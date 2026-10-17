@@ -1,6 +1,6 @@
 # RM-002 — Prepare the catalogue, assets and room fixtures
 
-Status: **Planned**  
+Status: **Complete**  
 Planning date: **17 October 2026**  
 Milestone: **Foundation**  
 Depends on: [RM-001](RM-001-initialize-workspace-contracts-and-safe-runtime.md)  
@@ -45,15 +45,15 @@ Use coherent fixtures that demonstrate repeated views, retained dimensions and g
 
 ## Acceptance criteria
 
-- [ ] Supported essentials/storage have versioned IDs, dimensions, front/access metadata and available representations.
-- [ ] No catalogue price, currency, shopping, invented availability or retail field is present.
-- [ ] Exact selected assets have traceable licenses and required local attribution.
-- [ ] Prepared assets are local, bounded and aligned to the documented semantic footprint/floor.
-- [ ] Adjustable versus fixed-size representation rules preserve reviewed furniture dimensions.
-- [ ] All three room conditions and one disclosed conflict baseline have valid authored records and independent expected facts.
-- [ ] Finish presets affect appearance only and use supported material references.
-- [ ] Missing representation/version behavior is safe, visible and does not replace physical sizes silently.
-- [ ] Fixtures demonstrate their stated geometry/identity relationships, and representation/thumbnail fallback never silently changes physical dimensions.
+- [x] Supported essentials/storage have versioned IDs, dimensions, front/access metadata and available representations.
+- [x] No catalogue price, currency, shopping, invented availability or retail field is present.
+- [x] Exact selected assets have traceable licenses and required local attribution.
+- [x] Prepared assets are local, bounded and aligned to the documented semantic footprint/floor.
+- [x] Adjustable versus fixed-size representation rules preserve reviewed furniture dimensions.
+- [x] All three room conditions and one disclosed conflict baseline have valid authored records and independent expected facts.
+- [x] Finish presets affect appearance only and use supported material references.
+- [x] Missing representation/version behavior is safe, visible and does not replace physical sizes silently.
+- [x] Fixtures demonstrate their stated geometry/identity relationships, and representation/thumbnail fallback never silently changes physical dimensions.
 
 ## Focused verification and evidence
 
@@ -69,3 +69,5 @@ Use coherent fixtures that demonstrate repeated views, retained dimensions and g
 ## Handoff and limits
 
 Record exact selected assets and actual preparation results when implemented. RM-003 owns geometric truth, RM-006 owns real cutaway rendering and RM-015 owns measured visual/device acceptance. This ticket cannot claim photo resemblance, exact recognition, certified clearances or owner approval from attractive thumbnails. Follow the index's future execution, read-only validation and Git rules.
+
+Execution: [exact allocation](../commit-plans/RM-002.md), [validation evidence](../validation/RM-002.md), [catalogue/asset/fixture policy](../design/catalogue.md). Required local scope completed on 17 October 2026; actual spatial engine and renderer/device acceptance remain later packets.

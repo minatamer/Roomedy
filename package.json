@@ -17,10 +17,11 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "pnpm build:shared && pnpm -r typecheck && tsc --noEmit --project test/tsconfig.json",
     "check:boundaries": "node scripts/check-boundaries.mjs && node --test scripts/check-boundaries.test.mjs",
+    "check:assets": "node scripts/check-catalogue-assets.mjs",
     "test:unit": "node scripts/run-tests.mjs",
     "test:smoke": "node scripts/smoke-foundation.mjs",
     "build": "pnpm build:shared && pnpm --filter @roomedy/backend build && pnpm --filter @roomedy/frontend build",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:boundaries && pnpm test:unit && pnpm build"
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:boundaries && pnpm check:assets && pnpm test:unit && pnpm build"
   },
   "devDependencies": {
     "@roomedy/contracts": "workspace:*",

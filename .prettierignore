@@ -8,3 +8,4 @@ docs/
 README.md
 AGENTS.md
 apps/*/next-env.d.ts
+apps/frontend/public/catalogue/

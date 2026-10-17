@@ -3,3 +3,4 @@
 *.jpg binary
 *.webp binary
 *.glb binary
+apps/frontend/public/catalogue/LICENSE-Kenney.txt -text

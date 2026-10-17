@@ -3,13 +3,13 @@
 Planning date: **17 October 2026**  
 Plan status: **Approved by owner on 17 October 2026; ordered fake-mode execution authorized**  
 Authority: [Roomedy blueprint](../ROOMEDY.md), especially [selected decisions](../ROOMEDY.md#26-decision-register)  
-Current instruction: execute and validate tickets in numeric order, stage/commit each completed ticket, use fake mode and stop at required review gates or 0% remaining Codex usage. No paid calls, deployment or push. RM-001 is implemented locally with hosted CI unverified; see its [allocation](../commit-plans/RM-001.md) and [evidence](../validation/RM-001.md).
+Current instruction: execute and validate tickets in numeric order, stage/commit each completed ticket, use fake mode and stop at required review gates or 0% remaining Codex usage. No paid calls, deployment or push. RM-001 is implemented locally with hosted CI unverified, and RM-002 is complete locally; see RM-001’s [allocation](../commit-plans/RM-001.md) and [evidence](../validation/RM-001.md).
 
 Owner-requested revision: incorporate lessons from the four referenced visual/manual-test chats before proceeding. Read [repository instructions](../../AGENTS.md), [feedback guidelines and their evidence](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and the [feature/review checklist](../design/REVIEW_CHECKLIST.md). These are requirements for the existing packets, not additional product features or authorization to implement.
 
 ## Why twenty packets
 
-Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 now has verified local evidence; remaining packets are Planned until their own required outcomes are verified.
+Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; remaining packets are Planned until their own required outcomes are verified.
 
 `RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001–RM-020 commit subjects below are suggestions for future authorized work, not existing implementation commits.
 
@@ -142,3 +142,5 @@ Roomedy separates the late quality execution, security audit and selected securi
 ## Review handoff
 
 The owner approved the updated plan and guidelines and requested step-six RM-000 documentation/ticket commits. This approval covers the reviewed packet count/scope, sequencing and guidelines; exact numerical engineering policy, asset preparation and model selection remain future evidence-bearing implementation work. Follow the scoped RM-000 allocation and verification receipt. The subsequent step-seven request authorizes ordered local implementation/commits in fake mode. Paid/provider testing and hosted changes remain unauthorized.
+
+Execution evidence: [RM-001](../validation/RM-001.md) (local foundation, hosted CI unverified), [RM-002](../validation/RM-002.md) (catalogue/assets/fixtures complete). Next numeric packet: RM-003.

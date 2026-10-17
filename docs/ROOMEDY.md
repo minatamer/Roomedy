@@ -16,7 +16,7 @@ Roomedy helps someone furnish an empty room or make the furniture they already o
 
 The important outcome is a room arrangement the visitor can inspect, apply, adjust and undo. A generated before/after image would not establish the product's central promise.
 
-This document replaces the initial draft as the current specification for discussion. The [original Markdown](drafts/2026-10-17/ROOMEDY.md) and [original HTML](drafts/2026-10-17/ROOMEDY_OVERVIEW.html) remain as source history. The RM-001 foundation is implemented locally. The AI integration, catalogue and layout engine remain future tickets. The companion is an offline scripted SVG concept, with a few illustrative checks; it is neither a React Three Fiber build nor live AI evidence.
+This document replaces the initial draft as the current specification for discussion. The [original Markdown](drafts/2026-10-17/ROOMEDY.md) and [original HTML](drafts/2026-10-17/ROOMEDY_OVERVIEW.html) remain as source history. The RM-001 foundation is implemented locally. RM-002 now supplies the dimensioned catalogue, local prepared assets and authored fixtures. The AI integration and layout engine remain future tickets. The companion is an offline scripted SVG concept, with a few illustrative checks; it is neither a React Three Fiber build nor live AI evidence.
 
 ## Contents
 
@@ -544,7 +544,7 @@ Owned furniture can use a similar visual model at its confirmed dimensions. Labe
 | [Quaternius Furniture Pack](https://quaternius.com/packs/furniture.html) | 23 models, CC0; listed formats FBX/OBJ/Blend | Essential pieces; convert/prepare GLB if selected rather than assuming runtime-ready GLB |
 | [Poly Haven licence](https://polyhaven.com/license) | Library assets are CC0 | Selected materials/models/lighting; choose assets and budget texture cost |
 
-These source pages were opened on 17 October 2026. No asset pack was downloaded, bought, integrated or performance-tested. Keep per-file source/licence records; a suitable public library is not proof that the exact needed furniture variant is available.
+These source pages were opened on 17 October 2026. At documentation time no pack had been downloaded. RM-002 subsequently reviewed/downloaded the exact free Kenney archive and prepared two selected CC0 meshes, with per-file source/license records in [the catalogue policy](design/catalogue.md) and actual checks in [RM-002 evidence](validation/RM-002.md). No purchased asset or device-performance result is claimed. Keep per-file source/licence records; a suitable public library is not proof that the exact needed furniture variant is available.
 
 ### 13.3 Procedural versus fixed assets
 
@@ -1219,8 +1219,8 @@ Outstanding application evidence includes all geometry/command tests, real R3F b
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage/commit exact validated RM-001 paths, then record the commit and start RM-002. Stop at 0% remaining Codex usage or required owner gates. Fake only, no paid calls/deployment/push.
-Active ticket: RM-001
+Next action: Stage/commit the exact validated RM-002 allocation, record the commit, then start dependency-ready RM-003. Keep fake/paid-off; stop at 0% remaining Codex usage or required owner review gates. No deployment/push/paid calls.
+Active ticket: RM-002
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1245,7 +1245,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-17T18:05:09+00:00",
+  "updated_at": "2026-10-17T18:16:06+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1384,8 +1384,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-001",
-  "next_action": "Stage/commit exact validated RM-001 paths, then record the commit and start RM-002. Stop at 0% remaining Codex usage or required owner gates. Fake only, no paid calls/deployment/push.",
+  "active_ticket": "RM-002",
+  "next_action": "Stage/commit the exact validated RM-002 allocation, record the commit, then start dependency-ready RM-003. Keep fake/paid-off; stop at 0% remaining Codex usage or required owner review gates. No deployment/push/paid calls.",
   "phases": [
     {
       "id": "01-docs",
@@ -1667,9 +1667,10 @@ This checklist records local work. Human approvals and unresolved external check
         }
       },
       "evidence": [
-        "docs/commit-plans/RM-001.md: exact 68-file allocation before implementation and scoped additions",
-        "docs/validation/RM-001.md: final pnpm check passed, 26 unit/5 boundary regressions, actual local smoke/cleanup passed, zero metered calls, revalidation no actionable local findings",
-        "RM-001 required local outcome implemented; actual GitHub workflow/Linux remains unverified. Codex usage 86% used / 14% remaining."
+        "commit:56b7d0fb8b97ed77b8f495460308a3778538ef95 — RM-001 verified local foundation; hosted CI unverified",
+        "docs/validation/RM-002.md: final local gate passed, 33 unit/5 boundary regressions, actual GLB geometry/rotations/budgets/license/thumbnail checks, revalidation no actionable findings",
+        "docs/commit-plans/RM-002.md: exact 33-file allocation, 26 source/config/asset files at SHA-256 manifest 6d6dc24327e5d3fef7bb646dd93fef5a66270a17982cf962214df68da6c70bd5",
+        "RM-002 required local outcome complete; 87% Codex usage used / 13% remaining. No paid calls or deployment."
       ],
       "blockers": [
         {

@@ -9,23 +9,37 @@ const axisSchema = z
     default: z.number().int().min(10).max(POLICY.furnitureEdgeMm),
   })
   .refine((v) => v.min <= v.default && v.default <= v.max);
-export const catalogueEntrySchema = z.strictObject({
-  id: idSchema,
-  version: z.literal(VERSIONS.catalogue),
-  label: labelSchema,
-  category: z.enum(['bed', 'desk', 'chair', 'wardrobe', 'storage']),
-  size: z.strictObject({
-    width: axisSchema,
-    depth: axisSchema,
-    height: axisSchema,
-  }),
-  localFront: z.literal('positive-z'),
-  representation: z.enum(['procedural', 'prepared-mesh']),
-  assetId: idSchema,
-  finishes: z.array(finishSchema).min(1).max(6),
-  accessMm: z.number().int().min(0).max(2000),
-  adjustable: z.boolean(),
-});
+export const catalogueEntrySchema = z
+  .strictObject({
+    id: idSchema,
+    version: z.literal(VERSIONS.catalogue),
+    label: labelSchema,
+    category: z.enum(['bed', 'desk', 'chair', 'wardrobe', 'storage']),
+    size: z.strictObject({
+      width: axisSchema,
+      depth: axisSchema,
+      height: axisSchema,
+    }),
+    localFront: z.literal('positive-z'),
+    representation: z.enum(['procedural', 'prepared-mesh']),
+    assetId: idSchema,
+    finishes: z.array(finishSchema).min(1).max(6),
+    accessMm: z.number().int().min(0).max(2000),
+    accessMechanism: z.enum([
+      'none',
+      'chair-pullout',
+      'hinged',
+      'sliding',
+      'drawer',
+    ]),
+    adjustable: z.boolean(),
+  })
+  .refine(
+    (entry) =>
+      entry.adjustable ===
+      Object.values(entry.size).some((axis) => axis.min !== axis.max),
+    'Adjustability must match the supported size range',
+  );
 export const catalogueSchema = z
   .array(catalogueEntrySchema)
   .min(1)

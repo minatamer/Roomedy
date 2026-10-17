@@ -5,6 +5,12 @@ import type {
 } from '@roomedy/contracts/commands';
 import type { CheckFacts, RoomDocument } from '@roomedy/contracts/room';
 
+export {
+  CATALOGUE,
+  findCatalogueEntry,
+  supportsDimensions,
+} from './catalogue.js';
+
 /** Origin is assigned by the calling controller/use case, never parsed from a wire payload. */
 export type CommandAuthority = 'visitor' | 'authored-sample' | 'assistant';
 export interface SpatialEngine {
