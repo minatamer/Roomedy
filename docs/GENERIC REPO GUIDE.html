@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <title>Generic Repo Guide — Your demo playbook</title>
+  <style>
+    :root{--ink:#1d2135;--muted:#70758b;--line:#e6e8ef;--purple:#7055e8;--soft:#f0ecff;--paper:#fff;--canvas:#f7f8fc;--green:#19886b;--shadow:0 12px 48px #24264106;--radius:22px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--canvas);color:var(--ink);font-family:"Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6}button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #b9aaff;outline-offset:4px}button:disabled{cursor:wait}button{touch-action:manipulation}::selection{background:#ddd4ff}a{color:inherit}
+    .shell{width:min(1160px,calc(100% - 64px));margin:0 auto}.masthead{height:86px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;gap:11px;align-items:center;font-size:13px;font-weight:800;letter-spacing:.09em}.brand-icon{width:33px;height:33px;background:var(--ink);color:white;border-radius:11px;display:grid;place-items:center}.brand-icon svg{width:20px;height:20px}.local-label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}.local-dot{width:6px;height:6px;background:#4cab8b;border-radius:50%}
+    .hero{text-align:center;padding:58px 10px 38px;position:relative}.eyebrow{display:inline-flex;gap:7px;align-items:center;font-size:11px;letter-spacing:.15em;font-weight:750;color:var(--purple);text-transform:uppercase}.eyebrow span{width:19px;height:1px;background:#b2a3ee}.hero h1{font-size:clamp(35px,4.8vw,58px);line-height:1.1;letter-spacing:-.055em;font-weight:780;margin:19px 0 17px}.hero h1 em{font-style:normal;color:var(--purple)}.hero p{margin:0 auto;max-width:590px;font-size:16px;color:var(--muted);line-height:1.65}.hero-pills{display:flex;justify-content:center;gap:22px;margin-top:24px;color:#72778d;font-size:12px}.hero-pills span{display:flex;align-items:center;gap:6px}.tiny-check{color:var(--green);font-weight:800}
+    .project-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:27px 30px 29px;box-shadow:var(--shadow)}.card-top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:21px}.section-title{display:flex;align-items:center;gap:11px}.section-icon{display:grid;place-items:center;background:var(--soft);color:var(--purple);width:35px;height:35px;border-radius:11px}.section-icon svg{width:18px;height:18px}.card-top h2{font-size:16px;letter-spacing:-.025em;margin:0;font-weight:750}.subtle{color:var(--muted);font-size:12px}.save-state{font-size:11px;color:var(--muted)}.project-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 23px}.field{min-width:0}.field label{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:650;margin-bottom:7px}.shared-label{font-size:9px;font-weight:650;color:var(--purple);border:1px solid #e5dfff;background:#f8f5ff;border-radius:5px;padding:1px 5px;letter-spacing:.02em}.field .hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}.field textarea{display:block;width:100%;min-height:45px;max-height:340px;resize:vertical;background:#fafbfe;color:var(--ink);border:1px solid #e0e3ee;border-radius:10px;padding:11px 13px;font-size:13px;line-height:1.55;transition:border-color .15s,box-shadow .15s,background .15s}.field textarea::placeholder{color:#9398ad}.field textarea:focus{outline:none;background:white;border-color:#9982ef;box-shadow:0 0 0 3px #7055e812}.field.wide{grid-column:1/-1}
+    .work-heading{margin:36px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}.work-heading h2{margin:0;font-size:19px;letter-spacing:-.035em;font-weight:750}.progress-text{font-size:11px;color:var(--muted);margin-top:2px}.secondary{border:1px solid #dee1eb;background:white;color:var(--ink);border-radius:9px;padding:9px 13px;font-size:12px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;white-space:nowrap}.secondary:hover{border-color:#b7a8ec;background:#faf8ff}.secondary svg,.primary svg{width:15px;height:15px;flex:none}
+    .workspace{display:grid;grid-template-columns:247px minmax(0,1fr);gap:21px;align-items:start}.rail{position:sticky;top:22px;background:white;border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:var(--shadow)}.rail-label{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#8b8fa2;font-weight:750;padding:8px 11px 11px}.step-button{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:0;text-align:left;padding:10px;border-radius:11px;color:#697087;position:relative;min-height:55px;transition:background .15s,color .15s}.step-button:hover{background:#f8f8fc}.step-button[aria-current="step"]{background:#f0ecff;color:var(--ink)}.step-number{width:28px;height:28px;flex:none;display:grid;place-items:center;font-size:10px;font-weight:750;border:1px solid #e6e8ee;border-radius:9px;color:#8990a4;background:white}.step-button[aria-current="step"] .step-number{background:var(--purple);border-color:var(--purple);color:white}.step-name{font-size:12px;font-weight:650;line-height:1.4}.step-caption{font-size:10px;font-weight:400;color:#8b8fa4;line-height:1.5;margin-top:2px}.step-status{margin-left:auto;flex:none;width:6px;height:6px;border-radius:50%;background:#dfe1ea}.step-status.ready{background:#40a88b}.rail-note{font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding:14px 11px 7px;margin-top:10px;line-height:1.65}
+    .editor{background:white;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}.editor-head{padding:27px 29px 22px;border-bottom:1px solid var(--line)}.step-kicker{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:750;color:var(--purple);display:flex;align-items:center;gap:8px}.editor-head h3{margin:8px 0 7px;font-size:27px;letter-spacing:-.045em;font-weight:750;line-height:1.2}.editor-head p{margin:0;font-size:13px;color:var(--muted);max-width:580px}.step-fields{display:grid;grid-template-columns:1fr 1fr;gap:19px;padding:24px 29px}.step-fields:empty{display:none}.ready-note{margin:22px 29px 0;font-size:12px;color:var(--green);display:flex;gap:8px;align-items:center}.ready-note[hidden]{display:none}.preview-area{padding:23px 29px 28px}.preview-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.preview-label{font-size:10px;text-transform:uppercase;letter-spacing:.11em;font-weight:750;color:#7c8298;display:flex;align-items:center;gap:7px}.preview-label svg{width:14px;height:14px}.fields-left{font-size:10px;text-transform:none;letter-spacing:0;font-weight:450;color:#969bad}.primary{border:0;background:var(--purple);color:white;border-radius:9px;padding:10px 15px;display:inline-flex;justify-content:center;align-items:center;gap:8px;font-size:12px;font-weight:650;min-height:41px;box-shadow:0 4px 12px #7055e81d}.primary:hover{background:#6045d5}.prompt{margin:0;border:1px solid #ececf4;border-radius:13px;background:#f9faff;padding:23px 24px;white-space:pre-wrap;overflow-wrap:anywhere;font-family:"Cascadia Code","SFMono-Regular",Consolas,monospace;font-size:12.5px;line-height:1.9;color:#4d5269;tab-size:2}.prompt .placeholder{background:#fff3df;color:#9a651f;border-radius:4px;padding:1px 3px;box-decoration-break:clone}.prompt .filled{color:#6143c7;background:#ece7fc;border-radius:4px;padding:1px 3px;box-decoration-break:clone}.preview-legend{display:flex;gap:16px;margin-top:12px;color:#8b90a2;font-size:10px}.legend-item{display:flex;gap:6px;align-items:center}.legend-swatch{width:8px;height:8px;border-radius:3px;background:#ece7fc}.legend-swatch.pending{background:#ffe8bf}.step-footer{display:flex;justify-content:space-between;align-items:center;padding:17px 29px;border-top:1px solid var(--line);background:#fdfdff}.step-footer button{border:0;background:transparent;color:#5c637a;font-size:12px;min-height:39px;padding:6px 0;display:flex;align-items:center;gap:8px}.step-footer button:hover{color:var(--purple)}.step-footer button:disabled{visibility:hidden}.step-footer svg{width:14px;height:14px}.step-page{color:#a0a5b6;font-size:10px}
+    .helpers{margin:27px 0 0;padding:24px 28px;border:1px solid var(--line);border-radius:18px;background:white}.helpers-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}.helpers h2{margin:0;font-size:15px;letter-spacing:-.025em}.helper-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.helper{background:#f8f9fd;border:1px solid #ebeef5;border-radius:12px;padding:15px 16px}.helper-head{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:11px;font-weight:700;margin-bottom:9px}.helper button{font-size:11px;color:var(--purple);border:0;background:transparent;padding:4px 0;min-height:30px}.helper p{margin:0;font-family:"Cascadia Code",Consolas,monospace;font-size:11px;color:#6d748a;line-height:1.7}.footer{display:flex;justify-content:space-between;align-items:center;gap:18px;color:#9197aa;font-size:10px;padding:28px 3px 40px}.footer span:last-child{color:#a3a8b8}.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%) translateY(8px);width:max-content;max-width:calc(100% - 32px);padding:12px 18px;background:#242639;color:white;border-radius:11px;box-shadow:0 12px 40px #16172822;font-size:12px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:10}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.enter{animation:enter .35s ease both}@keyframes enter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    @media(min-width:1000px){.project-grid{grid-template-columns:1fr 1fr 1fr}.project-grid .wide{grid-column:span 2}.project-grid .purpose-field{grid-column:span 2}.project-grid .audience-field{grid-column:span 1}.project-grid .refs-field{grid-column:span 2}}
+    @media(max-width:850px){.shell{width:calc(100% - 36px)}.workspace{grid-template-columns:1fr}.rail{position:static;padding:9px;display:flex;overflow:auto;gap:5px;scrollbar-width:thin}.rail-label,.rail-note{display:none}.step-button{width:auto;min-width:148px;flex:none;padding:8px;min-height:52px}.step-status{display:none}.step-caption{font-size:9px}.editor-head{padding:24px}.step-fields{padding:23px 24px}.preview-area{padding:22px 24px}.step-footer{padding:15px 24px}.hero{padding-top:41px}.project-card{padding:23px}.hero-pills{gap:15px}.work-heading{margin-top:29px}}
+    @media(max-width:520px){.shell{width:calc(100% - 26px)}.masthead{height:68px}.brand{font-size:10px;letter-spacing:.06em}.brand-icon{width:29px;height:29px}.local-label{font-size:10px}.hero{padding:36px 1px 27px}.hero h1{font-size:37px}.hero p{font-size:14px;max-width:310px}.hero-pills{gap:11px;font-size:10px;flex-wrap:wrap}.project-card{padding:20px;border-radius:18px}.card-top{align-items:flex-start;gap:10px;margin-bottom:18px}.section-title{gap:9px}.card-top h2{font-size:14px}.save-state{max-width:98px;text-align:right;font-size:10px}.project-grid{grid-template-columns:1fr;gap:16px}.field.wide{grid-column:auto}.step-fields{grid-template-columns:1fr;padding:20px}.editor-head{padding:22px 20px 19px}.editor-head h3{font-size:24px}.preview-area{padding:20px}.prompt{padding:17px;font-size:11.5px;line-height:1.9}.preview-toolbar{align-items:center}.preview-label{font-size:9px;gap:5px}.fields-left{display:none}.primary{padding:9px 11px;font-size:11px;min-height:40px}.work-heading h2{font-size:17px}.secondary{font-size:11px;padding:8px 11px}.helper-grid{grid-template-columns:1fr}.helpers{padding:20px}.helpers-top{align-items:flex-start}.helpers-top .subtle{max-width:140px;text-align:right;font-size:10px}.step-footer{padding:13px 20px}.ready-note{margin:20px 20px 0}.footer{align-items:flex-start;flex-direction:column;gap:5px;padding:24px 3px 30px}.preview-legend{gap:12px;font-size:9px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m8 6-5 6 5 6m8-12 5 6-5 6m-3-14-2 16"/></svg></span> GENERIC REPO GUIDE</div>
+      <span class="local-label"><span class="local-dot" aria-hidden="true"></span>Your personal playbook</span>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="guide-title">
+        <div class="eyebrow"><span></span> FROM IDEA TO FINISHED DEMO <span></span></div>
+        <h1>Your next demo.<br><em>Your usual way.</em></h1>
+        <p>A prompt-by-prompt guide to building something great.<br>Fill in the details. Copy a prompt. Keep moving.</p>
+        <div class="hero-pills"><span><b class="tiny-check">✓</b> Your original style</span><span><b class="tiny-check">✓</b> Live placeholders</span><span><b class="tiny-check">✓</b> 10 steps + a visual checkpoint</span></div>
+      </section>
+      <section class="project-card" aria-labelledby="project-title">
+        <div class="card-top"><div class="section-title"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="15" rx="3"/><path d="M8 5V3h8v2m-4 4v6m-3-3h6"/></svg></span><div><h2 id="project-title">Make it your project</h2><div class="subtle">Shared details fill the relevant prompts automatically.</div></div></div><span class="save-state" id="save-state">Only saved in this browser</span></div>
+        <div class="project-grid" id="project-fields"></div>
+      </section>
+      <div class="work-heading"><div><h2>Your build sequence</h2><div class="progress-text" id="progress-text"></div></div><button class="secondary" id="copy-all" type="button"></button></div>
+      <div class="workspace">
+        <nav class="rail" id="step-navigation" aria-label="Prompt steps"><div class="rail-label">THE WORKFLOW</div></nav>
+        <section class="editor" id="editor" aria-labelledby="step-title">
+          <div class="editor-head"><div class="step-kicker" id="step-kicker"></div><h3 id="step-title"></h3><p id="step-description"></p></div>
+          <div class="step-fields" id="step-fields"></div>
+          <p class="ready-note" id="ready-note" hidden><span aria-hidden="true">✓</span> This step is ready as is. Copy it when you're ready.</p>
+          <div class="preview-area"><div class="preview-toolbar"><div class="preview-label" id="preview-label"></div><button class="primary" id="copy-prompt" type="button"></button></div><pre class="prompt" id="prompt-preview" aria-label="Live prompt preview"></pre><div class="preview-legend"><span class="legend-item"><i class="legend-swatch" aria-hidden="true"></i>Your details</span><span class="legend-item"><i class="legend-swatch pending" aria-hidden="true"></i>Still to fill in</span></div></div>
+          <div class="step-footer"><button id="previous-step" type="button"></button><span class="step-page" id="step-page"></span><button id="next-step" type="button"></button></div>
+        </section>
+      </div>
+      <section class="helpers" aria-labelledby="helpers-title"><div class="helpers-top"><h2 id="helpers-title">A little nudge, when you need it</h2><span class="subtle">Your usual follow-up prompts.</span></div><div class="helper-grid"><div class="helper"><div class="helper-head">Resume the work<button type="button" data-helper="continue goal, continue right where u left off">Copy</button></div><p>continue goal, continue right where u left off</p></div><div class="helper"><div class="helper-head">Get it unstuck<button type="button" data-helper="you might be stuck check out what ur doing unstuck urself">Copy</button></div><p>you might be stuck check out what ur doing unstuck urself</p></div></div></section>
+    </main>
+    <footer class="footer"><span>One prompt at a time. Review the output, then move to the next step.</span><span>Documentation → Tickets → Build → Validate → Audit</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <noscript><p style="text-align:center;padding:24px">Enable JavaScript in your browser to edit and copy your prompts.</p></noscript>
+  <script>
+    'use strict';
+    const FIELDS = {
+      PROJECT_NAME:{label:'Project name',placeholder:'e.g. Retailor',short:true,shared:true},
+      DEMO_PURPOSE:{label:'What does this demo do?',placeholder:'What the platform does, and what it should show people.',shared:true},
+      TARGET_AUDIENCE:{label:'Who is it for?',placeholder:'e.g. new founders, creators, small business owners',short:true,shared:true},
+      REFERENCE_REPOS:{label:'Reference repos & locations',placeholder:'e.g. ClipBuilder, ScreenPilot and Retrosum — in the same parent directory.',shared:true},
+      TICKET_PREFIX:{label:'Ticket prefix',placeholder:'e.g. RTL, CLP, DEMO',short:true,shared:true},
+      OUT_OF_SCOPE:{label:'What is outside the scope?',placeholder:'Features and integrations we are leaving out of this demo.',hint:'Keep the project focused on the experience you want to demonstrate.'},
+      MAIN_INPUT:{label:'What does the user give us?',placeholder:'e.g. product photos, documents, a video',short:true},
+      MAIN_OUTPUT:{label:'What do we create for them?',placeholder:'e.g. a beautiful storefront, an interactive report',short:true},
+      PRODUCT_IDEAS:{label:'Your features, flow & design ideas',placeholder:'Write your ideas here. Be as detailed as you want.',large:true},
+      WOW_FACTOR:{label:'The main wow factor',placeholder:'e.g. you give us your products and we make you an ultra smooth storefront.',hint:'The promise this whole demo is built around.'},
+      BEST_REFERENCE_PROJECT:{label:'Best reference for the main flow',placeholder:'e.g. Retrosum',short:true},
+      NUMBERED_ANSWERS:{label:'Your answers to the clarification questions',placeholder:'1. ...\n2. ...\n3. ...',large:true},
+      PERFORMANCE_AREA:{label:'What should we make faster?',placeholder:'e.g. concurrency during image or document processing'},
+      PERFORMANCE_REFERENCE_REPO:{label:'Performance reference repo',placeholder:'e.g. Retrosum',short:true},
+      RELEVANT_IMPLEMENTATION:{label:'What should it learn from that repo?',placeholder:'e.g. bounded concurrency with cancellation and clear progress'},
+      VISUAL_FEEDBACK:{label:'Your visual approval or feedback',placeholder:'Approved as-is — skip visual fixes. Or describe the layout, animation and content changes you want.',large:true,hint:'Your approval skips the fixes. Otherwise, review the updated result after each requested round.'},
+      DEPLOYMENT_PLATFORM:{label:'Deployment platform',placeholder:'e.g. Google Cloud Run',short:true},
+      SELECTED_SECURITY_FIXES:{label:'Which fixes have you approved?',placeholder:'e.g. all fixes, or list the finding IDs you selected',hint:'Use this step after manually reviewing the security audit.'}
+    };
+    const STEPS = [
+      {title:'Build the documentation first',nav:'Documentation',caption:'Establish the backbone',description:'Start with the project vision and your proven reference repos. Documentation comes before tickets.',template:`This is a brand new project, and I need you to basically build documentation.
+
+In the docs folder, you'll find a bunch of resources, like draft documents about what I want this platform to be, maybe an HTML file and a Markdown file.
+
+The project is called [PROJECT_NAME]. Basically, it's a demo about [DEMO_PURPOSE].
+
+Stuff like [OUT_OF_SCOPE] doesn't concern the scope of our project rn.
+
+You can also visit these repos: [REFERENCE_REPOS]. You will find reference files and lessons learned from them in the docs folder too.
+
+I want to take a lot of inspiration from them and base the structure and backbone of this project on them. I want the same folder structure, the same guidelines, the same framework, the same architecture, the same infrastructure and deployment approach, unless this project actually needs something different.
+
+You can explore them however you want. And this is not a suggestion; this is a must. I want you to check their actual code and docs, not just assume what they do.
+
+Basically, your task is to make a huge, detailed Markdown file, brand new from scratch, inspired by the documents in this project's docs folder and the other repos.
+
+Also make a summarized, user-friendly PM language HTML file of what this will be about, basically just for my eye to see it.
+
+You can update the existing HTML and Markdown files, rename them, or make new ones. I would recommend making new ones starting from scratch.
+
+Do not make the tickets yet. I know you will read about what we do with tickets. Do not make them yet.
+
+I just want detailed Markdown documentation and an HTML overview as your end product. The Markdown should explain as much as possible about the flow of the app, what the landing will show, what infrastructure we'll use, what structure we'll use, and everything needed to understand what we're building.`},
+      {title:'Understand the core flow',nav:'Core flow',caption:'Make the promise clear',description:'Get a step-by-step explanation of the main experience before turning it into implementation work.',template:`ok to start working on our tickets lets first describe to me the main core flow of the demo, like step by step
+
+especially explain the part where the user gives us [MAIN_INPUT] and we turn it into [MAIN_OUTPUT].
+
+that is basically what this website is built on. that's the most important part of the flow and the main objective of this project.`},
+      {title:'Add your product & design ideas',nav:'Product & design',caption:'Define the wow factor',description:'Bring your ideas into the documentation, then have the assistant ask the questions that still need answers.',template:`These are the main things I want to add or change:
+
+[PRODUCT_IDEAS]
+
+The whole idea of this demo is to flex "[WOW_FACTOR]".
+
+The main flow must be so userfriendly and like a mono page thing where possible. This is where you can take [BEST_REFERENCE_PROJECT] as a big inspiration, cuz we did it there really well, with animations and smooth loading and a beautiful simple layout that would never overwhelm the user.
+
+Anything where the user is choosing between options should be SUPER visual. Show them an example or preview while they choose different options, so they see everything in real time and it helps their decision.
+
+If this project has an AI assistant, it should not just ask questions. It should help with actual stuff in the app: explain things, give summaries, give a tour, help the user make choices and perform useful actions.
+
+Take inspiration from the chat CTAs in the other demos so the user doesn't have to type everything if they don't want to.
+
+The landing before starting the demo should be VIBRANT too, matching the vibe and our target audience: [TARGET_AUDIENCE].
+
+We need something new as an eye catcher that's super modern. Research competitors, but also other good websites that we can take inspiration from, even if they aren't direct competitors.
+
+You can definitely research other ideas to improve this, but we don't wanna overengineer or complicate it cuz this is a demo at the end of the day.
+
+Every option we give the user should be a great choice. Not a single option should be bad or meh.
+
+DO NOT ADD ANIMATION OFF OR RENDER OFF SETTINGS, or anything that would ruin our animations.
+
+I want you to integrate these ideas in our docs first, both HTML and Markdown.
+
+Then ask me all the questions you need answering so we can start creating our tickets.`},
+      {title:'Finalize your answers in the docs',nav:'Clarify & finalize',caption:'Resolve the open questions',description:'Paste your answers, and make sure every document reflects the choices you actually made.',template:`Here are my answers:
+
+[NUMBERED_ANSWERS]
+
+Fully explore each answer I gave and make sure it's all reflected throughout all the docs, both the detailed Markdown and the summarized HTML.
+
+Make sure the flow, architecture, scope and design decisions all agree with these answers.
+
+If something still needs actual testing or visual feedback later, keep it documented instead of pretending we've already decided or verified it.`},
+      {title:'Create detailed tickets',nav:'Plan the tickets',caption:'Turn the vision into work',description:'Only create tickets once the vision is settled. Give each ticket enough context to execute and validate properly.',template:`you are now allowed to create the tickets
+
+again check the other repos for inspiration on how the tickets look like. usually they are extremely detailed and planned out and always have good context.
+
+I want each ticket to explain what we're building, why, how it fits into the flow, what files or parts of the project it affects, what it depends on, and how we'll know it's working properly.
+
+Plan the order carefully so we can execute them one by one without constantly having to redo earlier work.
+
+Cover the whole project, including testing, quality, security and preparing the local files needed for deployment.`},
+      {title:'Commit the planning',nav:'Commit the plan',caption:'Save the starting point',description:'Keep the planning work in Git before implementation begins, using the project’s usual ticket prefix.',template:`stage and commit the unstaged documentation and tickets first
+
+use our usual ticket prefix: [TICKET_PREFIX]
+
+for the initial documentation use ticket id 0 and a commit message that signifies initial documentation.
+
+inspect what you're staging and keep the commits cohesive.`},
+      {title:'Start the big build loop',nav:'Execute & validate',caption:'Build one ticket at a time',description:'The main execution prompt. Finish and validate each ticket before moving on, with responsive design and code quality throughout.',template:`ok your goal is to keep going in an execute / validate loop on each ticket.
+
+Use these skills:
+[$execute](C:\\Users\\minat\\.agents\\skills\\execute\\SKILL.md)
+[$validate](C:\\Users\\minat\\.agents\\skills\\validate\\SKILL.md)
+
+You can only move on to the next ticket when validation finds no new findings, or only finds findings related to our expected blockers that I won't be here to solve as I'm afk.
+
+Be thorough with each ticket. Be dynamic as hell with each design for big laptops, small laptops, mobile phones of all sizes and tablets.
+
+For the landing, make sure the hero always fits the device screen fully, since that's the first thing the user sees.
+
+Use animations. Be smooth and aesthetic as possible. Research ideas whenever possible.
+
+Code quality, structure, security and efficiency are so important and should easily be your highest priority as you're executing.
+
+You have my approval to stage and commit after each ticket is done.
+
+For each ticket make a file-level commit plan in case the ticket needs multiple commits. I prefer this. Use the same ticket prefix for all commits belonging to that ticket.
+
+Your goal is to cover all tickets, even the deployment ticket by preparing the local files needed.
+
+What I need you to watch out for is I'm running other repos locally, so avoid interfering with them when running this repo. Use this project's own ports and only stop processes that actually belong to it.
+
+I won't provide any API keys yet. Continue all tickets in fake mode and prepare paid mode without a key to test with yet.
+
+Missing keys or cloud access shouldn't stop independent local work, but keep those checks documented as pending. Don't claim fake results prove the real provider or deployment works.`},
+      {title:'Investigate performance, when needed',nav:'Performance',caption:'Optional focused follow-up',description:'Use this while the build is running if there’s a processing path that deserves a closer look.',template:`btw, after you finish the current task I want you to explore [PERFORMANCE_AREA].
+
+Check [PERFORMANCE_REFERENCE_REPO] for inspiration. We have really good [RELEVANT_IMPLEMENTATION] there to make it fast and save time during the flow of the demo.
+
+Check it thoroughly, plan it, document it and include it in the proper ticket.
+
+If it's in a past ticket, prioritize the task, then continue doing whatever you were doing.
+
+If it's in a future ticket, that's fine, you'll meet it eventually.
+
+Preserve functionality and the quality/security work we've already done. Don't just make it faster by removing checks or letting everything run without limits.`},
+      {title:'Frontend visual approval',nav:'Visual checkpoint',caption:'Approve as-is or request fixes',checkpoint:true,description:'This is your manual frontend review, rather than a required implementation step. Approve it as-is to skip the fixes, or give feedback and review the updated result.',template:`this is where I'll manually validate the frontend visuals.
+
+My review:
+
+[VISUAL_FEEDBACK]
+
+If I approve how it looks as-is, skip the visual feedback and fixes and move on to the final audits. Don't make extra design changes just to complete this checkpoint.
+
+If I give feedback and ask for fixes, this is usually where I change layouts, add more animations and remove some stuff to make the website look better.
+
+Go through each thing I asked for carefully, document the changes in the proper ticket and make a file-level plan before substantial edits.
+
+Be dynamic as hell with the design for big laptops, small laptops, tablets and mobile phones of all sizes. For the landing, make sure the hero always fits the device screen fully, since that's the first thing the user sees.
+
+Use animations. Be smooth and aesthetic as possible. Do not add animation-off or render-off settings, or anything that would ruin our animations.
+
+Preserve functionality, code quality, structure, security and efficiency as you're changing the visuals. When I ask to remove or simplify something, make sure the rest of the app still works properly.
+
+Use an execute / validate loop for these changes, check the actual changed flows and responsive layouts, and fix any new actionable findings.
+
+After the requested fixes, show me the updated result so I can manually review it and give more visual feedback or approve it. Automated validation doesn't count as my visual approval.
+
+Wait for my feedback after each completed visual round before making further design changes or moving to the final audits.`},
+      {title:'Audit quality, then review security',nav:'Quality & security',caption:'Preserve what you’ve built',description:'Execute the quality audit first. Security findings wait for your manual review before any fixes are implemented.',template:`ok this is a new ticket I want you to do:
+
+- code quality, efficiency and structure audit: no redundancy, no dead code etc.
+- STRIDE security audit and proposed fixes.
+
+Audit both very carefully and thoroughly, and document this in a new ticket called post deployment and pre sharing.
+
+Your priority is to preserve functionality with your edits no matter what.
+
+For the code audit:
+
+First is planning and documenting FULLY and in detail.
+
+Your goal is to keep making sure functionality is working okay as you're changing the code. That's the most important part.
+
+I'm not necessarily looking for less total LOC, just better structure, no dead code, no redundancy, better efficiency and all the other points we need to cover.
+
+Include stuff like "don't show technical errors in the UI".
+
+Do not remove any logs btw! That's important. All our private backend logs should stay so we can audit issues and fix them.
+
+The important thing is that technical errors and private diagnostic details don't reach users through the UI or application logs in the browser console. Users should get helpful generic errors instead.
+
+Once you finish documenting the plan, immediately go into an execute / validate loop until you finish the plan with no new findings.
+
+Once you do that, you have my approval to come up with a file-level commit plan, stage and commit.
+
+After that, move on to the security audit.
+
+For STRIDE security it will be different:
+
+NO EXECUTION UNTIL MANUAL FEEDBACK FROM ME.
+
+First, no implementation. Completely and thoroughly audit the whole repo using STRIDE analysis and generic known security threats, including whether any libraries/packages have known threats.
+
+DO NOT INCLUDE minor stuff. I don't want weird security recommendations. We're talking proper stuff here.
+
+Document all substantial findings in great detail, including a careful plan to fix each one.
+
+I want to manually review your findings and decide which ones deserve to be fixed, so also make an HTML with a much more summarized, easy-readable audit.
+
+Rank it from high severity to medium to low. Basically explain what the threat is in PM language and what the solution is, also in PM language.
+
+Each fix plan should be careful not to mess up functionality or undo the quality, structure and efficiency work.
+
+Do NOT overengineer this. It's a demo at the end of the day that will be deployed using [DEPLOYMENT_PLATFORM].
+
+Check rate limits, abuse, DDoS, exposed secrets, unsafe input, paid-provider misuse and other substantial threats that actually apply to this project.
+
+When I come back I want the quality plan executed, validated and committed, and the security audit documentation done, uncommitted and unstaged, waiting for my review.
+
+Since I'll be doing more manual testing and visual feedback afterwards, add guidelines that make sense for future edits so we always preserve what we achieved in these audits.`},
+      {title:'Approve the selected security fixes',nav:'Approve & finish',caption:'Close the final audit loop',description:'After reviewing the findings, choose the fixes you want and authorize the final implementation and validation loop.',template:`ok go for [SELECTED_SECURITY_FIXES] in an execute / validate loop.
+
+Preserve functionality, code quality, structure and efficiency with every change.
+
+Keep going until validation finds no new actionable findings, except our explicitly documented external blockers.
+
+You're allowed to make the final file-level commit plan, stage and commit when you're done.`}
+    ];
+    const SHARED_FIELDS=['PROJECT_NAME','DEMO_PURPOSE','TARGET_AUDIENCE','REFERENCE_REPOS','TICKET_PREFIX'];
+    const FIELD_PATTERN=/\[([A-Z_]+)\]/g;
+    const STORAGE_KEY='generic-repo-guide.v1';
+    const copyIcon='<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+    const arrowIcon='<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m9 5 7 7-7 7"/></svg>';
+    const documentIcon='<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8m-8 4h6"/></svg>';
+    let values=Object.fromEntries(Object.keys(FIELDS).map(key=>[key,'']));
+    let activeStep=0;
+    let storageAvailable=true;
+    let toastTimer;
+    try{
+      const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+      if(saved&&(saved.version===1||saved.version===2)&&saved.values&&typeof saved.values==='object'){
+        for(const key of Object.keys(FIELDS))if(typeof saved.values[key]==='string')values[key]=saved.values[key];
+        const restoredStep=saved.version===1&&saved.activeStep>=8?saved.activeStep+1:saved.activeStep;
+        if(Number.isInteger(restoredStep)&&restoredStep>=0&&restoredStep<STEPS.length)activeStep=restoredStep;
+      }
+    }catch{storageAvailable=false;}
+    const el=id=>document.getElementById(id);
+    function keysForStep(index){return [...new Set([...STEPS[index].template.matchAll(FIELD_PATTERN)].map(match=>match[1]))];}
+    function promptForStep(index){return STEPS[index].template.replace(FIELD_PATTERN,(placeholder,key)=>values[key]?.trim()||placeholder);}
+    function save(){
+      if(!storageAvailable)return;
+      try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:2,values,activeStep}));el('save-state').textContent='Saved in this browser';}
+      catch{storageAvailable=false;el('save-state').textContent='Changes last for this open tab';}
+    }
+    function createField(key,shared=false){
+      const definition=FIELDS[key];
+      const wrapper=document.createElement('div');wrapper.className='field';
+      if(definition.large||!definition.short&&!shared)wrapper.classList.add('wide');
+      if(key==='DEMO_PURPOSE')wrapper.classList.add('purpose-field');
+      if(key==='TARGET_AUDIENCE')wrapper.classList.add('audience-field');
+      if(key==='REFERENCE_REPOS')wrapper.classList.add('refs-field');
+      const label=document.createElement('label');label.htmlFor=`field-${key}`;label.textContent=definition.label;
+      if(shared){const badge=document.createElement('span');badge.className='shared-label';badge.textContent='SHARED';label.append(badge);}
+      const textarea=document.createElement('textarea');textarea.id=`field-${key}`;textarea.name=key;textarea.value=values[key];textarea.placeholder=definition.placeholder;textarea.rows=definition.large?5:definition.short?1:2;textarea.maxLength=50000;
+      textarea.addEventListener('input',()=>{values[key]=textarea.value;save();updatePreview();updateProgress();});
+      wrapper.append(label,textarea);
+      if(definition.hint){const hint=document.createElement('div');hint.className='hint';hint.id=`hint-${key}`;hint.textContent=definition.hint;textarea.setAttribute('aria-describedby',hint.id);wrapper.append(hint);}
+      return wrapper;
+    }
+    function updateProgress(){
+      const filled=Object.values(values).filter(value=>value.trim()).length;
+      el('progress-text').textContent=`${filled} of ${Object.keys(FIELDS).length} fields filled · shared details carry across steps`;
+      document.querySelectorAll('.step-button').forEach((button,index)=>{
+        const ready=keysForStep(index).every(key=>values[key]?.trim());
+        button.querySelector('.step-status').classList.toggle('ready',ready);
+        button.setAttribute('aria-label',`Step ${index+1}: ${STEPS[index].nav}. ${ready?'Ready to copy':'Has unfilled fields'}`);
+      });
+    }
+    function updatePreview(){
+      const text=STEPS[activeStep].template;const fragment=document.createDocumentFragment();let cursor=0;
+      for(const match of text.matchAll(FIELD_PATTERN)){
+        fragment.append(document.createTextNode(text.slice(cursor,match.index)));
+        const mark=document.createElement('span');const filled=values[match[1]]?.trim();mark.className=filled?'filled':'placeholder';mark.textContent=filled||match[0];fragment.append(mark);cursor=match.index+match[0].length;
+      }
+      fragment.append(document.createTextNode(text.slice(cursor)));el('prompt-preview').replaceChildren(fragment);
+      const pending=keysForStep(activeStep).filter(key=>!values[key]?.trim()).length;
+      el('preview-label').innerHTML=documentIcon+'<span>LIVE PROMPT</span>';
+      const pendingLabel=document.createElement('span');pendingLabel.className='fields-left';pendingLabel.textContent=pending?`· ${pending} field${pending===1?'':'s'} left`:'· ready to copy';el('preview-label').append(pendingLabel);
+    }
+    function setStep(index,focus=false){
+      activeStep=index;const step=STEPS[index];
+      el('step-kicker').textContent=step.checkpoint?'VISUAL APPROVAL CHECKPOINT':`STEP ${String(index+1).padStart(2,'0')} OF ${STEPS.length}${index===7?' · OPTIONAL':''}`;
+      el('step-title').textContent=step.title;el('step-description').textContent=step.description;
+      const fields=keysForStep(index).filter(key=>!SHARED_FIELDS.includes(key));
+      el('step-fields').replaceChildren(...fields.map(key=>createField(key)));
+      el('ready-note').hidden=keysForStep(index).length!==0;
+      document.querySelectorAll('.step-button').forEach((button,i)=>{if(i===index)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');});
+      el('previous-step').disabled=index===0;el('next-step').disabled=index===STEPS.length-1;el('step-page').textContent=`${index+1} / ${STEPS.length}`;
+      updatePreview();updateProgress();save();
+      el('editor').classList.remove('enter');void el('editor').offsetWidth;el('editor').classList.add('enter');
+      if(focus){el('step-title').tabIndex=-1;el('step-title').focus({preventScroll:true});if(window.innerWidth<=850)el('editor').scrollIntoView({behavior:'smooth',block:'start'});}
+    }
+    function notify(message){clearTimeout(toastTimer);el('toast').textContent=message;el('toast').classList.add('show');toastTimer=setTimeout(()=>el('toast').classList.remove('show'),2800);}
+    async function copyText(text,button,message){
+      let copied=false;button.disabled=true;
+      try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);copied=true;}}catch{}
+      if(!copied){
+        const temporary=document.createElement('textarea');temporary.value=text;temporary.style.cssText='position:fixed;left:-9999px;top:0;';temporary.setAttribute('aria-label','Text to copy');document.body.append(temporary);temporary.select();
+        try{copied=document.execCommand('copy');}catch{}
+        temporary.remove();
+      }
+      button.disabled=false;button.focus({preventScroll:true});
+      if(copied)notify(message);else{const range=document.createRange();range.selectNodeContents(el('prompt-preview'));const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);notify('Copy didn’t work here. Select the prompt text to copy it.');}
+    }
+    el('project-fields').replaceChildren(...SHARED_FIELDS.map(key=>createField(key,true)));
+    STEPS.forEach((step,index)=>{
+      const button=document.createElement('button');button.type='button';button.className='step-button';
+      const number=document.createElement('span');number.className='step-number';number.textContent=String(index+1).padStart(2,'0');
+      const text=document.createElement('span');text.className='step-name';text.textContent=step.nav;
+      const caption=document.createElement('div');caption.className='step-caption';caption.textContent=step.caption;text.append(caption);
+      const status=document.createElement('span');status.className='step-status';status.setAttribute('aria-hidden','true');button.append(number,text,status);button.addEventListener('click',()=>setStep(index,true));el('step-navigation').append(button);
+    });
+    const railNote=document.createElement('div');railNote.className='rail-note';railNote.textContent='Send one prompt at a time. Let each step finish before moving on.';el('step-navigation').append(railNote);
+    el('copy-prompt').innerHTML=copyIcon+'Copy prompt';el('copy-all').innerHTML=copyIcon+'Copy all prompts';
+    el('previous-step').innerHTML='<span style="display:flex;transform:rotate(180deg)">'+arrowIcon+'</span> Previous';el('next-step').innerHTML='Next step '+arrowIcon;
+    el('previous-step').addEventListener('click',()=>setStep(Math.max(0,activeStep-1),true));el('next-step').addEventListener('click',()=>setStep(Math.min(STEPS.length-1,activeStep+1),true));
+    el('copy-prompt').addEventListener('click',()=>copyText(promptForStep(activeStep),el('copy-prompt'),`Step ${activeStep+1} copied. Ready to paste.`));
+    el('copy-all').addEventListener('click',()=>copyText(STEPS.map((step,index)=>`${index+1}. ${step.title}\n\n${promptForStep(index)}`).join('\n\n'+'='.repeat(56)+'\n\n'),el('copy-all'),`All ${STEPS.length} prompts copied.`));
+    document.querySelectorAll('[data-helper]').forEach(button=>button.addEventListener('click',()=>copyText(button.dataset.helper,button,'Follow-up prompt copied.')));
+    if(!storageAvailable)el('save-state').textContent='Changes last for this open tab';
+    setStep(activeStep);
+  </script>
+</body>
+</html>

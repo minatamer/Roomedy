@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="A visual product brief for Roomedy, an AI-assisted guest room planner: empty rooms, existing furniture, two connected views and an assistant that edits the room.">
+<title>Roomedy — product overview</title>
+<style>
+:root{--paper:#f4f0e9;--card:#fffdfa;--ink:#263d3b;--muted:#59655f;--line:#d8ded5;--clay:#a9442d;--soft-clay:#f4e4da;--sage:#e4ebe2;--radius:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:25px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 "Segoe UI",Arial,sans-serif}button,a{-webkit-tap-highlight-color:transparent}a{color:var(--clay);text-underline-offset:4px}button{font:inherit;cursor:pointer}button:disabled{cursor:default;opacity:.5}button:focus-visible,a:focus-visible{outline:3px solid #366c70;outline-offset:4px}button:hover:not(:disabled){filter:brightness(.96)}h1,h2,h3,p{margin-top:0}h1,h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em;line-height:1.08}h1{font-size:clamp(46px,6.5vw,82px);margin:18px 0 22px}h2{font-size:clamp(31px,4vw,47px);margin-bottom:16px}h3{font-size:17px;line-height:1.4;margin-bottom:8px}p{margin-bottom:15px}.wrap{max-width:1220px;width:calc(100% - 64px);margin:auto}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}.pill{display:inline-flex;gap:7px;align-items:center;border:1px solid var(--line);border-radius:30px;padding:5px 12px;font-size:11px;font-weight:600;background:var(--card)}.pill i{width:6px;height:6px;border-radius:50%;background:var(--clay)}.skip{position:absolute;left:12px;top:-80px;background:white;padding:12px;z-index:5}.skip:focus{top:12px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:25px 0;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);font-weight:650;font-size:16px;letter-spacing:-.02em}.mark{width:29px;height:29px;color:var(--clay)}nav{display:flex;gap:23px;font-size:12px}nav a{text-decoration:none;color:var(--muted)}.hero{padding:55px 0 37px;text-align:center;max-width:830px;margin:auto}.hero h1 em{color:var(--clay);font-weight:400}.hero>p{font-size:18px;color:var(--muted);max-width:650px;margin:0 auto 21px}.hero .note{font-size:12px}.hero-links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:25px 0 18px}.btn{border:1px solid var(--ink);border-radius:9px;padding:10px 17px;min-height:44px;display:inline-flex;justify-content:center;align-items:center;text-decoration:none;background:var(--ink);color:white;font-size:13px;font-weight:650}.btn.secondary{background:transparent;color:var(--ink);border-color:#b8c2b7}
+.studio{border:1px solid #cbd3c8;background:var(--card);border-radius:24px;overflow:hidden;box-shadow:0 15px 45px #33483b09}.studio-heading{display:flex;justify-content:space-between;gap:24px;padding:22px 25px 18px;align-items:center}.studio-heading h2{font-family:"Segoe UI",Arial,sans-serif;font-size:16px;font-weight:650;letter-spacing:0;margin:0}.studio-heading p{font-size:11px;color:var(--muted);margin:3px 0 0}.sample-tag{font-size:11px;color:var(--muted);white-space:nowrap}.controls{padding:12px 25px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center;background:#faf8f3}.segmented{display:flex;gap:3px;flex-wrap:wrap}.segmented button{font-size:12px;border:1px solid transparent;border-radius:7px;padding:8px 11px;background:transparent;color:var(--muted);min-height:36px}.segmented button[aria-pressed=true]{color:var(--ink);background:white;border-color:var(--line);box-shadow:0 2px 4px #263d3b08}.workspace{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(300px,1fr);min-height:482px}.canvas{background:#ebece5;position:relative;display:flex;align-items:center;justify-content:center;padding:43px 16px 35px;min-width:0;overflow:hidden}.scene-wrap{width:100%;max-width:730px}.scene-wrap svg{width:100%;height:auto;display:block;max-height:450px}.canvas-top{position:absolute;left:22px;right:22px;top:15px;display:flex;justify-content:space-between;align-items:center;font-size:11px;gap:8px}.canvas-top strong{font-weight:600}.scene-state{border-radius:30px;background:#fffdfae8;padding:4px 10px}.scene-state.preview{color:#8f3f28;background:#fff5eb}.scene-state.invalid{color:#8c2d2b;background:#fff0ee}.canvas-bottom{position:absolute;left:22px;bottom:13px;font-size:10px;color:#52645a;right:22px}.assistant{border-left:1px solid var(--line);display:flex;flex-direction:column;padding:24px;min-width:0}.assistant-head{display:flex;align-items:center;gap:10px;padding-bottom:17px;border-bottom:1px solid var(--line)}.spark{width:32px;height:32px;display:grid;place-items:center;background:var(--soft-clay);color:var(--clay);border-radius:9px;font-size:22px}.assistant-head strong{font-size:13px}.assistant-head small{display:block;font-size:10px;color:var(--muted)}.assistant-quote{font:italic 19px/1.45 Georgia,serif;margin:20px 0 17px;letter-spacing:-.01em}.agent-body{padding:15px;background:#f4f5ef;border:1px solid #dce2d7;border-radius:12px;min-height:112px}.agent-body strong{display:block;font-size:13px;margin-bottom:7px}.agent-body p{font-size:12px;color:var(--muted);margin:0}.agent-body.invalid{background:#fff2ed;border-color:#e9c3b8}.changes{font-size:11px;color:var(--muted);margin:10px 0 0;padding-left:16px}.changes li+li{margin-top:4px}.requests{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0}.requests button{background:white;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:11px;min-height:35px;color:var(--ink)}.action-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}.action-row .btn{padding:8px 13px;min-height:39px;font-size:12px}.undo{margin-left:auto!important}.room-meta{font-size:10px;color:var(--muted);margin:12px 0 0}.studio-caption{font-size:11px;color:var(--muted);text-align:center;margin:14px 0 0}.value-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;padding:28px 0 38px}.value-strip strong{display:block;font-size:13px}.value-strip p{font-size:12px;color:var(--muted);margin:5px 0 0}.value-strip span{font-size:11px;color:var(--clay);font-weight:650;margin-right:7px}
+section{padding:55px 0;border-top:1px solid var(--line)}.section-head{display:grid;grid-template-columns:1fr 1fr;gap:65px;align-items:end;margin-bottom:26px}.section-head p{font-size:14px;color:var(--muted);margin-bottom:2px}.section-head h2{margin-bottom:0}.section-head .eyebrow{margin-bottom:12px}.journey{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:23px}.step-number{font:31px/1 Georgia,serif;color:var(--clay);display:block;margin-bottom:19px}.step h3{font-size:15px}.step p{font-size:13px;color:var(--muted);margin-bottom:0}.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}.path{border-top:2px solid #8b9c87;padding:16px 1px 0}.path h3{font-size:14px}.path p{font-size:13px;color:var(--muted);margin:0}.assistant-flow{display:grid;grid-template-columns:1.1fr 1fr;gap:55px;align-items:start}.big-quote{font:italic 30px/1.35 Georgia,serif;letter-spacing:-.025em;margin:22px 0;color:var(--clay)}.plain{font-size:14px;color:var(--muted)}.flow-list{padding:0;list-style:none;counter-reset:agent}.flow-list li{display:grid;grid-template-columns:28px 1fr;gap:13px;padding:13px 0;border-bottom:1px solid var(--line);counter-increment:agent}.flow-list li:before{content:counter(agent);font:20px Georgia,serif;color:var(--clay);padding-top:2px}.flow-list strong{display:block;font-size:13px}.flow-list p{margin:3px 0 0;font-size:12px;color:var(--muted)}.facts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.fact{border-radius:var(--radius);padding:26px;background:var(--card);border:1px solid var(--line)}.fact p{font-size:13px;color:var(--muted)}.fact ul{font-size:13px;color:var(--muted);padding-left:18px;margin-bottom:0}.fact li+li{margin-top:8px}.closer{border-radius:var(--radius);background:var(--ink);color:#fff9ed;display:flex;justify-content:space-between;gap:25px;align-items:center;padding:30px;margin-top:22px}.closer strong{font:27px Georgia,serif;letter-spacing:-.03em}.closer p{font-size:12px;color:#d1ddd3;margin:9px 0 0}.closer .btn{background:transparent;color:white;border-color:#a1b3a5;white-space:nowrap}.footer{display:flex;justify-content:space-between;gap:20px;padding:24px 0 30px;color:var(--muted);font-size:11px}.footer p{margin:0}
+@media(max-width:1000px){.wrap{width:calc(100% - 40px)}.workspace{grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr)}.assistant{padding:20px}.section-head{gap:30px}.assistant-flow{gap:30px}.canvas{padding-left:2px;padding-right:2px}.controls{padding-left:16px;padding-right:16px}.segmented button{padding:7px 8px;font-size:11px}}
+@media(max-width:760px){.wrap{width:calc(100% - 32px)}.topbar{align-items:start;padding:19px 0}.brand{font-size:13px}nav{gap:12px;font-size:11px;flex-wrap:wrap;justify-content:end}nav a:first-child{display:none}.hero{padding-top:36px}.hero>p{font-size:16px}.hero h1{font-size:54px}.studio-heading{padding:18px;gap:12px;align-items:start}.sample-tag{white-space:normal;text-align:right;max-width:96px;font-size:10px}.controls{align-items:start;flex-direction:column;gap:6px}.workspace{grid-template-columns:1fr}.canvas{min-height:350px;padding:37px 8px 30px}.scene-wrap{max-width:520px}.scene-wrap svg{max-height:380px}.assistant{border-left:0;border-top:1px solid var(--line);padding:20px}.assistant-quote{font-size:20px}.agent-body{min-height:0}.requests{margin:14px 0}.value-strip{grid-template-columns:1fr;gap:15px;padding:24px 0 30px}.section-head,.assistant-flow{grid-template-columns:1fr;gap:19px}.journey{grid-template-columns:repeat(2,1fr)}.paths{grid-template-columns:1fr;gap:20px}.facts{grid-template-columns:1fr}.closer{align-items:start;flex-direction:column;padding:23px}.footer{flex-direction:column;gap:7px}section{padding:38px 0}.big-quote{font-size:27px}}
+@media(max-width:420px){.hero h1{font-size:45px}.hero-links .btn{font-size:12px;padding:9px 13px}.topbar{gap:12px}.brand{max-width:160px;line-height:1.35}.journey{grid-template-columns:1fr}.step{padding:20px;display:grid;grid-template-columns:28px 1fr;column-gap:13px}.step-number{grid-row:1/3;font-size:27px;margin:0}.step h3,.step p{grid-column:2}.canvas{min-height:300px}.canvas-top{left:14px;right:14px;font-size:10px}.canvas-bottom{left:14px;right:14px;font-size:9px}.action-row{gap:6px}.undo{margin-left:0!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media print{body{background:white}.wrap{width:100%;max-width:none}.topbar nav,.hero-links,.controls,.requests,.action-row,.skip{display:none}.hero{padding:20px 0}.hero h1{font-size:45px}.studio{box-shadow:none}.workspace{grid-template-columns:1.4fr 1fr}.canvas{min-height:300px}.assistant{padding:16px}.assistant-quote{font-size:16px}.journey{grid-template-columns:repeat(3,1fr)}.step{padding:15px}.studio,.step,.fact,.closer{break-inside:avoid}.closer{background:#eee;color:#263d3b}.closer p,.closer .btn{color:#263d3b}.section-head{gap:30px}section{padding:30px 0}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the product overview</a>
+<div class="wrap">
+<header class="topbar">
+<a class="brand" href="#main"><svg class="mark" viewBox="0 0 30 30" aria-hidden="true"><path d="M4 11 15 5l11 6v13H4Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 24v-9h10v9M4 11h22" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Roomedy</a>
+<nav aria-label="Overview navigation"><a href="#flow">The flow</a><a href="#assistant">The assistant</a><a href="ROOMEDY.md">Full blueprint ↗</a></nav>
+</header>
+<main id="main">
+<div class="hero">
+<span class="pill"><i aria-hidden="true"></i> Roomedy · product concept</span>
+<h1>Make room for<br><em>the way you live.</em></h1>
+<p>Turn an empty room—or the furniture you already own—into a space that works. Explore it in 2D and 3D, arrange it yourself, or ask your assistant to help.</p>
+<div class="hero-links"><a class="btn" href="#studio">Explore the concept ↓</a><a class="btn secondary" href="ROOMEDY.md">Read the detailed blueprint ↗</a></div>
+<p class="note">Planned home: <strong>tryroomedy.com</strong> · A guest demo concept. No account needed.</p>
+</div>
+<div class="studio" id="studio" aria-label="Scripted illustration of the proposed Roomedy room editor">
+<div class="studio-heading"><div><h2>A small room. A better arrangement.</h2><p>Switch the starting point, then try an example request.</p></div><span class="sample-tag">Scripted illustration<br>No live AI or uploads</span></div>
+<div class="controls">
+<div class="segmented" role="group" aria-label="Room starting condition">
+<button data-start="empty" aria-pressed="false">Empty room</button>
+<button data-start="partial" aria-pressed="false">Keep a few pieces</button>
+<button data-start="existing" aria-pressed="true">Rearrange what I own</button>
+</div>
+<div class="segmented" role="group" aria-label="Room representation">
+<button data-view="plan" aria-pressed="false">2D plan</button><button data-view="room" aria-pressed="true">3D concept</button>
+</div>
+</div>
+<div class="workspace">
+<div class="canvas">
+<div class="canvas-top"><strong id="room-label">Existing furniture · 4 pieces</strong><span class="scene-state" id="scene-state">Current room</span></div>
+<div class="scene-wrap" id="scene"></div>
+<div class="canvas-bottom">Fictional measured sample · 3.6 × 4.2 m · wall/window positions are illustrative</div>
+</div>
+<aside class="assistant" aria-label="Illustration of the room assistant">
+<div class="assistant-head"><span class="spark" aria-hidden="true">✧</span><div><strong>Your room, with a little help.</strong><small>Example requests · preview before Apply</small></div></div>
+<p class="assistant-quote" id="request-text">“Move the desk near the window. Keep my bed and wardrobe.”</p>
+<div class="agent-body" id="agent-body" aria-live="polite" aria-atomic="true"><strong id="response-title">Start with the room you have.</strong><p id="response-text">Try an example below. The illustration changes real scene data and lets you apply or undo a proposal.</p><ul class="changes" id="changes" hidden></ul></div>
+<div class="requests" role="group" aria-label="Scripted assistant requests">
+<button id="arrange-request">Desk by the window</button><button id="warm-request">Warmer colours</button><button id="blocked-request">Try a blocked doorway</button>
+</div>
+<div class="action-row"><button class="btn" id="apply" disabled>Apply preview</button><button class="btn secondary" id="cancel" disabled>Cancel</button><button class="btn secondary undo" id="undo" disabled>Undo</button></div>
+<p class="room-meta" id="room-meta">Revision 1 · 4 pieces · no proposal waiting</p>
+</aside>
+</div>
+</div>
+<p class="studio-caption">The room above is a projected SVG illustration, not the planned React Three Fiber app. It demonstrates the interaction; its checks cover footprints, room bounds, locks and the sample doorway only.</p>
+<div class="value-strip">
+<div><strong><span>01</span> Your room, your starting point</strong><p>Empty, partly furnished or already full. Keep what matters.</p></div>
+<div><strong><span>02</span> Two views, one arrangement</strong><p>A clear plan for placement. A cutaway for perspective.</p></div>
+<div><strong><span>03</span> An assistant that can edit</strong><p>See a proposal, understand it, apply it and undo it.</p></div>
+</div>
+<section id="flow">
+<div class="section-head"><div><p class="eyebrow">01 / The visitor journey</p><h2>From “will it fit?”<br>to “this feels right.”</h2></div><p>Open a ready-made sample immediately, or add your own room with guided photo setup. The useful result is a room you can keep adjusting.</p></div>
+<div class="journey">
+<article class="step"><span class="step-number">1</span><h3>Bring a room</h3><p>Choose a sample or add photos. Tell us whether you are furnishing, filling gaps or rearranging.</p></article>
+<article class="step"><span class="step-number">2</span><h3>Check the essentials</h3><p>Review the room and furniture draft. Confirm the dimensions, doors and windows that affect fit.</p></article>
+<article class="step"><span class="step-number">3</span><h3>Tell us what it needs to do</h3><p>A bedroom and home office? More storage? Keep selected pieces and set your preferences.</p></article>
+<article class="step"><span class="step-number">4</span><h3>Explore an arrangement</h3><p>Add supported furniture and inspect the same room in a top-down plan or 3D cutaway.</p></article>
+<article class="step"><span class="step-number">5</span><h3>Ask for a change</h3><p>Let the assistant prepare edits. See affected objects, fit checks and any compromises before Apply.</p></article>
+<article class="step"><span class="step-number">6</span><h3>Make it yours</h3><p>Refine by dragging or chatting. Undo a change, then export the room project to keep working later.</p></article>
+</div>
+<div class="paths">
+<article class="path"><h3>An empty room</h3><p>Choose its purpose and essential furniture. Explore how a bed, desk, chair and wardrobe could work together.</p></article>
+<article class="path"><h3>A room with a few pieces</h3><p>Keep your bed or favourite chair, then add the things that are missing around them.</p></article>
+<article class="path"><h3>The room you already own</h3><p>Rearrange existing furniture. Its confirmed size and your locked positions stay respected.</p></article>
+</div>
+</section>
+<section id="assistant">
+<div class="section-head"><div><p class="eyebrow">02 / The assistant</p><h2>Conversation becomes<br>a change you can see.</h2></div><p>Moving, rotating, adding supported pieces and changing finishes should all be available through the same assistant.</p></div>
+<div class="assistant-flow">
+<div><p class="big-quote">“Keep my bed. Add a desk by the window and leave space to open the wardrobe.”</p><p class="plain">The assistant works with the actual room data and catalogue. The application checks the proposed arrangement and keeps the final result editable.</p><p class="plain">Ask it to highlight a problem, explain a compromise, try another supported item or undo its latest change.</p></div>
+<ol class="flow-list">
+<li><div><strong>Read the current room</strong><p>Dimensions, furniture, openings, locks and your latest edits.</p></div></li>
+<li><div><strong>Prepare and check the changes</strong><p>Use supported actions; test the resulting room against the available geometry and clearance rules.</p></div></li>
+<li><div><strong>Show one coherent preview</strong><p>Inspect proposed positions, changed pieces and anything still uncertain.</p></div></li>
+<li><div><strong>Apply together, undo together</strong><p>A coordinated instruction becomes one reversible change. Newer edits are protected from stale proposals.</p></div></li>
+</ol>
+</div>
+</section>
+<section id="foundation">
+<div class="section-head"><div><p class="eyebrow">03 / A useful, bounded demo</p><h2>The details that<br>make the idea work.</h2></div><p>The first goal is a small room with meaningful choices and a satisfying end-to-end flow. The complete engineering notes live in the Markdown.</p></div>
+<div class="facts">
+<article class="fact"><h3>Photos help with the setup.</h3><p>AI proposes visible furniture and room features. Photos, floor plans and furniture specifications can reduce typing; fit-critical measurements still need review.</p><ul><li>Estimated values remain visibly approximate.</li><li>Correct missed objects directly.</li><li>Use a similar model at the confirmed furniture size.</li></ul></article>
+<article class="fact"><h3>A focused visual foundation.</h3><p>The proposed app uses React Three Fiber with Three.js, a connected 2D plan and a small curated furniture collection.</p><ul><li>Free CC0 sources: Kenney, Quaternius and Poly Haven.</li><li>Adjustable furniture generated from supported parts.</li><li>Guest workspace with project export/import.</li></ul></article>
+</div>
+<div class="closer"><div><strong>One room. A complete story.</strong><p>Detailed flows, assistant actions, measurement rules, framework choices, scope and acceptance—all in one companion blueprint.</p></div><a class="btn" href="ROOMEDY.md">Open the Markdown ↗</a></div>
+</section>
+</main>
+<footer class="footer"><p>Roomedy · tryroomedy.com<br>Prepared 17 October 2026 · product documentation, not an implemented app</p><p>Self-contained illustration. No external libraries, tracking or API calls.<br><a href="ROOMEDY.md#19-research-and-primary-references">Research and technical references ↗</a></p></footer>
+</div>
+<script>
+(function(){
+"use strict";
+var width=3600,depth=4200;
+var base=[
+{id:"bed",name:"Bed",x:100,z:900,w:1400,d:2000,h:490,type:"bed",color:"#b6866c",locked:false},
+{id:"desk",name:"Desk",x:2300,z:1900,w:1200,d:600,h:740,type:"desk",color:"#bb9974",locked:false},
+{id:"chair",name:"Chair",x:2600,z:2600,w:550,d:550,h:850,type:"chair",color:"#547871",locked:false},
+{id:"wardrobe",name:"Wardrobe",x:2300,z:3300,w:1200,d:600,h:2050,type:"wardrobe",color:"#bfa685",locked:true}
+];
+var state={start:"existing",view:"room",revision:1,room:{items:copy(base),warm:false},preview:null,history:[]};
+var scene=document.getElementById("scene");
+function copy(v){return JSON.parse(JSON.stringify(v));}
+function p(x,z,y){return[340+x/width*330-z/depth*250,180+x/width*145+z/depth*180-(y||0)/2600*180];}
+function points(a){return a.map(function(v){return v[0].toFixed(1)+","+v[1].toFixed(1);}).join(" ");}
+function poly(a,fill,stroke,extra){return '<polygon points="'+points(a)+'" fill="'+fill+'" stroke="'+(stroke||"none")+'" stroke-width="1" '+(extra||"")+'/>';}
+function line(a,b,color,w,extra){return '<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="'+color+'" stroke-width="'+(w||1)+'" '+(extra||"")+'/>';}
+function textAt(x,y,t,size,color,extra){return '<text x="'+x+'" y="'+y+'" fill="'+(color||"#34483e")+'" font-size="'+(size||12)+'" font-family="Segoe UI,Arial,sans-serif" '+(extra||"")+'>'+t+'</text>';}
+function shade(hex,f){var n=parseInt(hex.slice(1),16);var r=Math.round((n>>16)*f),g=Math.round(((n>>8)&255)*f),b=Math.round((n&255)*f);return"rgb("+Math.min(255,r)+","+Math.min(255,g)+","+Math.min(255,b)+")";}
+function box(x,z,w,d,y,h,color,outline){
+var a=p(x,z,y),b=p(x+w,z,y),c=p(x+w,z+d,y),e=p(x,z+d,y);
+var at=p(x,z,y+h),bt=p(x+w,z,y+h),ct=p(x+w,z+d,y+h),et=p(x,z+d,y+h);
+return poly([b,c,ct,bt],shade(color,.79),outline||"#0000000d")+poly([e,c,ct,et],shade(color,.91),outline||"#0000000d")+poly([at,bt,ct,et],color,outline||"#ffffff38");
+}
+function furniture3D(o,invalid){
+var border=invalid?"#b5463b":null,out="";
+if(o.type==="bed"){
+out+=box(o.x,o.z,o.w,o.d,0,180,"#876d54",border);
+out+=box(o.x+25,o.z+30,o.w-50,o.d-60,180,210,"#f5efdf",border);
+out+=box(o.x+20,o.z+650,o.w-40,o.d-700,390,105,o.color,border);
+out+=box(o.x,o.z,o.w,90,0,850,"#957758",border);
+out+=box(o.x+120,o.z+150,490,350,390,100,"#fff8ea");
+out+=box(o.x+760,o.z+150,490,350,390,100,"#fff8ea");
+}else if(o.type==="desk"){
+[[45,35],[o.w-95,35],[45,o.d-85],[o.w-95,o.d-85]].forEach(function(t){out+=box(o.x+t[0],o.z+t[1],50,50,0,690,"#6c7567",border);});
+out+=box(o.x,o.z,o.w,o.d,690,50,o.color,border);
+out+=box(o.x+o.w*.4,o.z+o.d*.22,o.w*.25,100,740,230,"#354c4c");
+out+=box(o.x+o.w*.39,o.z+o.d*.58,o.w*.27,120,740,12,"#e9e1cd");
+}else if(o.type==="chair"){
+out+=box(o.x+70,o.z+70,o.w-140,o.d-140,0,425,"#465b51",border);
+out+=box(o.x,o.z,o.w,o.d,425,100,o.color,border);
+out+=box(o.x,o.z+o.d-70,o.w,70,490,350,o.color,border);
+}else{
+out+=box(o.x,o.z,o.w,o.d,0,o.h,o.color,border);
+var a=p(o.x+o.w/2,o.z+o.d,25),b=p(o.x+o.w/2,o.z+o.d,o.h-30);
+out+=line(a,b,"#8e795b",1.2);
+var handle=p(o.x+o.w/2-65,o.z+o.d,1050),handle2=p(o.x+o.w/2+65,o.z+o.d,1050);
+out+=line([handle[0],handle[1]-7],[handle[0],handle[1]+7],"#5d5d4b",2);
+out+=line([handle2[0],handle2[1]-7],[handle2[0],handle2[1]+7],"#5d5d4b",2);
+}
+return '<g>'+out+'</g>';
+}
+function iso(room,invalid){
+var floor=room.warm?"#d9bd99":"#d9d0b9",wall=room.warm?"#e8cdb3":"#e6e4d8",s="";
+s+=poly([p(0,0,0),p(width,0,0),p(width,0,2600),p(0,0,2600)],wall,"#c6c9bb");
+s+=poly([p(0,0,0),p(0,depth,0),p(0,depth,2600),p(0,0,2600)],shade(wall,.94),"#c6c9bb");
+s+=poly([p(0,0),p(width,0),p(width,depth),p(0,depth)],floor,"#b7bea9");
+for(var i=1;i<8;i++)s+=line(p(i*450,0),p(i*450,depth),"#b8aa8e",.6);
+for(var j=1;j<9;j++)s+=line(p(0,j*470),p(width,j*470),"#c1b398",.5);
+s+=poly([p(1650,0,900),p(3050,0,900),p(3050,0,2150),p(1650,0,2150)],"#d7e9e4","#97b5ac");
+s+=line(p(2350,0,900),p(2350,0,2150),"#faf9ec",4);
+s+=line(p(1650,0,1525),p(3050,0,1525),"#faf9ec",4);
+s+=box(1550,0,1600,90,840,60,"#f9f4e6");
+s+=poly([p(200,3300),p(1000,3300),p(1000,depth),p(200,depth)],"#fff9ee66","#ad9c7a",'stroke-dasharray="5 5"');
+var doorlabel=p(600,3850);s+=textAt(doorlabel[0],doorlabel[1],"door",10,"#6c735d",'text-anchor="middle"');
+room.items.slice().sort(function(a,b){return(a.z+a.d/2)-(b.z+b.d/2);}).forEach(function(o){s+=furniture3D(o,invalid&&o.id==="desk");});
+var a=p(0,depth),b=p(width,depth);s+=line([a[0],a[1]+28],[b[0],b[1]+28],"#8b9782",1);s+=textAt((a[0]+b[0])/2,(a[1]+b[1])/2+47,"3.6 m",13,"#4f6558",'text-anchor="middle"');
+if(!room.items.length)s+=textAt(365,325,"Your room starts here.",17,"#627265",'text-anchor="middle"');
+return s;
+}
+function plan(room,invalid){
+var scale=.095,ox=190,oy=50,w=width*scale,d=depth*scale,s="";
+s+='<rect x="'+ox+'" y="'+oy+'" width="'+w+'" height="'+d+'" fill="'+(room.warm?"#e7d0ad":"#e0d6be")+'" stroke="#7b8a77" stroke-width="5"/>';
+for(var x=600;x<width;x+=600)s+=line([ox+x*scale,oy],[ox+x*scale,oy+d],"#c6bca4",.6);
+for(var z=600;z<depth;z+=600)s+=line([ox,oy+z*scale],[ox+w,oy+z*scale],"#c6bca4",.6);
+s+=line([ox+1650*scale,oy],[ox+3050*scale,oy],"#82aaa3",7);
+s+=textAt(ox+2350*scale,oy-13,"window",11,"#526a5f",'text-anchor="middle"');
+s+='<rect x="'+(ox+200*scale)+'" y="'+(oy+3300*scale)+'" width="'+(800*scale)+'" height="'+(900*scale)+'" fill="#fff8e680" stroke="#95876c" stroke-dasharray="4 4"/>';
+s+=line([ox+200*scale,oy+d],[ox+1000*scale,oy+d],"#f4f0e9",8);
+s+=textAt(ox+600*scale,oy+d-15,"door",10,"#6d735d",'text-anchor="middle"');
+room.items.forEach(function(o){
+var px=ox+o.x*scale,pz=oy+o.z*scale,pw=o.w*scale,pd=o.d*scale;
+s+='<rect x="'+px+'" y="'+pz+'" width="'+pw+'" height="'+pd+'" rx="3" fill="'+o.color+'" stroke="'+(invalid&&o.id==="desk"?"#b22d25":"#675e4a")+'" stroke-width="'+(invalid&&o.id==="desk"?3:1)+'"/>';
+if(o.type==="bed"){s+='<rect x="'+(px+8)+'" y="'+(pz+9)+'" width="'+(pw-16)+'" height="31" rx="4" fill="#fff8e9"/>';}
+var tx=px+pw/2,tz=pz+pd/2;
+s+=textAt(tx,tz+3,o.name,11,o.type==="chair"?"#fffef4":"#273a32",'text-anchor="middle"');
+if(o.type!=="chair")s+=textAt(tx,tz+20,(o.w/1000).toFixed(1)+" × "+(o.d/1000).toFixed(1)+" m",9,"#293b32",'text-anchor="middle"');
+if(o.locked)s+=textAt(px+pw-7,pz+13,"fixed",8,"#293b32",'text-anchor="end"');
+});
+s+=line([ox,oy+d+24],[ox+w,oy+d+24],"#82917a",1);
+s+=textAt(ox+w/2,oy+d+43,"3.6 m",13,"#4f6558",'text-anchor="middle"');
+s+=textAt(ox-32,oy+d/2,"4.2 m",13,"#4f6558",'text-anchor="middle" transform="rotate(-90 '+(ox-32)+' '+(oy+d/2)+')"');
+if(!room.items.length)s+=textAt(ox+w/2,oy+d/2,"Add the pieces you need.",15,"#61705f",'text-anchor="middle"');
+return s;
+}
+function intersects(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.z<b.z+b.d&&a.z+a.d>b.z;}
+function validate(candidate){
+var issues=[],items=candidate.items;
+items.forEach(function(o){if(o.x<0||o.z<0||o.x+o.w>width||o.z+o.d>depth)issues.push(o.name+" extends beyond the room.");
+if(intersects(o,{x:200,z:3300,w:800,d:900}))issues.push(o.name+" overlaps the sample doorway area.");});
+for(var i=0;i<items.length;i++)for(var j=i+1;j<items.length;j++)if(intersects(items[i],items[j]))issues.push(items[i].name+" overlaps "+items[j].name.toLowerCase()+".");
+state.room.items.forEach(function(o){var next=items.find(function(t){return t.id===o.id;});if(!next){issues.push("This example keeps existing furniture.");return;}if(o.w!==next.w||o.d!==next.d||o.h!==next.h)issues.push(o.name+" has locked sample dimensions.");if(o.locked&&(o.x!==next.x||o.z!==next.z))issues.push(o.name+" has a fixed position.");});
+return issues;
+}
+function response(title,body,changes,invalid){
+document.getElementById("response-title").textContent=title;
+document.getElementById("response-text").textContent=body;
+document.getElementById("agent-body").classList.toggle("invalid",!!invalid);
+var list=document.getElementById("changes");list.replaceChildren();
+(changes||[]).forEach(function(t){var li=document.createElement("li");li.textContent=t;list.appendChild(li);});
+list.hidden=!(changes&&changes.length);
+}
+function render(){
+var shown=state.preview?state.preview.room:state.room,invalid=!!(state.preview&&state.preview.issues.length);
+scene.innerHTML='<svg viewBox="0 -16 760 560" role="img" aria-labelledby="scene-title scene-desc"><title id="scene-title">'+(state.view==="room"?"Projected room illustration":"Top-down room illustration")+'</title><desc id="scene-desc">Fictional 3.6 by 4.2 metre room, '+shown.items.length+' furniture pieces. '+(state.preview?"Uncommitted preview. ":"Committed sample. ")+'Scripted concept with no AI calls.</desc>'+(state.view==="room"?iso(shown,invalid):plan(shown,invalid))+'</svg>';
+var status=document.getElementById("scene-state");status.textContent=state.preview?(invalid?"Blocked preview":"Preview · not applied"):"Current room";status.className="scene-state"+(state.preview?(invalid?" invalid":" preview"):"");
+document.querySelectorAll("[data-start]").forEach(function(b){b.setAttribute("aria-pressed",String(state.start===b.dataset.start));});
+document.querySelectorAll("[data-view]").forEach(function(b){b.setAttribute("aria-pressed",String(state.view===b.dataset.view));});
+document.getElementById("room-label").textContent=({empty:"An empty room",partial:"A bed to keep",existing:"Existing furniture"})[state.start]+" · "+shown.items.length+" pieces";
+document.getElementById("arrange-request").textContent=state.start==="existing"?"Desk by the window":"Furnish this room";
+document.getElementById("blocked-request").disabled=!state.room.items.some(function(o){return o.id==="desk";});
+document.getElementById("apply").disabled=!state.preview||invalid;
+document.getElementById("cancel").disabled=!state.preview;
+document.getElementById("undo").disabled=!state.history.length;
+document.getElementById("room-meta").textContent="Revision "+state.revision+" · "+state.room.items.length+" committed pieces · "+(state.preview?"preview waiting":"no proposal waiting");
+}
+function request(kind){
+var room=copy(state.room),title="",body="",changes=[],quote="";
+if(kind==="arrange"){
+base.forEach(function(o){if(!room.items.some(function(t){return t.id===o.id;}))room.items.push(copy(o));});
+room.items.forEach(function(o){if(o.id==="desk"){o.x=1900;o.z=120;}if(o.id==="chair"){o.x=2225;o.z=820;}});
+quote=state.start==="existing"?"“Move the desk near the window. Keep my bed and wardrobe.”":state.start==="partial"?"“Keep my bed. Add a desk, chair and wardrobe.”":"“Furnish this bedroom with a bed, desk, chair and storage.”";
+title="An arrangement to explore.";body="The desk and chair sit near the window. Your retained furniture keeps its dimensions and the sample doorway stays clear.";
+changes=[state.start==="existing"?"Move the desk and chair together.":"Add the missing supported furniture.","Check footprints, room bounds and the sample doorway.","Preview now; Apply commits one reversible change."];
+}else if(kind==="warm"){
+room.warm=!room.warm;quote="“Keep the layout and try warmer colours.”";title=room.warm?"A warmer palette.":"Return to the neutral palette.";body="Change the wall and floor colours while keeping every furniture position and dimension.";changes=["Wall and floor finish preview.","Furniture remains unchanged."];
+}else{
+var desk=room.items.find(function(o){return o.id==="desk";});if(!desk)return;
+desk.x=250;desk.z=3500;quote="“Put the desk at the doorway.”";title="This placement needs another idea.";body="The proposed desk overlaps the sample doorway area. Apply stays unavailable; your current room has not changed.";changes=["The conflicting desk is highlighted.","Cancel to return to the current arrangement."];
+}
+var issues=validate(room);state.preview={room:room,issues:issues,revision:state.revision,kind:kind};
+document.getElementById("request-text").textContent=quote;
+response(title,body,issues.length?issues.concat(changes):changes,issues.length>0);render();
+}
+document.querySelectorAll("[data-start]").forEach(function(b){b.addEventListener("click",function(){
+state.start=b.dataset.start;state.revision++;state.preview=null;state.history=[];
+state.room={items:state.start==="empty"?[]:state.start==="partial"?[copy(base[0])]:copy(base),warm:false};
+document.getElementById("request-text").textContent=state.start==="empty"?"“This is an empty bedroom. Help me furnish it.”":state.start==="partial"?"“Keep my bed and help me finish this room.”":"“Move the desk near the window. Keep my bed and wardrobe.”";
+response("Start with the room you have.","This is a fictional measured sample. Try a scripted request to preview a change; your own room would begin with a measurement review.",[],false);render();
+});});
+document.querySelectorAll("[data-view]").forEach(function(b){b.addEventListener("click",function(){state.view=b.dataset.view;render();});});
+document.getElementById("arrange-request").addEventListener("click",function(){request("arrange");});
+document.getElementById("warm-request").addEventListener("click",function(){request("warm");});
+document.getElementById("blocked-request").addEventListener("click",function(){request("blocked");});
+document.getElementById("apply").addEventListener("click",function(){
+if(!state.preview||state.preview.issues.length||state.preview.revision!==state.revision)return;
+state.history.push(copy(state.room));if(state.history.length>20)state.history.shift();state.room=copy(state.preview.room);state.revision++;state.preview=null;
+response("The change is applied.","Both views now show the committed room. Undo will restore the previous arrangement in one step.",["One instruction, one reversible change."],false);render();
+});
+document.getElementById("cancel").addEventListener("click",function(){if(!state.preview)return;state.preview=null;response("Preview cancelled.","Your committed room stays as it was.",[],false);render();});
+document.getElementById("undo").addEventListener("click",function(){if(!state.history.length)return;state.room=state.history.pop();state.revision++;state.preview=null;response("Back to the previous room.","The whole last change has been reversed, including any coordinated furniture edits.",[],false);render();});
+render();
+})();
+</script>
+</body>
+</html>
+
