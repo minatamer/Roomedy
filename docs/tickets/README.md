@@ -1,21 +1,21 @@
 # Roomedy ticket plan
 
 Planning date: **17 October 2026**  
-Plan status: **Approved by owner on 17 October 2026; implementation not authorized**  
+Plan status: **Approved by owner on 17 October 2026; ordered fake-mode execution authorized**  
 Authority: [Roomedy blueprint](../ROOMEDY.md), especially [selected decisions](../ROOMEDY.md#26-decision-register)  
-Current instruction: commit the approved documentation, guidelines and tickets through the [RM-000 file-level plan](../commit-plans/RM-000.md); **do not start implementing**.
+Current instruction: execute and validate tickets in numeric order, stage/commit each completed ticket, use fake mode and stop at required review gates or 0% remaining Codex usage. No paid calls, deployment or push. RM-001 is implemented locally with hosted CI unverified; see its [allocation](../commit-plans/RM-001.md) and [evidence](../validation/RM-001.md).
 
 Owner-requested revision: incorporate lessons from the four referenced visual/manual-test chats before proceeding. Read [repository instructions](../../AGENTS.md), [feedback guidelines and their evidence](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and the [feature/review checklist](../design/REVIEW_CHECKLIST.md). These are requirements for the existing packets, not additional product features or authorization to implement.
 
 ## Why twenty packets
 
-Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. All twenty tickets are **Planned**. No application code, assets, dependencies or runtime configuration has been created by this plan.
+Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 now has verified local evidence; remaining packets are Planned until their own required outcomes are verified.
 
 `RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001–RM-020 commit subjects below are suggestions for future authorized work, not existing implementation commits.
 
 ## Dependency-ordered queue
 
-Every dependency below means its **required local outcome has actual verified evidence**. Paid/hosted/device/owner evidence is tracked separately and never inferred from fake tests. The owner has approved this plan; separate implementation authorization is still required before RM-001 can start.
+Every dependency below means its **required local outcome has actual verified evidence**. Paid/hosted/device/owner evidence is tracked separately and never inferred from fake tests. The owner has approved this plan and now authorizes ordered local execution in fake mode, with per-ticket local commits after validation.
 
 | ID | Complete outcome | Direct dependencies | Milestone / additional gate |
 | --- | --- | --- | --- |
@@ -46,9 +46,9 @@ The normal execution path is numeric order. Dependencies permit local sequencing
 
 | Build phase | Owning work | Required stop |
 | --- | --- | --- |
-| 05-tickets | This index and RM-001–RM-020 | Owner approved the updated plan/guidelines; no implementation now |
+| 05-tickets | This index and RM-001–RM-020 | Owner approved the updated plan/guidelines |
 | 06-plan-commit | Authorized RM-000 documentation commits | Scoped permission supplied; exact paths/checks in the RM-000 plan |
-| 07-build | RM-001–RM-014 local outcomes | Future execution authorization; execute → read-only validate → confirm/fix → revalidate |
+| 07-build | RM-001–RM-014 local outcomes | Authorized fake-mode execute → read-only validate → confirm/fix → revalidate → local commit |
 | 08-performance | RM-015 measurement and scoped fixes | Record evidence and update the actual owning modules; no duplicated performance pass |
 | 09-visual-review | RM-015 presentation of actual frontend | Owner approves as-is, requests a specific revision, or explicitly waives/defers |
 | 10a-quality | RM-016 | Preserve reviewed behavior and private diagnostics |
@@ -57,7 +57,7 @@ The normal execution path is numeric order. Dependencies permit local sequencing
 | 12-handoff | RM-019 | Local completion remains distinct from external acceptance |
 | Later authorized release | RM-020 | Exact paid/cloud/publication/domain scope must be supplied separately |
 
-The [build skill](../../../../.agents/skills/build/SKILL.md) requires ticket-plan, visual and security result checkpoints. The owner's current instruction independently prohibits implementation. The approved ticket plan does not override that prohibition. Local Git authority currently covers only RM-000 documentation/tickets and checkpoint records. A later execution request must settle implementation and any implementation-commit permission; do not extend this documentation-only approval. No push, deployment, purchased asset/domain, paid request or scanner metadata export is authorized here.
+The [build skill](../../../../.agents/skills/build/SKILL.md) requires ticket-plan, visual and security result checkpoints. The owner's latest instruction authorizes ordered fake-mode implementation and local commits after each validated ticket, superseding the earlier hold. Stop at required result gates or reported 0% remaining Codex usage. Do not consume reset credits or continue through paid credits beyond that cutoff. No push, deployment, purchased asset/domain, paid request or scanner metadata export is authorized here.
 
 RM-015–RM-019 are part of the planned delivery, but the build loop must stop at their named checkpoints. RM-020 is an external acceptance packet, not a reason to leave local Dockerfiles, probes or runbooks unwritten. An unavailable funded provider can leave live evidence pending while verified local work continues. A broken local feature, failed mandatory test or missing required local artifact is not an external blocker.
 
@@ -141,4 +141,4 @@ Roomedy separates the late quality execution, security audit and selected securi
 
 ## Review handoff
 
-The owner approved the updated plan and guidelines and requested step-six RM-000 documentation/ticket commits. This approval covers the reviewed packet count/scope, sequencing and guidelines; exact numerical engineering policy, asset preparation and model selection remain future evidence-bearing implementation work. Follow the scoped RM-000 allocation and verification receipt. Implementation, implementation commits, paid/provider testing and hosted changes remain unauthorized.
+The owner approved the updated plan and guidelines and requested step-six RM-000 documentation/ticket commits. This approval covers the reviewed packet count/scope, sequencing and guidelines; exact numerical engineering policy, asset preparation and model selection remain future evidence-bearing implementation work. Follow the scoped RM-000 allocation and verification receipt. The subsequent step-seven request authorizes ordered local implementation/commits in fake mode. Paid/provider testing and hosted changes remain unauthorized.

@@ -1,0 +1,41 @@
+{
+  "name": "roomedy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": "24.19.x",
+    "pnpm": "11.25.0"
+  },
+  "scripts": {
+    "build:shared": "pnpm --filter @roomedy/contracts build && pnpm --filter @roomedy/spatial build",
+    "dev:backend": "pnpm --filter @roomedy/backend dev",
+    "dev:frontend": "pnpm --filter @roomedy/frontend dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "pnpm build:shared && pnpm -r typecheck && tsc --noEmit --project test/tsconfig.json",
+    "check:boundaries": "node scripts/check-boundaries.mjs && node --test scripts/check-boundaries.test.mjs",
+    "test:unit": "node scripts/run-tests.mjs",
+    "test:smoke": "node scripts/smoke-foundation.mjs",
+    "build": "pnpm build:shared && pnpm --filter @roomedy/backend build && pnpm --filter @roomedy/frontend build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:boundaries && pnpm test:unit && pnpm build"
+  },
+  "devDependencies": {
+    "@roomedy/contracts": "workspace:*",
+    "@roomedy/spatial": "workspace:*",
+    "@types/node": "24.19.2",
+    "@types/supertest": "7.2.1",
+    "eslint": "10.13.0",
+    "@next/eslint-plugin-next": "16.4.2",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "prettier": "3.9.10",
+    "supertest": "7.3.1",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.5"
+  }
+}

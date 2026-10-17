@@ -2,11 +2,11 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** approved 20-ticket plan and guidelines recorded in RM-000; implementation remains on hold  
+**Stage:** step-seven ordered fake-mode implementation authorized; RM-001 local outcome implemented; hosted CI unverified  
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
-**Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). All RM-001–RM-020 packets are Planned. The owner approved the updated plan/guidelines and authorized RM-000 documentation/ticket commits only; implementation must not start.
+**Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). The owner approved the updated plan/guidelines, completed RM-000, then explicitly authorized ordered fake-mode execution/validation and local commits after each ticket. RM-001 is implemented locally; hosted CI is unverified; required review gates, no paid calls/deployment and a 0% remaining Codex usage cutoff apply.
 
 **Build guidelines:** [Lessons from the four owner-referenced feedback chats](references/LESSONS_FROM_VISUAL_FEEDBACK.md), [feature/review checklist](design/REVIEW_CHECKLIST.md) and [repository instructions](../AGENTS.md). Apply them during the owning feature, before the final visual/quality/security passes.
 
@@ -16,7 +16,7 @@ Roomedy helps someone furnish an empty room or make the furniture they already o
 
 The important outcome is a room arrangement the visitor can inspect, apply, adjust and undo. A generated before/after image would not establish the product's central promise.
 
-This document replaces the initial draft as the current specification for discussion. The [original Markdown](drafts/2026-10-17/ROOMEDY.md) and [original HTML](drafts/2026-10-17/ROOMEDY_OVERVIEW.html) remain as source history. The application, AI integration, catalogue and layout engine do not exist yet. The companion is an offline scripted SVG concept, with a few illustrative checks; it is neither a React Three Fiber build nor live AI evidence.
+This document replaces the initial draft as the current specification for discussion. The [original Markdown](drafts/2026-10-17/ROOMEDY.md) and [original HTML](drafts/2026-10-17/ROOMEDY_OVERVIEW.html) remain as source history. The RM-001 foundation is implemented locally. The AI integration, catalogue and layout engine remain future tickets. The companion is an offline scripted SVG concept, with a few illustrative checks; it is neither a React Three Fiber build nor live AI evidence.
 
 ## Contents
 
@@ -53,7 +53,7 @@ This document replaces the initial draft as the current specification for discus
 
 ### 1.1 What this document owns
 
-Use the latest explicit owner instruction first, this blueprint second, then an approved scoped implementation packet. The [ticket queue](tickets/README.md) and feedback guidelines are now owner-approved; that approval does not authorize implementation. Reference repos and archived drafts supply evidence and context; they do not transfer product scope, credentials, account approvals or release acceptance. The owner accepted the step-three product recommendations with prices and budget planning deferred; section 26 records that selection and the engineering/verification work still outstanding.
+Use the latest explicit owner instruction first, this blueprint second, then an approved scoped implementation packet. The [ticket queue](tickets/README.md) and feedback guidelines are now owner-approved; the subsequent step-seven request separately authorizes ordered local fake-mode implementation and commits. Reference repos and archived drafts supply evidence and context; they do not transfer product scope, credentials, account approvals or release acceptance. The owner accepted the step-three product recommendations with prices and budget planning deferred; section 26 records that selection and the engineering/verification work still outstanding.
 
 The root README owns the short public story. This document owns product behavior, architecture recommendations and open choices. The HTML owns the readable product summary. App/package READMEs will own actual setup and focused verification when implemented. Root `AGENTS.md` now owns concise documentation-first operating instructions and directs implementers to the feedback lessons/checklist; RM-001 extends it with real commands later. Update the narrowest owning document rather than maintaining several competing specifications. This follows the documentation ownership rules actually read in all four siblings [CB-1, SP-1, RS-1, RT-1].
 
@@ -912,7 +912,17 @@ pnpm build
 pnpm check
 ```
 
-These commands are **planned interfaces**; Roomedy has no package manifest or application commands yet. Do not report them as executed. `pnpm check` should compose settled formatting, lint, types, boundary checks, isolated tests and builds. Shared packages build before apps. Dev and production Next output should remain separate when both workflows need to coexist, following Retailor's practical separation.
+RM-001 establishes these commands; actual results are recorded in [its validation evidence](validation/RM-001.md). `pnpm check` should compose settled formatting, lint, types, boundary checks, isolated tests and builds. Shared packages build before apps. Dev and production Next output should remain separate when both workflows need to coexist, following Retailor's practical separation.
+
+### 22.1.1 RM-001 selected foundation policy
+
+Pinned runtime: Node 24.19.0 (supported 24 LTS line), pnpm 11.25.0; Next 16.4.2/React 19.3.1; Three 0.186.1/Fiber 9.8.2/Drei 10.7.9; TypeScript 6.0.3/Zod 4.6.7/Express 5.3.0; ESLint 10.13.0/typescript-eslint 8.71.2/Prettier 3.9.10/Vitest 5.0.5. TypeScript 7 is deliberately outside this set because the installed linter declares support below 6.1. Public registry peer/engine metadata and official support documentation were checked; see [RM-001 evidence](validation/RM-001.md). This is a reproducible baseline, not a claim of latest-patch security acceptance.
+
+`packages/contracts/src/policy.ts` owns finite enforced starting defaults from §18: 6 photos, 8 MiB each/24 MiB raw total, 16 MP/8000-edge decode sequentially, normalized 2048 edge/2 MiB each/6 MiB total, and a separate **10 MiB prepared provider-request ceiling** (8 MiB Base64 plus 2 MiB context/framing allowance). Furniture/features/actions 40/24/32; current+baseline 512 KiB, project envelope 1 MiB; text 4000 characters, context 40 turns/64 KiB; Undo 20 entries/2 MiB; one proposal and one AI operation; four rounds/16 tools; search 20000 candidates/250 ms/two internal results; assistant/recognition 60/90 seconds; provider output 1 MiB/4096 fragments; two expensive operations per instance. Room edges max 20000 mm, furniture edges 10000 mm, signed centers bounded to ±40000 mm. Foundation public responses are bounded to 16 KiB/256 fragments/3 seconds.
+
+Except the owner-selected fixed two-hour lifetime, these remain **provisional engineering defaults**, not measured capacity. Contracts enforce structure/counts/integers/versions; frontend intake owns decode/normalization (RM-007), bridge/backend transport/admission owns bytes/fragments/deadlines (RM-008), spatial/search owns work/locks/atomic batches (RM-003/009), and the session controller owns history/lifetime/storage (RM-005/012). RM-015 measures practical limits. No metered operation is enabled before admission; the output-token cap/model remain unselected until integration.
+
+Canonical schema version 1 uses X east/Z south/Y up, northwest origin, integer mm, footprint centers, quarter-turns 0–3 and local front +Z. Version labels are `catalogue-v1` and `rectangle-quarterturn-v1`. Unknown measurements carry null value/source; known values carry bounded provenance/source IDs. Confirmation is a semantic label, never authorization. Wire identities cannot carry origin/grants. Model action schemas omit unlock/confirmation; trusted controllers assign command origin, and RM-003 applies starting-state rules. Project/recovery schemas allow only semantic current/baseline and minimal view state, never photos/chat/history/operations/runtime capabilities. Catalogue record resolution and geometry are required in their owning later packets.
 
 ### 22.2 Dedicated ports and startup
 
@@ -936,7 +946,7 @@ Keep framework routes thin, domain functions pure, provider SDK types inside ada
 
 Tests install fake/paid-off configuration and deny external networking before app modules load. Imports must not load local environment, listen or contact providers. Use meaningful boundary/failure behavior tests, rather than tests that merely assert implementation structure. Never point deterministic tests at an already-running live instance.
 
-When implementation is explicitly authorized after ticket-plan review, execute one dependency-ready packet at a time, validate the settled diff read-only, independently confirm findings, fix and revalidate. The [ticket index](tickets/README.md) uses the approved `RM-###` convention. The owner specifically authorized step-six `RM-000` documentation/ticket commits through the [file-level allocation](commit-plans/RM-000.md). That authority does not cover later implementation commits, push or external actions.
+When implementation is explicitly authorized after ticket-plan review, execute one dependency-ready packet at a time, validate the settled diff read-only, independently confirm findings, fix and revalidate. The [ticket index](tickets/README.md) uses the approved `RM-###` convention. The owner specifically authorized step-six `RM-000` documentation/ticket commits through the [file-level allocation](commit-plans/RM-000.md). The later step-seven instruction separately authorizes local implementation commits after validation, in fake mode only. Push and external actions remain unauthorized.
 
 ### 22.5 Efficient iteration, quality and security from prior feedback
 
@@ -1092,7 +1102,7 @@ The selected Before/Current peek is the bounded comparison recommended in Q-05. 
 | D-13 | Bounded shared Undo and read-only baseline selected; Redo deferred | Measure history/byte limits; preserve baseline through selected recovery/export without restoring expired operations/photos |
 | D-14 | No external resource/account/domain operations selected or authorized | Obtain actual owner inputs and authorization only when their owning release/live work requires them |
 
-The owner has answered the product question set; no further product answer is required to describe this scope. Recognition accuracy, geometry, actual visual quality, device performance and provider/hosted outcomes remain unverified. The later step-five request now has an owner-approved [detailed 20-ticket plan](tickets/README.md) with the approved feedback guidelines. Its exact engineering/model/asset choices are evidence-bearing implementation work, not invented owner answers. No application package or implementation has started. The separate step-six request authorizes RM-000 documentation/ticket Git actions only.
+The owner has answered the product question set; no further product answer is required to describe this scope. Recognition accuracy, geometry, actual visual quality, device performance and provider/hosted outcomes remain unverified. The later step-five request now has an owner-approved [detailed 20-ticket plan](tickets/README.md) with the approved feedback guidelines. Its exact engineering/model/asset choices are evidence-bearing implementation work, not invented owner answers. The separate step-six request authorized RM-000 docs only; the subsequent step-seven request now authorizes ordered fake-mode implementation/validation and per-ticket local commits. RM-001 is implemented locally; hosted CI is unverified.
 
 ## 27. Primary research and source register
 
@@ -1209,8 +1219,8 @@ Outstanding application evidence includes all geometry/command tests, real R3F b
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Step six complete: the approved planning snapshot is committed in RM-000 and its scoped checkpoint record closes this documentation task. Wait for the owner before phase 07-build. Do not implement, install dependencies, start services or make RM-001 through RM-020 implementation commits; current Git authority covers RM-000 documentation only. No push, paid/cloud or deployment action.
-Active ticket: none
+Next action: Stage/commit exact validated RM-001 paths, then record the commit and start RM-002. Stop at 0% remaining Codex usage or required owner gates. Fake only, no paid calls/deployment/push.
+Active ticket: RM-001
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1220,7 +1230,7 @@ Local commits approved: yes
 - [x] 04-decisions — Product decisions (complete)
 - [x] 05-tickets — Ticket plan (complete)
 - [x] 06-plan-commit — Planning commit (complete)
-- [ ] 07-build — Execute and validate tickets (pending)
+- [ ] 07-build — Execute and validate tickets (in_progress)
 - [ ] 08-performance — Performance investigation (pending)
 - [ ] 09-visual-review — Frontend visual approval checkpoint (pending)
 - [ ] 10a-quality — Quality audit and fixes (pending)
@@ -1235,7 +1245,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-17T17:43:16+00:00",
+  "updated_at": "2026-10-17T18:05:09+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1348,18 +1358,23 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "RELEVANT_IMPLEMENTATION": {
-      "value": "Documentation-only repository. RM-000 planning snapshot b97db4b927036e9f82d1ab4e44a876797d9ec1c3 commits 33 reviewed files. No application packages, dependency installation, service or implementation exists; phase seven and all implementation tickets remain unstarted.",
-      "source": "Verified Git commit/tree/blob bytes; docs/validation/RM-000.md; explicit current owner implementation hold",
+      "value": "RM-001 local outcome verified: Next/Express foundation, strict browser-safe contracts/pure spatial interfaces, fixed bounded bridge, fake/paid-off isolation and startup. 26 unit tests plus 5 boundary regressions, all local root gates and real local smoke passed. Exact 68-file allocation awaits commit; actual hosted CI/Linux remains unverified.",
+      "source": "docs/validation/RM-001.md; final pnpm check and test:smoke outputs on 17 October 2026",
       "confidence": "confirmed"
     },
     "LOCAL_COMMIT_SCOPE": {
-      "value": "The Git approval flag is scoped ONLY to step-six RM-000 documentation/tickets and their planning/checkpoint records. It is not standing permission for RM-001 through RM-020 implementation commits. No push.",
-      "source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit",
+      "value": "Owner authorizes exact-path local staging and ticket-prefixed commits after each completed validated ticket. Required audit artifacts remain unstaged until security review. No push.",
+      "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
       "confidence": "confirmed"
     },
     "IMPLEMENTATION_AUTHORIZATION": {
-      "value": "Explicitly withheld: do not start implementing yet. After step six, wait for the owner to request/authorize the implementation phase; no application package, dependency install, service or live provider work may start from this approval.",
-      "source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit",
+      "value": "Phase seven explicitly authorized: execute and validate the ordered approved tickets locally in fake/paid-off mode; stop at required owner review gates. Supersedes the earlier implementation hold for this scope only.",
+      "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
+      "confidence": "confirmed"
+    },
+    "USAGE_STOP_POLICY": {
+      "value": "Stop at reported 0% remaining, check between tickets; latest 86% used/14% remaining weekly. No reset-credit use or continuation on paid credits. Required owner gates may stop earlier.",
+      "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build; get_usage_limits after RM-001 validation",
       "confidence": "confirmed"
     }
   },
@@ -1369,8 +1384,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": null,
-  "next_action": "Step six complete: the approved planning snapshot is committed in RM-000 and its scoped checkpoint record closes this documentation task. Wait for the owner before phase 07-build. Do not implement, install dependencies, start services or make RM-001 through RM-020 implementation commits; current Git authority covers RM-000 documentation only. No push, paid/cloud or deployment action.",
+  "active_ticket": "RM-001",
+  "next_action": "Stage/commit exact validated RM-001 paths, then record the commit and start RM-002. Stop at 0% remaining Codex usage or required owner gates. Fake only, no paid calls/deployment/push.",
   "phases": [
     {
       "id": "01-docs",
@@ -1634,10 +1649,35 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "07-build",
       "name": "Execute and validate tickets",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
-      "evidence": [],
-      "blockers": [],
+      "status": "in_progress",
+      "prompt": {
+        "text": "ok let's start step seven. execute and validate the tickets in order, follow the guidelines, and stage and commit after each. use fake mode and stop at the required review gates. no paid calls or deployment.\n\ndo this till u hit 0% codex usage then u must stop.",
+        "sha256": "de39f37a60901030e652540c667516b426afdbaaf95908e36d044a7c9566189e",
+        "context_sources": [
+          "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
+          "docs/tickets/README.md ordered queue and named gates",
+          "docs/ROOMEDY.md sections 8,14-18,21-24; AGENTS.md and feedback guidelines",
+          "build/references/prompts.md phase 07, execute/SKILL.md and validate/SKILL.md"
+        ],
+        "status": "approved",
+        "approval": {
+          "quote": "ok let's start step seven. execute and validate the tickets in order, follow the guidelines, and stage and commit after each. use fake mode and stop at the required review gates. no paid calls or deployment.\n\ndo this till u hit 0% codex usage then u must stop.",
+          "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
+          "scope": "Direct owner-authored phase-seven instruction authorizes ordered local execution, validation and ticket-prefixed staging/commits in fake mode. Stop at required result review gates or reported 0% remaining Codex usage. No paid calls, deployment, push, reset-credit consumption or delegation."
+        }
+      },
+      "evidence": [
+        "docs/commit-plans/RM-001.md: exact 68-file allocation before implementation and scoped additions",
+        "docs/validation/RM-001.md: final pnpm check passed, 26 unit/5 boundary regressions, actual local smoke/cleanup passed, zero metered calls, revalidation no actionable local findings",
+        "RM-001 required local outcome implemented; actual GitHub workflow/Linux remains unverified. Codex usage 86% used / 14% remaining."
+      ],
+      "blockers": [
+        {
+          "kind": "external",
+          "reason": "Actual hosted GitHub/Linux workflow execution is unverified; no push was authorized.",
+          "reference": "docs/validation/RM-001.md"
+        }
+      ],
       "approval": null,
       "decision": null,
       "reviews": []

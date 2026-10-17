@@ -1,6 +1,6 @@
 # RM-001 — Initialize the workspace, contracts and safe runtime
 
-Status: **Planned**  
+Status: **Implemented locally — external evidence pending**  
 Planning date: **17 October 2026**  
 Milestone: **Foundation**  
 Depends on: None  
@@ -46,16 +46,16 @@ Extend the existing documentation-only AGENTS.md with actual commands when the f
 
 ## Acceptance criteria
 
-- [ ] Frozen-lockfile installation and both minimal apps' documented local builds work on the selected supported runtime.
-- [ ] Shared contracts build in browser and backend consumers; spatial remains pure and browser-safe.
-- [ ] Executable boundary checks reject illegal cross-app, platform, provider and client/server imports.
-- [ ] Canonical room/provenance/command/project schemas and finite policy are documented with exact selected or provisional values.
-- [ ] Health, readiness and config distinguish process health from unavailable AI and expose no private configuration.
-- [ ] Importing factories/contracts has no environment, listener, storage or provider side effects.
-- [ ] Fake/paid-off tests withstand inherited live flags and record zero metered dispatches.
-- [ ] Established root commands and CI run meaningful no-key checks; no app spending or deployment is enabled implicitly.
-- [ ] Documented hot reload and scoped backend startup preserve configured manual runtime mode while automated tests independently remain fake/paid-off.
-- [ ] Existing owner guidelines survive foundation setup; deterministic checks do not depend on the current freshness of historical image evidence.
+- [x] Frozen-lockfile installation and both minimal apps' documented local builds work on the selected supported runtime.
+- [x] Shared contracts build in browser and backend consumers; spatial remains pure and browser-safe.
+- [x] Executable boundary checks reject illegal cross-app, platform, provider and client/server imports.
+- [x] Canonical room/provenance/command/project schemas and finite policy are documented with exact selected or provisional values.
+- [x] Health, readiness and config distinguish process health from unavailable AI and expose no private configuration.
+- [x] Importing factories/contracts has no environment, listener, storage or provider side effects.
+- [x] Fake/paid-off tests withstand inherited live flags and record zero metered dispatches.
+- [ ] Established root commands and CI run meaningful no-key checks; no app spending or deployment is enabled implicitly. **Local commands and workflow definition pass; actual hosted CI execution remains unverified without an authorized push.**
+- [x] Documented hot reload and scoped backend startup preserve configured manual runtime mode while automated tests independently remain fake/paid-off.
+- [x] Existing owner guidelines survive foundation setup; deterministic checks do not depend on the current freshness of historical image evidence.
 
 ## Focused verification and evidence
 
@@ -71,3 +71,5 @@ Extend the existing documentation-only AGENTS.md with actual commands when the f
 ## Handoff and limits
 
 Record installed versions, selected coordinate/schema policy, actual commands and local results in the execution evidence when performed. RM-002/003 consume these contracts; RM-007/008/015 refine measured policy through the same module. No geometry accuracy, photo interpretation, production capacity or paid/hosted acceptance is established by this foundation. No implementation or Git action is authorized by this planned ticket alone.
+
+Execution: [file allocation](../commit-plans/RM-001.md), [validation and exact evidence](../validation/RM-001.md). Required local outcome passed on 17 October 2026; next dependent work may proceed. No paid/live/hosted/visual acceptance is inferred.

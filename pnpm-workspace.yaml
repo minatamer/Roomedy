@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+minimumReleaseAge: 1440
+engineStrict: true
+saveExact: true
+autoInstallPeers: false
+strictPeerDependencies: true
+verifyDepsBeforeRun: error
+allowBuilds:
+  esbuild@0.28.2: true
+  unrs-resolver@1.12.2: true

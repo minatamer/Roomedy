@@ -1,0 +1,10 @@
+pnpm-lock.yaml
+node_modules
+dist
+.next
+.next-dev
+coverage
+docs/
+README.md
+AGENTS.md
+apps/*/next-env.d.ts
