@@ -45,6 +45,14 @@ Read actual search, transport, controller and recognition evidence. Reuse the on
 
 Provide friendly task-oriented responses and clickable canonical-object cards using available catalogue/source imagery honestly. Chat needs reachable sticky composition, accessible compact Send, Enter/Shift+Enter and IME-safe submission without scrollbar overlap. Optional tour cards/highlights wait for actual layout/scroll readiness and reveal together; preserve the selected optional policy. Verification should not interrupt every message with a needless modal.
 
+## Approved plan refinements — 17 October 2026
+
+**Application-owned mutation scope and grounded assistance.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-07/PR-10 and O-03. Capture an application-owned action/target/add/replace/remove scope from the selected action and resolved request; an unlocked object alone grants no request scope. Clarify true ambiguity and disclose necessary desk/chair coordination. Enforce scope in tools and again on Apply; model arguments cannot widen it. A finish request preserves geometry, targeted moves preserve unrelated furniture/finishes, and rearrange-owned never adds/replaces. Favor less change after satisfying the requested goal.
+
+Use explicit strict serial tool calling and one correlated final application-owned batch with foreground `store: false` and bounded supplied context. Keep computed facts independent of provider prose/schema conformance. Select a relevant next measurement from rule dependencies; avoid an exhaustive questionnaire. Per-fact physical evidence, planned placement and observed-photo measurement remain distinct, with truthful representation limitations.
+
 ## Acceptance criteria
 
 - [ ] Assistant context/tools are bounded, grounded in current semantic data and use shared provider/admission policy.
@@ -57,6 +65,12 @@ Provide friendly task-oriented responses and clickable canonical-object cards us
 - [ ] No prices, visitor-budget planning, retail sourcing, direct arbitrary code or silent fake fallback is introduced.
 - [ ] Composer, keyboard/touch submission and canonical-object card focus work across normal/narrow/panel states without losing draft text or shrinking the room unusably.
 - [ ] Optional tour and quiet-verification states are coherent and skippable/recoverable while all server/command controls remain enforced.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Desk/finish/rearrange-owned requests enforce their exact allowed action/target scope at preparation and Apply, preserving unrelated unlocked state and explaining coordinated changes.
+- [ ] Captured fake requests use compatible strict serial/stateless schemas; one final batch remains grounded in actual rule coverage and per-fact evidence.
+- [ ] Measurement prompts target a relevant missing dependency; unrelated unknown fields do not block supported exploration or cause invented confirmation.
 
 ## Focused verification and evidence
 

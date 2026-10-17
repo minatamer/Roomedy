@@ -43,6 +43,14 @@ Require RM-007's actual supported-image/review path and RM-008's enforced dispat
 
 A missed cross-photo match or incomplete visible structure normally remains a correctable draft, not a whole-operation failure. Distinguish it from malformed/refused/timeout outcomes and never erase newer corrections or navigate away simply because grouping was imperfect. Add bounded private decision-stage/code/count/reference diagnostics that distinguish provider hypotheses from reconciliation and rejection without retaining raw provider output.
 
+## Approved plan refinements — 17 October 2026
+
+**Evidence-grounded recognition and a correction-safe draft.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-02/PR-06/PR-09/PR-10 before integration. Return bounded observations/entities/associations and resolve frame/scale through the shared review contract, not direct provider-authored canonical IDs or confirmed poses. Wall/mechanism/hinge/pose evidence is explicit. Ambiguous duplicate matching and contradictory wall associations remain correctable. Preserve reviewed values and deliberate planned positions across fresh requests and dependent draft re-estimation. Use provider-compatible strict schema projection and foreground `store: false` transport; account/model retention remains a documented prerequisite, not a deletion promise.
+
+Use the early independent corpus/rubric skeleton: repeated item versus two identical pieces, reorder/orientation/missing-view perturbations, unobserved features and false confirmation. O-01 permits only an observation-adapter seam; no geometry model download, GPU runtime or benchmark execution in this packet.
+
 ## Acceptance criteria
 
 - [ ] Explicit draft action alone can dispatch recognition through shared admission/transport; selection and review edits cost zero calls.
@@ -55,6 +63,12 @@ A missed cross-photo match or incomplete visible structure normally remains a co
 - [ ] Raw photos/drafts/private filenames/provider payloads do not enter persistence, export or logs.
 - [ ] Usable incomplete/missed-match results stay in rough 2D review with manual repair, while unusable/technical failures remain distinct and preserve selected work.
 - [ ] Safe backend-only decision diagnostics explain the processing stage/outcome without photos, filenames, room/chat text or whole provider payloads.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Recognition emits bounded reviewable observations/entities/frame/scale evidence; similar distinct pieces and contradictory associations cannot silently corrupt accepted identities.
+- [ ] Photo order/orientation/missing-view and late measurement corrections preserve current 2D review and honest per-fact uncertainty under the declared rubric.
+- [ ] Actual provider-schema projection and captured fake strict/stateless request policy are checked; no live quality/zero-retention or reconstruction claim is inferred.
 
 ## Focused verification and evidence
 

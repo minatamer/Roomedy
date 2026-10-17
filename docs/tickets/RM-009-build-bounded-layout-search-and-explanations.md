@@ -43,17 +43,31 @@ Use actual RM-003 rules and controller fences. Keep worker effects outside the p
 
 Search runs under named finite policy without freezing active room interaction. Expose useful computed trade-offs and honest exhaustion, not a new collection of solver settings, percentages or debug controls. Approximate inputs remain labelled and do not make a valid result appear certified.
 
+## Approved plan refinements — 17 October 2026
+
+**Request-local scope and reproducible useful search.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-07/PR-08. Capture application-owned allowed action kinds, target IDs and add/replace/remove scope from the selected/resolved request; an unlocked unrelated piece is not automatically an authorized target. Disclose necessary coordinated desk/chair changes. Rank valid targeted candidates by goal satisfaction, then fewer changed pieces/lower displacement before decorative preferences.
+
+Guarantee deterministic ordering/results for fixed work and a seed. Deadline-limited runs record visited work and termination reason; different devices may finish different prefixes. Use pure incremental search state with scheduling outside the package, or a measured equivalent: browser worker and yielding/offloaded backend work so health/cancellation stay responsive. Prefer goal/wall/opening candidate ordering/pruning before a broad grid. Require actual improvement on independently known feasible cases, not merely a valid arrangement; exhaustion remains bounded, never an impossibility proof.
+
 ## Acceptance criteria
 
 - [ ] Supported empty/partial/rearrange goals produce typed candidates through shared rules without direct state mutation.
 - [ ] Retained dimensions, starting locks and no-additions goals remain invariant during search.
-- [ ] Deterministic seeds and versions give stable bounded results for the same input.
+- [ ] Deterministic seeds/versions give stable ordering and fixed-work results; deadline-limited runs report their visited prefix and termination reason.
 - [ ] Every returned candidate passes the complete shared validator and carries computed trade-offs/unknowns.
 - [ ] Candidate/time/memory/result bounds terminate work and explain exhaustion honestly.
 - [ ] Browser work runs off the pointer path and cancellation/supersession rejects late results.
 - [ ] Backend use revalidates input/candidates through the same package under independent bounds.
 - [ ] Only one proposal is exposed to the visitor; no multi-candidate comparison or price/budget goal is introduced.
 - [ ] Near-limit search/cancel preserves usable interaction and reports bounded exhaustion without new visitor-facing debug controls or invented fit claims.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Targeted desk/appearance requests preserve unrelated unlocked objects/finishes; explicit rearrange-owned scope forbids add/replace and necessary coordination is disclosed.
+- [ ] Fixed-work replay is reproducible; deadline output records visited prefix/reason without claiming device-independent identical candidates.
+- [ ] Maximum bounded backend search preserves health/cancellation responsiveness; known feasible tight-room stories produce measured relevant goal improvement through the full validator.
 
 ## Focused verification and evidence
 
@@ -63,7 +77,7 @@ Search runs under named finite policy without freezing active room interaction. 
 | Kept bed and fixed wardrobe; add desk | Exact dimensions/locks preserved and no illegal replacement |
 | Rearrange owned pieces | Same item identities/count/catalogue membership after candidate generation |
 | Desk near window versus protected doorway | Hard blocker wins; measured preference trade-off is explained |
-| Same input/seed; bound exhaustion | Stable output and correct termination reason/candidate count |
+| Same input/seed at fixed work; deadline exhaustion | Fixed-work stable output; deadline visited prefix and correct termination reason/count |
 | Worker reset/manual edit/new goal during search | No stale proposal, leaked worker or delayed UI mutation |
 | Candidate tampered before backend/tool use | Shared validation rejects despite claimed pass flags |
 

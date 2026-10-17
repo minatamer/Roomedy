@@ -45,6 +45,12 @@ Read the complete reviewed report, precise finding IDs/versions, actual current 
 
 Use the smallest compatible correction for selected findings and preserve functionality/motion/private diagnostics. Quiet UI must not weaken server controls, and a dependency advisory must not trigger an unrelated platform rewrite. Approval in Retailor is not a finding selection here; preserve all unselected dispositions.
 
+## Approved plan refinements — 17 October 2026
+
+**Selected fixes preserve approved product and evidence.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Any selected correction preserves the refined physical/provenance/coordinate/replay/request-scope and provider/admission/deadline contracts, deliberate active motion and documented expiry behavior. Refresh affected per-feature visual/performance and stale-client/Linux proof only where materially invalidated. The earlier plan-refinement approval selects no future SEC finding and authorizes no GPU/model download, paid call, account change or deployment.
+
 ## Acceptance criteria
 
 - [ ] Exact trusted finding selection/report scope is recorded before any remediation.
@@ -56,6 +62,10 @@ Use the smallest compatible correction for selected findings and preserve functi
 - [ ] Relevant release proof and any materially affected owner review are marked for refresh.
 - [ ] No cloud/vendor/account action, paid request, scanner export or unrelated Git action is inferred from finding selection.
 - [ ] Selected remedies remain proportionate to the demonstrated issue and do not introduce unrequested infrastructure or weaken behavior/verification for presentation.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Selected-fix regressions preserve approved refined contracts and refresh materially affected evidence; plan-review approval is never substituted for explicit current security finding selection.
 
 ## Focused verification and evidence
 

@@ -2,9 +2,11 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** step-seven ordered fake-mode implementation authorized; RM-001 local outcome implemented; hosted CI unverified  
+**Stage:** approved plan refinements adopted; ordered fake-mode execution resumes at unfinished RM-003; RM-001/RM-002 committed; hosted CI unverified  
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
+
+**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-003 remains partial/unvalidated until its execution checks pass; dated historical checkpoints below remain historical.
 
 **Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). The owner approved the updated plan/guidelines, completed RM-000, then explicitly authorized ordered fake-mode execution/validation and local commits after each ticket. RM-001 is implemented locally; hosted CI is unverified; required review gates, no paid calls/deployment and a 0% remaining Codex usage cutoff apply.
 
@@ -55,7 +57,7 @@ This document replaces the initial draft as the current specification for discus
 
 Use the latest explicit owner instruction first, this blueprint second, then an approved scoped implementation packet. The [ticket queue](tickets/README.md) and feedback guidelines are now owner-approved; the subsequent step-seven request separately authorizes ordered local fake-mode implementation and commits. Reference repos and archived drafts supply evidence and context; they do not transfer product scope, credentials, account approvals or release acceptance. The owner accepted the step-three product recommendations with prices and budget planning deferred; section 26 records that selection and the engineering/verification work still outstanding.
 
-The root README owns the short public story. This document owns product behavior, architecture recommendations and open choices. The HTML owns the readable product summary. App/package READMEs will own actual setup and focused verification when implemented. Root `AGENTS.md` now owns concise documentation-first operating instructions and directs implementers to the feedback lessons/checklist; RM-001 extends it with real commands later. Update the narrowest owning document rather than maintaining several competing specifications. This follows the documentation ownership rules actually read in all four siblings [CB-1, SP-1, RS-1, RT-1].
+The root README owns the short public story. This document owns product behavior, architecture recommendations and open choices. The HTML owns the readable product summary. App/package READMEs will own actual setup and focused verification when implemented. Root `AGENTS.md` owns concise operating instructions, current RM-001 commands and directions to the feedback lessons/checklist. Update the narrowest owning document rather than maintaining several competing specifications. This follows the documentation ownership rules actually read in all four siblings [CB-1, SP-1, RS-1, RT-1].
 
 ### 1.2 Decision vocabulary
 
@@ -75,9 +77,11 @@ The root README owns the short public story. This document owns product behavior
 
 **Recommended baseline:** a rectangular single-room first release, a small curated/procedural catalogue, Next.js/React/TypeScript, a separate Express API, shared browser-safe contracts and a pure spatial engine, browser-owned guest state, server-side GPT integration, and two Cloud Run application services when deployment is authorized.
 
-**Evidence required:** all application behavior. No recognition accuracy, geometric reliability, solver quality, device performance, provider latency, paid cost, domain registration or deployment result has been established for Roomedy.
+**Evidence required:** remaining application behavior and all amended contract checks. RM-001/002 have dated local evidence; unfinished RM-003 has no final validation. Recognition accuracy, complete geometric reliability, solver quality, device performance, provider latency/cost, domain and hosted outcomes remain unverified.
 
 The owner's product decision was: “ok let's leave prices and budget planning out for now. use your recommendations for the rest and update the docs.” This accepted the reviewed product recommendation set and documentation update. The later step-five instruction separately authorized detailed ticket creation using actual reference repos and explicitly prohibited implementation. Neither instruction grants local Git staging/commits, paid calls or publication. Build progress preserves both scopes; visual acceptance still requires a later review of the implemented interface.
+
+**Approved engineering refinement, 17 October 2026:** the owner said: “ok i approve the recommendations. update the docs and tickets, then resume RM-003 and continue in order. use fake mode, validate and commit each ticket, and stop at review gates or 0% usage. no paid calls or deployment.” Source: `human:current-chat/2026-10-17/approve-review-and-resume-ordered-build`. This adopts PR-01–PR-15 and the stated O dispositions into the existing packets. It does not approve actual visual results, select future security findings, authorize external work or retroactively verify amended requirements.
 
 ## 2. Product promise and scope
 
@@ -156,6 +160,8 @@ The navigation, hero message, main visual and CTA should compose within the init
 
 Below the hero, explain three capabilities: start with the room you have; explore one arrangement in two views; ask for a change you can review. A brief measurements/privacy explanation and the three starting conditions are enough. Avoid a long feature checklist or framework names in the main visitor journey.
 
+Establish the actual RM-004/005 palette/type/padding/panel hierarchy as a small internal visual baseline, with inspected short-laptop and narrow states. Later features use that evidence without creating another owner gate. The automatic scripted landing sequence finishes and settles within five seconds with stable readable text. Deliberate user-triggered motion remains smooth; the selected active-motion policy does not require perpetual decoration.
+
 ### 4.2 Progressive entry
 
 `/` is the landing and `/demo` is the recommended guest workspace route. Inside entry, first choose **Use a sample room** or **Add my room**. Then establish whether it is empty, partly furnished or already furnished. These are separate decisions; six competing hero CTAs would make the first step harder.
@@ -229,6 +235,10 @@ Unknown/occluded walls, hidden furniture and unreliable depth cannot become conf
 
 After a manual move, the room document changes once and both views reflect it. An assistant request uses a snapshot of that current document, prepares supported actions, validates the whole candidate and presents a preview. Apply commits that batch once; Undo restores the previous semantic arrangement as a new revision. Failed recognition can fall back to manual setup, and a sample room skips photo drafting/measurement entry using its authored data. Guest recovery/export follow the owner-selected two-hour semantic-room policy in section 17.
 
+**Approved uncertain-draft contract (PR-06):** separate bounded per-photo observations from candidate physical entities, with allow-listed source IDs, finite associations and application-owned stable identities. A cross-photo match remains reviewable: one desk in two photos and two identical desks are different cases. Resolve one rectangle frame, wall associations and scale explicitly. An unresolved fact may have an estimated sketch display value, never an invented confirmed millimetre value. Merge/split/add/remove review preserves visitor corrections and available source references. A later wall/width/depth correction preserves confirmed values and deliberate placements, recomputes only dependent draft estimates and highlights contradictions; never silently rescale the whole inventory.
+
+Prepare a small independent rights-safe corpus/rubric skeleton in the intake/recognition work before tuning. RM-013 owns its complete executable evaluation. O-01 keeps only this observation-adapter boundary; reconstruction model downloads, GPU services, benchmark execution and deployment remain deferred.
+
 ## 6. Intake and measurement confidence
 
 ### 6.1 Accepted inputs and deliberate choices
@@ -261,11 +271,15 @@ Use provenance for each dimension and opening location, not one blanket `roomCon
 
 For exploration, an unknown value may have a separate estimated display value. Never store the estimate as confirmed merely to satisfy a numeric schema. Only an explicit visitor confirmation action or a clearly authored sample may create confirmed provenance. The assistant may request confirmation but cannot manufacture it.
 
+The same evidence rule applies to pose/rotation/front, wall association, hinge and mechanism, not just dimensions. Store a bounded source/review representation and keep unknown associations explicit. Deliberate **planned** placement is distinct from confirmation of the original photographed position. Each check depends on all relevant facts, including room dimensions, and reports assessed/approximate/unassessed coverage; no emitted issue is not itself proof of a pass. Imported labels or loss of a source image cannot authenticate physical evidence.
+
 ### 6.3 Targeted measurement review
 
 Ask “How long is this wall?”, “How wide and deep is the desk?”, “Which side is the hinge?” or “How high is the sill?” next to the highlighted feature. Show metres/centimetres or a selected display unit, while storing one canonical unit. Bed mattress size may differ from the frame footprint; wardrobe depth may exclude handles or open doors.
 
 Correcting a confirmed measurement is an explicit room change. It increments revision and recomputes dependent diagnostics. If furniture no longer fits after an honest correction, show the conflict; do not silently move objects or enlarge the room. Keep recognition drafts separate until accepted into the room.
+
+Use O-03's small deterministic relevance policy: ask for the missing value that affects the current requested decision/check. Sill height matters to a desk under a window; an unrelated unknown need not block a different move. No calibrated confidence percentage or exhaustive questionnaire is added.
 
 ### 6.4 Future scan context
 
@@ -294,6 +308,8 @@ Pointer motion updates a transient drag state. Pointer-up produces one validated
 
 Door/window editing uses named wall, along-wall offset and dimensions, with a visible hinge/direction choice when applicable. A feature's appearance must agree with its validation geometry. A fixed obstacle is part of room data, not decoration.
 
+Trusted visitor controls add/remove a missed/false opening and correct wall, hinge and mechanism through the shared evaluator, with typed targets and explicit source/review intent. These are physical-description corrections, not assistant-authorized renovation. A true correction can reveal a conflict without being falsified. Pointer/numeric/snap controls preserve half-millimetre centres, and a drag records planned placement rather than measured photo truth.
+
 ### 7.3 Layout by viewport
 
 On desktop, use a narrow tool rail, dominant canvas, optional inspector and compact conversational panel. On tablets, collapse secondary panels while retaining the canvas and selected-item summary. On phones, use one focused canvas with bottom sheets/drawers for catalogue, properties, checks and chat; do not compress desktop columns into unreadable strips.
@@ -304,7 +320,7 @@ Opening one panel should not cover Apply/Cancel or the selected object without a
 
 ### 8.1 Recommended canonical conventions
 
-Use finite bounded integer millimetres for physical dimensions and placements. Display conversion belongs at the UI boundary; convert millimetres to Three.js metres once at the rendering boundary. Use the floor plane as X/Z, up as Y, and the room's northwest plan corner as `(0, 0)` for X/Z. Declare positive directions consistently in plan and 3D adapters.
+Use finite bounded integer millimetres for physical dimensions and half-millimetre increments for furniture centres. Odd-size objects therefore support exact contact: a 1501 mm span from 0 to 1501 has centre 750.5 mm. Keep the wire value bounded and exact; doubled-integer arithmetic may be used internally. An arbitrary collision epsilon must not conceal a quantization defect. Display conversion belongs at the UI boundary; convert millimetres to Three.js metres once at the rendering boundary. Use the floor plane as X/Z, up as Y, and the room's northwest plan corner as `(0, 0)` for X/Z. Declare positive directions consistently in plan and 3D adapters.
 
 Recommend furniture pose at the footprint center, with `quarterTurns` in `0..3`. Width and depth describe the catalogue's unrotated local axes. Rotate corners around the center; quarter-turns swap world-aligned extents. The local front direction must be recorded for access/swing geometry. Reject unsupported rotations instead of rounding them silently. These coordinate conventions are the engineering baseline; define and test the final contract during foundation implementation.
 
@@ -362,11 +378,15 @@ This abbreviated example describes shape and provenance; it is not a complete va
 
 The illustrative companion uses a simpler corner-based SVG model inherited from the draft. It is expressly separate from this proposed center-pose runtime contract; do not copy that illustration's coordinates directly into production fixtures without conversion and independent tests.
 
+The abbreviated JSON above shows coordinate fields only; it omits the full bounded pose/feature evidence and must not be copied as the complete current wire contract. Pose evidence includes unknown/estimated/extracted/scan-derived/confirmed and deliberate planned placement; wall/mechanism/hinge evidence and unknown wall association remain explicit. RM-003 documents and tests the selected full fields, rather than treating precise arithmetic as proof of input confidence.
+
 ### 8.4 Structural validity versus arrangement quality
 
 Structural validity means supported schema, unique IDs, finite bounds, valid catalogue references and coherent feature relationships. Arrangement validity concerns containment, collisions and modeled access. A structurally valid imported description can still document an awkward real room.
 
 Do not execute imported scripts, remote asset URLs, HTML or embedded code. Reject unsupported schema versions with a useful message. Migrations must be explicit, bounded and tested. Imported provenance is user-supplied evidence, not an authenticated survey or permission to bypass domain locks. Generate a new active workspace identity/generation rather than restoring operation capabilities from an export.
+
+An owned item's bounded true physical size is valid independently of its current asset's supported representation range. Keep geometry, ID, ownership and reviewed dimensions intact; use an eligible procedural representation or explicitly limited semantic placeholder when needed. Offered new/replacement catalogue variants still obey their supported size policy. Never shrink a true measurement or stretch a detailed fixed mesh silently. Targets are explicitly typed or cross-kind IDs unique, including the room, so feature/furniture/room corrections cannot collide.
 
 ## 9. Commands, previews, Apply and Undo
 
@@ -375,6 +395,8 @@ Do not execute imported scripts, remote asset URLs, HTML or embedded code. Rejec
 Manual edits, accepted intake corrections and assistant proposals use the same pure command evaluator. The model cannot mutate browser state directly. Commands are allow-listed operations with typed payloads, not arbitrary JSON patches or executable code. Inject identifiers/time where needed; the pure spatial engine performs no network, storage, environment or rendering work.
 
 A command envelope should identify command ID, room ID, expected revision, schema/rules/catalogue versions, origin assigned by trusted application code, and a bounded list of actions. Capture the pre-change state needed for Undo within the history byte budget. Never allow a model to designate its own changes as visitor-confirmed measurements.
+
+Application-owned request scope limits action kinds, target IDs and add/replace/remove permission in addition to locks. An unrelated unlocked item is not implicitly authorized by “move my desk.” Resolve ambiguous references, disclose necessary desk/chair coordination, and preserve unrelated geometry/finishes. Tool arguments cannot widen scope. Recheck scope on Apply; whole-room rearrangement requires the explicit whole-room goal.
 
 ### 9.2 Proposal lifecycle
 
@@ -408,6 +430,8 @@ Every asynchronous result belongs to a workspace ID, generation, input room revi
 One pending scene proposal is recommended. A manual edit cancels it or marks it stale before committing. A newer request supersedes prior preparation. Abort obsolete requests/solver work where possible and ignore late results even when remote cancellation cannot be confirmed. Cancellation does not guarantee zero provider cost after dispatch.
 
 Applying the same command ID twice returns the existing receipt or a safe already-applied state, never duplicate furniture. Bind the receipt to room identity and exact candidate payload. A browser refresh must not automatically replay a metered request or pending Apply.
+
+Use a finite recent exact-payload replay cache with a monotonic positive command sequence/high-water mark for the active workspace. Retired old sequences reject as stale; they never regain execution authority after cache eviction. Recent same-sequence/same-payload duplicates remain idempotent, including after Undo; a reused sequence with different payload rejects. No-op sequences retire safely without permanently exhausting the editor. Undo does not rewind the high-water sequence. Keep local command retirement separate from metered server-grant accounting.
 
 ### 9.5 Undo semantics
 
@@ -443,6 +467,8 @@ Use strict positive-area overlap with an explicit tolerance/contact policy; touc
 
 Semantic footprints may intentionally include physical frames/handles. Access zones are additional functional areas, not solid furniture. Vertical relationships matter: a chair can tuck under a desk only if the supported model represents that exception; a blanket 2D non-overlap rule must not silently contradict the intended furniture behavior. Decide whether such relationships belong in the first release.
 
+For O-02, first record false rejection from the disclosed conservative door envelope on independent cases. Retain it unless material failures justify a bounded analytic hinge-sector/rectangle rule with independent boundary tests. No physics engine or automatic scope expansion is needed.
+
 ### 10.2 Issue vocabulary
 
 Return machine-readable code, involved IDs, severity, rule version, measured facts, required inputs and provenance status. Useful classes are **blocked**, **warning**, **unassessed** and **passed for the stated inputs**. UI copy maps from fixed codes, with dimensions formatted by the application. The assistant can explain those facts but cannot turn them into a broader compliance claim.
@@ -458,6 +484,10 @@ Hard constraints include physical containment, protected dimensions/locks and mo
 Use a worker to keep local search off the pointer/render path. Bound input size, candidates examined, elapsed time, memory and result count; make work cancellable. The backend must re-evaluate any returned candidate using the same package. A browser is not a trusted validation boundary for metered/tool requests.
 
 “No arrangement found within this search” is not proof that no arrangement exists. Offer concrete alternatives: remove an optional item from the plan, choose a smaller replaceable desk, relax a preference or confirm a missing measurement. Exact solver choice, search limits and quality targets require engineering measurement. The selected UI shows one proposal at a time and a Before/Current peek.
+
+For targeted goals, rank valid candidates by request satisfaction, then fewer changed pieces/lower displacement before decorative preferences. Candidate ordering/pruning should exploit walls, openings and target relationships before a broad grid. The independent corpus includes tight feasible rooms with known valid arrangements and demands relevant goal improvement, not only validity.
+
+A seed guarantees stable ordering and fixed-work results. A deadline run reports the visited prefix and termination reason; hardware-dependent work budgets cannot promise identical best candidates across devices. Use pure incremental state with scheduling outside the spatial package or a measured equivalent. Browser search remains in its worker; backend search must yield or run off the event loop so health checks and cancellation stay responsive.
 
 ## 11. Assistant behavior and tools
 
@@ -489,6 +519,8 @@ Use a backend-only OpenAI adapter, with Responses as the proposed transport, str
 Roomedy policy should reject unknown tools, extra properties, unsupported IDs, non-finite values, out-of-range numbers, oversized text and fabricated catalogue references. Bound every tool iteration and output before execution. Do not execute returned JavaScript, shell commands, HTML or arbitrary external requests. Tool results are data. Text visible in photos or imported documents is untrusted evidence, never a developer instruction.
 
 The exact model, account access, evaluation corpus and internal funded provider allowance remain undecided. Verify current API/model compatibility during implementation. Do not copy model IDs, hidden signoff flags or spending policy from a sibling. Live failure never selects a fake provider; the visitor gets a clear failure and can continue manually.
+
+Use a provider-compatible projection of internal contracts, not an unchecked Zod-to-schema cast. OpenAI's supported schema subset requires a root object, closed strict objects, required fields and explicit nullability. Test actual emitted schemas and refusal/incomplete/unknown decoding. Set strict mode and serial tool calling explicitly, choose per-round tools deliberately, and correlate one final application-owned batch. Schema compliance never proves geometric truth. See [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) and the function guide above.
 
 ### 11.4 Tone and honest outcomes
 
@@ -549,6 +581,8 @@ These source pages were opened on 17 October 2026. At documentation time no pack
 ### 13.3 Procedural versus fixed assets
 
 Procedural beds, desks, shelving and wardrobes can change supported dimensions by rebuilding meaningful parts. Keep leg/frame thickness plausible; avoid stretching a detailed mesh indiscriminately. Curated fixed-size chairs or decorative models can add detail. Catalogue policy must say which dimensions may change and whether doing so creates a replacement proposal.
+
+Physical-size truth and representation eligibility are separate. A retained 680 mm chair remains 680 mm even if its selected fixed asset represents 670 mm. Resolve an eligible procedural representation or a single bounded semantic-box placeholder with a clear limitation; never substitute a different object/size or silently stretch the fixed detailed mesh. Offered proposed additions/replacements remain within their catalogue variant policy. RM-003 owns this refined validation; RM-002's earlier preparation evidence is not retroactive proof of it.
 
 ### 13.4 Preparation and runtime delivery
 
@@ -665,7 +699,7 @@ docs/
   design/                        # Later concrete design decisions/evidence
   engineering/                   # Later owning contracts/operations explanations
   operations/                    # Later release preparation and verified runbooks
-  tickets/                       # Prepared step-five packets; all Planned, review pending
+  tickets/                       # Approved queue; RM-001/002 committed, RM-003 in progress
   validation/                    # Actual check evidence, when performed
 scripts/                         # Named development/release/boundary checks
 test/                            # Shared isolation and boundary fixtures
@@ -712,6 +746,10 @@ Use an explicit fixed provider endpoint and credentials; reject redirects where 
 
 Handle refused, incomplete, malformed, oversized, unknown-tool and cancelled outcomes distinctly. Reject a partially valid batch atomically; do not apply the subset that happened to parse. Do not assume provider-side cancellation proves processing or billing stopped. Provider privacy/retention/account settings must be reviewed before transferring personal room photos; local reset cannot recall copies already sent to an external service.
 
+Use foreground stateless requests with explicit `store: false`, bounded supplied context and no persistent provider conversation/file object unless separately justified. Capture these flags in fake transport checks. Response storage disabled does not establish zero retention: verify actual selected-model caching, abuse-monitoring and image/account policies before personal-photo transfer. Local cleanup cannot recall external copies. [Official data controls](https://developers.openai.com/api/docs/guides/your-data).
+
+A server-owned operation deadline applies even when browser disconnect is not propagated; order provider-call, whole-operation, bridge and hosting timeouts with cleanup margin. Test vanished browser without abort propagation, provider ignoring abort, timeout and shutdown. Preserve conservative unresolved-remote accounting: gateway timeout/abort does not prove remote processing or billing stopped.
+
 ## 17. Guest lifecycle and privacy
 
 ### 17.1 Selected storage policy
@@ -740,6 +778,8 @@ Set expiry two hours from creation of the active guest workspace; ordinary edits
 Export/import uses a versioned JSON project containing the current semantic room, the bounded read-only starting baseline, catalogue/rules versions and human-readable provenance labels. Exclude raw photos, chat, active Undo history, pending proposals, provider/grant tokens, keys, blob URLs, server details, executable code and arbitrary remote asset locations. Describe the contents before download. A photo-inclusive export is outside the selected first-release scope.
 
 Import has a strict byte ceiling and structural/semantic validation before replacing the active workspace. Recompute fit diagnostics and build a new active identity. An export's prior revision or claimed confirmation is not a reusable authorization token. Explain missing catalogue versions or unsupported mechanisms instead of silently substituting different physical sizes.
+
+Recovery/project schemas preserve refined half-millimetre poses, physical dimensions and per-fact evidence, never operational replay authority. On a deployment/version update, fence pending work and recover accepted semantics where possible, distinguishing transient photos/drafts/proposals that a reload cannot preserve. No automatic update loop or guaranteed transient-photo recovery claim. The selected non-extensible two-hour expiry has a timing-adjustability limitation; warning/export help usability but alone do not establish WCAG conformance. Its lifetime/extension behavior remains unchanged.
 
 ### 17.3 Resource ownership
 
@@ -782,6 +822,10 @@ Recognition and assistant calls share expensive-operation capacity. Acquire an i
 
 Recommend scoped short-lived operation grants and a human challenge when opening a public paid demo. Bind operation type, input manifest/revision, expiry and replay protection. Keep a bounded in-memory ledger/counters free of room content if a database is intentionally absent. In-process controls reset on restart and do not enforce a durable account-wide spending cap. A single-instance starting deployment reduces coordination complexity but is not proof of a strict total cost ceiling. Revisit architecture before scaling beyond the assumptions.
 
+Bind a grant to allowed operation and a server-recomputed digest of normalized image bytes/request semantics. Client manifest claims alone are insufficient. Consume atomically before dispatch; bind to boot/process epoch or process-local signing material so restart cannot revive consumed grants. A different runtime can reject safely; document this availability tradeoff. Reject new admissions when the bounded ledger is full rather than evict active replay protection.
+
+Per-process controls and maximum instances=1 are not a durable global spend cap: temporary excess instances and overlapping revisions remain possible. Later paid readiness must explicitly resolve or accept bounded cross-process/account exposure under its own authorization. No database is added by this refinement. Carry restart/scaling/deadline assumptions into local release files and fake two-runtime tests.
+
 ### 18.3 Cost policy and external setup
 
 No provider dollar allowance, model tier, funded account, provider key or cloud project has been selected here. Choose a model and image policy using bounded evaluations before public enablement. Record provider usage privately in safe units and correlate with actual account reporting. Visitor-facing furniture prices and budget planning are explicitly deferred, including fictional catalogue prices. This product decision does not remove internal provider/cloud spending controls.
@@ -802,11 +846,15 @@ The original Roomedy draft suggested reduced-motion suppression. The supplied ge
 
 Use motion to explain selection, proposals, Apply, Undo and panel changes. Keep it restrained, avoid flashing/parallax or unnecessary continuous camera movement, and preserve readable stable content and keyboard/touch access. Optimize expensive rendering without freezing intended animations. Do not add a user setting that disables the designed experience. Physical-device/accessibility review remains real work, not an automatic claim from a media query or a screenshot.
 
+“Continuous motion” means smooth progress while intended animation is active. Automatic landing movement finishes and settles within five seconds, with stable readable text; avoid perpetual decorative movement/auto-updating text. Preserve active designed transitions without a global off setting. Record criterion-specific findings, not blanket conformance. [Pause, Stop, Hide](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide).
+
 ### 19.3 Interaction requirements
 
 Every important drag action has a numeric/keyboard path. Buttons have clear names and visible focus. Error status uses text/icons as well as color. Selected items and units are announced clearly; live-region messages report meaningful completed changes rather than every pointer move. Keep essential actions reachable at narrow widths, zoom and short viewport heights.
 
 Use semantic groups for view/start choices, readable targets, accessible dialog focus handling and text descriptions for the room/check summaries. For unsupported WebGL or context loss, preserve a usable 2D/numeric route. Test the actual keyboard/screen-reader paths; a canvas label alone does not make a spatial editor accessible.
+
+The fixed two-hour destructive active expiry is not covered by WCAG's over-twenty-hour timing exception. Record this specific timing-adjustability limitation and actual keyboard/focus/zoom/touch evidence. Useful warning/export opportunities do not alone establish conformance. Changing expiry/extension would require an owner product decision and is not selected here. [Timing Adjustable](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html).
 
 ### 19.4 Selected product and design refinements
 
@@ -890,6 +938,8 @@ Private diagnostics should use fixed operation/error codes, request references, 
 
 Production release checks must verify origin handling, no unintended public backend invocation, no provider key in browser bundles, challenge/grant replay/expiry, out-of-order operations, reset fences, cancellation and dependency/image findings. No cloud scanner or metadata export is authorized by this documentation work.
 
+Surface-specific privacy applies: the active page may show transient source photos and room/chat content; allow-listed current/baseline semantics may recover/export. Original photos, chat/provider payloads, credentials and operational grants do not recover/export. Private input content and raw failures stay out of diagnostic logs, public diagnostic envelopes, URLs and the application browser console. This does not prohibit the product's intended content display or semantic project export.
+
 ## 22. Local engineering conventions
 
 ### 22.1 Toolchain and command surface
@@ -923,6 +973,8 @@ Pinned runtime: Node 24.19.0 (supported 24 LTS line), pnpm 11.25.0; Next 16.4.2/
 Except the owner-selected fixed two-hour lifetime, these remain **provisional engineering defaults**, not measured capacity. Contracts enforce structure/counts/integers/versions; frontend intake owns decode/normalization (RM-007), bridge/backend transport/admission owns bytes/fragments/deadlines (RM-008), spatial/search owns work/locks/atomic batches (RM-003/009), and the session controller owns history/lifetime/storage (RM-005/012). RM-015 measures practical limits. No metered operation is enabled before admission; the output-token cap/model remain unselected until integration.
 
 Canonical schema version 1 uses X east/Z south/Y up, northwest origin, integer mm, footprint centers, quarter-turns 0–3 and local front +Z. Version labels are `catalogue-v1` and `rectangle-quarterturn-v1`. Unknown measurements carry null value/source; known values carry bounded provenance/source IDs. Confirmation is a semantic label, never authorization. Wire identities cannot carry origin/grants. Model action schemas omit unlock/confirmation; trusted controllers assign command origin, and RM-003 applies starting-state rules. Project/recovery schemas allow only semantic current/baseline and minimal view state, never photos/chat/history/operations/runtime capabilities. Catalogue record resolution and geometry are required in their owning later packets.
+
+**Approved RM-003 implementation decisions:** furniture centres permit bounded numeric half-millimetres while dimensions remain integer millimetres. Pose evidence has `unknown | estimated | extracted | scan-derived | confirmed | planned` status and bounded source ID; trusted moves assign planned placement. Check confidence distinguishes planned geometry from observed confirmation. Features carry wall/mechanism/hinge evidence, including unknown wall. Command envelopes use positive integer `commandSequence`; workspace high-water sequence increases monotonically, a bounded recent exact-payload cache prunes, old retired sequences reject stale, and Undo never rewinds it. Owned physical-size correction is independent of the asset range, with a single bounded-box fallback when needed; proposed variants remain strict. These are selected contracts to implement/test, not evidence that unfinished code already passes them.
 
 ### 22.2 Dedicated ports and startup
 
@@ -973,6 +1025,8 @@ Prepare two reproducible multi-stage Docker images with supported pinned bases, 
 Next standalone output needs deliberate inclusion of static/public assets and monorepo tracing. Verify packaged files rather than inferring success from `next build`. [Next output configuration](https://nextjs.org/docs/app/api-reference/config/next-config-js/output). Backend packages use built public workspace exports, not source-store symlinks. Record actual file bytes, lockfile and image digests; establish LF text checkout policy and preserve binary bytes, applying Retailor's cross-platform release lesson without copying its exact old image [RT-5].
 
 Linux image build/runtime evidence, package inventory, non-root identity, health, shutdown, asset availability and fake/paid-off probes are distinct from Windows source checks. Do not claim hosted/private-IAM/provider acceptance from a successful container build. Scanner findings and vendor patch status are checked on the actual candidate later.
+
+Include verified full CI action commit identities, pinned base-image/platform/tool identities and all relevant bytes in release proof; mutable action tags are insufficient identities for this selected policy. Exercise local two-build old-client/new-server cases, lazy cutaway chunks/search workers, schema/catalogue/rules mismatch and rollback. Choose deliberate compatible-asset/deployment-ID/update behavior, fence pending work and preserve accepted semantics where possible. A framework reload does not guarantee transient photos/drafts survive; prevent reload loops and undisclosed destructive updates. [Next version skew](https://nextjs.org/docs/app/guides/self-hosting#version-skew). Carry process/boot grant and timeout/scaling assumptions into the runbooks without claiming a single instance is a global lock or funded cap.
 
 ### 23.3 Authorized rollout sequence
 
@@ -1043,9 +1097,13 @@ When later authorized, compare expected actions and computed facts across the wo
 
 Measure cold/warm editor load, transferred assets, memory, pointer response, search time, frame behavior during Apply/Undo and provider end-to-end time. Test narrow phones, tablets, small/large laptops, short heights, at least one intermediate width and actual available devices. Start with a small sample, then the proposed maximum room/photos. No performance numbers in this blueprint are achieved results.
 
+Declare case pass/fail before tuning. Zero tolerated unauthorized mutation, false confirmation, stale Apply, silent fake fallback or non-AI provider dispatch in the exact tested corpus. Report category/opening coverage, false merges/splits, uncertainty honesty, manual repair actions, exact n and individual failures separately. Group development/held-out data by physical room/object; add reorder/orientation/missing-view perturbations and independent human-labelled semantics. A tiny corpus supplies no broad accuracy guarantee. [Official evaluation guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices).
+
+Declare practical performance budgets from first measurements before RM-015 sign-off, with browser/device or throttle, build mode, room/photo count, cold/warm state and repetitions. Measure discrete action latency, continuous drag/orbit frames, decode peak, search/abort latency and Apply/Undo motion separately. Finiteness alone is insufficient, and INP alone cannot establish continuous canvas behavior. Preserve the feature-owned internal visual baseline and the actual later owner visual stop.
+
 ## 25. Delivery sequence
 
-The [step-five ticket plan](tickets/README.md) now defines the detailed execution queue. It contains **20 standalone packets**, proposed prefix **RM**, direct dependencies, file responsibility allocation, concrete steps, unchecked acceptance, focused verification and explicit local/owner/external evidence gates. It follows the owner-selected product scope and actual sibling ticket patterns. All packets remain **Planned**; creating this queue does not approve its results or authorize implementation.
+The [step-five ticket plan](tickets/README.md) now defines the detailed execution queue. It contains **20 standalone packets**, proposed prefix **RM**, direct dependencies, file responsibility allocation, concrete steps, unchecked acceptance, focused verification and explicit local/owner/external evidence gates. It follows the owner-selected product scope and actual sibling ticket patterns. RM-001/002 have committed local evidence; RM-003 is in progress and unvalidated; RM-004–RM-020 remain Planned. The owner approved the later review refinements and authorized ordered fake-mode execution/validation and per-ticket local commits; result gates and external authority remain separate.
 
 | Delivery stage | Owning packets | Complete outcome |
 | --- | --- | --- |
@@ -1061,7 +1119,7 @@ The [queue](tickets/README.md#dependency-ordered-queue) is dependency-ordered an
 
 The smallest coherent prototype remains one fictional small bedroom, bed/desk/chair/wardrobe, two views, manual edits, one meaningful assistant command, preview/Apply/Cancel/Undo and basic boundaries/collision/door checks. The full queue covers all selected first-release behavior, not only that prototype. Native scans, complex rooms, AR, photorealistic exports, pricing/budget planning and multiple alternative layouts remain outside it.
 
-The plan's [workflow checkpoint map](tickets/README.md#workflow-checkpoints-and-eligibility) separates ticket-plan approval, future implementation/Git authority, actual frontend visual review and owner security finding selection. Local release files are required even if credentials are absent. Actual paid/provider/cloud/domain work remains conditional; a locally complete ticket never fabricates those results. The current owner instruction is to prepare tickets **without starting implementation**.
+The plan's [workflow checkpoint map](tickets/README.md#workflow-checkpoints-and-eligibility) separates ticket-plan approval, future implementation/Git authority, actual frontend visual review and owner security finding selection. Local release files are required even if credentials are absent. Actual paid/provider/cloud/domain work remains conditional; a locally complete ticket never fabricates those results. The current owner instruction is to update these requirements, then resume RM-003 and continue in numeric order in fake mode, validating/committing each completed ticket and stopping at review gates or 0% usage. No paid call or deployment is authorized.
 
 ## 26. Decision register
 
@@ -1103,6 +1161,8 @@ The selected Before/Current peek is the bounded comparison recommended in Q-05. 
 | D-14 | No external resource/account/domain operations selected or authorized | Obtain actual owner inputs and authorization only when their owning release/live work requires them |
 
 The owner has answered the product question set; no further product answer is required to describe this scope. Recognition accuracy, geometry, actual visual quality, device performance and provider/hosted outcomes remain unverified. The later step-five request now has an owner-approved [detailed 20-ticket plan](tickets/README.md) with the approved feedback guidelines. Its exact engineering/model/asset choices are evidence-bearing implementation work, not invented owner answers. The separate step-six request authorized RM-000 docs only; the subsequent step-seven request now authorizes ordered fake-mode implementation/validation and per-ticket local commits. RM-001 is implemented locally; hosted CI is unverified.
+
+**D-15 — Approved review refinements:** PR-01–PR-15 are adopted into their existing owners, with unchecked new acceptance. O-01 preserves only an uncertain-draft adapter seam and defers model downloads/GPU/runtime/benchmark execution; O-02 measures conservative door false rejection before considering precision geometry; O-03 adopts deterministic decision-relevant guided questions. The [review](reviews/2026-10-17-plan-review.md), [exact documentation allocation](commit-plans/PLAN-REFINEMENT-2026-10-17.md) and [documentation checks](validation/PLAN-REFINEMENT-2026-10-17.md) record adoption separately from execution. RM-001/002 receipts remain dated evidence, not proof of new downstream criteria.
 
 ## 27. Primary research and source register
 
@@ -1183,9 +1243,13 @@ All four were read through `read_thread`; visual histories were paginated. Overs
 
 The resulting [repository instructions](../AGENTS.md), [review checklist](design/REVIEW_CHECKLIST.md) and [ticket guideline ownership](tickets/README.md#guideline-ownership) make these rules part of original feature work. Relevant sections of Retailor's dated RTL-142 quality and RTL-143 security reports supplied concrete examples of restored-mode truth, proportional refactoring, multipart-fragment overhead and evidence limits. They are historical examples only; no Roomedy vulnerability, version recommendation or test pass is inferred.
 
+### 27.7 Approved review research and dispositions
+
+The [17 October plan review](reviews/2026-10-17-plan-review.md) records opened primary sources for physical uncertainty, provider schema/data policy, evaluation, scheduling, release skew/scaling and accessibility criteria. Modern [VGGT-Ω](https://vggt-omega.github.io/) and [Depth Anything 3](https://github.com/ByteDance-Seed/Depth-Anything-3) are bounded future research leads with exact checkpoint/license suitability to evaluate. No global SOTA winner or Roomedy benchmark is asserted. Their output does not establish editable identities, ownership or visitor-confirmed scale; actual downloads/GPU/benchmark execution remain deferred under O-01.
+
 ## 28. Documentation verification
 
-Step-one completion means the actual reference evidence, coherent detailed specification and companion overview have been prepared and checked within the verification scope below. It does not mean the product is accepted or the application is implemented.
+The following paragraphs preserve dated documentation checkpoints. Their original Planned/hold/unstarted descriptions are historical states, not current instructions. Current RM-001/002 local receipts and the later approved adoption/execution authority govern current status; no documentation check establishes remaining product acceptance.
 
 | Check performed on 17 October 2026 | Actual result and limit |
 | --- | --- |
@@ -1205,22 +1269,22 @@ At step three, the source check passed **125 local links/fragments**, balanced H
 
 After applying the owner's answers, the source checks again passed **125 local links/fragments**, balanced HTML with **24 unique IDs**, all existing script controls and no external runtime resources. The nine answers are recorded, the initial 2D-only review is preserved, and the selected comparison, two-hour recovery, transient photos and pricing deferral agree across the blueprint, HTML, index and root overview. The inline illustration script is unchanged; no application, visual-browser, provider or hosted result is claimed by these documentation checks.
 
-Step-five planning prepared **20 detailed packets (RM-001–RM-020)** using actual ticket indexes/packets from all four reference repos. Planning checks passed **271 local links/fragments**, agreement between the queue and **35 earlier-only dependency edges** (no cycles), required standalone packet structure, **164 unchecked acceptance criteria** and all statuses Planned. The overview retains **24 unique IDs**, balanced markup, every existing script control, no external runtime resource and the unchanged illustration script. These are documentation/plan checks only; no application test, install, build, service, asset preparation, provider request, cloud action or Git mutation ran. Original drafts and the generic guide were preserved. The plan is ready for owner review and implementation remains explicitly on hold.
+Step-five planning prepared **20 detailed packets (RM-001–RM-020)** using actual ticket indexes/packets from all four reference repos. Planning checks passed **271 local links/fragments**, agreement between the queue and **35 earlier-only dependency edges** (no cycles), required standalone packet structure, **164 unchecked acceptance criteria** and all statuses Planned. The overview retains **24 unique IDs**, balanced markup, every existing script control, no external runtime resource and the unchanged illustration script. These are documentation/plan checks only; no application test, install, build, service, asset preparation, provider request, cloud action or Git mutation ran. Original drafts and the generic guide were preserved. At that step-five checkpoint, the plan awaited owner review and implementation was on hold; later approvals supersede that hold.
 
 The owner-requested feedback-guideline revision adds 24 evidence-based lessons, 27 feedback references and two attributed historical audit examples, concise root AGENTS.md instructions and a reusable review checklist. All twenty packets now link their relevant lessons and include targeted prevention requirements, adding 24 acceptance checks for a total of **188 unchecked ticket criteria**; all statuses remain Planned and the original **35-edge** dependency order is unchanged. Source checks passed **344 local links/fragments**, 24 unique ordered lesson IDs with valid cited evidence, 22 unchecked reusable checklist items and the existing balanced HTML/24 IDs/controls/no-external-runtime checks. The illustration script is unchanged. This verifies documentation structure and consistency only; no application implementation, install, app build/test/run, screenshot session, paid request, scanner export, cloud change or Git mutation occurred. Source-chat reading limits and the exact-thread history fallback are documented; prior screenshots and audit outcomes were not reproduced as Roomedy evidence.
 
 Step six records the owner's approval of the updated plan/guidelines and authorization for RM-000 documentation/ticket commits only. The reviewed 28-file fingerprint was independently matched before status bookkeeping. The exact allocation contains 33 Markdown/HTML files; working-document checks passed 388 current local links/fragments, unchanged Planned ticket/dependency/unchecked-criteria counts, HTML/script integrity, three original-source hashes and scoped credential/path review. Staged-content and actual commit receipts are recorded in RM-000's verification document when performed; no commit is claimed by these pre-commit checks.
 
-The initial RM-000 planning snapshot is committed as `b97db4b927036e9f82d1ab4e44a876797d9ec1c3`. All 33 committed file blobs independently matched the reviewed staged/working bytes and the recorded manifest digest; the worktree was clean immediately afterward. The scoped completion record changes only this blueprint/progress, the RM-000 file-level plan and RM-000 verification. Step six is complete; all twenty implementation tickets and phase seven remain unstarted. No push, install, app run/build/test, paid request or external action occurred.
+The initial RM-000 planning snapshot is committed as `b97db4b927036e9f82d1ab4e44a876797d9ec1c3`. All 33 committed file blobs independently matched the reviewed staged/working bytes and the recorded manifest digest; the worktree was clean immediately afterward. The scoped completion record changes only this blueprint/progress, the RM-000 file-level plan and RM-000 verification. At that step-six checkpoint, all twenty implementation tickets and phase seven were unstarted; later RM-001/002 commits and current RM-003 work supersede that status. No push, install, app run/build/test, paid request or external action occurred.
 
-Outstanding application evidence includes all geometry/command tests, real R3F behavior/assets, provider interpretation/evaluation, measured limits/device performance, implementation of the selected recovery/privacy behavior, actual frontend visual approval, security audit, packaging, account controls and hosted/domain behavior. The owner approved the revised plan/guidelines and requested the scoped RM-000 documentation/ticket commits. The [commit plan](commit-plans/RM-000.md) and [verification record](validation/RM-000.md) own that work. Implementation remains on hold under the owner's explicit instruction.
+Current outstanding evidence includes final RM-003 geometry/command validation and all amended criteria, actual R3F/device behavior, provider interpretation/evaluation, measured limits, full recovery/privacy implementation, owner visual approval, security audit, Linux/hosted/account/domain proof. RM-001/002 have their own dated local evidence. The owner approved the full review recommendations and requested adoption before resuming ordered fake execution. The [adoption allocation](commit-plans/PLAN-REFINEMENT-2026-10-17.md) and [documentation receipt](validation/PLAN-REFINEMENT-2026-10-17.md) describe this update; no new implementation result follows from it.
 
 <!-- build-progress:start -->
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage/commit the exact validated RM-002 allocation, record the commit, then start dependency-ready RM-003. Keep fake/paid-off; stop at 0% remaining Codex usage or required owner review gates. No deployment/push/paid calls.
-Active ticket: RM-002
+Next action: Finish/check and commit the approved documentation refinements as a scoped RM-000 update, then complete RM-003 under its amended criteria, validate and commit exact owned paths before RM-004. Keep fake/paid-off; stop at required review gates or 0% usage; no paid calls, deployment or push.
+Active ticket: RM-003
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1245,7 +1309,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-17T18:16:06+00:00",
+  "updated_at": "2026-10-17T18:57:37+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1368,13 +1432,28 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "IMPLEMENTATION_AUTHORIZATION": {
-      "value": "Phase seven explicitly authorized: execute and validate the ordered approved tickets locally in fake/paid-off mode; stop at required owner review gates. Supersedes the earlier implementation hold for this scope only.",
-      "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
+      "value": "Approved refinements adopted into blueprint and existing tickets; owner explicitly resumes RM-003 then numeric-order execute/validate/exact-path local commit loop in fake/paid-off mode. Stop at manual visual/security gates or 0% usage. No paid calls/deployment/push/reset-credit consumption.",
+      "source": "human:current-chat/2026-10-17/approve-review-and-resume-ordered-build",
       "confidence": "confirmed"
     },
     "USAGE_STOP_POLICY": {
-      "value": "Stop at reported 0% remaining, check between tickets; latest 86% used/14% remaining weekly. No reset-credit use or continuation on paid credits. Required owner gates may stop earlier.",
-      "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build; get_usage_limits after RM-001 validation",
+      "value": "Stop at reported 0% remaining usage. Latest snapshot: 92% used / 8% remaining. No reset-credit consumption or paid-credit continuation.",
+      "source": "human:current-chat/2026-10-17/approve-review-and-resume-ordered-build; usage snapshot during adoption",
+      "confidence": "confirmed"
+    },
+    "PLAN_REVIEW_STEERING": {
+      "value": "Owner requested a full deeper-reasoning review of the existing plan for meaningful modern/SOTA improvements. Implementation is on hold during this review; RM-001 and RM-002 are committed, RM-003 is partial, unvalidated and uncommitted. Recommendations do not represent approved new product scope.",
+      "source": "human:current-chat/2026-10-17/deeper-plan-review",
+      "confidence": "confirmed"
+    },
+    "PLAN_REVIEW_RESULT": {
+      "value": "Full twenty-ticket review documented in docs/reviews/2026-10-17-plan-review.md: fifteen proposed refinements and three bounded research opportunities; five foundation contract/liveness issues should be settled before RM-003 signoff. Four narrow read-only probes reproduced measurement rejection, odd-centre boundary violation, missing pose provenance and receipt exhaustion. Recommendations remain distinct from approved criteria. No code edits/staging/commits/paid calls/deployment during review.",
+      "source": "human:current-chat/2026-10-17/deeper-plan-review; docs/reviews/2026-10-17-plan-review.md",
+      "confidence": "confirmed"
+    },
+    "PLAN_REFINEMENT_APPROVAL": {
+      "value": "ok i approve the recommendations. update the docs and tickets, then resume RM-003 and continue in order. use fake mode, validate and commit each ticket, and stop at review gates or 0% usage. no paid calls or deployment.",
+      "source": "human:current-chat/2026-10-17/approve-review-and-resume-ordered-build; reviewed docs/reviews/2026-10-17-plan-review.md PR-01..15/O-01..03",
       "confidence": "confirmed"
     }
   },
@@ -1384,8 +1463,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-002",
-  "next_action": "Stage/commit the exact validated RM-002 allocation, record the commit, then start dependency-ready RM-003. Keep fake/paid-off; stop at 0% remaining Codex usage or required owner review gates. No deployment/push/paid calls.",
+  "active_ticket": "RM-003",
+  "next_action": "Finish/check and commit the approved documentation refinements as a scoped RM-000 update, then complete RM-003 under its amended criteria, validate and commit exact owned paths before RM-004. Keep fake/paid-off; stop at required review gates or 0% usage; no paid calls, deployment or push.",
   "phases": [
     {
       "id": "01-docs",
@@ -1667,10 +1746,10 @@ This checklist records local work. Human approvals and unresolved external check
         }
       },
       "evidence": [
-        "commit:56b7d0fb8b97ed77b8f495460308a3778538ef95 — RM-001 verified local foundation; hosted CI unverified",
-        "docs/validation/RM-002.md: final local gate passed, 33 unit/5 boundary regressions, actual GLB geometry/rotations/budgets/license/thumbnail checks, revalidation no actionable findings",
-        "docs/commit-plans/RM-002.md: exact 33-file allocation, 26 source/config/asset files at SHA-256 manifest 6d6dc24327e5d3fef7bb646dd93fef5a66270a17982cf962214df68da6c70bd5",
-        "RM-002 required local outcome complete; 87% Codex usage used / 13% remaining. No paid calls or deployment."
+        "commit:56b7d0fb8b97ed77b8f495460308a3778538ef95 — RM-001 verified local foundation; actual hosted CI unverified",
+        "commit:dc07101324ce91f7066abc34243ef218eebe80c4 — RM-002 complete local catalogue/asset/fixture outcome, 33 tests and all root gates passed",
+        "RM-003 selected in numeric order; clean worktree, both committed dependencies confirmed, full ticket and blueprint sections 8–10/24.3 read. Codex remaining 13%.",
+        "Owner approved all review recommendations and resumed ordered fake execution; approved documentation refinements written across exact allocated paths before RM-003 source/test edits resumed. docs/reviews/2026-10-17-plan-review.md and docs/commit-plans/PLAN-REFINEMENT-2026-10-17.md."
       ],
       "blockers": [
         {

@@ -44,6 +44,12 @@ Require actual passing spatial command/corpus evidence and usable entry routes. 
 
 Keep room area useful when panels open, with consistent action placement and comfortable field/border padding. Label units and missing/invalid fields beside the actual control with a focus target. Inspect selected/excluded/blocked/unknown states as well as the happy path. Conditional chat expansion must preserve usable underlying room geometry; do not add a new expansion feature solely from the reference.
 
+## Approved plan refinements — 17 October 2026
+
+**One controller consumes refined physical authority.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Consume PR-01–PR-05 through the existing dispatcher: half-millimetre centre placement, true owned dimensions independent of representation range, complete feature corrections and finite replay retirement. Display unit conversion must preserve the exact semantic pose. A drag records a deliberate planned position and never certifies the original photographed position. Preserve source/review status for every physical fact used by checks and show relevant unassessed/approximate coverage without filler controls. Capture actual short-laptop/narrow states against the internal RM-004/005 visual baseline.
+
 ## Acceptance criteria
 
 - [ ] One controller owns accepted room, baseline, revision, history and effect invalidation; views have no competing scene store.
@@ -55,6 +61,12 @@ Keep room area useful when panels open, with consistent action placement and com
 - [ ] Baseline capture occurs at sample/accepted-draft editor entry and survives edits/Undo.
 - [ ] Manual/sample operation remains useful without AI and records zero provider dispatches.
 - [ ] Relevant phone/tablet/short-laptop panel and field-error states keep the room and next action usable without clipped controls, accidental empty columns or overlapping scroll regions.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Numeric/drag/snap/keyboard/Undo preserve half-millimetre centres and odd-size exact contact; planned pose never authenticates photographed placement.
+- [ ] Feature corrections and out-of-representation owned measurement corrections use shared authority and retain honest geometry/representation limitations.
+- [ ] Long bounded editing/replayed/no-op sessions remain usable and preserve stale-command rejection; feature states meet the recorded internal visual baseline.
 
 ## Focused verification and evidence
 

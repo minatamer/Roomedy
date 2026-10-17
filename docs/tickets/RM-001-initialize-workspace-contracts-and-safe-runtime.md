@@ -32,7 +32,7 @@ Read the approved plan and current repository state before execution. Allocate e
 
 1. Verify supported Node/pnpm/Next/React/Three/R3F/Drei/TypeScript/Zod/Express compatibility against primary documentation. Pin a compatible set and one lockfile; record selected support policy. Do not install a renderer service, database, ORM or general queue.
 2. Create minimal running applications and shared builds. Use explicit public package exports. Enforce applications never importing one another, contracts importing no apps/platform/provider/UI concerns, and spatial importing only pure contracts/logic. Catch client imports of server-only modules with an executable rule.
-3. Define strict schemas for rectangle dimensions, per-value provenance, wall features/mechanisms, stable furniture IDs/catalogue versions, center pose, quarter-turns, ownership/preferences, independent locks, room revision, issue facts, command/proposal/receipt and baseline/project projections. Coordinates use integer millimetres, X/Z floor and Y up. Unknowns are explicit; schemas reject non-finite/unsafe values and unknown fields.
+3. Define strict schemas for rectangle dimensions, per-value provenance, wall features/mechanisms, stable furniture IDs/catalogue versions, center pose, quarter-turns, ownership/preferences, independent locks, room revision, issue facts, command/proposal/receipt and baseline/project projections. The original foundation uses integer millimetres, X/Z floor and Y up; approved downstream RM-003 refines centres to half-millimetre precision while physical dimensions remain integer millimetres. Unknowns are explicit; schemas reject non-finite/unsafe values and unknown fields.
 4. Define workspace identity/generation/operation/revision envelopes and trusted-origin assignment. Provider/browser/imported data cannot self-authorize confirmations, unlocks or server admission. Keep pending operations distinct from accepted semantic data.
 5. Establish one finite policy module for counts, bytes, deadlines, history and search. Start from [§18 candidates](../ROOMEDY.md#181-bounds-are-part-of-the-feature), identify enforcement owners and mark provisional values for RM-007/RM-008/RM-015 measurement. Fixed two-hour guest expiry is selected scope. Bound prepared image requests separately from raw uploads and semantic JSON.
 6. Build an import-safe Express app factory and explicit startup composition. Only startup loads its app-local ignored environment and listens; process environment takes precedence. No import constructs a paid client, reads secrets or starts work. Proposed dedicated ports are 4320/4321, subject to verified ownership before starting.
@@ -43,6 +43,12 @@ Read the approved plan and current repository state before execution. Allocate e
 ## Prevention requirements from prior feedback
 
 Extend the existing documentation-only AGENTS.md with actual commands when the foundation exists; retain these owner lessons. Provide a normal hot-reload workflow and separate development/production output where needed. Runtime capability/mode comes from current composition, never a saved room. Keep deterministic gate tests on controlled fixtures and strict release freshness as a separate actual-candidate check.
+
+## Approved plan refinements — 17 October 2026
+
+**Historical foundation; downstream contract follow-up.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+The original local foundation evidence remains in its dated validation receipt. PR-01–PR-05 are adopted downstream refinements owned and tested by RM-003: bounded real physical dimensions distinct from representation eligibility, evidence for all check inputs, half-millimetre centres, complete trusted feature corrections and a replay window that does not exhaust ordinary editing. They do not become new passed RM-001 checks. PR-12 action-identity pinning is owned by RM-014 before release proof; preserve the installed compatible stack rather than performing unrelated dependency churn.
 
 ## Acceptance criteria
 
@@ -56,6 +62,11 @@ Extend the existing documentation-only AGENTS.md with actual commands when the f
 - [ ] Established root commands and CI run meaningful no-key checks; no app spending or deployment is enabled implicitly. **Local commands and workflow definition pass; actual hosted CI execution remains unverified without an authorized push.**
 - [x] Documented hot reload and scoped backend startup preserve configured manual runtime mode while automated tests independently remain fake/paid-off.
 - [x] Existing owner guidelines survive foundation setup; deterministic checks do not depend on the current freshness of historical image evidence.
+
+### Downstream acceptance — not historical completion evidence
+
+- [ ] Downstream RM-003 evidence demonstrates the approved semantic/coordinate/provenance/feature/replay refinements; this is not inferred from the original RM-001 receipt.
+- [ ] RM-014 includes verified immutable CI action identities in release inputs; actual hosted CI remains unverified until performed.
 
 ## Focused verification and evidence
 

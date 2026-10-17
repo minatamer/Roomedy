@@ -43,6 +43,12 @@ Read the visual decision, current candidate identity, prior ticket/evidence reco
 
 Prioritize reproduced behavior/ownership defects and structural waste without extra services/frameworks. Check restored data against current runtime capability truth. Prove reachability before deleting public/framework/worker/style/reference code; a long controller alone is insufficient reason to split authority. Preserve private diagnostics and finite controls.
 
+## Approved plan refinements — 17 October 2026
+
+**Quality preserves approved refined contracts.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Reconcile the adopted PR-01–PR-15 requirements against their actual owning evidence during this existing quality pass. Preserve physical-size/representation separation, all physical-fact evidence, half-millimetre centres, complete feature authority, usable bounded replay, request-local scope, reproducible search and explicit provider/data/deadline contracts. Keep the O-01 runtime/download/benchmark deferral and conditional O-02 precision work. Resolve stale present-tense documentation at its owning boundary while preserving dated validation receipts. This adds no generic framework, metric-driven rewrite or security-remediation permission.
+
 ## Acceptance criteria
 
 - [ ] A concrete quality plan covers the whole first-party candidate with evidence, ownership and invariant risks.
@@ -54,6 +60,10 @@ Prioritize reproduced behavior/ownership defects and structural waste without ex
 - [ ] Read-only validation has no new actionable local findings, with exact external limits retained.
 - [ ] Materially affected release proof/owner acceptance is identified for refresh or re-review.
 - [ ] Every quality correction has a concrete consequence/regression and preserves runtime truth; no speculative abstraction, service, deletion or LOC-driven split is introduced.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Quality reconciliation includes the approved refinements and precise surface-specific privacy/accessibility claims without treating their approval as implementation evidence or adding speculative infrastructure.
 
 ## Focused verification and evidence
 

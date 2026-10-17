@@ -44,6 +44,14 @@ Use actual spatial validation and measured intake manifest/contracts. Keep admis
 
 Make supported challenge verification quiet until interaction is actually needed, with a usable visible fallback. Retain server proof/grants/rate/replay/capacity boundaries. Bound retained multipart fragment/object overhead as well as payload bytes before native work/provider dispatch. Keep diagnostics private and content-free; no security weakening or new login screen as a visual convenience.
 
+## Approved plan refinements — 17 October 2026
+
+**Explicit schema/data policy and resilient admission.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-10/PR-11 with fake injected transports. Project rich internal contracts into the provider's supported JSON Schema subset: root object, closed strict objects, required fields and explicit nullability. Capture strict mode, serial tool calling and foreground stateless `store: false` requests. Supply bounded context explicitly; no persistent provider conversation/file object or hidden continuation. Document eventual model/cache/account retention review; response storage disabled is not a zero-retention guarantee.
+
+Bind grants to allowed operation and a server-recomputed digest of normalized image bytes/request semantics, not only a client manifest. Consume atomically before dispatch and bind to process/boot epoch or process-local signing material so restart cannot revive consumed grants. A different runtime may reject safely; document that availability tradeoff. Reject new admissions at ledger capacity without evicting active replay protection. Use an independent server deadline and ordered provider/operation/bridge/hosting timeouts with cleanup margin, including when browser disconnect never propagates or provider ignores abort. Maximum instances=1 is not a durable/global cap; record revision overlap/excess-instance and unresolved-remote exposure for later paid readiness, without adding a database.
+
 ## Acceptance criteria
 
 - [ ] Fixed bridge/routes reject arbitrary forwarding and protect private service/provider configuration.
@@ -56,6 +64,13 @@ Make supported challenge verification quiet until interaction is actually needed
 - [ ] Safe public failures and private diagnostics disclose no room content, credentials or raw provider errors.
 - [ ] Quiet challenge presentation retains the exact verified operation gate and exposes a usable fallback on interaction/failure.
 - [ ] Many tiny admitted stream fragments remain memory-bounded and preserve actual file bytes, cleanup and zero dispatch on rejection.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Actual emitted provider schema fixtures and captured fake request flags enforce strict serial/stateless policy; refusal/incomplete/unknown outcomes decode safely without hidden continuation/retry.
+- [ ] Substituted image/request bytes, concurrent duplicate consumption, process restart and a second fake runtime cannot reuse a grant for extra dispatch.
+- [ ] A full finite grant ledger rejects new admission without retiring live replay protection; no-disconnect timeout/ignored abort/shutdown clean up and account exactly once.
+- [ ] Timeout ordering, process-local availability tradeoff, remote-accounting and actual model/cache/retention/global-spend limits are documented; paid readiness remains conditional.
 
 ## Focused verification and evidence
 

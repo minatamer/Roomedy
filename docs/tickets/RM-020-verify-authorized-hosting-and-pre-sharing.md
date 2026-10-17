@@ -45,6 +45,12 @@ Read exact source/image/proof identity, unresolved provider/device/owner evidenc
 
 Explain public frontend visibility, private backend identity, paid enablement, TLS/domain and optional proxy/origin controls as separate choices. No extra visitor login, blanket proxy switch or unrelated domain/provider migration is introduced without scope. Verify the actual upload path and quiet challenge on the hosted candidate only under applicable authorization.
 
+## Approved plan refinements — 17 October 2026
+
+**Conditional hosted verification of refined operational limits.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Only under later external authorization, verify the actual process/restart/multi-revision grant behavior, disconnect-independent deadlines, effective hosted instance exposure, account-funded controls and selected model/cache/retention settings. Resolve or explicitly accept the named paid exposure rather than assuming a single-instance setting is a global money cap. Exercise old-browser/new-server/chunk/worker/schema mismatch and rollback on the permitted candidate with truthful transient-photo/update behavior. Preserve measured performance, criterion-level accessibility limits and the existing visual/security gates; no part of the current adoption authorizes this packet's external execution.
+
 ## Acceptance criteria — conditional, all unperformed
 
 - [ ] Exact external action/data/funding/publication scope is supplied by a trusted human and recorded.
@@ -56,6 +62,10 @@ Explain public frontend visibility, private backend identity, paid enablement, T
 - [ ] Security/physical/owner/vendor deferrals remain visible with a concrete sharing decision.
 - [ ] Rollback and safe operational evidence are recorded; public URL/claims reflect actual observed state.
 - [ ] Hosted evidence and instructions distinguish public/private/paid/domain/proxy status, and test actual permitted user flows without inheriting sibling permissions.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Later authorized hosted evidence resolves or explicitly dispositions process/scaling/spend/retention/skew risks on the exact candidate; prior local/adoption results do not authorize or prove those external outcomes.
 
 ## Focused verification and evidence
 
@@ -70,4 +80,4 @@ Explain public frontend visibility, private backend identity, paid enablement, T
 
 ## Handoff and limits
 
-Leave this packet Planned until applicable external execution is requested. It can finish only within the actual authorized and verified scope; no universal accuracy, traffic capacity, compliance or cost guarantee is implied. Current step-five work creates this checklist only and does not implement, host or publish Roomedy.
+Leave this packet Planned until applicable external execution is requested. It can finish only within the actual authorized and verified scope; no universal accuracy, traffic capacity, compliance or cost guarantee is implied. The current approved fake-mode local loop prepares requirements only for this conditional packet and does not host, publish or perform paid Roomedy calls.

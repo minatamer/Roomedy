@@ -46,6 +46,12 @@ Read actual source, lockfile, package output, release files, current evidence an
 
 Keep the audit proportionate to a single-room guest demo. Include stream-fragment overhead, current-mode restore, quiet challenge/server proof, safe decision logs and exact candidate evidence. Separate scanner severity from reachable application risk and available patches. Do not invent findings or import the reference chat's permission to remediate without review.
 
+## Approved plan refinements — 17 October 2026
+
+**Audit the refined candidate; approval is not a security waiver.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Include the actually implemented refined contracts and runtime assumptions: per-fact evidence/import trust, physical representation eligibility, bounded replay retirement, request scope, server-recomputed input binding, boot/process grant validity, disconnect-independent deadlines, provider schema/storage/cache/retention and stale-client release behavior. Reproduce or trace current risks proportionately; an approved design refinement is neither proof of safety nor a preselected vulnerability/fix. Preserve the report-only, unstaged/uncommitted finding-selection stop. Distinguish allowed transient product display and semantic export from forbidden diagnostic/photo/chat retention.
+
 ## Acceptance criteria
 
 - [ ] Exact candidate, performed checks, tools/database dates, assumptions and unperformed external evidence are recorded.
@@ -56,6 +62,10 @@ Keep the audit proportionate to a single-room guest demo. Include stream-fragmen
 - [ ] Application/config/dependencies remain unchanged by the audit and artifacts remain unstaged/uncommitted for review.
 - [ ] Owner is shown the concrete report and asked which current findings to fix, defer or reject.
 - [ ] The report distinguishes confirmed/reachable/local issues from static/vendor/hosted uncertainty and retains Roomedy's explicit owner finding-selection gate.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] The report evaluates actual adopted contract/data/admission/skew behavior with current evidence and honest external limits; no review recommendation is pre-labelled a confirmed vulnerability or owner-selected fix.
 
 ## Focused verification and evidence
 

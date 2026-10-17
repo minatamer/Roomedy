@@ -43,6 +43,14 @@ Read current full-flow/controller/transport evidence and actual limits; do not w
 
 Exercise real file selection/intake with authorized test images, not solely injected authored sample output. Include repeated views, distinct similar pieces and partial-match review outcomes with independent truth. Record actual model/corpus latency and imperfections when paid evaluation is authorized; do not promote fixture behavior or a prior screenshot into real-provider acceptance.
 
+## Approved plan refinements — 17 October 2026
+
+**Predeclared readiness rubric and held-out evidence.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-09 using the early skeleton from RM-007/010. Declare per-case pass/fail before tuning: zero tolerated unauthorized mutation, false confirmation, stale Apply, silent fake fallback or non-AI provider dispatch in the tested corpus. Score category/opening coverage, false merges, false splits, uncertainty honesty and manual repair actions separately; report exact counts and individual failures. Split by physical room/object so views do not leak across development/held-out sets. Add reorder/orientation/missing-view perturbations and independent semantic/geometry truth; do not grade exact provider wording.
+
+Record provider-schema/strict/stateless policy alongside model/prompt versions. Model selection uses later authorized evidence, never a leaderboard/name alone. O-01 preserves an offline observation-adapter comparison boundary only: model download, GPU runtime, benchmark execution and deployment remain deferred. O-02/O-03 are evaluated against false door rejection and relevant-question behavior through their owning modules, without adding a generalized evaluation platform.
+
 ## Required local acceptance
 
 - [ ] Independent corpus/rubric covers the three room conditions, uncertainty and worked assistant scenarios.
@@ -53,6 +61,13 @@ Exercise real file selection/intake with authorized test images, not solely inje
 - [ ] Model compatibility research and unresolved funded/privacy inputs are recorded without inherited approvals.
 - [ ] Reproduced local failures are corrected and settled validation has no new actionable local findings.
 - [ ] Evidence covers the actual upload boundary and correction-friendly partial inference, with separate sample/manual, fake, real-provider and private-diagnostic claims.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Predeclared case pass/fail rules treat the five authority/dispatch failures as zero-tolerance in the exact tested corpus and report all observed failures.
+- [ ] Room/object-group holdout, exact n, false merges/splits, uncertainty and repair-action measures are recorded independently from geometric correctness.
+- [ ] Reorder/orientation/missing-view perturbations test semantic truth and correction effort; strict/stateless schema policy and early-corpus lineage remain traceable.
+- [ ] No downloaded reconstruction model, GPU service or benchmark/live execution is inferred from the adopted future comparison seam.
 
 ## Conditional live acceptance — remain unchecked until performed
 

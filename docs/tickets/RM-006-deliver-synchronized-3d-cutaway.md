@@ -43,6 +43,12 @@ Confirm the real controller/selection interfaces, coordinate corpus and RM-002 a
 
 Rendering is one view of the current room, not another scene authority. Preserve coherent frame/selection/ghost motion while assets load; loading and failure do not unnecessarily replace the useful plan. Inspect actual asset size/placement and active motion, not just declared animation styles or saved screenshot existence.
 
+## Approved plan refinements — 17 October 2026
+
+**Coordinate, evidence and representation fidelity.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Consume revised half-millimetre centres exactly at the metre adapter. Depict an owned object's true bounded physical size through an eligible procedural model or explicitly limited semantic placeholder when a detailed fixed asset cannot represent it. Never change fit dimensions to suit a mesh. Read per-fact evidence/assessment coverage from the same document; a guessed original pose does not become confirmed because the rendering is precise. Use the internal visual baseline and separately measured orbit/transition frames; INP alone does not establish continuous canvas smoothness.
+
 ## Acceptance criteria
 
 - [ ] Cutaway loads only in the main editor; initial review has no 3D control/canvas.
@@ -54,6 +60,11 @@ Rendering is one view of the current room, not another scene authority. Preserve
 - [ ] WebGL/context/asset failures preserve useful 2D/manual behavior and safe copy.
 - [ ] Resource cleanup respects shared ownership on reset, view changes and unmount.
 - [ ] Actual tested loading/selection/view-switch/failure states preserve useful 2D work and coherent motion without introducing a 3D intake preview or extra render settings.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Odd-size/half-millimetre poses and true owned sizes outside detailed representation ranges remain aligned in plan, cutaway and checks without silent stretching.
+- [ ] Actual loading/orbit/Apply/Undo/view-switch frames and resource behavior are measured separately from discrete-action latency, with relevant uncertainty accessible.
 
 ## Focused verification and evidence
 

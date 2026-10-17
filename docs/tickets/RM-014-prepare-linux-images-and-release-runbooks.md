@@ -43,6 +43,14 @@ Require verified local application/evaluator behavior, not completed paid cases.
 
 Keep hot-reload iteration distinct from release-like output. Test release-verifier behavior against controlled matching and stale fixtures, then separately inspect actual current Linux images/bytes. Preserve LF/binary policy and reject actual stale proof; never normalize fingerprints or accept host-only evidence to silence a failing gate.
 
+## Approved plan refinements — 17 October 2026
+
+**Release covers runtime epochs and already-open clients.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-11/PR-12. Record process/boot-bound replay and independent server-deadline assumptions, revision overlap and the fact that maximum instances=1 is neither a global lock nor durable money cap. Pin CI actions to verified full commit identities and include action/base-image/platform/tool identities in release inputs; this does not perform a hosted run.
+
+Exercise local two-build stale-client cases: old JavaScript/new API, lazy cutaway chunk/search worker after update, catalogue/schema/rules mismatch and rollback. Choose an intentional compatible-asset/deployment-ID/update policy. Fence pending operations and preserve accepted semantic recovery where possible, with honest transient-photo/draft limitations. Avoid forced-update loops and never treat a framework reload as guaranteed preservation. Keep strict exact-byte proof and controlled verifier tests separate.
+
 ## Acceptance criteria
 
 - [ ] Both services have reviewable pinned multi-stage non-root images with actual required built dependencies/assets/workers.
@@ -54,6 +62,12 @@ Keep hot-reload iteration distinct from release-like output. Test release-verifi
 - [ ] Rollout/rollback/incident runbooks and fail-closed unconfigured examples are complete locally.
 - [ ] No image push, cloud mutation, domain change, paid request or hosted-success claim occurs without separate authorization.
 - [ ] Controlled tests pass for expected matching/stale cases while strict actual release checks still reject any relevant byte/image mismatch.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Verified immutable CI action/base-image/platform/tool identities participate in release evidence; hosted CI remains a distinct actual claim.
+- [ ] Local two-build chunk/worker/API/version mismatch and rollback cases have deliberate safe update behavior with no reload loop or invented transient-photo recovery.
+- [ ] Runbooks state boot/process grant binding, timeout ordering, revision-overlap/scaling exposure and separate durable funded controls without implying deployment authority.
 
 ## Focused verification and evidence
 

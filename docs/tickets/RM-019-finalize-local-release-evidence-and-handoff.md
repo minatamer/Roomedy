@@ -43,6 +43,12 @@ Read all ticket records, actual current source/status, visual decision, selected
 
 Reconcile every new feedback guideline with actual owning evidence. Keep screenshot/mode/input identity explicit, actual Linux/CI separate, and current source proof fresh after relevant fixes. Do not carry forward a visual/manual pass over materially changed UI. Handoff stays honest about unused external permissions and pending tests.
 
+## Approved plan refinements — 17 October 2026
+
+**Final proof includes open-client behavior and precise claims.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Reconcile PR-01–PR-15 and adopted O dispositions against actual evidence, not their documentation adoption. Refresh CI/action/base-image/tool/source/image identities and stale-client/lazy-chunk/worker/API/rollback behavior after relevant changes. Preserve separate Windows/Linux/hosted/model/owner claims. Document criterion-level motion/expiry and surface-specific privacy limits; local cleanup cannot delete exported or provider-controlled copies. O-01 remains an unexecuted comparison seam and O-02 retains its measured conditional disposition.
+
 ## Acceptance criteria
 
 - [ ] Every required prior outcome has evidence or an explicit legitimate disposition/destination.
@@ -54,6 +60,10 @@ Reconcile every new feedback guideline with actual owning evidence. Keep screens
 - [ ] External prerequisites and release implications are concrete, with no credentials or assumed authorizations.
 - [ ] Final handoff reports actual checks, limits, Git state and exact next action without automatic deployment/spend.
 - [ ] Final evidence identifies how applicable feedback guidelines were checked and never reuses materially stale visual, provider, Linux or hosted acceptance.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Final reconciliation includes adopted refinements, actual stale-client/rollback/action-identity proof and honest unperformed research/live/hosted cases without converting approval or old evidence into a pass.
 
 ## Focused verification and evidence
 

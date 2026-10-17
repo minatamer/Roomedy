@@ -42,6 +42,12 @@ Use RM-001's real app composition/config and RM-002's authored records. RM-005 a
 
 Keep the landing concise and task-led with no unsolicited chips, status explanations, settings or misleading preview claims. Use representative supported room art and stable type/logo loading. Animate hero copy/CTA when ready without arbitrary delay; in-page scrolling is smooth, preserves useful focus and avoids unnecessary route/hash churn. If FAQs are included, use one coherent accessible accordion rather than unrelated new sections.
 
+## Approved plan refinements — 17 October 2026
+
+**Feature-owned visual baseline and settled automatic motion.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Apply PR-13/PR-14 while composing the real feature. Record actual short-laptop and narrow-layout states for palette, typography, padding, panel hierarchy and first-viewport CTA. Establish a small internal visual baseline for later features; this adds no new owner gate. An automatically started landing story finishes and settles within five seconds with stable readable content; deliberate interactive motion remains smooth. Do not introduce perpetual decorative motion, fabricated progress or an animation-off/render-off setting. Record criterion-specific accessibility evidence rather than blanket conformance.
+
 ## Acceptance criteria
 
 - [ ] The real landing expresses the selected identity, guest value and three supported starting conditions.
@@ -53,6 +59,11 @@ Keep the landing concise and task-led with no unsolicited chips, status explanat
 - [ ] Keyboard/touch/focus/loading behavior is usable and deliberate motion remains present.
 - [ ] Local fonts/art and shared visual foundations have traceable ownership and no unnecessary external runtime dependency.
 - [ ] Actual cold load/refresh and short-laptop checks show stable typography, useful first-viewport CTA and smooth purposeful entrance/navigation without extra visitor-facing controls.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Actual cold/refresh/short-laptop/narrow evidence establishes the internal visual baseline and useful CTA without adding a new product or approval gate.
+- [ ] The automatic landing sequence settles within five seconds; active interaction motion stays smooth and readable, with criterion-level accessibility disposition.
 
 ## Focused verification and evidence
 

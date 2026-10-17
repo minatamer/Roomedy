@@ -43,6 +43,14 @@ Reuse the canonical controller, public schemas and shared correction commands. A
 
 Keep selection to previews/file checks and the explicit draft action; reconciliation belongs in review. Put upload guidance inside its control, maintain an obvious sample/manual alternative and consistent reachable proceed actions. Make removed/excluded photos and unknown values clear. Do not add recurring filler banners or send the visitor back to upload merely for a correctable hypothesis.
 
+## Approved plan refinements — 17 October 2026
+
+**Bounded observation-to-room review and relevant questions.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Before integration, define PR-06's uncertain draft: bounded per-photo observations, candidate physical entities, allow-listed source IDs, finite associations and application-owned stable identities. Resolve one rectangle frame, wall associations and scale without inventing confirmed millimetres. Estimated sketch display positions remain distinct from physical evidence. Merge/split/add/remove review preserves visitor corrections; two similar desks are not irreversibly merged by a provider assertion. Width/depth/wall corrections preserve confirmed values and deliberate placements, recompute only dependent draft estimates and flag contradictions.
+
+Wire the complete trusted feature authority and per-fact evidence from RM-003. O-03 is adopted: choose the one missing measurement relevant to the current goal/check dependencies, rather than asking every unknown field. Prepare a small rights-safe corpus/rubric skeleton now for RM-013; live interpretation remains unverified. O-01 preserves only the draft adapter seam; model downloads, GPU services and benchmark execution are deferred.
+
 ## Acceptance criteria
 
 - [ ] Eligible photo selection has finite codec/count/byte/pixel/decode policy with actual measured rationale.
@@ -54,6 +62,13 @@ Keep selection to previews/file checks and the explicit draft action; reconcilia
 - [ ] Duplicate/missed/misidentified features can be reconciled without losing stable accepted identities.
 - [ ] Removal/reset/expiry and stale decoder results cannot leak resources or restore cleared data.
 - [ ] Upload/review/error/restored-copy variants have concise contextual guidance, clear item states and reachable actions; no early AI dispatch, hidden 3D or redundant status banner appears.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Observation/entity/source/association/frame/scale bounds are explicit; ambiguous identity and wall relationships stay correctable with honest per-fact evidence.
+- [ ] One item in two photos, two identical items, conflicting associations, photo reorder/removal and mirrored/swapped wall dimensions preserve corrected 2D review work.
+- [ ] A later dimension correction preserves confirmed measurements/planned poses and recomputes only dependent estimates; complete feature corrections use shared commands.
+- [ ] The next guided question addresses a relevant unresolved dependency; irrelevant unknowns do not block exploration and the early independent rubric skeleton exists.
 
 ## Focused verification and evidence
 

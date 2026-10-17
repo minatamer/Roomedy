@@ -5,17 +5,19 @@ Plan status: **Approved by owner on 17 October 2026; ordered fake-mode execution
 Authority: [Roomedy blueprint](../ROOMEDY.md), especially [selected decisions](../ROOMEDY.md#26-decision-register)  
 Current instruction: execute and validate tickets in numeric order, stage/commit each completed ticket, use fake mode and stop at required review gates or 0% remaining Codex usage. No paid calls, deployment or push. RM-001 is implemented locally with hosted CI unverified, and RM-002 is complete locally; see RM-001’s [allocation](../commit-plans/RM-001.md) and [evidence](../validation/RM-001.md).
 
+**Latest approved steering:** the owner approved the [full review refinements](../reviews/2026-10-17-plan-review.md), requested documentation/ticket adoption, then resumption of unfinished RM-003 and the numeric fake-mode loop. PR-01–PR-15 and the stated O-01–O-03 dispositions now govern their existing owners. Added acceptance remains unchecked; RM-001/002 historical completion evidence is not retroactive proof. Stop at review gates or 0% usage; no paid calls or deployment.
+
 Owner-requested revision: incorporate lessons from the four referenced visual/manual-test chats before proceeding. Read [repository instructions](../../AGENTS.md), [feedback guidelines and their evidence](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and the [feature/review checklist](../design/REVIEW_CHECKLIST.md). These are requirements for the existing packets, not additional product features or authorization to implement.
 
 ## Why twenty packets
 
-Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; remaining packets are Planned until their own required outcomes are verified.
+Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is In progress and unvalidated, and RM-004 onward remain Planned.
 
-`RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001–RM-020 commit subjects below are suggestions for future authorized work, not existing implementation commits.
+`RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001/RM-002 have existing local implementation commits. Suggested subjects for later packets remain future authorized work; a subject is never proof of completed acceptance.
 
 ## Dependency-ordered queue
 
-Every dependency below means its **required local outcome has actual verified evidence**. Paid/hosted/device/owner evidence is tracked separately and never inferred from fake tests. The owner has approved this plan and now authorizes ordered local execution in fake mode, with per-ticket local commits after validation.
+Every dependency below means its **required local outcome has actual verified evidence**. Paid/hosted/device/owner evidence is tracked separately and never inferred from fake tests. The owner has approved this plan and its later review refinements, and authorizes ordered local execution in fake mode with per-ticket local commits after validation.
 
 | ID | Complete outcome | Direct dependencies | Milestone / additional gate |
 | --- | --- | --- | --- |
@@ -76,7 +78,7 @@ Use the current `execute` and `validate` workflows when implementation is author
 | Complete | All required evidence in the stated scope exists; exact limitations remain recorded |
 | Deferred / superseded | Explicit decision and destination recorded; never used to hide a required local failure |
 
-All checks below are **future verification requirements**. Planning link/graph checks do not establish application functionality. Development fixtures and injected provider tests are labelled fake, paid-off and network-denied before module imports. An ordinary check never reads ignored runtime environment files, inherits live spending flags or calls running apps/providers. Actual calls are counted, including refusals/failures; bootstrap, selection, drag, comparison, Apply, Undo, refresh and export must cost zero provider dispatches.
+Unchecked and newly added checks are **future verification requirements**; existing checked results retain their dated scope. Planning link/graph checks do not establish application functionality. Development fixtures and injected provider tests are labelled fake, paid-off and network-denied before module imports. An ordinary check never reads ignored runtime environment files, inherits live spending flags or calls running apps/providers. Actual calls are counted, including refusals/failures; bootstrap, selection, drag, comparison, Apply, Undo, refresh and export must cost zero provider dispatches.
 
 ## Scope invariants carried into every packet
 
@@ -125,6 +127,22 @@ The guideline source register distinguishes direct human feedback, Roomedy adapt
 | §§2.3, 16.2, 26; Q-07/D-10: prices and budget planning excluded | RM-001, RM-002, RM-004, RM-011 | RM-013, RM-016 |
 | §§20–24: failure recovery, test isolation, measured performance, packaging and release | RM-008, RM-012–RM-020 | Named local/owner/external evidence, separately classified |
 | §26 D-03/D-14: deferred inputs and external actions | Queue-wide scope rules; RM-019, RM-020 | No inferred account/domain/spend authority |
+
+## Approved review adoption and evidence ownership
+
+The [review](../reviews/2026-10-17-plan-review.md) is adopted through the [exact allocation](../commit-plans/PLAN-REFINEMENT-2026-10-17.md) and [documentation checks](../validation/PLAN-REFINEMENT-2026-10-17.md). It adds 52 unchecked criteria to existing packets, without new tickets or dependency edges. RM-001/002 preserve their dated completion evidence; their new downstream checklists name RM-003/RM-014 and later consumers explicitly rather than reopening or asserting historical verification.
+
+| Refinement | Existing execution owner and proof |
+| --- | --- |
+| PR-01–05: physical truth, fact evidence, centre lattice, feature commands, usable replay | RM-003 before sign-off; later RM-005/006/007/010/012 consumers refresh affected evidence |
+| PR-06 and O-03: uncertain observations/entities/frame/scale and relevant questions | RM-007/010/011; independent corpus skeleton prepared early and complete evaluation in RM-013 |
+| PR-07–08: request-local mutation scope and useful reproducible responsive search | RM-009/011; authority/scope rechecked on Apply and measured in RM-013/015 |
+| PR-09–11: readiness rubric, provider schema/data policy, resilient grants/deadlines | RM-008/010/011/013; fake local proof distinct from conditional paid/account/privacy acceptance |
+| PR-12–15: open-client release, meaningful visual/performance budgets, precise accessibility/privacy/current documentation | RM-004/005 per feature, RM-012/014/015/019 and conditional RM-020; actual visual/security gates unchanged |
+| O-01: modern geometry comparison seam | Keep the uncertain-draft adapter boundary only; downloads, GPU/runtime services, benchmark execution and deployment remain deferred |
+| O-02: precision door sector | Measure conservative-envelope false rejection in RM-003; precision work only if justified by independent cases |
+
+Approval selects these requirements and dispositions, not successful tests, a global SOTA model, actual frontend visual acceptance or future security finding remediation. Later quality/audit/fix packets preserve them under their existing gates.
 
 ## Reference ticket structures actually inspected
 

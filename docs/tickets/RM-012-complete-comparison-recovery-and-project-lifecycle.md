@@ -44,6 +44,14 @@ Inspect the actual controller resource registry and every effect added by RM-007
 
 Exercise reset then sample/import and refresh during retiring async writes/cleanup, not just idle reset. Persist semantic data only; restore uses current runtime composition/capabilities and never replays a request. Roomedy keeps its approved export/import despite Retailor's different export decision. Comparison remains inspection without hidden state mutation.
 
+## Approved plan refinements — 17 October 2026
+
+**Lifecycle preserves refined truth and deliberate updates.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Preserve half-millimetre centres, bounded true owned dimensions, per-fact evidence and the accepted baseline through allow-listed JSON recovery/import/export. Missing source photos and imported provenance never authenticate physical facts. Restore cannot revive retired local commands, grants or operations. Coordinate/schema migrations remain explicit and bounded.
+
+PR-12 update/skew handling must fence pending work and recover accepted semantics where possible, while honestly distinguishing transient photos/drafts/proposals that a forced reload cannot preserve. No reload loop or undisclosed guaranteed photo recovery. PR-14 preserves the selected non-extensible two-hour lifetime: document its specific timing-adjustability limitation and give useful warning/export opportunities without claiming those alone prove WCAG conformance or changing the selected expiry.
+
 ## Acceptance criteria
 
 - [ ] Before is read-only, immutable through edits/Undo and rendered with Current's selected view/camera.
@@ -55,6 +63,12 @@ Exercise reset then sample/import and refresh during retiring async writes/clean
 - [ ] Storage failure and missing originals have useful truthful recovery states.
 - [ ] Late writes/requests/decoders/worker replies cannot resurrect reset/expired/replaced data.
 - [ ] Cross-mode/capability restore cannot restore authorization or trigger dispatch, and reset/refresh races cannot recreate retiring room/photo/proposal data.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Round-trip recovery/import/export preserves refined physical/evidence/half-millimetre semantics and baseline without restoring source photos, replay authority or authenticated provenance.
+- [ ] Local stale-client/update behavior fences work and accurately distinguishes accepted semantic recovery from transient-photo/draft loss without a reload loop.
+- [ ] Fixed two-hour expiry and any warning/export behavior have a criterion-level timing disposition; no unsupported blanket accessibility or deletion claim is made.
 
 ## Focused verification and evidence
 

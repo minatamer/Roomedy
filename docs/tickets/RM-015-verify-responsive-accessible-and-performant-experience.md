@@ -44,6 +44,14 @@ Use the actual complete product and packaged candidate where available. Performa
 
 Consolidate evidence already gathered in the owning feature tickets; this is not the first time their controls/loading/error/mobile states are inspected. Add 1366x768 to the short-laptop matrix. Cover font cold-load/refresh, action reachability, composer/scrollbars, panel geometry, touch cues and all copy variants. Present only real available frontend evidence and its exact limitations.
 
+## Approved plan refinements — 17 October 2026
+
+**Measured failure thresholds and criterion-level accessibility.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-13/PR-14. Use the actual per-feature internal visual baseline and inspected short-laptop/narrow states; no new automatic owner gate is introduced. Before marking this packet passed, define practical measured budgets with browser/device or throttle, build mode, room/photo counts, cold/warm state and repetitions. Track discrete action latency separately from drag/orbit frame behavior, image-decode peak, search/abort latency and Apply/Undo motion; finiteness alone is insufficient. INP context is not a canvas-frame metric or a claimed Roomedy field result.
+
+Keep active designed motion smooth. Automatic landing sequences settle within five seconds with stable readable content. Record criterion-level keyboard/focus/zoom/touch/motion checks and the selected non-extensible two-hour expiry's timing-adjustability limitation; warning/export alone is no blanket WCAG pass. Preserve expiry/motion product choices and the actual owner visual stop.
+
 ## Required local acceptance
 
 - [ ] Complete product matrix records actual rendered interaction evidence and exact unperformed cases.
@@ -54,6 +62,12 @@ Consolidate evidence already gathered in the owning feature tickets; this is not
 - [ ] Central policy reflects measured chosen values and explicitly retained uncertainty; no competing limits exist.
 - [ ] Required settled checks and read-only validation pass for the scoped changes.
 - [ ] Feature evidence plus cumulative review covers the recurring failure states and 1366x768 layout, with actual inspected screenshots and no unsupported visual/physical acceptance.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Named repeatable performance scenarios have practical thresholds and actual results for discrete actions, continuous frames, decode peak, search/abort and Apply/Undo; failures receive owning fixes.
+- [ ] The internal feature visual baseline and current inspected states are reconciled without substituting for the actual owner review.
+- [ ] Automatic landing motion settles appropriately, active interactions remain smooth, and criterion-level accessibility/expiry limitations are stated without blanket conformance.
 
 ## Manual/external acceptance — never inferred from automation
 

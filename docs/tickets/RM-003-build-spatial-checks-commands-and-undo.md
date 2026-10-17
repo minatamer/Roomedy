@@ -1,6 +1,6 @@
 # RM-003 — Build spatial checks, atomic commands and Undo
 
-Status: **Planned**  
+Status: **In progress**  
 Planning date: **17 October 2026**  
 Milestone: **Foundation**  
 Depends on: [RM-001](RM-001-initialize-workspace-contracts-and-safe-runtime.md), [RM-002](RM-002-prepare-catalogue-assets-and-room-fixtures.md)  
@@ -13,7 +13,7 @@ Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEE
 
 Implement the pure authority used by manual controls, review corrections, local search and backend assistant validation. It transforms bounded room data through typed commands and produces computed issue facts. No React, SVG, Three, environment, storage, network or worker API belongs inside `packages/spatial`.
 
-Support integer-mm rectangles and quarter-turn center poses. Structural validity is separate from arrangement quality: a real room may already contain conflicts. Preserve that description while rejecting new hard blockers. Unknown inputs produce unassessed or approximate results. A model cannot resize a retained bed, mark an estimate confirmed or unlock-and-move a protected object by including an extra action.
+Support integer-mm physical dimensions, bounded half-millimetre centres and quarter-turn poses. Structural validity is separate from arrangement quality: a real room may already contain conflicts. Preserve that description while rejecting new hard blockers. Unknown inputs produce unassessed or approximate results. A model cannot resize a retained bed, mark an estimate confirmed or unlock-and-move a protected object by including an extra action.
 
 ## Dependency evidence and proposed ownership
 
@@ -29,7 +29,7 @@ Confirm actual catalogue/front/mechanism definitions and policy. Own pure algori
 
 ## Implementation plan
 
-1. Implement center-to-corners, local front, wall interval and quarter-turn adapters. State positive axes and integer rounding at external display boundaries. Geometry uses semantic dimensions; render bounds never enter rules.
+1. Implement center-to-corners, local front, wall interval and quarter-turn adapters. State positive axes and exact half-millimetre centre representation; display rounding never changes geometry. Geometry uses semantic dimensions; render bounds never enter rules.
 2. Define explicit contact/tolerance policy for positive-area collision versus touching edges and functional clearance. Test thresholds exactly and one millimetre either side. Build issue identities from rule and involved objects/regions, not array order or total issue count.
 3. Implement containment and supported solid/height collision checks. Define a conservative desk/chair relationship policy; only allow tucked-under overlap when the represented geometry supports it. Unknown height cannot create a false exception.
 4. Model door swing, wardrobe access, chair pull-out and height/window/obstacle checks for the supported mechanisms. Prefer explicit conservative approximations with visible limitations over unsupported exactness. Entry-path connectivity is passed only if the actual bounded connectivity algorithm exists; otherwise its diagnostic remains unassessed with a precise reason.
@@ -44,6 +44,16 @@ Confirm actual catalogue/front/mechanism definitions and policy. Own pure algori
 
 Keep structural validity, measurement uncertainty and arrangement blockers separate. A partial recognition hypothesis is not a reason to weaken geometric acceptance or demand invented dimensions. Focus tests on independent physical facts and command behavior; do not reorganize the pure engine or split its authority merely for a line-count target.
 
+## Approved plan refinements — 17 October 2026
+
+**Foundation contracts adopted before sign-off.** [Owner-approved review](../reviews/2026-10-17-plan-review.md). These requirements remain unverified until their owning execution evidence exists.
+
+Adopt PR-01–PR-05 before completing this packet. Physical dimensions of an owned real item are bounded semantic truth, separate from catalogue representation eligibility; a correction outside the model range remains accepted with a procedural/limited placeholder representation. Offered new/replacement variants stay constrained. Track bounded source/review evidence for pose, front/rotation, wall association, hinge/mechanism and all numeric dependencies, including room dimensions; deliberate planned positions are distinct from measured photographed positions. Unknown/unsupported rules never become passes merely because no issue was emitted.
+
+Use bounded half-millimetre centres and integer physical dimensions; doubled-integer arithmetic may express them internally. Define exact wire/round-trip behavior without hiding odd-size exact-fit failures behind an epsilon. Add bounded trusted visitor commands for feature add/remove/wall/hinge/mechanism corrections, with unambiguous typed targets or cross-kind ID uniqueness. Truthful physical corrections can reveal conflicts; model hypotheses cannot self-confirm or renovate the room.
+
+Replace permanent receipt-capacity lockout with a bounded replay window and safe retirement protocol. Retired commands reject as stale; recent duplicates remain idempotent after Undo. Never evict an ID while allowing its old action to execute again. Keep this local registry separate from metered admission. Measure the conservative door envelope on independent cases; retain its disclosed limitation unless demonstrated false rejection justifies the bounded analytic sector under O-02.
+
 ## Acceptance criteria
 
 - [ ] Coordinates and quarter-turn corners agree with independent expected values in all orientations.
@@ -55,6 +65,15 @@ Keep structural validity, measurement uncertainty and arrangement blockers separ
 - [ ] Apply is revision/version/payload-bound and idempotent; stale/replayed mismatches reject safely.
 - [ ] Whole-change Undo increases revision and obeys both history budgets without effects or baseline mutation.
 - [ ] Usable uncertain inputs receive explicit unassessed facts while structurally invalid data and new hard arrangement blockers still reject through the correct boundary.
+
+### Additional approved acceptance — all unperformed
+
+- [ ] Owned fixed/procedural items retain bounded corrected physical sizes outside representation ranges; offered unsupported new/replacement variants reject and original IDs/ownership remain intact.
+- [ ] Confirmed dimensions with guessed pose/wall/hinge facts cannot create a confirmed assessment; each rule reports its actual dependency/coverage status.
+- [ ] Odd/even dimensions at all quarter-turns support exact contact with half-millimetre centres, including command and JSON round trips.
+- [ ] Trusted feature add/remove/wall/hinge/mechanism corrections and Undo use this evaluator; cross-kind ID ambiguity and model confirmation/renovation attempts reject.
+- [ ] More than 256 actions and repeated no-ops remain usable under finite replay memory; retired/mismatched commands reject and duplicate Apply after Undo never reapplies.
+- [ ] Independent door cases record conservative false rejection; a precision-sector change occurs only if justified and independently tested.
 
 ## Focused verification and evidence
 
