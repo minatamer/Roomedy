@@ -2,11 +2,13 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** approved plan refinements adopted; ordered fake-mode execution resumes at unfinished RM-003; RM-001/RM-002 committed; hosted CI unverified  
+**Stage:** RM-003 locally complete and validated; exact local commit next, then RM-004; RM-001/RM-002 committed; hosted CI unverified  
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
 **Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-003 remains partial/unvalidated until its execution checks pass; dated historical checkpoints below remain historical.
+
+**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. Its exact authorized commit is next, followed by RM-004. Earlier in-progress statements below describe the adoption/review checkpoint.
 
 **Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). The owner approved the updated plan/guidelines, completed RM-000, then explicitly authorized ordered fake-mode execution/validation and local commits after each ticket. RM-001 is implemented locally; hosted CI is unverified; required review gates, no paid calls/deployment and a 0% remaining Codex usage cutoff apply.
 
@@ -1283,7 +1285,7 @@ Current outstanding evidence includes final RM-003 geometry/command validation a
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Finish/check and commit the approved documentation refinements as a scoped RM-000 update, then complete RM-003 under its amended criteria, validate and commit exact owned paths before RM-004. Keep fake/paid-off; stop at required review gates or 0% usage; no paid calls, deployment or push.
+Next action: Inspect/stage/commit the exact validated RM-003 allocation, record its Git receipt, then execute RM-004 in numeric order under the approved refinements. Keep fake/paid-off, stop at owner review gates or 0% usage; no paid calls/deployment/push/reset consumption.
 Active ticket: RM-003
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1309,7 +1311,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-17T18:57:37+00:00",
+  "updated_at": "2026-10-17T19:04:28+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1464,7 +1466,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-003",
-  "next_action": "Finish/check and commit the approved documentation refinements as a scoped RM-000 update, then complete RM-003 under its amended criteria, validate and commit exact owned paths before RM-004. Keep fake/paid-off; stop at required review gates or 0% usage; no paid calls, deployment or push.",
+  "next_action": "Inspect/stage/commit the exact validated RM-003 allocation, record its Git receipt, then execute RM-004 in numeric order under the approved refinements. Keep fake/paid-off, stop at owner review gates or 0% usage; no paid calls/deployment/push/reset consumption.",
   "phases": [
     {
       "id": "01-docs",
@@ -1749,7 +1751,9 @@ This checklist records local work. Human approvals and unresolved external check
         "commit:56b7d0fb8b97ed77b8f495460308a3778538ef95 — RM-001 verified local foundation; actual hosted CI unverified",
         "commit:dc07101324ce91f7066abc34243ef218eebe80c4 — RM-002 complete local catalogue/asset/fixture outcome, 33 tests and all root gates passed",
         "RM-003 selected in numeric order; clean worktree, both committed dependencies confirmed, full ticket and blueprint sections 8–10/24.3 read. Codex remaining 13%.",
-        "Owner approved all review recommendations and resumed ordered fake execution; approved documentation refinements written across exact allocated paths before RM-003 source/test edits resumed. docs/reviews/2026-10-17-plan-review.md and docs/commit-plans/PLAN-REFINEMENT-2026-10-17.md."
+        "Owner approved all review recommendations and resumed ordered fake execution; approved documentation refinements written across exact allocated paths before RM-003 source/test edits resumed. docs/reviews/2026-10-17-plan-review.md and docs/commit-plans/PLAN-REFINEMENT-2026-10-17.md.",
+        "commit:3cf041b95fb12645a902aceae05bf8a2606ed805 - RM-000 approved plan refinements: 28 exact documentation paths; 20 packets/35 original dependency edges, 52 new unchecked criteria and 386 local links/fragments checked; source excluded. RM-003 resumed under amended authority; revised shared build passed, independent corpus/final gates pending.",
+        "RM-003 required local outcome verified: 70 focused tests and test types; pnpm check passed format/lint/all types, six executable boundary cases, exact two GLB/eight SVG asset checks, 84 unit/integration tests and shared/backend/frontend production builds. Read-only review has no actionable findings; 18-source manifest independently matches 5966599a0e245d8f5cad520d659cf54f62641883f92bbeb6694793fbfec43164. docs/validation/RM-003.md records limits. Exact-path commit next."
       ],
       "blockers": [
         {

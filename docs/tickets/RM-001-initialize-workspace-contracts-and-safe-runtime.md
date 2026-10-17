@@ -65,7 +65,7 @@ The original local foundation evidence remains in its dated validation receipt. 
 
 ### Downstream acceptance — not historical completion evidence
 
-- [ ] Downstream RM-003 evidence demonstrates the approved semantic/coordinate/provenance/feature/replay refinements; this is not inferred from the original RM-001 receipt.
+- [x] Downstream RM-003 evidence demonstrates the approved semantic/coordinate/provenance/feature/replay refinements; this is not inferred from the original RM-001 receipt.
 - [ ] RM-014 includes verified immutable CI action identities in release inputs; actual hosted CI remains unverified until performed.
 
 ## Focused verification and evidence
@@ -84,3 +84,5 @@ The original local foundation evidence remains in its dated validation receipt. 
 Record installed versions, selected coordinate/schema policy, actual commands and local results in the execution evidence when performed. RM-002/003 consume these contracts; RM-007/008/015 refine measured policy through the same module. No geometry accuracy, photo interpretation, production capacity or paid/hosted acceptance is established by this foundation. No implementation or Git action is authorized by this planned ticket alone.
 
 Execution: [file allocation](../commit-plans/RM-001.md), [validation and exact evidence](../validation/RM-001.md). Required local outcome passed on 17 October 2026; next dependent work may proceed. No paid/live/hosted/visual acceptance is inferred.
+
+Downstream refinement receipt: [RM-003](../validation/RM-003.md) verifies its shared contract changes locally; the original RM-001 report remains dated.

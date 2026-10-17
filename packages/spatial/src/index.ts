@@ -1,39 +1,39 @@
-import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
-import type {
-  ProposalAction,
-  VisitorAction,
-} from '@roomedy/contracts/commands';
-import type { CheckFacts, RoomDocument } from '@roomedy/contracts/room';
-
 export {
   CATALOGUE,
   findCatalogueEntry,
   supportsDimensions,
 } from './catalogue.js';
-
-/** Origin is assigned by the calling controller/use case, never parsed from a wire payload. */
-export type CommandAuthority = 'visitor' | 'authored-sample' | 'assistant';
-export interface SpatialEngine {
-  check(room: RoomDocument, catalogue: readonly CatalogueEntry[]): CheckFacts;
-  propose(
-    room: RoomDocument,
-    actions: readonly ProposalAction[],
-    catalogue: readonly CatalogueEntry[],
-  ): CommandResult;
-  apply(
-    room: RoomDocument,
-    actions: readonly VisitorAction[],
-    authority: CommandAuthority,
-    catalogue: readonly CatalogueEntry[],
-  ): CommandResult;
-}
-export type CommandResult =
-  | { ok: true; room: RoomDocument; checks: CheckFacts }
-  | {
-      ok: false;
-      code:
-        'invalid-input' | 'locked' | 'stale' | 'new-conflict' | 'unassessed';
-    };
+export {
+  rotatePoint,
+  localFront,
+  footprint,
+  corners,
+  intersection,
+  area,
+  subsetRegion,
+  outsideRegions,
+  frontBand,
+  wallBand,
+  wallInterval,
+} from './coordinates.js';
+export { checkRoom } from './checks.js';
+export { evaluateBatch, validateRoom } from './commands.js';
+export type {
+  CommandAuthority,
+  CommandResult,
+  FailureCode,
+} from './commands.js';
+export {
+  createCommandWorkspace,
+  prepareCommand,
+  applyCommand,
+  undoCommand,
+  commandPayload,
+  payloadDigest,
+} from './proposals.js';
+export type { CommandWorkspace, ApplyResult } from './proposals.js';
+export { emptyHistory, pushHistory, popHistory, jsonBytes } from './history.js';
+export type { History, HistoryEntry } from './history.js';
 
 /** +X east, +Z south, +Y up. Meshes and display units never determine fit. */
 export const COORDINATES = Object.freeze({

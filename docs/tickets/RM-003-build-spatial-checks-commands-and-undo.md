@@ -1,6 +1,6 @@
 # RM-003 — Build spatial checks, atomic commands and Undo
 
-Status: **In progress**  
+Status: **Complete**  
 Planning date: **17 October 2026**  
 Milestone: **Foundation**  
 Depends on: [RM-001](RM-001-initialize-workspace-contracts-and-safe-runtime.md), [RM-002](RM-002-prepare-catalogue-assets-and-room-fixtures.md)  
@@ -56,24 +56,24 @@ Replace permanent receipt-capacity lockout with a bounded replay window and safe
 
 ## Acceptance criteria
 
-- [ ] Coordinates and quarter-turn corners agree with independent expected values in all orientations.
-- [ ] Supported collision/access/height rules return exact facts and honest approximate/unassessed states.
-- [ ] Final coordinated batches validate atomically; any invalid action leaves the original room unchanged.
-- [ ] Starting locks, retained dimensions and confirmation permissions resist model unlock/resize/confirmation bypasses.
-- [ ] Baseline repair compares issue identities and severity/geometry, not only issue count.
-- [ ] Measurement corrections retain new true values even when they expose a conflict.
-- [ ] Apply is revision/version/payload-bound and idempotent; stale/replayed mismatches reject safely.
-- [ ] Whole-change Undo increases revision and obeys both history budgets without effects or baseline mutation.
-- [ ] Usable uncertain inputs receive explicit unassessed facts while structurally invalid data and new hard arrangement blockers still reject through the correct boundary.
+- [x] Coordinates and quarter-turn corners agree with independent expected values in all orientations.
+- [x] Supported collision/access/height rules return exact facts and honest approximate/unassessed states.
+- [x] Final coordinated batches validate atomically; any invalid action leaves the original room unchanged.
+- [x] Starting locks, retained dimensions and confirmation permissions resist model unlock/resize/confirmation bypasses.
+- [x] Baseline repair compares issue identities and severity/geometry, not only issue count.
+- [x] Measurement corrections retain new true values even when they expose a conflict.
+- [x] Apply is revision/version/payload-bound and idempotent; stale/replayed mismatches reject safely.
+- [x] Whole-change Undo increases revision and obeys both history budgets without effects or baseline mutation.
+- [x] Usable uncertain inputs receive explicit unassessed facts while structurally invalid data and new hard arrangement blockers still reject through the correct boundary.
 
 ### Additional approved acceptance — all unperformed
 
-- [ ] Owned fixed/procedural items retain bounded corrected physical sizes outside representation ranges; offered unsupported new/replacement variants reject and original IDs/ownership remain intact.
-- [ ] Confirmed dimensions with guessed pose/wall/hinge facts cannot create a confirmed assessment; each rule reports its actual dependency/coverage status.
-- [ ] Odd/even dimensions at all quarter-turns support exact contact with half-millimetre centres, including command and JSON round trips.
-- [ ] Trusted feature add/remove/wall/hinge/mechanism corrections and Undo use this evaluator; cross-kind ID ambiguity and model confirmation/renovation attempts reject.
-- [ ] More than 256 actions and repeated no-ops remain usable under finite replay memory; retired/mismatched commands reject and duplicate Apply after Undo never reapplies.
-- [ ] Independent door cases record conservative false rejection; a precision-sector change occurs only if justified and independently tested.
+- [x] Owned fixed/procedural items retain bounded corrected physical sizes outside representation ranges; offered unsupported new/replacement variants reject and original IDs/ownership remain intact.
+- [x] Confirmed dimensions with guessed pose/wall/hinge facts cannot create a confirmed assessment; each rule reports its actual dependency/coverage status.
+- [x] Odd/even dimensions at all quarter-turns support exact contact with half-millimetre centres, including command and JSON round trips.
+- [x] Trusted feature add/remove/wall/hinge/mechanism corrections and Undo use this evaluator; cross-kind ID ambiguity and model confirmation/renovation attempts reject.
+- [x] More than 256 actions and repeated no-ops remain usable under finite replay memory; retired/mismatched commands reject and duplicate Apply after Undo never reapplies.
+- [x] Independent door cases record conservative false rejection; a precision-sector change occurs only if justified and independently tested.
 
 ## Focused verification and evidence
 
@@ -90,3 +90,5 @@ Replace permanent receipt-capacity lockout with a bounded replay window and safe
 ## Handoff and limits
 
 Publish exact supported rule/mechanism policy and independent expected fixtures. RM-005 supplies effectful session ownership, RM-009 bounded search and RM-011 assistant integration. No solver success, real-room accuracy, UI rendering or external safety certification is established here. Follow the index's future execute/validate evidence requirements; all criteria are unperformed at planning time.
+
+Actual local outcome: [RM-003 validation](../validation/RM-003.md) and [spatial policy](../engineering/spatial-rules.md). The full settled gate passed 84 unit/integration tests, six executable boundary cases, exact catalogue checks and both builds; the read-only source review found no actionable issues. No provider, UI, Linux or hosted result is inferred.

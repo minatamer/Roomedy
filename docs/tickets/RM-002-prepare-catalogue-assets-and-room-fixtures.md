@@ -63,8 +63,8 @@ The original catalogue/asset/fixture completion evidence is unchanged. PR-01 is 
 
 ### Downstream acceptance — not historical completion evidence
 
-- [ ] Downstream RM-003 and view consumers retain corrected owned physical dimensions outside fixed/procedural representation ranges with an honest fallback; proposed unsupported variants still reject.
-- [ ] Affected fixture/asset consumer checks are refreshed when coordinate/evidence contracts change; the original RM-002 preparation receipt remains historical.
+- [x] Downstream RM-003 and view consumers retain corrected owned physical dimensions outside fixed/procedural representation ranges with an honest fallback; proposed unsupported variants still reject.
+- [x] Affected fixture/asset consumer checks are refreshed when coordinate/evidence contracts change; the original RM-002 preparation receipt remains historical.
 
 ## Focused verification and evidence
 
@@ -82,3 +82,5 @@ The original catalogue/asset/fixture completion evidence is unchanged. PR-01 is 
 Record exact selected assets and actual preparation results when implemented. RM-003 owns geometric truth, RM-006 owns real cutaway rendering and RM-015 owns measured visual/device acceptance. This ticket cannot claim photo resemblance, exact recognition, certified clearances or owner approval from attractive thumbnails. Follow the index's future execution, read-only validation and Git rules.
 
 Execution: [exact allocation](../commit-plans/RM-002.md), [validation evidence](../validation/RM-002.md), [catalogue/asset/fixture policy](../design/catalogue.md). Required local scope completed on 17 October 2026; actual spatial engine and renderer/device acceptance remain later packets.
+
+Downstream refinement receipt: [RM-003](../validation/RM-003.md) refreshed fixture/representation and exact asset-consumer checks; original asset bytes and RM-002 preparation evidence remain unchanged.

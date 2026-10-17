@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@noble/hashes": "2.4.0",
     "@roomedy/contracts": "workspace:*"
   }
 }

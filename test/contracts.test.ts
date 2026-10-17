@@ -10,7 +10,7 @@ import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import { roomFixture } from './fixtures/room.js';
 
 describe('canonical structural boundaries', () => {
-  it('accepts the explicit integer-mm center-pose document and unknown measurements', () => {
+  it('accepts integer dimensions, half-mm center poses and unknown measurements', () => {
     const room = roomFixture();
     expect(roomDocumentSchema.parse(room)).toEqual(room);
     room.room.width = { status: 'unknown', value: null, sourceId: null };
@@ -55,7 +55,7 @@ describe('canonical structural boundaries', () => {
         false,
       );
   });
-  it('validates feature relationships without treating arrangement conflicts as schema failure', () => {
+  it('preserves physical feature conflicts as structurally valid facts for the spatial engine', () => {
     const room = roomFixture();
     room.furniture[0]!.pose.centerX = -100;
     expect(roomDocumentSchema.safeParse(room).success).toBe(true);
@@ -68,14 +68,17 @@ describe('canonical structural boundaries', () => {
       id: 'door-1',
       kind: 'door',
       wall: 'north',
+      wallProvenance: { status: 'estimated', sourceId: 'photo-1' },
       offset: m(3500),
       width: m(900),
       height: m(2100),
       sill: m(0),
       mechanism: 'inward',
+      mechanismProvenance: { status: 'estimated', sourceId: 'photo-1' },
       hinge: 'left',
+      hingeProvenance: { status: 'estimated', sourceId: 'photo-1' },
     });
-    expect(roomDocumentSchema.safeParse(room).success).toBe(false);
+    expect(roomDocumentSchema.safeParse(room).success).toBe(true);
   });
   it('prevents untrusted confirmation, unlock commands and supplied origin/admission fields', () => {
     expect(
@@ -101,6 +104,53 @@ describe('canonical structural boundaries', () => {
         inputRevision: 0,
         origin: 'visitor',
         admission: true,
+      }).success,
+    ).toBe(false);
+  });
+  it('requires evidence for pose and categorical physical facts without accepting mismatched unknown labels', () => {
+    const room = roomFixture();
+    const missingPose = structuredClone(room) as unknown as {
+      furniture: { pose: Record<string, unknown> }[];
+    };
+    delete missingPose.furniture[0]!.pose.provenance;
+    expect(roomDocumentSchema.safeParse(missingPose).success).toBe(false);
+    const feature = {
+      id: 'door_evidence',
+      kind: 'door',
+      wall: 'unknown',
+      wallProvenance: { status: 'confirmed', sourceId: 'photo_1' },
+      offset: { status: 'unknown', value: null, sourceId: null },
+      width: { status: 'unknown', value: null, sourceId: null },
+      height: { status: 'unknown', value: null, sourceId: null },
+      sill: { status: 'unknown', value: null, sourceId: null },
+      mechanism: 'unknown',
+      mechanismProvenance: { status: 'unknown', sourceId: null },
+      hinge: 'unknown',
+      hingeProvenance: { status: 'unknown', sourceId: null },
+    };
+    expect(
+      roomDocumentSchema.safeParse({
+        ...room,
+        room: { ...room.room, features: [feature] },
+      }).success,
+    ).toBe(false);
+    const uncertainFeature = {
+      ...feature,
+      wallProvenance: { status: 'unknown', sourceId: null },
+    };
+    expect(
+      roomDocumentSchema.safeParse({
+        ...room,
+        room: { ...room.room, features: [uncertainFeature] },
+      }).success,
+    ).toBe(true);
+    expect(
+      roomDocumentSchema.safeParse({
+        ...room,
+        room: {
+          ...room.room,
+          features: [{ ...uncertainFeature, mechanism: 'inward' }],
+        },
       }).success,
     ).toBe(false);
   });

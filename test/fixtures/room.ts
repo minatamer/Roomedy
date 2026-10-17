@@ -31,7 +31,12 @@ export function roomFixture(): RoomDocument {
         catalogueId: 'procedural-desk',
         catalogueVersion: VERSIONS.catalogue,
         dimensions: { width: m(1200), depth: m(600), height: m(740) },
-        pose: { centerX: 2900, centerZ: 2200, quarterTurns: 0 },
+        pose: {
+          centerX: 2900,
+          centerZ: 2200,
+          quarterTurns: 0,
+          provenance: { status: 'confirmed', sourceId: 'authored-sample' },
+        },
         ownership: 'owned',
         preference: 'keep',
         locks: { dimensions: true, position: false, rotation: false },

@@ -1,3 +1,5 @@
+import { POLICY } from '@roomedy/contracts/policy';
+import type { Furniture } from '@roomedy/contracts/room';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import { supportsDimensions } from '@roomedy/spatial';
 
@@ -139,6 +141,10 @@ export function resolveRepresentation(
   entry: CatalogueEntry | undefined,
   size: PhysicalSize,
   assetAvailable = true,
+  options: {
+    ownership?: Furniture['ownership'];
+    finish?: Furniture['finish'];
+  } = {},
 ): Representation {
   if (!entry)
     return {
@@ -146,11 +152,41 @@ export function resolveRepresentation(
       notice:
         'This catalogue version is unavailable. The room dimensions are preserved.',
     };
-  if (!supportsDimensions(entry, size))
+  const physical = Object.values(size).every(
+    (value) =>
+      Number.isInteger(value) && value >= 1 && value <= POLICY.furnitureEdgeMm,
+  );
+  if (!physical)
+    return {
+      kind: 'unavailable',
+      notice: 'The physical dimensions are invalid.',
+    };
+  const unsupportedFinish =
+    options.finish !== undefined && !entry.finishes.includes(options.finish);
+  if (
+    options.ownership === 'owned' &&
+    (!supportsDimensions(entry, size) || unsupportedFinish)
+  )
+    return {
+      kind: 'procedural',
+      approximate: true,
+      footprint: { ...size },
+      parts: [
+        {
+          name: 'physical-bounds',
+          center: [0, size.height / 2, 0],
+          size: [size.width, size.height, size.depth],
+          role: 'frame',
+        },
+      ],
+      notice:
+        'A simple bounds representation preserves this owned item’s measured size and finish. The selected model cannot represent them.',
+    };
+  if (!supportsDimensions(entry, size) || unsupportedFinish)
     return {
       kind: 'unavailable',
       notice:
-        'These dimensions are outside this item’s supported range. Choose an adjustable representation explicitly.',
+        'These dimensions are outside this itemâ€™s supported range. Choose an adjustable representation explicitly.',
     };
   if (entry.representation === 'prepared-mesh' && assetAvailable)
     return {

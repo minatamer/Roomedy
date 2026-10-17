@@ -7,6 +7,10 @@
     "dist"
   ],
   "exports": {
+    "./issues": {
+      "types": "./dist/issues.d.ts",
+      "default": "./dist/issues.js"
+    },
     "./policy": {
       "types": "./dist/policy.d.ts",
       "default": "./dist/policy.js"

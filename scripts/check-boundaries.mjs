@@ -160,7 +160,10 @@ export function analyzeBoundaries(input) {
       if (name.startsWith('packages/') && !relative) {
         const allowed = name.startsWith('packages/contracts/')
           ? specifier === 'zod'
-          : specifier.startsWith('@roomedy/contracts/');
+          : specifier.startsWith('@roomedy/contracts/') ||
+            ['@noble/hashes/sha2.js', '@noble/hashes/utils.js'].includes(
+              specifier,
+            );
         if (!allowed)
           errors.push(`${name}: forbidden shared dependency ${specifier}`);
       }

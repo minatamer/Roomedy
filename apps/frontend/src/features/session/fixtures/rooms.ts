@@ -28,7 +28,12 @@ function piece(
       depth: confirmed(entry.size.depth.default),
       height: confirmed(entry.size.height.default),
     },
-    pose: { centerX: x, centerZ: z, quarterTurns: turns },
+    pose: {
+      centerX: x,
+      centerZ: z,
+      quarterTurns: turns,
+      provenance: { status: 'confirmed', sourceId: 'authored-sample' },
+    },
     ownership: owned ? 'owned' : 'proposed',
     preference: owned ? 'keep' : 'flexible',
     locks: { dimensions: owned, position: fixedPosition, rotation: false },
@@ -54,22 +59,33 @@ const base: RoomDocument = {
         id: 'door_entrance',
         kind: 'door',
         wall: 'south',
+        wallProvenance: { status: 'confirmed', sourceId: 'authored-sample' },
         offset: confirmed(200),
         width: confirmed(900),
         height: confirmed(2100),
         sill: confirmed(0),
         mechanism: 'inward',
+        mechanismProvenance: {
+          status: 'confirmed',
+          sourceId: 'authored-sample',
+        },
         hinge: 'left',
+        hingeProvenance: { status: 'confirmed', sourceId: 'authored-sample' },
       },
       {
         id: 'window_work',
         kind: 'window',
         wall: 'north',
+        wallProvenance: { status: 'confirmed', sourceId: 'authored-sample' },
         offset: confirmed(2500),
         width: confirmed(1200),
         height: confirmed(1100),
         sill: confirmed(900),
         mechanism: 'fixed',
+        mechanismProvenance: {
+          status: 'confirmed',
+          sourceId: 'authored-sample',
+        },
       },
     ],
   },
@@ -95,7 +111,7 @@ export const ROOM_FIXTURE_DESCRIPTIONS = Object.freeze({
   partial:
     'Authored retained bed and fixed wardrobe. Room height is unknown; bed height is estimated.',
   conflict:
-    'Test baseline: the desk overlaps the retained bed by 900 × 600 mm. This arrangement needs repair.',
+    'Test baseline: the desk overlaps the retained bed by 900 Ã— 600 mm. This arrangement needs repair.',
 });
 export function createRoomFixture(
   kind: keyof typeof ROOM_FIXTURE_DESCRIPTIONS = 'sample',
@@ -122,6 +138,7 @@ export function createRoomFixture(
       centerX: 1500,
       centerZ: 1600,
       quarterTurns: 0,
+      provenance: { status: 'confirmed', sourceId: 'authored-sample' },
     };
   return roomDocumentSchema.parse(room);
 }

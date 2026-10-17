@@ -64,3 +64,17 @@ test('backend factories cannot load environment, read it, or listen', () => {
       analyzeBoundaries({ 'apps/backend/src/http/create-app.ts': text }).length,
     );
 });
+test('spatial permits only the selected pure hash/encoding subpaths', () => {
+  for (const specifier of ['@noble/hashes/sha2.js', '@noble/hashes/utils.js'])
+    assert.deepEqual(
+      analyzeBoundaries({
+        'packages/spatial/src/a.ts': `import '${specifier}';`,
+      }),
+      [],
+    );
+  assert.ok(
+    analyzeBoundaries({
+      'packages/spatial/src/a.ts': "import '@noble/hashes/webcrypto.js';",
+    }).length,
+  );
+});

@@ -1,7 +1,11 @@
 import { z } from 'zod';
+import { issueSchema, ruleCoverageSchema } from './issues.js';
+export { issueSchema } from './issues.js';
 import { POLICY, VERSIONS } from './policy.js';
 import {
   finishSchema,
+  factProvenanceSchema,
+  poseProvenanceSchema,
   idSchema,
   labelSchema,
   measurementSchema,
@@ -14,18 +18,21 @@ export const dimensionsSchema = z.strictObject({
   depth: measurementSchema(POLICY.furnitureEdgeMm),
   height: measurementSchema(POLICY.furnitureEdgeMm),
 });
-export const poseSchema = z.strictObject({
+export const poseTargetSchema = z.strictObject({
   centerX: z
     .number()
-    .int()
+    .multipleOf(0.5)
     .min(-POLICY.coordinateAbsMm)
     .max(POLICY.coordinateAbsMm),
   centerZ: z
     .number()
-    .int()
+    .multipleOf(0.5)
     .min(-POLICY.coordinateAbsMm)
     .max(POLICY.coordinateAbsMm),
   quarterTurns: quarterTurnsSchema,
+});
+export const poseSchema = poseTargetSchema.extend({
+  provenance: poseProvenanceSchema,
 });
 export const locksSchema = z.strictObject({
   dimensions: z.boolean(),
@@ -46,30 +53,54 @@ export const furnitureSchema = z.strictObject({
 });
 const featureBase = {
   id: idSchema,
-  wall: z.enum(['north', 'east', 'south', 'west']),
+  wall: z.enum(['north', 'east', 'south', 'west', 'unknown']),
+  wallProvenance: factProvenanceSchema,
   offset: measurementSchema(POLICY.roomEdgeMm, 0),
   width: measurementSchema(POLICY.roomEdgeMm),
   height: measurementSchema(POLICY.roomEdgeMm),
   sill: measurementSchema(POLICY.roomEdgeMm, 0),
 };
-export const featureSchema = z.discriminatedUnion('kind', [
-  z.strictObject({
-    ...featureBase,
-    kind: z.literal('door'),
-    mechanism: z.enum(['inward', 'outward', 'sliding']),
-    hinge: z.enum(['left', 'right']),
-  }),
-  z.strictObject({
-    ...featureBase,
-    kind: z.literal('window'),
-    mechanism: z.enum(['fixed', 'inward', 'outward', 'sliding']),
-  }),
-  z.strictObject({
-    ...featureBase,
-    kind: z.literal('obstacle'),
-    projection: measurementSchema(POLICY.roomEdgeMm),
-  }),
-]);
+export const featureSchema = z
+  .discriminatedUnion('kind', [
+    z.strictObject({
+      ...featureBase,
+      kind: z.literal('door'),
+      mechanism: z.enum(['inward', 'outward', 'sliding', 'unknown']),
+      mechanismProvenance: factProvenanceSchema,
+      hinge: z.enum(['left', 'right', 'unknown']),
+      hingeProvenance: factProvenanceSchema,
+    }),
+    z.strictObject({
+      ...featureBase,
+      kind: z.literal('window'),
+      mechanism: z.enum(['fixed', 'inward', 'outward', 'sliding', 'unknown']),
+      mechanismProvenance: factProvenanceSchema,
+    }),
+    z.strictObject({
+      ...featureBase,
+      kind: z.literal('obstacle'),
+      projection: measurementSchema(POLICY.roomEdgeMm),
+    }),
+  ])
+  .superRefine((feature, ctx) => {
+    const check = (value: string, status: string, field: string) => {
+      if ((value === 'unknown') !== (status === 'unknown'))
+        ctx.addIssue({
+          code: 'custom',
+          path: [field],
+          message: 'Unknown fact and evidence must agree',
+        });
+    };
+    check(feature.wall, feature.wallProvenance.status, 'wallProvenance');
+    if (feature.kind !== 'obstacle')
+      check(
+        feature.mechanism,
+        feature.mechanismProvenance.status,
+        'mechanismProvenance',
+      );
+    if (feature.kind === 'door')
+      check(feature.hinge, feature.hingeProvenance.status, 'hingeProvenance');
+  });
 export const roomDocumentSchema = z
   .strictObject({
     schemaVersion: z.literal(VERSIONS.schema),
@@ -98,58 +129,24 @@ export const roomDocumentSchema = z
     }),
   })
   .superRefine((doc, ctx) => {
-    const ids = [...doc.furniture, ...doc.room.features].map((item) => item.id);
+    const ids = [
+      doc.roomId,
+      ...[...doc.furniture, ...doc.room.features].map((item) => item.id),
+    ];
     if (new Set(ids).size !== ids.length)
       ctx.addIssue({ code: 'custom', message: 'Duplicate object ID' });
-    for (const [i, f] of doc.room.features.entries()) {
-      const edge =
-        f.wall === 'north' || f.wall === 'south'
-          ? doc.room.width.value
-          : doc.room.depth.value;
-      if (
-        edge !== null &&
-        f.offset.value !== null &&
-        f.width.value !== null &&
-        f.offset.value + f.width.value > edge
-      )
-        ctx.addIssue({
-          code: 'custom',
-          path: ['room', 'features', i],
-          message: 'Feature exceeds its wall',
-        });
-      if (
-        doc.room.height.value !== null &&
-        f.sill.value !== null &&
-        f.height.value !== null &&
-        f.sill.value + f.height.value > doc.room.height.value
-      )
-        ctx.addIssue({
-          code: 'custom',
-          path: ['room', 'features', i],
-          message: 'Feature exceeds wall height',
-        });
-    }
   });
 
-export const issueSchema = z.strictObject({
-  id: idSchema,
-  code: z.enum([
-    'outside-room',
-    'overlap',
-    'door-swing',
-    'access',
-    'unassessed',
-  ]),
-  severity: z.enum(['hard', 'warning', 'unassessed']),
-  objectIds: z.array(idSchema).max(POLICY.furniture + POLICY.features),
-  deficitMm: z.number().int().min(0).max(POLICY.coordinateAbsMm).nullable(),
-});
 export const checkFactsSchema = z.strictObject({
   roomId: idSchema,
   roomRevision: revisionSchema,
   rulesVersion: z.literal(VERSIONS.rules),
   assessed: z.boolean(),
-  issues: z.array(issueSchema).max(2048),
+  coverage: z
+    .array(ruleCoverageSchema)
+    .length(9)
+    .refine((items) => new Set(items.map((item) => item.rule)).size === 9),
+  issues: z.array(issueSchema).max(POLICY.issueFacts),
 });
 export type RoomDocument = z.infer<typeof roomDocumentSchema>;
 export type Furniture = z.infer<typeof furnitureSchema>;

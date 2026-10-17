@@ -52,3 +52,18 @@ export function candidateMeasurementSchema(max: number, min = 1) {
 }
 
 export type Measurement = z.infer<ReturnType<typeof measurementSchema>>;
+
+/** Evidence labels are data, never action authority. Planned is deliberate arrangement intent. */
+export const factProvenanceSchema = z.discriminatedUnion('status', [
+  z.strictObject({ status: z.literal('unknown'), sourceId: z.null() }),
+  ...(['estimated', 'extracted', 'scan-derived', 'confirmed'] as const).map(
+    (status) =>
+      z.strictObject({ status: z.literal(status), sourceId: idSchema }),
+  ),
+]);
+export const poseProvenanceSchema = z.union([
+  factProvenanceSchema,
+  z.strictObject({ status: z.literal('planned'), sourceId: idSchema }),
+]);
+export type FactProvenance = z.infer<typeof factProvenanceSchema>;
+export type PoseProvenance = z.infer<typeof poseProvenanceSchema>;
