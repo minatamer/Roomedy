@@ -1,0 +1,13 @@
+# Roomedy visual direction
+
+RM-004 source baseline, 17 October 2026. Actual screenshots, browser behavior and viewport evidence are recorded separately in RM-004 validation; this document is not a visual pass.
+
+The platform uses warm oat `#f4efe5`, paper `#fffaf2`, walnut `#78553d`, cocoa ink `#43352a`, sand and an earthy clay accent `#a96748`. This follows the owner’s latest beige/brown/earth/wood website direction, superseding the earlier teal platform direction. Future studio tools may use black/white neutrals. Room finish colours remain a separate catalogue concern. Typography uses the installed Arial/Helvetica/system sans stack and Georgia/Times italic accents: no font download, loading swap or external runtime asset dependency. The simple room-shaped R mark and flat tactile room SVG are repository-authored code-native artwork. They do not import a sibling logo or claim an exact photographed reconstruction.
+
+A compact navigation and left-aligned promise/CTA share the first desktop viewport with the authored room. Mobile places the useful message and CTA first. The plan uses actual RM-002 catalogue/sample dimensions and supports only a labelled illustrative desk/chair move. It is not a second editable semantic authority. Entry previews remain 2D; the later main editor introduces synchronized stylized 3D.
+
+The scripted story starts when mounted, previews at 650 ms, applies at 1850 ms and undoes at 3350 ms; the 650 ms geometry transition settles by 4000 ms. Readable request text stays fixed. Deliberate Preview/Apply/Undo cancels remaining automatic timers. No perpetual decorative loop, fake progress, hidden provider call, WebGL startup, animation-off setting or OS suppression exists. Actual frame/focus/browser acceptance remains required.
+
+`entry-state.ts` is the typed source/condition handoff authority. It supports sample versus own-room, then empty/partial/furnished; completed choices are represented by strict allow-listed URL values. The current stage renders an authored sample overview, or a truthful unavailable photo-drafting state with a sample fallback. It does not pretend the later editor/intake is implemented. No photo transfer, paid operation, local recovery claim of an unaccepted room or hidden persistence occurs at entry.
+
+Shared tokens, focus outlines, minimum action heights, bounded panels and responsive compositions are established in CSS. Root browser checks must inspect cold/refresh, keyboard/focus, SVG placement, the bounded story and 320×568, 390×844, 768×1024, 1280×720 and 1440×900. Criterion-specific accessibility evidence is separate from future physical-device/assistive review and the owner visual gate. Refine actual observed defects in these owning files before calling RM-004 locally complete.

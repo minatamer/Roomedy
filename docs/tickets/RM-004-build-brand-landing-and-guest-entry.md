@@ -1,6 +1,6 @@
 # RM-004 — Build the brand, landing and guest entry
 
-Status: **Planned**  
+Status: **Complete locally**\
 Planning date: **17 October 2026**  
 Milestone: **Product entry**  
 Depends on: [RM-001](RM-001-initialize-workspace-contracts-and-safe-runtime.md), [RM-002](RM-002-prepare-catalogue-assets-and-room-fixtures.md)  
@@ -11,7 +11,7 @@ Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEE
 
 ## Outcome and standalone context
 
-Introduce Roomedy through a polished responsive landing and a short guest entry. The visitor should understand that they can start with an empty, partly furnished or furnished bedroom/workspace, review their room, then edit it manually or with the assistant. Use warm ivory, deep green/teal and clay with tactile stylized room art and deliberate motion.
+Introduce Roomedy through a polished responsive landing and a short guest entry. The visitor should understand that they can start with an empty, partly furnished or furnished bedroom/workspace, review their room, then edit it manually or with the assistant. Use the owner's latest beige/brown/earth/wood website palette: oat, sand, beige, walnut and cocoa, with tactile stylized room art and deliberate motion. This supersedes the earlier teal brand direction. The studio may use more neutral black/white chrome; furniture/room finish data stays independent.
 
 The supplied HTML is a documentation illustration, not the application to embed wholesale. Build the real landing with a lightweight explicitly scripted example of one request, a coordinated preview, Apply and Undo. It must not initialize the heavy WebGL editor or imply a live provider response. The selected domain spelling is tryroomedy.com; no registration or hosted availability is claimed.
 
@@ -50,20 +50,20 @@ Apply PR-13/PR-14 while composing the real feature. Record actual short-laptop a
 
 ## Acceptance criteria
 
-- [ ] The real landing expresses the selected identity, guest value and three supported starting conditions.
-- [ ] First-viewport navigation/message/visual/CTA are usable across representative phone, tablet and laptop sizes.
-- [ ] The demonstration is labelled scripted, bounded and independent of provider/WebGL editor startup.
-- [ ] Progressive entry makes sample versus own-room and room condition clear with working route/state handoff contracts.
-- [ ] Sample/landing/selection generate zero metered calls.
-- [ ] Copy preserves rough 2D review before main-editor 3D and contains no deferred pricing/shopping or accuracy claim.
-- [ ] Keyboard/touch/focus/loading behavior is usable and deliberate motion remains present.
-- [ ] Local fonts/art and shared visual foundations have traceable ownership and no unnecessary external runtime dependency.
-- [ ] Actual cold load/refresh and short-laptop checks show stable typography, useful first-viewport CTA and smooth purposeful entrance/navigation without extra visitor-facing controls.
+- [x] The real landing expresses the selected identity, guest value and three supported starting conditions.
+- [x] First-viewport navigation/message/visual/CTA are usable across representative phone, tablet and laptop sizes.
+- [x] The demonstration is labelled scripted, bounded and independent of provider/WebGL editor startup.
+- [x] Progressive entry makes sample versus own-room and room condition clear with working route/state handoff contracts.
+- [x] Sample/landing/selection generate zero metered calls.
+- [x] Copy preserves rough 2D review before main-editor 3D and contains no deferred pricing/shopping or accuracy claim.
+- [x] Keyboard/touch/focus/loading behavior is usable and deliberate motion remains present.
+- [x] Local fonts/art and shared visual foundations have traceable ownership and no unnecessary external runtime dependency.
+- [x] Actual cold load/refresh and short-laptop checks show stable typography, useful first-viewport CTA and smooth purposeful entrance/navigation without extra visitor-facing controls.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance
 
-- [ ] Actual cold/refresh/short-laptop/narrow evidence establishes the internal visual baseline and useful CTA without adding a new product or approval gate.
-- [ ] The automatic landing sequence settles within five seconds; active interaction motion stays smooth and readable, with criterion-level accessibility disposition.
+- [x] Actual cold/refresh/short-laptop/narrow evidence establishes the internal visual baseline and useful CTA without adding a new product or approval gate.
+- [x] The automatic landing sequence settles within five seconds; active interaction motion stays smooth and readable, with criterion-level accessibility disposition.
 
 ## Focused verification and evidence
 
@@ -78,3 +78,7 @@ Apply PR-13/PR-14 while composing the real feature. Record actual short-laptop a
 ## Handoff and limits
 
 Record actual browser evidence when available; synthetic DOM or static HTML checks are not screenshots. RM-015 owns the completed product matrix and owner visual approval, so this packet does not claim final acceptance. The current documentation browser restriction is not permission to use an alternate rendering workaround. Follow available tool policy and record any unperformed visual check accurately.
+
+## Execution evidence — 18 October 2026
+
+See [RM-004 actual checks](../validation/RM-004.md) and [exact allocation](../commit-plans/RM-004.md). Landing/entry scope is locally complete; the main editor and intake remain RM-005/RM-007. Browser asset inventory, source boundaries and paid-off runtime support the zero-metered-call invariant; a full network waterfall and physical-device/assistive testing are not claimed. Owner visual acceptance remains RM-015.

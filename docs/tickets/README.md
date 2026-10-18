@@ -11,7 +11,7 @@ Owner-requested revision: incorporate lessons from the four referenced visual/ma
 
 ## Why twenty packets
 
-Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 onward remain Planned.
+Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 is locally complete; RM-005 onward remain Planned.
 
 `RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001/RM-002 have existing local implementation commits. Suggested subjects for later packets remain future authorized work; a subject is never proof of completed acceptance.
 
@@ -161,6 +161,6 @@ Roomedy separates the late quality execution, security audit and selected securi
 
 The owner approved the updated plan and guidelines and requested step-six RM-000 documentation/ticket commits. This approval covers the reviewed packet count/scope, sequencing and guidelines; exact numerical engineering policy, asset preparation and model selection remain future evidence-bearing implementation work. Follow the scoped RM-000 allocation and verification receipt. The subsequent step-seven request authorizes ordered local implementation/commits in fake mode. Paid/provider testing and hosted changes remain unauthorized.
 
-Execution evidence: [RM-001](../validation/RM-001.md) (local foundation, hosted CI unverified), [RM-002](../validation/RM-002.md) (catalogue/assets/fixtures complete). Next numeric packet: RM-003.
+Execution evidence: [RM-001](../validation/RM-001.md) (local foundation, hosted CI unverified), [RM-002](../validation/RM-002.md) (catalogue/assets/fixtures complete). RM-003 is committed; RM-004 local validation follows.
 
-RM-003 local completion: [actual checks](../validation/RM-003.md) and [supported rules](../engineering/spatial-rules.md). RM-004 is next after its exact authorized commit.
+RM-003 local completion: [actual checks](../validation/RM-003.md) and [supported rules](../engineering/spatial-rules.md). RM-003 was committed as `bc349f5`. RM-004 has [local browser and gate evidence](../validation/RM-004.md); its scoped commit is next, followed by RM-005.

@@ -38,7 +38,7 @@ Require actual passing spatial command/corpus evidence and usable entry routes. 
 7. Wire one command dispatcher and common receipts/Undo. Manual changes invalidate any pending proposal/AI/search result before commit. New semantic goals invalidate operations that captured the old goal; camera/selection inspection does not spuriously change room revision.
 8. Provide reusable candidate preview inputs distinct from accepted room data for RM-011. Every async completion checks workspace identity, generation, input revision and operation ID even after abort. Reset must fence late completion before releasing resources or creating a new workspace.
 9. Surface unsupported/unknown checks with focusable object/issue cards. A baseline conflict remains disclosed after an unrelated finish change. Never display a global fit pass when a required dimension/mechanism is unknown.
-10. Build responsive editor composition with focus-safe panels and concise goal/finish cards. Wire only supported controls; no direct 3D drag, extra layout comparison or price/budget flow. Sample/manual interaction works when AI is unavailable and costs zero calls.
+10. Build responsive editor composition with focus-safe panels and concise goal/finish cards. Studio chrome may use neutral black/white within the owner's latest earthy website direction; this does not recolor room/furniture finish data. Wire only supported controls; no direct 3D drag, extra layout comparison or price/budget flow. Sample/manual interaction works when AI is unavailable and costs zero calls.
 
 ## Prevention requirements from prior feedback
 

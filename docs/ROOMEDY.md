@@ -2,13 +2,13 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-003 locally complete and validated; exact local commit next, then RM-004; RM-001/RM-002 committed; hosted CI unverified  
+**Stage:** RM-001/RM-002/RM-003 committed; RM-004 locally validated, exact commit next, then RM-005; hosted CI unverified\
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
-**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-003 remains partial/unvalidated until its execution checks pass; dated historical checkpoints below remain historical.
+**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-003 is committed and RM-004 has local browser/gate evidence; dated historical checkpoints below remain historical.
 
-**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. Its exact authorized commit is next, followed by RM-004. Earlier in-progress statements below describe the adoption/review checkpoint.
+**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`. [RM-004 checks](validation/RM-004.md) establish the actual earthy landing and progressive entry baseline; its exact authorized commit is next, then RM-005. Earlier in-progress statements below describe historical checkpoints.
 
 **Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). The owner approved the updated plan/guidelines, completed RM-000, then explicitly authorized ordered fake-mode execution/validation and local commits after each ticket. RM-001 is implemented locally; hosted CI is unverified; required review gates, no paid calls/deployment and a 0% remaining Codex usage cutoff apply.
 
@@ -75,7 +75,7 @@ The root README owns the short public story. This document owns product behavior
 
 **Owner-confirmed review sequence, 17 October 2026:** initial photo review uses a rough, editable **2D sketch only**. The visitor corrects the sketch and reviews measurements before entering the main editor. **3D becomes available only in the main editor.** This clarification applies to all uploaded-room starting conditions; it does not remove either view from the main editor.
 
-**Owner-selected first-release product, 17 October 2026:** rectangular bedroom/workspace combinations; warm ivory, deep green/teal and clay with polished stylized furniture; similar supported models at reviewed dimensions; precision placement in 2D and 3D orbit/selection/inspection; one proposal at a time plus a bounded read-only Before/Current peek; samples/photos/typed dimensions; two-hour local semantic-room recovery and export/import, with raw photos transient. Guided sketch correction, visual ownership/goal/style cards, contextual assistant actions, explanatory previews and the sketch-to-studio transition are included. Furniture prices and visitor budget planning are explicitly deferred.
+**Owner-selected first-release product, 17 October 2026:** rectangular bedroom/workspace combinations; an oat/sand/beige/walnut/cocoa website palette with earthy wood tones, optional neutral black/white studio chrome and polished stylized furniture; similar supported models at reviewed dimensions; precision placement in 2D and 3D orbit/selection/inspection; one proposal at a time plus a bounded read-only Before/Current peek; samples/photos/typed dimensions; two-hour local semantic-room recovery and export/import, with raw photos transient. Guided sketch correction, visual ownership/goal/style cards, contextual assistant actions, explanatory previews and the sketch-to-studio transition are included. Furniture prices and visitor budget planning are explicitly deferred.
 
 **Recommended baseline:** a rectangular single-room first release, a small curated/procedural catalogue, Next.js/React/TypeScript, a separate Express API, shared browser-safe contracts and a pure spatial engine, browser-owned guest state, server-side GPT integration, and two Cloud Run application services when deployment is authorized.
 
@@ -838,9 +838,11 @@ Provider limits, cloud instance caps, operation grants and a paid master are com
 
 ### 19.1 Proposed identity
 
-The owner selected a calm but lively design studio: warm ivory, deep green/teal structure, a clay accent, tactile furniture and deliberate spatial motion. The room canvas is the hero. Use clear typography, generous spacing and one consistent icon/material language. This is the selected visual direction; it does not establish a finished logo or actual frontend visual approval. Do not copy Retrosum's vintage brand or Retailor's storefront style automatically.
+The owner selected a calm but lively design studio with tactile furniture and deliberate spatial motion. The latest website palette is full of beige/brown/earth/wood tones: oat, sand, beige, walnut and cocoa. Studio chrome may use more neutral black/white. This supersedes the earlier warm ivory/deep green-teal/clay platform direction recorded earlier on 17 October 2026; canonical room/furniture finishes remain independent. The room canvas is the hero. Use clear typography, generous spacing and one consistent icon/material language. This is the selected visual direction; it does not establish a finished logo or actual frontend visual approval. Do not copy Retrosum's vintage brand or Retailor's storefront style automatically.
 
 Offer visually understandable choices, with a room/furniture preview as the visitor selects a variant or finish. Use ghosted proposed positions, affected-object highlights, change summaries and readable check overlays. Proposed furniture must not look indistinguishable from committed pieces. The live app should not need a technical provider-mode switch in the visitor flow.
+
+**Latest owner wording, 17 October 2026:** “color theme should be full of beiges and browns and earthy colors, aka woody colors aka furtnite colors you feel me? color theme of the website .. studio can have more blacks and white ofc”. The selected interpretation is wood/furniture-inspired earth tones for the website and permission for neutral studio tools; it does not change room finish presets, introduce game branding or waive actual visual review.
 
 ### 19.2 Motion policy reconciliation
 
@@ -873,7 +875,7 @@ The signature moment is **ask for a useful room change → inspect the coordinat
 | P-05. Explanatory previews | Show affected footprints/ghost positions, a short change list, what stays protected, computed checks and remaining unknowns. Keep Apply/Cancel beside the room. | No invented improvement percentages or quality scores; preserve atomic validation and revision fencing. |
 | P-06. Before/Current peek | Include one read-only accepted starting layout and compare it with the committed current room from the same editor view/camera. | This selected refinement uses a bounded baseline, not multiple generated alternatives or a second editable state authority. Undo is separate. See section 9.6. |
 | P-07. Sketch-to-studio transition | Keep one coherent workspace: correct the rough 2D sketch, review dimensions, then continue into the main editor where the 3D cutaway becomes available. Panels adapt around the canvas; mobile uses focused sheets. | No 3D during initial review. Keep the transition explicit without a technical settings/loading screen. |
-| P-08. Lively room demonstration | A lightweight scripted main-editor cutaway on the landing demonstrates desk/chair coordination, a clear access overlay and Undo. Use warm ivory, deep green/teal and clay with polished stylized furniture and deliberate motion. | Label scripted behavior; load the real 3D editor only at its owning stage. No animation-off/render-off controls or OS suppression. |
+| P-08. Lively room demonstration | A lightweight scripted main-editor cutaway on the landing demonstrates desk/chair coordination, a clear access overlay and Undo. Use the selected beige/brown/earth/wood website direction with polished stylized furniture and deliberate motion; studio tools may use black/white neutrals. | Label scripted behavior; load the real 3D editor only at its owning stage. No animation-off/render-off controls or OS suppression. |
 
 Retrosum's coherent workspace/controller and useful assistant are the main interaction reference; Retailor contributes visual choices and reviewed action cards. Roomedy keeps its own visual identity. Section 27.5 records the official product/principle research that informed these ideas; owner selection does not turn that desk research into measured usability evidence.
 
@@ -881,7 +883,7 @@ Retrosum's coherent workspace/controller and useful assistant are the main inter
 
 The first release covers rectangular bedroom/home-office combinations and a coherent bed, desk, chair, wardrobe and limited storage catalogue. Keep empty, partly furnished and existing-room journeys. The visitor chooses the supported room purpose; a photo does not silently classify an empty room as a bedroom.
 
-Use procedural adjustable essentials and selected compatible assets with polished stylized cutaway rendering. Similar supported models at reviewed physical dimensions are accepted for owned items; exact photo-to-furniture replicas remain outside scope. The palette direction is warm ivory, deep green/teal and clay. Use the generic **Roomedy assistant** label; a separate assistant name and finished logo are not prerequisites to tickets. Final artwork/type/material implementation still needs actual visual review.
+Use procedural adjustable essentials and selected compatible assets with polished stylized cutaway rendering. Similar supported models at reviewed physical dimensions are accepted for owned items; exact photo-to-furniture replicas remain outside scope. The website palette is oat/sand/beige/walnut/cocoa and earthy wood tones. Studio chrome may use neutral black/white; room/furniture finishes remain semantic data independent of platform styling. Use the generic **Roomedy assistant** label; a separate assistant name and finished logo are not prerequisites to tickets. Final artwork/type/material implementation still needs actual visual review.
 
 Precision furniture placement is in 2D, with drag, rotate, snap and numeric/keyboard controls. The 3D main-editor view supports orbit, zoom/reset, selection and inspection. Direct 3D dragging is deferred. One proposal is visible at a time, plus the selected bounded Before/Current peek at the accepted starting arrangement. Multiple generated alternatives are deferred.
 
@@ -1132,7 +1134,7 @@ The owner answered the reviewed Q-01 through Q-09 recommendation set on 17 Octob
 | Question | Owner-selected outcome | Scope trace |
 | --- | --- | --- |
 | Q-01. First-release room scope | Rectangular bedroom/workspace combinations, with bed, desk, chair, wardrobe and a few storage additions. Keep room purpose explicit and support empty/partial/existing conditions. | D-02, D-06; sections 2 and 5 |
-| Q-02. Visual direction | Warm ivory, deep green/teal and clay with polished stylized furniture, consistent materials and deliberate motion. Actual artwork and implemented UI still need visual review. | D-01, D-02; section 19 |
+| Q-02. Visual direction — latest correction | Beige/brown/earth/wood website tones (oat, sand, beige, walnut, cocoa), with black/white studio neutrals permitted; polished stylized furniture and deliberate motion. Earlier teal platform direction is superseded; furniture finishes stay independent. Actual artwork and implemented UI still need visual review. | D-01, D-02; section 19 |
 | Q-03. Owned furniture representation | Similar supported models at reviewed dimensions are accepted, with clear representation/provenance labels. Exact arbitrary photo-to-furniture reconstruction is deferred. | D-02; sections 6 and 13 |
 | Q-04. Main-editor manipulation | 2D drag/rotate/numeric/keyboard placement; 3D orbit, selection and inspection. Direct 3D dragging is deferred. | D-07; section 7 |
 | Q-05. Comparison | One proposal at a time plus one bounded read-only Before/Current peek. Multiple generated alternatives are deferred. | D-09, D-13, P-06; section 9.6 |
@@ -1285,8 +1287,8 @@ Current outstanding evidence includes final RM-003 geometry/command validation a
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Inspect/stage/commit the exact validated RM-003 allocation, record its Git receipt, then execute RM-004 in numeric order under the approved refinements. Keep fake/paid-off, stop at owner review gates or 0% usage; no paid calls/deployment/push/reset consumption.
-Active ticket: RM-003
+Next action: Stage exact validated RM-004 allocation and commit it; then read/allocate/execute RM-005, preserving fake-mode and owner gates.
+Active ticket: RM-004
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1311,7 +1313,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-17T19:04:28+00:00",
+  "updated_at": "2026-10-18T07:48:41+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1457,6 +1459,21 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "ok i approve the recommendations. update the docs and tickets, then resume RM-003 and continue in order. use fake mode, validate and commit each ticket, and stop at review gates or 0% usage. no paid calls or deployment.",
       "source": "human:current-chat/2026-10-17/approve-review-and-resume-ordered-build; reviewed docs/reviews/2026-10-17-plan-review.md PR-01..15/O-01..03",
       "confidence": "confirmed"
+    },
+    "ACTIVE_GOAL": {
+      "value": "Registered active goal: execute/validate/commit eligible tickets in order through locally prepared release files, stopping at owner gates or 0% remaining; resume unfinished RM-004. No paid calls/deploy/push/reset consumption/delegation.",
+      "source": "human:current-chat/2026-10-18/keep-going-set-goal; docs/GENERIC REPO GUIDE.html Start the big build loop; create_goal confirmed",
+      "confidence": "confirmed"
+    },
+    "CODEX_USAGE_CHECK": {
+      "value": "2026-10-18: latest usage read 0% used / 100% remaining weekly; no reset consumed by agent.",
+      "source": "get_usage_limits:current-turn",
+      "confidence": "confirmed"
+    },
+    "WEBSITE_PALETTE": {
+      "value": "Oat, sand, beige, walnut, cocoa and earthy wood tones. Studio may use black/white; room finishes independent. Supersedes earlier teal platform direction.",
+      "source": "human:current-chat/latest-website-palette; docs/ROOMEDY.md section19.1",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": null,
@@ -1465,8 +1482,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-003",
-  "next_action": "Inspect/stage/commit the exact validated RM-003 allocation, record its Git receipt, then execute RM-004 in numeric order under the approved refinements. Keep fake/paid-off, stop at owner review gates or 0% usage; no paid calls/deployment/push/reset consumption.",
+  "active_ticket": "RM-004",
+  "next_action": "Stage exact validated RM-004 allocation and commit it; then read/allocate/execute RM-005, preserving fake-mode and owner gates.",
   "phases": [
     {
       "id": "01-docs",
@@ -1753,7 +1770,9 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-003 selected in numeric order; clean worktree, both committed dependencies confirmed, full ticket and blueprint sections 8–10/24.3 read. Codex remaining 13%.",
         "Owner approved all review recommendations and resumed ordered fake execution; approved documentation refinements written across exact allocated paths before RM-003 source/test edits resumed. docs/reviews/2026-10-17-plan-review.md and docs/commit-plans/PLAN-REFINEMENT-2026-10-17.md.",
         "commit:3cf041b95fb12645a902aceae05bf8a2606ed805 - RM-000 approved plan refinements: 28 exact documentation paths; 20 packets/35 original dependency edges, 52 new unchecked criteria and 386 local links/fragments checked; source excluded. RM-003 resumed under amended authority; revised shared build passed, independent corpus/final gates pending.",
-        "RM-003 required local outcome verified: 70 focused tests and test types; pnpm check passed format/lint/all types, six executable boundary cases, exact two GLB/eight SVG asset checks, 84 unit/integration tests and shared/backend/frontend production builds. Read-only review has no actionable findings; 18-source manifest independently matches 5966599a0e245d8f5cad520d659cf54f62641883f92bbeb6694793fbfec43164. docs/validation/RM-003.md records limits. Exact-path commit next."
+        "RM-003 required local outcome verified: 70 focused tests and test types; pnpm check passed format/lint/all types, six executable boundary cases, exact two GLB/eight SVG asset checks, 84 unit/integration tests and shared/backend/frontend production builds. Read-only review has no actionable findings; 18-source manifest independently matches 5966599a0e245d8f5cad520d659cf54f62641883f92bbeb6694793fbfec43164. docs/validation/RM-003.md records limits. Exact-path commit next.",
+        "commit:bc349f5b546d3668a762155fed1877afee3d1f3a - RM-003 complete local outcome; exact35changedpaths staged from36allocatedpaths, reviewed source manifest matched, all gates passed and worktree clean immediately aftercommit. RM-004 selected next in numeric order; full amended ticket/linked scope read and dependencies verified. Latest usage97%used/3%remaining.",
+        "RM-004 local outcome verified 2026-10-18: actual five-size landing and mobile entry screenshots, keyboard/refresh/fallback, finite scripted sequence; final pnpm check passed 91 tests, six boundary cases, exact assets, format/lint/types and all builds. Settled eleven-source read-only review has no actionable findings; manifest c0d4fc7094e793a2d5be1201eb3bf5097acc2a6e69f4ef666bd444b92f1692ce. docs/validation/RM-004.md. Exact commit next. Active guide goal registered; 100% remaining at latest read."
       ],
       "blockers": [
         {

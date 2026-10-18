@@ -13,7 +13,7 @@ Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEE
 
 Render a polished stylized room cutaway in the **main editor** using React Three Fiber/Three and selected Drei helpers. It shows the exact current room, selection, candidate and baseline snapshots supplied by the canonical controller. The 2D plan remains the precision editing surface; 3D provides orbit, zoom, reset, selection and inspection.
 
-There is no 3D initial-review preview, direct 3D furniture dragging or separate 3D room model. Photos produce a rough 2D sketch first. Renderable furniture resembles supported categories at reviewed sizes; mesh detail cannot redefine fit. The selected warm visual direction needs convincing materials, lighting, framing and deliberate transitions, with actual owner review reserved for RM-015.
+There is no 3D initial-review preview, direct 3D furniture dragging or separate 3D room model. Photos produce a rough 2D sketch first. Renderable furniture resembles supported categories at reviewed sizes; mesh detail cannot redefine fit. The selected warm visual direction needs convincing materials, lighting, framing and deliberate transitions, with actual owner review reserved for RM-015. The website uses the latest beige/brown/earth/wood direction; studio chrome may use black/white neutrals. Neither changes canonical room/furniture finishes.
 
 ## Dependency evidence and proposed ownership
 

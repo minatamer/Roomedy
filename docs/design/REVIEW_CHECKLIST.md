@@ -10,7 +10,7 @@ Before edits, identify the requested task, affected component/states, existing a
 - [ ] Every added label/control/card/setting has a useful documented task; no developer CTA, filler slogan, duplicate status row or unsupported capability appears.
 - [ ] Removed copy is absent in all variants of the owning flow, including loading/error/restored states; necessary approximation, transfer and validation information stays concise and contextual.
 - [ ] Primary content and action fit the tested phone/tablet/short-laptop layout. Long panels have reachable actions; no clipped control, accidental dead column or unnecessary nested scrollbar.
-- [ ] Roomedy platform palette/type/mark stay consistent while room finishes remain independent. Font loading/refresh causes no unintended lettering, wrapping or layout change.
+- [ ] Roomedy's website uses the selected oat/sand/beige/walnut/cocoa earthy wood palette; studio chrome may use black/white neutrals. Type/mark stay consistent and room/furniture finishes remain independent. Font loading/refresh causes no unintended lettering, wrapping or layout change.
 - [ ] Padding, labels, units, primary action alignment, hover/focus borders, touch targets and selected/disabled/error states remain coherent with variable content.
 - [ ] Dialog/panel opening, scroll, outside-click/Escape and focus restoration work without losing unsaved data. Optional chat expansion does not keep shrinking the room.
 - [ ] Motion progresses smoothly while active and can complete/interruption-reverse safely. Automatic landing sequences settle within five seconds with stable readable text. Related preview/progress/panel geometry animates together; ordinary entrances have no arbitrary delay.
