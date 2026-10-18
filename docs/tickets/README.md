@@ -11,7 +11,7 @@ Owner-requested revision: incorporate lessons from the four referenced visual/ma
 
 ## Why twenty packets
 
-Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 is locally complete; RM-005 onward remain Planned.
+Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 is committed, RM-005 is locally complete, and RM-006 onward remain Planned.
 
 `RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001/RM-002 have existing local implementation commits. Suggested subjects for later packets remain future authorized work; a subject is never proof of completed acceptance.
 
@@ -164,3 +164,5 @@ The owner approved the updated plan and guidelines and requested step-six RM-000
 Execution evidence: [RM-001](../validation/RM-001.md) (local foundation, hosted CI unverified), [RM-002](../validation/RM-002.md) (catalogue/assets/fixtures complete). RM-003 is committed; RM-004 local validation follows.
 
 RM-003 local completion: [actual checks](../validation/RM-003.md) and [supported rules](../engineering/spatial-rules.md). RM-003 was committed as `bc349f5`. RM-004 has [local browser and gate evidence](../validation/RM-004.md); its scoped commit is next, followed by RM-005.
+
+RM-005 local completion: [112 tests, final gates, actual interaction/device-size evidence and limits](../validation/RM-005.md), plus the [canonical session/plan contract](../engineering/session-and-plan.md). Its exact scoped commit is next, then RM-006. RM-004 was committed as `bd0bf78debd743b212ae5a1cf2308e2690c9f46e`.

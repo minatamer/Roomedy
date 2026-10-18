@@ -13,6 +13,7 @@ import { checkRoom } from './checks.js';
 import { evaluateBatch, validateRoom } from './commands.js';
 import type {
   CommandAuthority,
+  CommandFailure,
   CommandResult,
   FailureCode,
 } from './commands.js';
@@ -108,7 +109,7 @@ export function prepareCommand(
   return evaluateBatch(workspace.current, parsed.data.actions, authority);
 }
 export type ApplyResult =
-  | { ok: false; code: FailureCode }
+  | CommandFailure
   | {
       ok: true;
       workspace: CommandWorkspace;

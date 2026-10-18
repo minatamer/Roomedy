@@ -7,6 +7,7 @@ import { roomDocumentSchema, furnitureSchema } from '@roomedy/contracts/room';
 import type { RoomDocument, CheckFacts } from '@roomedy/contracts/room';
 import type { Measurement } from '@roomedy/contracts/primitives';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
+import type { SpatialIssue } from '@roomedy/contracts/issues';
 import { checkRoom } from './checks.js';
 import { CATALOGUE } from './catalogue.js';
 import { subsetRegion } from './coordinates.js';
@@ -30,8 +31,13 @@ export type CommandChange = {
   kind: 'added' | 'removed' | 'changed';
   fields: string[];
 };
+export type CommandFailure = {
+  ok: false;
+  code: FailureCode;
+  issue?: SpatialIssue;
+};
 export type CommandResult =
-  | { ok: false; code: FailureCode }
+  | CommandFailure
   | {
       ok: true;
       room: RoomDocument;
@@ -386,7 +392,7 @@ export function evaluateBatch(
           (previous.region === null ||
             !subsetRegion(current.region, previous.region)))
       )
-        return { ok: false, code: 'new-conflict' };
+        return { ok: false, code: 'new-conflict', issue: current };
       if (
         (current.areaMm2 ?? 0) < (previous.areaMm2 ?? 0) ||
         (current.deficitMm ?? 0) < (previous.deficitMm ?? 0)

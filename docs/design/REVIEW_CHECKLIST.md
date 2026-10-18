@@ -1,6 +1,6 @@
 # Roomedy feature and visual review checklist
 
-Prepared and refined **17 October 2026**; every item below is **unperformed**. This is a reusable acceptance aid under the approved fake-mode loop, not a visual pass. Adopted [review refinements](../reviews/2026-10-17-plan-review.md) supply requirements, not evidence.  
+Prepared and refined **17 October 2026**; the boxes below are an **unchecked reusable template**. Actual feature checks are recorded in their validation receipts; cumulative product/owner acceptance remains pending. This is a reusable acceptance aid under the approved fake-mode loop, not a visual pass. Adopted [review refinements](../reviews/2026-10-17-plan-review.md) supply requirements, not evidence.\
 Read [feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md), [blueprint](../ROOMEDY.md) and the [owning ticket](../tickets/README.md).
 
 ## Use during each feature

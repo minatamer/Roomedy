@@ -27,7 +27,11 @@ describe('atomic final batches and trusted authority', () => {
     const before = structuredClone(room);
     expect(
       evaluateBatch(room, [move('a', 5000, 2000)], 'visitor'),
-    ).toMatchObject({ ok: false, code: 'new-conflict' });
+    ).toMatchObject({
+      ok: false,
+      code: 'new-conflict',
+      issue: { code: 'overlap', objectIds: ['a', 'b'] },
+    });
     const result = evaluateBatch(
       room,
       [move('a', 5000, 2000), move('b', 2000, 2000)],

@@ -1,11 +1,18 @@
 'use client';
 import { useEffect, useReducer, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Brand } from '../../landing/brand';
-import { RoomPlan } from '../../landing/room-story';
-import { createRoomFixture } from '../fixtures/rooms';
 import { entryHref, entryReducer } from './entry-state';
 import type { EntryState, RoomCondition } from './entry-state';
+const EditorEntry = dynamic(() => import('../../room-editor/editor-entry'), {
+  ssr: false,
+  loading: () => (
+    <main id="main-content">
+      <p role="status">Opening your room…</p>
+    </main>
+  ),
+});
 const conditions: readonly {
   id: RoomCondition;
   title: string;
@@ -40,23 +47,19 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
     mounted.current = true;
     window.history.replaceState(null, '', entryHref(state));
   }, [state]);
-  const sample = state.step === 'ready' && state.intent.source === 'sample';
-  const sampleRoom =
-    state.step === 'ready' && sample
-      ? createRoomFixture(
-          state.intent.condition === 'furnished'
-            ? 'sample'
-            : state.intent.condition,
-        )
-      : null;
+  if (state.step === 'ready' && state.intent.source === 'sample')
+    return (
+      <EditorEntry
+        condition={state.intent.condition}
+        onBack={() => dispatch({ type: 'back' })}
+      />
+    );
   const title =
     state.step === 'source'
       ? 'Let’s make a little room.'
       : state.step === 'condition'
         ? 'What are we starting with?'
-        : sample
-          ? 'Your sample room.'
-          : 'Start with your own space.';
+        : 'Start with your own space.';
   return (
     <>
       <header className="site-header shell">
@@ -84,9 +87,7 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
               ? 'Explore an authored sample or begin with the room you have.'
               : state.step === 'condition'
                 ? 'Choose the starting point that feels closest.'
-                : sample
-                  ? 'An authored room with supplied measurements.'
-                  : 'Photos become a rough 2D sketch for you to review before the main editor.'}
+                : 'Photos become a rough 2D sketch for you to review before the main editor.'}
           </p>
         </div>
         {state.step === 'source' ? (
@@ -162,59 +163,26 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
           </div>
         ) : (
           <div className="entry-overview">
-            {sample ? (
-              <>
-                <div className="sample-plan">
-                  <RoomPlan room={sampleRoom!} />
-                </div>
-                <div className="entry-summary">
-                  <span className="eyebrow">
-                    {
-                      conditions.find(
-                        (condition) => condition.id === state.intent.condition,
-                      )?.title
-                    }
-                  </span>
-                  <h2>A place to begin.</h2>
-                  <p>
-                    {(sampleRoom!.room.width.value ?? 0) / 1000} ×{' '}
-                    {(sampleRoom!.room.depth.value ?? 0) / 1000} m · authored
-                    dimensions
-                  </p>
-                  <p>
-                    This preview shows the starting room. Room editing is not
-                    available yet.
-                  </p>
-                  <button
-                    className="button secondary"
-                    onClick={() => dispatch({ type: 'back' })}
-                  >
-                    Change starting point
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="own-room-notice">
-                <span className="condition-icon" aria-hidden="true">
-                  ↳
-                </span>
-                <h2>Your measurements matter.</h2>
-                <p>
-                  Photo drafting is not available in this preview. You can
-                  explore a sample room with supplied measurements.
-                </p>
-                <button
-                  className="button primary"
-                  onClick={() => dispatch({ type: 'source', source: 'sample' })}
-                >
-                  Use a sample room <span aria-hidden="true">↗</span>
-                </button>
-                <p className="small-note">
-                  Original photos are transient. Accepted room data can recover
-                  for two hours.
-                </p>
-              </div>
-            )}
+            <div className="own-room-notice">
+              <span className="condition-icon" aria-hidden="true">
+                ↳
+              </span>
+              <h2>Your measurements matter.</h2>
+              <p>
+                Photo drafting is not available in this preview. You can explore
+                a sample room with supplied measurements.
+              </p>
+              <button
+                className="button primary"
+                onClick={() => dispatch({ type: 'source', source: 'sample' })}
+              >
+                Use a sample room <span aria-hidden="true">↗</span>
+              </button>
+              <p className="small-note">
+                Original photos are transient. Accepted room data can recover
+                for two hours.
+              </p>
+            </div>
           </div>
         )}
         <p className="entry-footnote">

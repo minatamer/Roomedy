@@ -20,6 +20,7 @@ export { checkRoom } from './checks.js';
 export { evaluateBatch, validateRoom } from './commands.js';
 export type {
   CommandAuthority,
+  CommandFailure,
   CommandResult,
   FailureCode,
 } from './commands.js';

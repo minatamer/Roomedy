@@ -1,6 +1,6 @@
 # RM-005 — Deliver the canonical session and precision 2D editor
 
-Status: **Planned**  
+Status: **Complete locally**\
 Planning date: **17 October 2026**  
 Milestone: **Editable room**  
 Depends on: [RM-003](RM-003-build-spatial-checks-commands-and-undo.md), [RM-004](RM-004-build-brand-landing-and-guest-entry.md)  
@@ -52,21 +52,21 @@ Consume PR-01–PR-05 through the existing dispatcher: half-millimetre centre pl
 
 ## Acceptance criteria
 
-- [ ] One controller owns accepted room, baseline, revision, history and effect invalidation; views have no competing scene store.
-- [ ] SVG footprints, opening positions and display measurements agree with independent geometry fixtures.
-- [ ] Drag/snap/drop, rotate, numeric edit and keyboard nudge execute the shared validated command path.
-- [ ] One completed drag creates one history entry; cancel/invalid drop creates none.
-- [ ] Ownership, independent locks and explicit measurement provenance are editable through the intended trusted controls.
-- [ ] Pending work becomes stale on semantic edits/reset/expiry/new operation, and late results cannot restore it.
-- [ ] Baseline capture occurs at sample/accepted-draft editor entry and survives edits/Undo.
-- [ ] Manual/sample operation remains useful without AI and records zero provider dispatches.
-- [ ] Relevant phone/tablet/short-laptop panel and field-error states keep the room and next action usable without clipped controls, accidental empty columns or overlapping scroll regions.
+- [x] One controller owns accepted room, baseline, revision, history and effect invalidation; views have no competing scene store.
+- [x] SVG footprints, opening positions and display measurements agree with independent geometry fixtures.
+- [x] Drag/snap/drop, rotate, numeric edit and keyboard nudge execute the shared validated command path.
+- [x] One completed drag creates one history entry; cancel/invalid drop creates none.
+- [x] Ownership, independent locks and explicit measurement provenance are editable through the intended trusted controls.
+- [x] Pending work becomes stale on semantic edits/reset/expiry/new operation, and late results cannot restore it.
+- [x] Baseline capture occurs at sample/accepted-draft editor entry and survives edits/Undo.
+- [x] Manual/sample operation remains useful without AI and records zero provider dispatches.
+- [x] Relevant phone/tablet/short-laptop panel and field-error states keep the room and next action usable without clipped controls, accidental empty columns or overlapping scroll regions.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance
 
-- [ ] Numeric/drag/snap/keyboard/Undo preserve half-millimetre centres and odd-size exact contact; planned pose never authenticates photographed placement.
-- [ ] Feature corrections and out-of-representation owned measurement corrections use shared authority and retain honest geometry/representation limitations.
-- [ ] Long bounded editing/replayed/no-op sessions remain usable and preserve stale-command rejection; feature states meet the recorded internal visual baseline.
+- [x] Numeric/drag/snap/keyboard/Undo preserve half-millimetre centres and odd-size exact contact; planned pose never authenticates photographed placement.
+- [x] Feature corrections and out-of-representation owned measurement corrections use shared authority and retain honest geometry/representation limitations.
+- [x] Long bounded editing/replayed/no-op sessions remain usable and preserve stale-command rejection; feature states meet the recorded internal visual baseline.
 
 ## Focused verification and evidence
 
@@ -83,3 +83,7 @@ Consume PR-01–PR-05 through the existing dispatcher: half-millimetre centre pl
 ## Handoff and limits
 
 Document controller interfaces, resource ownership and actual tested gestures. RM-006 consumes readonly room/selection/candidate projections; RM-007 uses the same review command authority; RM-011 adds proposals and RM-012 completes durable projection/compare. No storage, 3D, AI accuracy or final visual proof is claimed from this packet. Follow the index's future file allocation and settled validation rules.
+
+## Execution evidence — 18 October 2026
+
+[Actual checks and limits](../validation/RM-005.md), [controller/plan contract](../engineering/session-and-plan.md) and [exact allocation](../commit-plans/RM-005.md). Final 112-test/root gates and read-only review pass. Actual browser evidence covers precision placement, controls, uncertainty, responsive states and reversible changes. OS pointer-cancel, physical assistive/device and the browser-blocked leave-confirmation interaction remain explicitly unexercised; source/domain evidence is named separately. No real-provider, storage, 3D, hosted or owner visual claim follows. RM-006 is next after this scoped commit.
