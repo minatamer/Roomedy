@@ -7,6 +7,10 @@
     "dist"
   ],
   "exports": {
+    "./intake": {
+      "types": "./dist/intake.d.ts",
+      "default": "./dist/intake.js"
+    },
     "./issues": {
       "types": "./dist/issues.d.ts",
       "default": "./dist/issues.js"

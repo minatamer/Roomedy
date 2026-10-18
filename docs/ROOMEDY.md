@@ -2,13 +2,13 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-001 through RM-004 committed; RM-005 locally validated, exact commit next, then RM-006; hosted CI unverified\
+**Stage:** RM-001–RM-006 committed; RM-007 final validation/commit next, then RM-008; hosted CI unverified\
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
 **Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-004 is committed and RM-005 has local browser/gate evidence; dated historical checkpoints below remain historical.
 
-**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; its exact authorized commit is next, then RM-006. Earlier in-progress statements below describe historical checkpoints.
+**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; it is committed as `85c7362`. RM-006 is committed as `f73ce2e`. RM-007 has safe transient image/manual rough review and actual empty/partial/furnished browser handoffs; final settled validation/read-only receipt and exact commit precede RM-008. Earlier in-progress statements below describe historical checkpoints.
 
 **Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). The owner approved the updated plan/guidelines, completed RM-000, then explicitly authorized ordered fake-mode execution/validation and local commits after each ticket. RM-001 is implemented locally; hosted CI is unverified; required review gates, no paid calls/deployment and a 0% remaining Codex usage cutoff apply.
 
@@ -1284,14 +1284,14 @@ The initial RM-000 planning snapshot is committed as `b97db4b927036e9f82d1ab4e44
 Current outstanding evidence includes final RM-003 geometry/command validation and all amended criteria, actual R3F/device behavior, provider interpretation/evaluation, measured limits, full recovery/privacy implementation, owner visual approval, security audit, Linux/hosted/account/domain proof. RM-001/002 have their own dated local evidence. The owner approved the full review recommendations and requested adoption before resuming ordered fake execution. The [adoption allocation](commit-plans/PLAN-REFINEMENT-2026-10-17.md) and [documentation receipt](validation/PLAN-REFINEMENT-2026-10-17.md) describe this update; no new implementation result follows from it.
 
 
-RM-005 is committed as `85c7362`. RM-006 adds the synchronized main-editor cutaway; [design](design/room-view.md) and [actual validation](validation/RM-006.md) retain local/device/owner evidence boundaries. The ordered fake-mode goal remains active.
+RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded transient photos and manual rough 2D review; [intake policy](engineering/image-intake.md) and [actual validation](validation/RM-007.md) distinguish local evidence from later recognition/recovery/device/owner acceptance. The ordered fake-mode guide goal remains active.
 
 <!-- build-progress:start -->
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage and commit exact validated RM-006 paths; then read/allocate RM-007 safe photo/manual intake and rough 2D review, preserving fake/paid-off and review/usage stops.
-Active ticket: RM-006
+Next action: Stage and commit the exact34 RM-007 paths, verify source identity and clean worktree, then read/allocate RM-008 shared admission/private bounded transport. Continue numeric fake/paid-off loop; stop review gates or0% remaining usage.
+Active ticket: RM-007
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1316,7 +1316,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-18T10:19:48+00:00",
+  "updated_at": "2026-10-18T11:57:31+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1485,8 +1485,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-006",
-  "next_action": "Stage and commit exact validated RM-006 paths; then read/allocate RM-007 safe photo/manual intake and rough 2D review, preserving fake/paid-off and review/usage stops.",
+  "active_ticket": "RM-007",
+  "next_action": "Stage and commit the exact34 RM-007 paths, verify source identity and clean worktree, then read/allocate RM-008 shared admission/private bounded transport. Continue numeric fake/paid-off loop; stop review gates or0% remaining usage.",
   "phases": [
     {
       "id": "01-docs",
@@ -1781,7 +1781,10 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-005 complete local outcome 2026-10-18: final pnpm check passes112tests/11files, six boundaries, exact assets, format/lint/types and all builds; focused36tests pass. Actual furnished/partial/empty browser states cover half-mm placement, scaled/panned drag, outside/overlap rejection, lock/rotate/resize/measurements, catalogue/owned replacement/removal/Undo, previews and five viewport sizes. Native Change room interaction blocked by automatic browser approval and preserved; separate fixtures used safely, no bypass. OS pointer-cancel/physical/hosted/provider/owner acceptance limits explicit. Final read-only review clean;23source/config/test manifest b1d06ea3a28a19b72b0fe8d1b9e2dee9be407eb85074625df3a60a3953f28a1b;35allocatedpaths/217local linked files checked. docs/validation/RM-005.md. Exact scoped commit next.",
         "RM-005 committed 85c73620a0bc6d36bbe3559676a94238b4c43ffc; exact 23 source/test/config blobs SHA b1d06ea3a28a19b72b0fe8d1b9e2dee9be407eb85074625df3a60a3953f28a1b; root gate 112/112 tests and builds passed.",
         "RM-006 read fully and exact paths allocated in docs/commit-plans/RM-006.md before feature edits.",
-        "RM-006 docs/validation/RM-006.md: final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; read-only pass 2 no actionable findings; settled pnpm check passed 120 tests, six boundaries, exact assets, types/builds; actual browser controls/candidate/Undo, missing asset, empty/partial and responsive evidence with unperformed device/context limits."
+        "RM-006 docs/validation/RM-006.md: final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; read-only pass 2 no actionable findings; settled pnpm check passed 120 tests, six boundaries, exact assets, types/builds; actual browser controls/candidate/Undo, missing asset, empty/partial and responsive evidence with unperformed device/context limits.",
+        "RM-006 committed f73ce2e65c3d5e2954ecad523cb477c5bed3760a; clean worktree; 20 exact paths, final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; 120-test root gate and read-only pass 2 complete.",
+        "RM-007 packet and precision references read; 33 exact paths allocated in docs/commit-plans/RM-007.md before feature edits. Codex usage latest 4% used / 96% remaining; no reset consumed.",
+        "RM-007 final24-path source/config/test/fixture SHA809d6de1a53b51e7ba121ecded614e69e98fef8d97a94a757d7007342bc3bc2e;34 exact allocated paths; final147/147 tests, six boundaries, exact assets/types/builds passed. Read-only pass2 no actionable findings after independently reproduced position-lock and manifest/Undo fixes. Actual empty/partial/furnished intake/review/editor and responsive screenshots are in docs/validation/RM-007.md. Latest usage7% used /93% remaining; goal active; no reset consumed."
       ],
       "blockers": [
         {

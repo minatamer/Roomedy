@@ -11,7 +11,7 @@ Owner-requested revision: incorporate lessons from the four referenced visual/ma
 
 ## Why twenty packets
 
-Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 is committed, RM-005 is committed (`85c7362`), RM-006 is locally validated with its exact authorized commit pending, and RM-007 onward remain Planned.
+Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 is committed, RM-005 is committed (`85c7362`), RM-006 is committed (`f73ce2e`), RM-007 is locally implemented with final validation/commit next, and RM-008 onward remain Planned.
 
 `RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001/RM-002 have existing local implementation commits. Suggested subjects for later packets remain future authorized work; a subject is never proof of completed acceptance.
 
@@ -87,7 +87,7 @@ Unchecked and newly added checks are **future verification requirements**; exist
 - One canonical current room, immutable starting baseline, shared pure spatial commands, starting-state locks, atomic final-batch checks, idempotent Apply and whole-change Undo. One scene proposal at a time; Redo and multiple alternatives are deferred.
 - Unknown/estimated/extracted/scan-derived/confirmed provenance is value-specific. Imported or model-supplied labels do not grant authority. Preserve disclosed baseline conflicts; no new hard blockers, invented confirmations or unsupported fit claims.
 - Fixed **two-hour** semantic recovery from workspace creation; edits and refresh do not extend it. Raw photos are active-page memory only. Export/import contains bounded current and baseline semantics, never photos/chat/history/tokens/operations.
-- Warm ivory, deep green/teal and clay, tactile stylized objects and deliberate motion. No animation-off/render-off controls or OS-based motion suppression. Actual visual acceptance happens later.
+- Oat, sand, beige, walnut, cocoa and earthy wood website tones; neutral black/white studio chrome is permitted. Tactile stylized objects and deliberate motion remain selected. No animation-off/render-off controls or OS-based motion suppression. Actual visual acceptance happens later.
 - No furniture prices, currencies/totals, visitor budgets, affordability tools, retail sourcing, shopping or checkout. Internal token/byte/time/concurrency/provider-spend controls remain mandatory.
 
 ## Guideline ownership

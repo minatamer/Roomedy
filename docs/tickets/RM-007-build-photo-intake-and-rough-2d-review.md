@@ -1,6 +1,6 @@
 # RM-007 — Build photo intake and rough 2D review
 
-Status: **Planned**  
+Status: **Implemented locally — external/device evidence pending**\
 Planning date: **17 October 2026**  
 Milestone: **Reviewed room**  
 Depends on: [RM-005](RM-005-deliver-canonical-session-and-precision-2d-editor.md)  
@@ -53,22 +53,22 @@ Wire the complete trusted feature authority and per-fact evidence from RM-003. O
 
 ## Acceptance criteria
 
-- [ ] Eligible photo selection has finite codec/count/byte/pixel/decode policy with actual measured rationale.
-- [ ] Selection/previews require no provider call and originals remain transient without storage/default-export serialization.
-- [ ] Initial review is a usable rough 2D sketch with no 3D preview or view switch.
-- [ ] Manual setup/correction covers room dimensions, openings, inventory, purpose and ownership/independent locks.
-- [ ] Guided confirmation changes only explicitly reviewed values and preserves estimated/extracted/unknown provenance elsewhere.
-- [ ] A corrected draft reaches the existing main editor with one baseline and honest unresolved-check labels.
-- [ ] Duplicate/missed/misidentified features can be reconciled without losing stable accepted identities.
-- [ ] Removal/reset/expiry and stale decoder results cannot leak resources or restore cleared data.
-- [ ] Upload/review/error/restored-copy variants have concise contextual guidance, clear item states and reachable actions; no early AI dispatch, hidden 3D or redundant status banner appears.
+- [x] Eligible photo selection has finite codec/count/byte/pixel/decode policy with actual measured rationale.
+- [x] Selection/previews require no provider call and originals remain transient without storage/default-export serialization.
+- [x] Initial review is a usable rough 2D sketch with no 3D preview or view switch.
+- [x] Manual setup/correction covers room dimensions, openings, inventory, purpose and ownership/independent locks.
+- [x] Guided confirmation changes only explicitly reviewed values and preserves estimated/extracted/unknown provenance elsewhere.
+- [x] A corrected draft reaches the existing main editor with one baseline and honest unresolved-check labels.
+- [x] Duplicate/missed/misidentified features can be reconciled without losing stable accepted identities.
+- [x] Removal/reset/expiry and stale decoder results cannot leak resources or restore cleared data.
+- [x] Upload/review/error/restored-copy variants have concise contextual guidance, clear item states and reachable actions; no early AI dispatch, hidden 3D or redundant status banner appears.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — local evidence below
 
-- [ ] Observation/entity/source/association/frame/scale bounds are explicit; ambiguous identity and wall relationships stay correctable with honest per-fact evidence.
-- [ ] One item in two photos, two identical items, conflicting associations, photo reorder/removal and mirrored/swapped wall dimensions preserve corrected 2D review work.
-- [ ] A later dimension correction preserves confirmed measurements/planned poses and recomputes only dependent estimates; complete feature corrections use shared commands.
-- [ ] The next guided question addresses a relevant unresolved dependency; irrelevant unknowns do not block exploration and the early independent rubric skeleton exists.
+- [x] Observation/entity/source/association/frame/scale bounds are explicit; ambiguous identity and wall relationships stay correctable with honest per-fact evidence.
+- [x] One item in two photos, two identical items, conflicting associations, photo reorder/removal and mirrored/swapped wall dimensions preserve corrected 2D review work.
+- [x] A later dimension correction preserves confirmed measurements/planned poses and recomputes only dependent estimates; complete feature corrections use shared commands.
+- [x] The next guided question addresses a relevant unresolved dependency; irrelevant unknowns do not block exploration and the early independent rubric skeleton exists.
 
 ## Focused verification and evidence
 
@@ -85,3 +85,7 @@ Wire the complete trusted feature authority and per-fact evidence from RM-003. O
 ## Handoff and limits
 
 Record actual format/memory measurements and selected policy. RM-008 uses the manifest/limits at server admission, RM-010 supplies provider drafts and RM-012 finishes persistence. Fake draft injection verifies review behavior only; no photo understanding or broad codec/device claim is established by this ticket. Follow the index's future validation and authorization rules.
+
+## Execution evidence — 18 October 2026
+
+[Exact allocation](../commit-plans/RM-007.md), [media/review policy](../engineering/image-intake.md) and [validation receipt](../validation/RM-007.md). Final147-test/root/build gate and second read-only pass are clean on the named source identity; actual browser evidence covers own empty/partial/furnished handoffs,2D-only review, removed evidence, errors and relevant responsive states. Checked acceptance is scoped to that local implementation/evidence, not real recognition, native hard-memory bounds, complete refresh recovery, physical-device/WCAG or owner visual acceptance. Those limits and the later RM-008/010/012/015 owners remain explicit in the receipt. Exact local commit follows; no paid/cloud authority is added.

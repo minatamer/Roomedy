@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber';
 import { RoomScene } from './scene';
 import type { CameraAction, SceneProps } from './scene';
 import type { CameraPose } from './adapter';
-import { displayRoom, pieceRepresentation } from './adapter';
+import { displayRoom, featureBox, pieceRepresentation } from './adapter';
 import styles from './room-view.module.css';
 
 class GraphicsBoundary extends Component<
@@ -44,6 +44,9 @@ export default function Cutaway(props: CutawayProps) {
     [],
   );
   const rendered = props.candidate ?? props.room;
+  const incompleteFeatures = rendered.room.features.some(
+    (feature) => featureBox(rendered, feature) === null,
+  );
   const unavailable = rendered.furniture.filter((p) => {
     const r = pieceRepresentation(p);
     return r.kind === 'unavailable' || (r.kind === 'procedural' && r.notice);
@@ -137,6 +140,7 @@ export default function Cutaway(props: CutawayProps) {
       {(assets.loading > 0 ||
         assets.failed > 0 ||
         unavailable > 0 ||
+        incompleteFeatures ||
         displayRoom(rendered).approximate ||
         props.candidate) && (
         <p role="status" className={styles.notice}>
@@ -149,6 +153,9 @@ export default function Cutaway(props: CutawayProps) {
             : ''}
           {displayRoom(rendered).approximate
             ? 'Room height or outline is approximate. '
+            : ''}
+          {incompleteFeatures
+            ? 'Some openings or obstacles await measurements; review them in the plan. '
             : ''}
           {props.candidate
             ? 'Preview: outlined shapes mark changes; pale outlines show the current arrangement.'

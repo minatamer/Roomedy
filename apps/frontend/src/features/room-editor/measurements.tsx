@@ -36,6 +36,39 @@ export function MeasurementField({
   min?: number;
   max: number;
 }) {
+  return (
+    <MeasurementInput
+      measurement={measurement}
+      label={label}
+      min={min}
+      max={max}
+      onCommit={(value) => {
+        const result = controller.dispatch(
+          [{ type: 'confirm-measurement', target, value }],
+          value === null
+            ? `Mark ${label.toLowerCase()} unknown`
+            : `Confirm ${label.toLowerCase()}`,
+        );
+        return result.ok
+          ? null
+          : failureMessage(result, controller.getSnapshot().workspace?.current);
+      }}
+    />
+  );
+}
+export function MeasurementInput({
+  measurement,
+  label,
+  min = 1,
+  max,
+  onCommit,
+}: {
+  measurement: Measurement;
+  label: string;
+  min?: number;
+  max: number;
+  onCommit: (value: number | null) => string | null;
+}) {
   const id = useId(),
     input = useRef<HTMLInputElement>(null);
   const committed = measurement.value?.toString() ?? '';
@@ -43,19 +76,9 @@ export function MeasurementField({
   if (form.committed !== committed)
     setForm({ committed, value: committed, error: '' });
   const apply = (value: number | null) => {
-    const result = controller.dispatch(
-      [{ type: 'confirm-measurement', target, value }],
-      value === null
-        ? `Mark ${label.toLowerCase()} unknown`
-        : `Confirm ${label.toLowerCase()}`,
-    );
-    setForm((f) => ({
-      ...f,
-      error: result.ok
-        ? ''
-        : failureMessage(result, controller.getSnapshot().workspace?.current),
-    }));
-    if (!result.ok) input.current?.focus();
+    const error = onCommit(value);
+    setForm((f) => ({ ...f, error: error ?? '' }));
+    if (error) input.current?.focus();
   };
   return (
     <form

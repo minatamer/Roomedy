@@ -142,6 +142,13 @@ export class SessionController {
     this.publish({ phase: 'intake' });
     return true;
   }
+  isIntakeCurrent(generation: number): boolean {
+    return (
+      this.active() &&
+      this.state.phase === 'intake' &&
+      this.state.generation === generation
+    );
+  }
   acceptRoom(room: RoomDocument): boolean {
     if (!this.active() || !['entry', 'intake'].includes(this.state.phase))
       return false;

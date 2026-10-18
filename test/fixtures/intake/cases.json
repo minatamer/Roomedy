@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "rights": "Programmatically authored synthetic test images; no personal photos, external asset or model output.",
+  "status": "Rubric skeleton only; no recognition accuracy evidence.",
+  "files": [
+    {
+      "file": "orientation.jpg",
+      "sha256": "7e337956f7d671db0eeb7692fcc7fbdb622c1076e7098604435725597a1f3215",
+      "bytes": 16652
+    },
+    {
+      "file": "room.jpg",
+      "sha256": "8e1e721f2677b0c1fc35cfd8d42364c002ee48898f49893d3c34b0ba44f0c647",
+      "bytes": 314362
+    },
+    {
+      "file": "room.png",
+      "sha256": "7d7f42a550cb445668dfcfc341e0216118e871b7bed02e05c8beb082b71d4a51",
+      "bytes": 7405
+    },
+    {
+      "file": "room.webp",
+      "sha256": "8cd0975397524b1ffaf1f3b586429296a17a2dcfd789a14dc1bb2f2ba9024ebc",
+      "bytes": 6648
+    }
+  ],
+  "cases": [
+    {
+      "id": "two-photos-one-desk",
+      "expected": "Explicit merge preserves reviewed measurements and a stable entity."
+    },
+    {
+      "id": "two-identical-desks",
+      "expected": "Distinct items remain separate; split requires independent measurements."
+    },
+    {
+      "id": "ambiguous-wall-frame",
+      "expected": "Wall/shape/scale stays reviewable; unknown and unsupported remain explicit."
+    },
+    {
+      "id": "corrected-scale",
+      "expected": "Confirmed sizes/planned poses survive; only dependent estimates reproject."
+    },
+    {
+      "id": "furniture-only",
+      "expected": "Furniture evidence cannot establish room outline or scale."
+    }
+  ]
+}

@@ -43,10 +43,12 @@ export function Editor({
   controller,
   onBack,
   condition,
+  source = 'sample',
 }: {
   controller: SessionController;
   onBack: () => void;
   condition: RoomCondition;
+  source?: 'sample' | 'own';
 }) {
   const state = useSyncExternalStore(
     controller.subscribe,
@@ -85,18 +87,22 @@ export function Editor({
             : 'Open a new room.'}
         </h1>
         <p>Room changes stay in this tab for this preview.</p>
-        <button
-          onClick={() =>
-            controller.reset(
-              createRoomFixture(
-                condition === 'furnished' ? 'sample' : condition,
-              ),
-            )
-          }
-        >
-          Start a new sample
+        {source === 'sample' && (
+          <button
+            onClick={() =>
+              controller.reset(
+                createRoomFixture(
+                  condition === 'furnished' ? 'sample' : condition,
+                ),
+              )
+            }
+          >
+            Start a new sample
+          </button>
+        )}
+        <button onClick={onBack}>
+          {source === 'own' ? 'Start a new room' : 'Choose another room'}
         </button>
-        <button onClick={onBack}>Choose another room</button>
       </main>
     );
   const room = workspace.current,
@@ -481,7 +487,10 @@ export function Editor({
         </aside>
       </main>
       <footer className={styles.footer}>
-        Supplied sample measurements · Similar furniture representations{' '}
+        {source === 'sample'
+          ? 'Supplied sample measurements'
+          : 'Your reviewed room'}{' '}
+        · Similar furniture representations{' '}
         <span>Changes stay in this tab for now.</span>
       </footer>
     </div>
