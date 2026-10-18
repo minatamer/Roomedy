@@ -255,7 +255,9 @@ export function Assistant({
                   reply.facts.windowDistanceMm.after !== null
                     ? `Desk-to-window distance: ${Math.round(reply.facts.windowDistanceMm.before)} → ${Math.round(reply.facts.windowDistanceMm.after)} mm. `
                     : ''}
-                  {reply.facts.changedIds.length} pieces change.
+                  {reply.facts.changedIds.length}{' '}
+                  {reply.facts.changedIds.length === 1 ? 'change' : 'changes'}{' '}
+                  to review.
                 </p>
               )}
               {reply?.question && (

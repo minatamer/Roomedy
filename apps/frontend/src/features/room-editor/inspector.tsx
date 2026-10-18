@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import type { Feature, Furniture } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
@@ -17,6 +17,7 @@ function PositionForm({
   item: Furniture;
 }) {
   const signature = `${item.id}/${item.pose.centerX}/${item.pose.centerZ}`;
+  const errorId = useId();
   const [form, setForm] = useState({
     signature,
     x: String(item.pose.centerX),
@@ -73,6 +74,7 @@ function PositionForm({
         );
         setForm((f) => ({
           ...f,
+          field: 'position',
           error: result.ok
             ? ''
             : failureMessage(
@@ -99,7 +101,14 @@ function PositionForm({
             step="0.5"
             value={form.x}
             disabled={item.locks.position}
-            aria-invalid={!!form.error && form.field === 'x'}
+            aria-invalid={
+              !!form.error && (form.field === 'x' || form.field === 'position')
+            }
+            aria-describedby={
+              form.error && (form.field === 'x' || form.field === 'position')
+                ? errorId
+                : undefined
+            }
             onChange={(e) =>
               setForm((f) => ({ ...f, x: e.target.value, error: '' }))
             }
@@ -113,7 +122,14 @@ function PositionForm({
             step="0.5"
             value={form.z}
             disabled={item.locks.position}
-            aria-invalid={!!form.error && form.field === 'z'}
+            aria-invalid={
+              !!form.error && (form.field === 'z' || form.field === 'position')
+            }
+            aria-describedby={
+              form.error && (form.field === 'z' || form.field === 'position')
+                ? errorId
+                : undefined
+            }
             onChange={(e) =>
               setForm((f) => ({ ...f, z: e.target.value, error: '' }))
             }
@@ -121,7 +137,7 @@ function PositionForm({
         </label>
       </div>
       {form.error && (
-        <p role="alert" className={styles.error}>
+        <p role="alert" id={errorId} className={styles.error}>
           {form.error}
         </p>
       )}
@@ -169,12 +185,14 @@ function ResizeForm({
   item: Furniture;
 }) {
   const signature = `${item.id}/${item.dimensions.width.value}/${item.dimensions.depth.value}/${item.dimensions.height.value}`;
+  const errorId = useId();
   const [form, setForm] = useState({
     signature,
     width: String(item.dimensions.width.value ?? ''),
     depth: String(item.dimensions.depth.value ?? ''),
     height: String(item.dimensions.height.value ?? ''),
     error: '',
+    field: '',
   });
   if (form.signature !== signature)
     setForm({
@@ -183,6 +201,7 @@ function ResizeForm({
       depth: String(item.dimensions.depth.value ?? ''),
       height: String(item.dimensions.height.value ?? ''),
       error: '',
+      field: '',
     });
   const formRef = useRef<HTMLFormElement>(null),
     entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion)!;
@@ -204,6 +223,7 @@ function ResizeForm({
           ) {
             setForm((f) => ({
               ...f,
+              field: axis,
               error: `${axis}: enter a whole number from ${range.min} to ${range.max} mm.`,
             }));
             formRef.current
@@ -226,6 +246,7 @@ function ResizeForm({
         );
         setForm((f) => ({
           ...f,
+          field: 'size',
           error: result.ok
             ? ''
             : failureMessage(
@@ -233,6 +254,8 @@ function ResizeForm({
                 controller.getSnapshot().workspace?.current,
               ),
         }));
+        if (!result.ok)
+          formRef.current?.querySelector<HTMLInputElement>('input')?.focus();
       }}
     >
       <h3>Proposed size</h3>
@@ -249,6 +272,14 @@ function ResizeForm({
             step="1"
             value={form[axis]}
             disabled={item.locks.dimensions}
+            aria-invalid={
+              !!form.error && (form.field === axis || form.field === 'size')
+            }
+            aria-describedby={
+              form.error && (form.field === axis || form.field === 'size')
+                ? errorId
+                : undefined
+            }
             onChange={(e) =>
               setForm((f) => ({ ...f, [axis]: e.target.value, error: '' }))
             }
@@ -256,7 +287,7 @@ function ResizeForm({
         </label>
       ))}
       {form.error && (
-        <p className={styles.error} role="alert">
+        <p className={styles.error} role="alert" id={errorId}>
           {form.error}
         </p>
       )}

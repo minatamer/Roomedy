@@ -1,6 +1,6 @@
 # RM-015 — Verify the responsive, accessible and performant experience
 
-Status: **Planned**  
+Status: **Awaiting owner — local gate/read-only validation passed; actual visual decision pending**
 Planning date: **17 October 2026**  
 Milestone: **Performance and frontend visual review**  
 Depends on: [RM-014](RM-014-prepare-linux-images-and-release-runbooks.md)  
@@ -54,20 +54,20 @@ Keep active designed motion smooth. Automatic landing sequences settle within fi
 
 ## Required local acceptance
 
-- [ ] Complete product matrix records actual rendered interaction evidence and exact unperformed cases.
-- [ ] Landing/entry/review/editor/assistant/lifecycle controls remain usable at tested sizes and orientations.
-- [ ] Keyboard/numeric/focus/status/contrast checks support the core tasks without relying on pointer or color alone.
-- [ ] Intended motion is preserved and rough initial review contains no 3D preview.
+- [x] Complete product matrix records actual rendered interaction evidence and exact unperformed cases.
+- [x] Landing/entry/review/editor/assistant/lifecycle controls remain usable at tested sizes and orientations.
+- [x] Keyboard/numeric/focus/status/contrast checks support the core tasks without relying on pointer or color alone.
+- [x] Intended motion is preserved and rough initial review contains no 3D preview.
 - [ ] Measured decode/search/render/storage/concurrency behavior is finite with reproduced defects corrected.
-- [ ] Central policy reflects measured chosen values and explicitly retained uncertainty; no competing limits exist.
-- [ ] Required settled checks and read-only validation pass for the scoped changes.
-- [ ] Feature evidence plus cumulative review covers the recurring failure states and 1366x768 layout, with actual inspected screenshots and no unsupported visual/physical acceptance.
+- [x] Central policy reflects measured chosen values and explicitly retained uncertainty; no competing limits exist.
+- [x] Required settled checks and read-only validation pass for the scoped changes.
+- [x] Feature evidence plus cumulative review covers the recurring failure states and 1366x768 layout, with actual inspected screenshots and no unsupported visual/physical acceptance.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — current evidence below
 
 - [ ] Named repeatable performance scenarios have practical thresholds and actual results for discrete actions, continuous frames, decode peak, search/abort and Apply/Undo; failures receive owning fixes.
-- [ ] The internal feature visual baseline and current inspected states are reconciled without substituting for the actual owner review.
-- [ ] Automatic landing motion settles appropriately, active interactions remain smooth, and criterion-level accessibility/expiry limitations are stated without blanket conformance.
+- [x] The internal feature visual baseline and current inspected states are reconciled without substituting for the actual owner review.
+- [x] Automatic landing motion settles appropriately, active interactions remain smooth, and criterion-level accessibility/expiry limitations are stated without blanket conformance.
 
 ## Manual/external acceptance — never inferred from automation
 
@@ -88,3 +88,9 @@ Keep active designed motion smooth. Automatic landing sequences settle within fi
 ## Handoff and limits
 
 RM-016 starts after the actual visual decision or explicit waiver/defer, not after an agent checks its own visual box. Keep physical/live/hosted evidence distinct. No testing tool restriction may be bypassed with an alternate renderer; record blocked checks and use permitted evidence. Follow the index's future execution/Git rules.
+
+## RM-015 execution evidence — 18 October2026
+
+[Allocation](../commit-plans/RM-015.md), [receipt](../validation/RM-015.md), [performance/raw results](../design/performance.md), [actual visual review](../design/visual-review.md). Final Windows standalone input cfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e;346tests/33files/seven boundaries/root and builds passed. Native final production covered all three starting conditions, Add/Undo, coupled field failures, half-mm keyboard/numeric edits, native drag/whole Undo, comparison/reset/Escape/focus, real worker/fake assistant,3D Apply/Undo and shortened-phone composer. No CSS/authority/policy ceiling changed.
+
+The two compound performance acceptance boxes remain unchecked because actual browser native decode peak and production continuous/discrete paint evidence are unperformed. The fixed200-node maximum-room throughput target missed and remains explicitly recorded; the real250ms yielding adapter passed its named finite local deadline/health/abort thresholds. Measurements are not substituted for physical/hosted/provider capacity. Owner review and real physical/AT/zoom/native-heap cases stay pending. Read-only pass1 found no new actionable findings; actual owner visual review is the current stop. The owner then explicitly withheld visual approval and separately authorized the current15-file plan, staging and checkpoint commit. That commit records this reviewed work; RM-015 remains incomplete and RM-016 has not started.

@@ -23,6 +23,7 @@
     "build": "pnpm build:shared && pnpm --filter @roomedy/backend build && pnpm --filter @roomedy/frontend build",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:boundaries && pnpm check:assets && pnpm test:unit && pnpm build",
     "evaluate": "pnpm build:shared && tsx scripts/evaluate-roomedy.mjs",
+    "measure:performance": "pnpm build:shared && tsx scripts/measure-performance.ts",
     "release:inventory": "node scripts/verify-release.mjs inventory",
     "release:verify": "node scripts/verify-release.mjs verify",
     "release:build": "node scripts/release/build-local.mjs"

@@ -2,13 +2,13 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-001–RM-011 committed; RM-012 exact local commit next, then RM-013; live/hosted/owner evidence remains separate\
+**Stage:** RM-001–RM-014 committed; RM-015 checkpoint commit authorized, actual owner visual review pending
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
-**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-001–RM-013 are committed. RM-014 local packaging/identity/update/proof preparation passed346tests/seven boundaries/root/build/Windows production checks and clean read-only pass3; exact local commit is next, then RM-015 performance and the actual owner visual checkpoint. Actual Linux/hosted/live/owner acceptance remains unperformed. Dated checkpoints below remain historical.
+**Latest steering:** the approved numeric fake/paid-off loop has committed RM-001–RM-014; `2e27f79` prepared release files with Linux/hosted/live proof explicitly pending. RM-015 has actual nine-size/interaction/measurement evidence, scoped numeric-error and summary fixes, and a passing346-test/seven-boundary/root/build gate. Read-only pass1 found no new actionable findings. The owner explicitly withheld visual approval and separately authorized the [exact15-file checkpoint plan and local commit](commit-plans/RM-015.md). This preserves current work; it does not complete RM-015 or resolve the [actual visual gate](design/visual-review.md). The guide goal stays paused and RM-016 stays Planned. [Performance evidence](design/performance.md) retains its limits. No paid calls, deployment, push, reset consumption or delegation; stop at review gates or0% usage. Approved PR-01–PR-15/O-01–O-03 requirements remain current.
 
-**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; it is committed as `85c7362`. RM-006 is committed as `f73ce2e`. RM-007 is committed as `d1d8c30` after147-test/root/browser validation. [RM-008 checks](validation/RM-008.md) establish finite shared admission/private bounded transport with170 tests, final root/build gates and read-only pass2 passed. It is committed as `3e6d4c1`. [RM-009 evidence](validation/RM-009.md) establishes bounded deterministic search/application scope with190 tests, all root/build gates, final native quality/health measurements and clean read-only pass3. It is committed as `bfd9e6d`. [RM-010 evidence](validation/RM-010.md) records admitted fake recognition, bounded pixel decode and correction-safe2D review with235 tests, all root/build gates and read-only pass3 passed. RM-010 is committed as `526a6b3`. [RM-011 evidence](validation/RM-011.md) records the grounded scoped assistant, actual worker/fake HTTP and coherent reviewed proposals with274 tests, all root/build gates and clean read-only pass1. RM-011 is committed as `7580870`. [RM-012 evidence](validation/RM-012.md) records same-scale comparison, fixed two-hour semantic tab recovery, safe project import/export and cleanup with314 tests, all root/build gates and clean read-only pass3. Exact RM-012 commit is next before RM-013; model/challenge/hosted/physical/owner evidence stays separately scoped. Earlier in-progress statements below describe historical checkpoints.
+**Historical local result record:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; it is committed as `85c7362`. RM-006 is committed as `f73ce2e`. RM-007 is committed as `d1d8c30` after147-test/root/browser validation. [RM-008 checks](validation/RM-008.md) establish finite shared admission/private bounded transport with170 tests, final root/build gates and read-only pass2 passed. It is committed as `3e6d4c1`. [RM-009 evidence](validation/RM-009.md) establishes bounded deterministic search/application scope with190 tests, all root/build gates, final native quality/health measurements and clean read-only pass3. It is committed as `bfd9e6d`. [RM-010 evidence](validation/RM-010.md) records admitted fake recognition, bounded pixel decode and correction-safe2D review with235 tests, all root/build gates and read-only pass3 passed. RM-010 is committed as `526a6b3`. [RM-011 evidence](validation/RM-011.md) records the grounded scoped assistant, actual worker/fake HTTP and coherent reviewed proposals with274 tests, all root/build gates and clean read-only pass1. RM-011 is committed as `7580870`. [RM-012 evidence](validation/RM-012.md) records same-scale comparison, fixed two-hour semantic tab recovery, safe project import/export and cleanup with314 tests, all root/build gates and clean read-only pass3. Exact RM-012 commit is next before RM-013; model/challenge/hosted/physical/owner evidence stays separately scoped. Earlier in-progress statements below describe historical checkpoints.
 
 **Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). The owner approved the updated plan/guidelines, completed RM-000, then explicitly authorized ordered fake-mode execution/validation and local commits after each ticket. RM-001 is implemented locally; hosted CI is unverified; required review gates, no paid calls/deployment and a 0% remaining Codex usage cutoff apply.
 
@@ -1291,9 +1291,9 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **07-build**
-Next action: Commit exact54owned RM-014 paths after raw-byte/staged checks; then RM-015 performance and actual owner visual stop.
-Active ticket: RM-014
+Current phase: **09-visual-review**
+Next action: Wait for the actual owner RM-015 visual decision. The separately authorized exact15-file checkpoint commit preserves current work and does not resolve this gate. No RM-016, paid call, deployment, push, reset use or delegation; guide goal remains paused.
+Active ticket: RM-015
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1303,9 +1303,9 @@ Local commits approved: yes
 - [x] 04-decisions — Product decisions (complete)
 - [x] 05-tickets — Ticket plan (complete)
 - [x] 06-plan-commit — Planning commit (complete)
-- [ ] 07-build — Execute and validate tickets (in_progress)
-- [ ] 08-performance — Performance investigation (pending)
-- [ ] 09-visual-review — Frontend visual approval checkpoint (pending)
+- [x] 07-build — Execute and validate tickets (complete_local)
+- [x] 08-performance — Performance investigation (complete_local)
+- [ ] 09-visual-review — Frontend visual approval checkpoint (awaiting_owner)
 - [ ] 10a-quality — Quality audit and fixes (pending)
 - [ ] 10b-security-review — Security audit and manual review (pending)
 - [ ] 11-security-fixes — Approved security fixes (pending)
@@ -1318,7 +1318,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-18T17:56:50+00:00",
+  "updated_at": "2026-10-18T19:20:22+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1446,8 +1446,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "USAGE_STOP_POLICY": {
-      "value": "Stop at reported0% remaining. Latest snapshot18October2026:14% used/86% remaining. No reset-credit consumption or paid-credit continuation.",
-      "source": "human:current-chat/approve-review-and-resume-ordered-build; actual get_usage_limits18October2026 RM-012 final review",
+      "value": "Stop at first required owner visual/security gate or reported0% remaining Codex usage. Latest actual reading21%used/79%remaining, ordinary usage allowed. Do not consume resets or paid credits beyond cutoff. Current stop is the required RM-015 owner visual gate.",
+      "source": "human:current-chat/step-seven-stop-policy; actual get_usage_limits2026-10-18 before owner presentation",
       "confidence": "confirmed"
     },
     "PLAN_REVIEW_STEERING": {
@@ -1466,8 +1466,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "ACTIVE_GOAL": {
-      "value": "Registered active goal: execute/validate/commit eligible tickets in order through locally prepared release files, stopping at owner gates or 0% remaining; resume unfinished RM-004. No paid calls/deploy/push/reset consumption/delegation.",
-      "source": "human:current-chat/2026-10-18/keep-going-set-goal; docs/GENERIC REPO GUIDE.html Start the big build loop; create_goal confirmed",
+      "value": "Registered unbudgeted Roomedy ordered execute/validate goal is paused at the explicitly required RM-015 visual result gate. The owner-authorized checkpoint Git action is separate and does not resume automatic implementation. Goal objective and remaining account usage are distinct; no completion or visual acceptance is inferred.",
+      "source": "get_goal verified paused; direct human stop-at-review instruction and 2026-10-18 visual-refusal/checkpoint-commit messages",
       "confidence": "confirmed"
     },
     "CODEX_USAGE_CHECK": {
@@ -1479,6 +1479,11 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "Oat, sand, beige, walnut, cocoa and earthy wood tones. Studio may use black/white; room finishes independent. Supersedes earlier teal platform direction.",
       "source": "human:current-chat/latest-website-palette; docs/ROOMEDY.md section19.1",
       "confidence": "confirmed"
+    },
+    "RM_CHECKPOINT_AUTHORITY": {
+      "value": "Owner: \"didnt approve visuals yet, but you are allowed to create file commit plan for current unstaged work and tomorrow i will review them\", followed by \"and you can stage and commit\". Authorizes the current exact15-file RM-015 local checkpoint plan/stage/commit before visual approval; no result approval, waiver, ticket completion or RM-016. Subject: RM-015: record performance and pending visual review. Earlier presentation-prompt/evidence statements holding the commit until visual approval are historical and superseded only for this specific Git action.",
+      "source": "human:current-chat/2026-10-18/visuals-unapproved-checkpoint-plan-and-stage-commit; docs/commit-plans/RM-015.md",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": null,
@@ -1487,8 +1492,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-014",
-  "next_action": "Commit exact54owned RM-014 paths after raw-byte/staged checks; then RM-015 performance and actual owner visual stop.",
+  "active_ticket": "RM-015",
+  "next_action": "Wait for the actual owner RM-015 visual decision. The separately authorized exact15-file checkpoint commit preserves current work and does not resolve this gate. No RM-016, paid call, deployment, push, reset use or delegation; guide goal remains paused.",
   "phases": [
     {
       "id": "01-docs",
@@ -1752,7 +1757,7 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "07-build",
       "name": "Execute and validate tickets",
       "gate": null,
-      "status": "in_progress",
+      "status": "complete_local",
       "prompt": {
         "text": "ok let's start step seven. execute and validate the tickets in order, follow the guidelines, and stage and commit after each. use fake mode and stop at the required review gates. no paid calls or deployment.\n\ndo this till u hit 0% codex usage then u must stop.",
         "sha256": "de39f37a60901030e652540c667516b426afdbaaf95908e36d044a7c9566189e",
@@ -1801,13 +1806,19 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-013 final local329tests/30files and all root/build gates passed;23offline cases/27fake adapter calls/0paid,11original synthetic images/6room groups. Native chooser covered three conditions and EXIF/repeated views; accepted furnished editor3D follows rough2D. Read-only pass2 clean after independently reproduced settlement fix. Final15-path LF source SHA e99c16d9ad75f29028c8996edf4aee3455460dc9cfce5da4ea805e0487799735;39 allocated paths; exact local commit next, then RM-014. Live/model/privacy/funding/hosted/owner evidence unperformed.15%used/85%remaining; no reset.",
         "commit:f5149b2c8b188bab67e2d6359b29e0fc9fbf3db1 - RM-013 exact39-path local commit; clean worktree. RM-014 full packet/precision refs read and49paths allocated before edits. Official Node linux/amd64 digest and CI action SHAs/pnpm integrity checked. Docker Linux daemon unavailable; actual Linux proof remains unperformed. No paid/deploy/push/reset/delegation.",
         "RM-014 local outcome final346tests/33files, seven boundaries, all root/build gates, Windows A/B/update/rollback and final raw-input-ID production cases passed. Read-only pass3 clean after independently reproduced probe-stream/header/test-env fixes.53allocated paths;39owned source/config/test raw SHA 90ca59b863b449aaf8e6d3dbc422a6e8dd23a9b873128b2d8c1b0bdd7f0aac90;166-file raw input digest7a60eb17e8d4d14deec85db56a1f67923e36d120fcf6e6569c0d351876ab7ba3. Docker Linux engine absent; actual Linux/image/hosted/CI/live evidence unperformed, fail-closed checks preserved. Exact local commit next, then RM-015 performance and actual owner visual stop.17%used/83%remaining; no reset.",
-        "Final preflight adopted unchanged Next-generated frontend AGENTS.md after verifying its generator and reading matching bundled guides.54exact allocated paths; final166-input identity and39-source SHA/346-test gate unchanged. No feedback/export action. Exact local commit next."
+        "Final preflight adopted unchanged Next-generated frontend AGENTS.md after verifying its generator and reading matching bundled guides.54exact allocated paths; final166-input identity and39-source SHA/346-test gate unchanged. No feedback/export action. Exact local commit next.",
+        "commit:2e27f79b5aa912685b027b76e0c990bf0b0b4998 - RM-014 exact54-path validated local commit; clean worktree. RM-001 through RM-014 local outcomes prepared. Next RM-015 under the explicit numeric execution authority."
       ],
       "blockers": [
         {
           "kind": "external",
           "reason": "Actual hosted GitHub/Linux workflow execution is unverified; no push was authorized.",
           "reference": "docs/validation/RM-001.md"
+        },
+        {
+          "kind": "external",
+          "reason": "Actual Docker Linux engine unavailable; Linux images/runtime/nonroot/probes remain unperformed. Hosted CI/IAM/live/model/funding/privacy also unperformed; no external mutation authorized.",
+          "reference": "docs/validation/RM-014.md"
         }
       ],
       "approval": null,
@@ -1818,10 +1829,36 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "08-performance",
       "name": "Performance investigation",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
-      "evidence": [],
-      "blockers": [],
+      "status": "complete_local",
+      "prompt": {
+        "text": "Continue the approved Roomedy numeric fake/paid-off ticket loop with RM-015, after committed RM-014. Explore landing/editor load and bundle splitting, native photo preparation and cleanup, discrete manual/Apply/Undo actions, active drag/orbit/transition frames, bounded search/cancellation, history/project growth and shared admission/concurrency. Check the already-inspected Retrosum workspace/controller and Retailor bounded-intake examples for inspiration only where relevant; current Roomedy implementation and the feature receipts govern, and sibling authority/secrets are excluded. Read the full RM-015 packet, blueprint sections7/18-20/24, feedback lessons and internal visual baseline. Inspect and document actual owning code before adding scoped fixes. Allocate exact paths before edits. Use controlled representative and40-piece/24-feature rooms and bounded synthetic photos; record Windows/browser/build/viewport/counts/cold-warm/repetitions and practical failure thresholds. Separate discrete latency from continuous frame intervals and preserve unperformed browser-native peak/physical/live/Linux evidence. Use permitted native browser interactions and existing development DOM observations without state injection or alternate rendering. Reconcile the full320x568,390x844,430x932,768x1024,1024x768,1280x720,1366x768,1440x900,1920x1080 plus orientation/short-height matrix; test keyboard/numeric/focus/error/status/contrast/motion. Retain rough2D review only and3D solely in the main editor, earthy website palette, fixed two-hour expiry with its criterion-level timing limitation and all authority/security/resource bounds. Use focused meaningful regressions, one settled applicable gate and read-only validation with independent defect confirmation. Prepare actual runnable frontend/screenshots and exact evidence, then stop at the RM-015 owner visual result gate before RM-016. Do not invent approval or new capabilities, delegate, spend, deploy, push or consume a reset. Stop at reported0% remaining usage.",
+        "sha256": "5148f3aad673885c43f9f91386571678dbfbdc2efa3b67ad091959d29160e69f",
+        "context_sources": [
+          "docs/tickets/RM-015-verify-responsive-accessible-and-performant-experience.md",
+          "docs/tickets/README.md workflow mapping",
+          "docs/ROOMEDY.md sections7/18-20/24",
+          "docs/design/visual-direction.md",
+          "human:current-chat/ordered-fake-loop-and-resume",
+          "build/references/prompts.md section08"
+        ],
+        "status": "approved",
+        "approval": {
+          "quote": "ok let's start step seven. execute and validate the tickets in order, follow the guidelines, and stage and commit after each. use fake mode and stop at the required review gates. no paid calls or deployment.\n\ndo this till u hit 0% codex usage then u must stop.",
+          "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
+          "scope": "Existing direct owner authorization for numeric tickets expressly includes RM-015 performance and stops at its actual visual result gate. This records prior authorized ticket scope, not a new owner review of the generated wording or blanket future prompt preapproval. Latest owner instruction keep going confirms continuation. User scope takes precedence over the skill default new-phase prompt pause."
+        }
+      },
+      "evidence": [
+        "docs/commit-plans/RM-015.md -12initial exact paths allocated before edits; full ticket/precision refs and feature baseline read. Existing346-test production candidate available4390/4391; dev4320/4321 untouched.",
+        "docs/validation/RM-015.md; docs/design/performance.md; docs/design/visual-review.md. Exact15-path local scope, five-source raw SHA b298c0f2080f2706e1f7feaf0779647c046051838a4885169529bc3746820fd1;214-input benchmark SHA2c00c300d679fde161edad5bebee44abab46e9e09aa3472dde420b14e133321e. Final346tests/33files/seven boundaries/root/builds and clean read-only pass1;263local file links and diff whitespace checks pass. Actual nine-size matrix,18native16MP decodes, named Node/frame measurements and final production three-condition/keyboard/drag/worker/3D ApplyUndo covered. Fixed200-node maximum throughput miss retained; actual yielding deadline/abort measurements pass. Current166-file input/BUILD_IDcfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e; review pair4390/4391 ready fake/off. RM-015 uncommitted pending actual owner gate. Latest21used/79remaining; no reset."
+      ],
+      "blockers": [
+        {
+          "kind": "external",
+          "reason": "Permitted browser tooling exposes no native/GPU decode-peak profiler or effective200%/400% browser zoom; physical touch/virtual keyboard/IME/AT/GPU/long heap, production continuous/paint and cold-network evidence remain unperformed. Compound measurement criteria stay unchecked. No alternate renderer/tool bypass.",
+          "reference": "docs/design/performance.md"
+        }
+      ],
       "approval": null,
       "decision": null,
       "reviews": []
@@ -1830,9 +1867,31 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "09-visual-review",
       "name": "Frontend visual approval checkpoint",
       "gate": "visual",
-      "status": "pending",
-      "prompt": null,
-      "evidence": [],
+      "status": "awaiting_owner",
+      "prompt": {
+        "text": "Present Roomedy’s actual frontend for the RM-015 owner visual checkpoint. The runnable Windows standalone fake/paid-off candidate is http://127.0.0.1:4390/ with exact input/BUILD_ID cfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e and matching private review backend4391. Show the actual final studio/proposal screenshot and link the visual/performance/validation evidence. Preserve the owner tab and original services. State the real nine-size, short-height, native keyboard/numeric/drag, rough2D-to-main-editor3D, grounded fake worker, Apply/Undo, lifecycle and measured evidence; distinguish desktop emulation, native-memory/production-frame/paint/physical/AT/zoom/cold-network/Linux/hosted/live limitations. Keep the recorded fixed-work throughput miss visible without raising runtime bounds. Owner visual feedback is pending; no approval or waiver has been supplied for this candidate. Ask whether it is approved as-is, which specific changes are wanted, or whether review is explicitly waived/deferred. Stop here. If approved, skip unsolicited design changes and resume the authorized ordered loop with the scoped RM-015 commit and RM-016. If feedback is supplied, allocate exact owners before that round, preserve functionality/quality/security/efficiency, earthy website palette, independent finishes, rough2D-only initial review, deliberate motion and responsive room geometry; validate only the requested round and re-present for actual owner approval. No animation-off/render-off setting, OS suppression, paid call, deployment, push, reset consumption, delegation or inferred result approval. RM-015 remains awaiting owner and its changes unstaged/uncommitted; no RM-016 or security work now.",
+        "sha256": "cfcf2b7ef79b84e06119c071e5bea51c3edb8c5aaa98d26acc31931f918a6629",
+        "context_sources": [
+          "docs/tickets/RM-015-verify-responsive-accessible-and-performant-experience.md",
+          "docs/design/visual-review.md",
+          "docs/design/performance.md",
+          "docs/validation/RM-015.md",
+          "human:current-chat/ordered-fake-loop-stop-at-review-gates",
+          "build/references/prompts.md section09"
+        ],
+        "status": "approved",
+        "approval": {
+          "quote": "ok let's start step seven. execute and validate the tickets in order, follow the guidelines, and stage and commit after each. use fake mode and stop at the required review gates. no paid calls or deployment.\n\ndo this till u hit 0% codex usage then u must stop.",
+          "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
+          "scope": "Prior direct owner authority includes preparing and presenting RM-015 at its required visual gate. This records authorization to present the already-approved ticket scope, not new human review of generated prompt wording, visual approval/waiver, future quality work or blanket prompt preapproval. Latest keep-going instruction continues only up to that stop."
+        }
+      },
+      "evidence": [
+        "docs/design/visual-review.md",
+        "docs/validation/RM-015.md",
+        "http://127.0.0.1:4390/ - current fake/off standalonecfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e; actual final studio/proposal image RM-015-final-studio-review.jpg under task visualization root. All15exact paths unstaged; actual owner approval/waiver absent.",
+        "human:current-chat/2026-10-18 - owner explicitly withheld visual approval, requested the current file-level commit plan, then said \"and you can stage and commit\". docs/commit-plans/RM-015.md scopes the exact15-file checkpoint independently of the unresolved visual result; docs/validation/RM-015.md records the pre-commit checks. No source/config change after the settled candidate."
+      ],
       "blockers": [],
       "approval": null,
       "decision": null,
