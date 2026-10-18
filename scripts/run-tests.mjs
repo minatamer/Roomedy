@@ -9,6 +9,8 @@ const env = {
   PAID_DEMO_ENABLED: 'false',
   OPENAI_API_KEY: '',
   OPENAI_MODEL: '',
+  ROOMEDY_BRIDGE_SECRET: '',
+  LIVE_POLICY_REVIEWED: 'false',
   NEXT_TELEMETRY_DISABLED: '1',
 };
 const result = spawnSync(

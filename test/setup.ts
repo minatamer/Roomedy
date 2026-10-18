@@ -9,6 +9,8 @@ process.env.FAKE_MODE = 'true';
 process.env.PAID_DEMO_ENABLED = 'false';
 delete process.env.OPENAI_API_KEY;
 delete process.env.OPENAI_MODEL;
+delete process.env.ROOMEDY_BRIDGE_SECRET;
+process.env.LIVE_POLICY_REVIEWED = 'false';
 globalThis.fetch = async () => {
   throw new Error('test-network-denied');
 };

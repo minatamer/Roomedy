@@ -4,6 +4,7 @@ import { config as loadEnvironment } from 'dotenv';
 import { parseRuntimeConfig } from './config/runtime-config.js';
 import { createApp } from './http/create-app.js';
 import { createRuntime } from './runtime/create-runtime.js';
+import { createResponsesProvider } from './providers/responses.js';
 
 // This executable is the only backend module allowed to load environment or listen.
 loadEnvironment({
@@ -20,6 +21,17 @@ try {
     now: Date.now,
     nextId: randomUUID,
     log,
+    ...(config.mode === 'live' &&
+    config.paidEnabled &&
+    config.providerConfigured &&
+    config.livePolicyReviewed
+      ? {
+          provider: createResponsesProvider(
+            process.env.OPENAI_API_KEY!,
+            process.env.OPENAI_MODEL!,
+          ),
+        }
+      : {}),
   });
   const server = createApp(runtime).listen(config.port, config.host, () => {
     log({ code: 'server-started', reference: randomUUID() });
@@ -30,6 +42,7 @@ try {
   });
   for (const signal of ['SIGINT', 'SIGTERM'] as const)
     process.once(signal, () => {
+      runtime.operations.close();
       server.close();
     });
 } catch {

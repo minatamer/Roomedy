@@ -8,6 +8,12 @@ export const errorCodeSchema = z.enum([
   'not-found',
   'upstream-unavailable',
   'internal-error',
+  'busy',
+  'invalid-grant',
+  'body-limit',
+  'timeout',
+  'cancelled',
+  'forbidden',
 ]);
 export const safeErrorSchema = z.strictObject({
   error: z.strictObject({
@@ -45,7 +51,26 @@ export const readySchema = z.strictObject({
     'disabled',
     'missing-configuration',
     'pending-admission',
+    'pending-integration',
+    'missing-verification',
   ]),
 });
 export type PublicConfig = z.infer<typeof publicConfigSchema>;
 export type SafeError = z.infer<typeof safeErrorSchema>;
+
+export const errorMessages = {
+  'invalid-input': 'Check the information and try again.',
+  'not-available':
+    'This action is not available yet. You can keep working manually.',
+  'not-found': 'This action could not be found.',
+  'upstream-unavailable':
+    'The service is unavailable. Please try again shortly.',
+  'internal-error': 'Something went wrong. Your room has not been changed.',
+  busy: 'The service is busy. Please try again shortly.',
+  'invalid-grant':
+    'This request permission expired or changed. Please try again.',
+  'body-limit': 'This request is too large. Try fewer or smaller photos.',
+  timeout: 'This request took too long. Your room has not been changed.',
+  cancelled: 'The request was cancelled. Your room has not been changed.',
+  forbidden: 'This request could not be verified. Please reopen the app.',
+} as const;

@@ -1,6 +1,6 @@
 # RM-008 — Build shared admission and bounded provider transport
 
-Status: **Planned**  
+Status: **Implemented locally — external provider/challenge/hosted evidence pending**\
 Planning date: **17 October 2026**  
 Milestone: **Safe AI infrastructure**  
 Depends on: [RM-003](RM-003-build-spatial-checks-commands-and-undo.md), [RM-007](RM-007-build-photo-intake-and-rough-2d-review.md)  
@@ -54,23 +54,23 @@ Bind grants to allowed operation and a server-recomputed digest of normalized im
 
 ## Acceptance criteria
 
-- [ ] Fixed bridge/routes reject arbitrary forwarding and protect private service/provider configuration.
-- [ ] Large bodies receive finite early intake admission and separate provider-work admission.
-- [ ] Recognition and assistant share capacity/rate policy with no unbounded waiting queue or replay ledger.
-- [ ] Grants bind operation/input/expiry/replay; forged or reused grants cannot create duplicate paid work.
-- [ ] Request, encoded-image, output, token, loop/deadline and concurrency limits are explicit and enforced.
-- [ ] Cancellation/disconnect/failure accounting releases once while respecting unresolved remote work.
-- [ ] Missing live/challenge prerequisites fail closed; no fallback-to-fake public success or hidden retry exists.
-- [ ] Safe public failures and private diagnostics disclose no room content, credentials or raw provider errors.
-- [ ] Quiet challenge presentation retains the exact verified operation gate and exposes a usable fallback on interaction/failure.
-- [ ] Many tiny admitted stream fragments remain memory-bounded and preserve actual file bytes, cleanup and zero dispatch on rejection.
+- [x] Fixed bridge/routes reject arbitrary forwarding and protect private service/provider configuration.
+- [x] Large bodies receive finite early intake admission and separate provider-work admission.
+- [x] Recognition and assistant share capacity/rate policy with no unbounded waiting queue or replay ledger.
+- [x] Grants bind operation/input/expiry/replay; forged or reused grants cannot create duplicate paid work.
+- [x] Request, encoded-image, output, token, loop/deadline and concurrency limits are explicit and enforced.
+- [x] Cancellation/disconnect/failure accounting releases once while respecting unresolved remote work.
+- [x] Missing live/challenge prerequisites fail closed; no fallback-to-fake public success or hidden retry exists.
+- [x] Safe public failures and private diagnostics disclose no room content, credentials or raw provider errors.
+- [ ] Actual vendor quiet/interactive challenge presentation remains external/unperformed. The verified/interaction/failed contract and fail-closed live gate are implemented and fake-tested; the selected vendor and owning UI must prove the presentation/fallback before public paid readiness.
+- [x] Many tiny admitted stream fragments remain memory-bounded and preserve actual file bytes, cleanup and zero dispatch on rejection.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — scoped local evidence below
 
-- [ ] Actual emitted provider schema fixtures and captured fake request flags enforce strict serial/stateless policy; refusal/incomplete/unknown outcomes decode safely without hidden continuation/retry.
-- [ ] Substituted image/request bytes, concurrent duplicate consumption, process restart and a second fake runtime cannot reuse a grant for extra dispatch.
-- [ ] A full finite grant ledger rejects new admission without retiring live replay protection; no-disconnect timeout/ignored abort/shutdown clean up and account exactly once.
-- [ ] Timeout ordering, process-local availability tradeoff, remote-accounting and actual model/cache/retention/global-spend limits are documented; paid readiness remains conditional.
+- [x] Actual emitted provider schema fixtures and captured fake request flags enforce strict serial/stateless policy; refusal/incomplete/unknown outcomes decode safely without hidden continuation/retry.
+- [x] Substituted image/request bytes, concurrent duplicate consumption, process restart and a second fake runtime cannot reuse a grant for extra dispatch.
+- [x] A full finite grant ledger rejects new admission without retiring live replay protection; no-disconnect timeout/ignored abort/shutdown clean up and account exactly once.
+- [x] Timeout ordering, process-local availability tradeoff, remote-accounting and actual model/cache/retention/global-spend limits are documented; paid readiness remains conditional.
 
 ## Focused verification and evidence
 
@@ -86,3 +86,7 @@ Bind grants to allowed operation and a server-recomputed digest of normalized im
 ## Handoff and limits
 
 Publish actual finite policy, dispatch accounting and trust assumptions. RM-010/011 consume this same runtime; neither may create a parallel provider client or limiter. Real challenge, provider privacy/funding, hosted IAM and effective account controls remain unchecked until specifically authorized. This planned work includes no paid call, cloud setup or scanner export.
+
+## Execution evidence — 18 October 2026
+
+[41-path allocation](../commit-plans/RM-008.md), [enforcement/trust policy](../engineering/provider-safety.md), [actual validation](../validation/RM-008.md). The final170-test/root/build gate and settled read-only pass2 are clean on the named31-path source identity. Checked acceptance is local fake/injected evidence; it does not assert real provider/challenge/hosted behavior. The unselected vendor widget, model/cache/privacy/funding/account controls and private hosted IAM/scaling/timeouts remain external prerequisites. RM-010/011 consume this single runtime and own actual product integration. Exact local commit follows; no paid/public authority is added.

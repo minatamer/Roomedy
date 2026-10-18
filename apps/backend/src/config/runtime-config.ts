@@ -6,6 +6,8 @@ export interface RuntimeConfig {
   host: string;
   frontendOrigin: string;
   providerConfigured: boolean;
+  bridgeSecret: string;
+  livePolicyReviewed: boolean;
 }
 
 /** Pure projection. Environment loading and access are confined to server.ts. */
@@ -38,6 +40,13 @@ export function parseRuntimeConfig(
   const host = env.HOST || '127.0.0.1';
   if (host !== '127.0.0.1' && host !== '0.0.0.0')
     throw new Error('invalid-configuration');
+  const bridgeSecret = env.ROOMEDY_BRIDGE_SECRET?.trim() || '';
+  if (
+    bridgeSecret &&
+    (!/^[\x21-\x7e]{1,4096}$/.test(bridgeSecret) ||
+      (appEnv === 'production' && bridgeSecret.length < 32))
+  )
+    throw new Error('invalid-configuration');
   return {
     appEnv: appEnv as RuntimeConfig['appEnv'],
     mode: bool('FAKE_MODE', true) ? 'fake' : 'live',
@@ -48,5 +57,7 @@ export function parseRuntimeConfig(
     providerConfigured: Boolean(
       env.OPENAI_API_KEY?.trim() && env.OPENAI_MODEL?.trim(),
     ),
+    bridgeSecret,
+    livePolicyReviewed: bool('LIVE_POLICY_REVIEWED', false),
   };
 }

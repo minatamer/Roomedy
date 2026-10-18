@@ -39,7 +39,7 @@ describe('safe runtime composition', () => {
         get meteredDispatches() {
           return calls;
         },
-        async dispatch() {
+        start() {
           calls++;
           throw new Error('must never dispatch');
         },

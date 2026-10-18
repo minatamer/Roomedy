@@ -1,0 +1,53 @@
+# Admission and bounded provider transport
+
+RM-008, 18 October 2026. [Ticket](../tickets/RM-008-build-shared-admission-and-bounded-provider-transport.md), [allocation](../commit-plans/RM-008.md), [actual checks](../validation/RM-008.md). Local infrastructure only: RM-010/011 register recognition/assistant use cases. No funded model, live challenge vendor, hosted identity or provider allowance is selected. No paid call occurred.
+
+## One admitted path
+
+The browser uses fixed Next operations beneath `/api/roomedy/v1`; the private Express operations use `/v1`. Only GET health/ready/config and POST admission/recognize-room/assistant exist. Methods, paths and queries are checked. Mutation JSON must have the configured exact public Origin and no cross-site fetch context; browser-chosen destinations/credentials are discarded. Next supplies its server-only bridge secret, checked privately using fixed-size digests and constant-time comparison. Blank identity fails closed. Blank committed examples contain no credential. This local shared-secret boundary does not establish hosted IAM; the public frontend/private authenticated backend deployment remains an external RM-014/020 prerequisite.
+
+Public capability/readiness schemas expose useful mode/limits without keys/model/private origin/account details. Owning handlers and matching provider kind must exist. Live availability additionally requires paid master, configured credentials/model, explicit policy review and a live verifier port. A fake verifier/provider cannot satisfy live readiness. Fresh running development remains fake/paid-off and unavailable for recognition/assistant pending their integrations. A failed live operation cannot switch to fake success.
+
+Admission receives the complete strict input plus nullable challenge proof. Operation dispatch receives that same input plus its opaque grant. Inputs include fixed contract/catalogue/rules versions and workspace/generation/operation/room/revision identity. Assistant room semantics use the actual shared validator; text/context and serialized room are independently bounded. Recognition accepts canonical Base64 for corresponding JPEG manifest entries, exact decoded byte counts/dimensions, bounded complete container traversal and the normalized size policy. It performs no native server image decode and claims no pixel/recognition validity. RM-010's recognition builder must sanitize/prepare the actual outgoing inline images; intake validation alone is not a photo-retention promise.
+
+The backend recomputes SHA-256 over strict request semantics including actual supplied image bytes. It stores only digests, operation keys, opaque tokens, kinds, expiry and state. Client approval/digest fields are rejected. A process-created epoch and fresh random server IDs bind grants to that process; startup uses `randomUUID`, never browser IDs. Another process or restarted process rejects the old token. Repeated admission for one operation identity returns its same unconsumed matching grant; changed input or consumed identity cannot mint a new dispatch during replay retention. Consume is synchronous before any handler/provider await. No active record is evicted at ledger capacity. Consumed active work retains its replay record beyond TTL until actual job retirement; inactive consumed records remain through original expiry. This is bounded replay retention, not a permanent operation archive. A deliberate retry uses a new operation identity.
+
+## Selected finite policy
+
+| Boundary | Local enforced value |
+| --- | --- |
+| Backend intake / expensive operations | 2 intake slots, separately 2 shared work slots; no waiting queue |
+| Next body/upstream ownership | 2 per loaded bridge module; unresolved attempts retain their slot |
+| Wire JSON / fragments | 10 MiB, 4096 fragments; no compressed-body acceptance |
+| Packed memory | 64 KiB pages; at most160 pages per maximum body; no retained array of tiny wire fragments |
+| Grant ledger / lifetime | 256 records; 120 seconds, with active consumed protection retained until retirement |
+| Global process rates | 30 admission attempts and12 admitted operations per60-second window, shared across browser identities/tabs |
+| Challenge | 15-second visible deadline; at most2 unresolved verifier promises, including timed-out/aborted work |
+| Body / provider / operation / bridge / proposed host deadlines | 15s body;45s provider call;60s assistant or90s recognition;110s operation bridge;120s proposed hosting timeout |
+| Provider request | 10 MiB after conservative pre-serialization work/byte checking and actual encoding;100,000 nodes/depth24; schema64 KiB/depth10 |
+| Output | 1 MiB,4096 fragments,8192 output tokens |
+| Loop | At most4 rounds and16 total tool calls; one call at a time, no implicit retry |
+
+Image policy remains six files,2 MiB each /6 MiB normalized total and2048px edges; raw/native preparation limits are separate in [intake policy](image-intake.md). Six MiB becomes8 MiB Base64, leaving framing margin inside10 MiB. Next framework/native/network buffers and parsed string/object copies are additional memory, not included in a payload-byte ceiling. Next may load separate route-module instances or worker processes: conservatively allow all three fixed POST route pools rather than claiming one global frontend counter. Backend admission is the shared expensive-work authority. Rate windows and resource quantities are engineering selections supported by the named local scenarios, not a public capacity certification.
+
+## Cancellation, settlement and accounting
+
+The runtime counts a bounded call reservation before adapter start; the live adapter increments actual attempted dispatch immediately before its single fixed fetch. Health/config/admission dispatch zero provider calls. No SDK or retry mechanism is installed. Actual provider billing can differ from local dispatch counts; no token-to-price accounting or account-wide cutoff is claimed.
+
+Client cancellation returns a safe cancelled result and aborts local signals. It does not release unresolved remote work immediately. Independent server deadlines also apply when browser disconnect never propagates. Normal retirement waits for handler and underlying transport settlement. Uncertain cancelled/timed-out/unavailable work also retains capacity through its whole-operation deadline. If a handler, verifier, fetch or body reader ignores abort forever, its finite slot is quarantined until actual settlement; repeated visible timeouts do not accumulate unbounded promises. Two stuck provider jobs can make AI unavailable while health/manual work remain usable. Shutdown closes admission, fences active work/verifiers and aborts signals; it does not claim remote billing stopped. No automatic restart clears uncertainty.
+
+The proposed host timeout is configuration/runbook work for RM-014/020; it has not been set on a hosted service. Operation/bridge margins are deliberately distinct. Read-only foundation GET probes retain their separate3-second policy.
+
+## Provider wire policy and outcomes
+
+The backend-only native fetch uses exactly `https://api.openai.com/v1/responses`, POST, redirects rejected and one attempt. It bounds encoded input/output/fragments/tokens and independently races visible deadlines while exposing real transport settlement to the runtime. Browser data cannot select model/endpoint/headers. The current input allow-list accepts explicit text messages, inline JPEG data URLs and bounded serial function-call/result context. It rejects persistent file items, external image URLs, arbitrary provider items and hidden root continuation/conversation fields.
+
+Rich local Zod/domain rules remain authoritative. Their explicit provider projection has an object root, closed objects, all properties required and preserved nullable branches; unsupported validation keywords are omitted from that projection and enforced locally. Actual emitted draft schema and captured strict flags are tested. Tool definitions and structured output explicitly use strict mode; calls are serial, foreground, `store:false` and non-streaming. There is no automatic continuation or persistent provider conversation/file object. This follows the fetched official [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) and [function-calling](https://developers.openai.com/api/docs/guides/function-calling) guidance. Model-specific compatibility remains unverified until selection/evaluation.
+
+Refusal, incomplete, malformed, oversized, cancellation, timeout and unavailability are distinct bounded internal outcomes. Empty completed output and unknown/parallel tools are rejected. Owning use cases must validate decoded data/tools and produce the strict public envelope; the adapter never applies room edits or treats model output as authority. Public failures use fixed source-controlled copy. Operator diagnostics preserve fixed codes, safe outcomes, round counts, bounded elapsed time and opaque references, without photos, filenames, rooms/chat, provider payloads, tokens or raw exception text.
+
+`store:false` does not establish zero retention. Selected-model caching, abuse monitoring, image handling and actual account settings require the later explicit privacy review; see official [data controls](https://developers.openai.com/api/docs/guides/your-data). No such external review or personal-photo transfer occurred here. Quiet verification is a result contract: a supported verifier can return verified without UI, interaction or failed; the owning UI must expose a useful visible fallback. Vendor widget/presentation cannot be verified before a vendor exists. Fake challenge tests are labelled simulation and cannot authorize live work.
+
+## Remaining account and hosting boundary
+
+These content-free ledgers reset on process restart and are independent across instances/revisions. Rejecting another runtime's grant trades availability for replay safety; no sticky routing or shared database is added. Maximum instances=1 is not a durable global lock or money cap: revision overlap, excess instances, restart and unresolved remote processing remain possible. Repeated deliberate operations can spend beyond any assumed lifetime allowance. Funding, enforceable account controls, acceptable outstanding exposure, chosen model/cache/retention, real challenge, private hosted IAM and actual scaling/timeouts must be explicitly resolved before paid/public readiness. Local flags are necessary configuration, never owner spending authorization.

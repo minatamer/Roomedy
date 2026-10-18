@@ -2,13 +2,13 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-001–RM-006 committed; RM-007 final validation/commit next, then RM-008; hosted CI unverified\
+**Stage:** RM-001–RM-007 committed; RM-008 final local commit next, then RM-009; hosted/provider/challenge evidence unverified\
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
 **Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-004 is committed and RM-005 has local browser/gate evidence; dated historical checkpoints below remain historical.
 
-**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; it is committed as `85c7362`. RM-006 is committed as `f73ce2e`. RM-007 has safe transient image/manual rough review and actual empty/partial/furnished browser handoffs; final settled validation/read-only receipt and exact commit precede RM-008. Earlier in-progress statements below describe historical checkpoints.
+**Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; it is committed as `85c7362`. RM-006 is committed as `f73ce2e`. RM-007 is committed as `d1d8c30` after147-test/root/browser validation. [RM-008 checks](validation/RM-008.md) establish finite shared admission/private bounded transport with170 tests, final root/build gates and read-only pass2 passed. Its exact local commit precedes RM-009; provider/challenge/hosted evidence stays external. Earlier in-progress statements below describe historical checkpoints.
 
 **Step-five deliverable:** [Detailed ticket plan and dependency queue](tickets/README.md). The owner approved the updated plan/guidelines, completed RM-000, then explicitly authorized ordered fake-mode execution/validation and local commits after each ticket. RM-001 is implemented locally; hosted CI is unverified; required review gates, no paid calls/deployment and a 0% remaining Codex usage cutoff apply.
 
@@ -1290,8 +1290,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage and commit the exact34 RM-007 paths, verify source identity and clean worktree, then read/allocate RM-008 shared admission/private bounded transport. Continue numeric fake/paid-off loop; stop review gates or0% remaining usage.
-Active ticket: RM-007
+Next action: Stage/commit the exact41 validated RM-008 paths, verify source identity and clean worktree, then read/allocate RM-009 bounded deterministic layout search. Continue fake/paid-off; stop required owner review gates or0% remaining usage.
+Active ticket: RM-008
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1316,7 +1316,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-18T11:57:31+00:00",
+  "updated_at": "2026-10-18T12:28:01+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1485,8 +1485,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-007",
-  "next_action": "Stage and commit the exact34 RM-007 paths, verify source identity and clean worktree, then read/allocate RM-008 shared admission/private bounded transport. Continue numeric fake/paid-off loop; stop review gates or0% remaining usage.",
+  "active_ticket": "RM-008",
+  "next_action": "Stage/commit the exact41 validated RM-008 paths, verify source identity and clean worktree, then read/allocate RM-009 bounded deterministic layout search. Continue fake/paid-off; stop required owner review gates or0% remaining usage.",
   "phases": [
     {
       "id": "01-docs",
@@ -1784,7 +1784,9 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-006 docs/validation/RM-006.md: final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; read-only pass 2 no actionable findings; settled pnpm check passed 120 tests, six boundaries, exact assets, types/builds; actual browser controls/candidate/Undo, missing asset, empty/partial and responsive evidence with unperformed device/context limits.",
         "RM-006 committed f73ce2e65c3d5e2954ecad523cb477c5bed3760a; clean worktree; 20 exact paths, final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; 120-test root gate and read-only pass 2 complete.",
         "RM-007 packet and precision references read; 33 exact paths allocated in docs/commit-plans/RM-007.md before feature edits. Codex usage latest 4% used / 96% remaining; no reset consumed.",
-        "RM-007 final24-path source/config/test/fixture SHA809d6de1a53b51e7ba121ecded614e69e98fef8d97a94a757d7007342bc3bc2e;34 exact allocated paths; final147/147 tests, six boundaries, exact assets/types/builds passed. Read-only pass2 no actionable findings after independently reproduced position-lock and manifest/Undo fixes. Actual empty/partial/furnished intake/review/editor and responsive screenshots are in docs/validation/RM-007.md. Latest usage7% used /93% remaining; goal active; no reset consumed."
+        "RM-007 final24-path source/config/test/fixture SHA809d6de1a53b51e7ba121ecded614e69e98fef8d97a94a757d7007342bc3bc2e;34 exact allocated paths; final147/147 tests, six boundaries, exact assets/types/builds passed. Read-only pass2 no actionable findings after independently reproduced position-lock and manifest/Undo fixes. Actual empty/partial/furnished intake/review/editor and responsive screenshots are in docs/validation/RM-007.md. Latest usage7% used /93% remaining; goal active; no reset consumed.",
+        "RM-007 committed d1d8c302909e85f052b66b37a70520354a8aa976; clean worktree after34-path commit; final147 tests/root/build gate and read-only pass2 complete. RM-008 full packet/precision sections and current OpenAI schema/function/data docs read;40 exact paths allocated before feature edits.",
+        "RM-008 allocation extended before shared test fixture creation to41 exact paths. Final31-path source/config/test SHA f202eec39a0a1e84c0ec2e9ebd6ec87160e6df5ba1cb1251fa3a898525371a3d; final170/170 tests in18 files (7.24s), six boundaries, exact assets/types/builds passed. Read-only pass2 no actionable findings after independently reproduced cancellation, empty output, active replay TTL and persistent provider file-reference corrections. Actual local no-cost probes and measured packed-body allocation are recorded in docs/validation/RM-008.md. Latest usage8% used/92% remaining; no reset consumed."
       ],
       "blockers": [
         {

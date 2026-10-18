@@ -7,6 +7,14 @@
     "dist"
   ],
   "exports": {
+    "./operations": {
+      "types": "./dist/operations.d.ts",
+      "default": "./dist/operations.js"
+    },
+    "./bounded-bytes": {
+      "types": "./dist/bounded-bytes.d.ts",
+      "default": "./dist/bounded-bytes.js"
+    },
     "./intake": {
       "types": "./dist/intake.d.ts",
       "default": "./dist/intake.js"
