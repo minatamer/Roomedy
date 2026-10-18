@@ -1,6 +1,6 @@
 # RM-006 — Deliver the synchronized 3D cutaway
 
-Status: **Planned**  
+Status: **Complete locally; exact authorized commit pending**
 Planning date: **17 October 2026**  
 Milestone: **Editable room**  
 Depends on: [RM-005](RM-005-deliver-canonical-session-and-precision-2d-editor.md)  
@@ -51,20 +51,20 @@ Consume revised half-millimetre centres exactly at the metre adapter. Depict an 
 
 ## Acceptance criteria
 
-- [ ] Cutaway loads only in the main editor; initial review has no 3D control/canvas.
-- [ ] Room and furniture positions/sizes/fronts agree with plan and independent canonical fixtures.
-- [ ] Orbit/zoom/reset/selection work without changing room revision or generating provider calls.
-- [ ] Manual commands, Undo and later previews can update both views from the same snapshot authority.
-- [ ] Supported asset sizes remain physical truth; missing/approximate representations are honest.
-- [ ] Warm stylized materials/lighting and deliberate motion are implemented with bounded scene resources.
-- [ ] WebGL/context/asset failures preserve useful 2D/manual behavior and safe copy.
-- [ ] Resource cleanup respects shared ownership on reset, view changes and unmount.
-- [ ] Actual tested loading/selection/view-switch/failure states preserve useful 2D work and coherent motion without introducing a 3D intake preview or extra render settings.
+- [x] Cutaway loads only in the main editor; initial review has no 3D control/canvas.
+- [x] Room and furniture positions/sizes/fronts agree with plan and independent canonical fixtures.
+- [x] Orbit/zoom/reset/selection work without changing room revision or generating provider calls.
+- [x] Manual commands, Undo and later previews can update both views from the same snapshot authority.
+- [x] Supported asset sizes remain physical truth; missing/approximate representations are honest.
+- [x] Warm stylized materials/lighting and deliberate motion are implemented with bounded scene resources.
+- [x] WebGL/context/asset failures preserve useful 2D/manual behavior and safe copy.
+- [x] Resource cleanup respects shared ownership on reset, view changes and unmount.
+- [x] Actual tested loading/selection/view-switch/failure states preserve useful 2D work and coherent motion without introducing a 3D intake preview or extra render settings.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — implementation and evidence
 
-- [ ] Odd-size/half-millimetre poses and true owned sizes outside detailed representation ranges remain aligned in plan, cutaway and checks without silent stretching.
-- [ ] Actual loading/orbit/Apply/Undo/view-switch frames and resource behavior are measured separately from discrete-action latency, with relevant uncertainty accessible.
+- [x] Odd-size/half-millimetre poses and true owned sizes outside detailed representation ranges remain aligned in plan, cutaway and checks without silent stretching.
+- [x] Actual loading/orbit/Apply/Undo/view-switch frames and resource behavior are measured separately from discrete-action latency, with relevant uncertainty accessible.
 
 ## Focused verification and evidence
 
@@ -80,3 +80,7 @@ Consume revised half-millimetre centres exactly at the metre adapter. Depict an 
 ## Handoff and limits
 
 Record actual rendered/browser/device evidence separately from unit adapter tests. RM-011 completes assistant candidate display and RM-012 comparison controls; RM-015 owns full performance/owner acceptance. No initial 3D review, photorealistic export, exact-photo reconstruction or direct 3D dragging is added. Follow the index's future execution and evidence rules.
+
+## Execution evidence — 18 October 2026
+
+See [RM-006 receipt](../validation/RM-006.md), [renderer design](../design/room-view.md) and [exact allocation](../commit-plans/RM-006.md). Core local behavior is implemented and browser-checked. Source-reviewed WebGL/context fallback remains without actual fault injection; physical-device/maximum-room/production proof and final owner visual acceptance remain explicitly open. Acceptance boxes record implemented local behavior; they do not claim the explicitly unperformed fault/device/owner checks. The final settled gate and read-only pass have completed without remaining actionable findings.

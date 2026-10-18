@@ -15,3 +15,7 @@ Shared tokens, focus outlines, minimum action heights, bounded panels and respon
 ## RM-005 actual studio baseline
 
 18 October 2026: the main precision editor uses neutral paper/off-white chrome, walnut actions and independent semantic room finishes. One narrow tool rail, useful SVG plan and 315 px inspector fit the inspected short laptop; tablet/phone layouts stack plan and active panel. Actual 320/390/768/1280/1440 evidence, field-error/selected/limited-representation states and controls are in [RM-005 validation](../validation/RM-005.md). The room footprint, per-value evidence and selected issues are factual projections; no 3D or owner visual approval is claimed. Later views retain this typography, spacing, task hierarchy and authored mark.
+
+## RM-006 cutaway baseline
+
+The main editor now adds a warm stylized cutaway over the same room/selection. Its neutral paper chrome and compact camera actions preserve the earthy website direction while scene finishes remain canonical data. Inspect [room-view policy](room-view.md) and [actual RM-006 browser/frame evidence](../validation/RM-006.md). Phone/tablet/short-laptop layouts, selected pieces, palette candidates and a missing model fallback were inspected. Final owner visual acceptance remains RM-015.

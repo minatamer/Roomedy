@@ -44,3 +44,5 @@ RM-003 supplies the [pure spatial policy](engineering/spatial-rules.md), [alloca
 RM-004 establishes the actual earthy [visual baseline](design/visual-direction.md), progressive guest entry and bounded scripted landing. Its [allocation](commit-plans/RM-004.md) and [validation](validation/RM-004.md) distinguish local browser evidence from the later RM-015 owner decision.
 
 RM-005 supplies the [canonical session and plan contract](engineering/session-and-plan.md), real sample editing and exact per-value corrections. Its [allocation](commit-plans/RM-005.md) and [validation](validation/RM-005.md) record actual browser/domain evidence and precise remaining limits.
+
+RM-005 is committed as `85c7362`. RM-006 implements the main-editor synchronized cutaway; [rendering policy](design/room-view.md), [allocation](commit-plans/RM-006.md) and [validation receipt](validation/RM-006.md) distinguish actual local checks from pending device/owner evidence.

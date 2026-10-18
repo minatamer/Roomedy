@@ -45,3 +45,7 @@ Desktop keeps the room alongside one inspector. Narrow layouts stack a useful pl
 Session and adapter fixtures independently exercise baseline immutability, one-step Undo, all quarter-turn contacts, letterboxing/pan/scale, locks/invalid drops, per-value corrections, operation races, sleeping expiry, cleanup, long editing and preview atomicity. Actual browser checks are required separately. Desktop emulation does not prove physical touch/GPU/assistive behavior. The fixed two-hour expiry is a known timing-adjustability limitation, not blanket WCAG conformance.
 
 Vitest integration-test type checking uses ESNext/Bundler resolution for imported frontend modules, matching its runtime. Shared/backend production builds independently retain NodeNext checks. After rebuilding a changed shared package, restart only an owned app whose dependency bundle remains stale; ordinary UI edits use hot reload. No live/provider result, deployment or owner visual decision follows from these local checks.
+
+## RM-006 projection extension
+
+The editor now lazily composes one cutaway with the same current/candidate/checks/selection inputs. View/camera refs are presentation state scoped to the workspace; no semantic controller method, command policy or baseline authority changes. The loading boundary keeps PlanView usable; graphical failure preserves numeric/plan editing. [Renderer design and ownership](../design/room-view.md), [actual evidence](../validation/RM-006.md). References above to 3D being absent describe RM-005 historical scope.

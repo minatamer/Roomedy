@@ -11,7 +11,7 @@ Owner-requested revision: incorporate lessons from the four referenced visual/ma
 
 ## Why twenty packets
 
-Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 is committed, RM-005 is locally complete, and RM-006 onward remain Planned.
+Roomedy needs one coherent room authority across photo review, precision editing, 3D rendering, geometry, assistant proposals and recovery. These packets deliver complete capabilities rather than separate tickets for buttons, endpoints, materials or individual tests. The queue covers the whole selected demo, local release preparation and later conditional hosted acceptance. The original plan created no application code. RM-001 and RM-002 now have verified local evidence; RM-003 is complete locally, and RM-004 is committed, RM-005 is committed (`85c7362`), RM-006 is locally validated with its exact authorized commit pending, and RM-007 onward remain Planned.
 
 `RM-###` is the approved Roomedy planning convention. The owner explicitly selected **RM-000** for step-six documentation/ticket commits; see the [scoped allocation](../commit-plans/RM-000.md). RM-000 is not an implementation ticket. RM-001/RM-002 have existing local implementation commits. Suggested subjects for later packets remain future authorized work; a subject is never proof of completed acceptance.
 

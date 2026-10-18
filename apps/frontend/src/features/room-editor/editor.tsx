@@ -1,4 +1,15 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { CameraPose } from '../room-view/adapter';
+import {
+  Component,
+  lazy,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
+import type { ReactNode } from 'react';
 import type { RoomCondition } from '../session/entry/entry-state';
 import type { SessionController } from '../session/controller';
 import type { Panel } from '../session/state';
@@ -14,6 +25,20 @@ import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import styles from './editor.module.css';
 
+const Cutaway = lazy(() => import('../room-view/cutaway'));
+class CutawayBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { failed: boolean }
+> {
+  override state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  override render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
+
 export function Editor({
   controller,
   onBack,
@@ -27,6 +52,13 @@ export function Editor({
     controller.subscribe,
     controller.getSnapshot,
     controller.getSnapshot,
+  );
+  const [cutawayOpenedAt, setCutawayOpenedAt] = useState(0);
+  const [roomView, setRoomView] = useState<'plan' | 'cutaway'>('plan');
+  const workspaceId = state.workspace?.workspaceId;
+  const cameraStateRef = useMemo(
+    () => ({ current: null as CameraPose | null, workspaceId }),
+    [workspaceId],
   );
   const [replacementId, setReplacementId] = useState<string | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -102,7 +134,9 @@ export function Editor({
         >
           <Brand />
         </div>
-        <span className={styles.editorLabel}>Your room / 2D plan</span>
+        <span className={styles.editorLabel}>
+          Your room / {roomView === 'plan' ? '2D plan' : '3D cutaway'}
+        </span>
         <div className={styles.headerActions}>
           <button
             aria-disabled={!state.undoLabel}
@@ -161,67 +195,128 @@ export function Editor({
               {room.furniture.length === 1 ? 'piece' : 'pieces'}
             </span>
           </div>
-          <div className={styles.viewTools} aria-label="Plan view controls">
+          <div
+            className={styles.viewSwitch}
+            role="group"
+            aria-label="Room view"
+          >
             <button
-              aria-label="Zoom out"
-              disabled={view.zoom <= 0.6}
-              onClick={() => controller.setView({ zoom: view.zoom - 0.2 })}
+              aria-pressed={roomView === 'plan'}
+              onClick={() => setRoomView('plan')}
             >
-              −
-            </button>
-            <span>{Math.round(view.zoom * 100)}%</span>
-            <button
-              aria-label="Zoom in"
-              disabled={view.zoom >= 3}
-              onClick={() => controller.setView({ zoom: view.zoom + 0.2 })}
-            >
-              +
+              2D plan
             </button>
             <button
-              onClick={() => controller.setView({ zoom: 1, panX: 0, panZ: 0 })}
+              aria-pressed={roomView === 'cutaway'}
+              onClick={() => {
+                setCutawayOpenedAt(performance.now());
+                setRoomView('cutaway');
+              }}
             >
-              Fit room
+              3D cutaway
             </button>
-            <div
-              className={styles.panButtons}
-              role="group"
-              aria-label="Pan plan"
-            >
-              <button
-                aria-label="Pan left"
-                onClick={() => controller.setView({ panX: view.panX - 250 })}
-              >
-                ←
-              </button>
-              <button
-                aria-label="Pan up"
-                onClick={() => controller.setView({ panZ: view.panZ - 250 })}
-              >
-                ↑
-              </button>
-              <button
-                aria-label="Pan down"
-                onClick={() => controller.setView({ panZ: view.panZ + 250 })}
-              >
-                ↓
-              </button>
-              <button
-                aria-label="Pan right"
-                onClick={() => controller.setView({ panX: view.panX + 250 })}
-              >
-                →
-              </button>
-            </div>
-            <label className={styles.snap}>
-              <input
-                type="checkbox"
-                checked={view.snap}
-                onChange={(e) => controller.setView({ snap: e.target.checked })}
-              />
-              Snap
-            </label>
           </div>
-          <PlanView controller={controller} state={state} />
+          {roomView === 'plan' && (
+            <div className={styles.viewTools} aria-label="Plan view controls">
+              <button
+                aria-label="Zoom out"
+                disabled={view.zoom <= 0.6}
+                onClick={() => controller.setView({ zoom: view.zoom - 0.2 })}
+              >
+                −
+              </button>
+              <span>{Math.round(view.zoom * 100)}%</span>
+              <button
+                aria-label="Zoom in"
+                disabled={view.zoom >= 3}
+                onClick={() => controller.setView({ zoom: view.zoom + 0.2 })}
+              >
+                +
+              </button>
+              <button
+                onClick={() =>
+                  controller.setView({ zoom: 1, panX: 0, panZ: 0 })
+                }
+              >
+                Fit room
+              </button>
+              <div
+                className={styles.panButtons}
+                role="group"
+                aria-label="Pan plan"
+              >
+                <button
+                  aria-label="Pan left"
+                  onClick={() => controller.setView({ panX: view.panX - 250 })}
+                >
+                  ←
+                </button>
+                <button
+                  aria-label="Pan up"
+                  onClick={() => controller.setView({ panZ: view.panZ - 250 })}
+                >
+                  ↑
+                </button>
+                <button
+                  aria-label="Pan down"
+                  onClick={() => controller.setView({ panZ: view.panZ + 250 })}
+                >
+                  ↓
+                </button>
+                <button
+                  aria-label="Pan right"
+                  onClick={() => controller.setView({ panX: view.panX + 250 })}
+                >
+                  →
+                </button>
+              </div>
+              <label className={styles.snap}>
+                <input
+                  type="checkbox"
+                  checked={view.snap}
+                  onChange={(e) =>
+                    controller.setView({ snap: e.target.checked })
+                  }
+                />
+                Snap
+              </label>
+            </div>
+          )}
+          {roomView === 'plan' ? (
+            <PlanView controller={controller} state={state} />
+          ) : (
+            <CutawayBoundary
+              fallback={
+                <>
+                  <p role="status">
+                    The cutaway could not load. Continue editing in the plan.
+                  </p>
+                  <PlanView controller={controller} state={state} />
+                </>
+              }
+            >
+              <Suspense
+                fallback={
+                  <>
+                    <p role="status">Opening the cutaway…</p>
+                    <PlanView controller={controller} state={state} />
+                  </>
+                }
+              >
+                <Cutaway
+                  key={workspace.workspaceId}
+                  room={room}
+                  candidate={state.candidate?.room}
+                  checks={state.candidate?.checks ?? state.checks!}
+                  selectedId={view.selectedId}
+                  onSelect={(id) => controller.select(id)}
+                  cameraStateRef={cameraStateRef}
+                  openedAt={cutawayOpenedAt}
+                  onPlan={() => setRoomView('plan')}
+                />
+              </Suspense>
+            </CutawayBoundary>
+          )}
           {state.candidate && (
             <div className={styles.previewActions} ref={previewRef}>
               <p>Preview only. Your current room is unchanged.</p>
@@ -294,7 +389,7 @@ export function Editor({
               });
             }}
           >
-            ↑ Back to plan
+            ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
           </button>
           {view.panel === 'inventory' && (
             <>

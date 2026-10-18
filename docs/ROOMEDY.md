@@ -1283,12 +1283,15 @@ The initial RM-000 planning snapshot is committed as `b97db4b927036e9f82d1ab4e44
 
 Current outstanding evidence includes final RM-003 geometry/command validation and all amended criteria, actual R3F/device behavior, provider interpretation/evaluation, measured limits, full recovery/privacy implementation, owner visual approval, security audit, Linux/hosted/account/domain proof. RM-001/002 have their own dated local evidence. The owner approved the full review recommendations and requested adoption before resuming ordered fake execution. The [adoption allocation](commit-plans/PLAN-REFINEMENT-2026-10-17.md) and [documentation receipt](validation/PLAN-REFINEMENT-2026-10-17.md) describe this update; no new implementation result follows from it.
 
+
+RM-005 is committed as `85c7362`. RM-006 adds the synchronized main-editor cutaway; [design](design/room-view.md) and [actual validation](validation/RM-006.md) retain local/device/owner evidence boundaries. The ordered fake-mode goal remains active.
+
 <!-- build-progress:start -->
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage and commit exact validated RM-005 paths; then read/allocate/implement RM-006 main-editor 3D only, with fake-mode, validation and review/usage stops preserved.
-Active ticket: RM-005
+Next action: Stage and commit exact validated RM-006 paths; then read/allocate RM-007 safe photo/manual intake and rough 2D review, preserving fake/paid-off and review/usage stops.
+Active ticket: RM-006
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1313,7 +1316,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-18T09:44:10+00:00",
+  "updated_at": "2026-10-18T10:19:48+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1482,8 +1485,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-005",
-  "next_action": "Stage and commit exact validated RM-005 paths; then read/allocate/implement RM-006 main-editor 3D only, with fake-mode, validation and review/usage stops preserved.",
+  "active_ticket": "RM-006",
+  "next_action": "Stage and commit exact validated RM-006 paths; then read/allocate RM-007 safe photo/manual intake and rough 2D review, preserving fake/paid-off and review/usage stops.",
   "phases": [
     {
       "id": "01-docs",
@@ -1775,7 +1778,10 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-004 local outcome verified 2026-10-18: actual five-size landing and mobile entry screenshots, keyboard/refresh/fallback, finite scripted sequence; final pnpm check passed 91 tests, six boundary cases, exact assets, format/lint/types and all builds. Settled eleven-source read-only review has no actionable findings; manifest c0d4fc7094e793a2d5be1201eb3bf5097acc2a6e69f4ef666bd444b92f1692ce. docs/validation/RM-004.md. Exact commit next. Active guide goal registered; 100% remaining at latest read.",
         "commit:bd0bf78debd743b212ae5a1cf2308e2690c9f46e - RM-004 landing/entry and earthy palette locally complete; 25 exact allocated paths, eleven source blobs matched review identity; final gate 91/91 tests and all builds passed, worktree clean after commit. RM-005 selected next; full ticket and precision references read; exact pre-edit allocation docs/commit-plans/RM-005.md.",
         "RM-005 in progress 2026-10-18: one controller/resource registry and precision SVG UI written within allocation; 20 focused session/adapter tests pass; frontend/test types, lint and executable boundaries pass at scoped checkpoints. Actual browser verified half-mm numeric placement, field focus/errors, scaled/panned drag to 3400 mm, outside drop cancellation, single drag Undo, keyboard nudge, palette Apply/whole Undo and catalogue insertion. Focus/navigation refinements and remaining browser matrix/settled full gate/read-only validation remain; no completion or commit claim. Latest usage1%used/99%remaining.",
-        "RM-005 complete local outcome 2026-10-18: final pnpm check passes112tests/11files, six boundaries, exact assets, format/lint/types and all builds; focused36tests pass. Actual furnished/partial/empty browser states cover half-mm placement, scaled/panned drag, outside/overlap rejection, lock/rotate/resize/measurements, catalogue/owned replacement/removal/Undo, previews and five viewport sizes. Native Change room interaction blocked by automatic browser approval and preserved; separate fixtures used safely, no bypass. OS pointer-cancel/physical/hosted/provider/owner acceptance limits explicit. Final read-only review clean;23source/config/test manifest b1d06ea3a28a19b72b0fe8d1b9e2dee9be407eb85074625df3a60a3953f28a1b;35allocatedpaths/217local linked files checked. docs/validation/RM-005.md. Exact scoped commit next."
+        "RM-005 complete local outcome 2026-10-18: final pnpm check passes112tests/11files, six boundaries, exact assets, format/lint/types and all builds; focused36tests pass. Actual furnished/partial/empty browser states cover half-mm placement, scaled/panned drag, outside/overlap rejection, lock/rotate/resize/measurements, catalogue/owned replacement/removal/Undo, previews and five viewport sizes. Native Change room interaction blocked by automatic browser approval and preserved; separate fixtures used safely, no bypass. OS pointer-cancel/physical/hosted/provider/owner acceptance limits explicit. Final read-only review clean;23source/config/test manifest b1d06ea3a28a19b72b0fe8d1b9e2dee9be407eb85074625df3a60a3953f28a1b;35allocatedpaths/217local linked files checked. docs/validation/RM-005.md. Exact scoped commit next.",
+        "RM-005 committed 85c73620a0bc6d36bbe3559676a94238b4c43ffc; exact 23 source/test/config blobs SHA b1d06ea3a28a19b72b0fe8d1b9e2dee9be407eb85074625df3a60a3953f28a1b; root gate 112/112 tests and builds passed.",
+        "RM-006 read fully and exact paths allocated in docs/commit-plans/RM-006.md before feature edits.",
+        "RM-006 docs/validation/RM-006.md: final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; read-only pass 2 no actionable findings; settled pnpm check passed 120 tests, six boundaries, exact assets, types/builds; actual browser controls/candidate/Undo, missing asset, empty/partial and responsive evidence with unperformed device/context limits."
       ],
       "blockers": [
         {

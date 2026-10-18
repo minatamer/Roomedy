@@ -186,7 +186,7 @@ export function resolveRepresentation(
     return {
       kind: 'unavailable',
       notice:
-        'These dimensions are outside this itemâ€™s supported range. Choose an adjustable representation explicitly.',
+        'These dimensions are outside this item’s supported range. Choose an adjustable representation explicitly.',
     };
   if (entry.representation === 'prepared-mesh' && assetAvailable)
     return {

@@ -693,3 +693,13 @@
     fill 0.2s,
     stroke 0.18s;
 }
+
+.viewSwitch {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 12px;
+}
+.viewSwitch button[aria-pressed='true'] {
+  background: #e7ddcc;
+  border-color: #aa9274;
+}

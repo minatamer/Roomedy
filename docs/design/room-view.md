@@ -1,0 +1,37 @@
+# Main-editor cutaway
+
+RM-006, 18 October 2026. [Ticket](../tickets/RM-006-deliver-synchronized-3d-cutaway.md), [actual checks](../validation/RM-006.md), [catalogue policy](catalogue.md).
+
+## One room, one projection
+
+The editor starts in its precision SVG plan. Requesting **3D cutaway** lazily imports Fiber/Three and the scene. The loading boundary keeps the usable plan; a chunk failure leaves that plan and safe copy. No landing/entry/rough-sketch canvas or 3D review control is introduced. Canvas construction/context failure offers **Open 2D plan** while the inspector and canonical room remain usable. A context-loss listener retires the canvas and its owned resources. Actual context-loss/unsupported-GPU injection remains unperformed with the available browser tool; missing-asset behavior was tested in the final browser implementation.
+
+`RoomScene` receives readonly `room`, optional `candidate`, check facts, shared selected ID and selection callback. Baseline comparison later supplies the immutable baseline through the same `room` input. There is no second room authority, generated layout or command API in the renderer. RM-011 owns assistant composition; RM-012 owns Before/Current controls. Camera/view/selection effects do not create commands, Undo or provider requests.
+
+## Coordinates and physical truth
+
+Northwest floor corner is X/Z zero; +X east, +Z south, +Y up. The adapter converts integer millimetres and half-millimetre centres once to metres. Three uses **negative Y radians** for canonical quarter-turns: local front +Z at q1 becomes -X. Fixed GLBs already use metres, floor Y0 and centred X/Z; runtime scale stays one. Procedural parts convert their authored millimetre centre/size once. Neither renderer nor mesh bounds performs fit checks.
+
+Floor size uses room dimensions; wall openings are the complement of the union of known door/window intervals and sill/height spans. Overlapping openings do not subtract twice. Instancing shares one unit box for wall spans. Known obstacles use their wall projection and sill/height. Unknown wall/size facts create no invented opening. Door panels/window panes are stylized contextual representations, not an animation of a verified real mechanism. Selected check regions come directly from the spatial evaluator, capped at 32 and shown on the floor; a region does not claim exact 3D clearance.
+
+Unknown room values use explicitly approximate display bounds. Missing furniture dimensions produce a marker and a notice, not invented confirmed sizes. Supported procedural shapes use the known physical envelope. Out-of-range owned sizes/unsupported owned finishes use the catalogue's labelled physical-bounds representation; they never shrink to fit an asset. Fixed model failure uses a procedural shape at the same size/ID. Proposed variants retain shared strict policy. Per-value evidence remains inspectable; precise drawing does not confirm an observed pose.
+
+## Composition and interaction
+
+Warm rough materials, soft directional shadows and hemisphere lighting frame an orbitable miniature. The canonical finish palette is independent of website chrome. Nearby walls fade smoothly to reveal the room; far walls remain legible. Box geometry is shared; known GLB geometry/materials are borrowed by clones within the owning canvas. No textures, HDR downloads, postprocessing stack, external model URLs or render-off settings are added.
+
+Orbit supports pointer drag, zoom supports wheel/pinch, and named buttons provide orbit/zoom/reset alternatives. Polar/zoom bounds prevent going below the floor or losing the scene at arbitrary scale. Camera reset and piece/finish changes animate locally; controls/damping/material transitions invalidate on-demand frames until complete. There are no per-frame React room updates. Selection shares the inventory/inspector; numeric/keyboard placement stays in the plan/inspector. Direct 3D dragging remains deferred.
+
+Camera position/target and relative zoom are presentation refs scoped to a workspace. Relative zoom scales with viewport fit; switching views preserves framing and a new workspace gets a new camera ref. There is one canvas at a time in an editor. Narrow layouts stack the active room and inspector with explicit return actions. Pointer gestures over the canvas orbit/zoom; page scrolling is available outside it and through normal keyboard/scrollbar navigation. Physical touch testing remains open.
+
+A candidate renders through the same scene. Changed candidate pieces get an outline; pale wire bounds show the prior accepted state, including removed pieces. Current semantics remain unchanged until the controller's validated Apply; Cancel/Undo use the same authority. Selected-piece highlighting does not imply confirmed dimensions or global fit.
+
+## Ownership, bounds and provisional budgets
+
+Each live canvas has its own finite two-URL model cache. It requests only the prepared chair/cabinet paths, rejects redirects, caps bytes at 256 KiB and retained fragments at 1,024 per model, and has a 10-second deadline. Unmount/retirement aborts before cleanup; a late decode is disposed rather than published. Decode uses only the reviewed embedded GLBs; release asset verification checks their exact bytes, geometry and absence of remote buffers/textures. A cache never disposes another canvas's assets. Material/geometry sets avoid duplicate disposal inside one loaded asset.
+
+A unit box is canvas-owned. Procedural per-piece materials, declarative scene materials, wall materials, controls/listeners and loaded model caches have explicit cleanup. Borrowed model clones opt out of recursive disposal; their cache owns resources. R3F owns the canvas renderer/context lifecycle. No global GLTF cache or permanent room mesh store is introduced.
+
+Existing per-asset limits remain 256 KiB / 10,000 triangles / 8 materials / zero textures. Two prepared files total 46,884 bytes / 660 triangles. Room inputs remain bounded by 40 pieces and 24 features. Floor seams cap at 64; issue overlays cap at 32; wall segmentation is finite in those feature bounds. DPR caps at 1.5 and one 1,024-square shadow map is used. Provisional representative-room targets: under 150 rendered calls / 10,000 triangles, active-frame p95 under 33.4 ms, warm opening under 1 second on the local test scenario. These are feature budgets, not device-wide release proof. RM-015 owns maximum-room, production, device and GPU/heap tuning.
+
+Development-only canvas attributes report bounded frame intervals, render calls/triangles and renderer geometry/texture/program counts. Samples reset for explicit camera/semantic/selection/viewport activity; each published sample describes its actual interval count, not an INP score. They contain no room payloads, IDs, telemetry or console logging. The probe is absent from production. Exact scenario/repetitions/results and upstream warnings are recorded in the validation receipt.
