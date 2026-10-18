@@ -1,6 +1,6 @@
 # RM-011 — Deliver the grounded assistant and reviewed edits
 
-Status: **Planned**  
+Status: **Implemented locally — external evidence pending**
 Planning date: **17 October 2026**  
 Milestone: **Assistant**  
 Depends on: [RM-006](RM-006-deliver-synchronized-3d-cutaway.md), [RM-008](RM-008-build-shared-admission-and-bounded-provider-transport.md), [RM-009](RM-009-build-bounded-layout-search-and-explanations.md), [RM-010](RM-010-deliver-photo-recognition-and-draft-reconciliation.md)  
@@ -55,22 +55,22 @@ Use explicit strict serial tool calling and one correlated final application-own
 
 ## Acceptance criteria
 
-- [ ] Assistant context/tools are bounded, grounded in current semantic data and use shared provider/admission policy.
-- [ ] Supported goals and explanatory cards perform useful work through allow-listed capabilities.
-- [ ] Unknown objects/tools/values, lock bypasses and fake confirmation are safely rejected.
-- [ ] Exactly one preview is separate from current room and visible coherently in both editor views.
-- [ ] Apply revalidates and commits atomically/idempotently; Cancel creates no change and Undo reverses the whole instruction.
-- [ ] Manual/new request/reset/import/expiry races cannot apply stale candidate data.
-- [ ] Outcome language distinguishes proposed/applied/failed/unassessed and uses computed check facts.
-- [ ] No prices, visitor-budget planning, retail sourcing, direct arbitrary code or silent fake fallback is introduced.
-- [ ] Composer, keyboard/touch submission and canonical-object card focus work across normal/narrow/panel states without losing draft text or shrinking the room unusably.
-- [ ] Optional tour and quiet-verification states are coherent and skippable/recoverable while all server/command controls remain enforced.
+- [x] Assistant context/tools are bounded, grounded in current semantic data and use shared provider/admission policy.
+- [x] Supported goals and explanatory cards perform useful work through allow-listed capabilities.
+- [x] Unknown objects/tools/values, lock bypasses and fake confirmation are safely rejected.
+- [x] Exactly one preview is separate from current room and visible coherently in both editor views.
+- [x] Apply revalidates and commits atomically/idempotently; Cancel creates no change and Undo reverses the whole instruction.
+- [x] Manual/new request/reset/import/expiry races cannot apply stale candidate data.
+- [x] Outcome language distinguishes proposed/applied/failed/unassessed and uses computed check facts.
+- [x] No prices, visitor-budget planning, retail sourcing, direct arbitrary code or silent fake fallback is introduced.
+- [x] Composer, keyboard/touch submission and canonical-object card focus work across normal/narrow/panel states without losing draft text or shrinking the room unusably.
+- [x] Optional tour and quiet-verification states are coherent and skippable/recoverable while all server/command controls remain enforced.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — local evidence below
 
-- [ ] Desk/finish/rearrange-owned requests enforce their exact allowed action/target scope at preparation and Apply, preserving unrelated unlocked state and explaining coordinated changes.
-- [ ] Captured fake requests use compatible strict serial/stateless schemas; one final batch remains grounded in actual rule coverage and per-fact evidence.
-- [ ] Measurement prompts target a relevant missing dependency; unrelated unknown fields do not block supported exploration or cause invented confirmation.
+- [x] Desk/finish/rearrange-owned requests enforce their exact allowed action/target scope at preparation and Apply, preserving unrelated unlocked state and explaining coordinated changes.
+- [x] Captured fake requests use compatible strict serial/stateless schemas; one final batch remains grounded in actual rule coverage and per-fact evidence.
+- [x] Measurement prompts target a relevant missing dependency; unrelated unknown fields do not block supported exploration or cause invented confirmation.
 
 ## Focused verification and evidence
 
@@ -87,3 +87,7 @@ Use explicit strict serial tool calling and one correlated final application-own
 ## Handoff and limits
 
 Record actual fake integration and tool-boundary evidence with dispatch counts. RM-012 completes comparison/persistence/export and RM-013 evaluates real interpretation only when authorized. No live quality, broad accuracy, external spend permission or final visual acceptance follows from deterministic fixtures. Follow the index's future execute/validate and Git rules.
+
+## Execution evidence — 18 October 2026
+
+[41-path allocation](../commit-plans/RM-011.md), [assistant policy](../engineering/assistant.md) and [validation receipt](../validation/RM-011.md). Final274-test/root/build gate and read-only pass1 passed; actual native worker/fake HTTP,2D/3D, responsive composition, preview/Apply/Cancel/Undo and optional guide were inspected. Tick marks cover the stated local fake implementation; vendor challenge/model/privacy/funding/physical IME/hosted evidence remains unverified. Import/recovery/comparison lifecycle integration continues in RM-012. RM-015 owner visual decision remains pending. Exact authorized local commit next.

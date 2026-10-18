@@ -703,3 +703,33 @@
   background: #e7ddcc;
   border-color: #aa9274;
 }
+
+.assistantPanel {
+  overflow: hidden;
+  padding: 20px 18px 16px;
+}
+.changeList {
+  margin: 5px 0 0;
+  padding-left: 16px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.previousPiece {
+  fill: none;
+  stroke: #775b43;
+  stroke-width: 22;
+  stroke-dasharray: 65 45;
+  opacity: 0.6;
+}
+@media (max-width: 850px) {
+  .assistantPanel {
+    overflow: visible;
+    padding: 24px 20px;
+  }
+}
+
+.piecePreview,
+.piecePreview:active {
+  cursor: pointer;
+  touch-action: auto;
+}

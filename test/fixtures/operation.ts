@@ -27,6 +27,8 @@ export const operationInput = (): Extract<
       inputRevision: document.roomRevision,
     },
     room: document,
+    selectedId: null,
+    localCandidate: null,
     text: 'Make room for work.',
     context: [],
   };

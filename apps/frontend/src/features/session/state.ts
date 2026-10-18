@@ -4,7 +4,8 @@ import type { CommandWorkspace } from '@roomedy/spatial';
 
 export type SessionPhase =
   'entry' | 'intake' | 'editor' | 'expired' | 'disposed';
-export type Panel = 'inventory' | 'inspector' | 'catalogue' | 'room' | 'checks';
+export type Panel =
+  'inventory' | 'inspector' | 'catalogue' | 'room' | 'checks' | 'assistant';
 export interface Presentation {
   readonly selectedId: string | null;
   readonly panel: Panel;
@@ -16,6 +17,8 @@ export interface Presentation {
 /** A renderer projection is never an independently editable room. */
 export interface CandidateProjection {
   readonly identity: OperationIdentity;
+  readonly source?: 'visitor' | 'assistant';
+  readonly label?: string;
   readonly room: RoomDocument;
   readonly checks: CheckFacts;
 }

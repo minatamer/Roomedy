@@ -54,6 +54,10 @@
     "./project": {
       "types": "./dist/project.d.ts",
       "default": "./dist/project.js"
+    },
+    "./assistant": {
+      "types": "./dist/assistant.d.ts",
+      "default": "./dist/assistant.js"
     }
   },
   "scripts": {

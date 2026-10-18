@@ -6,7 +6,8 @@ import { parseRuntimeConfig } from './config/runtime-config.js';
 import { createApp } from './http/create-app.js';
 import { createRuntime } from './runtime/create-runtime.js';
 import { createRecognitionHandler } from './recognition/recognize.js';
-import { createRecognitionFakeProvider } from './recognition/fixtures.js';
+import { createRoomedyFakeProvider } from './providers/fake.js';
+import { createAssistantHandler } from './assistant/assistant.js';
 import { createResponsesProvider } from './providers/responses.js';
 
 // This executable is the only backend module allowed to load environment or listen.
@@ -27,9 +28,12 @@ try {
     now: Date.now,
     nextId: randomUUID,
     log,
-    handlers: { 'recognize-room': createRecognitionHandler(log, randomUUID) },
+    handlers: {
+      'recognize-room': createRecognitionHandler(log, randomUUID),
+      assistant: createAssistantHandler(log, randomUUID),
+    },
     ...(config.mode === 'fake'
-      ? { provider: createRecognitionFakeProvider() }
+      ? { provider: createRoomedyFakeProvider() }
       : {}),
     ...(config.mode === 'live' &&
     config.paidEnabled &&

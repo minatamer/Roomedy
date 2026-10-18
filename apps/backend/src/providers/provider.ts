@@ -14,6 +14,8 @@ export type ProviderOutcome =
       kind: 'completed';
       data: unknown;
       calls: { name: string; callId: string; arguments: unknown }[];
+      /** Bounded replay items for this operation only; never returned to the browser. */
+      continuation?: Record<string, unknown>[];
     }
   | {
       kind:

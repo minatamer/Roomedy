@@ -510,7 +510,7 @@ export class LayoutSearch {
 /** Recompute candidate facts/geometry; claimed checks or pass flags never grant authority. */
 export function validateSearchCandidate(
   request: SearchRequest,
-  candidate: SearchCandidate,
+  candidate: Pick<SearchCandidate, 'actions'>,
   scope: ActionScope,
 ): SearchCandidate | null {
   return evaluateSearchActions(request, candidate.actions, scope);

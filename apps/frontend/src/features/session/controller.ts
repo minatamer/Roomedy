@@ -2,6 +2,9 @@ import type {
   OperationIdentity,
   VisitorAction,
   ActionScope,
+  ProposalAction,
+  CommandEnvelope,
+  Receipt,
 } from '@roomedy/contracts/commands';
 import type { SearchGoal, SearchResult } from '@roomedy/contracts/search';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
@@ -14,7 +17,11 @@ import {
   undoCommand,
   emptySearchResult,
 } from '@roomedy/spatial';
-import type { CommandResult, CommandFailure } from '@roomedy/spatial';
+import type {
+  CommandResult,
+  CommandFailure,
+  ApplyResult,
+} from '@roomedy/spatial';
 import { ResourceRegistry } from './effects';
 import { initialPresentation } from './state';
 import type { Panel, SessionSnapshot } from './state';
@@ -33,6 +40,18 @@ export class SessionController {
   private readonly labels = new Map<string, string>();
   private timer: ReturnType<typeof setTimeout> | undefined;
   private cleaning = false;
+  private assistantPreview: {
+    token: OperationIdentity;
+    command: CommandEnvelope;
+    scope: ActionScope;
+    label: string;
+  } | null = null;
+  private lastAssistant: {
+    token: OperationIdentity;
+    command: CommandEnvelope;
+    scope: ActionScope;
+    label: string;
+  } | null = null;
   private visitorPreview: {
     token: OperationIdentity;
     actions: VisitorAction[];
@@ -89,6 +108,8 @@ export class SessionController {
   }
   private cancelWork() {
     this.visitorPreview = null;
+    this.assistantPreview = null;
+    this.lastAssistant = null;
     this.state = Object.freeze({
       ...this.state,
       pending: null,
@@ -119,6 +140,8 @@ export class SessionController {
     this.timer = undefined;
     this.labels.clear();
     this.visitorPreview = null;
+    this.assistantPreview = null;
+    this.lastAssistant = null;
     this.cleaning = true;
     this.operations.clear();
     this.resources.clear();
@@ -200,13 +223,15 @@ export class SessionController {
     this.cleaning = false;
     this.labels.clear();
     this.visitorPreview = null;
+    this.assistantPreview = null;
+    this.lastAssistant = null;
     this.publish({});
     this.startTimer();
     return true;
   }
   select(id: string | null) {
     if (!this.active()) return;
-    const room = this.state.workspace?.current;
+    const room = this.state.candidate?.room ?? this.state.workspace?.current;
     const selectedId =
       id &&
       room &&
@@ -322,7 +347,17 @@ export class SessionController {
     if (!this.active() || !this.state.workspace)
       return { ok: false, code: 'stale' };
     const command = this.envelope(actions);
-    const result = applyCommand(this.state.workspace, command, 'visitor');
+    return this.commitCommand(
+      command,
+      label,
+      applyCommand(this.state.workspace, command, 'visitor'),
+    );
+  }
+  private commitCommand(
+    command: CommandEnvelope,
+    label: string,
+    result: ApplyResult,
+  ): { ok: true; changed: boolean } | CommandFailure {
     if (!result.ok) return result;
     const changed = result.status === 'applied';
     if (changed) this.cancelWork();
@@ -354,6 +389,75 @@ export class SessionController {
         ) ?? null,
     });
     return { ok: true, changed };
+  }
+  prepareAssistant(
+    token: OperationIdentity,
+    actions: ProposalAction[],
+    scope: ActionScope,
+    label: string,
+  ): { ok: true; changed: boolean } | CommandFailure {
+    if (!this.isCurrent(token) || !this.state.workspace)
+      return { ok: false, code: 'stale' };
+    const command = { ...this.envelope(actions), identity: { ...token } };
+    const evaluated = prepareCommand(
+      this.state.workspace,
+      command,
+      'assistant',
+      scope,
+    );
+    if (!evaluated.ok) return evaluated;
+    if (!evaluated.changed) {
+      this.completeOperation(token, () => {
+        this.publish({ message: 'No change needed.' });
+      });
+      return { ok: true, changed: false };
+    }
+    this.assistantPreview = {
+      token: { ...token },
+      command: structuredClone(command),
+      scope: structuredClone(scope),
+      label: label.slice(0, 120),
+    };
+    this.publish({
+      candidate: {
+        identity: { ...token },
+        source: 'assistant',
+        label: label.slice(0, 120),
+        room: evaluated.room,
+        checks: evaluated.checks,
+      },
+      message: 'Proposal ready. Review the changes before Apply.',
+    });
+    return { ok: true, changed: true };
+  }
+  applyAssistantPreview():
+    | {
+        ok: true;
+        changed: boolean;
+        receipt: Receipt | null;
+        status: 'applied' | 'unchanged' | 'already-applied';
+      }
+    | CommandFailure {
+    if (!this.active() || !this.state.workspace)
+      return { ok: false, code: 'stale' };
+    const preview = this.assistantPreview ?? this.lastAssistant;
+    if (!preview || (this.assistantPreview && !this.isCurrent(preview.token)))
+      return { ok: false, code: 'stale' };
+    const result = applyCommand(
+      this.state.workspace,
+      preview.command,
+      'assistant',
+      preview.scope,
+    );
+    const committed = this.commitCommand(
+      preview.command,
+      preview.label,
+      result,
+    );
+    if (!committed.ok) return committed;
+    if (!result.ok) return result;
+    this.lastAssistant = preview;
+    return { ...committed, receipt: result.receipt, status: result.status };
   }
   undo(): { ok: true } | { ok: false; code: string } {
     if (!this.active() || !this.state.workspace)
@@ -394,7 +498,7 @@ export class SessionController {
       roomId: workspace.current.roomId,
       inputRevision: workspace.current.roomRevision,
     });
-    this.publish({ pending });
+    this.publish({ pending, message: '' });
     return pending;
   }
   /** Local assistant search seam; the worker returns data and never commits a room/proposal. */

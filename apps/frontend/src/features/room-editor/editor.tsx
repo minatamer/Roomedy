@@ -1,3 +1,5 @@
+import { AssistantController } from '../assistant/controller';
+import { Assistant } from '../assistant/assistant';
 import type { CameraPose } from '../room-view/adapter';
 import {
   Component,
@@ -58,6 +60,21 @@ export function Editor({
   const [cutawayOpenedAt, setCutawayOpenedAt] = useState(0);
   const [roomView, setRoomView] = useState<'plan' | 'cutaway'>('plan');
   const workspaceId = state.workspace?.workspaceId;
+  const [assistant, setAssistant] = useState<AssistantController | null>(null);
+  useEffect(() => {
+    let live = true,
+      owned: AssistantController | null = null;
+    queueMicrotask(() => {
+      if (!live || !workspaceId) return;
+      owned = new AssistantController(controller);
+      setAssistant(owned);
+    });
+    return () => {
+      live = false;
+      owned?.dispose();
+    };
+  }, [controller, workspaceId]);
+
   const cameraStateRef = useMemo(
     () => ({ current: null as CameraPose | null, workspaceId }),
     [workspaceId],
@@ -106,11 +123,13 @@ export function Editor({
       </main>
     );
   const room = workspace.current,
-    view = state.presentation;
-  const item = room.furniture.find((f) => f.id === view.selectedId),
-    feature = room.room.features.find((f) => f.id === view.selectedId);
-  const hard = state.checks!.issues.filter((i) => i.severity === 'hard').length;
-  const unassessed = state.checks!.coverage.filter(
+    view = state.presentation,
+    shownRoom = state.candidate?.room ?? room,
+    shownChecks = state.candidate?.checks ?? state.checks!;
+  const item = shownRoom.furniture.find((f) => f.id === view.selectedId),
+    feature = shownRoom.room.features.find((f) => f.id === view.selectedId);
+  const hard = shownChecks.issues.filter((i) => i.severity === 'hard').length;
+  const unassessed = shownChecks.coverage.filter(
     (c) => c.status === 'unassessed' || c.unassessed > 0,
   ).length;
   const open = (panel: Panel) => {
@@ -126,6 +145,7 @@ export function Editor({
     { id: 'catalogue', label: 'Add piece' },
     { id: 'room', label: 'Room' },
     { id: 'checks', label: `Checks${hard ? ` (${hard})` : ''}` },
+    { id: 'assistant', label: 'Assistant' },
   ];
   return (
     <div className={styles.studio}>
@@ -148,7 +168,7 @@ export function Editor({
             aria-disabled={!state.undoLabel}
             onClick={() => {
               if (!state.undoLabel) return;
-              const r = controller.undo();
+              const r = assistant ? assistant.undo() : controller.undo();
               if (!r.ok)
                 controller.notify(
                   failureMessage(
@@ -184,11 +204,19 @@ export function Editor({
             </button>
           ))}
         </nav>
-        <section className={styles.canvasColumn} aria-label="Current room">
+        <section
+          className={styles.canvasColumn}
+          aria-label="Current room"
+          data-room-target="canvas"
+        >
           <div className={styles.canvasHeading}>
             <div>
               <p className={styles.eyebrow}>
-                {state.candidate ? 'Palette preview' : 'Current arrangement'}
+                {state.candidate
+                  ? state.candidate.source === 'assistant'
+                    ? 'Proposal preview'
+                    : 'Palette preview'
+                  : 'Current arrangement'}
               </p>
               <h1 ref={headingRef} tabIndex={-1}>
                 {condition === 'empty'
@@ -197,8 +225,8 @@ export function Editor({
               </h1>
             </div>
             <span>
-              {room.furniture.length}{' '}
-              {room.furniture.length === 1 ? 'piece' : 'pieces'}
+              {shownRoom.furniture.length}{' '}
+              {shownRoom.furniture.length === 1 ? 'piece' : 'pieces'}
             </span>
           </div>
           <div
@@ -324,12 +352,65 @@ export function Editor({
             </CutawayBoundary>
           )}
           {state.candidate && (
-            <div className={styles.previewActions} ref={previewRef}>
-              <p>Preview only. Your current room is unchanged.</p>
+            <div
+              className={styles.previewActions}
+              ref={previewRef}
+              data-room-target="preview"
+            >
+              <div>
+                <p>
+                  {state.candidate.label ?? 'Palette change'} · Preview only.
+                  Your current room is unchanged.
+                </p>
+                <p className={styles.hint}>
+                  {state.candidate.checks.coverage.some(
+                    (c) =>
+                      c.status === 'unassessed' ||
+                      c.unassessed > 0 ||
+                      c.status === 'approximate',
+                  )
+                    ? 'Some checks remain approximate or incomplete.'
+                    : 'Review the checks for the recorded inputs.'}
+                </p>
+                <ul className={styles.changeList}>
+                  {state.candidate.room.furniture
+                    .filter(
+                      (p) =>
+                        JSON.stringify(p) !==
+                        JSON.stringify(
+                          room.furniture.find((before) => before.id === p.id),
+                        ),
+                    )
+                    .slice(0, 8)
+                    .map((p) => (
+                      <li key={p.id}>
+                        {room.furniture.some((before) => before.id === p.id)
+                          ? 'Change'
+                          : 'Add'}{' '}
+                        {p.label} ·{' '}
+                        {p.ownership === 'owned' ? 'Owned' : 'Proposed'}
+                      </li>
+                    ))}
+                  {room.furniture
+                    .filter(
+                      (p) =>
+                        !state.candidate!.room.furniture.some(
+                          (after) => after.id === p.id,
+                        ),
+                    )
+                    .slice(0, 8)
+                    .map((p) => (
+                      <li key={p.id}>Remove {p.label} from this plan</li>
+                    ))}
+                </ul>
+              </div>
               <button
                 className={styles.primary}
                 onClick={() => {
-                  const r = controller.applyVisitorPreview();
+                  const r =
+                    state.candidate?.source === 'assistant'
+                      ? (assistant?.apply() ?? { ok: false, code: 'stale' })
+                      : controller.applyVisitorPreview();
                   if (!r.ok)
                     controller.notify(
                       failureMessage(
@@ -343,7 +424,9 @@ export function Editor({
                     );
                 }}
               >
-                Apply palette
+                {state.candidate.source === 'assistant'
+                  ? 'Apply proposed changes'
+                  : 'Apply palette'}
               </button>
               <button
                 onClick={() => {
@@ -381,7 +464,8 @@ export function Editor({
           </div>
         </section>
         <aside
-          className={styles.panel}
+          className={`${styles.panel} ${view.panel === 'assistant' ? styles.assistantPanel : ''}`}
+          data-room-target="properties"
           tabIndex={-1}
           aria-label="Room properties"
         >
@@ -397,15 +481,21 @@ export function Editor({
           >
             ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
           </button>
+          {view.panel === 'assistant' &&
+            (assistant ? (
+              <Assistant controller={assistant} roomState={state} />
+            ) : (
+              <p role="status">Opening assistant…</p>
+            ))}
           {view.panel === 'inventory' && (
             <>
               <div className={styles.panelTitle}>
                 <p className={styles.eyebrow}>In your room</p>
                 <h2 tabIndex={-1}>Furniture</h2>
               </div>
-              {room.furniture.length ? (
+              {shownRoom.furniture.length ? (
                 <ul className={styles.inventory}>
-                  {room.furniture.map((piece) => (
+                  {shownRoom.furniture.map((piece) => (
                     <li key={piece.id}>
                       <button
                         onClick={() => {
@@ -442,7 +532,39 @@ export function Editor({
               </button>
             </>
           )}
-          {view.panel === 'inspector' &&
+          {view.panel === 'inspector' && state.candidate ? (
+            <section className={styles.section}>
+              <p className={styles.eyebrow}>Preview inspection</p>
+              <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
+                {state.candidate.room.furniture.find(
+                  (p) => p.id === view.selectedId,
+                )?.label ??
+                  state.candidate.room.room.features.find(
+                    (f) => f.id === view.selectedId,
+                  )?.kind ??
+                  'Proposed room'}
+              </h2>
+              <p>
+                Current is unchanged. Apply or Cancel beside the room before
+                editing these preview values.
+              </p>
+              {(() => {
+                const piece = state.candidate.room.furniture.find(
+                  (p) => p.id === view.selectedId,
+                );
+                return piece ? (
+                  <p>
+                    {piece.dimensions.width.value ?? '?'} ×{' '}
+                    {piece.dimensions.depth.value ?? '?'} ×{' '}
+                    {piece.dimensions.height.value ?? '?'} mm ·{' '}
+                    {piece.ownership === 'owned' ? 'Owned' : 'Proposed'} ·
+                    Similar representation
+                  </p>
+                ) : null;
+              })()}
+            </section>
+          ) : (
+            view.panel === 'inspector' &&
             (item ? (
               <FurnitureInspector
                 controller={controller}
@@ -462,26 +584,54 @@ export function Editor({
                   Show furniture
                 </button>
               </>
+            ))
+          )}
+          {view.panel === 'catalogue' &&
+            (state.candidate ? (
+              <section className={styles.section}>
+                <h2 tabIndex={-1}>Choose a piece</h2>
+                <p>Apply or Cancel the preview before adding another piece.</p>
+                <button onClick={() => controller.cancelPreview()}>
+                  Cancel preview & choose a piece
+                </button>
+              </section>
+            ) : (
+              <CataloguePanel
+                key={replacementId ?? 'add'}
+                controller={controller}
+                room={room}
+                replacement={
+                  room.furniture.find((f) => f.id === replacementId) ?? null
+                }
+                onDone={() => setReplacementId(null)}
+              />
             ))}
-          {view.panel === 'catalogue' && (
-            <CataloguePanel
-              key={replacementId ?? 'add'}
-              controller={controller}
-              room={room}
-              replacement={
-                room.furniture.find((f) => f.id === replacementId) ?? null
-              }
-              onDone={() => setReplacementId(null)}
-            />
-          )}
-          {view.panel === 'room' && (
-            <RoomPanel controller={controller} room={room} />
-          )}
+          {view.panel === 'room' &&
+            (state.candidate ? (
+              <section className={styles.section}>
+                <p className={styles.eyebrow}>Preview inspection</p>
+                <h2 tabIndex={-1}>Proposed room</h2>
+                <p>
+                  {shownRoom.room.width.value ?? '?'} ×{' '}
+                  {shownRoom.room.depth.value ?? '?'} ×{' '}
+                  {shownRoom.room.height.value ?? '?'} mm
+                </p>
+                <p>
+                  Floor: {shownRoom.room.floorFinish}. Walls:{' '}
+                  {shownRoom.room.wallFinish}.
+                </p>
+                <p>
+                  Apply or Cancel beside the room before editing these values.
+                </p>
+              </section>
+            ) : (
+              <RoomPanel controller={controller} room={room} />
+            ))}
           {view.panel === 'checks' && (
             <ChecksPanel
               controller={controller}
-              room={room}
-              checks={state.checks!}
+              room={shownRoom}
+              checks={shownChecks}
             />
           )}
         </aside>

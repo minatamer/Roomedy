@@ -1,8 +1,4 @@
-import {
-  publicConfigSchema,
-  safeErrorSchema,
-  errorMessages,
-} from '@roomedy/contracts/api';
+import { safeErrorSchema, errorMessages } from '@roomedy/contracts/api';
 import {
   admissionResultSchema,
   operationResultSchema,
@@ -10,58 +6,12 @@ import {
 } from '@roomedy/contracts/operations';
 import type { OperationResult } from '@roomedy/contracts/operations';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
-import { BoundedBytes } from '@roomedy/contracts/bounded-bytes';
+import { readOperationResponse as read } from '../session/operation-client';
+export { operationAvailability as recognitionAvailability } from '../session/operation-client';
 import type { ReviewController } from './review-controller';
 
 type Transport = typeof fetch;
 const base = '/api/roomedy/v1/';
-async function read(
-  response: Response,
-  signal: AbortSignal,
-  maximum = POLICY.providerOutputBytes,
-): Promise<unknown> {
-  if (!response.body) throw new Error('response');
-  const reader = response.body.getReader(),
-    packed = new BoundedBytes(maximum, POLICY.providerOutputFragments);
-  try {
-    while (true) {
-      signal.throwIfAborted();
-      const next = await reader.read();
-      signal.throwIfAborted();
-      if (next.done) break;
-      packed.append(next.value);
-    }
-    return JSON.parse(
-      new TextDecoder('utf-8', { fatal: true }).decode(packed.take()),
-    ) as unknown;
-  } finally {
-    await reader.cancel().catch(() => undefined);
-    reader.releaseLock();
-  }
-}
-export async function recognitionAvailability(
-  signal: AbortSignal,
-  transport: Transport = fetch,
-) {
-  const combined = AbortSignal.any([
-    signal,
-    AbortSignal.timeout(POLICY.intakeMs),
-  ]);
-  try {
-    const response = await transport(base + 'config', {
-      signal: combined,
-      cache: 'no-store',
-      credentials: 'same-origin',
-    });
-    if (!response.ok) return null;
-    const parsed = publicConfigSchema.safeParse(
-      await read(response, combined, 16_384),
-    );
-    return parsed.success ? parsed.data : null;
-  } catch {
-    return null;
-  }
-}
 const outcomes: Record<OperationResult['kind'], string> = {
   completed: 'Draft observations are ready for your review.',
   refused:

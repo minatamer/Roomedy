@@ -51,3 +51,6 @@ export const COORDINATES = Object.freeze({
   localFront: 'positive-z',
   rotations: 4,
 } as const);
+
+export { resolveAssistantTask, emptyAssistantReply } from './assistant.js';
+export type { AssistantTask } from './assistant.js';

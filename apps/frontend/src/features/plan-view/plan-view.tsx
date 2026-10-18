@@ -162,6 +162,13 @@ export function PlanView({
     if (!result.ok) controller.notify(failureMessage(result, room));
   };
   const key = (event: KeyboardEvent<SVGGElement>, item: Furniture) => {
+    if (state.candidate) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        controller.select(item.id);
+      }
+      return;
+    }
     if (event.key === 'Escape') {
       event.preventDefault();
       cancel();
@@ -208,7 +215,11 @@ export function PlanView({
         className={styles.plan}
         viewBox={`${box.x} ${box.z} ${box.width} ${box.depth}`}
         role="group"
-        aria-label="Precision 2D room plan. Select a piece to inspect it. Arrow keys move the focused piece."
+        aria-label={
+          state.candidate
+            ? 'Proposed 2D room plan. Select a piece to inspect the preview. Current is unchanged.'
+            : 'Precision 2D room plan. Select a piece to inspect it. Arrow keys move the focused piece.'
+        }
         onPointerDown={(event) => {
           if (event.target === event.currentTarget) controller.select(null);
         }}
@@ -330,14 +341,15 @@ export function PlanView({
               role="button"
               tabIndex={0}
               aria-pressed={selected}
-              aria-label={`${item.label}, ${w ?? 'unknown'} by ${d ?? 'unknown'} mm, ${item.locks.position ? 'position locked' : 'movable'}`}
-              className={styles.piece}
+              aria-label={`${item.label}, ${w ?? 'unknown'} by ${d ?? 'unknown'} mm, ${state.candidate ? 'proposal preview' : item.locks.position ? 'position locked' : 'movable'}`}
+              className={`${styles.piece} ${state.candidate ? styles.piecePreview : ''}`}
               transform={`translate(${item.pose.centerX} ${item.pose.centerZ})`}
               onKeyDown={(e) => key(e, item)}
               onPointerDown={(event) => {
                 event.stopPropagation();
                 if (event.button !== 0 || gesture.current) return;
                 controller.select(item.id);
+                if (state.candidate) return;
                 if (item.locks.position) {
                   controller.notify(
                     'Position is locked. Unlock it in properties to move this piece.',
@@ -424,6 +436,43 @@ export function PlanView({
             </g>
           );
         })}
+        {state.candidate &&
+          state
+            .workspace!.current.furniture.filter((before) => {
+              const after = state.candidate!.room.furniture.find(
+                (p) => p.id === before.id,
+              );
+              return (
+                !after ||
+                after.pose.centerX !== before.pose.centerX ||
+                after.pose.centerZ !== before.pose.centerZ ||
+                after.pose.quarterTurns !== before.pose.quarterTurns
+              );
+            })
+            .map((before) => {
+              const box = footprint(before);
+              if (!box) return null;
+              return (
+                <g key={`previous-${before.id}`} pointerEvents="none">
+                  <rect
+                    x={box.minX}
+                    y={box.minZ}
+                    width={box.maxX - box.minX}
+                    height={box.maxZ - box.minZ}
+                    className={styles.previousPiece}
+                  />
+                  <text
+                    x={before.pose.centerX}
+                    y={before.pose.centerZ}
+                    textAnchor="middle"
+                    fontSize="110"
+                    fill="#775b43"
+                  >
+                    Previous position
+                  </text>
+                </g>
+              );
+            })}
         {regions.map((issue) => {
           const r = issue.region!;
           return (
@@ -510,7 +559,9 @@ export function PlanView({
       <p className={styles.planHint}>
         {ghost
           ? `Planned centre: ${ghost.x}, ${ghost.z} mm · release to validate`
-          : 'Drag to place · arrow keys to nudge · dimensions in mm'}
+          : state.candidate
+            ? 'Preview only · Ghosts mark current positions · Cancel to edit by hand'
+            : 'Drag to place · arrow keys to nudge · dimensions in mm'}
       </p>
       {(room.room.width.value === null || room.room.depth.value === null) && (
         <p className={styles.notice}>

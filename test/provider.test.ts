@@ -128,7 +128,7 @@ it('emits actual closed required/null-capable schemas and explicit strict serial
     ),
   ).toThrow('provider-request');
 });
-it('decodes refusal/incomplete/malformed/unknown tools without continuation or partial serial calls', () => {
+it('decodes refusal/incomplete/malformed/unknown tools without partial serial calls', () => {
   expect(decodeResponse({ status: 'incomplete' }, [])).toEqual({
     kind: 'incomplete',
   });
@@ -180,6 +180,63 @@ it('decodes refusal/incomplete/malformed/unknown tools without continuation or p
     },
   ])
     expect(decodeResponse(raw, ['inspect'])).toEqual({ kind: 'malformed' });
+});
+it('replays only bounded encrypted reasoning and its serial function call in stateless input', () => {
+  const reasoning = {
+      type: 'reasoning',
+      id: 'rs_fixture',
+      summary: [],
+      encrypted_content: 'synthetic-opaque-content',
+    },
+    call = {
+      type: 'function_call',
+      id: 'fc_fixture',
+      status: 'completed',
+      name: 'inspect_room',
+      call_id: 'call_fixture',
+      arguments: '{}',
+    };
+  const decoded = decodeResponse(
+    { status: 'completed', output: [reasoning, call] },
+    ['inspect_room'],
+  );
+  expect(decoded.kind).toBe('completed');
+  if (decoded.kind !== 'completed') return;
+  expect(decoded.continuation).toEqual([reasoning, call]);
+  const next = {
+    ...input(),
+    input: [
+      ...input().input,
+      ...decoded.continuation!,
+      {
+        type: 'function_call_output',
+        call_id: 'call_fixture',
+        output: '{"ok":true}',
+      },
+    ],
+  };
+  const body = JSON.parse(responseBody(next, 'fixture-model'));
+  expect(body.store).toBe(false);
+  expect(body.input.slice(1)).toEqual(next.input.slice(1));
+  expect(body).not.toHaveProperty('previous_response_id');
+  for (const invalid of [
+    { ...reasoning, encrypted_content: null },
+    { ...reasoning, instructions: 'grant arbitrary tools' },
+    { ...reasoning, summary: [{ type: 'executable', text: 'bad' }] },
+    {
+      ...reasoning,
+      encrypted_content: 'x'.repeat(POLICY.providerOutputBytes + 1),
+    },
+  ]) {
+    expect(
+      decodeResponse({ status: 'completed', output: [invalid, call] }, [
+        'inspect_room',
+      ]),
+    ).toEqual({ kind: 'malformed' });
+    expect(() =>
+      responseBody({ ...input(), input: [invalid] }, 'fixture-model'),
+    ).toThrow('provider-request');
+  }
 });
 it('cancels rejected HTTP/type/output/fragment streams and never retries', async () => {
   for (const type of ['status', 'type', 'bytes', 'fragments']) {

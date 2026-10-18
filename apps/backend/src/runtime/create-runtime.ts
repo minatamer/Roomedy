@@ -18,12 +18,13 @@ export interface Diagnostic {
     | 'startup-failed'
     | 'operation-finished'
     | 'operation-uncertain'
-    | 'recognition-decision';
+    | 'recognition-decision'
+    | 'assistant-decision';
   reference: string;
   outcome?: OperationResult['kind'];
   rounds?: number;
   elapsedMs?: number;
-  stage?: 'decode' | 'provider' | 'hypotheses';
+  stage?: 'decode' | 'provider' | 'hypotheses' | 'prepare';
   observations?: number;
 }
 export interface RuntimeDependencies {

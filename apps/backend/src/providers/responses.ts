@@ -8,6 +8,31 @@ import type {
 } from './provider.js';
 const object = (x: unknown): x is Record<string, unknown> =>
   !!x && typeof x === 'object' && !Array.isArray(x);
+const keys = (value: Record<string, unknown>, allowed: readonly string[]) =>
+  Object.keys(value).every((key) => allowed.includes(key));
+function reasoningItem(item: Record<string, unknown>) {
+  return (
+    keys(item, ['type', 'id', 'summary', 'encrypted_content', 'status']) &&
+    item.type === 'reasoning' &&
+    typeof item.id === 'string' &&
+    item.id.length > 0 &&
+    item.id.length <= 120 &&
+    typeof item.encrypted_content === 'string' &&
+    item.encrypted_content.length > 0 &&
+    item.encrypted_content.length <= POLICY.providerOutputBytes &&
+    [undefined, 'completed'].includes(item.status as string | undefined) &&
+    Array.isArray(item.summary) &&
+    item.summary.length <= 8 &&
+    item.summary.every(
+      (part: unknown) =>
+        object(part) &&
+        keys(part, ['type', 'text']) &&
+        part.type === 'summary_text' &&
+        typeof part.text === 'string' &&
+        part.text.length <= POLICY.contextBytes,
+    )
+  );
+}
 /** Bound plain context before JSON serialization can create a large escaped copy. */
 function checkRequestValue(raw: unknown) {
   let nodes = 0,
@@ -65,12 +90,15 @@ function checkInputItems(input: ProviderRequest['input']) {
   if (input.length > POLICY.contextTurns + 2 * POLICY.toolCalls + 2)
     throw new Error('provider-request');
   let images = 0;
-  const keys = (value: Record<string, unknown>, allowed: readonly string[]) =>
-    Object.keys(value).every((key) => allowed.includes(key));
   for (const item of input) {
-    if (item.type === 'function_call') {
+    if (item.type === 'reasoning') {
+      if (!reasoningItem(item)) throw new Error('provider-request');
+    } else if (item.type === 'function_call') {
       if (
-        !keys(item, ['type', 'name', 'call_id', 'arguments']) ||
+        !keys(item, ['type', 'id', 'status', 'name', 'call_id', 'arguments']) ||
+        (item.id !== undefined &&
+          (typeof item.id !== 'string' || item.id.length > 120)) ||
+        ![undefined, 'completed'].includes(item.status as string | undefined) ||
         typeof item.name !== 'string' ||
         typeof item.call_id !== 'string' ||
         typeof item.arguments !== 'string'
@@ -177,11 +205,20 @@ export function decodeResponse(
     return { kind: 'malformed' };
   let text = '';
   const calls: Extract<ProviderOutcome, { kind: 'completed' }>['calls'] = [];
+  const continuation: Record<string, unknown>[] = [];
   for (const item of raw.output) {
     if (!object(item)) return { kind: 'malformed' };
-    if (item.type === 'reasoning') continue;
+    if (item.type === 'reasoning') {
+      if (!reasoningItem(item)) return { kind: 'malformed' };
+      continuation.push(item);
+      continue;
+    }
     if (item.type === 'function_call') {
       if (
+        !keys(item, ['type', 'id', 'status', 'name', 'call_id', 'arguments']) ||
+        (item.id !== undefined &&
+          (typeof item.id !== 'string' || item.id.length > 120)) ||
+        ![undefined, 'completed'].includes(item.status as string | undefined) ||
         typeof item.name !== 'string' ||
         !tools.includes(item.name) ||
         typeof item.call_id !== 'string' ||
@@ -195,6 +232,7 @@ export function decodeResponse(
           callId: item.call_id,
           arguments: JSON.parse(item.arguments),
         });
+        continuation.push(item);
       } catch {
         return { kind: 'malformed' };
       }
@@ -212,7 +250,12 @@ export function decodeResponse(
   if ((calls.length && text) || (!calls.length && !text))
     return { kind: 'malformed' };
   try {
-    return { kind: 'completed', data: text ? JSON.parse(text) : null, calls };
+    return {
+      kind: 'completed',
+      data: text ? JSON.parse(text) : null,
+      calls,
+      ...(calls.length ? { continuation } : {}),
+    };
   } catch {
     return { kind: 'malformed' };
   }

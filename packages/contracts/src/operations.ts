@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { assistantReplySchema } from './assistant.js';
+import { searchCandidateSchema } from './search.js';
 import { operationIdentitySchema } from './commands.js';
 import { photoManifestSchema, draftHypothesisSchema } from './intake.js';
 import { roomDocumentSchema } from './room.js';
@@ -36,6 +38,8 @@ export const assistantInputSchema = z.strictObject({
   kind: z.literal('assistant'),
   identity: operationIdentitySchema,
   room: roomDocumentSchema,
+  selectedId: idSchema.nullable(),
+  localCandidate: searchCandidateSchema.nullable(),
   text: z.string().trim().min(1).max(POLICY.visitorTextChars),
   context: z
     .array(
@@ -88,6 +92,7 @@ export const operationResultSchema = z.strictObject({
   simulation: z.boolean(),
   message: z.string().max(6000),
   draft: draftHypothesisSchema.nullable(),
+  assistant: assistantReplySchema.optional(),
 });
 export type OperationInput = z.infer<typeof operationInputSchema>;
 export type OperationKind = OperationInput['kind'];
