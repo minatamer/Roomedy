@@ -15,7 +15,7 @@ import type { ReactNode } from 'react';
 import type { RoomCondition } from '../session/entry/entry-state';
 import type { SessionController } from '../session/controller';
 import type { Panel } from '../session/state';
-import { hasBaselineChanges } from '../session/state';
+import { hasBaselineChanges, comparisonFrame } from '../session/state';
 import { Brand } from '../landing/brand';
 import { createRoomFixture } from '../session/fixtures/rooms';
 import { PlanView } from '../plan-view/plan-view';
@@ -25,16 +25,21 @@ import { RoomPanel } from './room-panel';
 import { ChecksPanel } from './checks-panel';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
+import { checkRoom } from '@roomedy/spatial';
+import { ProjectControls } from './project-controls';
 import styles from './editor.module.css';
 
 const Cutaway = lazy(() => import('../room-view/cutaway'));
 class CutawayBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
+  { children: ReactNode; fallback: ReactNode; onFailure: () => void },
   { failed: boolean }
 > {
   override state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
+  }
+  override componentDidCatch() {
+    this.props.onFailure();
   }
   override render() {
     return this.state.failed ? this.props.fallback : this.props.children;
@@ -57,8 +62,12 @@ export function Editor({
     controller.getSnapshot,
     controller.getSnapshot,
   );
-  const [cutawayOpenedAt, setCutawayOpenedAt] = useState(0);
-  const [roomView, setRoomView] = useState<'plan' | 'cutaway'>('plan');
+  const [cutawayOpenedAt, setCutawayOpenedAt] = useState(() =>
+    performance.now(),
+  );
+  const roomView = state.presentation.roomView;
+  const setRoomView = (view: 'plan' | 'cutaway') =>
+    controller.setRoomView(view);
   const workspaceId = state.workspace?.workspaceId;
   const [assistant, setAssistant] = useState<AssistantController | null>(null);
   useEffect(() => {
@@ -84,7 +93,7 @@ export function Editor({
   const previewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
-  }, [state.phase]);
+  }, [state.phase, workspaceId]);
   useEffect(() => {
     if (!state.candidate) return;
     const target = previewRef.current;
@@ -103,7 +112,7 @@ export function Editor({
             ? 'This room session has expired.'
             : 'Open a new room.'}
         </h1>
-        <p>Room changes stay in this tab for this preview.</p>
+        <p>This workspace no longer has an active room.</p>
         {source === 'sample' && (
           <button
             onClick={() =>
@@ -124,8 +133,17 @@ export function Editor({
     );
   const room = workspace.current,
     view = state.presentation,
-    shownRoom = state.candidate?.room ?? room,
-    shownChecks = state.candidate?.checks ?? state.checks!;
+    before = state.comparison === 'before',
+    readOnly = before || !!state.candidate || state.clientLoadFailure,
+    shownRoom = before ? workspace.baseline : (state.candidate?.room ?? room),
+    shownChecks = before
+      ? checkRoom(shownRoom)
+      : (state.candidate?.checks ?? state.checks!),
+    inspectionReason = before
+      ? 'Before is read-only. Return to Current to edit.'
+      : state.clientLoadFailure
+        ? 'Export your accepted layout or reload the editor before making more changes.'
+        : 'Current is unchanged. Apply or Cancel beside the room before editing these preview values.';
   const item = shownRoom.furniture.find((f) => f.id === view.selectedId),
     feature = shownRoom.room.features.find((f) => f.id === view.selectedId);
   const hard = shownChecks.issues.filter((i) => i.severity === 'hard').length;
@@ -139,7 +157,9 @@ export function Editor({
   };
   const leave = () =>
     !hasBaselineChanges(workspace) ||
-    window.confirm('Leave this room? Changes in this tab will be lost.');
+    window.confirm(
+      'Leave this room? Accepted data can recover in this tab until expiry if storage is available. Photos, drafts and previews will be lost.',
+    );
   const panels: { id: Panel; label: string }[] = [
     { id: 'inventory', label: 'Furniture' },
     { id: 'catalogue', label: 'Add piece' },
@@ -165,9 +185,11 @@ export function Editor({
         </span>
         <div className={styles.headerActions}>
           <button
-            aria-disabled={!state.undoLabel}
+            aria-disabled={
+              !state.undoLabel || before || state.clientLoadFailure
+            }
             onClick={() => {
-              if (!state.undoLabel) return;
+              if (!state.undoLabel || before || state.clientLoadFailure) return;
               const r = assistant ? assistant.undo() : controller.undo();
               if (!r.ok)
                 controller.notify(
@@ -183,13 +205,11 @@ export function Editor({
           >
             ↶ <span>Undo</span>
           </button>
-          <button
-            onClick={() => {
-              if (leave()) onBack();
-            }}
-          >
-            Change room
-          </button>
+          <ProjectControls
+            key={workspace.workspaceId}
+            controller={controller}
+            onNewRoom={onBack}
+          />
         </div>
       </header>
       <main id="main-content" className={styles.workspace}>
@@ -206,20 +226,22 @@ export function Editor({
         </nav>
         <section
           className={styles.canvasColumn}
-          aria-label="Current room"
+          aria-label={before ? 'Before room' : 'Current room'}
           data-room-target="canvas"
         >
           <div className={styles.canvasHeading}>
             <div>
               <p className={styles.eyebrow}>
-                {state.candidate
-                  ? state.candidate.source === 'assistant'
-                    ? 'Proposal preview'
-                    : 'Palette preview'
-                  : 'Current arrangement'}
+                {before
+                  ? 'Before · read-only'
+                  : state.candidate
+                    ? state.candidate.source === 'assistant'
+                      ? 'Proposal preview'
+                      : 'Palette preview'
+                    : 'Current arrangement'}
               </p>
               <h1 ref={headingRef} tabIndex={-1}>
-                {condition === 'empty'
+                {shownRoom.intent.condition === 'empty'
                   ? 'A little room to begin.'
                   : 'Make this space yours.'}
               </h1>
@@ -229,6 +251,44 @@ export function Editor({
               {shownRoom.furniture.length === 1 ? 'piece' : 'pieces'}
             </span>
           </div>
+          <div
+            className={styles.comparison}
+            role="group"
+            aria-label="Compare arrangement"
+          >
+            <button
+              aria-pressed={before}
+              aria-disabled={!!state.candidate}
+              onClick={() => controller.setComparison('before')}
+            >
+              Before
+            </button>
+            <button
+              aria-pressed={!before}
+              aria-disabled={!!state.candidate}
+              onClick={() => controller.setComparison('current')}
+            >
+              Current
+            </button>
+          </div>
+          {state.clientLoadFailure && (
+            <div className={styles.lifecycleNotice} role="alert">
+              <p>
+                Part of the editor could not load. Export your accepted layout
+                or reload to try again. Photos, drafts and proposals are lost on
+                reload; only saved accepted data can recover.
+              </p>
+              <button onClick={() => window.location.reload()}>
+                Reload editor
+              </button>
+            </div>
+          )}
+          {state.expiresSoon && (
+            <div className={styles.lifecycleNotice} role="status">
+              This session expires in less than five minutes. Export a project
+              to keep its accepted layout.
+            </div>
+          )}
           <div
             className={styles.viewSwitch}
             role="group"
@@ -320,6 +380,7 @@ export function Editor({
             <PlanView controller={controller} state={state} />
           ) : (
             <CutawayBoundary
+              onFailure={() => controller.clientPartFailed()}
               fallback={
                 <>
                   <p role="status">
@@ -339,9 +400,10 @@ export function Editor({
               >
                 <Cutaway
                   key={workspace.workspaceId}
-                  room={room}
+                  room={before ? workspace.baseline : room}
+                  cameraFrame={comparisonFrame(workspace)}
                   candidate={state.candidate?.room}
-                  checks={state.candidate?.checks ?? state.checks!}
+                  checks={shownChecks}
                   selectedId={view.selectedId}
                   onSelect={(id) => controller.select(id)}
                   cameraStateRef={cameraStateRef}
@@ -482,7 +544,19 @@ export function Editor({
             ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
           </button>
           {view.panel === 'assistant' &&
-            (assistant ? (
+            (readOnly && !state.candidate ? (
+              <section
+                className={`${styles.section} ${styles.readOnlyAssistant}`}
+              >
+                <h2>Roomedy assistant</h2>
+                <p>{inspectionReason}</p>
+                {before && (
+                  <button onClick={() => controller.setComparison('current')}>
+                    Return to Current
+                  </button>
+                )}
+              </section>
+            ) : assistant ? (
               <Assistant controller={assistant} roomState={state} />
             ) : (
               <p role="status">Opening assistant…</p>
@@ -526,30 +600,28 @@ export function Editor({
               )}
               <button
                 className={styles.primary}
+                disabled={readOnly}
                 onClick={() => open('catalogue')}
               >
                 Add a piece
               </button>
             </>
           )}
-          {view.panel === 'inspector' && state.candidate ? (
+          {view.panel === 'inspector' && readOnly ? (
             <section className={styles.section}>
-              <p className={styles.eyebrow}>Preview inspection</p>
-              <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
-                {state.candidate.room.furniture.find(
-                  (p) => p.id === view.selectedId,
-                )?.label ??
-                  state.candidate.room.room.features.find(
-                    (f) => f.id === view.selectedId,
-                  )?.kind ??
-                  'Proposed room'}
-              </h2>
-              <p>
-                Current is unchanged. Apply or Cancel beside the room before
-                editing these preview values.
+              <p className={styles.eyebrow}>
+                {before ? 'Before inspection' : 'Read-only inspection'}
               </p>
+              <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
+                {shownRoom.furniture.find((p) => p.id === view.selectedId)
+                  ?.label ??
+                  shownRoom.room.features.find((f) => f.id === view.selectedId)
+                    ?.kind ??
+                  'Room'}
+              </h2>
+              <p>{inspectionReason}</p>
               {(() => {
-                const piece = state.candidate.room.furniture.find(
+                const piece = shownRoom.furniture.find(
                   (p) => p.id === view.selectedId,
                 );
                 return piece ? (
@@ -562,6 +634,11 @@ export function Editor({
                   </p>
                 ) : null;
               })()}
+              {before && (
+                <button onClick={() => controller.setComparison('current')}>
+                  Return to Current
+                </button>
+              )}
             </section>
           ) : (
             view.panel === 'inspector' &&
@@ -587,13 +664,21 @@ export function Editor({
             ))
           )}
           {view.panel === 'catalogue' &&
-            (state.candidate ? (
+            (readOnly ? (
               <section className={styles.section}>
                 <h2 tabIndex={-1}>Choose a piece</h2>
-                <p>Apply or Cancel the preview before adding another piece.</p>
-                <button onClick={() => controller.cancelPreview()}>
-                  Cancel preview & choose a piece
-                </button>
+                <p>{inspectionReason}</p>
+                {before ? (
+                  <button onClick={() => controller.setComparison('current')}>
+                    Return to Current
+                  </button>
+                ) : (
+                  state.candidate && (
+                    <button onClick={() => controller.cancelPreview()}>
+                      Cancel preview & choose a piece
+                    </button>
+                  )
+                )}
               </section>
             ) : (
               <CataloguePanel
@@ -607,10 +692,18 @@ export function Editor({
               />
             ))}
           {view.panel === 'room' &&
-            (state.candidate ? (
+            (readOnly ? (
               <section className={styles.section}>
-                <p className={styles.eyebrow}>Preview inspection</p>
-                <h2 tabIndex={-1}>Proposed room</h2>
+                <p className={styles.eyebrow}>
+                  {before
+                    ? 'Before inspection'
+                    : state.candidate
+                      ? 'Preview inspection'
+                      : 'Room inspection'}
+                </p>
+                <h2 tabIndex={-1}>
+                  {before ? 'Before room' : 'Room inspection'}
+                </h2>
                 <p>
                   {shownRoom.room.width.value ?? '?'} ×{' '}
                   {shownRoom.room.depth.value ?? '?'} ×{' '}
@@ -620,9 +713,12 @@ export function Editor({
                   Floor: {shownRoom.room.floorFinish}. Walls:{' '}
                   {shownRoom.room.wallFinish}.
                 </p>
-                <p>
-                  Apply or Cancel beside the room before editing these values.
-                </p>
+                <p>{inspectionReason}</p>
+                {before && (
+                  <button onClick={() => controller.setComparison('current')}>
+                    Return to Current
+                  </button>
+                )}
               </section>
             ) : (
               <RoomPanel controller={controller} room={room} />
@@ -637,11 +733,25 @@ export function Editor({
         </aside>
       </main>
       <footer className={styles.footer}>
-        {source === 'sample'
-          ? 'Supplied sample measurements'
-          : 'Your reviewed room'}{' '}
+        {state.recovered || state.imported
+          ? 'Recorded room measurements'
+          : source === 'sample'
+            ? 'Supplied sample measurements'
+            : 'Your reviewed room'}{' '}
         · Similar furniture representations{' '}
-        <span>Changes stay in this tab for now.</span>
+        <span>
+          {state.persistence === 'memory-only'
+            ? 'Refresh recovery is unavailable. Export to keep this layout.'
+            : state.persistence === 'saved'
+              ? `Recovers in this tab until ${new Date(state.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`
+              : 'Saving accepted layout in this tab…'}
+        </span>
+        {state.recovered && (
+          <span>Recovered layout. Photos, chat and Undo were not stored.</span>
+        )}
+        {state.imported && (
+          <span>Imported measurement labels are user-supplied.</span>
+        )}
       </footer>
     </div>
   );

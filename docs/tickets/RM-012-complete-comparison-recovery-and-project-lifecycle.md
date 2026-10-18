@@ -1,6 +1,6 @@
 # RM-012 — Complete comparison, recovery and the project lifecycle
 
-Status: **Planned**  
+Status: **Implemented locally — external evidence pending**
 Planning date: **17 October 2026**  
 Milestone: **Complete guest lifecycle**  
 Depends on: [RM-011](RM-011-deliver-grounded-assistant-and-reviewed-edits.md)  
@@ -54,21 +54,21 @@ PR-12 update/skew handling must fence pending work and recover accepted semantic
 
 ## Acceptance criteria
 
-- [ ] Before is read-only, immutable through edits/Undo and rendered with Current's selected view/camera.
-- [ ] Comparison resolves active previews and costs zero revision/history/provider work.
-- [ ] Recovery restores only validated allow-listed current+baseline semantics within combined byte limits.
-- [ ] Edits/refresh never extend fixed two-hour expiry; action entry catches sleeping timers.
-- [ ] Raw photos/chat/history/candidates/grants/URLs/private runtime fields never persist or enter export.
-- [ ] Invalid import/cancelled reset preserves current work; valid import replaces atomically with fresh operational identity.
-- [ ] Storage failure and missing originals have useful truthful recovery states.
-- [ ] Late writes/requests/decoders/worker replies cannot resurrect reset/expired/replaced data.
-- [ ] Cross-mode/capability restore cannot restore authorization or trigger dispatch, and reset/refresh races cannot recreate retiring room/photo/proposal data.
+- [x] Before is read-only, immutable through edits/Undo and rendered with Current's selected view/camera.
+- [x] Comparison resolves active previews and costs zero revision/history/provider work.
+- [x] Recovery restores only validated allow-listed current+baseline semantics within combined byte limits.
+- [x] Edits/refresh never extend fixed two-hour expiry; action entry catches sleeping timers.
+- [x] Raw photos/chat/history/candidates/grants/URLs/private runtime fields never persist or enter export.
+- [x] Invalid import/cancelled reset preserves current work; valid import replaces atomically with fresh operational identity.
+- [x] Storage failure and missing originals have useful truthful recovery states.
+- [x] Late writes/requests/decoders/worker replies cannot resurrect reset/expired/replaced data.
+- [x] Cross-mode/capability restore cannot restore authorization or trigger dispatch, and reset/refresh races cannot recreate retiring room/photo/proposal data.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — local evidence below
 
-- [ ] Round-trip recovery/import/export preserves refined physical/evidence/half-millimetre semantics and baseline without restoring source photos, replay authority or authenticated provenance.
-- [ ] Local stale-client/update behavior fences work and accurately distinguishes accepted semantic recovery from transient-photo/draft loss without a reload loop.
-- [ ] Fixed two-hour expiry and any warning/export behavior have a criterion-level timing disposition; no unsupported blanket accessibility or deletion claim is made.
+- [x] Round-trip recovery/import/export preserves refined physical/evidence/half-millimetre semantics and baseline without restoring source photos, replay authority or authenticated provenance.
+- [x] Local stale-client/update behavior fences work and accurately distinguishes accepted semantic recovery from transient-photo/draft loss without a reload loop.
+- [x] Fixed two-hour expiry and any warning/export behavior have a criterion-level timing disposition; no unsupported blanket accessibility or deletion claim is made.
 
 ## Focused verification and evidence
 
@@ -85,3 +85,7 @@ PR-12 update/skew handling must fence pending work and recover accepted semantic
 ## Handoff and limits
 
 Record actual storage mechanism, tab behavior, byte limits and expiry/race evidence. RM-013 exercises whole-product sequences and RM-017 audits the privacy boundary. Local reset cannot recall downloaded exports or provider copies; no misleading deletion guarantee is permitted. Follow the index's future execution and evidence contract.
+
+## Execution evidence — 18 October2026
+
+[31-path allocation](../commit-plans/RM-012.md), [lifecycle policy](../engineering/guest-lifecycle.md), [actual checks](../validation/RM-012.md). Final314-test/root/build gate and clean read-only pass3 passed. Actual comparison2D/3D, fixed-expiry refresh, semantic download/import/reject/Cancel/reset and independent tabs were checked; camera scale after room-dimension correction was independently reproduced and fixed. Native browser-menu duplication, physical devices/assistive technology and cross-deployment skew remain unperformed; bounded copied-storage/local load-failure cases are explicitly fixture evidence. Fixed SC2.2.1 timing limitation is documented without a conformance claim. Exact authorized local commit next, then RM-013; no owner visual/security gate is waived.

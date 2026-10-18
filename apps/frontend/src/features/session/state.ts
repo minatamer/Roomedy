@@ -13,6 +13,7 @@ export interface Presentation {
   readonly panX: number;
   readonly panZ: number;
   readonly snap: boolean;
+  readonly roomView: 'plan' | 'cutaway';
 }
 /** A renderer projection is never an independently editable room. */
 export interface CandidateProjection {
@@ -34,6 +35,12 @@ export interface SessionSnapshot {
   readonly candidate: CandidateProjection | null;
   readonly message: string;
   readonly undoLabel: string | null;
+  readonly comparison: 'current' | 'before';
+  readonly persistence: 'checking' | 'saved' | 'memory-only';
+  readonly recovered: boolean;
+  readonly imported: boolean;
+  readonly expiresSoon: boolean;
+  readonly clientLoadFailure: boolean;
 }
 export const initialPresentation = (): Presentation => ({
   selectedId: null,
@@ -42,7 +49,25 @@ export const initialPresentation = (): Presentation => ({
   panX: 0,
   panZ: 0,
   snap: true,
+  roomView: 'plan',
 });
+/** Display-only framing; these bounds never become room measurements or check evidence. */
+export interface RoomFrame {
+  width: number;
+  depth: number;
+  height: number;
+}
+export function comparisonFrame(
+  workspace: Pick<CommandWorkspace, 'current' | 'baseline'>,
+): RoomFrame {
+  const defaults = { width: 4200, depth: 4800, height: 2600 };
+  const edge = (axis: keyof RoomFrame) =>
+    Math.max(
+      workspace.current.room[axis].value ?? defaults[axis],
+      workspace.baseline.room[axis].value ?? defaults[axis],
+    );
+  return { width: edge('width'), depth: edge('depth'), height: edge('height') };
+}
 
 /** History can retire; compare canonical semantics, excluding the revision counter. */
 export function hasBaselineChanges(

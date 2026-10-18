@@ -6,7 +6,26 @@ import {
   snapPosition,
 } from '../apps/frontend/src/features/plan-view/adapter.js';
 import { commandRoom, piece } from './fixtures/command-room.js';
+import { comparisonFrame } from '../apps/frontend/src/features/session/state.js';
 describe('precision plan display adapter', () => {
+  it('compares different recorded room sizes at one world scale and centre', () => {
+    const before = commandRoom(),
+      current = structuredClone(before);
+    before.room.width.value = 4200;
+    before.room.depth.value = 4800;
+    current.room.width.value = 2000;
+    current.room.depth.value = 3000;
+    const view = { zoom: 1, panX: 0, panZ: 0 };
+    const frame = comparisonFrame({ current, baseline: before });
+    const currentBox = planBox(current, view, frame),
+      beforeBox = planBox(before, view, frame);
+    expect(currentBox).toEqual({ x: -500, z: -500, width: 5200, depth: 5800 });
+    expect(currentBox).toEqual(beforeBox);
+    const rect = { left: 10, top: 20, width: 520, height: 580 };
+    expect(pointInPlan({ x: 210, y: 220 }, rect, currentBox)).toEqual(
+      pointInPlan({ x: 210, y: 220 }, rect, beforeBox),
+    );
+  });
   it('maps letterboxed and scaled/panned SVG coordinates without changing semantic units', () => {
     const box = { x: 100, z: 200, width: 4000, depth: 2000 };
     expect(

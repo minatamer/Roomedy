@@ -133,8 +133,13 @@ export class AssistantController {
     scope: ActionScope,
   ) {
     if (this.deps.search) return this.deps.search(token, goal, scope);
-    const { BrowserLayoutSearch } = await import('../layout-search/client');
-    return new BrowserLayoutSearch(this.session).run(token, goal, scope);
+    try {
+      const { BrowserLayoutSearch } = await import('../layout-search/client');
+      return new BrowserLayoutSearch(this.session).run(token, goal, scope);
+    } catch {
+      if (this.session.isCurrent(token)) this.session.clientPartFailed();
+      throw new Error('client-load');
+    }
   }
   async submit(value = this.state.draft) {
     const text = value.trim();

@@ -4,6 +4,7 @@ import { createRoomFixture } from '../apps/frontend/src/features/session/fixture
 import {
   changedPieces,
   displayRoom,
+  cameraFrameMetres,
   featureBox,
   piecePose,
   pieceRepresentation,
@@ -14,8 +15,26 @@ import {
   LOCAL_MODELS,
 } from '../apps/frontend/src/features/room-view/assets.js';
 import type { AssetState } from '../apps/frontend/src/features/room-view/assets.js';
+import { comparisonFrame } from '../apps/frontend/src/features/session/state.js';
 
 describe('cutaway projection over semantic snapshots', () => {
+  it('uses identical physical camera bounds for Before/Current after dimension correction without changing shell geometry', () => {
+    const baseline = createRoomFixture('sample'),
+      current = structuredClone(baseline);
+    current.room.width.value = 3000;
+    current.room.depth.value = 5000;
+    current.room.height.value = 2400;
+    const before = structuredClone(baseline),
+      frame = comparisonFrame({ current, baseline });
+    expect(cameraFrameMetres(frame)).toEqual({
+      width: 4.2,
+      depth: 5,
+      height: 2.6,
+    });
+    expect(displayRoom(current).width).toBe(3);
+    expect(displayRoom(baseline).depth).toBe(4.8);
+    expect(baseline).toEqual(before);
+  });
   it('preserves odd dimensions, half-mm centres and the independent front at every turn', () => {
     const p = createRoomFixture('sample').furniture[1]!;
     p.pose.centerX = 750.5;

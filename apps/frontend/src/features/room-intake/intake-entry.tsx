@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import type { RoomCondition } from '../session/entry/entry-state';
-import { SessionController } from '../session/controller';
+import type { SessionController } from '../session/controller';
+import { createGuestSession } from '../session/lifecycle';
 import { Editor } from '../room-editor/editor';
 import { ReviewController } from './review-controller';
 import { Intake } from './intake';
@@ -14,7 +15,7 @@ function Workspace({
   onBack,
 }: {
   session: SessionController;
-  review: ReviewController;
+  review: ReviewController | null;
   condition: RoomCondition;
   onBack: () => void;
 }) {
@@ -35,11 +36,21 @@ function Workspace({
   ) : state.phase === 'expired' || state.phase === 'disposed' ? (
     <main id="main-content" className={`${styles.intake} ${styles.main}`}>
       <h1>This room session has expired.</h1>
-      <p>Selected photos and the unfinished sketch have been cleared.</p>
+      <p>This workspace no longer has an active room.</p>
       <button onClick={onBack}>Start a new room</button>
     </main>
+  ) : review ? (
+    <>
+      {state.expiresSoon && (
+        <p role="status" className={styles.message}>
+          This session expires in less than five minutes. Finish reviewing to
+          export an accepted room, or start a new room.
+        </p>
+      )}
+      <Intake controller={review} onBack={onBack} />
+    </>
   ) : (
-    <Intake controller={review} onBack={onBack} />
+    <p role="status">Choose a new room to continue.</p>
   );
 }
 export default function IntakeEntry({
@@ -51,23 +62,27 @@ export default function IntakeEntry({
 }) {
   const [owned, setOwned] = useState<{
     session: SessionController;
-    review: ReviewController;
+    review: ReviewController | null;
+    close: () => void;
   } | null>(null);
   useEffect(() => {
     let live = true,
       pair: typeof owned = null;
     queueMicrotask(() => {
       if (!live) return;
-      const session = new SessionController();
-      const review = new ReviewController(session, condition);
-      session.startTimer();
-      pair = { session, review };
+      const guest = createGuestSession(),
+        session = guest.session;
+      const review =
+        session.getSnapshot().phase === 'entry'
+          ? new ReviewController(session, condition)
+          : null;
+      pair = { session, review, close: guest.close };
       setOwned(pair);
     });
     return () => {
       live = false;
-      pair?.review.dispose();
-      pair?.session.dispose();
+      pair?.review?.dispose();
+      pair?.close();
     };
   }, [condition]);
   return owned ? (

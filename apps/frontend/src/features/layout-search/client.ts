@@ -111,7 +111,10 @@ export class BrowserLayoutSearch {
             finish(invalid());
           }
         };
-        worker.onerror = () => finish(invalid());
+        worker.onerror = () => {
+          if (this.session.isCurrent(token)) this.session.clientPartFailed();
+          finish(invalid());
+        };
         // Watchdog includes chunk/worker startup margin; search itself remains250ms in the worker.
         timer = setTimeout(
           () => finish(invalid('deadline')),
@@ -119,6 +122,7 @@ export class BrowserLayoutSearch {
         );
         worker.postMessage(job.data);
       } catch {
+        if (this.session.isCurrent(token)) this.session.clientPartFailed();
         finish(invalid());
       }
     });

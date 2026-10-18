@@ -33,3 +33,4 @@ export const recoverySchema = z
   );
 
 export type Project = z.infer<typeof projectSchema>;
+export type Recovery = z.infer<typeof recoverySchema>;

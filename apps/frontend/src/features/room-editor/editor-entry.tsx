@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import type { RoomCondition } from '../session/entry/entry-state';
 import { createRoomFixture } from '../session/fixtures/rooms';
-import { SessionController } from '../session/controller';
+import type { SessionController } from '../session/controller';
+import { createGuestSession } from '../session/lifecycle';
 import { Editor } from './editor';
 
 export default function EditorEntry({
@@ -15,19 +16,18 @@ export default function EditorEntry({
   const [controller, setController] = useState<SessionController | null>(null);
   useEffect(() => {
     let live = true;
-    let owned: SessionController | undefined;
+    let owned: ReturnType<typeof createGuestSession> | undefined;
     // Client-only resource initialization. An unmounted/StrictMode setup cannot publish a session.
     queueMicrotask(() => {
       if (!live) return;
-      owned = new SessionController(
+      owned = createGuestSession(
         createRoomFixture(condition === 'furnished' ? 'sample' : condition),
       );
-      owned.startTimer();
-      setController(owned);
+      setController(owned.session);
     });
     return () => {
       live = false;
-      owned?.dispose();
+      owned?.close();
     };
   }, [condition]);
   return controller ? (

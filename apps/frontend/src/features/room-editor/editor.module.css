@@ -733,3 +733,106 @@
   cursor: pointer;
   touch-action: auto;
 }
+.comparison {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0 2px;
+}
+.comparison button[aria-pressed='true'] {
+  background: #e7ddcc;
+  border-color: #aa9274;
+}
+.lifecycleNotice {
+  margin: 12px 0;
+  border: 1px solid #bda782;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #f0e6d4;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.projectMenu {
+  position: relative;
+  font-size: 12px;
+}
+.projectMenu > summary {
+  min-height: 44px;
+  padding: 12px 14px;
+  cursor: pointer;
+  border: 1px solid #d9d3ca;
+  border-radius: 10px;
+  background: #fffdf8;
+}
+.projectMenu > summary:focus-visible {
+  outline: 3px solid #956444;
+  outline-offset: 3px;
+}
+.projectOptions {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100svh - 92px);
+  overflow: auto;
+  z-index: 30;
+  padding: 18px;
+  background: #fffdf8;
+  border: 1px solid #d9cbb9;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px #45321c20;
+  display: grid;
+  gap: 14px;
+  line-height: 1.6;
+  animation: projectIn 180ms ease-out;
+}
+.projectOptions p {
+  margin: 0;
+}
+.projectImport {
+  display: grid;
+  gap: 8px;
+}
+.projectImport input {
+  max-width: 100%;
+  font-size: 11px;
+}
+.readOnlyAssistant h2 {
+  font-size: 24px;
+  line-height: 1.25;
+  margin-bottom: 14px;
+}
+.projectDialog {
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100svh - 32px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid #c7b79f;
+  border-radius: 16px;
+  background: #fffdf8;
+  color: #3f352c;
+  box-shadow: 0 18px 70px #3f352c30;
+  font-size: 14px;
+  line-height: 1.6;
+  animation: projectIn 180ms ease-out;
+}
+.projectDialog h2 {
+  font-size: 26px;
+  line-height: 1.25;
+  margin: 0 0 16px;
+}
+.projectDialog p {
+  margin: 0 0 18px;
+}
+.projectDialog::backdrop {
+  background: #332e2866;
+}
+@keyframes projectIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

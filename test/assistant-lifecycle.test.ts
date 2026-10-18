@@ -12,6 +12,10 @@ import type { ActionScope, ProposalAction } from '@roomedy/contracts/commands';
 import { windowCase } from './fixtures/search-corpus.js';
 import { commandRoom, piece } from './fixtures/command-room.js';
 import { identityIds } from './fixtures/operation.js';
+import {
+  projectOf,
+  recoveryOf,
+} from '../apps/frontend/src/features/session/project.js';
 
 async function setup(hold = false) {
   let now = 0;
@@ -144,6 +148,45 @@ it('Cancel changes no accepted room/history; draft text survives selection, came
   expect(s.session.getSnapshot().workspace!.history.entries).toHaveLength(0);
   s.close();
 });
+it('recovery reads current runtime capabilities and cannot restore fake/live authorization or replay a request', async () => {
+  const previous = await setup();
+  await previous.assistant.submit('Move the work area near the window');
+  previous.assistant.apply();
+  const saved = recoveryOf(previous.session.getSnapshot())!;
+  previous.close();
+  const session = new SessionController(undefined, { now: () => 0 });
+  expect(session.restore(saved)).toBe(true);
+  const disabled = createRuntime(
+    parseRuntimeConfig({ FAKE_MODE: 'false', PAID_DEMO_ENABLED: 'false' }),
+    {
+      now: Date.now,
+      nextId: identityIds(),
+      log: vi.fn(),
+    },
+  );
+  const transport = vi.fn<typeof fetch>(async (url) => {
+    expect(String(url)).toContain('/config');
+    return Response.json(disabled.publicConfig);
+  });
+  const assistant = new AssistantController(session, { transport });
+  await vi.waitFor(() =>
+    expect(assistant.getSnapshot().mode).toBe('unavailable'),
+  );
+  await assistant.submit('Move the work area near the window');
+  expect(transport).toHaveBeenCalledTimes(1);
+  expect(assistant.getSnapshot().messages.at(-1)?.text).toContain(
+    'unavailable',
+  );
+  expect(session.getSnapshot().workspace!.history.entries).toHaveLength(0);
+  expect(session.getSnapshot().candidate).toBeNull();
+  expect(session.getSnapshot().workspace!.current).toEqual(
+    saved.project.current,
+  );
+  expect(disabled.meteredDispatches()).toBe(0);
+  assistant.dispose();
+  session.dispose();
+  disabled.operations.close();
+});
 
 it('a new explanation retires the old proposal status instead of leaving a false Preview ready message', async () => {
   const s = await setup();
@@ -177,7 +220,16 @@ it('the visible watchdog stops progress even when the operation transport ignore
     vi.useRealTimers();
   }
 });
-it.each(['manual', 'reset', 'expire', 'cancel', 'newer'] as const)(
+it.each([
+  'manual',
+  'reset',
+  'expire',
+  'cancel',
+  'newer',
+  'import',
+  'before',
+  'update',
+] as const)(
   'G: rejects a late abort-ignoring assistant reply after %s',
   async (action) => {
     const s = await setup(true),
@@ -191,6 +243,10 @@ it.each(['manual', 'reset', 'expire', 'cancel', 'newer'] as const)(
         ).ok,
       ).toBe(true);
     if (action === 'reset') s.session.reset(commandRoom());
+    if (action === 'import')
+      s.session.importProject(projectOf(s.session.getSnapshot())!);
+    if (action === 'before') s.session.setComparison('before');
+    if (action === 'update') s.session.clientPartFailed();
     if (action === 'expire') {
       s.expire();
       s.session.beginOperation();

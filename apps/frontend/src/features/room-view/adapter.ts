@@ -1,6 +1,7 @@
 import type { Furniture, RoomDocument, Feature } from '@roomedy/contracts/room';
 import { findCatalogueEntry } from '@roomedy/spatial';
 import { resolveRepresentation } from './representations/definitions';
+import type { RoomFrame } from '../session/state';
 
 export type Triple = [number, number, number];
 export interface CameraPose {
@@ -13,6 +14,13 @@ export interface SceneBox {
   size: Triple;
 }
 export const metres = (mm: number) => mm / 1000;
+export function cameraFrameMetres(frame: RoomFrame) {
+  return {
+    width: metres(frame.width),
+    depth: metres(frame.depth),
+    height: metres(frame.height),
+  };
+}
 export function piecePose(piece: Furniture) {
   return {
     position: [

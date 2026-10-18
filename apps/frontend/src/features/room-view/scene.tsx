@@ -29,6 +29,8 @@ import {
   wallBoxes,
 } from './adapter';
 import type { CameraPose, SceneBox } from './adapter';
+import { cameraFrameMetres } from './adapter';
+import type { RoomFrame } from '../session/state';
 import { ViewAssets } from './assets';
 import type { AssetState } from './assets';
 
@@ -43,6 +45,7 @@ export interface SceneProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
   cameraStateRef: MutableRefObject<CameraPose | null>;
+  cameraFrame: RoomFrame | undefined;
   cameraAction: CameraAction | null;
   onReady: () => void;
   onNotice: (loading: number, failed: number) => void;
@@ -156,11 +159,17 @@ function CameraRig({
   room,
   cameraStateRef,
   cameraAction,
-}: Pick<SceneProps, 'room' | 'cameraStateRef' | 'cameraAction'>) {
+  cameraFrame,
+}: Pick<
+  SceneProps,
+  'room' | 'cameraStateRef' | 'cameraAction' | 'cameraFrame'
+>) {
   const { camera, size, invalidate } = useThree(),
     controls = useRef<ComponentRef<typeof OrbitControls>>(null);
   const cameraRef = useRef(camera);
-  const bounds = displayRoom(room),
+  const bounds = cameraFrame
+      ? cameraFrameMetres(cameraFrame)
+      : displayRoom(room),
     span = Math.hypot(bounds.width, bounds.depth, bounds.height);
   const target = useMemo(
     () => new Vector3(bounds.width / 2, bounds.height * 0.28, bounds.depth / 2),
@@ -710,6 +719,7 @@ export function RoomScene(props: SceneProps) {
         })}
       <CameraRig
         room={rendered}
+        cameraFrame={props.cameraFrame}
         cameraStateRef={props.cameraStateRef}
         cameraAction={props.cameraAction}
       />

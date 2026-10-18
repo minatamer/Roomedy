@@ -25,6 +25,9 @@ import type {
 import { ResourceRegistry } from './effects';
 import { initialPresentation } from './state';
 import type { Panel, SessionSnapshot } from './state';
+import { recoverySchema } from '@roomedy/contracts/project';
+import type { Project, Recovery } from '@roomedy/contracts/project';
+import { validateProject } from './project';
 
 interface Dependencies {
   now?: () => number;
@@ -79,6 +82,12 @@ export class SessionController {
       candidate: null,
       message: '',
       undoLabel: null,
+      comparison: 'current',
+      persistence: 'checking',
+      recovered: false,
+      imported: false,
+      expiresSoon: false,
+      clientLoadFailure: false,
     });
   }
   getSnapshot = (): SessionSnapshot => this.state;
@@ -105,6 +114,19 @@ export class SessionController {
       return false;
     }
     return true;
+  }
+  canEdit(): boolean {
+    return (
+      this.active() &&
+      this.state.comparison === 'current' &&
+      !this.state.clientLoadFailure
+    );
+  }
+  checkExpiry(): boolean {
+    return this.active();
+  }
+  expiredRecovery() {
+    this.retire('expired');
   }
   private cancelWork() {
     this.visitorPreview = null;
@@ -151,12 +173,19 @@ export class SessionController {
   startTimer() {
     if (!this.active()) return;
     if (this.timer) clearTimeout(this.timer);
+    const now = this.now(),
+      warningAt = this.state.expiresAt - 5 * 60_000;
+    if (now >= warningAt && !this.state.expiresSoon)
+      this.publish({ expiresSoon: true });
     this.timer = setTimeout(
       () => {
         this.timer = undefined;
         if (this.active()) this.startTimer();
       },
-      Math.max(1, this.state.expiresAt - this.now()),
+      Math.max(
+        1,
+        (this.state.expiresSoon ? this.state.expiresAt : warningAt) - now,
+      ),
     );
   }
   dispose() {
@@ -164,7 +193,12 @@ export class SessionController {
     this.listeners.clear();
   }
   beginIntake(): boolean {
-    if (!this.active() || this.state.phase !== 'entry') return false;
+    if (
+      !this.active() ||
+      this.state.clientLoadFailure ||
+      this.state.phase !== 'entry'
+    )
+      return false;
     this.publish({ phase: 'intake' });
     return true;
   }
@@ -172,11 +206,16 @@ export class SessionController {
     return (
       this.active() &&
       this.state.phase === 'intake' &&
+      !this.state.clientLoadFailure &&
       this.state.generation === generation
     );
   }
   acceptRoom(room: RoomDocument): boolean {
-    if (!this.active() || !['entry', 'intake'].includes(this.state.phase))
+    if (
+      !this.active() ||
+      this.state.clientLoadFailure ||
+      !['entry', 'intake'].includes(this.state.phase)
+    )
       return false;
     const generation = this.state.generation + 1;
     const workspace = createCommandWorkspace(room, {
@@ -196,13 +235,30 @@ export class SessionController {
     return true;
   }
   reset(room?: RoomDocument): boolean {
+    return this.replaceRoom(room);
+  }
+  private replaceRoom(
+    room?: RoomDocument,
+    options?: {
+      baseline: RoomDocument;
+      createdAt: number;
+      expiresAt: number;
+      recovered: boolean;
+      imported: boolean;
+      roomView: 'plan' | 'cutaway';
+    },
+  ): boolean {
     if (this.cleaning || this.state.phase === 'disposed') return false;
     const generation = this.state.generation + 1;
     // Validation precedes retirement; an invalid replacement cannot discard useful work.
     const workspace = room
-      ? createCommandWorkspace(room, { workspaceId: this.id(), generation })
+      ? createCommandWorkspace(
+          room,
+          { workspaceId: this.id(), generation },
+          options?.baseline ?? room,
+        )
       : null;
-    const createdAt = this.now();
+    const createdAt = options?.createdAt ?? this.now();
     this.state = Object.freeze({
       ...this.state,
       generation,
@@ -211,11 +267,20 @@ export class SessionController {
       candidate: null,
       phase: room ? 'editor' : 'entry',
       createdAt,
-      expiresAt: createdAt + POLICY.guestLifetimeMs,
+      expiresAt: options?.expiresAt ?? createdAt + POLICY.guestLifetimeMs,
       checks: room ? checkRoom(room) : null,
-      presentation: initialPresentation(),
+      presentation: {
+        ...initialPresentation(),
+        roomView: options?.roomView ?? 'plan',
+      },
       message: '',
       undoLabel: null,
+      comparison: 'current',
+      persistence: 'checking',
+      recovered: options?.recovered ?? false,
+      imported: options?.imported ?? false,
+      expiresSoon: false,
+      clientLoadFailure: false,
     });
     this.cleaning = true;
     this.operations.clear();
@@ -229,9 +294,97 @@ export class SessionController {
     this.startTimer();
     return true;
   }
+  importProject(project: Project): boolean {
+    const validated = validateProject(project);
+    if (!validated.ok) return false;
+    const now = this.now();
+    return this.replaceRoom(
+      { ...validated.value.current, roomRevision: 0 },
+      {
+        baseline: validated.value.baseline,
+        createdAt: now,
+        expiresAt: now + POLICY.guestLifetimeMs,
+        recovered: false,
+        imported: true,
+        roomView: this.state.presentation.roomView,
+      },
+    );
+  }
+  restore(record: Recovery): boolean {
+    const parsed = recoverySchema.safeParse(record);
+    if (!parsed.success) return false;
+    record = parsed.data;
+    const now = this.now(),
+      validated = validateProject(record.project);
+    if (
+      !validated.ok ||
+      record.createdAt > now ||
+      record.expiresAt <= now ||
+      record.expiresAt !== record.createdAt + POLICY.guestLifetimeMs
+    )
+      return false;
+    return this.replaceRoom(validated.value.current, {
+      baseline: validated.value.baseline,
+      createdAt: record.createdAt,
+      expiresAt: record.expiresAt,
+      recovered: true,
+      imported: false,
+      roomView: record.ui.view === '2d' ? 'plan' : 'cutaway',
+    });
+  }
+  setPersistence(status: SessionSnapshot['persistence']) {
+    if (this.state.persistence !== status && this.state.phase !== 'disposed')
+      this.publish({ persistence: status });
+  }
+  setRoomView(roomView: 'plan' | 'cutaway') {
+    if (this.active())
+      this.publish({ presentation: { ...this.state.presentation, roomView } });
+  }
+  setComparison(comparison: SessionSnapshot['comparison']): boolean {
+    if (!this.active() || !this.state.workspace) return false;
+    if (this.state.candidate) {
+      this.publish({
+        message:
+          'Apply or Cancel the preview before comparing Before and Current.',
+      });
+      return false;
+    }
+    if (comparison === this.state.comparison) return true;
+    if (this.state.pending) this.cancelWork();
+    this.publish({
+      comparison,
+      message: '',
+      presentation: { ...this.state.presentation, selectedId: null },
+    });
+    return true;
+  }
+  clientPartFailed() {
+    if (!this.active()) return;
+    this.state = Object.freeze({
+      ...this.state,
+      clientLoadFailure: true,
+      pending: null,
+      candidate: null,
+      comparison: 'current',
+    });
+    this.cleaning = true;
+    this.operations.clear();
+    this.resources.clear();
+    this.cleaning = false;
+    this.visitorPreview = null;
+    this.assistantPreview = null;
+    this.lastAssistant = null;
+    this.publish({
+      message:
+        'Part of the editor could not load. Export your accepted layout or reload to try again.',
+    });
+  }
   select(id: string | null) {
     if (!this.active()) return;
-    const room = this.state.candidate?.room ?? this.state.workspace?.current;
+    const room =
+      this.state.comparison === 'before'
+        ? this.state.workspace?.baseline
+        : (this.state.candidate?.room ?? this.state.workspace?.current);
     const selectedId =
       id &&
       room &&
@@ -282,7 +435,7 @@ export class SessionController {
     if (this.active()) this.publish({ message: message.slice(0, 240) });
   }
   previewVisitor(actions: VisitorAction[]): CommandResult {
-    if (!this.active() || !this.state.workspace)
+    if (!this.canEdit() || !this.state.workspace)
       return { ok: false, code: 'stale' };
     return prepareCommand(
       this.state.workspace,
@@ -344,7 +497,7 @@ export class SessionController {
     actions: VisitorAction[],
     label: string,
   ): { ok: true; changed: boolean } | CommandFailure {
-    if (!this.active() || !this.state.workspace)
+    if (!this.canEdit() || !this.state.workspace)
       return { ok: false, code: 'stale' };
     const command = this.envelope(actions);
     return this.commitCommand(
@@ -396,7 +549,7 @@ export class SessionController {
     scope: ActionScope,
     label: string,
   ): { ok: true; changed: boolean } | CommandFailure {
-    if (!this.isCurrent(token) || !this.state.workspace)
+    if (!this.canEdit() || !this.isCurrent(token) || !this.state.workspace)
       return { ok: false, code: 'stale' };
     const command = { ...this.envelope(actions), identity: { ...token } };
     const evaluated = prepareCommand(
@@ -438,7 +591,7 @@ export class SessionController {
         status: 'applied' | 'unchanged' | 'already-applied';
       }
     | CommandFailure {
-    if (!this.active() || !this.state.workspace)
+    if (!this.canEdit() || !this.state.workspace)
       return { ok: false, code: 'stale' };
     const preview = this.assistantPreview ?? this.lastAssistant;
     if (!preview || (this.assistantPreview && !this.isCurrent(preview.token)))
@@ -460,7 +613,7 @@ export class SessionController {
     return { ...committed, receipt: result.receipt, status: result.status };
   }
   undo(): { ok: true } | { ok: false; code: string } {
-    if (!this.active() || !this.state.workspace)
+    if (!this.canEdit() || !this.state.workspace)
       return { ok: false, code: 'stale' };
     const result = undoCommand(this.state.workspace);
     if (!result.ok) return result;
@@ -488,7 +641,7 @@ export class SessionController {
     return { ok: true };
   }
   beginOperation(): OperationIdentity | null {
-    if (!this.active() || !this.state.workspace) return null;
+    if (!this.canEdit() || !this.state.workspace) return null;
     this.cancelWork();
     const workspace = this.state.workspace;
     const pending = Object.freeze({

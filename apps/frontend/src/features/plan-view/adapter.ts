@@ -1,6 +1,6 @@
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
 import { footprint } from '@roomedy/spatial';
-import type { Presentation } from '../session/state';
+import type { Presentation, RoomFrame } from '../session/state';
 
 export interface PlanBox {
   x: number;
@@ -12,9 +12,10 @@ export interface PlanBox {
 export function planBox(
   room: RoomDocument,
   view: Pick<Presentation, 'zoom' | 'panX' | 'panZ'>,
+  frame?: Pick<RoomFrame, 'width' | 'depth'>,
 ): PlanBox {
-  const width = room.room.width.value ?? 4200,
-    depth = room.room.depth.value ?? 4800;
+  const width = frame?.width ?? room.room.width.value ?? 4200,
+    depth = frame?.depth ?? room.room.depth.value ?? 4800;
   const spanX = (width + 1000) / view.zoom,
     spanZ = (depth + 1000) / view.zoom;
   return {
