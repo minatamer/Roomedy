@@ -202,10 +202,15 @@ export function analyzeBoundaries(input) {
   return [...new Set(errors)];
 }
 
-function sourceFiles(directory) {
+export function sourceFiles(directory) {
   const result = {};
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     if (['node_modules', 'dist', '.next', '.next-dev'].includes(entry.name))
+      continue;
+    if (
+      /^\.next-release-[ab]$/.test(entry.name) &&
+      /(^|\/)apps\/frontend$/.test(directory.replaceAll('\\', '/'))
+    )
       continue;
     const name = path.join(directory, entry.name);
     if (entry.isDirectory()) Object.assign(result, sourceFiles(name));

@@ -8,6 +8,7 @@ import type { OperationResult } from '@roomedy/contracts/operations';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import { readOperationResponse as read } from '../session/operation-client';
 export { operationAvailability as recognitionAvailability } from '../session/operation-client';
+import { releaseTransport } from '../session/release-client';
 import type { ReviewController } from './review-controller';
 
 type Transport = typeof fetch;
@@ -64,6 +65,11 @@ export async function draftFromPhotos(
     if (controller.isCurrent(token))
       controller.endDraftOperation(token, message);
   };
+  transport = releaseTransport(transport, () =>
+    finish(
+      'This version changed. Your sketch and photos are still here. Continue manually, or reload when ready; photos and drafts cannot recover.',
+    ),
+  );
   try {
     const images: { id: string; data: string }[] = [];
     for (const [index, image] of prepared.images.entries()) {

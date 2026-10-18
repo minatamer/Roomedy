@@ -9,6 +9,8 @@ export default defineConfig([
       '**/dist/**',
       '**/.next/**',
       '**/.next-dev/**',
+      '**/.next-release-*/**',
+      '.release/**',
       '**/node_modules/**',
       '**/next-env.d.ts',
     ],

@@ -1,4 +1,5 @@
 export interface RuntimeConfig {
+  releaseId: string;
   appEnv: 'development' | 'test' | 'production';
   mode: 'fake' | 'live';
   paidEnabled: boolean;
@@ -47,7 +48,11 @@ export function parseRuntimeConfig(
       (appEnv === 'production' && bridgeSecret.length < 32))
   )
     throw new Error('invalid-configuration');
+  const releaseId = env.ROOMEDY_RELEASE_ID ?? '';
+  if (releaseId && !/^[a-f0-9]{64}$/.test(releaseId))
+    throw new Error('invalid-configuration');
   return {
+    releaseId,
     appEnv: appEnv as RuntimeConfig['appEnv'],
     mode: bool('FAKE_MODE', true) ? 'fake' : 'live',
     paidEnabled: bool('PAID_DEMO_ENABLED', false),

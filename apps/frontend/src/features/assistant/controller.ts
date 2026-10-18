@@ -12,6 +12,7 @@ import {
 } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { operationAvailability } from '../session/operation-client';
+import { releaseTransport } from '../session/release-client';
 import { askAssistant } from './client';
 
 export interface AssistantMessage {
@@ -57,7 +58,9 @@ export class AssistantController {
     readonly session: SessionController,
     private deps: Dependencies = {},
   ) {
-    this.transport = deps.transport ?? fetch;
+    this.transport = releaseTransport(deps.transport ?? fetch, () =>
+      session.clientPartFailed(),
+    );
     this.release = session.ownResource(() => this.dispose());
     void operationAvailability(this.configAbort.signal, this.transport).then(
       (config) => {

@@ -54,10 +54,20 @@ try {
     log({ code: 'startup-failed', reference: randomUUID() });
     process.exitCode = 1;
   });
+  let stopping = false;
   for (const signal of ['SIGINT', 'SIGTERM'] as const)
     process.once(signal, () => {
+      if (stopping) return;
+      stopping = true;
       runtime.operations.close();
-      server.close();
+      const force = setTimeout(() => {
+        log({ code: 'shutdown-forced', reference: randomUUID() });
+        server.closeAllConnections();
+        process.exit(0);
+      }, 8000);
+      force.unref();
+      server.close(() => clearTimeout(force));
+      server.closeIdleConnections();
     });
 } catch {
   log({ code: 'startup-failed', reference: randomUUID() });

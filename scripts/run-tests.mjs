@@ -7,6 +7,8 @@ const env = {
   APP_ENV: 'test',
   FAKE_MODE: 'true',
   PAID_DEMO_ENABLED: 'false',
+  ROOMEDY_RELEASE_ID: '',
+  NEXT_PUBLIC_ROOMEDY_RELEASE_ID: '',
   OPENAI_API_KEY: '',
   OPENAI_MODEL: '',
   ROOMEDY_BRIDGE_SECRET: '',

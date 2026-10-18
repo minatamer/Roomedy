@@ -16,11 +16,27 @@ export function createApp(runtime: Runtime): Express {
   app.disable('etag');
   app.enable('case sensitive routing');
   app.enable('strict routing');
-  app.use((_req, res, next) => {
+  app.use((req, res, next) => {
     res.set({
       'Cache-Control': 'no-store',
       'X-Content-Type-Options': 'nosniff',
     });
+    const release = runtime.config.releaseId;
+    if (release) {
+      res.set('X-Roomedy-Release', release);
+      if (
+        (req.headers['x-roomedy-release'] !== release &&
+          req.method === 'POST') ||
+        (req.headers['x-roomedy-release'] !== undefined &&
+          req.headers['x-roomedy-release'] !== release)
+      ) {
+        res
+          .set('Cache-Control', 'no-store')
+          .status(409)
+          .json(safeError('not-available', runtime.nextId()));
+        return;
+      }
+    }
     next();
   });
   const gets = ['/v1/health', '/v1/ready', '/v1/config'];

@@ -1,6 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { analyzeBoundaries } from './check-boundaries.mjs';
+import { analyzeBoundaries, sourceFiles } from './check-boundaries.mjs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 
 test('rejects cross-app paths, aliases and private package paths', () => {
   for (const text of [
@@ -77,4 +80,40 @@ test('spatial permits only the selected pure hash/encoding subpaths', () => {
       'packages/spatial/src/a.ts': "import '@noble/hashes/webcrypto.js';",
     }).length,
   );
+});
+
+test('excludes only reserved frontend release outputs and keeps real worker/lazy source reachable', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'roomedy-boundary-'));
+  const put = (p, text) => {
+    const file = path.join(root, p);
+    mkdirSync(path.dirname(file), { recursive: true });
+    writeFileSync(file, text);
+  };
+  try {
+    put('apps/frontend/.next-release-a/server/runtime.js', 'import(variable)');
+    put('apps/frontend/.next-release-b/types/validator.ts', 'import(variable)');
+    put('apps/frontend/src/lazy.ts', 'import(variable)');
+    put(
+      'apps/frontend/src/features/layout-search/worker.ts',
+      'export const worker=1;',
+    );
+    put('apps/frontend/src/.next-release-a/source.ts', 'import(variable)');
+    const rows = Object.fromEntries(
+      Object.entries(sourceFiles(path.join(root, 'apps'))).map(([k, v]) => [
+        k.slice(root.length + 1).replaceAll('\\', '/'),
+        v,
+      ]),
+    );
+    assert.equal(Object.keys(rows).length, 3);
+    assert.ok(rows['apps/frontend/src/features/layout-search/worker.ts']);
+    assert.equal(analyzeBoundaries(rows).length, 2);
+  } finally {
+    if (
+      !path
+        .resolve(root)
+        .startsWith(path.join(path.resolve(tmpdir()), 'roomedy-boundary-'))
+    )
+      throw Error('unsafe-cleanup');
+    rmSync(root, { recursive: true, force: true });
+  }
 });

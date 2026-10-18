@@ -1,0 +1,31 @@
+{
+  "project": "",
+  "region": "",
+  "registry": "",
+  "frontendService": "",
+  "backendService": "",
+  "frontendIdentity": "",
+  "backendIdentity": "",
+  "publicOrigin": "",
+  "backendOrigin": "",
+  "providerSecretRef": "",
+  "bridgeSecretRef": "",
+  "model": "",
+  "fundingApproval": "",
+  "privacyApproval": "",
+  "challengeApproval": "",
+  "visualApproval": "",
+  "securityApproval": "",
+  "linuxProofDigest": "",
+  "frontendImage": "",
+  "backendImage": "",
+  "rollbackFrontend": "",
+  "rollbackBackend": "",
+  "candidateCapacity": {
+    "frontend": { "cpu": 1, "memoryMiB": 512, "concurrency": 4, "maxInstances": 1, "timeoutSeconds": 120 },
+    "backend": { "cpu": 1, "memoryMiB": 512, "concurrency": 4, "maxInstances": 1, "timeoutSeconds": 120 },
+    "measuredHostedCapacity": false
+  },
+  "paidEnabled": false,
+  "fakeMode": true
+}

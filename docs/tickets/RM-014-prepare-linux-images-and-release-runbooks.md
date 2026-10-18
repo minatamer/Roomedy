@@ -1,6 +1,6 @@
 # RM-014 — Prepare Linux images and release runbooks
 
-Status: **Planned**  
+Status: **Implemented locally — Linux/hosted evidence pending**
 Planning date: **17 October 2026**  
 Milestone: **Local release preparation**  
 Depends on: [RM-012](RM-012-complete-comparison-recovery-and-project-lifecycle.md), [RM-013](RM-013-evaluate-ai-and-integrated-product-behavior.md)  
@@ -53,21 +53,21 @@ Exercise local two-build stale-client cases: old JavaScript/new API, lazy cutawa
 
 ## Acceptance criteria
 
-- [ ] Both services have reviewable pinned multi-stage non-root images with actual required built dependencies/assets/workers.
-- [ ] Build contexts/runtime outputs exclude secrets, private room data and unnecessary workspace material.
-- [ ] Content-free health/readiness and fake/no-key startup/probe commands are documented and tested where tooling permits.
-- [ ] Exact-input manifest and strict release-proof checks distinguish inventory from actual Linux runtime evidence.
-- [ ] Relevant byte changes invalidate prior proof; later candidate fixes have a documented refresh owner.
-- [ ] Public/private identity, configuration, finite capacity and secret boundaries are explicit in local release files.
-- [ ] Rollout/rollback/incident runbooks and fail-closed unconfigured examples are complete locally.
-- [ ] No image push, cloud mutation, domain change, paid request or hosted-success claim occurs without separate authorization.
-- [ ] Controlled tests pass for expected matching/stale cases while strict actual release checks still reject any relevant byte/image mismatch.
+- [x] Both services have reviewable pinned multi-stage non-root images with actual required built dependencies/assets/workers.
+- [x] Build contexts/runtime outputs exclude secrets, private room data and unnecessary workspace material.
+- [x] Content-free health/readiness and fake/no-key startup/probe commands are documented and tested where tooling permits.
+- [x] Exact-input manifest and strict release-proof checks distinguish inventory from actual Linux runtime evidence.
+- [x] Relevant byte changes invalidate prior proof; later candidate fixes have a documented refresh owner.
+- [x] Public/private identity, configuration, finite capacity and secret boundaries are explicit in local release files.
+- [x] Rollout/rollback/incident runbooks and fail-closed unconfigured examples are complete locally.
+- [x] No image push, cloud mutation, domain change, paid request or hosted-success claim occurs without separate authorization.
+- [x] Controlled tests pass for expected matching/stale cases while strict actual release checks still reject any relevant byte/image mismatch.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — local evidence recorded
 
-- [ ] Verified immutable CI action/base-image/platform/tool identities participate in release evidence; hosted CI remains a distinct actual claim.
-- [ ] Local two-build chunk/worker/API/version mismatch and rollback cases have deliberate safe update behavior with no reload loop or invented transient-photo recovery.
-- [ ] Runbooks state boot/process grant binding, timeout ordering, revision-overlap/scaling exposure and separate durable funded controls without implying deployment authority.
+- [x] Verified immutable CI action/base-image/platform/tool identities participate in release evidence; hosted CI remains a distinct actual claim.
+- [x] Local two-build chunk/worker/API/version mismatch and rollback cases have deliberate safe update behavior with no reload loop or invented transient-photo recovery.
+- [x] Runbooks state boot/process grant binding, timeout ordering, revision-overlap/scaling exposure and separate durable funded controls without implying deployment authority.
 
 ## Focused verification and evidence
 
@@ -83,3 +83,14 @@ Exercise local two-build stale-client cases: old JavaScript/new API, lazy cutawa
 ## Handoff and limits
 
 RM-015 tests the packaged experience where available, RM-017 audits the actual candidate and RM-019 refreshes proof after quality/security changes. RM-020 alone owns later authorized hosted acceptance. Missing paid credentials cannot excuse missing local release files; missing Linux tooling cannot be relabelled passed Linux proof.
+
+## Execution evidence — 18 October2026
+
+[Validation](../validation/RM-014.md), [operations](../operations/README.md), [input/proof policy](../operations/release-inputs.md), [stale-client policy](../operations/stale-client.md), [actual input inventory](../operations/local-inventory-2026-10-18.json), [allocation](../commit-plans/RM-014.md). Final346tests/33files, seven boundaries, all root/build gates and read-only pass3 pass. Actual Windows production A/B/rollback and final current-release native/HTTP cases are recorded separately from Linux image proof. The final content-derived input/BUILD_ID is `7a60eb17e8d4d14deec85db56a1f67923e36d120fcf6e6569c0d351876ab7ba3`.
+
+The checked local criteria above cover reviewable files, tested controlled gates and the explicitly tooling-conditional observations. They do not assert these additional external outcomes:
+
+- [ ] Actual Linux engine builds/starts both pinned images, executes all nine runtime probes and produces fresh matching strict image proof.
+- [ ] Actual hosted CI/runner/builder, private IAM/ingress/service identity, account/funding/retention/challenge/model/domain acceptance is performed under separate owner authority.
+
+The installed Docker CLI has no running Linux engine; execution and verification fail closed. No paid request, image push or deployment occurred. Exact local commit is next, then RM-015 performance/actual frontend owner review; no RM-016 without that decision.

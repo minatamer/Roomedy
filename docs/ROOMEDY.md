@@ -6,7 +6,7 @@
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
-**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-001–RM-012 are committed. RM-013 passed329tests/root/build/native checks and clean read-only pass2; its exact local commit is next, then RM-014 local preparation. Its synthetic recognition/assistant misses and missing real-provider evidence remain explicit. Dated checkpoints below remain historical.
+**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-001–RM-013 are committed. RM-014 local packaging/identity/update/proof preparation passed346tests/seven boundaries/root/build/Windows production checks and clean read-only pass3; exact local commit is next, then RM-015 performance and the actual owner visual checkpoint. Actual Linux/hosted/live/owner acceptance remains unperformed. Dated checkpoints below remain historical.
 
 **Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; it is committed as `85c7362`. RM-006 is committed as `f73ce2e`. RM-007 is committed as `d1d8c30` after147-test/root/browser validation. [RM-008 checks](validation/RM-008.md) establish finite shared admission/private bounded transport with170 tests, final root/build gates and read-only pass2 passed. It is committed as `3e6d4c1`. [RM-009 evidence](validation/RM-009.md) establishes bounded deterministic search/application scope with190 tests, all root/build gates, final native quality/health measurements and clean read-only pass3. It is committed as `bfd9e6d`. [RM-010 evidence](validation/RM-010.md) records admitted fake recognition, bounded pixel decode and correction-safe2D review with235 tests, all root/build gates and read-only pass3 passed. RM-010 is committed as `526a6b3`. [RM-011 evidence](validation/RM-011.md) records the grounded scoped assistant, actual worker/fake HTTP and coherent reviewed proposals with274 tests, all root/build gates and clean read-only pass1. RM-011 is committed as `7580870`. [RM-012 evidence](validation/RM-012.md) records same-scale comparison, fixed two-hour semantic tab recovery, safe project import/export and cleanup with314 tests, all root/build gates and clean read-only pass3. Exact RM-012 commit is next before RM-013; model/challenge/hosted/physical/owner evidence stays separately scoped. Earlier in-progress statements below describe historical checkpoints.
 
@@ -1045,6 +1045,8 @@ Include verified full CI action commit identities, pinned base-image/platform/to
 
 Keep a known compatible frontend/backend image pair and rollback instructions. Include an emergency paid-off path that preserves manual editing. Changes in contracts/catalogue/rules may affect old browser exports, so version compatibility and failure behavior need explicit checks before traffic moves.
 
+**RM-014 local preparation, 18 October2026:** [Operations](operations/README.md), [exact inputs/proof](operations/release-inputs.md), [stale clients](operations/stale-client.md) and [actual validation](validation/RM-014.md) now exist. Pinned non-root image files, strict conditional probes, fixed future service identity, compatible asset retention and reviewed rollout/rollback files are prepared. Windows production A/B/update/rollback and current API checks ran; the Docker Linux engine is absent, so actual Linux image/runtime/hosted/provider acceptance is not claimed. Owner visual review remains RM-015.
+
 ## 24. Testing and acceptance evidence
 
 ### 24.1 Layers of proof
@@ -1290,8 +1292,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage and commit the exact validated RM-013 allocation, then read and allocate RM-014 local release preparation. Stop at owner review gates or0% remaining; no paid/deploy/push/reset/delegation.
-Active ticket: RM-013
+Next action: Commit exact54owned RM-014 paths after raw-byte/staged checks; then RM-015 performance and actual owner visual stop.
+Active ticket: RM-014
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1316,7 +1318,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-18T16:31:22+00:00",
+  "updated_at": "2026-10-18T17:56:50+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1485,8 +1487,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-013",
-  "next_action": "Stage and commit the exact validated RM-013 allocation, then read and allocate RM-014 local release preparation. Stop at owner review gates or0% remaining; no paid/deploy/push/reset/delegation.",
+  "active_ticket": "RM-014",
+  "next_action": "Commit exact54owned RM-014 paths after raw-byte/staged checks; then RM-015 performance and actual owner visual stop.",
   "phases": [
     {
       "id": "01-docs",
@@ -1796,7 +1798,10 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-011 committed7580870ca7430d82329b58e304ccd443cf10fe3c after274-test/root/browser/read-only validation; clean worktree. RM-012 exact25-path allocation before feature edits in docs/commit-plans/RM-012.md.",
         "RM-012 allocation extended before renderer edits to31paths. Final314tests/28files, all root/build/boundary/asset gates and clean read-only pass3. Actual same-scale Before/Current2D/3D, refresh with unchanged expiry, project download/import/Cancel/reset and independent tabs checked; copied storage and load-failure/expiry clocks are controlled evidence.23-path source SHA5f1ae9b30a80041813e5c4e9e0f8b48e94130327ef879619d624198b1316326d; exact authorized local commit next. Limits in docs/validation/RM-012.md. Usage14used/86remaining, no reset consumed.",
         "RM-012 committedb53dc8a40903020ff019c599fba41f8b7788b951 after314-test/root/native/read-only pass3; clean worktree. RM-013 exact39-path allocation before edits in docs/commit-plans/RM-013.md.",
-        "RM-013 final local329tests/30files and all root/build gates passed;23offline cases/27fake adapter calls/0paid,11original synthetic images/6room groups. Native chooser covered three conditions and EXIF/repeated views; accepted furnished editor3D follows rough2D. Read-only pass2 clean after independently reproduced settlement fix. Final15-path LF source SHA e99c16d9ad75f29028c8996edf4aee3455460dc9cfce5da4ea805e0487799735;39 allocated paths; exact local commit next, then RM-014. Live/model/privacy/funding/hosted/owner evidence unperformed.15%used/85%remaining; no reset."
+        "RM-013 final local329tests/30files and all root/build gates passed;23offline cases/27fake adapter calls/0paid,11original synthetic images/6room groups. Native chooser covered three conditions and EXIF/repeated views; accepted furnished editor3D follows rough2D. Read-only pass2 clean after independently reproduced settlement fix. Final15-path LF source SHA e99c16d9ad75f29028c8996edf4aee3455460dc9cfce5da4ea805e0487799735;39 allocated paths; exact local commit next, then RM-014. Live/model/privacy/funding/hosted/owner evidence unperformed.15%used/85%remaining; no reset.",
+        "commit:f5149b2c8b188bab67e2d6359b29e0fc9fbf3db1 - RM-013 exact39-path local commit; clean worktree. RM-014 full packet/precision refs read and49paths allocated before edits. Official Node linux/amd64 digest and CI action SHAs/pnpm integrity checked. Docker Linux daemon unavailable; actual Linux proof remains unperformed. No paid/deploy/push/reset/delegation.",
+        "RM-014 local outcome final346tests/33files, seven boundaries, all root/build gates, Windows A/B/update/rollback and final raw-input-ID production cases passed. Read-only pass3 clean after independently reproduced probe-stream/header/test-env fixes.53allocated paths;39owned source/config/test raw SHA 90ca59b863b449aaf8e6d3dbc422a6e8dd23a9b873128b2d8c1b0bdd7f0aac90;166-file raw input digest7a60eb17e8d4d14deec85db56a1f67923e36d120fcf6e6569c0d351876ab7ba3. Docker Linux engine absent; actual Linux/image/hosted/CI/live evidence unperformed, fail-closed checks preserved. Exact local commit next, then RM-015 performance and actual owner visual stop.17%used/83%remaining; no reset.",
+        "Final preflight adopted unchanged Next-generated frontend AGENTS.md after verifying its generator and reading matching bundled guides.54exact allocated paths; final166-input identity and39-source SHA/346-test gate unchanged. No feedback/export action. Exact local commit next."
       ],
       "blockers": [
         {

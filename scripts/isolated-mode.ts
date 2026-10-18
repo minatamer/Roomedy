@@ -7,6 +7,8 @@ export function isolateOffline() {
   process.env.APP_ENV = 'test';
   process.env.FAKE_MODE = 'true';
   process.env.PAID_DEMO_ENABLED = 'false';
+  process.env.ROOMEDY_RELEASE_ID = '';
+  process.env.NEXT_PUBLIC_ROOMEDY_RELEASE_ID = '';
   delete process.env.OPENAI_API_KEY;
   delete process.env.OPENAI_MODEL;
   delete process.env.ROOMEDY_BRIDGE_SECRET;
