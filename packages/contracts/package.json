@@ -7,6 +7,10 @@
     "dist"
   ],
   "exports": {
+    "./search": {
+      "types": "./dist/search.d.ts",
+      "default": "./dist/search.js"
+    },
     "./operations": {
       "types": "./dist/operations.d.ts",
       "default": "./dist/operations.js"

@@ -18,6 +18,13 @@ export {
 } from './coordinates.js';
 export { checkRoom } from './checks.js';
 export { evaluateBatch, validateRoom } from './commands.js';
+export {
+  LayoutSearch,
+  proposedSearchPiece,
+  emptySearchResult,
+  validateSearchCandidate,
+} from './search/engine.js';
+export { scopeAllows, evaluateScopedBatch } from './search/scope.js';
 export type {
   CommandAuthority,
   CommandFailure,

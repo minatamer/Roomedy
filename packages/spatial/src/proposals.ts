@@ -6,6 +6,8 @@ import {
   receiptSchema,
 } from '@roomedy/contracts/commands';
 import type { CommandEnvelope, Receipt } from '@roomedy/contracts/commands';
+import type { ActionScope, ProposalAction } from '@roomedy/contracts/commands';
+import { evaluateScopedBatch } from './search/scope.js';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { idSchema, revisionSchema } from '@roomedy/contracts/primitives';
@@ -98,6 +100,7 @@ export function prepareCommand(
   workspace: CommandWorkspace,
   raw: unknown,
   authority: CommandAuthority,
+  scope?: ActionScope,
 ): CommandResult {
   const parsed = commandEnvelopeSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, code: 'invalid-input' };
@@ -106,7 +109,13 @@ export function prepareCommand(
     parsed.data.commandSequence !== workspace.lastCommandSequence + 1
   )
     return { ok: false, code: 'stale' };
-  return evaluateBatch(workspace.current, parsed.data.actions, authority);
+  return authority === 'assistant'
+    ? evaluateScopedBatch(
+        workspace.current,
+        parsed.data.actions as ProposalAction[],
+        scope,
+      )
+    : evaluateBatch(workspace.current, parsed.data.actions, authority);
 }
 export type ApplyResult =
   | CommandFailure
@@ -122,6 +131,7 @@ export function applyCommand(
   workspace: CommandWorkspace,
   raw: unknown,
   authority: CommandAuthority,
+  scope?: ActionScope,
 ): ApplyResult {
   const parsed = commandEnvelopeSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, code: 'invalid-input' };
@@ -153,11 +163,14 @@ export function applyCommand(
     command.commandSequence !== workspace.lastCommandSequence + 1
   )
     return { ok: false, code: 'stale' };
-  const evaluation = evaluateBatch(
-    workspace.current,
-    command.actions,
-    authority,
-  );
+  const evaluation =
+    authority === 'assistant'
+      ? evaluateScopedBatch(
+          workspace.current,
+          command.actions as ProposalAction[],
+          scope,
+        )
+      : evaluateBatch(workspace.current, command.actions, authority);
   if (!evaluation.ok) return evaluation;
   if (
     evaluation.changed &&

@@ -1,7 +1,9 @@
 import type {
   OperationIdentity,
   VisitorAction,
+  ActionScope,
 } from '@roomedy/contracts/commands';
+import type { SearchGoal, SearchResult } from '@roomedy/contracts/search';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import {
@@ -10,6 +12,7 @@ import {
   createCommandWorkspace,
   prepareCommand,
   undoCommand,
+  emptySearchResult,
 } from '@roomedy/spatial';
 import type { CommandResult, CommandFailure } from '@roomedy/spatial';
 import { ResourceRegistry } from './effects';
@@ -393,6 +396,23 @@ export class SessionController {
     });
     this.publish({ pending });
     return pending;
+  }
+  /** Local assistant search seam; the worker returns data and never commits a room/proposal. */
+  async findLayout(
+    goal: SearchGoal,
+    scope: ActionScope,
+    seed = 42,
+  ): Promise<SearchResult> {
+    const token = this.beginOperation();
+    if (!token) return emptySearchResult(null, seed, 'cancelled');
+    try {
+      const { BrowserLayoutSearch } = await import('../layout-search/client');
+      if (!this.isCurrent(token))
+        return emptySearchResult(token, seed, 'cancelled');
+      return await new BrowserLayoutSearch(this).run(token, goal, scope, seed);
+    } catch {
+      return emptySearchResult(token, seed);
+    }
   }
   isCurrent(token: OperationIdentity): boolean {
     if (!this.active() || !this.state.workspace || !this.state.pending)

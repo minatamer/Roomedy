@@ -1,6 +1,8 @@
 import type { SpatialIssue } from '@roomedy/contracts/issues';
 import type { RoomDocument } from '@roomedy/contracts/room';
 const failureCopy: Readonly<Record<string, string>> = Object.freeze({
+  'out-of-scope':
+    'This change goes beyond the requested pieces. Start a new request to include them.',
   'invalid-input': 'Check the values and units before trying again.',
   locked: 'Unlock the protected property before changing it.',
   'owned-dimensions':

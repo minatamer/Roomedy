@@ -14,6 +14,7 @@ import { subsetRegion } from './coordinates.js';
 
 export type CommandAuthority = 'visitor' | 'authored-sample' | 'assistant';
 export type FailureCode =
+  | 'out-of-scope'
   | 'invalid-input'
   | 'locked'
   | 'owned-dimensions'
@@ -48,6 +49,21 @@ export type CommandResult =
       policy:
         'clear' | 'repair' | 'appearance-with-issues' | 'measurement-review';
     };
+
+/** Same monotone repair comparison for final commands and conservative search pruning. */
+export function preservesHardIssue(
+  previous: SpatialIssue | undefined,
+  current: SpatialIssue,
+): previous is SpatialIssue {
+  return (
+    !!previous &&
+    (current.deficitMm ?? 0) <= (previous.deficitMm ?? 0) &&
+    (current.areaMm2 ?? 0) <= (previous.areaMm2 ?? 0) &&
+    (current.region === null ||
+      (previous.region !== null &&
+        subsetRegion(current.region, previous.region)))
+  );
+}
 
 function diffRoom(before: RoomDocument, after: RoomDocument): CommandChange[] {
   const changes: CommandChange[] = [];
@@ -384,14 +400,7 @@ export function evaluateBatch(
   if (!measurement)
     for (const current of nextHard) {
       const previous = oldHard.get(current.id);
-      if (
-        !previous ||
-        (current.deficitMm ?? 0) > (previous.deficitMm ?? 0) ||
-        (current.areaMm2 ?? 0) > (previous.areaMm2 ?? 0) ||
-        (current.region !== null &&
-          (previous.region === null ||
-            !subsetRegion(current.region, previous.region)))
-      )
+      if (!preservesHardIssue(previous, current))
         return { ok: false, code: 'new-conflict', issue: current };
       if (
         (current.areaMm2 ?? 0) < (previous.areaMm2 ?? 0) ||

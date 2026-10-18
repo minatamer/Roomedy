@@ -1,6 +1,6 @@
 # RM-009 — Build bounded layout search and explanations
 
-Status: **Planned**  
+Status: **Implemented locally — native browser integration/device evidence pending**\
 Planning date: **17 October 2026**  
 Milestone: **Spatial assistance**  
 Depends on: [RM-003](RM-003-build-spatial-checks-commands-and-undo.md), [RM-005](RM-005-deliver-canonical-session-and-precision-2d-editor.md)  
@@ -53,21 +53,21 @@ Guarantee deterministic ordering/results for fixed work and a seed. Deadline-lim
 
 ## Acceptance criteria
 
-- [ ] Supported empty/partial/rearrange goals produce typed candidates through shared rules without direct state mutation.
-- [ ] Retained dimensions, starting locks and no-additions goals remain invariant during search.
-- [ ] Deterministic seeds/versions give stable ordering and fixed-work results; deadline-limited runs report their visited prefix and termination reason.
-- [ ] Every returned candidate passes the complete shared validator and carries computed trade-offs/unknowns.
-- [ ] Candidate/time/memory/result bounds terminate work and explain exhaustion honestly.
-- [ ] Browser work runs off the pointer path and cancellation/supersession rejects late results.
-- [ ] Backend use revalidates input/candidates through the same package under independent bounds.
-- [ ] Only one proposal is exposed to the visitor; no multi-candidate comparison or price/budget goal is introduced.
-- [ ] Near-limit search/cancel preserves usable interaction and reports bounded exhaustion without new visitor-facing debug controls or invented fit claims.
+- [x] Supported empty/partial/rearrange goals produce typed candidates through shared rules without direct state mutation.
+- [x] Retained dimensions, starting locks and no-additions goals remain invariant during search.
+- [x] Deterministic seeds/versions give stable ordering and fixed-work results; deadline-limited runs report their visited prefix and termination reason.
+- [x] Every returned candidate passes the complete shared validator and carries computed trade-offs/unknowns.
+- [x] Candidate/time/memory/result bounds terminate work and explain exhaustion honestly.
+- [x] Browser work runs off the pointer path and cancellation/supersession rejects late results.
+- [x] Backend use revalidates input/candidates through the same package under independent bounds.
+- [x] Only one proposal is exposed to the visitor; no multi-candidate comparison or price/budget goal is introduced.
+- [x] Near-limit search/cancel preserves usable interaction and reports bounded exhaustion without new visitor-facing debug controls or invented fit claims.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — scoped local evidence below
 
-- [ ] Targeted desk/appearance requests preserve unrelated unlocked objects/finishes; explicit rearrange-owned scope forbids add/replace and necessary coordination is disclosed.
-- [ ] Fixed-work replay is reproducible; deadline output records visited prefix/reason without claiming device-independent identical candidates.
-- [ ] Maximum bounded backend search preserves health/cancellation responsiveness; known feasible tight-room stories produce measured relevant goal improvement through the full validator.
+- [x] Targeted desk/appearance requests preserve unrelated unlocked objects/finishes; explicit rearrange-owned scope forbids add/replace and necessary coordination is disclosed.
+- [x] Fixed-work replay is reproducible; deadline output records visited prefix/reason without claiming device-independent identical candidates.
+- [x] Maximum bounded backend search preserves health/cancellation responsiveness; known feasible tight-room stories produce measured relevant goal improvement through the full validator.
 
 ## Focused verification and evidence
 
@@ -84,3 +84,7 @@ Guarantee deterministic ordering/results for fixed work and a seed. Deadline-lim
 ## Handoff and limits
 
 Record actual corpus quality and candidate/time distributions when measured. RM-011 integrates search with assistant tools; RM-013 evaluates worked scenarios and RM-015 tunes device limits. No general optimality, exhaustive solvability, professional ergonomics or guaranteed fit is claimed from a bounded result. Follow the index's future execution and evidence rules.
+
+## Execution evidence — 18 October 2026
+
+[29-path allocation](../commit-plans/RM-009.md), [enforced search/scope policy](../engineering/layout-search.md) and [actual validation/measurements](../validation/RM-009.md). Final190-test/root/build gate and read-only pass3 are clean on the named21-path source identity. Fixed-work/goal-improvement/near-limit backend and controlled worker fences are verified locally. Browser worker implementation is reachable in the compiled Next graph; actual native browser search/cancel becomes reachable through RM-011's intended UI and remains unperformed here. Checked criteria describe implemented/local evidence, not physical-device performance, general completeness or final owner visual acceptance. No debug controls, paid calls or extra solver service were added. Exact local commit follows before RM-010.

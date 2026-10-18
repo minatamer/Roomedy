@@ -175,3 +175,33 @@ export type Proposal = z.infer<typeof proposalSchema>;
 export type Receipt = z.infer<typeof receiptSchema>;
 
 export type CommandEnvelope = z.infer<typeof commandEnvelopeSchema>;
+
+/** Trusted application argument. Never accepted from a model command's payload. */
+export const actionScopeSchema = z.strictObject({
+  roomId: idSchema,
+  roomRevision: revisionSchema,
+  actionKinds: z
+    .array(
+      z.enum([
+        'move',
+        'rotate',
+        'add',
+        'replace',
+        'remove',
+        'resize',
+        'finish',
+        'room-finish',
+      ]),
+    )
+    .max(8),
+  targetIds: z.array(idSchema).max(POLICY.furniture),
+  additions: z
+    .array(z.strictObject({ id: idSchema, catalogueId: idSchema }))
+    .max(POLICY.actions),
+  replacements: z
+    .array(z.strictObject({ id: idSchema, catalogueId: idSchema }))
+    .max(POLICY.actions),
+  removals: z.array(idSchema).max(POLICY.actions),
+  roomFinishes: z.boolean(),
+});
+export type ActionScope = z.infer<typeof actionScopeSchema>;
