@@ -1,10 +1,6 @@
 import { z } from 'zod';
 import { POLICY } from './policy.js';
-import {
-  candidateMeasurementSchema,
-  idSchema,
-  labelSchema,
-} from './primitives.js';
+import { finishSchema, idSchema, labelSchema } from './primitives.js';
 
 export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 export const imageTypeSchema = z.enum(IMAGE_TYPES);
@@ -32,7 +28,27 @@ export const photoManifestSchema = z
         message: 'Prepared photos exceed total bytes',
       });
   });
-const candidateLength = candidateMeasurementSchema(POLICY.roomEdgeMm);
+const evidenceSchema = z.discriminatedUnion('status', [
+  z.strictObject({ status: z.literal('unknown'), sourceId: z.null() }),
+  z.strictObject({
+    status: z.enum(['estimated', 'extracted']),
+    sourceId: idSchema,
+  }),
+]);
+const photoMeasurement = (max: number, min = 1) =>
+  z.discriminatedUnion('status', [
+    z.strictObject({
+      status: z.literal('unknown'),
+      value: z.null(),
+      sourceId: z.null(),
+    }),
+    z.strictObject({
+      status: z.enum(['estimated', 'extracted']),
+      value: z.number().int().min(min).max(max),
+      sourceId: idSchema,
+    }),
+  ]);
+const candidateLength = photoMeasurement(POLICY.roomEdgeMm);
 /** Untrusted adapter output. IDs below are temporary observation references, never canonical room IDs. */
 export const draftObservationSchema = z.strictObject({
   ref: idSchema,
@@ -41,11 +57,19 @@ export const draftObservationSchema = z.strictObject({
   catalogueId: idSchema.nullable(),
   label: labelSchema,
   wall: z.enum(['north', 'east', 'south', 'west', 'unknown']),
+  wallEvidence: evidenceSchema,
+  mechanism: z.enum(['inward', 'outward', 'sliding', 'fixed', 'unknown']),
+  mechanismEvidence: evidenceSchema,
+  hinge: z.enum(['left', 'right', 'unknown']),
+  hingeEvidence: evidenceSchema,
+  poseEvidence: evidenceSchema,
+  visibility: z.enum(['visible', 'partial', 'occluded', 'unsupported']),
+  finish: finishSchema.nullable(),
   width: candidateLength,
   depth: candidateLength,
   height: candidateLength,
-  offset: candidateMeasurementSchema(POLICY.roomEdgeMm, 0),
-  sill: candidateMeasurementSchema(POLICY.roomEdgeMm, 0),
+  offset: photoMeasurement(POLICY.roomEdgeMm, 0),
+  sill: photoMeasurement(POLICY.roomEdgeMm, 0),
   projection: candidateLength,
   sketch: z.strictObject({
     x: z.number().min(0).max(1).nullable(),
@@ -59,6 +83,7 @@ export const draftHypothesisSchema = z
   .strictObject({
     version: z.literal(1),
     shape: z.enum(['rectangle', 'unknown', 'unsupported']),
+    frameEvidence: evidenceSchema,
     room: z.strictObject({
       width: candidateLength,
       depth: candidateLength,
@@ -81,6 +106,12 @@ export const draftHypothesisSchema = z
       perPhoto.set(o.sourceId, (perPhoto.get(o.sourceId) ?? 0) + 1);
     if ([...perPhoto.values()].some((n) => n > POLICY.observationsPerPhoto))
       ctx.addIssue({ code: 'custom', message: 'Too many photo observations' });
+    const grouped = draft.groups.flat();
+    if (new Set(grouped).size !== grouped.length)
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Competing observation associations',
+      });
     for (const group of draft.groups)
       if (
         new Set(group).size !== group.length ||
@@ -91,6 +122,8 @@ export const draftHypothesisSchema = z
           message: 'Invalid observation association',
         });
   });
+export const draftHypothesisJsonSchema = () =>
+  z.toJSONSchema(draftHypothesisSchema);
 export type DraftHypothesis = z.infer<typeof draftHypothesisSchema>;
 export type DraftObservation = z.infer<typeof draftObservationSchema>;
 export type PhotoManifest = z.infer<typeof photoManifestSchema>;
@@ -114,7 +147,28 @@ export function parseDraftHypothesis(raw: unknown, sources: readonly string[]) {
       o.projection,
     ]),
   ];
+  const evidence = [
+    parsed.data.frameEvidence,
+    ...parsed.data.observations.flatMap((o) => [
+      o.wallEvidence,
+      o.mechanismEvidence,
+      o.hingeEvidence,
+      o.poseEvidence,
+    ]),
+  ];
+  const inconsistent = parsed.data.observations.some(
+    (o) =>
+      (o.wall === 'unknown') !== (o.wallEvidence.status === 'unknown') ||
+      (o.mechanism === 'unknown') !==
+        (o.mechanismEvidence.status === 'unknown') ||
+      (o.hinge === 'unknown') !== (o.hingeEvidence.status === 'unknown') ||
+      (o.kind === 'door' && o.mechanism === 'fixed'),
+  );
   if (
+    inconsistent ||
+    (parsed.data.shape === 'unknown') !==
+      (parsed.data.frameEvidence.status === 'unknown') ||
+    evidence.some((e) => e.sourceId !== null && !allowed.has(e.sourceId)) ||
     parsed.data.observations.some((o) => !allowed.has(o.sourceId)) ||
     measurements.some((m) => m.sourceId !== null && !allowed.has(m.sourceId))
   )

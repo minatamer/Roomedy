@@ -17,11 +17,14 @@ export interface Diagnostic {
     | 'server-started'
     | 'startup-failed'
     | 'operation-finished'
-    | 'operation-uncertain';
+    | 'operation-uncertain'
+    | 'recognition-decision';
   reference: string;
   outcome?: OperationResult['kind'];
   rounds?: number;
   elapsedMs?: number;
+  stage?: 'decode' | 'provider' | 'hypotheses';
+  observations?: number;
 }
 export interface RuntimeDependencies {
   now: () => number;
@@ -63,7 +66,9 @@ export function createRuntime(
   };
   const ai =
     config.mode === 'fake'
-      ? 'fake-pending-integration'
+      ? publicConfig.capabilities.recognition
+        ? 'fake-ready'
+        : 'fake-pending-integration'
       : !config.paidEnabled
         ? 'disabled'
         : !config.providerConfigured

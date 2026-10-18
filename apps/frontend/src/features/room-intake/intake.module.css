@@ -562,3 +562,31 @@
 .studioTransition {
   animation: arrive 0.35s cubic-bezier(0.2, 0.75, 0.2, 1);
 }
+
+.simulation {
+  background: #eee3d2;
+  color: #493325;
+  padding: 0.75rem 1rem;
+  border-radius: 0.65rem;
+  margin: 0 0 1rem;
+}
+.drafting {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+.drafting > span {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid #d2c1a7;
+  border-top-color: #6f4e37;
+  border-radius: 50%;
+  animation: draft-spin 0.85s linear infinite;
+}
+@keyframes draft-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

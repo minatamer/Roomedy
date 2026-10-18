@@ -1,6 +1,6 @@
 # RM-010 — Deliver photo recognition and draft reconciliation
 
-Status: **Planned**  
+Status: **Implemented locally — live recognition quality remains unverified**\
 Planning date: **17 October 2026**  
 Milestone: **Photo-to-room**  
 Depends on: [RM-007](RM-007-build-photo-intake-and-rough-2d-review.md), [RM-008](RM-008-build-shared-admission-and-bounded-provider-transport.md)  
@@ -53,22 +53,22 @@ Use the early independent corpus/rubric skeleton: repeated item versus two ident
 
 ## Acceptance criteria
 
-- [ ] Explicit draft action alone can dispatch recognition through shared admission/transport; selection and review edits cost zero calls.
-- [ ] Strict bounded output becomes correctable hypotheses with source links and honest uncertainty, never auto-confirmed measurements.
-- [ ] Multiple views of one object can be reconciled without duplicate accepted furniture.
-- [ ] Unsupported/occluded structure and catalogue mismatches remain visible and manually correctable.
-- [ ] Recognition review stays 2D; accepted data enters the existing main editor/baseline path.
-- [ ] Superseded/cancelled/expired results cannot overwrite newer corrections or recreate cleared photos.
-- [ ] Fake development is labelled; missing/live-failed integration never silently fakes success.
-- [ ] Raw photos/drafts/private filenames/provider payloads do not enter persistence, export or logs.
-- [ ] Usable incomplete/missed-match results stay in rough 2D review with manual repair, while unusable/technical failures remain distinct and preserve selected work.
-- [ ] Safe backend-only decision diagnostics explain the processing stage/outcome without photos, filenames, room/chat text or whole provider payloads.
+- [x] Explicit draft action alone can dispatch recognition through shared admission/transport; selection and review edits cost zero calls.
+- [x] Strict bounded output becomes correctable hypotheses with source links and honest uncertainty, never auto-confirmed measurements.
+- [x] Multiple views of one object can be reconciled without duplicate accepted furniture.
+- [x] Unsupported/occluded structure and catalogue mismatches remain visible and manually correctable.
+- [x] Recognition review stays 2D; accepted data enters the existing main editor/baseline path.
+- [x] Superseded/cancelled/expired results cannot overwrite newer corrections or recreate cleared photos.
+- [x] Fake development is labelled; missing/live-failed integration never silently fakes success.
+- [x] Raw photos/drafts/private filenames/provider payloads do not enter persistence, export or logs.
+- [x] Usable incomplete/missed-match results stay in rough 2D review with manual repair, while unusable/technical failures remain distinct and preserve selected work.
+- [x] Safe backend-only decision diagnostics explain the processing stage/outcome without photos, filenames, room/chat text or whole provider payloads.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — local invariants checked; real quality unperformed
 
-- [ ] Recognition emits bounded reviewable observations/entities/frame/scale evidence; similar distinct pieces and contradictory associations cannot silently corrupt accepted identities.
-- [ ] Photo order/orientation/missing-view and late measurement corrections preserve current 2D review and honest per-fact uncertainty under the declared rubric.
-- [ ] Actual provider-schema projection and captured fake strict/stateless request policy are checked; no live quality/zero-retention or reconstruction claim is inferred.
+- [x] Recognition emits bounded reviewable observations/entities/frame/scale evidence; similar distinct pieces and contradictory associations cannot silently corrupt accepted identities.
+- [x] Photo order/orientation/missing-view and late measurement corrections preserve current 2D review and honest per-fact uncertainty under the declared rubric.
+- [x] Actual provider-schema projection and captured fake strict/stateless request policy are checked; no live quality/zero-retention or reconstruction claim is inferred.
 
 ## Focused verification and evidence
 
@@ -85,3 +85,9 @@ Use the early independent corpus/rubric skeleton: repeated item versus two ident
 ## Handoff and limits
 
 Record local integration evidence independently of recognition quality. RM-013 owns the funded model/corpus evaluation kit and actual authorized live outcomes. No key request, paid call, asset reconstruction, production recognition accuracy or vendor privacy setting is implied by this planned packet. Follow the index's future settled review and evidence rules.
+
+## Local execution evidence — 18 October 2026
+
+[30-path allocation](../commit-plans/RM-010.md), [recognition policy](../engineering/room-recognition.md) and [validation receipt](../validation/RM-010.md) record the actual strict admitted fake HTTP/use-case/UI path, bounded native decode, source/evidence reconciliation and correction-safe initial2D review. Final235-test/root/build gate and read-only pass3 have no actionable findings on the named21-path source identity. Actual empty/partial/furnished browser journeys, measured correction across retry, split/merge/missed opening, compact phone/tablet/short-laptop states and accepted studio3D were checked.
+
+Checked criteria describe implemented local/fake invariants and authored repair cases, not image-recognition accuracy or model robustness. Current official image/schema protocol was checked and real request preparation is implemented; exact configured model compatibility, real corpus/provider outcomes, privacy/funding/challenge and hosted/device evidence remain **unchecked** for RM-013/external approval. O-01 remains deferred. This ticket grants no paid call, key request, deployment or final owner visual approval. Exact local commit precedes RM-011.

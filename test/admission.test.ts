@@ -41,6 +41,7 @@ describe('content-bound boot admission', () => {
     const input = {
       ...operationVersions,
       kind: 'recognize-room' as const,
+      condition: 'partial' as const,
       identity: operationInput().identity,
       manifest: [
         {

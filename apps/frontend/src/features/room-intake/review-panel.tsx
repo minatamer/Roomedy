@@ -195,6 +195,12 @@ function Evidence({
   return (
     <section className={editorStyles.section}>
       <h3>Photo evidence</h3>
+      {!!link && link.observations.length > 1 && (
+        <p className={styles.hint}>
+          Check whether these photos show one piece. Separate them if they show
+          different pieces.
+        </p>
+      )}
       {link?.observations.map((ref) => {
         const observation = state.draft.observations.find((o) => o.ref === ref),
           photo = state.photos.find((p) => p.id === observation?.sourceId),
@@ -212,7 +218,12 @@ function Evidence({
             ) : (
               <p>Original photo unavailable</p>
             )}
-            <span>{observation?.label ?? 'Observation'}</span>
+            <span>
+              {observation?.label ?? 'Observation'}
+              {observation?.visibility !== 'visible'
+                ? ` · ${observation?.visibility}`
+                : ''}
+            </span>
             {!!state.draft.room.furniture.find((p) => p.id === id) &&
               link.observations.length > 1 && (
                 <button onClick={() => controller.split(id, ref)}>
@@ -760,8 +771,9 @@ export function ReviewPanel({
                 .map((o) => (
                   <div key={o.ref}>
                     <p>
-                      {o.label} · choose a piece to link it, or exclude a
-                      mistaken observation.
+                      {o.label} · {o.visibility} · choose a similar
+                      representation and link it, or exclude a mistaken
+                      observation.
                     </p>
                     <button
                       onClick={() => controller.excludeObservation(o.ref)}

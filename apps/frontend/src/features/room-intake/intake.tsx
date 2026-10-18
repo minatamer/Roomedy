@@ -9,6 +9,8 @@ import { ReviewPanel } from './review-panel';
 import type { ReviewController } from './review-controller';
 import type { PhotoPurpose } from './photo-store';
 import styles from './intake.module.css';
+import { draftFromPhotos, recognitionAvailability } from './recognition-client';
+import type { PublicConfig } from '@roomedy/contracts/api';
 
 export function Intake({
   controller,
@@ -24,6 +26,14 @@ export function Intake({
     ),
     [purpose, setPurpose] = useState<PhotoPurpose>('room'),
     [owned, setOwned] = useState(state.draft.room.intent.condition !== 'empty');
+  const [availability, setAvailability] = useState<PublicConfig | null>(null);
+  useEffect(() => {
+    const abort = new AbortController();
+    void recognitionAvailability(abort.signal).then((config) => {
+      if (!abort.signal.aborted) setAvailability(config);
+    });
+    return () => abort.abort();
+  }, []);
   const panel = useRef<HTMLDivElement>(null),
     heading = useRef<HTMLHeadingElement>(null),
     question = nextQuestion(state.draft, state.selectedId);
@@ -37,6 +47,7 @@ export function Intake({
   ].some((m) => m.status !== 'confirmed');
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
+    heading.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [state.stage]);
   const leave = () => {
     if (state.photos.length || state.draft.revision > 0) {
@@ -245,18 +256,42 @@ export function Intake({
             <div className={styles.startActions}>
               <div>
                 <p id="photo-transfer">
-                  Photo drafting is unavailable. Your selected photos stay
-                  local.
+                  {availability?.capabilities.recognition
+                    ? availability.mode === 'fake'
+                      ? 'Simulated drafting sends prepared photos to this local demo. The authored result does not interpret your photos.'
+                      : 'Draft my room sends prepared photos to the AI provider. Metadata is removed; details visible in the image remain. Review every estimate.'
+                    : 'Photo drafting is unavailable. Your selected photos stay local.'}
                 </p>
-                <button disabled aria-describedby="photo-transfer">
-                  Draft my room
+                <button
+                  className={styles.primary}
+                  disabled={
+                    !availability?.capabilities.recognition ||
+                    state.recognition !== 'idle' ||
+                    !state.photos.length ||
+                    state.photos.some((p) => p.status !== 'ready')
+                  }
+                  aria-describedby="photo-transfer"
+                  onClick={() => void draftFromPhotos(controller)}
+                >
+                  {state.recognition === 'idle'
+                    ? 'Draft my room'
+                    : state.recognition === 'preparing'
+                      ? 'Preparing request…'
+                      : 'Drafting room…'}
                 </button>
+                {state.recognition !== 'idle' && (
+                  <div className={styles.drafting} role="status">
+                    <span aria-hidden="true" /> Preparing a correctable sketch…{' '}
+                    <button onClick={() => controller.cancelDraft()}>
+                      Cancel drafting
+                    </button>
+                  </div>
+                )}
               </div>
               <button
                 className={styles.primary}
                 onClick={() => {
                   controller.startReview();
-                  requestAnimationFrame(() => heading.current?.focus());
                 }}
               >
                 Set up the rough sketch manually ↗
@@ -265,6 +300,12 @@ export function Intake({
           </>
         ) : (
           <>
+            {state.simulated && (
+              <p className={styles.simulation} role="status">
+                Simulated draft · An authored example, not an interpretation of
+                your photos. Correct it to match your room.
+              </p>
+            )}
             <div className={styles.reviewTools}>
               <button onClick={() => controller.showPhotos()}>← Photos</button>
               <button

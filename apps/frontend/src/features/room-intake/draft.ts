@@ -12,9 +12,9 @@ import {
 } from '@roomedy/spatial';
 import type { PhotoPurpose } from './photo-store';
 
-export const unknown = (): Measurement => ({
+export const unknown = () => ({
   value: null,
-  status: 'unknown',
+  status: 'unknown' as const,
   sourceId: null,
 });
 export const estimate = (value: number): Measurement => ({
@@ -39,6 +39,7 @@ export interface ReviewDraft {
   frameReviewed: boolean;
   sources: ReviewSource[];
   observations: DraftObservation[];
+  excludedObservations: DraftObservation[];
   links: EvidenceLink[];
   reviewed: string[];
 }
@@ -52,6 +53,7 @@ export function createDraft(
     frameReviewed: false,
     sources: [],
     observations: [],
+    excludedObservations: [],
     links: [],
     reviewed: [],
     room: {
@@ -171,7 +173,8 @@ export function finishDraft(
   if (
     !room ||
     next.sources.length > POLICY.reviewSources ||
-    next.observations.length > POLICY.draftObservations ||
+    next.observations.length + next.excludedObservations.length >
+      POLICY.draftObservations ||
     next.links.length > POLICY.furniture + POLICY.features ||
     next.reviewed.length > POLICY.reviewedFields ||
     next.revision >= Number.MAX_SAFE_INTEGER - 1
@@ -438,6 +441,13 @@ function retireEntityEvidence(draft: ReviewDraft, id: string) {
     if (!draft.reviewed.includes(`observation:${ref}:excluded`))
       draft.reviewed.push(`observation:${ref}:excluded`);
   draft.links = draft.links.filter((link) => link.entityId !== id);
+  draft.excludedObservations.push(
+    ...draft.observations.filter(
+      (o) =>
+        removed.includes(o.ref) &&
+        !draft.links.some((l) => l.observations.includes(o.ref)),
+    ),
+  );
   draft.observations = draft.observations.filter(
     (observation) =>
       !removed.includes(observation.ref) ||
@@ -474,7 +484,11 @@ export function adoptHypothesis(
     !next.frameReviewed &&
     !next.reviewed.includes(`${next.room.roomId}:shape`)
   )
-    next.shape = roomSources.size ? parsed.shape : 'unknown';
+    next.shape =
+      parsed.frameEvidence.sourceId &&
+      roomSources.has(parsed.frameEvidence.sourceId)
+        ? parsed.shape
+        : 'unknown';
   for (const axis of ['width', 'depth', 'height'] as const) {
     const m = parsed.room[axis];
     if (
@@ -485,23 +499,110 @@ export function adoptHypothesis(
     )
       next.room.room[axis] = m;
   }
-  const refs = new Map<string, string>();
+  const refs = new Map<string, string>(),
+    ambiguous = new Set<string>();
+  const sameObservation = (a: DraftObservation, b: DraftObservation) =>
+    a.sourceId === b.sourceId &&
+    a.kind === b.kind &&
+    a.catalogueId === b.catalogueId &&
+    (a.wall === 'unknown' || b.wall === 'unknown' || a.wall === b.wall) &&
+    a.sketch.x !== null &&
+    b.sketch.x !== null &&
+    a.sketch.z !== null &&
+    b.sketch.z !== null &&
+    Math.abs(a.sketch.x - b.sketch.x) < 0.08 &&
+    Math.abs(a.sketch.z - b.sketch.z) < 0.08;
   for (const observation of parsed.observations) {
     const ref = `${observation.sourceId}:${observation.ref}`;
     if (next.reviewed.includes(`observation:${ref}:excluded`)) continue;
+    if (next.excludedObservations.some((o) => sameObservation(o, observation)))
+      continue;
     const prior = next.observations.find((o) => o.ref === ref);
+    if (prior) {
+      // A reused provider label is not authority to change the represented physical entity.
+      if (
+        (sameObservation(prior, observation) ||
+          (prior.sketch.x === null &&
+            observation.sketch.x === null &&
+            prior.sketch.z === null &&
+            observation.sketch.z === null)) &&
+        prior.kind === observation.kind &&
+        prior.catalogueId === observation.catalogueId &&
+        (prior.wall === observation.wall ||
+          observation.wall === 'unknown' ||
+          prior.wall === 'unknown')
+      )
+        refs.set(observation.ref, ref);
+      else {
+        const conflict = `${ref}:conflict:${next.revision}`;
+        next.observations.push({ ...observation, ref: conflict });
+        refs.set(observation.ref, conflict);
+        ambiguous.add(conflict);
+      }
+      continue;
+    }
+    const matches = next.observations.filter((o) =>
+      sameObservation(o, observation),
+    );
+    const contenders = parsed.observations.filter((o) =>
+      sameObservation(o, observation),
+    );
+    if (matches.length === 1 && contenders.length === 1) {
+      refs.set(observation.ref, matches[0]!.ref);
+      continue;
+    }
     refs.set(observation.ref, ref);
-    if (!prior) next.observations.push({ ...observation, ref });
+    next.observations.push({ ...observation, ref });
+    if (matches.length || contenders.length > 1) ambiguous.add(ref);
   }
   for (const group of parsed.groups) {
     const observations = group
       .map((ref) => refs.get(ref))
       .filter((ref): ref is string => !!ref);
     if (observations.length === 0) continue;
+    if (observations.some((ref) => ambiguous.has(ref))) continue;
     const first = next.observations.find((o) => o.ref === observations[0])!;
+    const members = observations.map((ref) =>
+      next.observations.find((o) => o.ref === ref)!,
+    );
+    const walls = new Set(
+      members.map((o) => o.wall).filter((w) => w !== 'unknown'),
+    );
+    // Keep contradictory associations unassigned and visible rather than choosing the first wall/category.
+    if (
+      members.some(
+        (o) => o.kind !== first.kind || o.catalogueId !== first.catalogueId,
+      ) ||
+      walls.size > 1
+    )
+      continue;
+    const existing = next.links.filter((l) =>
+      l.observations.some((r) => observations.includes(r)),
+    );
+    if (existing.length) {
+      // Never merge two already reviewed physical entities because a new response groups them.
+      if (existing.length === 1)
+        existing[0]!.observations = [
+          ...new Set([...existing[0]!.observations, ...observations]),
+        ];
+      continue;
+    }
+    // Unknown poses with a previous same-source/category entity are ambiguous, not an automatic extra piece.
     if (
       next.links.some((l) =>
-        l.observations.some((r) => observations.includes(r)),
+        l.observations.some((ref) => {
+          const prior = next.observations.find((o) => o.ref === ref)!;
+          return members.some(
+            (o) =>
+              o.sourceId === prior.sourceId &&
+              o.kind === prior.kind &&
+              o.catalogueId === prior.catalogueId &&
+              (o.sketch.x === null ||
+                o.sketch.z === null ||
+                prior.sketch.x === null ||
+                prior.sketch.z === null),
+          );
+        }),
       )
     )
       continue;
@@ -524,6 +625,7 @@ export function adoptHypothesis(
         ...displayPosition(next, normalized),
         quarterTurns: first.sketch.quarterTurns ?? 0,
       };
+      if (first.finish) piece.finish = first.finish;
       if (
         next.room.furniture.length >= POLICY.furniture ||
         !validateRoom({
@@ -537,15 +639,22 @@ export function adoptHypothesis(
     } else {
       const feature = draftFeature(first.kind, id);
       feature.wall = first.wall;
-      feature.wallProvenance =
-        first.wall === 'unknown'
-          ? { status: 'unknown', sourceId: null }
-          : { status: 'estimated', sourceId: first.sourceId };
+      feature.wallProvenance = first.wallEvidence;
       feature.width = first.width;
       feature.height = first.height;
       feature.offset = first.offset;
       feature.sill = first.sill;
       if (feature.kind === 'obstacle') feature.projection = first.projection;
+      else {
+        if (first.mechanism !== 'fixed' || feature.kind === 'window') {
+          feature.mechanism = first.mechanism;
+          feature.mechanismProvenance = first.mechanismEvidence;
+        }
+        if (feature.kind === 'door') {
+          feature.hinge = first.hinge;
+          feature.hingeProvenance = first.hingeEvidence;
+        }
+      }
       if (next.room.room.features.length >= POLICY.features) continue;
       next.room.room.features.push(feature);
       next.links.push({ entityId: id, observations, normalized: null });

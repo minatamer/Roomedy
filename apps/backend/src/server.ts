@@ -1,9 +1,12 @@
+import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { config as loadEnvironment } from 'dotenv';
 import { parseRuntimeConfig } from './config/runtime-config.js';
 import { createApp } from './http/create-app.js';
 import { createRuntime } from './runtime/create-runtime.js';
+import { createRecognitionHandler } from './recognition/recognize.js';
+import { createRecognitionFakeProvider } from './recognition/fixtures.js';
 import { createResponsesProvider } from './providers/responses.js';
 
 // This executable is the only backend module allowed to load environment or listen.
@@ -17,10 +20,17 @@ const log = (event: { code: string; reference: string }) => {
 };
 try {
   const config = parseRuntimeConfig(process.env);
+  // Private transient images: no process-wide native operation cache; finite per-image threads.
+  sharp.cache(false);
+  sharp.concurrency(1);
   const runtime = createRuntime(config, {
     now: Date.now,
     nextId: randomUUID,
     log,
+    handlers: { 'recognize-room': createRecognitionHandler(log, randomUUID) },
+    ...(config.mode === 'fake'
+      ? { provider: createRecognitionFakeProvider() }
+      : {}),
     ...(config.mode === 'live' &&
     config.paidEnabled &&
     config.providerConfigured &&

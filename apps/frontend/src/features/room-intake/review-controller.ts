@@ -40,6 +40,8 @@ export interface ReviewSnapshot {
   readonly selectedId: string;
   readonly message: string;
   readonly undo: boolean;
+  readonly recognition: 'idle' | 'preparing' | 'drafting';
+  readonly simulated: boolean;
 }
 /** Provisional evidence review only. SessionController alone accepts the canonical room/baseline. */
 export class ReviewController {
@@ -72,6 +74,8 @@ export class ReviewController {
       selectedId: draft.room.roomId,
       message: '',
       undo: false,
+      recognition: 'idle',
+      simulated: false,
     });
     this.photos = new PhotoStore(
       () => this.active(),
@@ -96,6 +100,7 @@ export class ReviewController {
   }
   private invalidate() {
     this.pending = null;
+    this.state = Object.freeze({ ...this.state, recognition: 'idle' });
     this.resources.clear();
   }
   private photoChange(photos: readonly PhotoItem[]) {
@@ -281,6 +286,8 @@ export class ReviewController {
   }
   excludeObservation(ref: string) {
     const next = structuredClone(this.state.draft);
+    const excluded = next.observations.find((o) => o.ref === ref);
+    if (excluded) next.excludedObservations.push(excluded);
     next.observations = next.observations.filter((o) => o.ref !== ref);
     if (!next.reviewed.includes(`observation:${ref}:excluded`))
       next.reviewed.push(`observation:${ref}:excluded`);
@@ -325,6 +332,17 @@ export class ReviewController {
       catalogueId: piece?.catalogueId ?? null,
       label: piece?.label ?? feature!.kind,
       wall: feature?.wall ?? 'unknown',
+      wallEvidence:
+        feature && feature.wall !== 'unknown'
+          ? { status: 'estimated', sourceId: photoId }
+          : { status: 'unknown', sourceId: null },
+      mechanism: 'unknown',
+      mechanismEvidence: { status: 'unknown', sourceId: null },
+      hinge: 'unknown',
+      hingeEvidence: { status: 'unknown', sourceId: null },
+      poseEvidence: { status: 'unknown', sourceId: null },
+      visibility: 'visible',
+      finish: null,
       width: unknownMeasurement(),
       depth: unknownMeasurement(),
       height: unknownMeasurement(),
@@ -367,6 +385,7 @@ export class ReviewController {
       operationId: this.id(),
       inputRevision: this.state.draft.revision,
     };
+    this.publish({ recognition: 'preparing', message: '' });
     return { ...this.pending };
   }
   isCurrent(token: ReviewToken) {
@@ -389,11 +408,32 @@ export class ReviewController {
     }
     return this.resources.own(cleanup);
   }
-  applyHypothesis(token: ReviewToken, raw: unknown) {
+  draftProgress(token: ReviewToken, recognition: 'preparing' | 'drafting') {
+    if (this.isCurrent(token)) this.publish({ recognition });
+  }
+  endDraftOperation(token: ReviewToken, message: string) {
+    if (!this.isCurrent(token)) return;
+    this.invalidate();
+    this.publish({ message });
+  }
+  cancelDraft() {
+    if (!this.active()) return;
+    this.invalidate();
+    this.publish({
+      message:
+        'Photo drafting cancelled. Your photos and current sketch are preserved.',
+    });
+  }
+  applyHypothesis(token: ReviewToken, raw: unknown, simulated = false) {
     if (!this.isCurrent(token)) return false;
     const result = adoptHypothesis(this.state.draft, raw, this.id);
     this.invalidate();
-    return this.commit(result, 'Draft observations are ready for your review.');
+    const ok = this.commit(
+      result,
+      'Draft observations are ready for your review.',
+    );
+    if (ok) this.publish({ stage: 'review', simulated });
+    return ok;
   }
   accept() {
     if (!this.active()) return false;
@@ -428,6 +468,8 @@ export class ReviewController {
       selectedId: draft.room.roomId,
       message: '',
       undo: false,
+      recognition: 'idle',
+      simulated: false,
     });
     this.listeners.clear();
     const release = this.release;

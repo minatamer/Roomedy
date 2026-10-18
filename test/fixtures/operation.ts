@@ -40,6 +40,7 @@ export async function recognitionInput(): Promise<
   return {
     ...operationVersions,
     kind: 'recognize-room',
+    condition: 'partial',
     identity: operationInput().identity,
     manifest: [
       {

@@ -34,6 +34,14 @@ const observation = (ref: string, sourceId: string): DraftObservation => ({
   offset: unknown(),
   sill: unknown(),
   projection: unknown(),
+  wallEvidence: { status: 'unknown', sourceId: null },
+  mechanism: 'unknown',
+  mechanismEvidence: { status: 'unknown', sourceId: null },
+  hinge: 'unknown',
+  hingeEvidence: { status: 'unknown', sourceId: null },
+  poseEvidence: { status: 'estimated', sourceId },
+  visibility: 'visible',
+  finish: null,
   sketch: { x: 0.7, z: 0.3, quarterTurns: 1 },
 });
 function fixture() {
@@ -48,6 +56,7 @@ function hypothesis(): DraftHypothesis {
   return {
     version: 1,
     shape: 'rectangle',
+    frameEvidence: { status: 'estimated', sourceId: 'photo_a' },
     room: { width: unknown(), depth: unknown(), height: unknown() },
     observations: [
       observation('desk_a', 'photo_a'),
@@ -320,6 +329,7 @@ describe('uncertain review and shared physical authority', () => {
       kind: 'door' as const,
       catalogueId: null,
       wall: 'west' as const,
+      wallEvidence: { status: 'estimated' as const, sourceId: 'photo_a' },
     };
     d.observations = [{ ...observation, ref: 'photo_a:door' }];
     d.links[0]!.observations = ['photo_a:door'];

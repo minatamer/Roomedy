@@ -16,6 +16,7 @@ export const recognitionInputSchema = z.strictObject({
   ...versions,
   kind: z.literal('recognize-room'),
   identity: operationIdentitySchema,
+  condition: z.enum(['empty', 'partial', 'furnished']),
   manifest: photoManifestSchema,
   images: z
     .array(
@@ -82,6 +83,7 @@ export const operationResultSchema = z.strictObject({
     'too-large',
     'unavailable',
     'failed',
+    'invalid-image',
   ]),
   simulation: z.boolean(),
   message: z.string().max(6000),

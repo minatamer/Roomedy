@@ -48,6 +48,7 @@ export const readySchema = z.strictObject({
   status: z.literal('ok'),
   ai: z.enum([
     'fake-pending-integration',
+    'fake-ready',
     'disabled',
     'missing-configuration',
     'pending-admission',
