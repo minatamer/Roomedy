@@ -1,0 +1,583 @@
+{
+  "version": 1,
+  "mode": "offline",
+  "date": "2026-10-18T16:28:46.545Z",
+  "recognitionPrompt": "room-observations-1",
+  "assistantPrompt": "grounded-room-1",
+  "providerSchema": "strict-serial-stateless-1",
+  "automaticSafetyChecks": [
+    "strict-draft-schema",
+    "assistant-input-unchanged",
+    "proposal-action-scope"
+  ],
+  "clientLifecycleEvidence": "separate-integrated-test-receipt",
+  "model": null,
+  "qualityEvidence": "not-measured-fake-does-not-read-pixels",
+  "cases": 23,
+  "physicalRoomGroups": 6,
+  "results": [
+    {
+      "id": "empty-a",
+      "split": "development",
+      "group": "room-a",
+      "outcome": "completed",
+      "latencyMs": 99,
+      "score": {
+        "expected": {
+          "door": 1,
+          "window": 1
+        },
+        "observed": {
+          "door": 0,
+          "window": 0
+        },
+        "missing": 2,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 2,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 3,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "repeated-b",
+      "split": "development",
+      "group": "room-b",
+      "outcome": "completed",
+      "latencyMs": 44,
+      "score": {
+        "expected": {
+          "door": 2,
+          "window": 2,
+          "procedural-desk": 2
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 2
+        },
+        "missing": 4,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 2,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 3,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "furnished-c",
+      "split": "held-out",
+      "group": "room-c",
+      "outcome": "completed",
+      "latencyMs": 41,
+      "score": {
+        "expected": {
+          "door": 2,
+          "window": 2,
+          "procedural-desk": 2,
+          "procedural-chair": 2,
+          "procedural-bed": 2,
+          "wardrobe-hinged": 2,
+          "procedural-storage": 2
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 2,
+          "procedural-chair": 0,
+          "procedural-bed": 0,
+          "wardrobe-hinged": 0,
+          "procedural-storage": 0
+        },
+        "missing": 12,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 6,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 7,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "distinct-d",
+      "split": "held-out",
+      "group": "room-d",
+      "outcome": "completed",
+      "latencyMs": 19,
+      "score": {
+        "expected": {
+          "door": 1,
+          "window": 1,
+          "procedural-desk": 2
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 1
+        },
+        "missing": 3,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 3,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 4,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "occluded-e",
+      "split": "held-out",
+      "group": "room-e",
+      "outcome": "completed",
+      "latencyMs": 20,
+      "score": {
+        "expected": {
+          "door": 1,
+          "window": 1,
+          "procedural-desk": 1,
+          "obstacle": 1
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 1,
+          "obstacle": 0
+        },
+        "missing": 3,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 3,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 4,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "unsupported-f",
+      "split": "held-out",
+      "group": "room-f",
+      "outcome": "completed",
+      "latencyMs": 18,
+      "score": {
+        "expected": {},
+        "observed": {},
+        "missing": 0,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 0,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 1,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "reordered-b",
+      "split": "development",
+      "group": "room-b",
+      "outcome": "completed",
+      "latencyMs": 37,
+      "score": {
+        "expected": {
+          "door": 2,
+          "window": 2,
+          "procedural-desk": 2
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 2
+        },
+        "missing": 4,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 2,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 3,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "missing-b",
+      "split": "development",
+      "group": "room-b",
+      "outcome": "completed",
+      "latencyMs": 20,
+      "score": {
+        "expected": {
+          "door": 1,
+          "window": 1,
+          "procedural-desk": 1
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 1
+        },
+        "missing": 2,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 2,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 3,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "rotated-b",
+      "split": "development",
+      "group": "room-b",
+      "outcome": "completed",
+      "latencyMs": 30,
+      "score": {
+        "expected": {
+          "door": 1,
+          "window": 1,
+          "procedural-desk": 1
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 1
+        },
+        "missing": 2,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 2,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 3,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "contradictory-b",
+      "split": "development",
+      "group": "room-b",
+      "outcome": "completed",
+      "latencyMs": 39,
+      "score": {
+        "expected": {
+          "door": 2,
+          "window": 2,
+          "procedural-desk": 2
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 2
+        },
+        "missing": 4,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 2,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 3,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "injection-b",
+      "split": "development",
+      "group": "room-b",
+      "outcome": "completed",
+      "latencyMs": 22,
+      "score": {
+        "expected": {
+          "door": 1,
+          "window": 1,
+          "procedural-desk": 1
+        },
+        "observed": {
+          "door": 0,
+          "window": 0,
+          "procedural-desk": 1
+        },
+        "missing": 2,
+        "unexpected": 0,
+        "falseMerges": 0,
+        "falseSplits": 0,
+        "groupingUnscored": 2,
+        "unsupportedMetricClaims": 0,
+        "unknownMechanismClaims": 0,
+        "shapeMismatch": false,
+        "shapeUnresolved": true,
+        "repairLowerBound": 3,
+        "humanRepairActions": null
+      }
+    },
+    {
+      "id": "assistant-a",
+      "outcome": "completed",
+      "reply": "proposal",
+      "expected": "proposal",
+      "expectationMet": true,
+      "actions": 2,
+      "scopeValid": true,
+      "latencyMs": 564
+    },
+    {
+      "id": "assistant-b",
+      "outcome": "completed",
+      "reply": "proposal",
+      "expected": "proposal",
+      "expectationMet": true,
+      "actions": 4,
+      "scopeValid": true,
+      "latencyMs": 350
+    },
+    {
+      "id": "assistant-c",
+      "outcome": "completed",
+      "reply": "proposal",
+      "expected": "proposal",
+      "expectationMet": true,
+      "actions": 3,
+      "scopeValid": true,
+      "latencyMs": 561
+    },
+    {
+      "id": "assistant-d",
+      "outcome": "completed",
+      "reply": "explanation",
+      "expected": "proposal",
+      "expectationMet": false,
+      "actions": 0,
+      "scopeValid": true,
+      "latencyMs": 5
+    },
+    {
+      "id": "assistant-e",
+      "outcome": "completed",
+      "reply": "visitor-action",
+      "expected": "visitor-action",
+      "expectationMet": true,
+      "actions": 0,
+      "scopeValid": true,
+      "latencyMs": 0
+    },
+    {
+      "id": "assistant-explain",
+      "outcome": "completed",
+      "reply": "explanation",
+      "expected": "explanation",
+      "expectationMet": true,
+      "actions": 0,
+      "scopeValid": true,
+      "latencyMs": 2
+    },
+    {
+      "id": "assistant-ambiguous",
+      "outcome": "completed",
+      "reply": "clarification",
+      "expected": "clarification",
+      "expectationMet": true,
+      "actions": 0,
+      "scopeValid": true,
+      "latencyMs": 1
+    },
+    {
+      "id": "assistant-owned",
+      "outcome": "completed",
+      "reply": "explanation",
+      "expected": "proposal",
+      "expectationMet": false,
+      "actions": 0,
+      "scopeValid": true,
+      "latencyMs": 962
+    },
+    {
+      "id": "assistant-remove",
+      "outcome": "completed",
+      "reply": "proposal",
+      "expected": "proposal",
+      "expectationMet": true,
+      "actions": 1,
+      "scopeValid": true,
+      "latencyMs": 2
+    },
+    {
+      "id": "assistant-replace",
+      "outcome": "completed",
+      "reply": "proposal",
+      "expected": "proposal",
+      "expectationMet": true,
+      "actions": 1,
+      "scopeValid": true,
+      "latencyMs": 18
+    },
+    {
+      "id": "assistant-undo",
+      "outcome": "completed",
+      "reply": "visitor-action",
+      "expected": "visitor-action",
+      "expectationMet": true,
+      "actions": 0,
+      "scopeValid": true,
+      "latencyMs": 1
+    },
+    {
+      "id": "assistant-budget",
+      "outcome": "completed",
+      "reply": "unsupported",
+      "expected": "unsupported",
+      "expectationMet": true,
+      "actions": 0,
+      "scopeValid": true,
+      "latencyMs": 0
+    }
+  ],
+  "safetyFailures": [],
+  "elapsedMs": 2859,
+  "providerAdapterCalls": 27,
+  "meteredDispatches": 0,
+  "reservedTokens": 0,
+  "usage": [],
+  "missingUsage": 0,
+  "livePolicy": null,
+  "sourceHashes": [
+    {
+      "path": "scripts/evaluate-roomedy.mjs",
+      "sha256": "b6e10187c8e4a745bd293ff940d6e8cff9b81b294d145156192ba3e9cca32bd4"
+    },
+    {
+      "path": "scripts/prepare-evaluation-corpus.mjs",
+      "sha256": "1850178704aa1b2b4883c5251a31ce029c87efb62947eeee635003356b29025e"
+    },
+    {
+      "path": "scripts/isolated-mode.ts",
+      "sha256": "ecebff260981145f538d7e81a2670d36d3ad962201885fa091ebe95ff56454bf"
+    },
+    {
+      "path": "scripts/evaluation/corpus.ts",
+      "sha256": "2503f6f3f3e9cb7437a3fac3bea5c70dcb6ecaf3a7af3628b4072531a29f5d06"
+    },
+    {
+      "path": "scripts/evaluation/options.ts",
+      "sha256": "33c402608c7fea1c4bbf55064a45459ad4bb75ba276d80d7f16336744ccaab99"
+    },
+    {
+      "path": "scripts/evaluation/scoring.ts",
+      "sha256": "4cd67f02ce23f03cb758ec74733d3efaa7134526d95ba92d2c1bb1c2fa6abada"
+    },
+    {
+      "path": "scripts/evaluation/runner.ts",
+      "sha256": "f3637f9e3b199178a2b4817baf71b8db1dfc01092bdad0962663cda1c71d78ca"
+    },
+    {
+      "path": "scripts/evaluation/live-budget.ts",
+      "sha256": "e3c2ef074ab515147daf864233d17710c34f9e9ad86c0e779f9561786e8e5bcf"
+    },
+    {
+      "path": "apps/backend/src/recognition/recognize.ts",
+      "sha256": "f9b42798f8af3ffe038f2a67481b825d13a5075397ba54b0d8a2e05395a9d1db"
+    },
+    {
+      "path": "apps/backend/src/providers/responses.ts",
+      "sha256": "a80ce1ef4dac7de39ab1175c8f34865f419d4185afce47636b9f684407294084"
+    },
+    {
+      "path": "apps/backend/src/providers/provider.ts",
+      "sha256": "e4c5a0a1c13b85137b8c472e34ba1b13b99ae101a8c48ca3b491b7d0617adb72"
+    },
+    {
+      "path": "apps/backend/src/assistant/assistant.ts",
+      "sha256": "347dd10a4119f529f003f371115824d30025bf1a6b1e17ab32c984c53ddd3a3a"
+    },
+    {
+      "path": "packages/contracts/src/intake.ts",
+      "sha256": "27110de337674693b4d87066abfb374f57da19720dedb7142785c5e8aa01d91a"
+    },
+    {
+      "path": "packages/contracts/src/assistant.ts",
+      "sha256": "3c044104d78595bb2f4cc75e86bba07a6aef18204551f2e648f489562ad3474c"
+    }
+  ],
+  "corpusHash": "4694150ef0c86e0bfa71b8d8b9652f7cc9e89042c8262b75a922304c193165a4",
+  "imageHashes": [
+    {
+      "id": "empty-a",
+      "sha256": "83c336fdbafccc38f9cd6228f360a1043d80e18f1310601c8d0d9c5630f64ab0"
+    },
+    {
+      "id": "partial-b-front",
+      "sha256": "23b1a4fec12bb238246a868f426cb16f3d04e61fdda78f72de2433d8e0c3f652"
+    },
+    {
+      "id": "partial-b-side",
+      "sha256": "37749fbb8735125f658df255a9525547d9424c4cd11c6850aee9fa7c4528b925"
+    },
+    {
+      "id": "partial-b-exif",
+      "sha256": "ab37bdca376b353b84a2bbac825e91f84da870689af230bec5b5ea00a1c294f9"
+    },
+    {
+      "id": "furnished-c-front",
+      "sha256": "d474e60ebcc449030a871dd59c493f7ec40943e84dd5a0b9e1c5aca5e7f15050"
+    },
+    {
+      "id": "furnished-c-side",
+      "sha256": "a33e781f5f502d730895c36aa4ca39d0bc5761cfea78dfd9629d555ea49322bc"
+    },
+    {
+      "id": "two-desks-d",
+      "sha256": "25b9f5ad33344f561af7b61ca130a800ca8e9542d2c080741fd8b73283c7a976"
+    },
+    {
+      "id": "occluded-e",
+      "sha256": "77412acaaba8f6d102252499d766a9dec96c54f89a1910a95719e4301e09eaee"
+    },
+    {
+      "id": "unsupported-f",
+      "sha256": "2b00f7e109625681ce262226b3f8a7d55372490b5417892eb65db343f75d83de"
+    },
+    {
+      "id": "contradictory-b",
+      "sha256": "0cd5656b745516b9fca060895d451612c9673b12d218cd5f6216b4adeb80f8ac"
+    },
+    {
+      "id": "injection-b",
+      "sha256": "685aaee6cbe3c2b60e2d4208975f30a24c5330757bdd28a9cb46fca14a7cc960"
+    }
+  ]
+}

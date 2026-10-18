@@ -9,7 +9,12 @@ export interface ProviderRequest {
     parameters: JsonSchema;
   }[];
 }
-export type ProviderOutcome =
+export interface ProviderUsage {
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+}
+export type ProviderOutcome = (
   | {
       kind: 'completed';
       data: unknown;
@@ -26,7 +31,8 @@ export type ProviderOutcome =
         | 'cancelled'
         | 'timeout'
         | 'unavailable';
-    };
+    }
+) & { usage?: ProviderUsage };
 export interface ProviderCall {
   readonly result: Promise<ProviderOutcome>;
   /** Actual underlying transport settlement, independent of its visible deadline result. */

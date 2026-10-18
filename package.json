@@ -21,7 +21,8 @@
     "test:unit": "node scripts/run-tests.mjs",
     "test:smoke": "node scripts/smoke-foundation.mjs",
     "build": "pnpm build:shared && pnpm --filter @roomedy/backend build && pnpm --filter @roomedy/frontend build",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:boundaries && pnpm check:assets && pnpm test:unit && pnpm build"
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:boundaries && pnpm check:assets && pnpm test:unit && pnpm build",
+    "evaluate": "pnpm build:shared && tsx scripts/evaluate-roomedy.mjs"
   },
   "devDependencies": {
     "@roomedy/contracts": "workspace:*",

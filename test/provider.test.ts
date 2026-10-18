@@ -67,6 +67,7 @@ it('emits actual closed required/null-capable schemas and explicit strict serial
     const body = JSON.parse(options!.body as string);
     expect(body).toMatchObject({
       store: false,
+      include: ['reasoning.encrypted_content'],
       background: false,
       stream: false,
       parallel_tool_calls: false,
@@ -310,3 +311,32 @@ it('returns an independent deadline even when fetch ignores abort, while exposin
     vi.useRealTimers();
   }
 });
+
+it.each(['completed', 'incomplete', 'refused'] as const)(
+  'retains validated usage for %s without exposing payloads',
+  (kind) => {
+    const raw =
+      kind === 'incomplete'
+        ? { status: 'incomplete' }
+        : kind === 'refused'
+          ? {
+              status: 'completed',
+              output: [{ type: 'message', content: [{ type: 'refusal' }] }],
+            }
+          : completed;
+    const usage = { input_tokens: 12, output_tokens: 7, total_tokens: 19 };
+    expect(decodeResponse({ ...raw, usage }, ['inspect_room'])).toMatchObject({
+      kind,
+      usage: { inputTokens: 12, outputTokens: 7, totalTokens: 19 },
+    });
+    for (const invalid of [
+      { ...usage, input_tokens: -1 },
+      { ...usage, total_tokens: 18 },
+      { ...usage, output_tokens: 1.5 },
+    ])
+      expect(decodeResponse({ ...raw, usage: invalid }, []).kind).toBe(
+        'malformed',
+      );
+    expect(decodeResponse(raw, ['inspect_room'])).not.toHaveProperty('usage');
+  },
+);

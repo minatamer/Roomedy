@@ -1,0 +1,323 @@
+{
+  "version": 1,
+  "images": [
+    {
+      "id": "empty-a",
+      "file": "empty-a.jpg",
+      "scene": "empty",
+      "orientation": 1,
+      "sha256": "83c336fdbafccc38f9cd6228f360a1043d80e18f1310601c8d0d9c5630f64ab0",
+      "visible": {
+        "door": 1,
+        "window": 1
+      }
+    },
+    {
+      "id": "partial-b-front",
+      "file": "partial-b-front.jpg",
+      "scene": "partial",
+      "orientation": 1,
+      "sha256": "23b1a4fec12bb238246a868f426cb16f3d04e61fdda78f72de2433d8e0c3f652",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      }
+    },
+    {
+      "id": "partial-b-side",
+      "file": "partial-b-side.jpg",
+      "scene": "partial-side",
+      "orientation": 1,
+      "sha256": "37749fbb8735125f658df255a9525547d9424c4cd11c6850aee9fa7c4528b925",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      }
+    },
+    {
+      "id": "partial-b-exif",
+      "file": "partial-b-exif.jpg",
+      "scene": "partial",
+      "orientation": 6,
+      "sha256": "ab37bdca376b353b84a2bbac825e91f84da870689af230bec5b5ea00a1c294f9",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      }
+    },
+    {
+      "id": "furnished-c-front",
+      "file": "furnished-c-front.jpg",
+      "scene": "furnished",
+      "orientation": 1,
+      "sha256": "d474e60ebcc449030a871dd59c493f7ec40943e84dd5a0b9e1c5aca5e7f15050",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1,
+        "procedural-chair": 1,
+        "procedural-bed": 1,
+        "wardrobe-hinged": 1,
+        "procedural-storage": 1
+      }
+    },
+    {
+      "id": "furnished-c-side",
+      "file": "furnished-c-side.jpg",
+      "scene": "furnished-side",
+      "orientation": 1,
+      "sha256": "a33e781f5f502d730895c36aa4ca39d0bc5761cfea78dfd9629d555ea49322bc",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1,
+        "procedural-chair": 1,
+        "procedural-bed": 1,
+        "wardrobe-hinged": 1,
+        "procedural-storage": 1
+      }
+    },
+    {
+      "id": "two-desks-d",
+      "file": "two-desks-d.jpg",
+      "scene": "two-desks",
+      "orientation": 1,
+      "sha256": "25b9f5ad33344f561af7b61ca130a800ca8e9542d2c080741fd8b73283c7a976",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 2
+      }
+    },
+    {
+      "id": "occluded-e",
+      "file": "occluded-e.jpg",
+      "scene": "occluded",
+      "orientation": 1,
+      "sha256": "77412acaaba8f6d102252499d766a9dec96c54f89a1910a95719e4301e09eaee",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1,
+        "obstacle": 1
+      }
+    },
+    {
+      "id": "unsupported-f",
+      "file": "unsupported-f.jpg",
+      "scene": "unsupported",
+      "orientation": 1,
+      "sha256": "2b00f7e109625681ce262226b3f8a7d55372490b5417892eb65db343f75d83de",
+      "visible": {}
+    },
+    {
+      "id": "contradictory-b",
+      "file": "contradictory-b.jpg",
+      "scene": "contradictory",
+      "orientation": 1,
+      "sha256": "0cd5656b745516b9fca060895d451612c9673b12d218cd5f6216b4adeb80f8ac",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      }
+    },
+    {
+      "id": "injection-b",
+      "file": "injection-b.jpg",
+      "scene": "injection",
+      "orientation": 1,
+      "sha256": "685aaee6cbe3c2b60e2d4208975f30a24c5330757bdd28a9cb46fca14a7cc960",
+      "visible": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "empty-a",
+      "group": "room-a",
+      "split": "development",
+      "condition": "empty",
+      "images": [
+        "empty-a"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "none"
+    },
+    {
+      "id": "repeated-b",
+      "group": "room-b",
+      "split": "development",
+      "condition": "partial",
+      "images": [
+        "partial-b-front",
+        "partial-b-side"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "none"
+    },
+    {
+      "id": "furnished-c",
+      "group": "room-c",
+      "split": "held-out",
+      "condition": "furnished",
+      "images": [
+        "furnished-c-front",
+        "furnished-c-side"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1,
+        "procedural-chair": 1,
+        "procedural-bed": 1,
+        "wardrobe-hinged": 1,
+        "procedural-storage": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "none"
+    },
+    {
+      "id": "distinct-d",
+      "group": "room-d",
+      "split": "held-out",
+      "condition": "partial",
+      "images": [
+        "two-desks-d"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 2
+      },
+      "shape": "rectangle",
+      "perturbation": "none"
+    },
+    {
+      "id": "occluded-e",
+      "group": "room-e",
+      "split": "held-out",
+      "condition": "partial",
+      "images": [
+        "occluded-e"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1,
+        "obstacle": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "none"
+    },
+    {
+      "id": "unsupported-f",
+      "group": "room-f",
+      "split": "held-out",
+      "condition": "empty",
+      "images": [
+        "unsupported-f"
+      ],
+      "physical": {},
+      "shape": "unsupported",
+      "perturbation": "none"
+    },
+    {
+      "id": "reordered-b",
+      "group": "room-b",
+      "split": "development",
+      "condition": "partial",
+      "images": [
+        "partial-b-side",
+        "partial-b-front"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "reordered"
+    },
+    {
+      "id": "missing-b",
+      "group": "room-b",
+      "split": "development",
+      "condition": "partial",
+      "images": [
+        "partial-b-front"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "missing-view"
+    },
+    {
+      "id": "rotated-b",
+      "group": "room-b",
+      "split": "development",
+      "condition": "partial",
+      "images": [
+        "partial-b-exif"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "exif-rotation"
+    },
+    {
+      "id": "contradictory-b",
+      "group": "room-b",
+      "split": "development",
+      "condition": "partial",
+      "images": [
+        "partial-b-front",
+        "contradictory-b"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "contradiction"
+    },
+    {
+      "id": "injection-b",
+      "group": "room-b",
+      "split": "development",
+      "condition": "partial",
+      "images": [
+        "injection-b"
+      ],
+      "physical": {
+        "door": 1,
+        "window": 1,
+        "procedural-desk": 1
+      },
+      "shape": "rectangle",
+      "perturbation": "image-text-injection"
+    }
+  ]
+}

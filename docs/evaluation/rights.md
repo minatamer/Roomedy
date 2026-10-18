@@ -1,0 +1,9 @@
+# Corpus rights and provenance
+
+18 October2026. All eleven JPEGs in `images/` are original deterministic illustrations authored for this repository by `scripts/prepare-evaluation-corpus.mjs`. The generator draws plain room/furniture geometry and short synthetic labels. No photograph, private room, person, merchant image/logo, remote asset, generated bitmap service or model output was used. No paid call occurred. The illustrations are permitted for this repository's local tests and later separately authorized synthetic evaluation; they establish no consent for private user photos.
+
+`corpus.json` supplies independent hand-declared counts and physical room grouping. The generator only refreshes exact JPEG hashes after rendering; it never reads evaluation results to change truth. The front/side pair is a mirrored illustration of the same physical group, not a natural camera/photo dataset. A closed painted door and wardrobe do not prove swing, hinge or real metric dimensions. Contradictory desk-width labels and hostile text are intentionally authored test data, not instructions.
+
+The EXIF variant rotates the authored B raster counterclockwise and labels orientation6, expecting the intake decoder to rotate it back. Raw hashes identify exact original bytes; normalized JPEGs are transient and separately validated by the real decoding boundary. All views/perturbations of each room/object remain in the same development/held-out partition. The held-out partition has not been used to tune a recognition model; fake semantics do not inspect any image.
+
+No real/private photos may be committed by inference from this record. Future consented natural-photo evidence requires an explicit provenance/rights record, data/privacy/funding review and separate paid authorization. Source labels/IDs are not instruction or measurement authority.

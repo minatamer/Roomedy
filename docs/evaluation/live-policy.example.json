@@ -1,0 +1,17 @@
+{
+  "model": "",
+  "cases": [
+    "empty-a"
+  ],
+  "maxCases": 1,
+  "maxDispatches": 1,
+  "maxReservedTokens": 60000,
+  "maxMs": 90000,
+  "imageTokenUpperBound": 10000,
+  "approval": "",
+  "funding": "",
+  "privacy": "",
+  "dataRights": "",
+  "compatibility": "",
+  "fundedAllowanceUsd": 0
+}

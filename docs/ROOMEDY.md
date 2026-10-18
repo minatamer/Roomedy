@@ -6,7 +6,7 @@
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
-**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-004 is committed and RM-005 has local browser/gate evidence; dated historical checkpoints below remain historical.
+**Latest steering:** the owner approved the [full plan review](reviews/2026-10-17-plan-review.md), requested these documentation/ticket updates, then authorized resuming RM-003 and continuing in numeric order. Use fake/paid-off mode, validate and commit each completed ticket, and stop at required review gates or 0% remaining usage. No paid calls or deployment. PR-01–PR-15 and the O-01–O-03 dispositions are current requirements, not completed implementation evidence. RM-001–RM-012 are committed. RM-013 passed329tests/root/build/native checks and clean read-only pass2; its exact local commit is next, then RM-014 local preparation. Its synthetic recognition/assistant misses and missing real-provider evidence remain explicit. Dated checkpoints below remain historical.
 
 **Current local result:** [RM-003 checks](validation/RM-003.md) passed 84 tests, six boundary cases, exact assets and both builds. The read-only review found no actionable source issues. RM-003 is committed as `bc349f5`; RM-004 as `bd0bf78`. [RM-004 checks](validation/RM-004.md) establish the earthy landing baseline. [RM-005 checks](validation/RM-005.md) establish the canonical session and working precision 2D editor with 112 tests and final gates passed; it is committed as `85c7362`. RM-006 is committed as `f73ce2e`. RM-007 is committed as `d1d8c30` after147-test/root/browser validation. [RM-008 checks](validation/RM-008.md) establish finite shared admission/private bounded transport with170 tests, final root/build gates and read-only pass2 passed. It is committed as `3e6d4c1`. [RM-009 evidence](validation/RM-009.md) establishes bounded deterministic search/application scope with190 tests, all root/build gates, final native quality/health measurements and clean read-only pass3. It is committed as `bfd9e6d`. [RM-010 evidence](validation/RM-010.md) records admitted fake recognition, bounded pixel decode and correction-safe2D review with235 tests, all root/build gates and read-only pass3 passed. RM-010 is committed as `526a6b3`. [RM-011 evidence](validation/RM-011.md) records the grounded scoped assistant, actual worker/fake HTTP and coherent reviewed proposals with274 tests, all root/build gates and clean read-only pass1. RM-011 is committed as `7580870`. [RM-012 evidence](validation/RM-012.md) records same-scale comparison, fixed two-hour semantic tab recovery, safe project import/export and cleanup with314 tests, all root/build gates and clean read-only pass3. Exact RM-012 commit is next before RM-013; model/challenge/hosted/physical/owner evidence stays separately scoped. Earlier in-progress statements below describe historical checkpoints.
 
@@ -1290,8 +1290,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Commit exact reviewed RM-012 paths, then execute/validate/commit RM-013 integrated evaluation in fake/off mode. No paid/deploy/push/reset/delegation; stop at owner review gates or0% remaining account usage.
-Active ticket: RM-012
+Next action: Stage and commit the exact validated RM-013 allocation, then read and allocate RM-014 local release preparation. Stop at owner review gates or0% remaining; no paid/deploy/push/reset/delegation.
+Active ticket: RM-013
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1316,7 +1316,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-18T15:50:23+00:00",
+  "updated_at": "2026-10-18T16:31:22+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1485,8 +1485,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-012",
-  "next_action": "Commit exact reviewed RM-012 paths, then execute/validate/commit RM-013 integrated evaluation in fake/off mode. No paid/deploy/push/reset/delegation; stop at owner review gates or0% remaining account usage.",
+  "active_ticket": "RM-013",
+  "next_action": "Stage and commit the exact validated RM-013 allocation, then read and allocate RM-014 local release preparation. Stop at owner review gates or0% remaining; no paid/deploy/push/reset/delegation.",
   "phases": [
     {
       "id": "01-docs",
@@ -1794,7 +1794,9 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-010 committed 526a6b3c84670074fe4542b9c5f76e2c992c424d; clean worktree. RM-011 exact33-path allocation before feature edits. Usage11used/89remaining; no reset consumed.",
         "RM-011 final274tests/26files, all root/build/asset/boundary gates and clean read-only pass1. Actual native worker/fake HTTP,2D/3D, Apply/Cancel/whole Undo, responsive composer/tour checked.32-path source SHA9ddb4990a285f1e964fc27c64d38819b637506ac34ad5abcbea04f33c5580fb6;41 exact allocated paths. Exact authorized local commit next; live/physical/hosted/owner limits in docs/validation/RM-011.md. Usage13used/87remaining; no reset consumed.",
         "RM-011 committed7580870ca7430d82329b58e304ccd443cf10fe3c after274-test/root/browser/read-only validation; clean worktree. RM-012 exact25-path allocation before feature edits in docs/commit-plans/RM-012.md.",
-        "RM-012 allocation extended before renderer edits to31paths. Final314tests/28files, all root/build/boundary/asset gates and clean read-only pass3. Actual same-scale Before/Current2D/3D, refresh with unchanged expiry, project download/import/Cancel/reset and independent tabs checked; copied storage and load-failure/expiry clocks are controlled evidence.23-path source SHA5f1ae9b30a80041813e5c4e9e0f8b48e94130327ef879619d624198b1316326d; exact authorized local commit next. Limits in docs/validation/RM-012.md. Usage14used/86remaining, no reset consumed."
+        "RM-012 allocation extended before renderer edits to31paths. Final314tests/28files, all root/build/boundary/asset gates and clean read-only pass3. Actual same-scale Before/Current2D/3D, refresh with unchanged expiry, project download/import/Cancel/reset and independent tabs checked; copied storage and load-failure/expiry clocks are controlled evidence.23-path source SHA5f1ae9b30a80041813e5c4e9e0f8b48e94130327ef879619d624198b1316326d; exact authorized local commit next. Limits in docs/validation/RM-012.md. Usage14used/86remaining, no reset consumed.",
+        "RM-012 committedb53dc8a40903020ff019c599fba41f8b7788b951 after314-test/root/native/read-only pass3; clean worktree. RM-013 exact39-path allocation before edits in docs/commit-plans/RM-013.md.",
+        "RM-013 final local329tests/30files and all root/build gates passed;23offline cases/27fake adapter calls/0paid,11original synthetic images/6room groups. Native chooser covered three conditions and EXIF/repeated views; accepted furnished editor3D follows rough2D. Read-only pass2 clean after independently reproduced settlement fix. Final15-path LF source SHA e99c16d9ad75f29028c8996edf4aee3455460dc9cfce5da4ea805e0487799735;39 allocated paths; exact local commit next, then RM-014. Live/model/privacy/funding/hosted/owner evidence unperformed.15%used/85%remaining; no reset."
       ],
       "blockers": [
         {

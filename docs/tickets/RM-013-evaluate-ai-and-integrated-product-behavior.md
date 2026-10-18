@@ -1,6 +1,6 @@
 # RM-013 — Evaluate AI and integrated product behavior
 
-Status: **Planned**  
+Status: **Locally validated — conditional live evidence unperformed**
 Planning date: **17 October 2026**  
 Milestone: **Local evidence and live-evaluation preparation**  
 Depends on: [RM-010](RM-010-deliver-photo-recognition-and-draft-reconciliation.md), [RM-011](RM-011-deliver-grounded-assistant-and-reviewed-edits.md), [RM-012](RM-012-complete-comparison-recovery-and-project-lifecycle.md)  
@@ -53,21 +53,21 @@ Record provider-schema/strict/stateless policy alongside model/prompt versions. 
 
 ## Required local acceptance
 
-- [ ] Independent corpus/rubric covers the three room conditions, uncertainty and worked assistant scenarios.
-- [ ] Complete fake/manual/recognition/review/proposal/lifecycle flows use real application contracts.
-- [ ] Adversarial, race and replay cases preserve room truth, starting locks and exact dispatch bounds.
-- [ ] Non-AI interactions/refresh generate zero provider dispatches and no operation replay.
-- [ ] Live evaluator defaults offline, fails closed and enforces explicit case/dispatch/token/time caps.
-- [ ] Model compatibility research and unresolved funded/privacy inputs are recorded without inherited approvals.
-- [ ] Reproduced local failures are corrected and settled validation has no new actionable local findings.
-- [ ] Evidence covers the actual upload boundary and correction-friendly partial inference, with separate sample/manual, fake, real-provider and private-diagnostic claims.
+- [x] Independent corpus/rubric covers the three room conditions, uncertainty and worked assistant scenarios.
+- [x] Complete fake/manual/recognition/review/proposal/lifecycle flows use real application contracts.
+- [x] Adversarial, race and replay cases preserve room truth, starting locks and exact dispatch bounds.
+- [x] Non-AI interactions/refresh generate zero provider dispatches and no operation replay.
+- [x] Live evaluator defaults offline, fails closed and enforces explicit case/dispatch/token/time caps.
+- [x] Model compatibility research and unresolved funded/privacy inputs are recorded without inherited approvals.
+- [x] Reproduced local failures are corrected and settled validation has no new actionable local findings.
+- [x] Evidence covers the actual upload boundary and correction-friendly partial inference, with separate sample/manual, fake, real-provider and private-diagnostic claims.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — local evidence recorded
 
-- [ ] Predeclared case pass/fail rules treat the five authority/dispatch failures as zero-tolerance in the exact tested corpus and report all observed failures.
-- [ ] Room/object-group holdout, exact n, false merges/splits, uncertainty and repair-action measures are recorded independently from geometric correctness.
-- [ ] Reorder/orientation/missing-view perturbations test semantic truth and correction effort; strict/stateless schema policy and early-corpus lineage remain traceable.
-- [ ] No downloaded reconstruction model, GPU service or benchmark/live execution is inferred from the adopted future comparison seam.
+- [x] Predeclared case pass/fail rules treat the five authority/dispatch failures as zero-tolerance in the exact tested corpus and report all observed failures.
+- [x] Room/object-group holdout, exact n, false merges/splits, uncertainty and repair-action measures are recorded independently from geometric correctness.
+- [x] Reorder/orientation/missing-view perturbations test semantic truth and correction effort; strict/stateless schema policy and early-corpus lineage remain traceable.
+- [x] No downloaded reconstruction model, GPU service or benchmark/live execution is inferred from the adopted future comparison seam.
 
 ## Conditional live acceptance — remain unchecked until performed
 
@@ -89,3 +89,7 @@ Record provider-schema/strict/stateless policy alongside model/prompt versions. 
 ## Handoff and limits
 
 Publish local evidence and a separate live-evidence ledger. RM-014 can proceed with verified local kits even when funded tests are pending; RM-019/020 must retain that release blocker. No keys, paid calls, provider dashboards, account changes or live data transfer are authorized by this ticket plan.
+
+## Execution evidence — 18 October2026
+
+See [RM-013 validation](../validation/RM-013.md), [evaluation kit and limits](../evaluation/README.md), [rights](../evaluation/rights.md), [exact offline report](../evaluation/reports/offline-2026-10-18.json) and [allocation](../commit-plans/RM-013.md). Final329tests/30files and complete root/build gates pass. Read-only pass2 has no actionable findings after the independently reproduced transport-settlement fix. Native file selection covered all three conditions, repeated views and EXIF; 2D review/correction precedes accepted editor3D.23offline cases/27fake-adapter calls/0paid dispatches. Known interpretation misses remain recorded. Exact local ticket commit is next, then RM-014 local preparation; live/model/privacy/funding/natural-photo/hosted evidence stays blocked and unchecked.

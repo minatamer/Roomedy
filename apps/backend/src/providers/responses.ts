@@ -169,6 +169,7 @@ export function responseBody(input: ProviderRequest, model: string) {
     instructions: input.instructions,
     input: input.input,
     store: false,
+    include: ['reasoning.encrypted_content'],
     background: false,
     stream: false,
     parallel_tool_calls: false,
@@ -192,6 +193,32 @@ export function responseBody(input: ProviderRequest, model: string) {
   return body;
 }
 export function decodeResponse(
+  raw: unknown,
+  tools: readonly string[],
+): ProviderOutcome {
+  const result = decodePayload(raw, tools);
+  if (!object(raw) || raw.usage === undefined || raw.usage === null)
+    return result;
+  const u = raw.usage;
+  if (
+    !object(u) ||
+    ![u.input_tokens, u.output_tokens, u.total_tokens].every(
+      (n) =>
+        Number.isSafeInteger(n) && Number(n) >= 0 && Number(n) <= 1_000_000_000,
+    ) ||
+    Number(u.input_tokens) + Number(u.output_tokens) !== u.total_tokens
+  )
+    return { kind: 'malformed' };
+  return {
+    ...result,
+    usage: {
+      inputTokens: Number(u.input_tokens),
+      outputTokens: Number(u.output_tokens),
+      totalTokens: Number(u.total_tokens),
+    },
+  };
+}
+function decodePayload(
   raw: unknown,
   tools: readonly string[],
 ): ProviderOutcome {
