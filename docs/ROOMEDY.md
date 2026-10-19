@@ -1302,7 +1302,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: RM-015A-D locally complete with clean read-only validation; execute RM-015E direct floor-plane3D editing next, then F-J in order with validate/fix/revalidate. Actual joint visual approval remains pending; no RM-016, paid/live/deploy/push/reset/delegation.
+Next action: RM-015E local implementation and360-test/root/build gate passed with clean read-only pass1; record its authorized exact14-path commit, then thoroughly refine and execute RM-015F. F-J precede the pending actual owner visual decision; RM-016 stays Planned.
 Active ticket: RM-015E
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1328,7 +1328,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T09:25:25+00:00",
+  "updated_at": "2026-10-19T10:15:10+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1503,7 +1503,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-015E",
-  "next_action": "RM-015A-D locally complete with clean read-only validation; execute RM-015E direct floor-plane3D editing next, then F-J in order with validate/fix/revalidate. Actual joint visual approval remains pending; no RM-016, paid/live/deploy/push/reset/delegation.",
+  "next_action": "RM-015E local implementation and360-test/root/build gate passed with clean read-only pass1; record its authorized exact14-path commit, then thoroughly refine and execute RM-015F. F-J precede the pending actual owner visual decision; RM-016 stays Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -1901,7 +1901,8 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015B.md",
         "docs/validation/RM-015C.md",
         "docs/validation/RM-015D.md",
-        "docs/tickets/RM-015E-edit-furniture-directly-in-3d.md"
+        "docs/tickets/RM-015E-edit-furniture-directly-in-3d.md",
+        "docs/validation/RM-015E.md: direct floor-plane3D editing, one command/Undo, desktop/phone interaction checks,360tests and both builds; clean read-only pass1."
       ],
       "blockers": [],
       "approval": {

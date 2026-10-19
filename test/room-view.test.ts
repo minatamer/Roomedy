@@ -31,6 +31,76 @@ import {
   detailedParts,
   surfaceModel,
 } from '../apps/frontend/src/features/room-view/surfaces.js';
+import {
+  floorPlacement,
+  pointOnFloor,
+} from '../apps/frontend/src/features/room-view/manipulation.js';
+import { commandRoom, piece as commandPiece } from './fixtures/command-room.js';
+
+describe('3D floor projection into the existing placement policy', () => {
+  it('intersects the actual forward ray with floor zero and converts metres to semantic millimetres once', () => {
+    const ray = {
+        origin: { x: 1, y: 2, z: 3 },
+        direction: { x: 0.5, y: -1, z: 1 },
+      },
+      before = structuredClone(ray);
+    expect(pointOnFloor(ray)).toEqual({ x: 2000, z: 5000 });
+    expect(ray).toEqual(before);
+    for (const direction of [
+      { x: 1, y: 0, z: 1 },
+      { x: 0, y: 1, z: 0 },
+      { x: NaN, y: -1, z: 0 },
+      { x: 1, y: -1e-7, z: 1 },
+    ])
+      expect(pointOnFloor({ origin: ray.origin, direction })).toBeNull();
+    expect(
+      pointOnFloor({
+        origin: { x: Infinity, y: 1, z: 0 },
+        direction: ray.direction,
+      }),
+    ).toBeNull();
+  });
+  it('retains grab offset, exact odd-size wall contact and half-mm precision at every supported turn', () => {
+    const item = commandPiece('odd', 2000, 2500, { width: 1501, depth: 601 });
+    const room = commandRoom([item]),
+      before = JSON.stringify(room);
+    for (const turn of [0, 1, 2, 3] as const) {
+      item.pose.quarterTurns = turn;
+      const x = turn % 2 ? 0.31 : 0.76;
+      const next = floorPlacement(
+        room,
+        item,
+        { origin: { x, y: 1, z: 2.5 }, direction: { x: 0, y: -1, z: 0 } },
+        { x: 0, z: 0 },
+        true,
+      );
+      expect(next).toEqual({ x: turn % 2 ? 300.5 : 750.5, z: 2500 });
+    }
+    item.pose.quarterTurns = 0;
+    expect(JSON.stringify(room)).toBe(before);
+    expect(
+      floorPlacement(
+        room,
+        item,
+        {
+          origin: { x: 2.00024, y: 1, z: 3.00026 },
+          direction: { x: 0, y: -1, z: 0 },
+        },
+        { x: 1.25, z: 0.1 },
+        false,
+      ),
+    ).toEqual({ x: 1999, z: 3000 });
+    expect(
+      floorPlacement(
+        room,
+        item,
+        { origin: { x: 0, y: 1, z: 0 }, direction: { x: 0, y: -1, z: 0 } },
+        { x: Infinity, z: 0 },
+        true,
+      ),
+    ).toBeNull();
+  });
+});
 
 describe('finite close-up surface ownership and physical envelopes', () => {
   it('creates deterministic bounded mipmapped surfaces and finite bevels inside the original unit box', () => {

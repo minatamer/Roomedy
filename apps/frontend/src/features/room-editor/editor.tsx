@@ -413,6 +413,9 @@ export function Editor({
                   cameraStateRef={cameraStateRef}
                   openedAt={cutawayOpenedAt}
                   onPlan={() => setRoomView('plan')}
+                  controller={controller}
+                  readOnly={readOnly}
+                  snap={view.snap}
                 />
               </Suspense>
             </CutawayBoundary>

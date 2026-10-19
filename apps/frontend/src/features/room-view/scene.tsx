@@ -49,6 +49,7 @@ import {
   surfaceModel,
 } from './surfaces';
 import type { Surfaces } from './surfaces';
+import type { FloorEditing } from './use-floor-edit';
 
 export type CameraAction = {
   kind:
@@ -76,6 +77,7 @@ export interface SceneProps {
   cameraFrame: RoomFrame | undefined;
   cameraAction: CameraAction | null;
   cameraView: CameraView;
+  editing: FloorEditing;
   onReady: () => void;
   onNotice: (loading: number, failed: number) => void;
   onLost: () => void;
@@ -199,9 +201,15 @@ function CameraRig({
   cameraAction,
   cameraFrame,
   cameraView,
+  editing,
 }: Pick<
   SceneProps,
-  'room' | 'cameraStateRef' | 'cameraAction' | 'cameraFrame' | 'cameraView'
+  | 'room'
+  | 'cameraStateRef'
+  | 'cameraAction'
+  | 'cameraFrame'
+  | 'cameraView'
+  | 'editing'
 >) {
   const { camera, size, invalidate, gl } = useThree();
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
@@ -421,6 +429,11 @@ function CameraRig({
         '-': 'out',
       };
       const kind = kinds[e.key.length === 1 ? e.key.toLowerCase() : e.key];
+      if (kind && editing.pose.current) {
+        e.preventDefault();
+        return;
+      }
+      if (editing.enabled && kind && !['in', 'out'].includes(kind)) return;
       if (
         !kind ||
         (cameraView === 'overview' &&
@@ -436,6 +449,10 @@ function CameraRig({
       pinch = 0,
       pinchZoom = 1;
     const down = (e: PointerEvent) => {
+      if (editing.enabled) {
+        desired.current = null;
+        return;
+      }
       if (cameraView === 'overview' || e.defaultPrevented || pointers.size >= 2)
         return;
       desired.current = null;
@@ -500,7 +517,11 @@ function CameraRig({
         canvas.releasePointerCapture(e.pointerId);
     };
     const wheel = (e: WheelEvent) => {
-      if (cameraView === 'overview') return;
+      if (editing.pose.current) {
+        e.preventDefault();
+        return;
+      }
+      if (cameraView === 'overview' && !editing.enabled) return;
       e.preventDefault();
       act(e.deltaY < 0 ? 'in' : 'out');
     };
@@ -521,7 +542,7 @@ function CameraRig({
         if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
       pointers.clear();
     };
-  }, [gl, camera, cameraView, act, begin]);
+  }, [gl, camera, cameraView, act, begin, editing]);
   useFrame((_, delta) => {
     const c = controls.current;
     if (!c) return;
@@ -578,7 +599,7 @@ function CameraRig({
   return (
     <OrbitControls
       ref={controls}
-      enabled={cameraView === 'overview'}
+      enabled={cameraView === 'overview' && !editing.enabled}
       enableDamping
       dampingFactor={0.12}
       enablePan={false}
@@ -830,6 +851,7 @@ function Piece({
   asset,
   onSelect,
   surfaces,
+  editing,
 }: {
   piece: Furniture;
   selected: boolean;
@@ -838,6 +860,7 @@ function Piece({
   asset: AssetState | undefined;
   onSelect: SceneProps['onSelect'];
   surfaces: Surfaces;
+  editing: FloorEditing;
 }) {
   const group = useRef<Group>(null),
     { invalidate } = useThree(),
@@ -905,7 +928,11 @@ function Piece({
     const g = group.current;
     if (!g) return;
     const amount = 1 - Math.exp(-Math.min(delta, 0.05) * 20),
-      target = new Vector3(...pose.position);
+      projected =
+        editing.pose.current?.id === piece.id ? editing.pose.current : null,
+      target = projected
+        ? new Vector3(metres(projected.x), 0, metres(projected.z))
+        : new Vector3(...pose.position);
     const rotation = Math.atan2(
       Math.sin(pose.rotationY - g.rotation.y),
       Math.cos(pose.rotationY - g.rotation.y),
@@ -921,7 +948,8 @@ function Piece({
         Math.abs(materials.soft.color.b - upholsteryColor.b) >
         0.001;
     if (moving) {
-      g.position.lerp(target, amount);
+      if (projected) g.position.copy(target);
+      else g.position.lerp(target, amount);
       g.rotation.y += rotation * amount;
       materials.frame.color.lerp(color, amount);
       materials.soft.color.lerp(upholsteryColor, amount);
@@ -941,6 +969,25 @@ function Piece({
       position={initial.position}
       rotation={[0, initial.rotationY, 0]}
       onClick={pick}
+      {...(editing.enabled
+        ? {
+            onPointerDown: (e: ThreeEvent<PointerEvent>) => {
+              const position = group.current?.position;
+              editing.down(
+                e,
+                piece,
+                position
+                  ? { x: position.x * 1000, z: position.z * 1000 }
+                  : undefined,
+              );
+            },
+            onPointerMove: (e: ThreeEvent<PointerEvent>) =>
+              editing.move(e, piece),
+            onPointerUp: (e: ThreeEvent<PointerEvent>) => editing.up(e, piece),
+            onPointerCancel: () => editing.cancel(true),
+            onLostPointerCapture: () => editing.cancel(true),
+          }
+        : {})}
     >
       {representation.kind === 'mesh' && asset?.kind === 'ready' ? (
         <BorrowedModel asset={asset.asset} surfaces={surfaces} />
@@ -1142,6 +1189,7 @@ export function RoomScene(props: SceneProps) {
             geometry={geometry}
             asset={r.kind === 'mesh' ? assets.get(r.url) : undefined}
             surfaces={surfaces}
+            editing={props.editing}
             onSelect={onSelect}
           />
         );
@@ -1211,6 +1259,7 @@ export function RoomScene(props: SceneProps) {
         cameraStateRef={props.cameraStateRef}
         cameraAction={props.cameraAction}
         cameraView={props.cameraView}
+        editing={props.editing}
       />
     </>
   );

@@ -6,6 +6,10 @@ import { failureMessage } from '../apps/frontend/src/features/room-editor/messag
 import { hasBaselineChanges } from '../apps/frontend/src/features/session/state.js';
 import { commandRoom, piece } from './fixtures/command-room.js';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
+import {
+  beginFloorEdit,
+  rotateFloorSelection,
+} from '../apps/frontend/src/features/room-view/manipulation.js';
 
 const controllers: SessionController[] = [];
 let now = 0,
@@ -23,6 +27,175 @@ afterEach(() => {
   controllers.length = 0;
   now = 0;
   vi.useRealTimers();
+});
+
+describe('3D gestures use the canonical session command and lifecycle', () => {
+  function floorSession(room = commandRoom([piece('a')])) {
+    const s = session(room);
+    s.setRoomView('cutaway');
+    s.select('a');
+    return s;
+  }
+  it('keeps a click uncommitted, records one accepted drop and makes the retired gesture unreplayable', () => {
+    const s = floorSession(),
+      original = s.getSnapshot().workspace!;
+    const click = beginFloorEdit(s, 'a')!;
+    expect(click.commit({ x: 2000, z: 2000 })).toEqual({
+      ok: true,
+      changed: false,
+    });
+    expect(s.getSnapshot().workspace).toBe(original);
+    expect(original.current.furniture[0]!.pose.provenance.status).toBe(
+      'confirmed',
+    );
+    const ended = vi.fn(),
+      edit = beginFloorEdit(s, 'a', ended)!;
+    expect(edit.room).toBe(original.current);
+    expect(s.getSnapshot().pending).toBeNull();
+    expect(original.history.entries).toHaveLength(0);
+    expect(edit.commit({ x: 2500.5, z: 2600 })).toEqual({
+      ok: true,
+      changed: true,
+    });
+    expect(ended).toHaveBeenCalledOnce();
+    expect(edit.commit({ x: 3000, z: 3000 })).toEqual({
+      ok: false,
+      code: 'stale',
+    });
+    const changed = s.getSnapshot().workspace!;
+    expect(changed.history.entries).toHaveLength(1);
+    expect(changed.current.furniture[0]!.pose).toMatchObject({
+      centerX: 2500.5,
+      centerZ: 2600,
+      quarterTurns: 0,
+      provenance: { status: 'planned' },
+    });
+    expect(changed.baseline).toBe(original.baseline);
+    expect(s.undo()).toEqual({ ok: true });
+    expect(s.getSnapshot().workspace!.current.furniture[0]!.pose).toEqual(
+      original.current.furniture[0]!.pose,
+    );
+    expect(s.getSnapshot().workspace!.history.entries).toHaveLength(0);
+  });
+  it('delegates position/rotation locks and space conflicts to the same spatial authority', () => {
+    const room = commandRoom([piece('a')]);
+    room.furniture[0]!.locks.position = true;
+    const locked = floorSession(room),
+      original = locked.getSnapshot().workspace;
+    expect(
+      beginFloorEdit(locked, 'a')!.commit({ x: 2500, z: 2000 }),
+    ).toMatchObject({ ok: false, code: 'locked' });
+    expect(locked.getSnapshot().workspace).toBe(original);
+    const s = floorSession();
+    expect(beginFloorEdit(s, 'a')!.commit({ x: -100, z: 2000 })).toMatchObject({
+      ok: false,
+      code: 'new-conflict',
+      issue: { code: 'outside-room' },
+    });
+    expect(s.getSnapshot().workspace!.history.entries).toHaveLength(0);
+    expect(rotateFloorSelection(s)).toEqual({ ok: true, changed: true });
+    expect(
+      s.getSnapshot().workspace!.current.furniture[0]!.pose.quarterTurns,
+    ).toBe(1);
+    const rotationRoom = commandRoom([piece('a')]);
+    rotationRoom.furniture[0]!.locks.rotation = true;
+    const rotationLocked = floorSession(rotationRoom);
+    expect(rotateFloorSelection(rotationLocked)).toMatchObject({
+      ok: false,
+      code: 'locked',
+    });
+    expect(
+      beginFloorEdit(rotationLocked, 'a')!.commit({ x: 2500, z: 2000 }),
+    ).toEqual({ ok: true, changed: true });
+  });
+  it('cannot revive a gesture through Before/Current, preview cancellation, view switching, reselection or replacement', () => {
+    const changes = [
+      (s: SessionController) => {
+        s.setComparison('before');
+        s.setComparison('current');
+        s.select('a');
+      },
+      (s: SessionController) => {
+        s.prepareVisitorPreview(
+          [{ type: 'finish', id: 'a', finish: 'ivory' }],
+          'Finish',
+        );
+        s.cancelPreview();
+      },
+      (s: SessionController) => {
+        s.setRoomView('plan');
+        s.setRoomView('cutaway');
+      },
+      (s: SessionController) => {
+        s.select(null);
+        s.select('a');
+      },
+      (s: SessionController) => {
+        s.reset(commandRoom([piece('a')]));
+        s.setRoomView('cutaway');
+        s.select('a');
+      },
+    ];
+    for (const change of changes) {
+      const s = floorSession(),
+        retired = vi.fn(),
+        edit = beginFloorEdit(s, 'a', retired)!;
+      change(s);
+      expect(retired).toHaveBeenCalledOnce();
+      expect(edit.commit({ x: 2500, z: 2500 })).toEqual({
+        ok: false,
+        code: 'stale',
+      });
+      expect(
+        s.getSnapshot().workspace!.current.furniture[0]!.pose.centerX,
+      ).toBe(2000);
+      expect(s.getSnapshot().workspace!.history.entries).toHaveLength(0);
+    }
+  });
+  it('fences sleeping expiry and cleanup reentrancy before a late release can write', () => {
+    const s = floorSession(),
+      retired = vi.fn(() => expect(s.getSnapshot().phase).toBe('expired'));
+    const edit = beginFloorEdit(s, 'a', retired)!;
+    now = POLICY.guestLifetimeMs;
+    expect(edit.commit({ x: 2500, z: 2500 })).toEqual({
+      ok: false,
+      code: 'stale',
+    });
+    expect(s.getSnapshot().workspace).toBeNull();
+    expect(retired).toHaveBeenCalledOnce();
+    now = 0;
+    const other = floorSession(),
+      original = other.getSnapshot().workspace!;
+    const reentrant = beginFloorEdit(other, 'a', () =>
+      other.reset(commandRoom([piece('a')])),
+    )!;
+    expect(reentrant.commit({ x: 2500, z: 2500 })).toEqual({
+      ok: false,
+      code: 'stale',
+    });
+    expect(other.getSnapshot().workspace).not.toBe(original);
+    expect(
+      other.getSnapshot().workspace!.current.furniture[0]!.pose.centerX,
+    ).toBe(2000);
+  });
+  it('preserves pending assistance until an actual visitor commit and releases cancelled ownership beyond capacity', () => {
+    const s = floorSession(),
+      token = s.beginOperation()!;
+    for (let i = 0; i < 80; i++) {
+      const edit = beginFloorEdit(s, 'a');
+      expect(edit).not.toBeNull();
+      edit!.cancel();
+      edit!.cancel();
+      expect(edit!.current()).toBe(false);
+    }
+    expect(s.isCurrent(token)).toBe(true);
+    expect(beginFloorEdit(s, 'a')!.commit({ x: 2500, z: 2500 })).toEqual({
+      ok: true,
+      changed: true,
+    });
+    expect(s.isCurrent(token)).toBe(false);
+    expect(s.getSnapshot().workspace!.history.entries).toHaveLength(1);
+  });
 });
 describe('one canonical session and effect authority', () => {
   it('keeps unknown and prototype-like error codes safe for text rendering', () => {
