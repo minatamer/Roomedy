@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Latest visual feedback revision:** [RM-015L](tickets/RM-015L-create-a-scroll-driven-furniture-landing.md) replaces the rejected small landing with the owner-selected assembling/rotating/opening3D scroll journey, fuller workflow/value and matching beige browser/search icons. [Primary research](references/landing-research-2026-10-19.md), [implementation/verification](validation/RM-015L.md), [current review](design/visual-review.md). Palette/logo/dot remain selected; local404-test/root/both-build and final nine-size checks pass. Current Windows review4390/private4391 uses182-input identity `7fbe666c7fefbfc1a0698def8e8e3eb4108e0158d66fc93e153ca7933480e248`. Actual visual approval is pending.
+
 Step-one documentation prepared on **17 October 2026**, using the supplied Roomedy drafts, the owner's generic repo guide and actual read-only inspection of ClipBuilder, ScreenPilot, Retrosum and Retailor.
 
 **19 October A–J owner revision completed locally:** [RM-015A–J](tickets/README.md#owner-requested-pre-review-queue--19-october-2026) were planned, executed and validated individually; findings were fixed/revalidated before each local commit. [Historical integrated401-test evidence](validation/RM-015J.md), [actual frontend for our joint session](design/visual-review.md), [permanent motion/copy rules](design/motion.md). Actual visual approval and later quality/security/external gates remain pending; RM-016 stays Planned.

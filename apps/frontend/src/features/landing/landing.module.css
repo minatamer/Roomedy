@@ -1,0 +1,594 @@
+.landing {
+  overflow: clip;
+}
+.journey {
+  max-width: 1680px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  position: relative;
+}
+.stage {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  position: sticky;
+  top: 0;
+  height: min(100svh, 1000px);
+  align-self: start;
+  min-width: 0;
+  pointer-events: none;
+}
+.roomVisual {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+.roomVisual > div:last-child {
+  width: 100%;
+  height: 100%;
+}
+.stageHalo {
+  position: absolute;
+  inset: 16% 3% 15%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    #dfcbae70,
+    #e6d8c230 45%,
+    transparent 70%
+  );
+}
+.poster {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: opacity 300ms;
+}
+.poster svg {
+  width: 90%;
+  max-height: 90%;
+}
+.posterReady {
+  opacity: 0;
+}
+.sceneCaption {
+  position: absolute;
+  bottom: 22px;
+  left: 20px;
+  right: 20px;
+  margin: 0;
+  text-align: center;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+.chapter {
+  grid-column: 1;
+  min-width: 0;
+  min-height: 90svh;
+  padding: 80px clamp(24px, 4.5vw, 76px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  scroll-margin-top: 24px;
+}
+.hero {
+  min-height: calc(100svh - 84px);
+  padding-top: 30px;
+  padding-bottom: 60px;
+  animation: contentEnter 500ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+@keyframes contentEnter {
+  from {
+    opacity: 0.45;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero h1 {
+  font-size: clamp(45px, 5.2vw, 78px);
+  margin-bottom: 26px;
+}
+.hero :global(.eyebrow) {
+  margin-bottom: 26px;
+}
+.description {
+  font-size: clamp(15px, 1.3vw, 18px);
+  max-width: 470px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.scrollLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  min-height: 44px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 14px;
+}
+.scrollLink span {
+  display: inline-block;
+  transition: transform 220ms;
+}
+.scrollLink:hover span {
+  transform: translateY(5px);
+}
+.chapterLabel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.chapterLabel span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #c5ad8c;
+  border-radius: 50%;
+  letter-spacing: 0;
+}
+.chapter h2 {
+  font-size: clamp(36px, 4vw, 60px);
+  line-height: 1.08;
+  margin-bottom: 25px;
+}
+.landing h2 em {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--teal);
+  font-weight: 400;
+}
+.detail {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 450px;
+  margin-bottom: 20px;
+}
+.chapterLink {
+  display: inline-flex;
+  gap: 28px;
+  align-items: center;
+  font-size: 12px;
+  min-height: 44px;
+  border-bottom: 1px solid #b3916a;
+}
+.chapterLink span {
+  transition: transform 200ms;
+}
+.chapterLink:hover span {
+  transform: translate(3px, -3px);
+}
+.sketch {
+  width: min(100%, 400px);
+  margin: 0 0 24px;
+  padding: 18px 6px;
+  border-block: 1px solid var(--line);
+}
+.sketch svg {
+  display: block;
+  width: 100%;
+}
+.intentions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  padding-block: 12px 22px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.intentions > div > span {
+  font-size: 25px;
+  color: var(--clay);
+  display: block;
+  margin-bottom: 14px;
+}
+.intentions h3 {
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.intentions p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.7;
+}
+.designerNote {
+  max-width: 420px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin: 5px 0 28px;
+  padding: 22px 0;
+  border-block: 1px solid #cbb79a;
+}
+.designerNote > span {
+  color: var(--clay);
+  font-size: 24px;
+}
+.designerNote p {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 23px;
+  line-height: 1.4;
+  color: var(--teal);
+}
+.why {
+  border-top: 1px solid var(--line);
+  padding-block: 90px 80px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  column-gap: 10%;
+  row-gap: 62px;
+}
+.why h2 {
+  font-size: clamp(36px, 4vw, 58px);
+}
+.whyIntro > p:last-child {
+  max-width: 420px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.research {
+  align-self: center;
+  border-left: 1px solid #cbb79a;
+  padding-left: 45px;
+}
+.stat {
+  font-size: clamp(75px, 9vw, 140px);
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+  display: block;
+  color: var(--teal);
+}
+.stat > span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.45em;
+  margin-left: 8px;
+}
+.research p {
+  font-size: 13px;
+  line-height: 1.75;
+  max-width: 310px;
+  margin: 25px 0 8px;
+  color: var(--muted);
+}
+.research a {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-size: 10px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.reasons {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 44px;
+}
+.reasons > div {
+  border-top: 1px solid #cbb79a;
+  padding-top: 28px;
+}
+.reasons span {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+}
+.reasons h3 {
+  font-size: 23px;
+  line-height: 1.25;
+  margin: 17px 0 12px;
+}
+.reasons p {
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 360px;
+  line-height: 1.8;
+  margin: 0;
+}
+.invitation {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: clamp(25px, 4vw, 65px);
+  align-items: center;
+  padding: 52px;
+  background: #e6d9c3;
+  border-radius: 30px;
+  margin-bottom: 50px;
+}
+.invitationMark {
+  font-size: clamp(65px, 8vw, 120px);
+  line-height: 1;
+  color: #9d7453;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.invitation h2 {
+  font-size: clamp(38px, 4.2vw, 62px);
+  margin: 0;
+}
+.invitation :global(.eyebrow) {
+  font-size: 9px;
+  margin-bottom: 18px;
+}
+.invitationAction p {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin: 14px 0 0;
+}
+.footer {
+  padding-block: 35px 45px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: center;
+}
+@media (min-width: 1400px) {
+  .chapter {
+    padding-left: 80px;
+  }
+}
+@media (min-width: 900px) and (max-height: 700px) {
+  .chapter {
+    padding-block: 35px;
+    min-height: 100svh;
+  }
+  .hero {
+    min-height: calc(100svh - 84px);
+  }
+  .hero h1 {
+    font-size: 56px;
+    margin-bottom: 20px;
+  }
+  .hero :global(.eyebrow) {
+    margin-bottom: 20px;
+  }
+  .description {
+    margin-bottom: 20px;
+  }
+  .chapter h2 {
+    font-size: 45px;
+  }
+}
+@media (max-width: 899px) {
+  .journey {
+    display: block;
+  }
+  .stage {
+    height: clamp(145px, 29svh, 270px);
+    z-index: 2;
+    background: linear-gradient(var(--ivory) 88%, #f4efe5f5);
+    border-bottom: 1px solid #d6c4a640;
+  }
+  .roomVisual {
+    inset: -4% 12% 0;
+  }
+  .poster svg {
+    width: 65%;
+  }
+  .stageHalo {
+    inset: 0 15%;
+  }
+  .sceneCaption {
+    display: none;
+  }
+  .chapter {
+    padding: 42px clamp(24px, 7vw, 90px);
+    min-height: 72svh;
+    scroll-margin-top: min(32svh, 290px);
+  }
+  .hero {
+    min-height: 0;
+    padding-block: 25px 40px;
+    justify-content: flex-start;
+  }
+  .hero h1 {
+    font-size: clamp(39px, 7vw, 65px);
+    margin-bottom: 20px;
+  }
+  .hero :global(.eyebrow) {
+    font-size: 8px;
+    margin-bottom: 18px;
+  }
+  .description {
+    max-width: 550px;
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+  .chapter h2 {
+    font-size: clamp(36px, 6.5vw, 55px);
+  }
+  .intentions {
+    width: 100%;
+    max-width: 550px;
+  }
+  .detail {
+    max-width: 550px;
+  }
+  .why {
+    padding-block: 60px;
+    column-gap: 30px;
+    row-gap: 40px;
+  }
+  .research {
+    padding-left: 24px;
+  }
+  .why h2 {
+    font-size: 37px;
+  }
+  .reasons {
+    gap: 24px;
+  }
+  .reasons h3 {
+    font-size: 20px;
+  }
+  .invitation {
+    padding: 30px;
+    grid-template-columns: 1fr auto;
+    gap: 25px;
+  }
+  .invitationMark {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .chapter {
+    padding-inline: 24px;
+  }
+  .hero {
+    padding-top: 18px;
+    padding-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    line-height: 1.03;
+  }
+  .hero .description {
+    font-size: 13px;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .hero :global(.button) {
+    min-height: 46px;
+    padding: 13px 23px;
+  }
+  .hero :global(.cta-note) {
+    margin-top: 9px;
+    font-size: 10px;
+  }
+  .scrollLink {
+    margin-top: 0;
+    font-size: 11px;
+  }
+  .chapterLabel {
+    font-size: 8px;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .intentions {
+    gap: 18px;
+  }
+  .designerNote p {
+    font-size: 22px;
+  }
+  .why {
+    display: block;
+    padding-block: 50px;
+  }
+  .whyIntro {
+    margin-bottom: 34px;
+  }
+  .why h2 {
+    font-size: 36px;
+  }
+  .research {
+    border-left: 0;
+    border-block: 1px solid var(--line);
+    padding: 28px 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 25px;
+    align-items: center;
+    margin-bottom: 34px;
+  }
+  .stat {
+    grid-row: 1 / span 2;
+    font-size: 85px;
+  }
+  .research p {
+    font-size: 11px;
+    margin: 0;
+  }
+  .research a {
+    font-size: 9px;
+  }
+  .reasons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .reasons > div {
+    padding-top: 20px;
+  }
+  .reasons h3 {
+    margin-block: 12px 8px;
+    font-size: 22px;
+  }
+  .reasons p {
+    max-width: none;
+    font-size: 12px;
+  }
+  .invitation {
+    grid-template-columns: 1fr;
+    padding: 30px 25px;
+    text-align: center;
+    border-radius: 22px;
+    margin-bottom: 30px;
+  }
+  .invitation h2 {
+    font-size: 40px;
+  }
+  .invitationAction {
+    justify-self: center;
+  }
+  .footer {
+    padding-block: 27px 36px;
+  }
+}
+@media (max-width: 360px) {
+  .chapter {
+    padding-inline: 18px;
+  }
+  .hero h1 {
+    font-size: 36px;
+  }
+  .hero :global(.eyebrow) {
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .hero .description {
+    font-size: 12px;
+  }
+  .hero :global(.cta-note) {
+    margin-bottom: 6px;
+  }
+  .roomVisual {
+    inset-inline: 4%;
+  }
+  .research {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .stat {
+    grid-row: auto;
+  }
+  .chapter h2,
+  .why h2 {
+    font-size: 33px;
+  }
+}
+@media (max-width: 899px) and (max-height: 500px) {
+  .stage {
+    height: 110px;
+  }
+  .chapter {
+    scroll-margin-top: 130px;
+  }
+  .hero h1 {
+    font-size: 38px;
+  }
+}

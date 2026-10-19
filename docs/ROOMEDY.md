@@ -2,11 +2,11 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-015 checkpoint committed as `2512bde`; owner-authorized RM-015A–J revision loop before joint visual review; RM-016 remains Planned
+**Stage:** RM-015A–K committed; owner-selected RM-015L landing correction locally implemented/validated for continued visual review; RM-016 remains Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
-**Current steering, 19 October:** Execute the owner-requested [RM-015A–J revision loop](tickets/README.md#owner-requested-pre-review-queue--19-october-2026), with full ticket plans and clean execute/validate/fix loops before the joint visual review. Actual visual approval remains pending; RM-016 has not started.
+**Current steering, 19 October:** A–K are committed. Owner-selected [RM-015L](tickets/RM-015L-create-a-scroll-driven-furniture-landing.md) replaces the rejected small landing with an assembling/rotating/opening furniture room, richer workflow/value and the preserved palette/mark/dot plus matching beige icons/centered footer. [L evidence](validation/RM-015L.md) records404tests/root/builds, current182-input Windows review and exact limits. Continue the actual visual session; approval remains pending and RM-016 has not started.
 
 **18 October checkpoint:** the approved numeric fake/paid-off loop has committed RM-001–RM-014; `2e27f79` prepared release files with Linux/hosted/live proof explicitly pending. RM-015 has actual nine-size/interaction/measurement evidence, scoped numeric-error and summary fixes, and a passing346-test/seven-boundary/root/build gate. Read-only pass1 found no new actionable findings. The owner explicitly withheld visual approval and separately authorized the [exact15-file checkpoint plan and local commit](commit-plans/RM-015.md). This preserves current work; it does not complete RM-015 or resolve the [actual visual gate](design/visual-review.md). The guide goal stays paused and RM-016 stays Planned. [Performance evidence](design/performance.md) retains its limits. No paid calls, deployment, push, reset consumption or delegation; stop at review gates or0% usage. Approved PR-01–PR-15/O-01–O-03 requirements remain current.
 
@@ -164,15 +164,13 @@ Roomedy requires no renderer service: its interactive 3D is browser-side. It req
 
 ### 4.1 First viewport
 
-Suggested headline: **Make room for the way you live.** Supporting copy: **Explore your room in 2D and 3D. Arrange it yourself or ask your assistant to help.** The primary CTA is **Try the demo**.
+Current owner-selected19October visual direction is [RM-015L](tickets/RM-015L-create-a-scroll-driven-furniture-landing.md): **a room assembles, rotates and opens up as the visitor scrolls**. Keep the selected earthy palette, exact Roomedy mark/wordmark and brown dot. The former small Sample room/Preview/Apply/Undo marketing card is explicitly rejected and superseded; those real editing controls remain in the main editor.
 
-Show an immediately legible miniature room transformation, with a desk moving near a window and the relevant pieces highlighted. Use real planned interaction vocabulary: a request, an arrangement preview, Apply and Undo. A landing illustration must be labelled if it is scripted. Do not display fabricated live visitor numbers, unsupported time savings or fit/accuracy percentages.
+The landing is a genuine isolated3D furniture journey with full-size editorial chapters, meaningful how-it-works, motivation/value and closing CTA. Use normal reversible scrolling and finite ready entrances, a large adjacent scene on desktop and a compact sticky scene on narrow screens. Keep the primary **Start designing** action visible in the first viewport. The scene is authored marketing art, not a visitor-photo result or a live editing session; do not add fake editor controls or recurring demo warnings. Photos still become a rough2D correction review before accepted main-editor3D.
 
-The navigation, hero message, main visual and CTA should compose within the initial viewport across common phones, tablets and laptops. Maintain a visible CTA under short-height constraints instead of letting decorative artwork dominate. The room workspace should lazy-load after entry; the landing need not initialize the full WebGL editor.
+Research uses official examples/sources in [the landing register](references/landing-research-2026-10-19.md). Any motivating statistic needs correct population/context and direct attribution; no invented3D-designer adoption, visitor totals, savings, endorsements or feature equivalence. Professional tools and free competitor tiers do not establish Roomedy pricing. Use actual browser/no-account/use-owned-pieces value instead. Center the footer logo and remove the domain text. Matching browser/search/Apple icons use the existing vector mark on solid token beige, never white/transparent. Local metadata/assets prepare eligibility; Google crawl/display is external, not guaranteed.
 
-Below the hero, explain three capabilities: start with the room you have; explore one arrangement in two views; ask for a change you can review. A brief measurements/privacy explanation and the three starting conditions are enough. Avoid a long feature checklist or framework names in the main visitor journey.
-
-Establish the actual RM-004/005 palette/type/padding/panel hierarchy as a small internal visual baseline, with inspected short-laptop and narrow states. Later features use that evidence without creating another owner gate. The automatic scripted landing sequence finishes and settles within five seconds with stable readable text. Deliberate user-triggered motion remains smooth; the selected active-motion policy does not require perpetual decoration.
+The landing may initialize its own bounded client-loaded Three/R3F scene and reuse existing finite furniture/surface definitions, but never the editor controller, session or provider. Readable content/static dimensional poster remain available while loading or graphics is unavailable. Ready entrances settle within five seconds; scroll-driven choreography follows the visitor without hijacking scroll or suppressing motion. Dispose owned resources/listeners/frames and keep performance evidence scenario-specific. Actual owner visual approval and later quality/security/external checkpoints remain separate.
 
 ### 4.2 Progressive entry
 
@@ -1302,7 +1300,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Present the actual K layout correction and current exact Windows fake/paid-off standalone4390/private4391, input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd, for the joint owner visual feedback session. RM-015K locally implemented, full gate passed and read-only pass2 clean after independently fixing expanded chat. Exact per-ticket local commit authorized. Actual visual approval is pending; guide goal remains paused, RM-016 Planned; no paid/live/deploy/push/reset/delegation.
+Next action: Wait for the actual owner visual decision on the final RM-015L furniture-scroll landing and retained editor. Local exact-path checkpoint authority is separate from result acceptance. Guide goal stays paused; no RM-016, paid/live/deploy/push/reset/delegation.
 Active ticket: RM-015
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1328,7 +1326,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T12:47:43+00:00",
+  "updated_at": "2026-10-19T13:44:53+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1494,6 +1492,11 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "Owner: \"didnt approve visuals yet, but you are allowed to create file commit plan for current unstaged work and tomorrow i will review them\", followed by \"and you can stage and commit\". Authorizes the current exact15-file RM-015 local checkpoint plan/stage/commit before visual approval; no result approval, waiver, ticket completion or RM-016. Subject: RM-015: record performance and pending visual review. Earlier presentation-prompt/evidence statements holding the commit until visual approval are historical and superseded only for this specific Git action.",
       "source": "human:current-chat/2026-10-18/visuals-unapproved-checkpoint-plan-and-stage-commit; docs/commit-plans/RM-015.md",
       "confidence": "confirmed"
+    },
+    "LANDING_VISUAL_REVIEW": {
+      "value": "Owner-selected room assembles/rotates/opens through scroll; richer truthful workflow/value, exact palette/brand/dot, centered footer and opaque beige icons. Final182inputs/1,224,315bytes/BUILD_ID7fbe666c7fefbfc1a0698def8e8e3eb4108e0158d66fc93e153ca7933480e248,404tests/34files/root/both builds. Actual hash-to-entry browser Back defect independently fixed/rechecked; stale candidate sentence fixed; read-only pass3 clean. Exact31-path checkpoint prepared under existing Git authority. Actual result approval is still absent. Latest recorded changes-requested decision is historical revision authority, not acceptance of this presented result.",
+      "source": "human:current-chat/2026-10-19/selected-scroll-room; docs/validation/RM-015L.md; docs/commit-plans/RM-015L.md",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": null,
@@ -1503,7 +1506,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-015",
-  "next_action": "Present the actual K layout correction and current exact Windows fake/paid-off standalone4390/private4391, input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd, for the joint owner visual feedback session. RM-015K locally implemented, full gate passed and read-only pass2 clean after independently fixing expanded chat. Exact per-ticket local commit authorized. Actual visual approval is pending; guide goal remains paused, RM-016 Planned; no paid/live/deploy/push/reset/delegation.",
+  "next_action": "Wait for the actual owner visual decision on the final RM-015L furniture-scroll landing and retained editor. Local exact-path checkpoint authority is separate from result acceptance. Guide goal stays paused; no RM-016, paid/live/deploy/push/reset/delegation.",
   "phases": [
     {
       "id": "01-docs",
@@ -1912,14 +1915,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015I.md:11 paths, permanent motion/copy authority, animated retained floor/wall materials, actual1280/390 checks,401tests/both builds and clean read-only pass1.",
         "docs/validation/RM-015J.md; docs/design/visual-review.md: all ten local outcomes, current173-input/BUILD_ID8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11,401tests/both builds, production9-size/full-flow/three-condition/export/recovery/3D checks, current repeated measurements,305local links and clean read-only pass1. Actual owner decision remains unchecked.",
         "docs/commit-plans/RM-015K.md; docs/tickets/RM-015K-review-and-rebalance-page-layouts.md: exact26-path allocation, actual1280 canvas y429.5/document948 and wide entry/intake/review baseline.",
-        "docs/validation/RM-015K.md; docs/design/layout.md; docs/design/visual-review.md: exact27-path all-page space correction, final173-input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd,401tests/33files/root/both builds,63 exact-production size/state observations, expanded-chat and tour fixes independently verified; read-only pass2 clean. Actual owner visual decision pending."
+        "docs/validation/RM-015K.md; docs/design/layout.md; docs/design/visual-review.md: exact27-path all-page space correction, final173-input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd,401tests/33files/root/both builds,63 exact-production size/state observations, expanded-chat and tour fixes independently verified; read-only pass2 clean. Actual owner visual decision pending.",
+        "docs/tickets/RM-015L-create-a-scroll-driven-furniture-landing.md; docs/commit-plans/RM-015L.md; docs/references/landing-research-2026-10-19.md: owner-selected assembling/rotating/opening room, exact31-path plan, credible sources and icon requirements.",
+        "docs/validation/RM-015L.md; docs/design/visual-review.md: final182inputs/1,224,315bytes/BUILD_ID7fbe666c7fefbfc1a0698def8e8e3eb4108e0158d66fc93e153ca7933480e248,404tests/34files/root/both builds, actual production9-size/short/native scroll/corrected hash-entry-back/icon checks, bounded measurements and clean read-only pass3. Exact31-path local checkpoint; actual owner decision pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "Before I do any visual feedback ... so much dead empty space not utilized ... take that into consdering fully do a big review on all our pages, and fix that and document that.",
-        "source": "human:current-chat/2026-10-19/all-page-space-review",
-        "scope": "Review and fix all-page space use in RM-015K before the actual joint visual review; no visual acceptance, paid/live/external/delegation authority.",
-        "recorded_at": "2026-10-19T12:07:15+00:00"
+        "quote": "Landing is way too boring ... a room assembles, rotates and opens up as you scroll (recommended) ... remove try RoomED.com from our footer ... centralize the logo ... same beige background ... same icon in Google search",
+        "source": "human:current-chat/2026-10-19/landing-visual-feedback-and-selected-scroll-room",
+        "scope": "Implement researched richer scroll-driven furniture landing, preserve palette/logo/dot, centered footer and opaque beige icon family. No actual result approval or paid/live/external/delegation authority.",
+        "recorded_at": "2026-10-19T12:59:20+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -1939,6 +1944,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/all-page-space-review",
             "scope": "Review and fix all-page space use in RM-015K before the actual joint visual review; no visual acceptance, paid/live/external/delegation authority.",
             "recorded_at": "2026-10-19T12:07:15+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "Landing is way too boring ... a room assembles, rotates and opens up as you scroll (recommended) ... remove try RoomED.com from our footer ... centralize the logo ... same beige background ... same icon in Google search",
+            "source": "human:current-chat/2026-10-19/landing-visual-feedback-and-selected-scroll-room",
+            "scope": "Implement researched richer scroll-driven furniture landing, preserve palette/logo/dot, centered footer and opaque beige icon family. No actual result approval or paid/live/external/delegation authority.",
+            "recorded_at": "2026-10-19T12:59:20+00:00"
           }
         }
       ]

@@ -9,7 +9,7 @@ Current instruction: execute and validate tickets in numeric order, stage/commit
 
 Owner-requested revision: incorporate lessons from the four referenced visual/manual-test chats before proceeding. Read [repository instructions](../../AGENTS.md), [feedback guidelines and their evidence](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and the [feature/review checklist](../design/REVIEW_CHECKLIST.md). These are requirements for the existing packets, not additional product features or authorization to implement.
 
-**Current 19 October steering:** RM-015A–K below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
+**Current 19 October steering:** RM-015A–L below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
 
 ## Why twenty original packets
 
@@ -49,6 +49,7 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015I](RM-015I-make-active-motion-a-permanent-rule.md) | Make active motion a permanent rule | RM-015H | Implemented locally; visual approval pending |
 | [RM-015J](RM-015J-verify-the-revised-interactive-experience.md) | Verify the revised interactive experience | RM-015I | Implemented locally; visual approval pending |
 | [RM-015K](RM-015K-review-and-rebalance-page-layouts.md) | Review and rebalance useful space across all pages | RM-015J | Implemented locally; actual visual approval pending |
+| [RM-015L](RM-015L-create-a-scroll-driven-furniture-landing.md) | Scroll-driven assembling/rotating/opening furniture landing, richer workflow/value, footer/icons | RM-015K | Implemented locally;404tests/root/both builds/current production checks; actual result approval pending |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |
@@ -190,3 +191,6 @@ RM-005 local completion: [112 tests, final gates, actual interaction/device-size
 
 
 19October additional owner correction: [RM-015K](RM-015K-review-and-rebalance-page-layouts.md) follows committed J/e01a0ca and precedes RM-016. Broad layout review/fixes/documentation use the same authorized execute/read-only validate/verify/fix/revalidate/exact local commit loop. [Current K evidence](../validation/RM-015K.md) supersedes J only for the changed candidate; actual joint visual approval remains pending.
+
+
+Latest landing feedback: [RM-015L](RM-015L-create-a-scroll-driven-furniture-landing.md) follows committed K/9c76653. Owner selected the assembling/rotating/opening scroll room; palette/mark/dot retained, old marketing control card replaced, richer workflow/motivation and beige icon/centered footer. [Research](../references/landing-research-2026-10-19.md) and [actual L evidence](../validation/RM-015L.md) govern this visual correction; no RM-016 or inferred result approval.

@@ -49,7 +49,7 @@ Room finishes are scene data and remain independent of application chrome. Inspe
 
 Show what the feature actually changes. Initial intake is a rough 2D sketch; precision 2D and stylized 3D have distinct purposes in the main editor. They share IDs, sizes, pose and selection. A clipped miniature or decorative image that suggests unsupported capabilities is misleading even if attractive.
 
-The landing uses a lightweight labelled scripted example from the selected story. Use real supported catalogue representations and coherent authored geometry. Do not portray live reconstruction, professional fit certification or multiple alternative layouts. Evidence: E06; the current Roomedy review-sequence decision remains controlling.
+Historical RM-004 used a lightweight labelled scripted example; the latest19October owner correction RM-015L explicitly replaces that marketing card with authored scroll-driven furniture3D. Use real supported catalogue representations and coherent authored geometry. Do not portray live reconstruction, professional fit certification or multiple alternative layouts. Evidence: E06; the current Roomedy review-sequence decision remains controlling.
 
 ### L-06. Make forms and actions easy to find
 
@@ -220,3 +220,8 @@ The [feature/review checklist](../design/REVIEW_CHECKLIST.md) is used throughout
 ## Direct Roomedy space review —19 October2026
 
 The owner explicitly requested an all-page review after seeing dead empty areas and vertical stacking despite spare side width (and the reverse). [RM-015K](../tickets/RM-015K-review-and-rebalance-page-layouts.md) owns this correction before the joint visual session. Use [permanent layout rules](../design/layout.md): spend width/height on existing real tasks, room controls, grounded cards and usable conversation; preserve readable text and intentional breathing room without filler. Check actual room-column width, short-height flow, field/action reachability and tours on resize. A large viewport screenshot alone is insufficient. Actual owner visual approval remains pending. This later direct authority supersedes historical checkpoint wording above only for the named correction.
+
+
+## Direct landing visual feedback —19 October2026
+
+The owner rejected the boring small landing, Sample room/Apply/Undo control card and tiny step list, and selected **a room assembles, rotates and opens up as you scroll**. [RM-015L](../tickets/RM-015L-create-a-scroll-driven-furniture-landing.md) owns full-size meaningful chapters, research-backed motivation, final CTA, centered footer without domain and matching opaque beige browser/search/Apple icons. The palette, logo and brown dot are explicitly liked and must stay. Authored marketing art is not a live room; remove faux editor controls, not actual editor features. Keep normal scroll and readable content/CTA; no fabricated designer-adoption, price savings or customer statistics. [Primary research](landing-research-2026-10-19.md) records dispositions and limits; actual visual result approval remains pending.

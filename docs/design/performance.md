@@ -1,5 +1,12 @@
 # RM-015 measured performance and policy
 
+## Current RM-015L furniture-scroll scenario
+
+Owner explicitly selected a genuine3D landing on19October, replacing the non-WebGL control card. [L evidence](../validation/RM-015L.md) and [research](../references/landing-research-2026-10-19.md) distinguish this scenario from historical J/K byte/frame measurements. Before production measurement: practical complete observed script-graph target≤700KiB estimated gzip, usable SSR content/CTA/poster without waiting for WebGL, one renderer,≤2million bounded stage render pixels, named development active-frame p95≤33.4ms. These engineering targets do not alter runtime input/provider/spatial caps or prove cold-network/paint/device acceptance.
+
+Windows development1280×720 warm native scroll, three actual runs through assembly/rotation/opening:42/42/38 active intervals per run; p9516.8/16.8/16.8ms,16.8/16.8/16.8ms,16.8/16.8/16.9ms; maximum17.9ms. Renderer4 geometries/7 textures/78 calls. Fresh compact390 ready entrance62 intervals p9517.4/max68.9ms; do not claim every frame stayed below33.4ms. Three complete entry/home cycles showed0 canvases in entry and1 on landing, stable resource counts; this is not native-heap/driver reclamation proof. Old non-WebGL250KiB target and prior J/I performance remain historical. Final182-input/BUILD_ID `7fbe666c7fefbfc1a0698def8e8e3eb4108e0158d66fc93e153ca7933480e248`:10observed scripts1,605,815raw/446,015estimated-gzip bytes,2stylesheets16,841raw/4894gzip; loaded script graph passes the declared700KiB threshold. Final404-test/root/both-build gate passes. Production has no dev probe; production continuous frames/paint, physical devices/AT/browser zoom, GPU/native heap, actual Linux/hosted/live and Google crawling remain unperformed.
+
+
 ## RM-015K layout correction
 
 [Current layout evidence](../validation/RM-015K.md) records actual before/after room geometry and viewport/page/panel bounds. K changes browser presentation and tour positioning; earlier J/I active-frame, CSS bytes and production asset numbers are dated observations, not measurements of K. No new frame/paint/native-memory performance claim is made. Existing finite demand rendering, motion durations and resource authority are unchanged; actual production/Linux/hosted/physical/GPU/heap evidence remains separately pending.

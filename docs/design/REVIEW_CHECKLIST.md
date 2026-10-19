@@ -27,7 +27,7 @@ Before edits, identify the requested task, affected component/states, existing a
 
 | Journey/state | What must be inspected in the actual app |
 | --- | --- |
-| Landing and entry | First viewport CTA; labelled sample room; sample versus own-room choice is obvious; no unsolicited settings, recurring demo commentary or price/budget claims |
+| Landing and entry | First viewport CTA; owner-selected authored furniture3D scrolling journey/full-size meaningful chapters, without faux editor controls; sample versus own-room entry choice is obvious; no unsolicited settings, recurring demo commentary or price/budget claims |
 | Authored sample | Immediate useful manual room without recognition or hidden provider request; coherent supported furniture/locks |
 | Personal photo selection | Previews/file checks only; concise guidance inside upload; add/remove; explicit **Draft my room** or honest **Open sample sketch** action with actual transfer beside it |
 | Draft review | Rough **2D only**, per-value uncertainty, source photo when available, targeted measurements and duplicate/missed-feature correction |
@@ -74,3 +74,6 @@ Use relevant cases while a feature is built; RM-015 consolidates the full matrix
 - [ ] The settled diff is reviewed read-only; actionable findings are independently confirmed/fixed/revalidated. Manual visual/security decisions remain with the owner at their named checkpoints.
 
 Record real results in the owning `docs/validation/RM-###.md` during authorized work. This checklist does not require irrelevant tests for every small edit, authorize a browser-policy workaround, supply paid/Git/cloud permission or replace the owner's actual visual review.
+
+
+Landing-specific L checks: normal forward/back/anchor/keyboard scrolling, continuous room/camera/wall transitions, no sticky text occlusion, bounded scene/cleanup and usable poster/content without graphics. Preserve mark/palette/dot; center footer without domain. Verify opaque beige icon pixels, stable served PNG/ICO/SVG/Apple paths and actual root head declarations. Source any statistic with correct population/context; no fabricated software-adoption, savings or Google-indexing claims.

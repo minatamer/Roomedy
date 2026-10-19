@@ -15,3 +15,8 @@ Use existing furniture thumbnails and adaptive selection/catalogue grids. Pair m
 Keep natural-size motion children independent of animated parent height. Responsive changes must preserve current selection, drafts, camera journeys and shared command authority. No animation suppression or timing padding is a layout fix.
 
 Verify320×568,390×844,430×932,768×1024,1024×768,1280×720,1366×768,1440×900 and1920×1080, plus short landscape, keyboard-sized height and neighbouring layout/container breakpoints. Inspect actual settled screenshots and DOM bounds after motion; an in-flight screenshot is not a settled layout failure or pass. Record page/owning-panel dispositions, actual before/after measurements and limits. Desktop emulation does not prove physical touch, virtual-keyboard or GPU performance.
+
+
+## Owner-selected landing journey (RM-015L)
+
+The19October visual feedback replaces the small hero card/tiny steps with a furniture room that assembles, rotates and opens through normal scrolling. Full-size chapters must carry useful product information while the adjacent/sticky scene changes. A chapter may reserve readable traversal space for meaningful motion, not empty spacer-only sections. Keep initial CTA visible, compact the phone hero to its actual content, constrain the narrow sticky scene and leave readable text below it. Motivation and final CTA extend the page usefully; preserve existing palette/mark/brown dot, centered footer and opaque beige icon family. Research/source honesty and actual viewport/cleanup evidence belong to [L](../validation/RM-015L.md).
