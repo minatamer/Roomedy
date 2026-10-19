@@ -1,6 +1,6 @@
 .intake {
   min-height: 100svh;
-  background: #f7f4ec;
+  background: transparent;
   color: #3e3126;
 }
 .intake button,
@@ -70,7 +70,7 @@
   gap: 24px;
   padding: 20px 32px;
   border-bottom: 1px solid #dfd4c5;
-  background: #fffdf8;
+  background: #fbf5eae8;
 }
 .header > span {
   font-size: 12px;
@@ -146,16 +146,14 @@
   margin: 10px 0;
 }
 .photos {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 16px;
   list-style: none;
   padding: 0;
   margin: 20px 0;
 }
 .photos > li {
-  flex: 1 1 220px;
-  max-width: 420px;
   background: #fffdf8;
   border: 1px solid #ded3c3;
   border-radius: 14px;
@@ -164,9 +162,11 @@
   animation: arrive 0.25s ease-out;
 }
 .photoPreview {
-  height: 180px;
-  display: grid;
-  place-content: center;
+  height: clamp(180px, 34svh, 360px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   border-radius: 8px;
   background: #eee7da;
@@ -175,7 +175,7 @@
 .photoPreview img {
   display: block;
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: contain;
 }
 .photoPreview p {
@@ -600,10 +600,34 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
 }
 .photoMain {
   min-width: 0;
+}
+.photoMain > .upload {
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 1fr);
+  min-height: clamp(280px, calc(100svh - 235px), 620px);
+  grid-template-rows: 1fr auto auto;
+  align-content: stretch;
+  background: #eee0c8ed;
+}
+.photoMain > .upload > div:first-child {
+  grid-column: 1 / -1;
+  align-self: center;
+}
+.photoMain > .upload h2 {
+  font-size: clamp(26px, 3vw, 40px);
+  max-width: 16ch;
+}
+.startActions {
+  align-self: start;
+  background: #fffaf1f0;
+}
+@media (max-width: 759px), (max-height: 500px) {
+  .photoMain > .upload {
+    min-height: 280px;
+  }
 }
 @media (min-width: 1180px) {
   .reviewLayout {
@@ -651,12 +675,23 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
   }
-  .photos > li {
-    max-width: none;
-  }
 }
 @media (max-width: 480px) {
   .upload {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.photoMain:has(.photos) > .upload {
+  min-height: 0;
+  grid-template-rows: auto auto auto;
+}
+.photoMain:has(.photos) > .upload h2 {
+  max-width: none;
+  font-size: 26px;
+}
+@media (max-width: 480px) {
+  .photoMain > .upload {
     grid-template-columns: minmax(0, 1fr);
   }
 }

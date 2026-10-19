@@ -1,0 +1,29 @@
+.root {
+  min-height: 100svh;
+  position: relative;
+  isolation: isolate;
+  background: #d9c8ac;
+}
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  pointer-events: none;
+  background: linear-gradient(120deg, #e6d7bd, #cfb58e);
+}
+.atmosphere picture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.38;
+}
+.photo {
+  object-fit: cover;
+  object-position: center 58%;
+}
+.atmosphere::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, #eee0c7a8, #e7d5b530 65%, #d7bd9740);
+}

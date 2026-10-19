@@ -2,7 +2,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-015A–O committed; RM-015P performance-first landing correction implemented/locally verified; warm lighting Q held, actual visual/smoothness feedback pending and RM-016 Planned
+**Stage:** RM-015A–P committed; RM-015R adaptive demo-space/background correction locally implemented; warm lighting Q held, actual visual/smoothness feedback pending and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -185,6 +185,8 @@ Latest [P](tickets/RM-015P-restore-smooth-landing-scrolling.md) supersedes O's t
 The sample route opens the main editor immediately with authored dimensions and a purposeful arrangement. Adding a room uses a guided intake panel beside a rough, editable 2D sketch of walls, openings and labelled furniture footprints. Keep initial review in 2D while the visitor corrects the draft and measurements; introduce 3D only after they continue to the main editor. Preserve progress when switching relevant panels.
 
 If live AI is unavailable, the supplied sample and manual editor should still be useful. The assistant can explain its current availability. A public failure must not quietly replace the provider response with a scripted success. Development fixtures use an explicit simulation label.
+
+Current demo-space correction [R](tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md) supersedes K’s small top-aligned entry after direct owner feedback. Use available width and height for larger relevant source/condition previews derived from the actual authored fixtures, without a new controller or visitor measurement claims. A single static locally licensed warm bedroom backdrop persists across the demo; no landing house, parallax, photo filter/blur or new asset. Empty upload uses working height, prepared photos release that space, and action cards keep natural content height. Existing rough 2D correction and room-first 2D/3D studio preserve neutral readable task surfaces and all shared state/provenance/commands. Actual screen-size, functional and build evidence belongs to [R](validation/RM-015R.md); actual visual acceptance stays pending and Q lighting remains held.
 
 ## 5. The complete visitor journeys
 
@@ -1306,8 +1308,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Complete exact20-path authorized local P checkpoint, show actual4320 landing/screenshot and await owner smoothness/visual feedback. Keep lighting Q held, guide goal paused, RM-016 and later quality/security pending; no extra ports/paid/live/push/deploy/delegation.
-Active ticket: RM-015P
+Next action: Save exact22-path validated R local checkpoint, then plan/execute/read-only validate the owner-requested S editor corrections (clamped drag, stable frame, concise chrome, working3D and simplified Advanced inspector). Actual visual approval pending; Q held, guide goal paused and RM-016 Planned.
+Active ticket: RM-015R
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1332,7 +1334,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T15:47:43+00:00",
+  "updated_at": "2026-10-19T16:31:16+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1505,8 +1507,13 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "LIVE_REVIEW_URL": {
-      "value": "http://127.0.0.1:4320/ sole hot-reloaded browser URL; existing private4321 behind same origin.4390/4391 stopped, original old-origin editor tab preserved. Development review distinct from exact production artifact.",
-      "source": "docs/validation/RM-015P.md",
+      "value": "http://127.0.0.1:4320/demo sole hot-reloaded browser URL; existing private4321 behind same origin. No4390/4391 listeners; original old-origin visitor tabs untouched. Actual dev review distinct from production artifact.",
+      "source": "docs/validation/RM-015R.md",
+      "confidence": "confirmed"
+    },
+    "DEMO_VISUAL_REVIEW": {
+      "value": "R adaptive demo space/static photo background plus matching glass header and relocated step Back locally validated.414tests/36files/seven boundary cases/root/both builds,191inputs/1500858bytes/BUILD_IDdee4dd163ab4881a2f4f313551f4bbce852d16dfbefd681efde416ebb985f8c8; actual15-size header/nine-size flow/photo/2D/3D/panels/fake lifecycle evidence and clean whole22-path read-only pass2. Owner supplied further S editor feedback; actual visual acceptance pending.",
+      "source": "docs/validation/RM-015R.md; human:current-chat/2026-10-19/demo-space-glass-header-and-editor-feedback",
       "confidence": "confirmed"
     }
   },
@@ -1516,8 +1523,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015P",
-  "next_action": "Complete exact20-path authorized local P checkpoint, show actual4320 landing/screenshot and await owner smoothness/visual feedback. Keep lighting Q held, guide goal paused, RM-016 and later quality/security pending; no extra ports/paid/live/push/deploy/delegation.",
+  "active_ticket": "RM-015R",
+  "next_action": "Save exact22-path validated R local checkpoint, then plan/execute/read-only validate the owner-requested S editor corrections (clamped drag, stable frame, concise chrome, working3D and simplified Advanced inspector). Actual visual approval pending; Q held, guide goal paused and RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -1936,14 +1943,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/tickets/RM-015O-create-a-warm-photographic-landing-background.md; docs/commit-plans/RM-015O.md: exact21-path owner-selected warm photographic background, local licensed crops and bounded existing motion planned before feature edits.",
         "docs/validation/RM-015O.md; docs/design/visual-review.md: final190inputs/1760035bytes/BUILD_IDaa8d66aed1327592fde2b075ca3bc5db78b227bae1d70ccb31d93863894a0fd4,414tests/36files/root/both builds; licensed responsive515164byte background, actual13-size/photo-ready/3startup/3warm moves/clean section-legacy-skip/entryBack evidence and clean whole-ticket read-only pass1. Exact21-path local checkpoint; actual owner visual approval pending.",
         "docs/commit-plans/RM-015P.md; docs/tickets/RM-015P-restore-smooth-landing-scrolling.md: exact19-path performance-first allocation before feature edits. Q lighting recorded Planned.",
-        "docs/validation/RM-015P.md; docs/design/visual-review.md: final188inputs/1495693bytes/BUILD_ID6f760018a29ea875ae511e5d436267795d3b490efba94ae68f1f3373ace47e65,414tests/36files/root/both builds; one local photo/batched scroll work, centered clear cue, small scoped frosted CTA and actual-ready text fade. Actual13-size/3startup/normal-reverse-rapid/loading/entryBack evidence, explicit limits and clean whole20-path read-only pass1. Exact20-path local checkpoint; actual owner performance/visual feedback pending, Q held."
+        "docs/validation/RM-015P.md; docs/design/visual-review.md: final188inputs/1495693bytes/BUILD_ID6f760018a29ea875ae511e5d436267795d3b490efba94ae68f1f3373ace47e65,414tests/36files/root/both builds; one local photo/batched scroll work, centered clear cue, small scoped frosted CTA and actual-ready text fade. Actual13-size/3startup/normal-reverse-rapid/loading/entryBack evidence, explicit limits and clean whole20-path read-only pass1. Exact20-path local checkpoint; actual owner performance/visual feedback pending, Q held.",
+        "docs/commit-plans/RM-015R.md; docs/tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md: exact22-path demo-space/background allocation before source edits.",
+        "docs/validation/RM-015R.md; docs/design/visual-review.md: exact22-path adaptive demo/photo/glass header correction,191inputs/1500858bytes/BUILD_IDdee4dd163ab4881a2f4f313551f4bbce852d16dfbefd681efde416ebb985f8c8,414tests/36files/seven boundaries/root/both builds and whole-ticket read-only pass2 clean. Actual owner visual approval pending; newer direct S editor feedback queued; Q held."
       ],
       "blockers": [],
       "approval": {
-        "quote": "its very laggy now tho after the recent additions of background, tackle that first",
-        "source": "human:current-chat/2026-10-19/lag-after-background-fix-before-lighting",
-        "scope": "Execute and validate RM-015P landing performance correction before held restrained warm dynamic-lighting request Q. Existing exact local commit loop only, no result approval or other authority.",
-        "recorded_at": "2026-10-19T15:25:22+00:00"
+        "quote": "too much dead space literally in the first part of the demo flow ... demo flow should always try to DYNAMICALLY fill the screen as much as possible with content that makes sense, no filler ... maybe use the same background from landing (without the house ofc)",
+        "source": "human:current-chat/2026-10-19/demo-dead-space-dynamic-useful-content-warm-background",
+        "scope": "Execute/validate R whole-demo layout/background correction before held Q lighting. Existing exact local checkpoint loop; no actual visual approval or new external authority.",
+        "recorded_at": "2026-10-19T15:53:45+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2008,6 +2017,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/lag-after-background-fix-before-lighting",
             "scope": "Execute and validate RM-015P landing performance correction before held restrained warm dynamic-lighting request Q. Existing exact local commit loop only, no result approval or other authority.",
             "recorded_at": "2026-10-19T15:25:22+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "too much dead space literally in the first part of the demo flow ... demo flow should always try to DYNAMICALLY fill the screen as much as possible with content that makes sense, no filler ... maybe use the same background from landing (without the house ofc)",
+            "source": "human:current-chat/2026-10-19/demo-dead-space-dynamic-useful-content-warm-background",
+            "scope": "Execute/validate R whole-demo layout/background correction before held Q lighting. Existing exact local checkpoint loop; no actual visual approval or new external authority.",
+            "recorded_at": "2026-10-19T15:53:45+00:00"
           }
         }
       ]

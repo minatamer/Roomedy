@@ -3,7 +3,7 @@
   display: grid;
   grid-template-rows: 68px minmax(0, 1fr) auto;
   color: #332e28;
-  background: #f7f5f0;
+  background: transparent;
 }
 .studio button,
 .expired button {

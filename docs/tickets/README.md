@@ -9,7 +9,7 @@ Current instruction: execute and validate tickets in numeric order, stage/commit
 
 Owner-requested revision: incorporate lessons from the four referenced visual/manual-test chats before proceeding. Read [repository instructions](../../AGENTS.md), [feedback guidelines and their evidence](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and the [feature/review checklist](../design/REVIEW_CHECKLIST.md). These are requirements for the existing packets, not additional product features or authorization to implement.
 
-**Current 19 October steering:** RM-015A–Q below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
+**Current 19 October steering:** RM-015A–R below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
 
 ## Why twenty original packets
 
@@ -54,7 +54,8 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015N](RM-015N-refine-landing-glass-and-scroll-navigation.md) | Glass/depth, consistent first reveal, clean smooth section navigation/underline and refined scroll cue | RM-015M | Implemented locally;414tests/root/both builds; actual approval pending |
 | [RM-015O](RM-015O-create-a-warm-photographic-landing-background.md) | Warm local interior photography/material atmosphere behind the animated room | RM-015N | Implemented/locally verified; actual visual approval pending |
 | [RM-015P](RM-015P-restore-smooth-landing-scrolling.md) | Performance-first photographic/scroll correction, centered cue and faster readiness fade | RM-015O | Implemented/locally verified; actual smoothness/visual feedback pending |
-| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015P | Planned; held behind performance correction and actual feedback |
+| [RM-015R](RM-015R-fill-demo-flow-with-useful-adaptive-content.md) | Adaptive useful demo space and shared static warm photographic background without landing house | RM-015P | Current owner correction; locally implemented, actual visual approval pending |
+| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015R | Planned; held behind current demo-space correction and actual feedback |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |

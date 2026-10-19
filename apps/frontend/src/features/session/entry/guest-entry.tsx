@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useReducer, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import type { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import { useSurfaceMotion } from '../../room-editor/use-surface-motion';
 import { Brand } from '../../landing/brand';
@@ -26,28 +28,30 @@ const conditions: readonly {
   id: RoomCondition;
   title: string;
   copy: string;
-  icon: string;
 }[] = [
   {
     id: 'empty',
     title: 'An empty room',
     copy: 'A blank canvas for your essentials.',
-    icon: '□',
   },
   {
     id: 'partial',
     title: 'A few pieces',
     copy: 'Keep what works. Fill in the rest.',
-    icon: '▥',
   },
   {
     id: 'furnished',
     title: 'Already furnished',
     copy: 'Find a fresh arrangement for what’s there.',
-    icon: '▦',
   },
 ];
-export function GuestEntry({ initial }: { initial: EntryState }) {
+export function GuestEntry({
+  initial,
+  previews,
+}: {
+  initial: EntryState;
+  previews: Record<RoomCondition, ReactNode>;
+}) {
   const [state, dispatch] = useReducer(entryReducer, initial);
   const motion = useSurfaceMotion(state.step);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -78,22 +82,28 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
     <>
       <header className="site-header shell">
         <Brand />
-        <Link href="/" className="text-link">
-          Back to home <span aria-hidden="true">↗</span>
-        </Link>
+        {state.step === 'source' ? (
+          <Link href="/" className="text-link">
+            Back to home <span aria-hidden="true">↗</span>
+          </Link>
+        ) : (
+          <button
+            className="text-link"
+            aria-label="Back to room choices"
+            onClick={() => dispatch({ type: 'back' })}
+          >
+            <span aria-hidden="true">←</span> Back
+          </button>
+        )}
       </header>
-      <main id="main-content" className="entry-main shell">
+      <main
+        id="main-content"
+        className="entry-main shell"
+        data-entry-step={state.step}
+      >
         <div ref={motion} className="motion-surface">
           <div className="motion-flow entry-layout">
             <div className="entry-heading">
-              {state.step !== 'source' && (
-                <button
-                  className="back-button"
-                  onClick={() => dispatch({ type: 'back' })}
-                >
-                  ← Back
-                </button>
-              )}
               <p className="eyebrow">YOUR SPACE, A FRESH PERSPECTIVE</p>
               <h1 ref={heading} tabIndex={-1}>
                 {title}
@@ -113,9 +123,7 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
                   onClick={() => dispatch({ type: 'source', source: 'sample' })}
                 >
                   <span className="choice-art sample-art" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
+                    {previews.furnished}
                   </span>
                   <span className="choice-title">
                     Use a sample room <span>↗</span>
@@ -129,25 +137,22 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
                   onClick={() => dispatch({ type: 'source', source: 'own' })}
                 >
                   <span className="choice-art own-art" aria-hidden="true">
-                    <svg viewBox="0 0 140 90">
-                      <rect
-                        x="22"
-                        y="12"
-                        width="95"
-                        height="65"
-                        rx="8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
+                    <picture>
+                      <source
+                        media="(max-width: 600px)"
+                        srcSet="/landing/bedroom-narrow.webp"
                       />
-                      <path
-                        d="m35 64 25-26 19 19 12-12 17 19M95 29h.1"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
+                      <Image
+                        src="/landing/bedroom-wide.webp"
+                        alt=""
+                        fill
+                        unoptimized
+                        sizes="(max-width: 700px) 110px, 50vw"
+                        onError={(event) => {
+                          event.currentTarget.hidden = true;
+                        }}
                       />
-                      <circle cx="94" cy="29" r="5" fill="currentColor" />
-                    </svg>
+                    </picture>
                   </span>
                   <span className="choice-title">
                     Add my room <span>↗</span>
@@ -167,8 +172,11 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
                       dispatch({ type: 'condition', condition: condition.id })
                     }
                   >
-                    <span className="condition-icon" aria-hidden="true">
-                      {condition.icon}
+                    <span
+                      className="choice-art condition-art"
+                      aria-hidden="true"
+                    >
+                      {previews[condition.id]}
                     </span>
                     <span className="choice-title">
                       {condition.title} <span>↗</span>
