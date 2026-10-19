@@ -16,6 +16,34 @@ const fieldSchema = z.enum([
   'hinge',
   'sill',
 ]);
+const categorySchema = z.enum(['bed', 'desk', 'chair', 'wardrobe', 'storage']);
+/** Interpretation has no edit coordinates or permissions. The application authors a clarification. */
+export const designIntentSchema = z.strictObject({
+  goal: z.enum([
+    'open-space',
+    'work-by-window',
+    'palette',
+    'piece-finish',
+    'left',
+    'right',
+    'furnish',
+    'explain',
+    'clarify',
+    'unsupported',
+  ]),
+  targetIds: z.array(idSchema).max(5),
+  categories: z.array(categorySchema).max(5),
+  finish: finishSchema.nullable(),
+  palette: z.enum(['warm', 'light', 'calm']).nullable(),
+});
+export type DesignIntent = z.infer<typeof designIntentSchema>;
+export const designSuggestionSchema = z.strictObject({
+  label: z.string().min(1).max(240),
+  request: z.string().min(1).max(POLICY.visitorTextChars),
+  selectedId: idSchema.nullable(),
+  roomRevision: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+});
+export type DesignSuggestion = z.infer<typeof designSuggestionSchema>;
 export const assistantReplySchema = z.strictObject({
   kind: z.enum([
     'explanation',
@@ -42,9 +70,9 @@ export const assistantReplySchema = z.strictObject({
       'undo',
     ])
     .nullable(),
+  suggestions: z.array(designSuggestionSchema).max(3).optional(),
 });
 export type AssistantReply = z.infer<typeof assistantReplySchema>;
-const categorySchema = z.enum(['bed', 'desk', 'chair', 'wardrobe', 'storage']);
 /** Flat tool actions avoid deep provider dialect nesting. Application builds full semantic additions. */
 export const assistantEditSchema = z.strictObject({
   type: z.enum([
@@ -99,7 +127,13 @@ export const assistantToolSchemas = {
 } as const;
 export type AssistantTool = keyof typeof assistantToolSchemas;
 export const assistantFinalSchema = z.strictObject({ kind: z.literal('done') });
-export const assistantJsonSchema = (name: AssistantTool | 'final') =>
+export const assistantJsonSchema = (
+  name: AssistantTool | 'final' | 'interpretation',
+) =>
   z.toJSONSchema(
-    name === 'final' ? assistantFinalSchema : assistantToolSchemas[name],
+    name === 'final'
+      ? assistantFinalSchema
+      : name === 'interpretation'
+        ? designIntentSchema
+        : assistantToolSchemas[name],
   );

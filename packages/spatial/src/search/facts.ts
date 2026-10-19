@@ -260,8 +260,9 @@ export function candidateRank(
   checks: CheckFacts,
 ): number[] {
   const hard = checks.issues.filter((i) => i.severity === 'hard');
-  const primary =
-    goal.kind === 'rearrange-owned' ? -(facts.centralFreeMm2.after ?? 0) : 0;
+  const primary = ['rearrange-owned', 'open-space'].includes(goal.kind)
+    ? -(facts.centralFreeMm2.after ?? 0)
+    : 0;
   return [
     hard.length,
     hard.reduce((n, i) => n + (i.areaMm2 ?? 0), 0),

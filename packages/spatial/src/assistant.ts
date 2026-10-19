@@ -4,6 +4,11 @@ import type { ActionScope, ProposalAction } from '@roomedy/contracts/commands';
 import type { SearchGoal } from '@roomedy/contracts/search';
 import { findCatalogueEntry, CATALOGUE } from './catalogue.js';
 import { checkRoom } from './checks.js';
+import { designerRequest, designPalette } from './design.js';
+import type { DesignTurn } from './design.js';
+
+const clarificationLabel =
+  'Which change would help: move the work area by a window, rearrange owned pieces, choose furniture, or preview a finish?';
 
 export interface AssistantTask {
   kind:
@@ -15,6 +20,7 @@ export interface AssistantTask {
     | 'unsupported'
     | 'control'
     | 'undo';
+  interpret?: boolean;
   label: string;
   scope: ActionScope;
   goal: SearchGoal | null;
@@ -43,7 +49,7 @@ export function emptyAssistantReply(
   };
 }
 /** Pure application policy, not model-generated authority. Unresolved language is clarified before any mutation capability exists. */
-export function resolveAssistantTask(
+function resolveExplicitTask(
   room: RoomDocument,
   text: string,
   selectedId: string | null,
@@ -62,8 +68,7 @@ export function resolveAssistantTask(
   };
   const task: AssistantTask = {
     kind: 'clarify',
-    label:
-      'Which change would help: move the work area by a window, rearrange owned pieces, choose furniture, or preview a finish?',
+    label: clarificationLabel,
     scope,
     goal: null,
     actions: null,
@@ -162,8 +167,66 @@ export function resolveAssistantTask(
     /\b(make|feel|preview|palette|finish|warm|calm|airy|focused)\b/.test(t);
   const preset = /\b(calm|focused|calm-focused)\b/.test(t)
     ? { floorFinish: 'walnut' as const, wallFinish: 'sage' as const }
-    : { floorFinish: 'oak' as const, wallFinish: 'ivory' as const };
+    : /\b(warm|warmer|warm-simple)\b/.test(t)
+      ? { floorFinish: 'oak' as const, wallFinish: 'clay' as const }
+      : { floorFinish: 'oak' as const, wallFinish: 'ivory' as const };
   const adding = /\b(add|need|furnish)\b/.test(t);
+  if (
+    /\b(rotate|turn)\b/.test(t) &&
+    !/\b(move|add|remove|replace|finish)\b/.test(t)
+  ) {
+    const targets =
+      selected && /\b(this|that|selected|it)\b/.test(t)
+        ? [selected]
+        : referenced;
+    const degrees = t.match(/\b(\d+(?:\.\d+)?)\s*(?:degrees?|°)?/);
+    if (
+      targets.length !== 1 ||
+      (degrees &&
+        (!['90', '180', '270'].includes(degrees[1]!) ||
+          [...t.matchAll(/\d+(?:\.\d+)?/g)].length !== 1)) ||
+      /\b(or|and)\b/.test(t) ||
+      /[-−]\s*\d/.test(t)
+    )
+      return {
+        ...task,
+        label: 'Select one piece and choose a 90, 180 or 270 degree turn.',
+        objectIds: targets.map((p) => p.id),
+      };
+    const p = targets[0]!;
+    if (p.locks.rotation)
+      return {
+        ...task,
+        kind: 'control',
+        label: `${p.label} has a rotation lock. Review it before turning the piece.`,
+        objectIds: [p.id],
+        control: 'rotation-lock',
+      };
+    const turns = degrees
+      ? Number(degrees[1]) / 90
+      : /\baround\b/.test(t)
+        ? 2
+        : 1;
+    const directed = /\b(counterclockwise|anticlockwise)\b/.test(t)
+      ? -turns
+      : turns;
+    scope.actionKinds = ['rotate'];
+    scope.targetIds = [p.id];
+    return {
+      ...task,
+      kind: 'edits',
+      label: `Turn ${p.label}`,
+      objectIds: [p.id],
+      actions: [
+        {
+          type: 'rotate',
+          id: p.id,
+          quarterTurns: ((p.pose.quarterTurns + directed + 4) % 4) as
+            0 | 1 | 2 | 3,
+        },
+      ],
+    };
+  }
   if (/\b(remove|replace)\b/.test(t)) {
     const targetText = t.split(/\bwith\b/)[0]!;
     const targetTypes = types.filter((c) =>
@@ -309,7 +372,7 @@ export function resolveAssistantTask(
       return {
         ...task,
         kind: 'search',
-        label: `Preview ${piece.label} finish`,
+        label: `Preview ${piece.label} in ${finish}`,
         goal,
         objectIds: [piece.id],
       };
@@ -563,5 +626,93 @@ export function resolveAssistantTask(
       objectIds: targets.map((p) => p.id),
     };
   }
+  return task;
+}
+
+/** Understanding may use conversational context; exact edit authority remains application-owned. */
+export function resolveAssistantTask(
+  room: RoomDocument,
+  text: string,
+  selectedId: string | null,
+  operationId: string,
+  context: readonly DesignTurn[] = [],
+): AssistantTask {
+  const design = designerRequest(room, text, selectedId, context.slice(-40));
+  const empty = () => resolveExplicitTask(room, '', null, operationId);
+  if (design.clarification) return { ...empty(), label: design.clarification };
+  const task = resolveExplicitTask(
+    room,
+    design.text,
+    design.selectedId,
+    operationId,
+  );
+  if (task.kind === 'search' && task.goal) {
+    if (design.openSpace) {
+      task.goal.kind = 'open-space';
+      task.goal.targetIds = room.furniture
+        .filter(
+          (p) =>
+            !p.locks.position &&
+            (design.targets === null || design.targets.includes(p.id)),
+        )
+        .map((p) => p.id);
+      task.scope.targetIds = [...task.goal.targetIds];
+      task.objectIds = [...task.goal.targetIds];
+      task.label = 'Open up the room';
+    }
+    if (design.excluded.length) {
+      task.goal.fixedIds = [
+        ...new Set([...task.goal.fixedIds, ...design.excluded]),
+      ];
+      task.goal.targetIds = task.goal.targetIds.filter(
+        (id) => !design.excluded.includes(id),
+      );
+      task.scope.targetIds = task.scope.targetIds.filter(
+        (id) => !design.excluded.includes(id),
+      );
+      task.objectIds = task.objectIds.filter(
+        (id) => !design.excluded.includes(id),
+      );
+    }
+    if (design.mood && task.goal.kind !== 'appearance') {
+      task.extraFinish = { type: 'room-finish', ...designPalette(design.mood) };
+      task.scope.roomFinishes = true;
+      task.scope.actionKinds.push('room-finish');
+      task.label += ` with a ${design.mood} palette`;
+    }
+    if (
+      !task.goal.targetIds.length &&
+      !task.goal.additions.length &&
+      !task.goal.replacements.length &&
+      task.goal.kind !== 'appearance'
+    ) {
+      const locked = room.furniture.find(
+        (p) =>
+          p.locks.position &&
+          (design.targets === null || design.targets.includes(p.id)),
+      );
+      if (locked)
+        return {
+          ...empty(),
+          kind: 'control',
+          label: `${locked.label} has a position lock. Review it before requesting a layout change.`,
+          objectIds: [locked.id],
+          control: 'position-lock',
+        };
+      return {
+        ...empty(),
+        label:
+          'Which piece can change position? Review a position lock or choose a finish-only change.',
+      };
+    }
+  }
+  if (
+    task.kind === 'clarify' &&
+    task.label === clarificationLabel &&
+    !/\b(don't|do not|never|except|without|instead|ignore|unlock|confirm|not)\b/.test(
+      text.toLowerCase().replace(/[’]/g, "'"),
+    )
+  )
+    return { ...task, interpret: true };
   return task;
 }

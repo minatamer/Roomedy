@@ -1,5 +1,8 @@
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
-import type { AssistantReply } from '@roomedy/contracts/assistant';
+import type {
+  AssistantReply,
+  DesignSuggestion,
+} from '@roomedy/contracts/assistant';
 import type {
   OperationIdentity,
   ActionScope,
@@ -152,11 +155,16 @@ export class AssistantController {
     const selectedId = this.session.getSnapshot().presentation.selectedId;
     const token = this.session.beginOperation();
     if (!token) return;
+    const context = this.state.messages
+      .map((m) => ({ role: m.role, text: m.text }))
+      .slice(-POLICY.contextTurns);
+    while (jsonBytes(context) > POLICY.contextBytes) context.shift();
     const task = resolveAssistantTask(
       workspace.current,
       text,
       selectedId,
       token.operationId,
+      context,
     );
     this.pending = token;
     this.publish({ draft: '', busy: true, stage: 'request' });
@@ -232,7 +240,10 @@ export class AssistantController {
         );
     };
     try {
-      if (['clarify', 'unsupported', 'control', 'undo'].includes(task.kind)) {
+      if (
+        !task.interpret &&
+        ['clarify', 'unsupported', 'control', 'undo'].includes(task.kind)
+      ) {
         finish({
           ...emptyAssistantReply(
             workspace.current,
@@ -315,11 +326,6 @@ export class AssistantController {
         localCandidate = found.candidate;
       }
       this.publish({ stage: 'request' });
-      const context = this.state.messages
-        .slice(0, -1)
-        .map((m) => ({ role: m.role, text: m.text }))
-        .slice(-POLICY.contextTurns);
-      while (jsonBytes(context) > POLICY.contextBytes) context.shift();
       const result = await askAssistant(
         {
           schemaVersion: VERSIONS.schema,
@@ -358,6 +364,26 @@ export class AssistantController {
   }
   cancel() {
     this.session.cancelPreview();
+  }
+  chooseSuggestion(messageId: number, suggestion: DesignSuggestion) {
+    const last = this.state.messages.at(-1),
+      workspace = this.session.getSnapshot().workspace;
+    if (
+      !this.session.canEdit() ||
+      this.state.busy ||
+      last?.id !== messageId ||
+      !last.reply?.suggestions?.includes(suggestion) ||
+      !workspace ||
+      workspace.current.roomRevision !== suggestion.roomRevision ||
+      (suggestion.selectedId !== null &&
+        !workspace.current.furniture.some(
+          (p) => p.id === suggestion.selectedId,
+        ))
+    )
+      return;
+    if (suggestion.selectedId) this.session.select(suggestion.selectedId);
+    this.session.setPanel('assistant');
+    void this.submit(suggestion.request);
   }
   apply() {
     const label = this.session.getSnapshot().candidate?.label ?? 'Room changes';

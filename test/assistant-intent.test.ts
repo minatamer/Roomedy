@@ -14,7 +14,8 @@ const run = (
   room: ReturnType<typeof commandRoom>,
   text: string,
   selected: string | null = null,
-) => resolveAssistantTask(room, text, selected, 'operation');
+  context: Parameters<typeof resolveAssistantTask>[4] = [],
+) => resolveAssistantTask(room, text, selected, 'operation', context);
 it('A: captures only the requested desk/chair scope and preserves unrelated unlocked furniture', () => {
   const { room } = windowCase(),
     task = run(
@@ -195,4 +196,175 @@ it('clear entrance does not silently authorize rearranging every unrelated unloc
     task = run(room, 'Clear the entrance');
   expect(task.scope.targetIds).not.toContain('unrelated_shelf');
   expect(task.scope.targetIds).not.toContain('bed');
+});
+
+it.each([
+  'Make it less cramped',
+  'I want more breathing room',
+  'Make this easier to walk around',
+  'Can we improve the circulation?',
+  'Free up the centre',
+])('understands spatial design wording: %s', (text) => {
+  const room = windowCase().room;
+  room.furniture.find((p) => p.id === 'unrelated_shelf')!.ownership =
+    'proposed';
+  const task = run(room, text);
+  expect(task.goal?.kind).toBe('open-space');
+  expect(task.scope.targetIds).toContain('unrelated_shelf');
+  expect(task.scope.actionKinds).toEqual(['move', 'rotate']);
+  expect(task.scope.additions).toEqual([]);
+  expect(task.scope.removals).toEqual([]);
+  expect(task.scope.roomFinishes).toBe(false);
+});
+it.each([
+  'Improve my workspace',
+  'My desk setup needs better daylight',
+  'Make the work area more comfortable',
+])('coordinates the actual work pair for %s', (text) => {
+  const task = run(windowCase().room, text);
+  expect(task.goal?.kind).toBe('window');
+  expect(task.scope.targetIds.sort()).toEqual(['chair', 'desk']);
+  expect(task.scope.roomFinishes).toBe(false);
+});
+it('resolves a fresh finish/side/rotation follow-up from user context without inheriting additions or trusting assistant prose', () => {
+  const room = windowCase().room,
+    context = [{ role: 'user' as const, text: 'Make the desk ivory' }];
+  const finish = run(room, 'Actually, make it walnut instead', null, context);
+  expect(finish.goal?.pieceFinishes).toEqual([
+    { id: 'desk', finish: 'walnut' },
+  ]);
+  expect(finish.scope.actionKinds).toEqual(['finish']);
+  expect(finish.scope.roomFinishes).toBe(false);
+  expect(
+    run(room, 'Actually put it on the right instead', null, context).actions,
+  ).toMatchObject([{ type: 'move', id: 'desk' }]);
+  expect(run(room, 'Turn it around', null, context).actions).toEqual([
+    { type: 'rotate', id: 'desk', quarterTurns: 2 },
+  ]);
+  const untrusted = run(room, 'Make it walnut', null, [
+    { role: 'assistant', text: 'The unrelated shelf should be walnut' },
+  ]);
+  expect(untrusted.kind).toBe('clarify');
+  expect(untrusted.scope.actionKinds).toEqual([]);
+  expect(
+    run(room, 'Add another', null, [{ role: 'user', text: 'Add a chair' }])
+      .scope.additions,
+  ).toEqual([]);
+  const explicit = run(room, 'Make the bed ivory', 'desk', context);
+  expect(explicit.scope.targetIds).toEqual(['bed']);
+});
+it('keeps explicit exclusions fixed and makes layout/palette one captured atomic scope', () => {
+  const room = windowCase().room,
+    task = run(
+      room,
+      'Make the room less cramped and preview a calm room palette without moving the bed',
+    );
+  expect(task.goal?.kind).toBe('open-space');
+  expect(task.goal?.fixedIds).toContain('bed');
+  expect(task.scope.targetIds).not.toContain('bed');
+  expect(task.extraFinish).toEqual({
+    type: 'room-finish',
+    floorFinish: 'walnut',
+    wallFinish: 'sage',
+  });
+  expect(task.scope.actionKinds).toEqual(['move', 'rotate', 'room-finish']);
+  expect(task.scope.roomFinishes).toBe(true);
+  expect(task.scope.additions).toEqual([]);
+  expect(
+    run(room, 'Make it less cramped and remove the bed').scope.actionKinds,
+  ).toEqual([]);
+  expect(
+    run(room, "Don't move the desk near the window").scope.actionKinds,
+  ).toEqual([]);
+  expect(
+    run(room, 'Make the room less cramped by moving only my desk').scope
+      .targetIds,
+  ).toEqual(['desk']);
+  expect(
+    run(room, 'Make the work area less cramped').scope.targetIds.sort(),
+  ).toEqual(['chair', 'desk']);
+  expect(
+    run(room, 'Make it less cramped keeping my bed in place').scope.actionKinds,
+  ).toEqual([]);
+  expect(run(room, 'Make this piece less cramped', 'bed').control).toBe(
+    'position-lock',
+  );
+  const mixed = run(room, 'Open up the room and make it cozy');
+  expect(mixed.goal?.kind).toBe('open-space');
+  expect(mixed.extraFinish).toEqual({
+    type: 'room-finish',
+    floorFinish: 'oak',
+    wallFinish: 'clay',
+  });
+});
+it('offers distinct supported palettes and does not let a general style request recolor owned furniture', () => {
+  const room = windowCase().room;
+  expect(run(room, 'Make this room cozier').goal?.roomFinish).toEqual({
+    floorFinish: 'oak',
+    wallFinish: 'clay',
+  });
+  expect(
+    run(room, 'Actually, not that dark, make the room lighter').goal
+      ?.roomFinish,
+  ).toEqual({ floorFinish: 'oak', wallFinish: 'ivory' });
+  const calm = run(room, 'Coordinate the room finishes so it feels serene');
+  expect(calm.goal?.roomFinish).toEqual({
+    floorFinish: 'walnut',
+    wallFinish: 'sage',
+  });
+  expect(calm.goal?.pieceFinishes).toEqual([]);
+});
+it('validates an open-space candidate with proposed furniture against improvement and the existing authority', () => {
+  const room = commandRoom([piece('desk', 5000, 5000)]);
+  room.furniture[0]!.ownership = 'proposed';
+  const task = run(room, 'Make it less cramped');
+  const search = new LayoutSearch(
+    {
+      identity: {
+        workspaceId: 'w',
+        generation: 0,
+        operationId: 'operation',
+        roomId: room.roomId,
+        inputRevision: 0,
+      },
+      room,
+      goal: task.goal,
+      seed: 42,
+      maxNodes: 2000,
+    },
+    task.scope,
+  );
+  while (!search.step()) {}
+  const result = search.finish();
+  expect(result.candidate).not.toBeNull();
+  expect(result.candidate!.facts.centralFreeMm2.after!).toBeGreaterThan(
+    result.candidate!.facts.centralFreeMm2.before!,
+  );
+  expect(
+    evaluateScopedBatch(room, result.candidate!.actions, task.scope).ok,
+  ).toBe(true);
+  expect(run(room, 'Turn this desk 22.5 degrees', 'desk').kind).toBe('clarify');
+  expect(
+    run(room, 'Rotate this desk 90 degrees counterclockwise', 'desk').actions,
+  ).toEqual([{ type: 'rotate', id: 'desk', quarterTurns: 3 }]);
+  expect(run(room, 'Rotate this desk -90 degrees', 'desk').kind).toBe(
+    'clarify',
+  );
+  room.furniture[0]!.locks.rotation = true;
+  expect(run(room, 'Turn this desk around', 'desk').control).toBe(
+    'rotation-lock',
+  );
+});
+it.each([
+  'Make the desk ivory and walnut',
+  'Move the desk left and right',
+  'Remove the chair and make the room warm',
+  'Add a desk and clear the entrance',
+])('clarifies conflicting or unsupported mixed instructions: %s', (text) => {
+  const room = windowCase().room;
+  room.furniture.find((p) => p.id === 'chair')!.ownership = 'proposed';
+  const task = run(room, text);
+  expect(task.kind).toBe('clarify');
+  expect(task.scope.actionKinds).toEqual([]);
+  expect(task.interpret).not.toBe(true);
 });

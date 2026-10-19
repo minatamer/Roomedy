@@ -160,6 +160,29 @@ export function Assistant({
               }
             >
               <p>{message.text}</p>
+              {!!reply?.suggestions?.length && (
+                <div
+                  className={styles.goals}
+                  aria-label="Clarify your design goal"
+                >
+                  {reply.suggestions.map((suggestion) => (
+                    <button
+                      key={suggestion.label}
+                      disabled={
+                        roomState.comparison !== 'current' ||
+                        state.busy ||
+                        state.messages.at(-1)?.id !== message.id ||
+                        suggestion.roomRevision !== room.roomRevision
+                      }
+                      onClick={() =>
+                        controller.chooseSuggestion(message.id, suggestion)
+                      }
+                    >
+                      {suggestion.label}
+                    </button>
+                  ))}
+                </div>
+              )}
               {reply?.kind === 'proposal' && (
                 <p className={styles.note}>
                   {active
@@ -250,10 +273,6 @@ export function Assistant({
                   {reply.facts.approximate ? 'Approximate inputs · ' : ''}
                   {reply.facts.coordinatedIds.length > 1
                     ? 'Desk and chair coordination is included. '
-                    : ''}
-                  {reply.facts.windowDistanceMm.before !== null &&
-                  reply.facts.windowDistanceMm.after !== null
-                    ? `Desk-to-window distance: ${Math.round(reply.facts.windowDistanceMm.before)} → ${Math.round(reply.facts.windowDistanceMm.after)} mm. `
                     : ''}
                   {reply.facts.changedIds.length}{' '}
                   {reply.facts.changedIds.length === 1 ? 'change' : 'changes'}{' '}

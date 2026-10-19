@@ -5,6 +5,8 @@ import { AssistantController } from '../apps/frontend/src/features/assistant/con
 import { createRuntime } from '../apps/backend/src/runtime/create-runtime.js';
 import { parseRuntimeConfig } from '../apps/backend/src/config/runtime-config.js';
 import { createRoomedyFakeProvider } from '../apps/backend/src/providers/fake.js';
+import { createFakeProvider } from '../apps/backend/src/providers/provider.js';
+import { assistantFakeResponse } from '../apps/backend/src/assistant/fake.js';
 import { createAssistantHandler } from '../apps/backend/src/assistant/assistant.js';
 import { operationInputSchema } from '@roomedy/contracts/operations';
 import { LayoutSearch, proposedSearchPiece } from '@roomedy/spatial';
@@ -17,7 +19,7 @@ import {
   recoveryOf,
 } from '../apps/frontend/src/features/session/project.js';
 
-async function setup(hold = false) {
+async function setup(hold = false, provider = createRoomedyFakeProvider()) {
   let now = 0;
   const room = windowCase().room,
     session = new SessionController(room, { now: () => now });
@@ -28,7 +30,7 @@ async function setup(hold = false) {
         now: Date.now,
         nextId: ids,
         log: vi.fn(),
-        provider: createRoomedyFakeProvider(),
+        provider,
         handlers: { assistant: createAssistantHandler(vi.fn(), ids) },
       },
     );
@@ -130,6 +132,107 @@ it('previews one coordinated proposal separately, applies twice idempotently and
   }).toEqual({ ...before, roomRevision: 0 });
   expect(s.session.getSnapshot().workspace!.current.roomRevision).toBe(2);
   expect(s.runtime.operations.calls()).toBe(dispatched);
+  s.close();
+});
+it('keeps a finish correction grounded across view changes and whole-change Undo', async () => {
+  const s = await setup(),
+    before = s.session.getSnapshot().workspace!.current;
+  await s.assistant.submit('Make the desk ivory');
+  expect(
+    s.session
+      .getSnapshot()
+      .candidate?.room.furniture.find((p) => p.id === 'desk')!.finish,
+  ).toBe('ivory');
+  expect(s.assistant.apply().ok).toBe(true);
+  s.session.select(null);
+  s.session.setRoomView('cutaway');
+  await s.assistant.submit('Actually, make it walnut instead');
+  const candidate = s.session.getSnapshot().candidate!;
+  expect(candidate.room.furniture.find((p) => p.id === 'desk')!.finish).toBe(
+    'walnut',
+  );
+  expect(
+    candidate.room.furniture.find((p) => p.id === 'unrelated_shelf'),
+  ).toEqual(before.furniture.find((p) => p.id === 'unrelated_shelf'));
+  s.session.setRoomView('plan');
+  expect(s.session.getSnapshot().candidate?.room).toBe(candidate.room);
+  expect(s.assistant.apply().ok).toBe(true);
+  expect(s.assistant.undo().ok).toBe(true);
+  expect(
+    s.session
+      .getSnapshot()
+      .workspace!.current.furniture.find((p) => p.id === 'desk')!.finish,
+  ).toBe('ivory');
+  expect(s.assistant.undo().ok).toBe(true);
+  expect(s.session.getSnapshot().workspace!.current.furniture).toEqual(
+    before.furniture,
+  );
+  expect(s.runtime.meteredDispatches()).toBe(0);
+  s.close();
+});
+it('requires a fresh visitor choice after novel-language interpretation and fences old/changed-room options', async () => {
+  const s = await setup();
+  await s.assistant.submit('The furniture needs a quieter visual rhythm');
+  const message = s.assistant.getSnapshot().messages.at(-1)!,
+    suggestions = message.reply!.suggestions!;
+  expect(suggestions).toHaveLength(3);
+  expect(s.session.getSnapshot().candidate).toBeNull();
+  expect(s.session.getSnapshot().workspace!.history.entries).toHaveLength(0);
+  const initialCalls = s.runtime.operations.calls();
+  s.assistant.chooseSuggestion(message.id, { ...suggestions[1]! });
+  expect(s.runtime.operations.calls()).toBe(initialCalls);
+  s.assistant.chooseSuggestion(message.id, suggestions[1]!);
+  await vi.waitFor(() =>
+    expect(s.session.getSnapshot().candidate).not.toBeNull(),
+  );
+  expect(s.assistant.apply().ok).toBe(true);
+  const calls = s.runtime.operations.calls();
+  s.assistant.chooseSuggestion(message.id, suggestions[0]!);
+  expect(s.runtime.operations.calls()).toBe(calls);
+  await s.assistant.submit('Where should the visual rhythm go next?');
+  const fresh = s.assistant.getSnapshot().messages.at(-1)!;
+  expect(fresh.reply?.suggestions?.length).toBeGreaterThan(0);
+  expect(
+    s.session.dispatch(
+      [{ type: 'finish', id: 'desk', finish: 'clay' }],
+      'Finish',
+    ).ok,
+  ).toBe(true);
+  const after = s.runtime.operations.calls();
+  s.assistant.chooseSuggestion(fresh.id, fresh.reply!.suggestions![0]!);
+  expect(s.runtime.operations.calls()).toBe(after);
+  expect(s.session.getSnapshot().candidate).toBeNull();
+  expect(s.runtime.meteredDispatches()).toBe(0);
+  s.close();
+});
+it('keeps conversation and composer ownership when a clarification binds a specific piece', async () => {
+  const s = await setup(
+    false,
+    createFakeProvider(async (req, signal) =>
+      req.format.name === 'room_design_intent_1'
+        ? {
+            kind: 'completed',
+            calls: [],
+            data: {
+              goal: 'piece-finish',
+              targetIds: ['desk'],
+              categories: [],
+              finish: 'ivory',
+              palette: null,
+            },
+          }
+        : assistantFakeResponse(req, signal),
+    ),
+  );
+  s.session.setPanel('assistant');
+  await s.assistant.submit('The furniture needs a quieter visual rhythm');
+  const message = s.assistant.getSnapshot().messages.at(-1)!;
+  s.assistant.chooseSuggestion(message.id, message.reply!.suggestions![0]!);
+  await vi.waitFor(() =>
+    expect(s.session.getSnapshot().candidate).not.toBeNull(),
+  );
+  expect(s.session.getSnapshot().presentation.selectedId).toBe('desk');
+  expect(s.session.getSnapshot().presentation.panel).toBe('assistant');
   s.close();
 });
 it('Cancel changes no accepted room/history; draft text survives selection, camera and panel changes', async () => {

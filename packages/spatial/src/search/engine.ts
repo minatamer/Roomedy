@@ -190,11 +190,12 @@ export class LayoutSearch {
       return;
     }
     if (
-      goal.kind === 'rearrange-owned' &&
+      ['rearrange-owned', 'open-space'].includes(goal.kind) &&
       (goal.additions.length ||
         goal.replacements.length ||
         goal.removals.length ||
-        goal.targetIds.some((id) => existing.get(id)?.ownership !== 'owned'))
+        (goal.kind === 'rearrange-owned' &&
+          goal.targetIds.some((id) => existing.get(id)?.ownership !== 'owned')))
     ) {
       this.stop('out-of-scope');
       return;
@@ -550,13 +551,13 @@ function evaluateSearchActions(
       if (action.type === 'add')
         return (
           goal.kind === 'appearance' ||
-          goal.kind === 'rearrange-owned' ||
+          ['rearrange-owned', 'open-space'].includes(goal.kind) ||
           !variant(action.furniture, goal.additions)
         );
       if (action.type === 'replace')
         return (
           goal.kind === 'appearance' ||
-          goal.kind === 'rearrange-owned' ||
+          ['rearrange-owned', 'open-space'].includes(goal.kind) ||
           goal.retainedIds.includes(action.id) ||
           goal.fixedIds.includes(action.id) ||
           !variant(action.furniture, goal.replacements)
@@ -564,7 +565,7 @@ function evaluateSearchActions(
       if (action.type === 'remove')
         return (
           goal.kind === 'appearance' ||
-          goal.kind === 'rearrange-owned' ||
+          ['rearrange-owned', 'open-space'].includes(goal.kind) ||
           !goal.removals.includes(action.id) ||
           goal.retainedIds.includes(action.id) ||
           goal.fixedIds.includes(action.id)
@@ -623,7 +624,7 @@ function evaluateSearchActions(
   )
     return null;
   if (
-    goal.kind === 'rearrange-owned' &&
+    ['rearrange-owned', 'open-space'].includes(goal.kind) &&
     (facts.centralFreeMm2.after ?? 0) <= (facts.centralFreeMm2.before ?? 0) &&
     !repair
   )

@@ -17,6 +17,7 @@ import {
   evaluateScopedBatch,
   proposedSearchPiece,
   validateSearchCandidate,
+  searchFacts,
 } from '@roomedy/spatial';
 import type { AssistantTask } from '@roomedy/spatial';
 import { runBackendLayoutSearch } from './layout-search.js';
@@ -96,7 +97,8 @@ export function createAssistantTools(
         task.scope,
       );
       if (!checked) return reject();
-      facts = checked.facts;
+      // Include every changed item in the final atomic batch, including an extra room palette.
+      facts = searchFacts(room, evaluated.room, task.goal, evaluated.checks);
     }
     const payload = JSON.stringify(actions);
     if (prepared !== null && payload !== prepared) return reject();
@@ -104,11 +106,49 @@ export function createAssistantTools(
     const missing = evaluated.checks.coverage.filter(
       (c) => c.status === 'unassessed' || c.unassessed > 0,
     ).length;
+    const changedPieces = evaluated.affectedIds.flatMap((id) => {
+      const p =
+        evaluated.room.furniture.find((p) => p.id === id) ??
+        room.furniture.find((p) => p.id === id);
+      return p ? [p.label.slice(0, 60)] : [];
+    });
+    const names =
+      changedPieces.slice(0, 3).join(', ') +
+      (changedPieces.length > 3 ? ' and other requested pieces' : '');
+    const window = facts?.windowDistanceMm,
+      centre = facts?.centralFreeMm2;
+    const tradeoff =
+      window?.before !== null &&
+      window?.before !== undefined &&
+      window.after !== null
+        ? `The work area moves closer to daylight: ${Math.round(window.before)} → ${Math.round(window.after)} mm from the window. `
+        : centre?.before !== null &&
+            centre?.before !== undefined &&
+            centre.after !== null &&
+            centre.after > centre.before
+          ? `The modeled free centre grows from ${(centre.before / 1e6).toFixed(2)} to ${(centre.after / 1e6).toFixed(2)} m²; furniture sizes stay the same. `
+          : '';
+    const palette = task.extraFinish ?? task.goal?.roomFinish;
+    const style = palette
+      ? palette.wallFinish === 'clay'
+        ? 'Oak and clay bring warmth without changing owned furniture finishes. '
+        : palette.wallFinish === 'sage'
+          ? 'Walnut and sage give the room a calmer, coordinated palette. '
+          : 'Oak and ivory keep the room light and airy. '
+      : '';
+    const invitation =
+      task.goal?.kind === 'appearance' && task.goal.pieceFinishes.length === 1
+        ? `I’d use ${task.goal.pieceFinishes[0]!.finish} for ${names}. `
+        : task.goal?.kind === 'open-space'
+          ? `I’d reposition ${names || 'the requested pieces'} for a clearer centre. `
+          : task.goal?.kind === 'window'
+            ? `I’d bring ${names || 'the work area'} nearer the window. `
+            : `${task.label}${names ? `: ${names}` : ''}. `;
     reply = {
       ...emptyAssistantReply(
         room,
         evaluated.changed
-          ? `${task.label}: ${actions.length} ${actions.length === 1 ? 'action' : 'actions'} ready to review. ${missing ? `${missing} ${missing === 1 ? 'check still has' : 'checks still have'} missing inputs.` : 'Review the modeled checks before applying.'}`
+          ? `${invitation}${tradeoff}${style}${missing ? `${missing} ${missing === 1 ? 'check still needs' : 'checks still need'} measurements before relying on the fit.` : 'Review this arrangement, then Apply if it works for you.'}`
           : 'This request needs no room change.',
       ),
       kind: evaluated.changed ? 'proposal' : 'explanation',

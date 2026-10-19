@@ -21,7 +21,14 @@ const choiceSchema = z.strictObject({
   finish: finishSchema.nullable(),
 });
 export const searchGoalSchema = z.strictObject({
-  kind: z.enum(['furnish', 'add', 'rearrange-owned', 'window', 'appearance']),
+  kind: z.enum([
+    'furnish',
+    'add',
+    'rearrange-owned',
+    'open-space',
+    'window',
+    'appearance',
+  ]),
   targetIds: z.array(idSchema).max(POLICY.furniture),
   retainedIds: z.array(idSchema).max(POLICY.furniture),
   fixedIds: z.array(idSchema).max(POLICY.furniture),

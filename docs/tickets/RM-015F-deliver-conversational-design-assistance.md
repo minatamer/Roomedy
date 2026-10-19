@@ -1,6 +1,6 @@
 # RM-015F — Deliver conversational design assistance
 
-Status: **Planned**
+Status: **Implemented locally — external evidence pending**
 Planning date: **19 October 2026**
 Owner todo: **6/10 — Designer-like assistance** (ordered by implementation dependencies; coverage in queue)
 Depends on: [RM-015E](RM-015E-edit-furniture-directly-in-3d.md)
@@ -32,12 +32,12 @@ Inspect current owners before edits, preserve existing working paths, and extend
 
 ## Acceptance criteria
 
-- [ ] Support conversational references and follow-ups against current room, selected objects and bounded recent decisions: make it less cramped, improve work area, coordinate finishes, and revise a previous instruction.
-- [ ] Separate semantic interpretation/design advice from exact action authorization; remove the narrow keyword gate as the sole understanding path while enforcing independently captured kinds/targets/add/replace/remove scope at preparation and Apply.
-- [ ] Broader useful style/function/space suggestions explain actual tradeoffs, use supported catalogue/finishes and preserve protected/unknown measurements. Ambiguity asks one grounded question; conversation cannot self-confirm, unlock or silently broaden intent.
-- [ ] Real adapter can interpret bounded structured intent and supply constrained conversational guidance; schema-valid prose is not geometry proof. Preserve stateless serial rounds, deadlines, privacy and no paid dispatch.
-- [ ] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
-- [ ] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
+- [x] Support conversational references and follow-ups against current room, selected objects and bounded recent decisions: make it less cramped, improve work area, coordinate finishes, and revise a previous instruction.
+- [x] Separate semantic interpretation/design advice from exact action authorization; remove the narrow keyword gate as the sole understanding path while enforcing independently captured kinds/targets/add/replace/remove scope at preparation and Apply.
+- [x] Broader useful style/function/space suggestions explain actual tradeoffs, use supported catalogue/finishes and preserve protected/unknown measurements. Ambiguity asks one grounded question; conversation cannot self-confirm, unlock or silently broaden intent.
+- [x] Real adapter can interpret bounded structured intent and supply constrained conversational guidance; schema-valid prose is not geometry proof. Preserve stateless serial rounds, deadlines, privacy and no paid dispatch.
+- [x] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
+- [x] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
 
 ## Verification
 
@@ -54,3 +54,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Handoff
 
 Record real commands/results and findings dispositions in `docs/validation/RM-015F.md`; no source changes during validation. Existing exact-path per-ticket local commit authority remains scoped to validated owned work. Next packet is RM-015G.
+
+## Refined plan before implementation
+
+[Exact allocation (extended to24 paths) and language/authority plan](../commit-plans/RM-015F.md) preserves the explicit compiler, adds bounded conversational resolution and a strict real-adapter design-intent clarification path. Model interpretation alone cannot prepare edits. Distinct palettes, current-fact design guidance, atomic layout/style and explicit open-space search include proposed furniture while preserving rearrange-owned semantics. F supplies foundational fake protocol handling; G owns expanded complete sample/parity evidence.
+
+## Local completion
+
+[Actual execution, two confirmed/fixed review findings and clean pass2](../validation/RM-015F.md) record384-test/root/build gate, injected real Responses protocol, computed desktop/phone proposals, conversational owned-finish correction and whole-change Undo. Actual live/physical/owner evidence stays separate; G is next.

@@ -7,7 +7,10 @@ import { createAssistantHandler } from '../apps/backend/src/assistant/assistant.
 import { createAssistantTools } from '../apps/backend/src/assistant/tools.js';
 import { createRoomedyFakeProvider } from '../apps/backend/src/providers/fake.js';
 import { createFakeProvider } from '../apps/backend/src/providers/provider.js';
-import { responseBody } from '../apps/backend/src/providers/responses.js';
+import {
+  responseBody,
+  createResponsesProvider,
+} from '../apps/backend/src/providers/responses.js';
 import type {
   ProviderOutcome,
   ProviderRequest,
@@ -452,4 +455,135 @@ it('keeps stateless reasoning replay only inside the current serial operation', 
   );
   expect(JSON.stringify(result)).not.toContain('synthetic-opaque');
   r.operations.close();
+});
+
+it('interprets novel wording through the injected Responses adapter without preparing edits or granting scope', async () => {
+  const intent = {
+    goal: 'piece-finish',
+    targetIds: ['desk'],
+    categories: [],
+    finish: 'walnut',
+    palette: null,
+  };
+  const fetcher = vi.fn<typeof fetch>(async () =>
+    Response.json({
+      status: 'completed',
+      output: [
+        {
+          type: 'message',
+          content: [{ type: 'output_text', text: JSON.stringify(intent) }],
+        },
+      ],
+    }),
+  );
+  const port = createResponsesProvider(
+      'synthetic-key',
+      'fixture-model',
+      fetcher,
+    ),
+    signal = new AbortController().signal;
+  const input = assistantInput(
+      windowCase().room,
+      'The furniture needs a quieter visual rhythm',
+    ),
+    before = structuredClone(input.room);
+  const handler = createAssistantHandler(vi.fn(), identityIds());
+  const output = await handler(input, {
+    signal,
+    call: async (req) => {
+      const job = port.start(req, signal);
+      await job.settled;
+      return job.result;
+    },
+  });
+  expect(output.kind).toBe('completed');
+  expect(output.assistant?.kind).toBe('clarification');
+  expect(output.assistant?.actions).toBeNull();
+  expect(output.assistant?.suggestions).toMatchObject([
+    {
+      selectedId: 'desk',
+      roomRevision: 0,
+      request: 'Preview this selected piece finish walnut',
+    },
+  ]);
+  expect(input.room).toEqual(before);
+  const body = JSON.parse(fetcher.mock.calls[0]![1]!.body as string);
+  expect(body.store).toBe(false);
+  expect(body.parallel_tool_calls).toBe(false);
+  expect(body.tools).toEqual([]);
+  expect(body.text.format.strict).toBe(true);
+  expect(fetcher).toHaveBeenCalledOnce();
+});
+it.each([
+  {
+    goal: 'piece-finish',
+    targetIds: ['missing'],
+    categories: [],
+    finish: 'walnut',
+    palette: null,
+  },
+  {
+    goal: 'palette',
+    targetIds: ['desk'],
+    categories: [],
+    finish: null,
+    palette: 'calm',
+  },
+  {
+    goal: 'open-space',
+    targetIds: [],
+    categories: [],
+    finish: null,
+    palette: null,
+    actions: [{ type: 'remove', id: 'bed' }],
+  },
+])(
+  'cannot turn invalid interpretation output into edit authority: %j',
+  async (data) => {
+    const input = assistantInput(
+      windowCase().room,
+      'The furniture needs a quieter visual rhythm',
+    );
+    const result = await createAssistantHandler(vi.fn(), identityIds())(input, {
+      signal: new AbortController().signal,
+      call: async () => ({ kind: 'completed', data, calls: [] }),
+    });
+    expect(result.assistant?.actions ?? null).toBeNull();
+    expect(result.assistant?.suggestions ?? []).toEqual([]);
+  },
+);
+it('prepares a coordinated spatial/style batch with actual facts and rejects an unrelated finish', async () => {
+  const input = assistantInput(
+    windowCase().room,
+    'Improve my workspace with a calm room palette',
+  );
+  input.localCandidate = localAssistantCandidate(input);
+  expect(input.localCandidate).not.toBeNull();
+  const task = resolveAssistantTask(
+      input.room,
+      input.text,
+      null,
+      input.identity.operationId,
+      input.context,
+    ),
+    tools = createAssistantTools(input, task, new AbortController().signal);
+  expect((await tools.execute('find_arrangements', {})).ok).toBe(true);
+  const reply = tools.reply();
+  expect(reply.actions).toContainEqual({
+    type: 'room-finish',
+    floorFinish: 'walnut',
+    wallFinish: 'sage',
+  });
+  expect(reply.facts!.windowDistanceMm.after!).toBeLessThan(
+    reply.facts!.windowDistanceMm.before!,
+  );
+  expect(reply.summary).toContain('closer to daylight');
+  expect(reply.summary).toContain('Walnut and sage');
+  expect(reply.facts!.changedIds).toContain(input.room.roomId);
+  expect(
+    tools.prepare([
+      ...reply.actions!,
+      { type: 'finish', id: 'unrelated_shelf', finish: 'ivory' },
+    ]).ok,
+  ).toBe(false);
 });

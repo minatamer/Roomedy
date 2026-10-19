@@ -163,6 +163,8 @@ export function evaluateBatch(
   rawActions: unknown,
   authority: CommandAuthority,
   catalogue: readonly CatalogueEntry[] = CATALOGUE,
+  // Only the scoped application entry point supplies explicit owned-finish permission.
+  ownedFinishIds: readonly string[] = [],
 ): CommandResult {
   if (!['visitor', 'authored-sample', 'assistant'].includes(authority))
     return { ok: false, code: 'invalid-input' };
@@ -362,6 +364,7 @@ export function evaluateBatch(
       if (
         authority === 'assistant' &&
         start.ownership === 'owned' &&
+        !ownedFinishIds.includes(start.id) &&
         action.finish !== start.finish
       )
         return { ok: false, code: 'retained' };

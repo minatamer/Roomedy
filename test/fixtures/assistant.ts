@@ -28,6 +28,7 @@ export function localAssistantCandidate(
     input.text,
     input.selectedId,
     input.identity.operationId,
+    input.context,
   );
   if (!task.goal) return null;
   const search = new LayoutSearch(

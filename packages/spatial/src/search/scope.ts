@@ -56,5 +56,11 @@ export function evaluateScopedBatch(
 ): CommandResult {
   if (!scopeAllows(room, actions, scope))
     return { ok: false, code: 'out-of-scope' };
-  return evaluateBatch(room, actions, 'assistant');
+  return evaluateBatch(
+    room,
+    actions,
+    'assistant',
+    undefined,
+    scope?.actionKinds.includes('finish') ? scope.targetIds : [],
+  );
 }

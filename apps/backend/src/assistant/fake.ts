@@ -8,6 +8,18 @@ export async function assistantFakeResponse(
   signal: AbortSignal,
 ): Promise<ProviderOutcome> {
   if (signal.aborted) return { kind: 'cancelled' };
+  if (request.format.name === 'room_design_intent_1')
+    return {
+      kind: 'completed',
+      calls: [],
+      data: {
+        goal: 'clarify',
+        targetIds: [],
+        categories: [],
+        finish: null,
+        palette: null,
+      },
+    };
   if (request.input.at(-1)?.type === 'function_call_output')
     return { kind: 'completed', data: { kind: 'done' }, calls: [] };
   const content = request.input.at(-1)?.content;
