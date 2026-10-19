@@ -21,10 +21,12 @@
   overflow: clip;
 }
 .roomVisual,
-.canvas,
-.poster {
+.canvas {
   position: absolute;
   inset: 0;
+}
+.roomVisual {
+  background: radial-gradient(ellipse at 72% 45%, #dfd2b652, transparent 68%);
 }
 .canvas {
   opacity: 0;
@@ -33,19 +35,25 @@
 .canvasReady {
   opacity: 1;
 }
-.poster {
-  display: grid;
-  place-items: center;
-  transition: opacity 380ms ease;
+.howLink {
+  position: relative;
+  min-height: 44px;
+  padding: 9px 0;
+  background: none;
 }
-.poster svg {
-  width: 130%;
-  height: 125%;
-  max-width: none;
-  transform: translateX(12%);
+.howLink::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 6px;
+  height: 2px;
+  background: #c3aa82;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.posterReady {
-  opacity: 0;
+.howLink:hover::after,
+.howLink:focus-visible::after {
+  transform: scaleX(1);
 }
 .chapter {
   position: relative;
@@ -104,7 +112,6 @@
   color: var(--muted);
   margin-bottom: 28px;
 }
-.scrollLink,
 .chapterLink {
   display: inline-flex;
   align-items: center;
@@ -112,22 +119,54 @@
   min-height: 44px;
   font-size: 12px;
 }
-.scrollLink {
-  color: var(--muted);
-  margin-top: 14px;
-}
-.scrollLink span,
 .chapterLink span {
   transition: transform 220ms;
 }
-.scrollLink:hover span {
-  transform: translateY(5px);
-}
 .chapterLink {
   border-bottom: 1px solid #a9845c;
+  background: none;
+  padding: 0;
 }
 .chapterLink:hover span {
   transform: translate(3px, -3px);
+}
+.scrollCue {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 48px;
+  margin-top: 24px;
+  padding: 0 8px 0 0;
+  background: none;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+.cueArrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #b9a080;
+  border-radius: 50%;
+  background: #f4efe55c;
+  transition:
+    background 280ms,
+    border-color 280ms;
+}
+.cueArrow svg {
+  width: 21px;
+  height: 21px;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scrollCue:hover .cueArrow,
+.scrollCue:focus-visible .cueArrow {
+  background: #e3d5bd;
+  border-color: #a58962;
+}
+.scrollCue:hover svg,
+.scrollCue:focus-visible svg {
+  transform: translateY(4px);
 }
 .chapterLabel {
   display: flex;
@@ -151,6 +190,9 @@
   font-size: clamp(38px, 4.5vw, 66px);
   line-height: 1.08;
   margin-bottom: 25px;
+}
+.chapter h2:focus {
+  outline: none;
 }
 .landing h2 em {
   font-family: Georgia, 'Times New Roman', serif;
@@ -402,6 +444,9 @@
   }
 }
 @media (max-width: 600px) {
+  .howLink {
+    display: none;
+  }
   .chapter {
     padding: 85px 24px 44px;
     align-items: flex-start;
@@ -439,13 +484,8 @@
     min-height: 46px;
     padding: 13px 23px;
   }
-  .hero :global(.cta-note) {
-    font-size: 10px;
-    margin-top: 10px;
-  }
-  .scrollLink {
-    margin-top: 0;
-    font-size: 11px;
+  .scrollCue {
+    margin-top: 18px;
   }
   .chapter h2 {
     font-size: 39px;
@@ -522,11 +562,6 @@
   }
   .footer {
     padding-block: 25px 35px;
-  }
-  .poster svg {
-    width: 190%;
-    height: 110%;
-    transform: translateX(8%);
   }
 }
 @media (max-width: 360px) {

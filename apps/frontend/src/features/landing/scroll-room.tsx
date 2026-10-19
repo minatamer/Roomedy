@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import type { ScrollTarget } from './scroll-motion';
 import { boundedProgress } from './scroll-motion';
-import { RoomPoster } from './room-poster';
 import styles from './landing.module.css';
 
 const FurnitureScene = dynamic(() => import('./furniture-scene'), {
@@ -93,14 +92,13 @@ export function ScrollRoom() {
     <div ref={stage} className={styles.stage}>
       <div
         className={styles.roomVisual}
-        role="img"
-        aria-label="Furniture slides and turns into a more open bedroom and workspace, with the desk moving toward the window as you scroll."
+        role={ready && !lost ? 'img' : undefined}
+        aria-label={
+          ready && !lost
+            ? 'Furniture slides and turns into a more open bedroom and workspace, with the desk moving toward the window as you scroll.'
+            : undefined
+        }
       >
-        <div
-          className={`${styles.poster} ${ready && !lost ? styles.posterReady : ''}`}
-        >
-          <RoomPoster />
-        </div>
         {!lost && (
           <div
             className={`${styles.canvas} ${ready ? styles.canvasReady : ''}`}

@@ -178,10 +178,6 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
                 ))}
               </div>
             )}
-
-            {state.step === 'source' && (
-              <p className="entry-footnote">No account needed.</p>
-            )}
           </div>
         </div>
       </main>

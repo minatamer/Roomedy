@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { MutableRefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
+  BoxGeometry,
   MeshStandardMaterial,
   PCFShadowMap,
   PlaneGeometry,
@@ -22,6 +23,7 @@ import {
   landingFurniturePose,
 } from './scroll-motion';
 import { prepareLandingScene } from './prepare-scene';
+import { createWindowGlass } from './window-glass';
 import type { ScrollTarget } from './scroll-motion';
 
 type FurnitureMaterials = {
@@ -108,7 +110,8 @@ function Choreography({
       preparationMs: 0,
     });
   const resources = useMemo(() => {
-      const surfaces = createSurfaces();
+      const surfaces = createSurfaces(),
+        windowGlass = createWindowGlass();
       const materials = {
           floor: new MeshStandardMaterial({
             color: '#d0af80',
@@ -128,10 +131,6 @@ function Choreography({
             roughness: 0.9,
           }),
           frame: new MeshStandardMaterial({ color: '#fff7e9' }),
-          glass: new MeshStandardMaterial({
-            color: '#b9cbc7',
-            roughness: 0.35,
-          }),
           metal: new MeshStandardMaterial({
             color: '#695641',
             metalness: 0.45,
@@ -164,6 +163,7 @@ function Choreography({
             roughness: 0.95,
           }),
         })),
+        wall = new BoxGeometry(1, 1, 1),
         rug = new PlaneGeometry(2, 2.65),
         ground = new PlaneGeometry(100, 100),
         shadow = new ShadowMaterial({ transparent: true, opacity: 0.14 });
@@ -172,9 +172,12 @@ function Choreography({
         materials,
         pieces,
         rug,
+        wall,
         ground,
         shadow,
+        windowGlass,
         dispose() {
+          windowGlass.dispose();
           surfaces.dispose();
           for (const material of Object.values(materials)) material.dispose();
           for (const piece of pieces) {
@@ -182,6 +185,7 @@ function Choreography({
             piece.fabric.dispose();
           }
           rug.dispose();
+          wall.dispose();
           ground.dispose();
           shadow.dispose();
         },
@@ -222,6 +226,7 @@ function Choreography({
     void prepareLandingScene({
       current: () => current,
       upload: () => {
+        resources.windowGlass.prepare(gl);
         for (const map of [
           resources.surfaces.floor,
           resources.surfaces.wood,
@@ -375,34 +380,52 @@ function Choreography({
           dispose={null}
         />
         <group ref={north} position={[0, 0, -2.45]}>
+          {[
+            { size: [4.45, 1.05, 0.12], at: [0, 0.5, 0] },
+            { size: [4.45, 0.35, 0.12], at: [0, 2.45, 0] },
+            { size: [2.55, 1.25, 0.12], at: [-0.95, 1.65, 0] },
+            { size: [0.65, 1.25, 0.12], at: [1.9, 1.65, 0] },
+          ].map((part, i) => (
+            <mesh
+              key={i}
+              geometry={resources.wall}
+              material={materials.north}
+              scale={part.size as [number, number, number]}
+              position={part.at as [number, number, number]}
+              castShadow
+              receiveShadow
+              dispose={null}
+            />
+          ))}
+          {[
+            { size: [1.25, 0.085, 0.15], at: [0.95, 1.0675, 0.065] },
+            { size: [1.25, 0.085, 0.15], at: [0.95, 2.2325, 0.065] },
+            { size: [0.085, 1.08, 0.15], at: [0.3675, 1.65, 0.065] },
+            { size: [0.085, 1.08, 0.15], at: [1.5325, 1.65, 0.065] },
+            { size: [0.035, 1.08, 0.11], at: [0.95, 1.65, 0.08] },
+            { size: [1.35, 0.055, 0.23], at: [0.95, 1.025, 0.095] },
+          ].map((part, i) => (
+            <mesh
+              key={i}
+              geometry={surfaces.hard}
+              material={materials.frame}
+              scale={part.size as [number, number, number]}
+              position={part.at as [number, number, number]}
+              dispose={null}
+            />
+          ))}
           <mesh
             geometry={surfaces.hard}
-            material={materials.north}
-            scale={[4.45, 2.65, 0.12]}
-            position={[0, 1.3, 0]}
-            castShadow
-            receiveShadow
+            material={resources.windowGlass.daylight}
+            scale={[1.08, 1.08, 0.008]}
+            position={[0.95, 1.65, -0.065]}
             dispose={null}
           />
           <mesh
             geometry={surfaces.hard}
-            material={materials.frame}
-            scale={[1.25, 1.25, 0.05]}
-            position={[0.95, 1.65, 0.085]}
-            dispose={null}
-          />
-          <mesh
-            geometry={surfaces.hard}
-            material={materials.glass}
-            scale={[1.08, 1.08, 0.05]}
-            position={[0.95, 1.65, 0.12]}
-            dispose={null}
-          />
-          <mesh
-            geometry={surfaces.hard}
-            material={materials.frame}
-            scale={[0.035, 1.08, 0.06]}
-            position={[0.95, 1.65, 0.16]}
+            material={resources.windowGlass.material}
+            scale={[1.08, 1.08, 0.012]}
+            position={[0.95, 1.65, 0.06]}
             dispose={null}
           />
         </group>
@@ -466,6 +489,7 @@ export default function FurnitureScene(props: {
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       onCreated={({ gl, size, setDpr }) => {
         gl.shadowMap.type = PCFShadowMap;
+        gl.transmissionResolutionScale = 0.35;
         setDpr(
           landingPixelRatio(size.width, size.height, window.devicePixelRatio),
         );

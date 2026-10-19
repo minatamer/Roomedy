@@ -1,14 +1,21 @@
 import Link from 'next/link';
 import { Brand } from './brand';
 import { ScrollRoom } from './scroll-room';
+import {
+  CleanLandingFragment,
+  SectionScroll,
+} from '../navigation/section-scroll';
 import styles from './landing.module.css';
 export function Landing() {
   return (
     <>
+      <CleanLandingFragment />
       <header className={`site-header shell ${styles.header}`}>
         <Brand />
         <nav aria-label="Main navigation">
-          <Link href="#how-it-works">How it works</Link>
+          <SectionScroll className={styles.howLink} target="how-it-works">
+            How it works
+          </SectionScroll>
           <Link className="nav-cta" href="/demo">
             Start designing <span aria-hidden="true">↗</span>
           </Link>
@@ -36,15 +43,26 @@ export function Landing() {
                 <Link className="button primary" href="/demo">
                   Start designing <span aria-hidden="true">↗</span>
                 </Link>
-                <p className="cta-note">No account needed.</p>
-                <Link className={styles.scrollLink} href="#how-it-works">
-                  Scroll to make room <span aria-hidden="true">↓</span>
-                </Link>
+                <SectionScroll
+                  className={styles.scrollCue}
+                  target="how-it-works"
+                >
+                  <span className={styles.cueArrow} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 5v14m-5-5 5 5 5-5"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                      />
+                    </svg>
+                  </span>
+                  <span>Explore the room</span>
+                </SectionScroll>
               </div>
             </section>
             <section
               className={styles.chapter}
-              id="how-it-works"
+              data-scroll-target="how-it-works"
               aria-labelledby="how-title"
               data-room-chapter
             >
@@ -106,14 +124,17 @@ export function Landing() {
                   rough 2D sketch: review the pieces and measurements, then open
                   your studio.
                 </p>
-                <Link className={styles.chapterLink} href="#make-it-yours">
+                <SectionScroll
+                  className={styles.chapterLink}
+                  target="make-it-yours"
+                >
                   Find your flow <span aria-hidden="true">↘</span>
-                </Link>
+                </SectionScroll>
               </div>
             </section>
             <section
               className={`${styles.chapter} ${styles.right}`}
-              id="make-it-yours"
+              data-scroll-target="make-it-yours"
               aria-labelledby="arrange-title"
               data-room-chapter
             >
@@ -150,7 +171,7 @@ export function Landing() {
             </section>
             <section
               className={styles.chapter}
-              id="a-fresh-angle"
+              data-scroll-target="a-fresh-angle"
               aria-labelledby="perspective-title"
               data-room-chapter
             >

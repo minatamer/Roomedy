@@ -1,6 +1,13 @@
 # RM-015 measured performance and policy
 
-## Current RM-015M full-viewport entrance scenario
+## Current RM-015N glass and section-motion scenario
+
+[N actual evidence](../validation/RM-015N.md) owns current measurements. Reflection capture uses one128-face PMREM generated locally once before reveal; authored daylight texture256square; transmission capture scale.35 of an already≤2million-pixel renderer (≤245,000capture pixels). No external HDR/image fetch, live cube-camera loop or animation-off setting. Final Windows dev1280×720 three fresh-document/warm-asset runs have69/68/69startup intervals, preparation169.7/176.9/165.6ms before reveal, visible p9516.9/16.8/17.2ms/max23/26.2/26.8ms. Named p95≤33.4/max≤50ms local targets pass; total cold load/paint/physical GPU remains unmeasured. Added physical glass raises preparation cost and representative draws from M78/4geometries/7textures to137/5/10. Three separate warm moves (two forward, one reverse),37intervals each: p9516.9/17/16.9ms,max16.9/17.6/16.9ms. First.25 sample includes a preceding resize, recorded separately. Three entry/Back cycles retain0/1canvas and stable5/10counts; no driver/native-heap proof.13viewport hero/end bounds pass, short568×320 cue remains reachable below fold.
+
+Final185inputs/1,239,238bytes/BUILD_ID8e70695c2cee49e613961da3b6609c924abdadadc6250ba29909782de017677c,414tests/36files/root/both builds. Conservative offline SSR+root/polyfill/dynamic graph11JS1,724,795raw/487,952estimated-gzip bytes;2CSS17,184raw/4978gzip;≤700KiB script target passes for this graph, not observed production transfer/LCP/INP. M below stays historical. Actual4320hot reload is distinct from the production artifact; no extra app listener is started.
+
+
+## Historical RM-015M full-viewport entrance scenario
 
 [Actual M evidence](../validation/RM-015M.md). Same Windows development1280×720 host, fresh documents with warm assets: L baseline3runs p9518/18/17.8ms and max69.3/54.7/72ms. Final M source, after the grounded furniture/soft-edge refinement, has68 startup intervals in each of3runs, p9517.1/16.9/17.1ms and max26.6/31.7/23.6ms. Named p95≤33.4ms and max≤50ms targets pass for these runs. Upload/shader/first-shadow preparation51/53.2/53.5ms occurs before reveal and starts after scene resources exist; it is not total cold load. Useful SSR/poster/copy remains available. Intermediate M results21.6/21.5/30.6ms remain dated in the receipt. No cold-cache/network/LCP/INP/paint/physical GPU claim.
 

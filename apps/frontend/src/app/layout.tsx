@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { SectionScroll } from '../features/navigation/section-scroll';
 import './globals.css';
 export const metadata: Metadata = {
   title: 'Roomedy — make room for the way you live',
@@ -32,9 +33,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body>
-        <a className="skip-link" href="#main-content">
+        <SectionScroll className="skip-link" target="main-content">
           Skip to content
-        </a>
+        </SectionScroll>
         {children}
       </body>
     </html>
