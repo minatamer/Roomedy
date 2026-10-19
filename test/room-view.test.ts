@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { describe, it, expect, vi } from 'vitest';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import {
@@ -23,6 +24,142 @@ import {
   moveCamera,
 } from '../apps/frontend/src/features/room-view/camera.js';
 import type { Triple } from '../apps/frontend/src/features/room-view/adapter.js';
+import { CATALOGUE } from '@roomedy/spatial';
+import { proceduralParts } from '../apps/frontend/src/features/room-view/representations/definitions.js';
+import {
+  createSurfaces,
+  detailedParts,
+  surfaceModel,
+} from '../apps/frontend/src/features/room-view/surfaces.js';
+
+describe('finite close-up surface ownership and physical envelopes', () => {
+  it('creates deterministic bounded mipmapped surfaces and finite bevels inside the original unit box', () => {
+    const a = createSurfaces(),
+      b = createSurfaces();
+    let bytes = 0,
+      disposed = 0,
+      otherDisposed = 0;
+    for (const key of ['floor', 'wood', 'fabric', 'plaster'] as const) {
+      const map = a[key],
+        other = b[key];
+      const pixels = map.image.data,
+        otherPixels = other.image.data;
+      if (!pixels || !otherPixels) throw new Error('surface-pixels-missing');
+      expect(map.image.width).toBeLessThanOrEqual(512);
+      expect(map.image.height).toBeLessThanOrEqual(512);
+      bytes += pixels.byteLength;
+      expect(createHash('sha256').update(pixels).digest('hex')).toBe(
+        createHash('sha256').update(otherPixels).digest('hex'),
+      );
+      expect(new Set(pixels).size).toBeGreaterThan(2);
+      expect(map.generateMipmaps).toBe(true);
+      map.addEventListener('dispose', () => disposed++);
+      other.addEventListener('dispose', () => otherDisposed++);
+    }
+    expect(bytes).toBeLessThanOrEqual(1.5 * 1024 * 1024);
+    for (const key of ['hard', 'soft'] as const) {
+      const g = a[key];
+      g.computeBoundingBox();
+      expect(g.getAttribute('position').count / 3).toBeLessThanOrEqual(108);
+      expect([...g.getAttribute('position').array].every(Number.isFinite)).toBe(
+        true,
+      );
+      expect([...g.getAttribute('normal').array].every(Number.isFinite)).toBe(
+        true,
+      );
+      for (const axis of ['x', 'y', 'z'] as const) {
+        expect(g.boundingBox!.min[axis]).toBeCloseTo(-0.5);
+        expect(g.boundingBox!.max[axis]).toBeCloseTo(0.5);
+      }
+      g.addEventListener('dispose', () => disposed++);
+      b[key].addEventListener('dispose', () => otherDisposed++);
+    }
+    a.dispose();
+    expect(disposed).toBe(6);
+    expect(otherDisposed).toBe(0);
+    expect(() => a.dispose()).not.toThrow();
+    b.dispose();
+    expect(otherDisposed).toBe(6);
+  });
+  it('keeps decorative pillows, recessed fronts and handles within every min/max physical envelope', () => {
+    for (const entry of CATALOGUE)
+      for (const bound of ['min', 'max'] as const) {
+        const size = {
+          width: entry.size.width[bound],
+          depth: entry.size.depth[bound],
+          height: entry.size.height[bound],
+        };
+        const parts = proceduralParts(
+            entry.category,
+            size,
+            entry.accessMechanism,
+          ),
+          original = JSON.stringify(parts);
+        for (const part of detailedParts(parts, size)) {
+          const low = [-size.width / 2, 0, -size.depth / 2],
+            high = [size.width / 2, size.height, size.depth / 2];
+          for (const axis of [0, 1, 2] as const) {
+            expect(part.size[axis]).toBeGreaterThan(0);
+            expect(
+              part.center[axis] - part.size[axis] / 2,
+            ).toBeGreaterThanOrEqual(low[axis]!);
+            expect(part.center[axis] + part.size[axis] / 2).toBeLessThanOrEqual(
+              high[axis]!,
+            );
+          }
+        }
+        expect(JSON.stringify(parts)).toBe(original);
+      }
+  });
+  it('polishes only instance materials and retires them independently of immutable cache geometry and textures', async () => {
+    const bytes = await readFile(
+      'apps/frontend/public/catalogue/chair-desk-v1.glb',
+    );
+    let state: AssetState | undefined;
+    const cache = new ViewAssets(
+      (s) => {
+        state = s.get(LOCAL_MODELS[0]);
+      },
+      { fetch: async () => new Response(bytes) },
+    );
+    cache.load(LOCAL_MODELS[0]);
+    await vi.waitFor(() => expect(state?.kind).toBe('ready'));
+    if (state?.kind !== 'ready') throw new Error('local-fixture-not-ready');
+    const surfaces = createSurfaces(),
+      source = state.asset.scene,
+      before = JSON.stringify(source.toJSON());
+    let sourceDisposed = 0,
+      texturesDisposed = 0;
+    source.traverse((o) => {
+      type Disposable = {
+        addEventListener: (kind: string, fn: () => void) => void;
+      };
+      const mesh = o as unknown as {
+        geometry?: Disposable;
+        material?: Disposable | Disposable[];
+      };
+      mesh.geometry?.addEventListener('dispose', () => sourceDisposed++);
+      for (const material of Array.isArray(mesh.material)
+        ? mesh.material
+        : mesh.material
+          ? [mesh.material]
+          : [])
+        material.addEventListener('dispose', () => sourceDisposed++);
+    });
+    surfaces.fabric.addEventListener('dispose', () => texturesDisposed++);
+    const instance = surfaceModel(source, surfaces);
+    expect(instance.object).not.toBe(source);
+    expect(JSON.stringify(source.toJSON())).toBe(before);
+    instance.dispose();
+    instance.dispose();
+    expect(sourceDisposed).toBe(0);
+    expect(texturesDisposed).toBe(0);
+    surfaces.dispose();
+    expect(texturesDisposed).toBe(1);
+    cache.dispose();
+    expect(sourceDisposed).toBeGreaterThan(0);
+  });
+});
 
 describe('bounded presentation camera navigation', () => {
   it('chooses meaningful free eye positions without mutating accepted or approximate facts', () => {

@@ -70,3 +70,7 @@ South entrance is X200–1100, Z4800, width 900, inward/left hinge. North window
 ## Verification limits
 
 See [RM-002 validation](../validation/RM-002.md). Prepared thumbnail images were actually rasterized and inspected; source geometry/palette/size identity and both min/max procedural sizes are tested. Full R3F cutaway, actual browser/GPU/device presentation, recognition resemblance and owner visual approval remain later work. No 3D appears in initial room review.
+
+## RM-015D renderer detail (19 October2026)
+
+Original GLB bytes, exact manifests/licences/thumbnails and catalogue/physical definitions remain unchanged. Renderer-only bevels, two pillows within the existing pillow envelope, recessed wardrobe fronts/handles and owned material maps improve close-up interiors. Shared physical bounds, scale1 fixed assets, odd/half-mm geometry, strict proposed variants and same-size fallback retain their original authority. Fixed models have reviewed UVs and named wood/carpet/metal materials; renderer instances copy those materials, retain cache-owned geometry and borrow bounded canvas-owned maps. Unsupported measured owned-size bounds remain simple geometry and keep their existing contextual notice. See [the room renderer policy](room-view.md) and [actual receipt](../validation/RM-015D.md). No new asset preparation/source/licence or purchased download was needed.

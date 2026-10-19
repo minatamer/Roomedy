@@ -1,6 +1,6 @@
 # RM-015D — Polish close-up room materials
 
-Status: **Planned**
+Status: **Complete locally**
 Planning date: **19 October 2026**
 Owner todo: **4/10 — Interior visual quality** (ordered by implementation dependencies; coverage in queue)
 Depends on: [RM-015C](RM-015C-add-smooth-interior-camera-exploration.md)
@@ -18,8 +18,7 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Exact proposed implementation ownership
 
 - `apps/frontend/src/features/room-view/scene.tsx`
-- `apps/frontend/src/features/room-view/representations/definitions.ts`
-- `apps/frontend/src/features/room-view/assets.ts`
+- `apps/frontend/src/features/room-view/surfaces.ts`
 - `docs/design/catalogue.md`
 - `docs/design/room-view.md`
 - `test/room-view.test.ts`
@@ -27,11 +26,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 
 ## Acceptance criteria
 
-- [ ] Furniture geometry, edge detail, floor/wall surfaces, coherent material variation and lighting/shadows hold up at interior camera distance, retaining warm stylized character.
-- [ ] Any generated local material textures are small, owned and disposed; no purchased assets or arbitrary remote downloads. Improve procedural shapes without stretching fixed assets or changing physical truth.
-- [ ] View interiors from all preset angles for exposed backs, gaps, intersections, shadow artifacts and aliasing. Preserve same-size graceful asset fallback and finite resource budgets.
-- [ ] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
-- [ ] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
+- [x] Furniture geometry, edge detail, floor/wall surfaces, coherent material variation and lighting/shadows hold up at interior camera distance, retaining warm stylized character.
+- [x] Any generated local material textures are small, owned and disposed; no purchased assets or arbitrary remote downloads. Improve procedural shapes without stretching fixed assets or changing physical truth.
+- [x] View interiors from all preset angles for exposed backs, gaps, intersections, shadow artifacts and aliasing. Preserve same-size graceful asset fallback and finite resource budgets.
+- [x] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
+- [x] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
 
 ## Verification
 
@@ -48,3 +47,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Handoff
 
 Record real commands/results and findings dispositions in `docs/validation/RM-015D.md`; no source changes during validation. Existing exact-path per-ticket local commit authority remains scoped to validated owned work. Next packet is RM-015E.
+
+## Refined plan before implementation
+
+[Exact allocation and local rendering plan](../commit-plans/RM-015D.md) specifies owned finite procedural textures/bevel geometry, compatible per-instance material clones, within-envelope furniture/opening detail and targeted shadows. Original semantic definitions, asset bytes/manifests and cache remain unchanged because no catalogue/physical variant is needed.
+
+## Local completion
+
+[Actual implementation, browser/resource measurements and two review passes](../validation/RM-015D.md) record the353-test final gate, independently reproduced/fixed chair finish finding and clean pass2. Owner/physical/production/live/Linux/hosted acceptance remains separate.

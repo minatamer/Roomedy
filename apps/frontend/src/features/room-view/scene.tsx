@@ -16,6 +16,7 @@ import {
   Group,
   Matrix4,
   MeshStandardMaterial,
+  Object3D,
   Vector3,
 } from 'three';
 import type {
@@ -23,6 +24,7 @@ import type {
   RoomDocument,
   CheckFacts,
 } from '@roomedy/contracts/room';
+import { findCatalogueEntry } from '@roomedy/spatial';
 import type { InstancedMesh, MeshBasicMaterial } from 'three';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { FINISH_PALETTE } from '../catalogue/finishes';
@@ -40,6 +42,13 @@ import { cameraJourney, cameraViewPose, moveCamera } from './camera';
 import type { RoomFrame } from '../session/state';
 import { ViewAssets } from './assets';
 import type { AssetState } from './assets';
+import {
+  createSurfaces,
+  detailedParts,
+  setSurfaceMap,
+  surfaceModel,
+} from './surfaces';
+import type { Surfaces } from './surfaces';
 
 export type CameraAction = {
   kind:
@@ -590,20 +599,29 @@ function Walls({
   color,
   wall,
   room,
+  surfaces,
 }: {
   boxes: SceneBox[];
   geometry: BoxGeometry;
   color: string;
   wall: string;
   room: RoomDocument;
+  surfaces: Surfaces;
 }) {
   const ref = useRef<InstancedMesh>(null),
     { camera, invalidate } = useThree(),
     bounds = displayRoom(room);
   const material = useMemo(
     () =>
-      new MeshStandardMaterial({ color, roughness: 0.94, transparent: true }),
-    [color],
+      new MeshStandardMaterial({
+        color,
+        map: surfaces.plaster,
+        bumpMap: surfaces.plaster,
+        bumpScale: 0.0015,
+        roughness: 0.94,
+        transparent: true,
+      }),
+    [color, surfaces],
   );
   const materialRef = useRef(material);
   useEffect(() => {
@@ -664,16 +682,144 @@ function Walls({
   );
 }
 
-function BorrowedModel({ asset }: { asset: GLTF }) {
-  const object = useMemo(() => {
-    const clone = asset.scene.clone(true);
-    clone.traverse((o) => {
-      o.castShadow = true;
-      o.receiveShadow = true;
-    });
-    return clone;
-  }, [asset]);
-  return <primitive object={object} dispose={null} />;
+function BorrowedModel({
+  asset,
+  surfaces,
+}: {
+  asset: GLTF;
+  surfaces: Surfaces;
+}) {
+  const instance = useMemo(
+    () => surfaceModel(asset.scene, surfaces),
+    [asset, surfaces],
+  );
+  useEffect(() => () => instance.dispose(), [instance]);
+  return <primitive object={instance.object} dispose={null} />;
+}
+
+function Opening({
+  room,
+  feature,
+  geometry,
+  surfaces,
+  selected,
+  onSelect,
+}: {
+  room: RoomDocument;
+  feature: RoomDocument['room']['features'][number];
+  geometry: BoxGeometry;
+  surfaces: Surfaces;
+  selected: boolean;
+  onSelect: SceneProps['onSelect'];
+}) {
+  const box = featureBox(room, feature);
+  if (!box) return null;
+  const alongX = feature.wall === 'north' || feature.wall === 'south';
+  const w = alongX ? box.size[0] : box.size[2],
+    h = box.size[1],
+    depth = alongX ? box.size[2] : box.size[0];
+  const angle =
+    feature.wall === 'south'
+      ? Math.PI
+      : feature.wall === 'west'
+        ? Math.PI / 2
+        : feature.wall === 'east'
+          ? -Math.PI / 2
+          : 0;
+  const t = Math.min(0.035, w / 6, h / 6),
+    window = feature.kind === 'window',
+    door = feature.kind === 'door';
+  const trim = [
+    [-w / 2 + t / 2, 0, t, h],
+    [w / 2 - t / 2, 0, t, h],
+    [0, h / 2 - t / 2, w - t * 2, t],
+    ...(window
+      ? [
+          [0, -h / 2 + t / 2, w - t * 2, t],
+          [0, 0, t * 0.65, h - t * 2],
+        ]
+      : []),
+  ];
+  return (
+    <group
+      position={box.center}
+      rotation={[0, angle, 0]}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (e.delta <= 4) onSelect(feature.id);
+      }}
+    >
+      <mesh
+        geometry={geometry}
+        scale={[w, h, window ? 0.004 : door ? depth * 0.6 : depth]}
+        dispose={null}
+        receiveShadow
+      >
+        <OwnedStandard
+          color={
+            selected
+              ? '#a77342'
+              : window
+                ? '#b8ced2'
+                : door
+                  ? '#765238'
+                  : '#9a8870'
+          }
+          map={door ? surfaces.wood : window ? null : surfaces.plaster}
+          roughness={window ? 0.28 : 0.7}
+          metalness={window ? 0.15 : 0}
+          emissive={window ? '#adc9d1' : '#000000'}
+          emissiveIntensity={window ? 0.15 : 0}
+        />
+      </mesh>
+      {(window || door) &&
+        trim.map(([x, y, width, height], i) => (
+          <mesh
+            key={i}
+            geometry={surfaces.hard}
+            position={[x!, y!, 0]}
+            scale={[width!, height!, depth]}
+            dispose={null}
+            receiveShadow
+          >
+            <OwnedStandard
+              color="#e8e0d3"
+              map={surfaces.wood}
+              roughness={0.7}
+            />
+          </mesh>
+        ))}
+      {door && (
+        <>
+          <mesh
+            geometry={surfaces.hard}
+            position={[0, 0, depth * 0.32]}
+            scale={[w - t * 4, h - t * 4, depth * 0.2]}
+            dispose={null}
+            receiveShadow
+          >
+            <OwnedStandard
+              color={selected ? '#a77342' : '#806046'}
+              map={surfaces.wood}
+              roughness={0.7}
+            />
+          </mesh>
+          <mesh
+            geometry={surfaces.hard}
+            position={[
+              (feature.hinge === 'right' ? -1 : 1) * w * 0.32,
+              -h * 0.06,
+              depth * 0.43,
+            ]}
+            scale={[Math.min(0.1, w * 0.2), t * 0.5, depth * 0.12]}
+            dispose={null}
+          >
+            <OwnedStandard color="#574b3e" roughness={0.35} metalness={0.6} />
+          </mesh>
+        </>
+      )}
+    </group>
+  );
 }
 
 function Piece({
@@ -683,6 +829,7 @@ function Piece({
   geometry,
   asset,
   onSelect,
+  surfaces,
 }: {
   piece: Furniture;
   selected: boolean;
@@ -690,6 +837,7 @@ function Piece({
   geometry: BoxGeometry;
   asset: AssetState | undefined;
   onSelect: SceneProps['onSelect'];
+  surfaces: Surfaces;
 }) {
   const group = useRef<Group>(null),
     { invalidate } = useThree(),
@@ -698,12 +846,43 @@ function Piece({
   const representation = pieceRepresentation(piece, asset?.kind === 'ready');
   const materials = useMemo(
     () => ({
-      frame: new MeshStandardMaterial({ roughness: 0.72 }),
-      soft: new MeshStandardMaterial({ color: '#eee5d5', roughness: 0.97 }),
-      metal: new MeshStandardMaterial({ color: '#514a40', roughness: 0.65 }),
+      frame: new MeshStandardMaterial({
+        roughness: 0.67,
+        map: surfaces.wood,
+        bumpMap: surfaces.wood,
+        bumpScale: 0.0004,
+      }),
+      soft: new MeshStandardMaterial({
+        color: '#eee5d5',
+        roughness: 0.97,
+        map: surfaces.fabric,
+        bumpMap: surfaces.fabric,
+        bumpScale: 0.0012,
+      }),
+      blanket: new MeshStandardMaterial({
+        color: '#bc9475',
+        roughness: 0.98,
+        map: surfaces.fabric,
+        bumpMap: surfaces.fabric,
+        bumpScale: 0.0012,
+      }),
+      metal: new MeshStandardMaterial({
+        color: '#514a40',
+        roughness: 0.38,
+        metalness: 0.55,
+      }),
     }),
-    [],
+    [surfaces],
   );
+  useLayoutEffect(() => {
+    setSurfaceMap(
+      materials.frame,
+      piece.finish === 'oak' || piece.finish === 'walnut'
+        ? surfaces.wood
+        : surfaces.plaster,
+    );
+    invalidate();
+  }, [piece.finish, surfaces, materials, invalidate]);
   useEffect(
     () => () => Object.values(materials).forEach((m) => m.dispose()),
     [materials],
@@ -711,6 +890,16 @@ function Piece({
   const color = useMemo(
     () => new Color(FINISH_PALETTE[piece.finish]),
     [piece.finish],
+  );
+  const upholsteryColor = useMemo(
+    () =>
+      new Color(
+        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+          ?.category === 'chair'
+          ? FINISH_PALETTE[piece.finish]
+          : '#eee5d5',
+      ),
+    [piece.catalogueId, piece.catalogueVersion, piece.finish],
   );
   useFrame((_, delta) => {
     const g = group.current;
@@ -726,12 +915,16 @@ function Piece({
       Math.abs(rotation) > 0.0001 ||
       Math.abs(materials.frame.color.r - color.r) +
         Math.abs(materials.frame.color.g - color.g) +
-        Math.abs(materials.frame.color.b - color.b) >
+        Math.abs(materials.frame.color.b - color.b) +
+        Math.abs(materials.soft.color.r - upholsteryColor.r) +
+        Math.abs(materials.soft.color.g - upholsteryColor.g) +
+        Math.abs(materials.soft.color.b - upholsteryColor.b) >
         0.001;
     if (moving) {
       g.position.lerp(target, amount);
       g.rotation.y += rotation * amount;
       materials.frame.color.lerp(color, amount);
+      materials.soft.color.lerp(upholsteryColor, amount);
       invalidate();
     }
   });
@@ -750,20 +943,30 @@ function Piece({
       onClick={pick}
     >
       {representation.kind === 'mesh' && asset?.kind === 'ready' ? (
-        <BorrowedModel asset={asset.asset} />
+        <BorrowedModel asset={asset.asset} surfaces={surfaces} />
       ) : representation.kind === 'procedural' ? (
-        representation.parts.map((part) => (
-          <mesh
-            key={part.name}
-            geometry={geometry}
-            material={materials[part.role]}
-            position={part.center.map(metres) as [number, number, number]}
-            scale={part.size.map(metres) as [number, number, number]}
-            dispose={null}
-            castShadow
-            receiveShadow
-          />
-        ))
+        detailedParts(representation.parts, representation.footprint).map(
+          (part) => (
+            <mesh
+              key={part.name}
+              geometry={
+                part.name === 'physical-bounds'
+                  ? geometry
+                  : part.role === 'soft'
+                    ? surfaces.soft
+                    : surfaces.hard
+              }
+              material={
+                materials[part.name === 'blanket' ? 'blanket' : part.role]
+              }
+              position={part.center.map(metres) as [number, number, number]}
+              scale={part.size.map(metres) as [number, number, number]}
+              dispose={null}
+              castShadow
+              receiveShadow
+            />
+          ),
+        )
       ) : (
         <mesh position={[0, 0.15, 0]}>
           <octahedronGeometry args={[0.12]} />
@@ -804,6 +1007,8 @@ export function RoomScene(props: SceneProps) {
     rendered = candidate ?? room;
   const geometry = useMemo(() => new BoxGeometry(1, 1, 1), []);
   useEffect(() => () => geometry.dispose(), [geometry]);
+  const surfaces = useMemo(() => createSurfaces(), []);
+  useEffect(() => () => surfaces.dispose(), [surfaces]);
   const [assets, setAssets] = useState<ReadonlyMap<string, AssetState>>(
     new Map(),
   );
@@ -831,6 +1036,15 @@ export function RoomScene(props: SceneProps) {
   }, [assets, urls, onNotice]);
   const bounds = displayRoom(rendered),
     ghosts = changedPieces(room, candidate);
+  const sunTarget = useMemo(() => {
+    const target = new Object3D();
+    target.position.set(bounds.width / 2, 0, bounds.depth / 2);
+    return target;
+  }, [bounds.width, bounds.depth]);
+  useLayoutEffect(() => {
+    surfaces.floor.repeat.set(bounds.width / 1.12, bounds.depth / 2.8);
+  }, [surfaces, bounds.width, bounds.depth]);
+  const shadowSpan = Math.max(bounds.width, bounds.depth) * 0.8 + 0.5;
   const walls = useMemo(
     () =>
       Object.fromEntries(
@@ -855,18 +1069,26 @@ export function RoomScene(props: SceneProps) {
           action={props.cameraAction}
         />
       )}
-      <ambientLight intensity={0.8} />
-      <hemisphereLight args={['#fff7e8', '#a89175', 1.4]} />
+      <ambientLight intensity={0.35} />
+      <hemisphereLight args={['#fff8ee', '#a89175', 1.6]} />
+      <primitive object={sunTarget} />
       <directionalLight
-        position={[3, 8, 5]}
+        position={[
+          bounds.width * 0.2,
+          bounds.height * 2.5,
+          bounds.depth * 0.25,
+        ]}
+        target={sunTarget}
         intensity={2.5}
         castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-left={-14}
-        shadow-camera-right={14}
-        shadow-camera-top={14}
-        shadow-camera-bottom={-14}
-        shadow-normalBias={0.025}
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-shadowSpan}
+        shadow-camera-right={shadowSpan}
+        shadow-camera-top={shadowSpan}
+        shadow-camera-bottom={-shadowSpan}
+        shadow-camera-far={Math.max(50, bounds.height * 4 + shadowSpan * 2)}
+        shadow-normalBias={0.005}
+        onUpdate={(light) => light.shadow.camera.updateProjectionMatrix()}
       />
       <mesh
         geometry={geometry}
@@ -877,23 +1099,12 @@ export function RoomScene(props: SceneProps) {
       >
         <OwnedStandard
           color={FINISH_PALETTE[rendered.room.floorFinish]}
-          roughness={0.78}
+          roughness={0.76}
+          map={surfaces.floor}
+          bumpMap={surfaces.floor}
+          bumpScale={0.001}
         />
       </mesh>
-      {Array.from(
-        { length: Math.min(64, Math.ceil(bounds.width / 0.28) - 1) },
-        (_, i) => (
-          <mesh
-            key={i}
-            geometry={geometry}
-            position={[(i + 1) * 0.28, 0.001, bounds.depth / 2]}
-            scale={[0.004, 0.002, bounds.depth]}
-            dispose={null}
-          >
-            <OwnedStandard color="#6f5033" transparent opacity={0.16} />
-          </mesh>
-        ),
-      )}
       {(['north', 'south', 'east', 'west'] as const).map((w) => (
         <Walls
           key={w}
@@ -902,40 +1113,20 @@ export function RoomScene(props: SceneProps) {
           color={FINISH_PALETTE[rendered.room.wallFinish]}
           wall={w}
           room={rendered}
+          surfaces={surfaces}
         />
       ))}
-      {rendered.room.features.map((f) => {
-        const b = featureBox(rendered, f);
-        if (!b) return null;
-        return (
-          <mesh
-            key={f.id}
-            geometry={geometry}
-            position={b.center}
-            scale={b.size}
-            dispose={null}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (e.delta <= 4) onSelect(f.id);
-            }}
-          >
-            <OwnedStandard
-              color={
-                selectedId === f.id
-                  ? '#a77342'
-                  : f.kind === 'window'
-                    ? '#b6ced0'
-                    : f.kind === 'door'
-                      ? '#765238'
-                      : '#9a8870'
-              }
-              transparent={f.kind === 'window'}
-              opacity={f.kind === 'window' ? 0.45 : 1}
-              roughness={0.6}
-            />
-          </mesh>
-        );
-      })}
+      {rendered.room.features.map((feature) => (
+        <Opening
+          key={feature.id}
+          room={rendered}
+          feature={feature}
+          geometry={geometry}
+          surfaces={surfaces}
+          selected={selectedId === feature.id}
+          onSelect={onSelect}
+        />
+      ))}
       {rendered.furniture.map((p) => {
         const r = pieceRepresentation(p);
         return (
@@ -950,6 +1141,7 @@ export function RoomScene(props: SceneProps) {
             }
             geometry={geometry}
             asset={r.kind === 'mesh' ? assets.get(r.url) : undefined}
+            surfaces={surfaces}
             onSelect={onSelect}
           />
         );
