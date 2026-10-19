@@ -264,7 +264,7 @@ export function ProjectControls({
           }
         }}
       >
-        <summary>Project</summary>
+        <summary className="glass-control">Project</summary>
         <div className={styles.projectOptions}>
           <p>
             Take your Current design with you, or save a project to edit later.

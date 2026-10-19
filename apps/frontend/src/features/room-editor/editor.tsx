@@ -217,6 +217,7 @@ export function Editor({
         </div>
         <div className={styles.headerActions}>
           <button
+            className="glass-control"
             data-room-target="history"
             aria-disabled={
               !state.undoLabel || before || state.clientLoadFailure

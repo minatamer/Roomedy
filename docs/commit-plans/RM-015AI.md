@@ -27,3 +27,18 @@ Inspect actual fresh welcome/Skip, focus return, exactly four row actions, both 
 
 
 Settled checkpoint allocation refinement before batch evidence creation: `docs/commit-plans/RM-015AD-AI-CHECKPOINT.md` and `docs/validation/RM-015AD-AI.md` join the existing packet union. The [exact70-path batch plan](RM-015AD-AI-CHECKPOINT.md) owns final reconciliation of the six already allocated ticket/receipt sets, root/source proof, full read-only review and one atomic local checkpoint after this final queued cleanup. No unrelated source owner is added.
+
+## Header glass follow-up allocation —20 October2026
+
+Parent133e154 is committed and the worktree is clean. Latest owner screenshot selects Undo and Project: “these should use our glass class”. Treat this as the small header continuation of AI, reusing the existing global glass-control from Y. Exact follow-up allocation before source edits:
+
+1. `apps/frontend/src/features/room-editor/editor.tsx`
+2. `apps/frontend/src/features/room-editor/project-controls.tsx`
+3. `apps/frontend/src/features/room-editor/editor.module.css`
+4. `docs/tickets/RM-015AI-simplify-editor-tool-navigation.md`
+5. `docs/commit-plans/RM-015AI.md`
+6. `docs/validation/RM-015AI.md`
+7. `docs/ROOMEDY.md`
+8. `docs/tickets/README.md`
+
+Apply the actual shared class to Undo and Project summary; exclude glass controls from studio base/hover/focus and narrow header visual overrides instead of copying the glass declarations. Preserve Undo authority/unavailable presentation and its narrow label, native Project disclosure marker/keyboard/menu/export/import/reset behavior,44px targets and existing header dimensions. Keep blur limited to these two small targets. Shared glass itself and other editor controls stay unchanged. Inspect actual disabled/enabled Undo, Project closed/open/keyboard focus, phone/short fit and browser errors via the existing hot-reloaded app. Use scoped format/lint/frontend types and a read-only eight-path review; this reversible class/cascade correction needs no mirrored CSS test or repeated full578-test/backend/build run. Record current native/source evidence honestly; prior production BUILD_ID belongs to the earlier batch and does not validate new class bytes. After local validation the existing ticket-prefixed exact local commit authority applies. Actual visual approval pending; Q held, guide paused, RM-016 Planned. No new services/ports/dependencies, paid/live, delegation, push or deploy.

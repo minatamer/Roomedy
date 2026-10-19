@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Current Undo/Project glass follow-up:** The AD–AI batch is committed133e154. Latest screenshot asks both header controls to reuse glass-control. [AI ticket](tickets/RM-015AI-simplify-editor-tool-navigation.md), [eight-path follow-up plan](commit-plans/RM-015AI.md#header-glass-follow-up-allocation-20-october2026) and [actual evidence](validation/RM-015AI.md) record shared styling, preserved disabled/disclosure behavior, desktop/phone/short observations and scoped format/lint/frontend types. Prior full578-test/build evidence remains historical for this class-only correction; current hot-reload source differs from that production artifact. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Current settled queued edits:** [RM-015AD–AI batch evidence](validation/RM-015AD-AI.md) and [exact70-path checkpoint plan](commit-plans/RM-015AD-AI-CHECKPOINT.md) follow committed AC42b400a. All queued finishes/photo estimates, shared glass, browser icon,2D rotation/direction, horizontal interior dragging and tool-row cleanup are implemented. Native desktop/narrow/focus/edit/export observations are recorded. The queue finished before one settled578-test/root/both-build gate; current216-file source/BUILD_ID matches and full-scope read-only pass1 is clean. GLB/OBJ downloads and all4PDF pages inspected. Exact local checkpoint prepared; actual owner visual approval remains pending, Q held, guide paused, RM-016 Planned. Owner requests no questions while sleeping. Individual receipts preserve historical test timing and explicit unperformed external/device/full-matrix limits.
 
 **Current temporary comparison pause:** [RM-015AC](tickets/RM-015AC-temporarily-hide-room-comparison.md), [14-path plan](commit-plans/RM-015AC.md) and [evidence](validation/RM-015AC.md) follow committed AB6db513e. Before/Current controls are hidden for now; full comparison/baseline/import/export implementation remains. Editor stays Current; the existing last tour step points to Undo. Actual visual approval pending, Q held, guide paused, RM-016 Planned.
@@ -1333,7 +1335,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Actual owner visual review of the completed AD–AI refinements remains pending. Settled578-test/root/both-build/current-source gates and read-only pass1 passed; exact70-path local checkpoint prepared under existing authority. No question while owner sleeps. Q lighting held, guide goal paused, RM-016 Planned; do not infer result approval or resume later phases. No paid/live/new ports/delegation/push/deploy.
+Next action: Actual owner visual review remains pending after the scoped Undo/Project shared-glass follow-up. Native desktop/phone/short states, scoped format/lint/frontend types and read-only eight-path review passed; exact local checkpoint prepared under existing authority. No questions while owner sleeps. Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy; prior full578-test/build evidence remains historical.
 Active ticket: RM-015AI
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1359,7 +1361,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T23:23:00+00:00",
+  "updated_at": "2026-10-19T23:34:18+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1549,7 +1551,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-015AI",
-  "next_action": "Actual owner visual review of the completed AD–AI refinements remains pending. Settled578-test/root/both-build/current-source gates and read-only pass1 passed; exact70-path local checkpoint prepared under existing authority. No question while owner sleeps. Q lighting held, guide goal paused, RM-016 Planned; do not infer result approval or resume later phases. No paid/live/new ports/delegation/push/deploy.",
+  "next_action": "Actual owner visual review remains pending after the scoped Undo/Project shared-glass follow-up. Native desktop/phone/short states, scoped format/lint/frontend types and read-only eight-path review passed; exact local checkpoint prepared under existing authority. No questions while owner sleeps. Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy; prior full578-test/build evidence remains historical.",
   "phases": [
     {
       "id": "01-docs",
@@ -2000,14 +2002,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AF.md; docs/commit-plans/RM-015AF.md:16-path larger dot-free browser icon on existing soft beige#e7ddcc, one SVG regenerates96/192/512/Apple180 PNG and16/32/48 ICO. Actual source/served96px art and all six revised head metadata links inspected on4320. AD/AE/AF58-path union remains unstaged, allocation/whitespace housekeeping clean; no routine suite/root/build/final read-only/checkpoint pass or owner/indexing acceptance claimed.",
         "docs/validation/RM-015AG.md; docs/commit-plans/RM-015AG.md:12-path removal of obstructing plan selection dot, shared-command clockwise/counterclockwise90deg controls and local shortest-angle CSS footprint/arrow motion. Native wardrobe180deg arrow visibility/90deg counterturn/Undo-to180deg observed; desktop frame retained480.578125px,390px controls76x44 and no horizontal overflow. Captured browser errors empty. AD–AG61-path union unstaged with allocation/whitespace housekeeping clean; routine final tests/root/build/read-only/checkpoint and actual owner acceptance remain pending.",
         "docs/validation/RM-015AH.md; docs/commit-plans/RM-015AH.md:10-path correction after owner clarifies horizontal dragging. Native Corner100px right drag reproduced old room-left/yaw-0.4004rad, corrected room-right/yaw+0.4002rad; equal left drag returns direction with fixed3750/1600/450mm eye, captured errors empty. One horizontal sign change in existing shared interior owner, same smooth motion/capture/edit guards; no camera/room authority expansion. AD–AH64-path union unstaged with allocation/whitespace housekeeping clean; routine final tests/root/build/read-only/checkpoint and actual owner approval remain pending.",
-        "docs/validation/RM-015AD-AI.md — settled AD–AI queue completed before578tests/45files +7boundaries/root/both builds; current216-file source/BUILD_ID0b9b5d4f8871d848efa21e195d3cf9afd171a48b8919e8ff94260aec02a2a88d; clean full-scope read-only pass1; actual native GLB/OBJ downloads and4PDF pages inspected; exact70-path authorized local checkpoint prepared. Actual owner visual acceptance and explicit external/device/full-matrix limits remain pending."
+        "docs/validation/RM-015AD-AI.md — settled AD–AI queue completed before578tests/45files +7boundaries/root/both builds; current216-file source/BUILD_ID0b9b5d4f8871d848efa21e195d3cf9afd171a48b8919e8ff94260aec02a2a88d; clean full-scope read-only pass1; actual native GLB/OBJ downloads and4PDF pages inspected; exact70-path authorized local checkpoint prepared. Actual owner visual acceptance and explicit external/device/full-matrix limits remain pending.",
+        "docs/validation/RM-015AI.md — Undo/Project glass-control follow-up: actual enabled/disabled Undo, native disclosure/keyboard/focus,1280×720/390×844/320×640/1280×600 fit; scoped format/lint/frontend types passed; clean eight-path read-only pass1 and264local links. Current hot-reload source692380139950ee927d68d5b3450360f09d9d502bb8c44c7a0ccb40b1046340bb differs from prior production artifact; exact local checkpoint prepared."
       ],
       "blockers": [],
       "approval": {
-        "quote": "dont add quick tour in this like navbar sort of this and remove the horizontal bar thats above and below it\n\nand hide the checks tab for now i dont really like it\n\nim sleeping so dont ask me questions, take recommneded decisisons if needed",
-        "source": "human:current-chat/2026-10-20/tool-row-cleanup-and-sleeping",
-        "scope": "RM-015AI navigation cleanup and routine recommended decisions without questions. All selected queued UI edits completed before settled verification, satisfying earlier skip-tests-until-finished timing. Existing exact local checkpoint authority remains; no actual visual result approval or external authority.",
-        "recorded_at": "2026-10-19T23:01:58+00:00"
+        "scope": "Small RM-015AI header appearance follow-up only; not visual result approval.",
+        "source": "human:current-chat/2026-10-20/undo-project-glass-screenshot",
+        "quote": "these should use our glass class",
+        "recorded_at": "2026-10-19T23:28:40+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2234,6 +2237,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/tool-row-cleanup-and-sleeping",
             "scope": "RM-015AI navigation cleanup and routine recommended decisions without questions. All selected queued UI edits completed before settled verification, satisfying earlier skip-tests-until-finished timing. Existing exact local checkpoint authority remains; no actual visual result approval or external authority.",
             "recorded_at": "2026-10-19T23:01:58+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "scope": "Small RM-015AI header appearance follow-up only; not visual result approval.",
+            "source": "human:current-chat/2026-10-20/undo-project-glass-screenshot",
+            "quote": "these should use our glass class",
+            "recorded_at": "2026-10-19T23:28:40+00:00"
           }
         }
       ]
