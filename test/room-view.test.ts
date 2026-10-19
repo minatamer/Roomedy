@@ -16,6 +16,107 @@ import {
 } from '../apps/frontend/src/features/room-view/assets.js';
 import type { AssetState } from '../apps/frontend/src/features/room-view/assets.js';
 import { comparisonFrame } from '../apps/frontend/src/features/session/state.js';
+import {
+  cameraJourney,
+  cameraPositionAllowed,
+  cameraViewPose,
+  moveCamera,
+} from '../apps/frontend/src/features/room-view/camera.js';
+import type { Triple } from '../apps/frontend/src/features/room-view/adapter.js';
+
+describe('bounded presentation camera navigation', () => {
+  it('chooses meaningful free eye positions without mutating accepted or approximate facts', () => {
+    for (const condition of ['sample', 'empty', 'partial'] as const) {
+      const room = createRoomFixture(condition),
+        before = JSON.stringify(room);
+      for (const view of ['doorway', 'corner', 'work-area'] as const) {
+        const pose = cameraViewPose(room, view);
+        if (view === 'work-area' && condition !== 'sample')
+          expect(pose).toBeNull();
+        else {
+          expect(pose).not.toBeNull();
+          expect(cameraPositionAllowed(room, pose!.position)).toBe(true);
+          expect(pose!.position[1]).toBe(1.6);
+          expect(pose!.target.every(Number.isFinite)).toBe(true);
+        }
+      }
+      expect(JSON.stringify(room)).toBe(before);
+    }
+  });
+  it('does not offer a room-interior pose when no safe floor or head space exists', () => {
+    const room = createRoomFixture('sample');
+    room.furniture = [room.furniture[0]!];
+    room.furniture[0]!.dimensions.width.value = 4200;
+    room.furniture[0]!.dimensions.depth.value = 4800;
+    room.furniture[0]!.pose.centerX = 2100;
+    room.furniture[0]!.pose.centerZ = 2400;
+    expect(cameraViewPose(room, 'corner')).toBeNull();
+    room.furniture = [];
+    room.room.width.value = 500;
+    expect(cameraViewPose(room, 'doorway')).toBeNull();
+    room.room.width.value = 4200;
+    room.room.height.value = 600;
+    expect(cameraViewPose(room, 'corner')).toBeNull();
+    expect(
+      cameraViewPose(room, 'overview')!.position.every(Number.isFinite),
+    ).toBe(true);
+  });
+  it('routes around a barrier with bounded finite clear segments and stops deliberate steps at its edge', () => {
+    const room = createRoomFixture('sample');
+    room.furniture = [room.furniture[0]!];
+    const barrier = room.furniture[0]!;
+    barrier.dimensions.width.value = 1200;
+    barrier.dimensions.depth.value = 2400;
+    barrier.pose.centerX = 2100;
+    barrier.pose.centerZ = 2400;
+    barrier.pose.quarterTurns = 0;
+    const from: Triple = [0.4, 1.6, 2.4],
+      to: Triple = [3.8, 1.6, 2.4];
+    const path = cameraJourney(room, from, to);
+    expect(path.length).toBeGreaterThan(1);
+    expect(path.length).toBeLessThanOrEqual(626);
+    expect(path.at(-1)).toEqual(to);
+    let previous = from;
+    for (const p of path) {
+      for (let n = 0; n <= 20; n++)
+        expect(
+          cameraPositionAllowed(
+            room,
+            previous.map((v, i) => v + ((p[i]! - v) * n) / 20) as Triple,
+          ),
+        ).toBe(true);
+      previous = p;
+    }
+    const stopped = moveCamera(room, from, to);
+    expect(stopped[0]).toBeGreaterThan(1.3);
+    expect(stopped[0]).toBeLessThan(1.32);
+    expect(stopped[1]).toBe(1.6);
+    expect(cameraPositionAllowed(room, stopped)).toBe(true);
+    expect(moveCamera(room, from, [NaN, 0, 0])).toEqual(from);
+    expect(moveCamera(room, from, [-20, 0, 2.4])).toEqual([0.18, 1.6, 2.4]);
+  });
+  it('uses the open roof for disconnected travel and keeps comparison overview framing identical', () => {
+    const room = createRoomFixture('sample');
+    room.furniture = [room.furniture[0]!];
+    const barrier = room.furniture[0]!;
+    barrier.dimensions.width.value = 1200;
+    barrier.dimensions.depth.value = 4800;
+    barrier.pose.centerX = 2100;
+    barrier.pose.centerZ = 2400;
+    barrier.pose.quarterTurns = 0;
+    const path = cameraJourney(room, [0.4, 1.6, 2.4], [3.8, 1.6, 2.4]);
+    expect(path).toHaveLength(3);
+    expect(path[0]![1]).toBeGreaterThan(2.6);
+    expect(path[1]![1]).toBe(path[0]![1]);
+    const current = structuredClone(room);
+    current.room.width.value = 3000;
+    const frame = comparisonFrame({ current, baseline: room });
+    expect(cameraViewPose(current, 'overview', frame)).toEqual(
+      cameraViewPose(room, 'overview', frame),
+    );
+    expect(cameraJourney(room, [NaN, 1, 0], [1, 1, 1])).toEqual([]);
+  });
+});
 
 describe('cutaway projection over semantic snapshots', () => {
   it('uses identical physical camera bounds for Before/Current after dimension correction without changing shell geometry', () => {

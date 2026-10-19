@@ -1,11 +1,12 @@
 'use client';
-import { Component, useCallback, useState } from 'react';
+import { Component, useCallback, useMemo, useState } from 'react';
 import type { ErrorInfo, ReactNode, MutableRefObject } from 'react';
 import { PCFShadowMap } from 'three';
 import { Canvas } from '@react-three/fiber';
 import { RoomScene } from './scene';
 import type { CameraAction, SceneProps } from './scene';
-import type { CameraPose } from './adapter';
+import type { CameraPose, CameraView } from './adapter';
+import { cameraViewPose } from './camera';
 import { displayRoom, featureBox, pieceRepresentation } from './adapter';
 import styles from './room-view.module.css';
 
@@ -37,6 +38,9 @@ export default function Cutaway(props: CutawayProps) {
     [lost, setLost] = useState(false),
     [assets, setAssets] = useState({ loading: 0, failed: 0 });
   const [action, setAction] = useState<CameraAction | null>(null);
+  const [cameraView, setCameraView] = useState<CameraView>(
+    props.cameraStateRef.current?.view ?? 'overview',
+  );
   const onLost = useCallback(() => setLost(true), []);
   const onReady = useCallback(() => setReady(true), []);
   const onNotice = useCallback(
@@ -44,6 +48,22 @@ export default function Cutaway(props: CutawayProps) {
     [],
   );
   const rendered = props.candidate ?? props.room;
+  const views = useMemo(
+    () =>
+      (
+        [
+          ['overview', 'Overview'],
+          ['doorway', 'Doorway'],
+          ['work-area', 'Work area'],
+          ['corner', 'Corner'],
+        ] as const
+      ).map(([view, label]) => ({
+        view,
+        label,
+        available: !!cameraViewPose(rendered, view),
+      })),
+    [rendered],
+  );
   const incompleteFeatures = rendered.room.features.some(
     (feature) => featureBox(rendered, feature) === null,
   );
@@ -61,13 +81,32 @@ export default function Cutaway(props: CutawayProps) {
       <button onClick={props.onPlan}>Open 2D plan</button>
     </div>
   );
-  const command = (kind: CameraAction['kind']) =>
+  const command = (kind: CameraAction['kind']) => {
+    if (kind === 'reset') setCameraView('overview');
+    else if (views.some((v) => v.view === kind))
+      setCameraView(kind as CameraView);
     setAction((previous) => ({
       kind,
       sequence: (previous?.sequence ?? 0) + 1,
     }));
+  };
   return (
     <div className={styles.wrap}>
+      <div role="group" aria-label="Room viewpoints" className={styles.tools}>
+        {views.map(({ view, label, available }) => (
+          <button
+            key={view}
+            aria-pressed={cameraView === view}
+            disabled={!ready || lost || !available}
+            title={
+              available ? label : `${label} needs a clear position in this room`
+            }
+            onClick={() => command(view)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
       <div
         role="group"
         aria-label="3D camera controls"
@@ -86,14 +125,34 @@ export default function Cutaway(props: CutawayProps) {
         ).map(([kind, label, text]) => (
           <button
             key={kind}
-            aria-label={label}
-            title={label}
+            aria-label={
+              cameraView === 'overview' ? label : label.replace('Orbit', 'Look')
+            }
+            title={
+              cameraView === 'overview' ? label : label.replace('Orbit', 'Look')
+            }
             onClick={() => command(kind)}
             disabled={!ready || lost}
           >
             {text}
           </button>
         ))}
+        {cameraView !== 'overview' && (
+          <>
+            <button
+              onClick={() => command('forward')}
+              disabled={!ready || lost}
+            >
+              Step forward
+            </button>
+            <button
+              onClick={() => command('backward')}
+              disabled={!ready || lost}
+            >
+              Step back
+            </button>
+          </>
+        )}
       </div>
       <div className={styles.viewport}>
         {lost ? (
@@ -101,26 +160,27 @@ export default function Cutaway(props: CutawayProps) {
         ) : (
           <GraphicsBoundary fallback={fallback} onFailure={() => setLost(true)}>
             <Canvas
-              orthographic
               frameloop="demand"
               shadows={{ type: PCFShadowMap }}
               dpr={[1, 1.5]}
-              camera={{ position: [7, 7, 9], near: 0.05, far: 200, zoom: 45 }}
+              camera={{ position: [7, 7, 9], near: 0.05, far: 200, fov: 50 }}
               gl={{ antialias: true, alpha: true, powerPreference: 'default' }}
               fallback={fallback}
               onCreated={({ gl }) => {
                 gl.setClearColor('#f7f5f0', 0);
                 const canvas = gl.domElement;
+                canvas.tabIndex = 0;
                 canvas.setAttribute('role', 'img');
                 canvas.setAttribute(
                   'aria-label',
-                  'Room cutaway. Select furniture with the pointer, or use the furniture list and numeric properties.',
+                  'Room in 3D. Arrow keys look around; plus and minus zoom. Inside the room, W A S D move. Select furniture to inspect.',
                 );
               }}
             >
               <RoomScene
                 {...props}
                 cameraAction={action}
+                cameraView={cameraView}
                 onReady={onReady}
                 onLost={onLost}
                 onNotice={onNotice}
@@ -135,7 +195,10 @@ export default function Cutaway(props: CutawayProps) {
         )}
       </div>
       <p className={styles.hint}>
-        Drag to orbit · Scroll or pinch to zoom · Select a piece to inspect
+        {cameraView === 'overview'
+          ? 'Drag to orbit'
+          : 'Drag to look · W A S D to move'}{' '}
+        · Scroll or pinch to zoom · Select a piece to inspect
       </p>
       {(assets.loading > 0 ||
         assets.failed > 0 ||

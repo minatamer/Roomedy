@@ -4,10 +4,12 @@ import { resolveRepresentation } from './representations/definitions';
 import type { RoomFrame } from '../session/state';
 
 export type Triple = [number, number, number];
+export type CameraView = 'overview' | 'doorway' | 'work-area' | 'corner';
 export interface CameraPose {
   position: Triple;
   target: Triple;
   zoom: number;
+  view?: CameraView;
 }
 export interface SceneBox {
   center: Triple;

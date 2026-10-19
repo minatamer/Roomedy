@@ -1,4 +1,11 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import type { ComponentRef, MutableRefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import type { ThreeElements, ThreeEvent } from '@react-three/fiber';
@@ -28,14 +35,26 @@ import {
   pieceRepresentation,
   wallBoxes,
 } from './adapter';
-import type { CameraPose, SceneBox } from './adapter';
-import { cameraFrameMetres } from './adapter';
+import type { CameraPose, CameraView, SceneBox, Triple } from './adapter';
+import { cameraJourney, cameraViewPose, moveCamera } from './camera';
 import type { RoomFrame } from '../session/state';
 import { ViewAssets } from './assets';
 import type { AssetState } from './assets';
 
 export type CameraAction = {
-  kind: 'left' | 'right' | 'up' | 'down' | 'in' | 'out' | 'reset';
+  kind:
+    | CameraView
+    | 'left'
+    | 'right'
+    | 'up'
+    | 'down'
+    | 'in'
+    | 'out'
+    | 'reset'
+    | 'forward'
+    | 'backward'
+    | 'strafe-left'
+    | 'strafe-right';
   sequence: number;
 };
 export interface SceneProps {
@@ -47,6 +66,7 @@ export interface SceneProps {
   cameraStateRef: MutableRefObject<CameraPose | null>;
   cameraFrame: RoomFrame | undefined;
   cameraAction: CameraAction | null;
+  cameraView: CameraView;
   onReady: () => void;
   onNotice: (loading: number, failed: number) => void;
   onLost: () => void;
@@ -155,81 +175,195 @@ function OwnedBasic(props: ThreeElements['meshBasicMaterial']) {
   return <meshBasicMaterial {...props} ref={ref} />;
 }
 
+// Three's projection is imperative; this does not update React-owned state.
+function setCameraZoom(
+  camera: { zoom: number; updateProjectionMatrix: () => void },
+  zoom: number,
+) {
+  camera.zoom = zoom;
+  camera.updateProjectionMatrix();
+}
+
 function CameraRig({
   room,
   cameraStateRef,
   cameraAction,
   cameraFrame,
+  cameraView,
 }: Pick<
   SceneProps,
-  'room' | 'cameraStateRef' | 'cameraAction' | 'cameraFrame'
+  'room' | 'cameraStateRef' | 'cameraAction' | 'cameraFrame' | 'cameraView'
 >) {
-  const { camera, size, invalidate } = useThree(),
-    controls = useRef<ComponentRef<typeof OrbitControls>>(null);
-  const cameraRef = useRef(camera);
-  const bounds = cameraFrame
-      ? cameraFrameMetres(cameraFrame)
-      : displayRoom(room),
-    span = Math.hypot(bounds.width, bounds.depth, bounds.height);
-  const target = useMemo(
-    () => new Vector3(bounds.width / 2, bounds.height * 0.28, bounds.depth / 2),
-    [bounds.width, bounds.depth, bounds.height],
-  );
-  const fit = Math.min(size.width, size.height) / (span * 1.1);
-  const desired = useRef<{
-    position: Vector3;
+  const { camera, size, invalidate, gl } = useThree();
+  const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
+  const initialized = useRef(false),
+    previousFit = useRef(1),
+    lastAction = useRef(0);
+  const aspect = size.width / Math.max(1, size.height),
+    fit = Math.min(1, aspect);
+  type Flight = {
+    path: Vector3[];
+    lengths: number[];
+    distance: number;
+    elapsed: number;
+    duration: number;
+    fromTarget: Vector3;
     target: Vector3;
+    fromZoom: number;
     zoom: number;
-  } | null>(null);
+  };
+  const desired = useRef<Flight | null>(null);
+  const begin = useCallback(
+    (points: Triple[], target: Triple, zoom: number, duration?: number) => {
+      if (!points.length || !controls.current) return;
+      const path = [
+          camera.position.clone(),
+          ...points.map((p) => new Vector3(...p)),
+        ],
+        lengths = [0];
+      for (let i = 1; i < path.length; i++)
+        lengths.push(lengths[i - 1]! + path[i]!.distanceTo(path[i - 1]!));
+      const distance = lengths.at(-1)!;
+      desired.current = {
+        path,
+        lengths,
+        distance,
+        elapsed: 0,
+        duration: duration ?? Math.min(1.8, Math.max(0.7, distance * 0.14)),
+        fromTarget: controls.current.target.clone(),
+        target: new Vector3(...target),
+        fromZoom: camera.zoom,
+        zoom,
+      };
+      invalidate();
+    },
+    [camera, invalidate],
+  );
   useLayoutEffect(() => {
-    const saved = cameraStateRef.current;
-    camera.position.copy(
-      saved
-        ? new Vector3(...saved.position)
-        : target.clone().add(new Vector3(span * 0.7, span * 1.15, span * 0.9)),
-    );
-    cameraRef.current.zoom = (saved?.zoom ?? 1) * fit;
-    camera.lookAt(saved ? new Vector3(...saved.target) : target);
+    const c = controls.current;
+    if (!initialized.current) {
+      const pose =
+        cameraStateRef.current ??
+        cameraViewPose(room, 'overview', cameraFrame)!;
+      camera.position.set(...pose.position);
+      setCameraZoom(
+        camera,
+        pose.zoom * (pose.view === 'overview' || !pose.view ? fit : 1),
+      );
+      c?.target.set(...pose.target);
+      camera.lookAt(new Vector3(...pose.target));
+      initialized.current = true;
+    } else if (cameraView === 'overview') {
+      const ratio = fit / previousFit.current;
+      setCameraZoom(camera, camera.zoom * ratio);
+      if (desired.current) {
+        desired.current.fromZoom *= ratio;
+        desired.current.zoom *= ratio;
+      }
+    }
+    previousFit.current = fit;
     camera.updateProjectionMatrix();
-    if (controls.current)
-      controls.current.target.copy(
-        saved ? new Vector3(...saved.target) : target,
-      );
     invalidate();
-    // A different semantic room can resize the shell; it does not reset the visitor's camera.
-  }, [camera, cameraStateRef, target, span, fit, invalidate]);
-  const lastAction = useRef(0);
-  useEffect(() => {
-    if (
-      !cameraAction ||
-      !controls.current ||
-      lastAction.current === cameraAction.sequence
-    )
-      return;
-    lastAction.current = cameraAction.sequence;
-    const aim = controls.current.target.clone(),
-      position = camera.position.clone(),
-      offset = position.clone().sub(aim);
-    let zoom = camera.zoom;
-    if (cameraAction.kind === 'reset') {
-      aim.copy(target);
-      position
-        .copy(target)
-        .add(new Vector3(span * 0.7, span * 1.15, span * 0.9));
-      zoom = fit;
-    } else if (cameraAction.kind === 'in' || cameraAction.kind === 'out')
-      zoom = Math.max(
-        fit * 0.65,
-        Math.min(
-          fit * 2.6,
-          zoom * (cameraAction.kind === 'in' ? 1.2 : 1 / 1.2),
-        ),
-      );
-    else {
-      if (cameraAction.kind === 'left' || cameraAction.kind === 'right')
+  }, [
+    camera,
+    cameraFrame,
+    cameraStateRef,
+    cameraView,
+    room,
+    aspect,
+    fit,
+    invalidate,
+  ]);
+  const act = useCallback(
+    (kind: CameraAction['kind']) => {
+      const c = controls.current;
+      if (!c) return;
+      const from: Triple = [
+        camera.position.x,
+        camera.position.y,
+        camera.position.z,
+      ];
+      if (
+        ['overview', 'doorway', 'work-area', 'corner', 'reset'].includes(kind)
+      ) {
+        const view = kind === 'reset' ? 'overview' : (kind as CameraView);
+        const pose = cameraViewPose(room, view, cameraFrame);
+        if (!pose) return;
+        begin(
+          cameraJourney(room, from, pose.position, view !== 'overview'),
+          pose.target,
+          pose.zoom * (view === 'overview' ? fit : 1),
+        );
+        return;
+      }
+      if (kind === 'in' || kind === 'out') {
+        const factor = cameraView === 'overview' ? fit : 1;
+        begin(
+          [from],
+          [c.target.x, c.target.y, c.target.z],
+          Math.max(
+            factor * 0.65,
+            Math.min(
+              factor * 2.6,
+              (desired.current?.zoom ?? camera.zoom) *
+                (kind === 'in' ? 1.2 : 1 / 1.2),
+            ),
+          ),
+          0.28,
+        );
+        return;
+      }
+      const position = camera.position.clone(),
+        target = c.target.clone(),
+        offset = position.clone().sub(target);
+      if (cameraView !== 'overview') {
+        const direction = target.clone().sub(position).normalize();
+        if (
+          ['forward', 'backward', 'strafe-left', 'strafe-right'].includes(kind)
+        ) {
+          const dx = direction.x,
+            dz = direction.z,
+            length = Math.hypot(dx, dz) || 1;
+          const forward = kind === 'forward' || kind === 'backward';
+          const sign = kind === 'forward' || kind === 'strafe-right' ? 1 : -1;
+          const wanted: Triple = [
+            from[0] + ((forward ? dx : -dz) / length) * 0.35 * sign,
+            from[1],
+            from[2] + ((forward ? dz : dx) / length) * 0.35 * sign,
+          ];
+          const next = moveCamera(room, from, wanted),
+            shift = new Vector3(...next).sub(position);
+          target.add(shift);
+          begin([next], [target.x, target.y, target.z], camera.zoom, 0.3);
+          return;
+        }
+        const yaw =
+          Math.atan2(direction.x, direction.z) +
+          (kind === 'left' ? 0.18 : kind === 'right' ? -0.18 : 0);
+        const pitch = Math.max(
+          -1.1,
+          Math.min(
+            1.1,
+            Math.asin(Math.max(-1, Math.min(1, direction.y))) +
+              (kind === 'up' ? 0.12 : kind === 'down' ? -0.12 : 0),
+          ),
+        );
+        target
+          .copy(position)
+          .add(
+            new Vector3(
+              Math.sin(yaw) * Math.cos(pitch),
+              Math.sin(pitch),
+              Math.cos(yaw) * Math.cos(pitch),
+            ),
+          );
+        begin([from], [target.x, target.y, target.z], camera.zoom, 0.22);
+        return;
+      }
+      if (kind === 'left' || kind === 'right')
         offset.applyAxisAngle(
           new Vector3(0, 1, 0),
-          cameraAction.kind === 'left' ? 0.2 : -0.2,
+          kind === 'left' ? 0.2 : -0.2,
         );
       else {
         const horizontal = Math.hypot(offset.x, offset.z),
@@ -237,59 +371,214 @@ function CameraRig({
             0.25,
             Math.min(
               1.3,
-              Math.atan2(horizontal, offset.y) +
-                (cameraAction.kind === 'up' ? -0.15 : 0.15),
+              Math.atan2(horizontal, offset.y) + (kind === 'up' ? -0.15 : 0.15),
+            ),
+          ),
+          r = offset.length();
+        offset.y = Math.cos(angle) * r;
+        const scale = (Math.sin(angle) * r) / Math.max(0.0001, horizontal);
+        offset.x *= scale;
+        offset.z *= scale;
+      }
+      position.copy(target).add(offset);
+      begin(
+        [[position.x, position.y, position.z]],
+        [target.x, target.y, target.z],
+        camera.zoom,
+        0.35,
+      );
+    },
+    [camera, room, cameraView, cameraFrame, fit, begin],
+  );
+  useEffect(() => {
+    if (!cameraAction || lastAction.current === cameraAction.sequence) return;
+    lastAction.current = cameraAction.sequence;
+    act(cameraAction.kind);
+  }, [cameraAction, act]);
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const key = (e: KeyboardEvent) => {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      const kinds: Record<string, CameraAction['kind']> = {
+        ArrowLeft: 'left',
+        ArrowRight: 'right',
+        ArrowUp: 'up',
+        ArrowDown: 'down',
+        w: 'forward',
+        s: 'backward',
+        a: 'strafe-left',
+        d: 'strafe-right',
+        '+': 'in',
+        '-': 'out',
+      };
+      const kind = kinds[e.key.length === 1 ? e.key.toLowerCase() : e.key];
+      if (
+        !kind ||
+        (cameraView === 'overview' &&
+          ['forward', 'backward', 'strafe-left', 'strafe-right'].includes(kind))
+      )
+        return;
+      e.preventDefault();
+      act(kind);
+    };
+    const pointers = new Map<number, { x: number; y: number }>();
+    let yaw = 0,
+      pitch = 0,
+      pinch = 0,
+      pinchZoom = 1;
+    const down = (e: PointerEvent) => {
+      if (cameraView === 'overview' || e.defaultPrevented || pointers.size >= 2)
+        return;
+      desired.current = null;
+      canvas.focus({ preventScroll: true });
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      canvas.setPointerCapture(e.pointerId);
+      const direction = camera.getWorldDirection(new Vector3());
+      yaw = Math.atan2(direction.x, direction.z);
+      pitch = Math.asin(Math.max(-1, Math.min(1, direction.y)));
+      pinch = 0;
+    };
+    const move = (e: PointerEvent) => {
+      const old = pointers.get(e.pointerId);
+      if (!old) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) {
+        const [a, b] = [...pointers.values()];
+        const distance = Math.hypot(a!.x - b!.x, a!.y - b!.y);
+        if (!pinch) {
+          pinch = distance;
+          pinchZoom = camera.zoom;
+        }
+        if (pinch) {
+          const p = camera.position,
+            target = controls.current?.target;
+          if (target)
+            begin(
+              [[p.x, p.y, p.z]],
+              [target.x, target.y, target.z],
+              Math.max(0.65, Math.min(2.6, (pinchZoom * distance) / pinch)),
+              0.16,
+            );
+        }
+        return;
+      }
+      yaw -= (e.clientX - old.x) * 0.004;
+      pitch = Math.max(
+        -1.1,
+        Math.min(1.1, pitch + (e.clientY - old.y) * 0.004),
+      );
+      const pos = camera.position,
+        target = pos
+          .clone()
+          .add(
+            new Vector3(
+              Math.sin(yaw) * Math.cos(pitch),
+              Math.sin(pitch),
+              Math.cos(yaw) * Math.cos(pitch),
             ),
           );
-        const r = offset.length();
-        offset.y = Math.cos(angle) * r;
-        const factor = (Math.sin(angle) * r) / horizontal;
-        offset.x *= factor;
-        offset.z *= factor;
-      }
-      position.copy(aim).add(offset);
-    }
-    desired.current = { position, target: aim, zoom };
-    invalidate();
-  }, [cameraAction, camera, fit, invalidate, span, target]);
+      begin(
+        [[pos.x, pos.y, pos.z]],
+        [target.x, target.y, target.z],
+        camera.zoom,
+        0.16,
+      );
+    };
+    const up = (e: PointerEvent) => {
+      pointers.delete(e.pointerId);
+      pinch = 0;
+      if (canvas.hasPointerCapture(e.pointerId))
+        canvas.releasePointerCapture(e.pointerId);
+    };
+    const wheel = (e: WheelEvent) => {
+      if (cameraView === 'overview') return;
+      e.preventDefault();
+      act(e.deltaY < 0 ? 'in' : 'out');
+    };
+    canvas.addEventListener('keydown', key);
+    canvas.addEventListener('pointerdown', down);
+    canvas.addEventListener('pointermove', move);
+    canvas.addEventListener('pointerup', up);
+    canvas.addEventListener('pointercancel', up);
+    canvas.addEventListener('wheel', wheel, { passive: false });
+    return () => {
+      canvas.removeEventListener('keydown', key);
+      canvas.removeEventListener('pointerdown', down);
+      canvas.removeEventListener('pointermove', move);
+      canvas.removeEventListener('pointerup', up);
+      canvas.removeEventListener('pointercancel', up);
+      canvas.removeEventListener('wheel', wheel);
+      for (const id of pointers.keys())
+        if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
+      pointers.clear();
+    };
+  }, [gl, camera, cameraView, act, begin]);
   useFrame((_, delta) => {
-    const next = desired.current,
-      c = controls.current;
-    if (!next || !c) return;
-    const t = 1 - Math.exp(-Math.min(delta, 0.05) * 18);
-    camera.position.lerp(next.position, t);
-    c.target.lerp(next.target, t);
-    cameraRef.current.zoom += (next.zoom - camera.zoom) * t;
-    camera.updateProjectionMatrix();
-    c.update();
-    invalidate();
-    if (
-      camera.position.distanceToSquared(next.position) < 0.000001 &&
-      Math.abs(camera.zoom - next.zoom) < 0.001
-    )
-      desired.current = null;
+    const c = controls.current;
+    if (!c) return;
+    const next = desired.current;
+    if (next) {
+      next.elapsed += Math.min(delta, 0.05);
+      const progress = Math.min(1, next.elapsed / next.duration),
+        ease =
+          progress < 0.5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2;
+      const distance = next.distance * ease;
+      let segment = 1;
+      while (
+        segment < next.lengths.length - 1 &&
+        next.lengths[segment]! < distance
+      )
+        segment++;
+      const low = next.lengths[segment - 1]!,
+        high = next.lengths[segment]!;
+      camera.position
+        .copy(next.path[segment - 1]!)
+        .lerp(
+          next.path[segment]!,
+          high === low ? 1 : (distance - low) / (high - low),
+        );
+      c.target.copy(next.fromTarget).lerp(next.target, ease);
+      setCameraZoom(camera, next.fromZoom + (next.zoom - next.fromZoom) * ease);
+      camera.lookAt(c.target);
+      camera.updateProjectionMatrix();
+      invalidate();
+      if (progress === 1) desired.current = null;
+    }
+    cameraStateRef.current = {
+      position: [camera.position.x, camera.position.y, camera.position.z],
+      target: [c.target.x, c.target.y, c.target.z],
+      zoom: camera.zoom / (cameraView === 'overview' ? fit : 1),
+      view: cameraView,
+    };
+    if (process.env.NODE_ENV === 'development')
+      gl.domElement.setAttribute(
+        'data-roomedy-camera',
+        JSON.stringify({
+          x: Math.round(camera.position.x * 1000),
+          y: Math.round(camera.position.y * 1000),
+          z: Math.round(camera.position.z * 1000),
+          target: [c.target.x, c.target.y, c.target.z].map((v) =>
+            Math.round(v * 1000),
+          ),
+          zoom: Math.round(camera.zoom * 1000) / 1000,
+          travelling: !!desired.current,
+          view: cameraView,
+        }),
+      );
   });
   return (
     <OrbitControls
       ref={controls}
+      enabled={cameraView === 'overview'}
       enableDamping
       dampingFactor={0.12}
       enablePan={false}
       minPolarAngle={0.25}
       maxPolarAngle={1.3}
-      minZoom={fit * 0.65}
-      maxZoom={fit * 2.6}
+      minDistance={0.8}
+      maxDistance={80}
       onStart={() => {
         desired.current = null;
-      }}
-      onChange={() => {
-        const c = controls.current;
-        if (c)
-          cameraStateRef.current = {
-            position: camera.position.toArray(),
-            target: c.target.toArray(),
-            zoom: camera.zoom / fit,
-          };
       }}
     />
   );
@@ -349,7 +638,14 @@ function Walls({
           : wall === 'west'
             ? camera.position.x < bounds.width / 2
             : camera.position.x > bounds.width / 2;
-    const goal = front ? 0.06 : 1,
+    const inside =
+      camera.position.x > 0 &&
+      camera.position.x < bounds.width &&
+      camera.position.z > 0 &&
+      camera.position.z < bounds.depth &&
+      camera.position.y > 0 &&
+      camera.position.y < bounds.height;
+    const goal = inside ? 1 : front ? 0.06 : 1,
       difference = goal - material.opacity;
     if (Math.abs(difference) > 0.002) {
       materialRef.current.opacity +=
@@ -722,6 +1018,7 @@ export function RoomScene(props: SceneProps) {
         cameraFrame={props.cameraFrame}
         cameraStateRef={props.cameraStateRef}
         cameraAction={props.cameraAction}
+        cameraView={props.cameraView}
       />
     </>
   );

@@ -17,6 +17,10 @@
 .viewport canvas {
   touch-action: none;
 }
+.viewport canvas:focus-visible {
+  outline: 3px solid #956b43;
+  outline-offset: -4px;
+}
 .hint {
   text-align: center;
   color: #75614c;
@@ -114,6 +118,12 @@
 }
 .tools button {
   min-width: 44px;
+  min-height: 44px;
   font-size: 12px;
   padding: 8px 10px;
+}
+.tools button[aria-pressed='true'] {
+  background: #e7ddcc;
+  border-color: #aa9274;
+  color: #3f352c;
 }

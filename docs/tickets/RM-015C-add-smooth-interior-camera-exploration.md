@@ -1,6 +1,6 @@
 # RM-015C — Add smooth interior camera exploration
 
-Status: **Planned**
+Status: **Complete locally**
 Planning date: **19 October 2026**
 Owner todo: **3/10 — Interior cameras** (ordered by implementation dependencies; coverage in queue)
 Depends on: [RM-015B](RM-015B-animate-the-landing-room.md)
@@ -18,6 +18,7 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Exact proposed implementation ownership
 
 - `apps/frontend/src/features/room-view/adapter.ts`
+- `apps/frontend/src/features/room-view/camera.ts`
 - `apps/frontend/src/features/room-view/cutaway.tsx`
 - `apps/frontend/src/features/room-view/scene.tsx`
 - `apps/frontend/src/features/room-view/room-view.module.css`
@@ -26,11 +27,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 
 ## Acceptance criteria
 
-- [ ] Provide overview plus meaningful doorway/desk/corner eye-level viewpoints and bounded interior look/movement with perspective appropriate to being inside one room.
-- [ ] Camera position, target, zoom/projection framing travel visibly between requested viewpoints; orbit/zoom/reset and new input interrupt the current journey without teleporting.
-- [ ] Keep usable interior walls, avoid camera-through-floor/wall/object viewpoints, preserve camera across view switching and Before/Current; camera changes never mutate room/history or dispatch providers.
-- [ ] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
-- [ ] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
+- [x] Provide overview plus meaningful doorway/desk/corner eye-level viewpoints and bounded interior look/movement with perspective appropriate to being inside one room.
+- [x] Camera position, target, zoom/projection framing travel visibly between requested viewpoints; orbit/zoom/reset and new input interrupt the current journey without teleporting.
+- [x] Keep usable interior walls, avoid camera-through-floor/wall/object viewpoints, preserve camera across view switching and Before/Current; camera changes never mutate room/history or dispatch providers.
+- [x] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
+- [x] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
 
 ## Verification
 
@@ -47,3 +48,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Handoff
 
 Record real commands/results and findings dispositions in `docs/validation/RM-015C.md`; no source changes during validation. Existing exact-path per-ticket local commit authority remains scoped to validated owned work. Next packet is RM-015D.
+
+## Refined plan before implementation
+
+[Exact allocation and camera algorithm](../commit-plans/RM-015C.md) defines pure finite free-viewpoint/route/step policy, perspective fitting, focused keyboard/pointer looking, interruptible finite waypoint travel, same workspace camera ref and interior wall visibility. Existing OrbitControls remains the overview interaction; no new dependency or semantic authority. Unknown/packed rooms receive no fabricated viewpoint, and an unavailable floor path may travel above the open cutaway. Focused independent regressions and actual browser checks precede the root gate and read-only review.
+
+## Local completion
+
+[Actual receipt and two validation passes](../validation/RM-015C.md) record the350-test settled gate, actual interior/view/comparison/browser results, both independently confirmed/resolved findings and final clean read-only pass2. Actual owner/physical/production/live/Linux/hosted evidence remains pending.
