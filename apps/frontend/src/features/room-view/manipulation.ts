@@ -61,28 +61,25 @@ function editable(state: SessionSnapshot) {
     state.workspace &&
     state.comparison === 'current' &&
     !state.candidate &&
-    !state.clientLoadFailure &&
-    state.presentation.roomView === 'cutaway'
+    !state.clientLoadFailure
   );
 }
-
-/** One live, owned gesture; the shared controller still owns every accepted command. */
-export function beginFloorEdit(
+/** Shared gesture lifetime only; callers still select their target and command kind. */
+export function beginRoomEdit(
   controller: SessionController,
   id: string,
   onRetire: () => void = () => {},
-): FloorEdit | null {
+) {
   if (!controller.canEdit()) return null;
   const snapshot = controller.getSnapshot(),
     workspace = snapshot.workspace;
-  const item = workspace?.current.furniture.find((p) => p.id === id);
   if (
     !workspace ||
-    !item ||
     !editable(snapshot) ||
     snapshot.presentation.selectedId !== id
   )
     return null;
+  const view = snapshot.presentation.roomView;
   let live = true,
     unsubscribe = () => {},
     release: (() => void) | null = null;
@@ -91,7 +88,8 @@ export function beginFloorEdit(
     return (
       !!editable(state) &&
       state.workspace === workspace &&
-      state.presentation.selectedId === id
+      state.presentation.selectedId === id &&
+      state.presentation.roomView === view
     );
   };
   const retire = () => {
@@ -114,19 +112,38 @@ export function beginFloorEdit(
   }
   const current = () => live && controller.canEdit() && sameContext();
   return {
-    item,
     room: workspace.current,
     current,
     cancel,
-    commit(point) {
+    finish() {
       if (!current()) {
         cancel();
-        return { ok: false, code: 'stale' };
+        return false;
       }
       cancel();
-      // Cleanup may synchronously reset/import/expire the room. Fence again before dispatch.
-      if (!controller.canEdit() || !sameContext())
-        return { ok: false, code: 'stale' };
+      // Cleanup can synchronously replace/expire the room; fence before dispatch.
+      return controller.canEdit() && sameContext();
+    },
+  };
+}
+/** One live floor gesture, restricted to the main3D view. */
+export function beginFloorEdit(
+  controller: SessionController,
+  id: string,
+  onRetire: () => void = () => {},
+): FloorEdit | null {
+  const snapshot = controller.getSnapshot();
+  const item = snapshot.workspace?.current.furniture.find((p) => p.id === id);
+  if (!item || snapshot.presentation.roomView !== 'cutaway') return null;
+  const edit = beginRoomEdit(controller, id, onRetire);
+  if (!edit) return null;
+  return {
+    item,
+    room: edit.room,
+    current: edit.current,
+    cancel: edit.cancel,
+    commit(point) {
+      if (!edit.finish()) return { ok: false, code: 'stale' };
       if (point.x === item.pose.centerX && point.z === item.pose.centerZ)
         return { ok: true, changed: false };
       return controller.dispatch(
@@ -151,7 +168,8 @@ export function rotateFloorSelection(
 ): FloorResult {
   if (!controller.canEdit()) return { ok: false, code: 'stale' };
   const state = controller.getSnapshot();
-  if (!editable(state)) return { ok: false, code: 'stale' };
+  if (!editable(state) || state.presentation.roomView !== 'cutaway')
+    return { ok: false, code: 'stale' };
   const item = state.workspace!.current.furniture.find(
     (p) => p.id === state.presentation.selectedId,
   );

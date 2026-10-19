@@ -1,6 +1,8 @@
 # Roomedy documentation
 
-**Current entry correction:** [RM-015T](tickets/RM-015T-separate-photo-and-manual-room-entry.md), [28-path plan](commit-plans/RM-015T.md), [actual evidence and pending browser checks](validation/RM-015T.md). Photo entry and manual presets are distinct, local fake example photos use the real preparation/draft/review path, and fresh choices preserve saved work until an explicit decision. U/V follow; actual visual approval remains pending.
+**Current window correction:** [RM-015U](tickets/RM-015U-drag-windows-along-their-walls.md), [17-path plan](commit-plans/RM-015U.md), [code evidence and pending actual checks](validation/RM-015U.md). Bounded same-wall dragging in both main-editor views, one command/Undo, planned offset provenance and continuous aperture motion. Final actual T/U checks await restored browser control; V Corner follows, Q held and visual approval pending.
+
+**Previous entry correction:** [RM-015T](tickets/RM-015T-separate-photo-and-manual-room-entry.md), [28-path plan](commit-plans/RM-015T.md), [actual evidence and pending browser checks](validation/RM-015T.md). Photo entry and manual presets are distinct, local fake example photos use the real preparation/draft/review path, and fresh choices preserve saved work until an explicit decision. U/V follow; actual visual approval remains pending.
 
 **Previous editor correction:** [RM-015S](tickets/RM-015S-stabilize-and-simplify-room-editing.md), [exact39-path plan](commit-plans/RM-015S.md), [actual evidence](validation/RM-015S.md). Stable2D/3D furniture dragging, shared defaults, simpler warm inspector/chrome/Project. T/U/V follow; actual visual approval pending and Q held.
 

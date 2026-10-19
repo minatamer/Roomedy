@@ -1,8 +1,12 @@
 # RM-015 current frontend review
 
-Status: **RM-015T entry-flow code locally validated; final browser checks and actual owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
+Status: **RM-015U window-editing code locally validated; T/U actual browser checks and owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
 
-## Current T entry result and browser limit
+## Current U window result and browser limit
+
+[U ticket](../tickets/RM-015U-drag-windows-along-their-walls.md), [17-path plan](../commit-plans/RM-015U.md), [evidence](../validation/RM-015U.md). Window sliding in both main-editor views, integer complete-opening bounds, displayed grab/canonical identity, one planned-offset command/Undo and shared cancellation. Arrange room includes furniture/windows; glass/aperture motion remains synchronized. Current451tests/38files/seven boundaries/root/both builds pass;194inputs/1,537,856bytes/BUILD_ID85b702b15a070758551b4d37a170f3719b4b3550ca9dd95ac081abd4a258cf58. The source-identity finding was fixed and regression checked before this current gate. Actual native input/size/performance completion remains unverified while the test confirmation/control issue persists; this is no visual or GPU pass. V Corner is next; return to T/U/V browser checks before actual acceptance.
+
+## Prior T entry result and browser limit
 
 [T ticket](../tickets/RM-015T-separate-photo-and-manual-room-entry.md), [28-path plan](../commit-plans/RM-015T.md), [actual evidence](../validation/RM-015T.md). Build manually and Upload photos now follow distinct paths. Optional local fake examples use real preparation/admission/review; fresh entry preserves saved work until an explicit choice. Warm upload/navigation/field alignment and existing-review return are connected. Current432tests/seven boundaries/root/both builds pass,193inputs/1,516,490bytes/BUILD_ID3cad8f3e95adb084212e0d4d5daf668d6e43b593e73b981551c4680ec2103ccf. Actual final1280×720 layout has no overflow and aligned44px controls. Earlier native provided-photo drafting reached rough2D. Remaining nine-size/manual/final-accept3D/recovery interactions are **unverified** because the browser automation stalled on an agent test-tab Leave this room confirmation. Requested user dismissal is pending; no visual pass or cleanup success inferred. U/V are independent selected follow-ups; Q held and RM-016 Planned.
 

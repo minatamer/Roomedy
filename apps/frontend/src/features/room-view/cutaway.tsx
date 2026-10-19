@@ -170,7 +170,7 @@ export default function Cutaway({
                 setInteraction('move');
               }}
             >
-              Move furniture
+              Arrange room
             </button>
           </div>
           {moving ? (
@@ -303,7 +303,7 @@ export default function Cutaway({
       </div>
       <p className={styles.hint}>
         {moving
-          ? 'Drag a piece to place · Arrow keys nudge · R rotates · Esc cancels'
+          ? 'Drag furniture or windows · Arrow keys nudge · R rotates furniture · Esc cancels'
           : cameraView === 'overview'
             ? 'Drag to orbit'
             : 'Drag to look · W A S D to move'}{' '}

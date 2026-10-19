@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent, KeyboardEvent } from 'react';
-import type { Furniture } from '@roomedy/contracts/room';
+import type { Feature, Furniture } from '@roomedy/contracts/room';
 import {
   findCatalogueEntry,
   footprint,
@@ -14,6 +14,16 @@ import { FINISH_PALETTE } from '../catalogue/finishes';
 import { failureMessage } from '../room-editor/messages';
 import { nudgePosition, planBox, pointInPlan, snapPosition } from './adapter';
 import styles from '../room-editor/editor.module.css';
+import {
+  beginWindowEdit,
+  clampWindowOffset,
+  nudgeWindowOffset,
+  roomWithWindowPreview,
+} from '../room-view/window-manipulation';
+import type {
+  WindowEdit,
+  WindowPosition,
+} from '../room-view/window-manipulation';
 
 type Gesture = {
   id: string;
@@ -27,6 +37,10 @@ type Gesture = {
   viewport: { left: number; top: number; width: number; height: number };
   viewBox: string;
 };
+type WindowGesture = Pick<
+  Gesture,
+  'pointerId' | 'clientX' | 'clientY' | 'target' | 'viewport' | 'viewBox'
+> & { edit: WindowEdit; grab: number };
 type Ghost = { id: string; x: number; z: number };
 export function PlanView({
   controller,
@@ -36,14 +50,20 @@ export function PlanView({
   state: SessionSnapshot;
 }) {
   const svg = useRef<SVGSVGElement>(null),
-    gesture = useRef<Gesture | null>(null);
+    gesture = useRef<Gesture | null>(null),
+    windowGesture = useRef<WindowGesture | null>(null);
   const [movementGhost, setGhost] = useState<Ghost | null>(null);
+  const [windowGhost, setWindowGhost] = useState<WindowPosition | null>(null);
   const before = state.comparison === 'before',
     readOnly = before || !!state.candidate || state.clientLoadFailure;
   const ghost = readOnly ? null : movementGhost;
-  const room = before
+  const canonicalRoom = before
     ? state.workspace!.baseline
     : (state.candidate?.room ?? state.workspace!.current);
+  const room = roomWithWindowPreview(
+    canonicalRoom,
+    readOnly ? null : windowGhost,
+  );
   const checks = before
     ? checkRoom(room)
     : (state.candidate?.checks ?? state.checks!);
@@ -114,7 +134,7 @@ export function PlanView({
       controller.notify('Move cancelled. The room is unchanged.');
     }
   };
-  const sameViewport = (drag: Gesture) => {
+  const sameViewport = (drag: Pick<Gesture, 'viewport' | 'viewBox'>) => {
     const rect = svg.current?.getBoundingClientRect();
     return (
       !!rect &&
@@ -123,6 +143,125 @@ export function PlanView({
       ) &&
       drag.viewBox === `${box.x} ${box.z} ${box.width} ${box.depth}`
     );
+  };
+  const finishWindow = () => {
+    const old = windowGesture.current;
+    windowGesture.current = null;
+    setWindowGhost(null);
+    if (old?.target.hasPointerCapture(old.pointerId))
+      old.target.releasePointerCapture(old.pointerId);
+  };
+  useEffect(() => {
+    const stop = () => windowGesture.current?.edit.cancel();
+    const second = (event: globalThis.PointerEvent) => {
+      if (
+        windowGesture.current &&
+        event.pointerId !== windowGesture.current.pointerId
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        stop();
+      }
+    };
+    window.addEventListener('blur', stop);
+    window.addEventListener('scroll', stop, true);
+    window.addEventListener('resize', stop);
+    window.addEventListener('pointerdown', second, true);
+    return () => {
+      stop();
+      window.removeEventListener('blur', stop);
+      window.removeEventListener('scroll', stop, true);
+      window.removeEventListener('resize', stop);
+      window.removeEventListener('pointerdown', second, true);
+    };
+  }, [controller]);
+  const windowDown = (event: PointerEvent<SVGGElement>, feature: Feature) => {
+    if (
+      feature.kind !== 'window' ||
+      readOnly ||
+      event.button !== 0 ||
+      !event.isPrimary ||
+      gesture.current ||
+      windowGesture.current
+    )
+      return;
+    event.stopPropagation();
+    controller.select(feature.id);
+    const p = point(event),
+      edit = beginWindowEdit(controller, feature.id, finishWindow);
+    if (
+      !p ||
+      !edit ||
+      edit.feature !==
+        canonicalRoom.room.features.find((f) => f.id === feature.id)
+    ) {
+      edit?.cancel();
+      controller.notify(
+        'Review the window width, position and wall measurements before moving it.',
+      );
+      return;
+    }
+    const along =
+      feature.wall === 'north' || feature.wall === 'south' ? p.x : p.z;
+    let displayedOffset = feature.offset.value!;
+    const transform = getComputedStyle(event.currentTarget).transform;
+    if (transform !== 'none') {
+      const matrix = new DOMMatrixReadOnly(transform);
+      const value =
+        feature.wall === 'north' || feature.wall === 'south'
+          ? matrix.m41
+          : matrix.m42;
+      if (Number.isFinite(value)) displayedOffset = value;
+    }
+    windowGesture.current = {
+      edit,
+      pointerId: event.pointerId,
+      clientX: event.clientX,
+      clientY: event.clientY,
+      grab: along - displayedOffset,
+      target: event.currentTarget,
+      viewport: svg.current!.getBoundingClientRect(),
+      viewBox: `${box.x} ${box.z} ${box.width} ${box.depth}`,
+    };
+    setWindowGhost({ id: feature.id, offset: displayedOffset });
+    event.currentTarget.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  };
+  const windowMove = (event: PointerEvent<SVGGElement>, drop = false) => {
+    const old = windowGesture.current;
+    if (!old || event.pointerId !== old.pointerId) return;
+    event.stopPropagation();
+    if (!old.edit.current() || !sameViewport(old)) {
+      old.edit.cancel();
+      return;
+    }
+    if (
+      Math.hypot(event.clientX - old.clientX, event.clientY - old.clientY) < 3
+    ) {
+      if (drop) old.edit.cancel();
+      return;
+    }
+    const p = point(event);
+    if (!p) {
+      if (drop) old.edit.cancel();
+      return;
+    }
+    const feature = old.edit.feature,
+      along = feature.wall === 'north' || feature.wall === 'south' ? p.x : p.z;
+    const offset = clampWindowOffset(
+      old.edit.room,
+      feature,
+      along - old.grab,
+      view.snap,
+    );
+    if (offset === null) {
+      old.edit.cancel();
+      return;
+    }
+    if (drop) {
+      const result = old.edit.commit(offset);
+      if (!result.ok) controller.notify(failureMessage(result, old.edit.room));
+    } else setWindowGhost({ id: feature.id, offset });
   };
   const move = (event: PointerEvent<SVGGElement>, item: Furniture) => {
     if (readOnly) return;
@@ -281,7 +420,16 @@ export function PlanView({
         {room.room.features.map((feature) => {
           const r = wallBand(
             room,
-            feature,
+            feature.kind === 'window' && feature.offset.value !== null
+              ? {
+                  ...feature,
+                  offset: {
+                    value: 0,
+                    status: 'estimated',
+                    sourceId: 'display-origin',
+                  },
+                }
+              : feature,
             feature.kind === 'obstacle' ? (feature.projection.value ?? 1) : 1,
           );
           if (!r) return null;
@@ -294,8 +442,65 @@ export function PlanView({
               aria-label={`${feature.kind}, ${feature.wall} wall, ${feature.width.value ?? 'unknown'} mm wide`}
               aria-pressed={selected}
               className={styles.feature}
-              onClick={() => controller.select(feature.id)}
+              style={
+                feature.kind === 'window'
+                  ? {
+                      transform: `translate(${feature.wall === 'north' || feature.wall === 'south' ? feature.offset.value : 0}px, ${feature.wall === 'east' || feature.wall === 'west' ? feature.offset.value : 0}px)`,
+                      transition:
+                        windowGhost?.id === feature.id
+                          ? 'none'
+                          : 'transform 180ms cubic-bezier(.2,.75,.2,1)',
+                      cursor: readOnly
+                        ? 'pointer'
+                        : feature.wall === 'north' || feature.wall === 'south'
+                          ? 'ew-resize'
+                          : 'ns-resize',
+                    }
+                  : undefined
+              }
+              onPointerDown={(event) => windowDown(event, feature)}
+              onPointerMove={(event) => windowMove(event)}
+              onPointerUp={(event) => windowMove(event, true)}
+              onPointerCancel={() => windowGesture.current?.edit.cancel()}
+              onLostPointerCapture={() => windowGesture.current?.edit.cancel()}
+              onClick={() => {
+                if (!gesture.current && !windowGesture.current)
+                  controller.select(feature.id);
+              }}
               onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  windowGesture.current?.edit.cancel();
+                  return;
+                }
+                if (
+                  feature.kind === 'window' &&
+                  !readOnly &&
+                  !e.nativeEvent.isComposing &&
+                  !e.ctrlKey &&
+                  !e.metaKey &&
+                  e.key.startsWith('Arrow')
+                ) {
+                  e.preventDefault();
+                  if (windowGesture.current) return;
+                  controller.select(feature.id);
+                  const offset = nudgeWindowOffset(
+                    canonicalRoom,
+                    feature,
+                    e.key,
+                    e.shiftKey,
+                    e.altKey,
+                  );
+                  const edit = beginWindowEdit(controller, feature.id);
+                  if (edit && offset !== null) {
+                    const result = edit.commit(offset);
+                    if (!result.ok)
+                      controller.notify(failureMessage(result, canonicalRoom));
+                  } else
+                    controller.notify(
+                      'Review the window width, position and wall measurements before moving it.',
+                    );
+                  return;
+                }
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
                   controller.select(feature.id);

@@ -50,6 +50,11 @@ import {
   surfaceModel,
 } from './surfaces';
 import type { Surfaces } from './surfaces';
+import {
+  advanceWindowOffset,
+  roomWithWindowPreview,
+  windowDragTarget,
+} from './window-manipulation';
 import type { FloorEditing } from './use-floor-edit';
 
 export type CameraAction = {
@@ -441,7 +446,7 @@ function CameraRig({
         '-': 'out',
       };
       const kind = kinds[e.key.length === 1 ? e.key.toLowerCase() : e.key];
-      if (kind && editing.pose.current) {
+      if (kind && editing.dragging.current) {
         e.preventDefault();
         return;
       }
@@ -529,7 +534,7 @@ function CameraRig({
         canvas.releasePointerCapture(e.pointerId);
     };
     const wheel = (e: WheelEvent) => {
-      if (editing.pose.current) {
+      if (editing.dragging.current) {
         e.preventDefault();
         return;
       }
@@ -742,7 +747,11 @@ function Opening({
   surfaces,
   selected,
   onSelect,
+  editing,
+  dragTarget,
 }: {
+  dragTarget: ReturnType<typeof windowDragTarget>;
+  editing: FloorEditing;
   room: RoomDocument;
   feature: RoomDocument['room']['features'][number];
   geometry: BoxGeometry;
@@ -782,6 +791,18 @@ function Opening({
     <group
       position={box.center}
       rotation={[0, angle, 0]}
+      {...(dragTarget && editing.enabled
+        ? {
+            onPointerDown: (e: ThreeEvent<PointerEvent>) =>
+              editing.downWindow(e, dragTarget.feature, dragTarget.offset),
+            onPointerMove: (e: ThreeEvent<PointerEvent>) =>
+              editing.move(e, feature),
+            onPointerUp: (e: ThreeEvent<PointerEvent>) =>
+              editing.up(e, feature),
+            onPointerCancel: () => editing.cancel(true),
+            onLostPointerCapture: () => editing.cancel(true),
+          }
+        : {})}
       onClick={(e) => {
         e.stopPropagation();
         if (e.delta <= 4) onSelect(feature.id);
@@ -1068,7 +1089,66 @@ function Piece({
 export function RoomScene(props: SceneProps) {
   const { room, candidate, selectedId, onSelect, checks, onNotice, onReady } =
       props,
-    rendered = candidate ?? room;
+    desiredRoom = useMemo(
+      () =>
+        roomWithWindowPreview(
+          candidate ?? room,
+          candidate ? null : props.editing.windowPreview,
+        ),
+      [room, candidate, props.editing.windowPreview],
+    );
+  const { invalidate } = useThree();
+  const [windowOffsets, setWindowOffsets] = useState(
+    () =>
+      new Map(
+        desiredRoom.room.features
+          .filter((f) => f.kind === 'window' && f.offset.value !== null)
+          .map((f) => [f.id, f.offset.value!]),
+      ),
+  );
+  useEffect(() => invalidate(), [desiredRoom, invalidate]);
+  useFrame((_, delta) => {
+    const next = new Map<string, number>();
+    let changed = false;
+    for (const feature of desiredRoom.room.features) {
+      if (feature.kind !== 'window' || feature.offset.value === null) continue;
+      const target = feature.offset.value,
+        current = windowOffsets.get(feature.id) ?? target;
+      const value =
+        props.editing.windowPreview?.id === feature.id
+          ? target
+          : advanceWindowOffset(current, target, delta);
+      next.set(feature.id, value);
+      if (value !== windowOffsets.get(feature.id)) changed = true;
+      if (value !== target) invalidate();
+    }
+    if (changed || next.size !== windowOffsets.size) {
+      setWindowOffsets(next);
+      invalidate();
+    }
+  });
+  const rendered = useMemo(
+    () => ({
+      ...desiredRoom,
+      room: {
+        ...desiredRoom.room,
+        features: desiredRoom.room.features.map((feature) =>
+          feature.kind === 'window' &&
+          feature.offset.value !== null &&
+          props.editing.windowPreview?.id !== feature.id
+            ? {
+                ...feature,
+                offset: {
+                  ...feature.offset,
+                  value: windowOffsets.get(feature.id) ?? feature.offset.value,
+                },
+              }
+            : feature,
+        ),
+      },
+    }),
+    [desiredRoom, windowOffsets, props.editing.windowPreview],
+  );
   const geometry = useMemo(() => new BoxGeometry(1, 1, 1), []);
   useEffect(() => () => geometry.dispose(), [geometry]);
   const surfaces = useMemo(() => createSurfaces(), []);
@@ -1185,9 +1265,11 @@ export function RoomScene(props: SceneProps) {
           key={feature.id}
           room={rendered}
           feature={feature}
+          dragTarget={windowDragTarget(candidate ?? room, feature)}
           geometry={geometry}
           surfaces={surfaces}
           selected={selectedId === feature.id}
+          editing={props.editing}
           onSelect={onSelect}
         />
       ))}
@@ -1271,7 +1353,7 @@ export function RoomScene(props: SceneProps) {
           );
         })}
       <CameraRig
-        room={rendered}
+        room={candidate ?? room}
         cameraFrame={props.cameraFrame}
         cameraStateRef={props.cameraStateRef}
         cameraAction={props.cameraAction}

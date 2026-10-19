@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { MutableRefObject } from 'react';
 import type { ThreeEvent } from '@react-three/fiber';
 import type { Furniture } from '@roomedy/contracts/room';
@@ -11,8 +11,19 @@ import {
   pointOnFloor,
   rotateFloorSelection,
 } from './manipulation';
-import type { FloorEdit, FloorPoint } from './manipulation';
-
+import type { FloorEdit, FloorPoint, FloorResult } from './manipulation';
+import {
+  beginWindowEdit,
+  clampWindowOffset,
+  nudgeWindowOffset,
+  pointOnWindowWall,
+  windowPlacement,
+} from './window-manipulation';
+import type {
+  WindowEdit,
+  WindowFeature,
+  WindowPosition,
+} from './window-manipulation';
 type Pointer = ThreeEvent<PointerEvent>;
 type CaptureTarget = {
   hasPointerCapture: (id: number) => boolean;
@@ -38,15 +49,19 @@ const sameViewport = (a: Viewport, b: Viewport) =>
     (key) => Math.abs(a[key] - b[key]) <= 1,
   );
 export type MovingPose = { id: string; x: number; z: number };
-type Gesture = {
-  edit: FloorEdit;
+type BaseGesture = {
   pointerId: number;
   startX: number;
   startY: number;
-  offset: FloorPoint;
   target: CaptureTarget;
   rect: Viewport;
 };
+type Gesture = BaseGesture &
+  (
+    | { kind: 'floor'; edit: FloorEdit; offset: FloorPoint }
+    | { kind: 'window'; edit: WindowEdit; offset: number }
+  );
+/** One pointer/cancellation owner for floor pieces and same-wall windows. */
 export function useFloorEdit(
   controller: SessionController,
   enabled: boolean,
@@ -56,11 +71,21 @@ export function useFloorEdit(
   invalidate: () => void,
 ) {
   const gesture = useRef<Gesture | null>(null),
-    pose = useRef<MovingPose | null>(null);
+    pose = useRef<MovingPose | null>(null),
+    dragging = useRef(false),
+    windowPose = useRef<WindowPosition | null>(null);
+  const [windowPreview, setWindowPreview] = useState<WindowPosition | null>(
+    null,
+  );
   const finish = useCallback(() => {
     const old = gesture.current;
     gesture.current = null;
     pose.current = null;
+    dragging.current = false;
+    if (old?.kind === 'window') {
+      windowPose.current = null;
+      setWindowPreview(null);
+    }
     canvasRef.current?.style.removeProperty('cursor');
     invalidate();
     if (old?.target.hasPointerCapture(old.pointerId))
@@ -75,10 +100,14 @@ export function useFloorEdit(
     },
     [controller],
   );
-  const down = useCallback(
-    (event: Pointer, piece: Furniture, displayed?: FloorPoint) => {
-      const canvas = canvasRef.current;
-      const target = event.target;
+  const begin = useCallback(
+    (
+      event: Pointer,
+      item: Furniture | WindowFeature,
+      displayed?: FloorPoint | number,
+    ) => {
+      const canvas = canvasRef.current,
+        target = event.target;
       if (
         !enabled ||
         !canvas?.isConnected ||
@@ -90,55 +119,101 @@ export function useFloorEdit(
       )
         return;
       event.stopPropagation();
-      controller.select(piece.id);
-      if (piece.locks.position) {
-        controller.notify(
-          'Position is locked. Unlock it in properties to move this piece.',
-        );
-        return;
-      }
-      const point = pointOnFloor(event.ray);
-      if (!point) {
-        controller.notify('Use Overview to place this piece on the floor.');
-        return;
-      }
-      const edit = beginFloorEdit(controller, piece.id, finish);
-      if (!edit) return;
-      if (edit.item !== piece) {
-        edit.cancel();
-        return;
-      }
-      const initial =
-        displayed &&
-        Number.isFinite(displayed.x) &&
-        Number.isFinite(displayed.z)
-          ? displayed
-          : { x: piece.pose.centerX, z: piece.pose.centerZ };
-      gesture.current = {
-        edit,
+      controller.select(item.id);
+      const base = {
         pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
-        offset: { x: point.x - initial.x, z: point.z - initial.z },
         target,
         rect: canvas.getBoundingClientRect(),
       };
-      pose.current = { id: piece.id, ...initial };
-      canvasRef.current?.focus({ preventScroll: true });
-      canvasRef.current?.style.setProperty('cursor', 'grabbing');
+      if ('catalogueId' in item) {
+        if (item.locks.position) {
+          controller.notify(
+            'Position is locked. Unlock it in properties to move this piece.',
+          );
+          return;
+        }
+        const point = pointOnFloor(event.ray);
+        if (!point) {
+          controller.notify('Use Overview to place this piece on the floor.');
+          return;
+        }
+        const edit = beginFloorEdit(controller, item.id, finish);
+        if (!edit) return;
+        if (edit.item !== item) {
+          edit.cancel();
+          return;
+        }
+        const initial =
+          typeof displayed === 'object' &&
+          displayed !== null &&
+          Number.isFinite(displayed.x) &&
+          Number.isFinite(displayed.z)
+            ? displayed
+            : { x: item.pose.centerX, z: item.pose.centerZ };
+        gesture.current = {
+          ...base,
+          kind: 'floor',
+          edit,
+          offset: { x: point.x - initial.x, z: point.z - initial.z },
+        };
+        pose.current = { id: item.id, ...initial };
+      } else {
+        const room = controller.getSnapshot().workspace?.current;
+        const point = room && pointOnWindowWall(room, item, event.ray);
+        if (point === undefined || point === null) {
+          controller.notify(
+            'Review the window width, position and wall measurements before moving it.',
+          );
+          return;
+        }
+        const edit = beginWindowEdit(controller, item.id, finish);
+        if (!edit) return;
+        if (edit.feature !== item) {
+          edit.cancel();
+          return;
+        }
+        const initialOffset =
+          typeof displayed === 'number' && Number.isFinite(displayed)
+            ? displayed
+            : item.offset.value!;
+        gesture.current = {
+          ...base,
+          kind: 'window',
+          edit,
+          offset: point - initialOffset,
+        };
+        windowPose.current = { id: item.id, offset: initialOffset };
+        setWindowPreview(windowPose.current);
+      }
+      dragging.current = true;
+      canvas.focus({ preventScroll: true });
+      canvas.style.setProperty('cursor', 'grabbing');
       event.nativeEvent.preventDefault();
       target.setPointerCapture(event.pointerId);
       invalidate();
     },
     [controller, enabled, finish, canvasRef, invalidate],
   );
+  const down = useCallback(
+    (event: Pointer, piece: Furniture, displayed?: FloorPoint) =>
+      begin(event, piece, displayed),
+    [begin],
+  );
+  const downWindow = useCallback(
+    (event: Pointer, feature: WindowFeature, displayed?: number) =>
+      begin(event, feature, displayed),
+    [begin],
+  );
   const move = useCallback(
-    (event: Pointer, piece: Furniture) => {
+    (event: Pointer, item: { id: string }) => {
       const old = gesture.current;
       if (
         !old ||
         old.pointerId !== event.pointerId ||
-        old.edit.item.id !== piece.id
+        (old.kind === 'floor' ? old.edit.item.id : old.edit.feature.id) !==
+          item.id
       )
         return;
       event.stopPropagation();
@@ -155,51 +230,45 @@ export function useFloorEdit(
         Math.hypot(event.clientX - old.startX, event.clientY - old.startY) < 3
       )
         return;
-      const next = floorPlacement(
-        old.edit.room,
-        old.edit.item,
-        event.ray,
-        old.offset,
-        snap,
-      );
-      if (!next) return;
-      pose.current = { id: piece.id, ...next };
-      invalidate();
-    },
-    [snap, invalidate, canvasRef, cancel],
-  );
-  const up = useCallback(
-    (event: Pointer, piece: Furniture) => {
-      const old = gesture.current;
-      if (
-        !old ||
-        old.pointerId !== event.pointerId ||
-        old.edit.item.id !== piece.id
-      )
-        return;
-      event.stopPropagation();
-      const rect = canvasRef.current?.getBoundingClientRect();
-      const outside =
-        !!rect &&
-        (event.clientX < rect.left ||
-          event.clientX > rect.right ||
-          event.clientY < rect.top ||
-          event.clientY > rect.bottom);
-      const projected = floorPlacement(
+      if (old.kind === 'floor') {
+        const next = floorPlacement(
           old.edit.room,
           old.edit.item,
           event.ray,
           old.offset,
           snap,
-        ),
-        displayed = pose.current;
-      // Beyond the perspective horizon, keep the last displayed valid floor pose.
-      const next =
-        projected ??
-        (outside && displayed?.id === piece.id
-          ? { x: displayed.x, z: displayed.z }
-          : null);
-      if (!next || !rect || !sameViewport(rect, old.rect)) {
+        );
+        if (next) pose.current = { id: item.id, ...next };
+      } else {
+        const next = windowPlacement(
+          old.edit.room,
+          old.edit.feature,
+          event.ray,
+          old.offset,
+          snap,
+        );
+        if (next !== null) {
+          windowPose.current = { id: item.id, offset: next };
+          setWindowPreview(windowPose.current);
+        }
+      }
+      invalidate();
+    },
+    [snap, invalidate, canvasRef, cancel],
+  );
+  const up = useCallback(
+    (event: Pointer, item: { id: string }) => {
+      const old = gesture.current;
+      if (
+        !old ||
+        old.pointerId !== event.pointerId ||
+        (old.kind === 'floor' ? old.edit.item.id : old.edit.feature.id) !==
+          item.id
+      )
+        return;
+      event.stopPropagation();
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (!rect || !sameViewport(rect, old.rect)) {
         cancel(true);
         return;
       }
@@ -209,7 +278,56 @@ export function useFloorEdit(
         old.edit.cancel();
         return;
       }
-      const result = old.edit.commit(next);
+      const outside =
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom;
+      let result: FloorResult;
+      if (old.kind === 'floor') {
+        const projected = floorPlacement(
+            old.edit.room,
+            old.edit.item,
+            event.ray,
+            old.offset,
+            snap,
+          ),
+          displayed = pose.current;
+        const next =
+          projected ??
+          (outside && displayed?.id === item.id
+            ? { x: displayed.x, z: displayed.z }
+            : null);
+        if (!next) {
+          cancel(true);
+          return;
+        }
+        result = old.edit.commit(next);
+      } else {
+        const projected = windowPlacement(
+            old.edit.room,
+            old.edit.feature,
+            event.ray,
+            old.offset,
+            snap,
+          ),
+          displayed = windowPose.current;
+        const next =
+          projected ??
+          (outside && displayed?.id === item.id
+            ? clampWindowOffset(
+                old.edit.room,
+                old.edit.feature,
+                displayed.offset,
+                false,
+              )
+            : null);
+        if (next === null) {
+          cancel(true);
+          return;
+        }
+        result = old.edit.commit(next);
+      }
       if (!result.ok) controller.notify(failureMessage(result, old.edit.room));
     },
     [canvasRef, controller, snap, cancel],
@@ -232,8 +350,8 @@ export function useFloorEdit(
     canvas.setAttribute(
       'aria-label',
       enabled
-        ? 'Room in 3D. Drag furniture on the floor. Arrow keys nudge the selected piece; Shift moves 100 mm, Alt moves half a millimetre. R rotates; Escape cancels.'
-        : 'Room in 3D. Arrow keys look around; plus and minus zoom. Inside the room, W A S D move. Select furniture to inspect.',
+        ? 'Room in 3D. Drag furniture on the floor or slide windows along their wall. Arrow keys nudge; R rotates furniture; Escape cancels.'
+        : 'Room in 3D. Arrow keys look around; plus and minus zoom. Inside the room, W A S D move. Select an item to inspect.',
     );
     const key = (event: KeyboardEvent) => {
       if (!enabled || event.isComposing || event.ctrlKey || event.metaKey)
@@ -253,11 +371,35 @@ export function useFloorEdit(
       event.preventDefault();
       if (gesture.current) return;
       const state = controller.getSnapshot(),
-        item = state.workspace?.current.furniture.find(
-          (p) => p.id === state.presentation.selectedId,
+        room = state.workspace?.current;
+      const feature = room?.room.features.find(
+        (f) => f.id === state.presentation.selectedId,
+      );
+      if (feature?.kind === 'window' && room) {
+        if (!arrow) return;
+        const next = nudgeWindowOffset(
+          room,
+          feature,
+          event.key,
+          event.shiftKey,
+          event.altKey,
         );
+        const edit = beginWindowEdit(controller, feature.id);
+        if (!edit || next === null) {
+          controller.notify(
+            'Review the window width, position and wall measurements before moving it.',
+          );
+          return;
+        }
+        const result = edit.commit(next);
+        if (!result.ok) controller.notify(failureMessage(result, room));
+        return;
+      }
+      const item = room?.furniture.find(
+        (p) => p.id === state.presentation.selectedId,
+      );
       if (!item) {
-        controller.notify('Select a piece to edit.');
+        controller.notify('Select an item to edit.');
         return;
       }
       if (!arrow) {
@@ -266,18 +408,17 @@ export function useFloorEdit(
       }
       const edit = beginFloorEdit(controller, item.id);
       if (!edit) return;
-      const next = nudgePosition(item, event.key, event.shiftKey, event.altKey);
-      const result = edit.commit({ x: next.centerX, z: next.centerZ });
-      if (!result.ok)
-        controller.notify(failureMessage(result, state.workspace!.current));
+      const next = nudgePosition(item, event.key, event.shiftKey, event.altKey),
+        result = edit.commit({ x: next.centerX, z: next.centerZ });
+      if (!result.ok) controller.notify(failureMessage(result, room));
     };
     const interrupted = () => cancel();
-    const pointerCancel = (e: PointerEvent) => {
-      if (gesture.current?.pointerId === e.pointerId) cancel(true);
+    const pointerCancel = (event: PointerEvent) => {
+      if (gesture.current?.pointerId === event.pointerId) cancel(true);
     };
-    const anotherPointer = (e: PointerEvent) => {
-      if (gesture.current && gesture.current.pointerId !== e.pointerId) {
-        e.preventDefault();
+    const anotherPointer = (event: PointerEvent) => {
+      if (gesture.current && gesture.current.pointerId !== event.pointerId) {
+        event.preventDefault();
         cancel(true);
       }
     };
@@ -311,8 +452,19 @@ export function useFloorEdit(
     };
   }, [canvasRef, ready, enabled, cancel, controller, rotate]);
   return useMemo(
-    () => ({ enabled, pose, down, move, up, cancel, rotate }),
-    [enabled, down, move, up, cancel, rotate],
+    () => ({
+      enabled,
+      pose,
+      dragging,
+      windowPreview,
+      down,
+      downWindow,
+      move,
+      up,
+      cancel,
+      rotate,
+    }),
+    [enabled, windowPreview, down, downWindow, move, up, cancel, rotate],
   );
 }
 export type FloorEditing = ReturnType<typeof useFloorEdit>;
