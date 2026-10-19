@@ -46,6 +46,25 @@ export function ScrollRoom() {
         -rect.top /
           Math.max(1, rect.height - document.documentElement.clientHeight),
       );
+      for (const chapter of journey.querySelectorAll<HTMLElement>(
+        '[data-room-chapter]',
+      )) {
+        const bounds = chapter.getBoundingClientRect(),
+          distance =
+            (bounds.top +
+              Math.min(bounds.height, document.documentElement.clientHeight) /
+                2 -
+              document.documentElement.clientHeight / 2) /
+            Math.max(1, document.documentElement.clientHeight);
+        chapter.style.setProperty(
+          '--copy-y',
+          `${Math.max(-16, Math.min(16, distance * 12))}px`,
+        );
+        chapter.style.setProperty(
+          '--copy-opacity',
+          String(1 - Math.min(0.12, Math.abs(distance) * 0.08)),
+        );
+      }
       if (target.current.visible) target.current.wake?.();
     };
     const schedule = () => {
@@ -72,11 +91,10 @@ export function ScrollRoom() {
   }, []);
   return (
     <div ref={stage} className={styles.stage}>
-      <div className={styles.stageHalo} aria-hidden="true" />
       <div
         className={styles.roomVisual}
         role="img"
-        aria-label="Furniture comes together into a bedroom and workspace, rotates, and opens toward the interior as you scroll."
+        aria-label="Furniture slides and turns into a more open bedroom and workspace, with the desk moving toward the window as you scroll."
       >
         <div
           className={`${styles.poster} ${ready && !lost ? styles.posterReady : ''}`}
@@ -84,18 +102,19 @@ export function ScrollRoom() {
           <RoomPoster />
         </div>
         {!lost && (
-          <GraphicsBoundary onFailure={graphicsLost}>
-            <FurnitureScene
-              targetRef={target}
-              onReady={graphicsReady}
-              onLost={graphicsLost}
-            />
-          </GraphicsBoundary>
+          <div
+            className={`${styles.canvas} ${ready ? styles.canvasReady : ''}`}
+          >
+            <GraphicsBoundary onFailure={graphicsLost}>
+              <FurnitureScene
+                targetRef={target}
+                onReady={graphicsReady}
+                onLost={graphicsLost}
+              />
+            </GraphicsBoundary>
+          </div>
         )}
       </div>
-      <p className={styles.sceneCaption} aria-hidden="true">
-        A little space. An entirely new perspective.
-      </p>
     </div>
   );
 }

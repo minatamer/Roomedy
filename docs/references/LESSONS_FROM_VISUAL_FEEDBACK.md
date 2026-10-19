@@ -225,3 +225,12 @@ The owner explicitly requested an all-page review after seeing dead empty areas 
 ## Direct landing visual feedback —19 October2026
 
 The owner rejected the boring small landing, Sample room/Apply/Undo control card and tiny step list, and selected **a room assembles, rotates and opens up as you scroll**. [RM-015L](../tickets/RM-015L-create-a-scroll-driven-furniture-landing.md) owns full-size meaningful chapters, research-backed motivation, final CTA, centered footer without domain and matching opaque beige browser/search/Apple icons. The palette, logo and brown dot are explicitly liked and must stay. Authored marketing art is not a live room; remove faux editor controls, not actual editor features. Keep normal scroll and readable content/CTA; no fabricated designer-adoption, price savings or customer statistics. [Primary research](landing-research-2026-10-19.md) records dispositions and limits; actual visual result approval remains pending.
+
+
+## Direct full-room and startup feedback —19 October2026
+
+The owner asks for the room to cover the whole landing with smoothly integrated text, and reports first-load3D stutter. [RM-015M](../tickets/RM-015M-integrate-landing-content-into-the-room.md) supersedes L's split/compact scene layout. Keep real semantic text/actions inside one full-viewport spatial experience across every section, retain the selected palette/brand/icons/content, and prepare GPU uploads/shaders/first shadow render before visible motion. Readiness is actual work, not a timed artificial delay; preserve normal scroll, bounded resources, useful poster and all narrow/short variants. Compare actual initial-load runs and do not claim device/paint evidence from local callback timing.
+
+## Purposeful rearrangement and preserved card style —19 October2026
+
+The owner likes the immersive room and requests movement that explains a better arrangement: grounded furniture starts in inefficient places, then slides/rotates with scrolling while existing camera/wall animation remains. [M](../tickets/RM-015M-integrate-landing-content-into-the-room.md) owns this same uncommitted refinement. The screenshot shows hard rectangular text-shading seams. The owner explicitly likes those warm translucent backgrounds and the current card style: keep them, feather only the outer edges, and preserve decorative rules/readability. Do not interpret softer edges as permission to strip the background treatment.

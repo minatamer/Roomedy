@@ -1,7 +1,7 @@
 /** Authored vector counterpart remains visible while graphics loads or is unavailable. */
 export function RoomPoster() {
   return (
-    <svg viewBox="0 0 640 580" fill="none" aria-hidden="true">
+    <svg viewBox="60 -15 540 540" fill="none" aria-hidden="true">
       <ellipse
         cx="330"
         cy="466"

@@ -1,6 +1,16 @@
 # RM-015 measured performance and policy
 
-## Current RM-015L furniture-scroll scenario
+## Current RM-015M full-viewport entrance scenario
+
+[Actual M evidence](../validation/RM-015M.md). Same Windows development1280×720 host, fresh documents with warm assets: L baseline3runs p9518/18/17.8ms and max69.3/54.7/72ms. Final M source, after the grounded furniture/soft-edge refinement, has68 startup intervals in each of3runs, p9517.1/16.9/17.1ms and max26.6/31.7/23.6ms. Named p95≤33.4ms and max≤50ms targets pass for these runs. Upload/shader/first-shadow preparation51/53.2/53.5ms occurs before reveal and starts after scene resources exist; it is not total cold load. Useful SSR/poster/copy remains available. Intermediate M results21.6/21.5/30.6ms remain dated in the receipt. No cold-cache/network/LCP/INP/paint/physical GPU claim.
+
+One full-viewport renderer dynamically caps DPR≤1.5 and≤2million backing pixels, actual nine-size buffers173,240 through1,998,192pixels. Final rapid nine-size hero/footer layout checks retain full viewport coverage, no horizontal overflow and reachable first-fold actions. They include active resize/interruptions under concurrent checks, with one57.6ms callback maximum; this is retained rather than represented as an isolated scroll benchmark. Named settled startup repetitions above run after the final build completes. Resource ownership remains4geometries/7renderer textures/78calls at the representative pose; static captures/counts do not prove native heap/driver reclamation.
+
+Final native forward scrolls to.25/.5/.751:37intervals each,p9516.9/16.8/16.9ms,max17.2/17.2/17.6ms. Reverse to.501:36intervals,p9518/max28.6ms.
+
+Final183-input/1,232,196byte BUILD_ID `3a6e49439c60a76d2de5be606498c6d45a2b44e5d6a1b36910076e078b01ec36`,412tests/35files/root/both builds. Conservative offline SSR+root/polyfill/dynamic manifests:11scripts1,720,894raw/486,306estimated-gzip bytes;2CSS16,464raw/4767gzip. The700KiB target passes for that conservative graph, not observed production transfer. Owner requires4320 as the sole hot-reloaded browser URL; production output remains separate artifact evidence and4390/4391 stay stopped.
+
+## Historical RM-015L furniture-scroll scenario
 
 Owner explicitly selected a genuine3D landing on19October, replacing the non-WebGL control card. [L evidence](../validation/RM-015L.md) and [research](../references/landing-research-2026-10-19.md) distinguish this scenario from historical J/K byte/frame measurements. Before production measurement: practical complete observed script-graph target≤700KiB estimated gzip, usable SSR content/CTA/poster without waiting for WebGL, one renderer,≤2million bounded stage render pixels, named development active-frame p95≤33.4ms. These engineering targets do not alter runtime input/provider/spatial caps or prove cold-network/paint/device acceptance.
 

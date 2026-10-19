@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { MutableRefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
@@ -10,56 +10,19 @@ import {
   Vector3,
 } from 'three';
 import type { Group } from 'three';
-import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import { proceduralParts } from '../room-view/representations/definitions';
 import { createSurfaces, detailedParts } from '../room-view/surfaces';
 import type { Surfaces } from '../room-view/surfaces';
-import { advanceScroll, roomChoreography } from './scroll-motion';
+import {
+  advanceScroll,
+  roomChoreography,
+  landingFraming,
+  landingPixelRatio,
+  landingFurniture,
+  landingFurniturePose,
+} from './scroll-motion';
+import { prepareLandingScene } from './prepare-scene';
 import type { ScrollTarget } from './scroll-motion';
-
-const furnishings: {
-  category: CatalogueEntry['category'];
-  size: { width: number; depth: number; height: number };
-  position: [number, number];
-  turn: number;
-  color: string;
-}[] = [
-  {
-    category: 'bed',
-    size: { width: 1600, depth: 2100, height: 850 },
-    position: [-1.05, -0.7],
-    turn: 0,
-    color: '#b8875c',
-  },
-  {
-    category: 'desk',
-    size: { width: 1200, depth: 600, height: 750 },
-    position: [1, -1.55],
-    turn: 0,
-    color: '#c09a6f',
-  },
-  {
-    category: 'chair',
-    size: { width: 670, depth: 630, height: 1150 },
-    position: [1, -0.65],
-    turn: Math.PI,
-    color: '#b67d66',
-  },
-  {
-    category: 'storage',
-    size: { width: 800, depth: 350, height: 1200 },
-    position: [-1.6, 1.65],
-    turn: Math.PI / 2,
-    color: '#b0875d',
-  },
-  {
-    category: 'storage',
-    size: { width: 450, depth: 450, height: 550 },
-    position: [0.15, 1.55],
-    turn: 0,
-    color: '#a57551',
-  },
-];
 
 type FurnitureMaterials = {
   wood: MeshStandardMaterial;
@@ -73,7 +36,7 @@ function Furniture({
   metal: metalMaterial,
   pillow,
 }: {
-  item: (typeof furnishings)[number];
+  item: (typeof landingFurniture)[number];
   index: number;
   surfaces: Surfaces;
   materials: FurnitureMaterials;
@@ -126,7 +89,7 @@ function Choreography({
   onReady: () => void;
   onLost: () => void;
 }) {
-  const { camera, size, gl, invalidate } = useThree(),
+  const { camera, size, gl, scene, invalidate, setDpr } = useThree(),
     room = useRef<Group>(null),
     furniture = useRef<Group>(null),
     north = useRef<Group>(null),
@@ -134,7 +97,16 @@ function Choreography({
     displayed = useRef(0),
     entrance = useRef(0),
     prepared = useRef(false),
-    probe = useRef({ previous: 0, moving: false, intervals: [] as number[] });
+    firstFrame = useRef(true),
+    aspect = useRef(Math.max(0.1, size.width / Math.max(1, size.height))),
+    probe = useRef({
+      previous: 0,
+      moving: false,
+      intervals: [] as number[],
+      startup: [] as number[],
+      startupPrevious: 0,
+      preparationMs: 0,
+    });
   const resources = useMemo(() => {
       const surfaces = createSurfaces();
       const materials = {
@@ -176,7 +148,7 @@ function Choreography({
             roughness: 1,
           }),
         },
-        pieces = furnishings.map(({ color }) => ({
+        pieces = landingFurniture.map(({ color }) => ({
           wood: new MeshStandardMaterial({
             color,
             map: surfaces.wood,
@@ -217,71 +189,136 @@ function Choreography({
     }, []),
     { surfaces, materials } = resources,
     lookAt = useMemo(() => new Vector3(), []);
+  const present = useCallback(
+    (progress: number, intro: number, ratio: number) => {
+      if (!room.current || !furniture.current) return;
+      const { opening } = roomChoreography(progress),
+        framing = landingFraming(progress, ratio);
+      room.current.rotation.y = framing.turn;
+      room.current.position.y = -0.15 + intro * 0.15;
+      room.current.scale.setScalar(framing.scale * (0.96 + intro * 0.04));
+      furniture.current.children.forEach((piece, i) => {
+        const pose = landingFurniturePose(landingFurniture[i]!.key, progress);
+        piece.position.set(...pose.position);
+        piece.rotation.y = pose.turn;
+      });
+      if (north.current) north.current.rotation.x = (-opening * Math.PI) / 2.2;
+      if (west.current) west.current.rotation.z = (opening * Math.PI) / 2.2;
+      camera.position.set(...framing.camera);
+      lookAt.set(...framing.lookAt);
+      camera.lookAt(lookAt);
+    },
+    [camera, lookAt],
+  );
   useEffect(() => {
     const control = targetRef.current;
+    let current = true;
+    prepared.current = false;
+    firstFrame.current = true;
+    const canvas = gl.domElement,
+      preparationStarted = performance.now();
     control.wake = invalidate;
-    invalidate();
-    const canvas = gl.domElement;
     canvas.addEventListener('webglcontextlost', onLost);
+    void prepareLandingScene({
+      current: () => current,
+      upload: () => {
+        for (const map of [
+          resources.surfaces.floor,
+          resources.surfaces.wood,
+          resources.surfaces.fabric,
+          resources.surfaces.plaster,
+        ])
+          gl.initTexture(map);
+      },
+      compile: () => gl.compileAsync(scene, camera),
+      warm: () => {
+        displayed.current = targetRef.current.progress;
+        present(displayed.current, 0, aspect.current);
+        gl.render(scene, camera);
+      },
+      ready: () => {
+        prepared.current = true;
+        entrance.current = 0;
+        const now = performance.now();
+        probe.current = {
+          previous: now,
+          moving: false,
+          intervals: [],
+          startup: [],
+          startupPrevious: now,
+          preparationMs: now - preparationStarted,
+        };
+        onReady();
+        invalidate();
+      },
+      failed: onLost,
+    });
     return () => {
+      current = false;
+      prepared.current = false;
       if (control.wake === invalidate) delete control.wake;
       canvas.removeEventListener('webglcontextlost', onLost);
       resources.dispose();
     };
-  }, [gl, invalidate, onLost, resources, targetRef]);
+  }, [
+    camera,
+    gl,
+    invalidate,
+    onLost,
+    onReady,
+    present,
+    resources,
+    scene,
+    targetRef,
+  ]);
   useEffect(() => {
+    setDpr(landingPixelRatio(size.width, size.height, window.devicePixelRatio));
     invalidate();
-  }, [invalidate, size.width, size.height]);
+  }, [invalidate, setDpr, size.width, size.height]);
   useFrame((_, delta) => {
-    if (!room.current || !furniture.current || !targetRef.current.visible) {
+    if (
+      !prepared.current ||
+      !room.current ||
+      !furniture.current ||
+      !targetRef.current.visible
+    ) {
       probe.current.moving = false;
+      probe.current.startupPrevious = 0;
+      firstFrame.current = true;
       return;
     }
+    const dt = firstFrame.current ? 0 : delta;
+    firstFrame.current = false;
     displayed.current = advanceScroll(
       displayed.current,
       targetRef.current.progress,
-      delta,
+      dt,
     );
-    entrance.current = Math.min(
-      1,
-      entrance.current + Math.min(delta, 0.05) / 1.1,
-    );
-    const { assembly, rotation, opening } = roomChoreography(displayed.current),
-      intro = 1 - (1 - entrance.current) ** 3,
-      spread = 1 - assembly;
-    room.current.rotation.y = rotation * -0.85 + opening * 0.35;
-    room.current.position.y = -0.15 + intro * 0.15;
-    room.current.scale.setScalar(0.9 + intro * 0.1);
-    furniture.current.children.forEach((piece, i) => {
-      const item = furnishings[i]!;
-      piece.position.set(
-        item.position[0] * (1 + spread * 0.48),
-        spread * (0.35 + (i % 3) * 0.28) + (1 - intro) * 1.1,
-        item.position[1] * (1 + spread * 0.3),
-      );
-      piece.rotation.y = item.turn + spread * (i % 2 ? 0.3 : -0.3);
-    });
-    if (north.current) north.current.rotation.x = (-opening * Math.PI) / 2.2;
-    if (west.current) west.current.rotation.z = (opening * Math.PI) / 2.2;
-    const ratio = Math.max(0.25, size.width / Math.max(1, size.height)),
-      distance = Math.max(1, 0.9 / ratio);
-    camera.position.set(
-      (7.3 - opening * 2.8) * distance,
-      (6 + rotation * 2.8 - opening * 5.4) * distance,
-      (8.6 - opening * 1.4) * distance,
-    );
-    lookAt.set(0, 0.5 + opening * 0.2, 0);
-    camera.lookAt(lookAt);
+    entrance.current = Math.min(1, entrance.current + Math.min(dt, 0.05) / 1.1);
+    const targetAspect = Math.max(0.1, size.width / Math.max(1, size.height));
+    aspect.current +=
+      (targetAspect - aspect.current) *
+      (1 - Math.exp(-Math.min(dt, 0.05) * 12));
+    if (Math.abs(targetAspect - aspect.current) < 0.0001)
+      aspect.current = targetAspect;
+    present(displayed.current, 1 - (1 - entrance.current) ** 3, aspect.current);
     const active =
       Math.abs(displayed.current - targetRef.current.progress) > 0.0001 ||
-      entrance.current < 1;
-    if (!prepared.current && entrance.current > 0.02) {
-      prepared.current = true;
-      onReady();
-    }
+      entrance.current < 1 ||
+      Math.abs(aspect.current - targetAspect) > 0.0001;
     if (process.env.NODE_ENV === 'development') {
       const now = performance.now(),
         record = probe.current;
+      if (entrance.current < 1 && !record.startupPrevious)
+        record.startupPrevious = now;
+      if (
+        entrance.current <= 1 &&
+        record.startup.length < 90 &&
+        record.startupPrevious
+      ) {
+        record.startup.push(now - record.startupPrevious);
+        record.startupPrevious = entrance.current < 1 ? now : 0;
+      }
       if (active && !record.moving) record.intervals = [];
       if (record.moving) {
         record.intervals.push(now - record.previous);
@@ -289,12 +326,19 @@ function Choreography({
       }
       record.moving = active;
       record.previous = now;
-      const sorted = record.intervals.slice().sort((a, b) => a - b);
+      const sorted = record.intervals.slice().sort((a, b) => a - b),
+        startup = record.startup.slice().sort((a, b) => a - b);
       gl.domElement.setAttribute(
         'data-roomedy-landing',
         JSON.stringify({
           progress: Math.round(displayed.current * 1000) / 1000,
           active,
+          prepared: prepared.current,
+          entrance: Math.round(entrance.current * 1000) / 1000,
+          preparationMs: record.preparationMs,
+          startupSamples: startup.length,
+          startupP95: startup[Math.floor(startup.length * 0.95)] ?? null,
+          startupMax: startup.at(-1) ?? null,
           samples: sorted.length,
           p95: sorted[Math.floor(sorted.length * 0.95)] ?? null,
           max: sorted.at(-1) ?? null,
@@ -374,7 +418,7 @@ function Choreography({
           />
         </group>
         <group ref={furniture}>
-          {furnishings.map((item, index) => (
+          {landingFurniture.map((item, index) => (
             <Furniture
               key={index}
               item={item}
@@ -416,12 +460,15 @@ export default function FurnitureScene(props: {
     <Canvas
       aria-hidden="true"
       frameloop="demand"
-      dpr={[1, 1.5]}
+      dpr={1}
       shadows
       camera={{ position: [7.3, 6, 8.6], fov: 38, near: 0.1, far: 80 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-      onCreated={({ gl }) => {
+      onCreated={({ gl, size, setDpr }) => {
         gl.shadowMap.type = PCFShadowMap;
+        setDpr(
+          landingPixelRatio(size.width, size.height, window.devicePixelRatio),
+        );
       }}
     >
       <Choreography {...props} />

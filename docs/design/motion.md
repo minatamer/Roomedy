@@ -1,6 +1,6 @@
 # Roomedy motion and product-language policy
 
-19 October 2026. Direct owner priority: animations are the highest interaction priority throughout Roomedy, especially in 3D. The pre-review revision queue extends through RM-015L; the owner selected a scroll-driven assembling/rotating/opening furniture landing. Actual owner visual acceptance remains pending.
+19 October 2026. Direct owner priority: animations are the highest interaction priority throughout Roomedy, especially in 3D. The pre-review revision queue extends through RM-015M; the owner selected a scroll-driven assembling/rotating/opening furniture landing. Actual owner visual acceptance remains pending.
 
 ## Choreography
 
@@ -25,7 +25,7 @@ Remove recurring demo/prototype/development commentary and simulation-warning se
 | Floor/wall finishes and cutaway | Canvas-owned material colors approach their new target without recreating maps/materials or resetting wall opacity. Target changes wake demand frames; final residual settles exactly. |
 | Preview, Apply, Cancel, Undo and Before/Current | Same projection and scene owners; semantic changes supply new display targets. No animation frame writes room/history. |
 | Panels and entry/review stages | useSurfaceMotion observes real containing geometry, cancels/retargets from the displayed size and preserves usable room/composer space. |
-| Landing hero/CTA/scroll (RM-015L) | One real3D scene follows bounded scroll progress: furniture assembly, room rotation and opening walls/camera approach. Native scroll/anchors remain interruptible/reversible; ready entrance1100ms and copy500ms settle independently. Frame presentation never edits a room; idle/offscreen rendering sleeps and wakes from displayed state. Static poster/content survive unavailable graphics. Old scripted Sample/Apply/Undo story is retired. |
+| Landing hero/CTA/scroll (RM-015M) | One full-viewport room spans all landing sections, with semantic text/CTA inside its composition. Canvas stays covered until finite texture uploads, compileAsync, first shadow/material render and actual initial pose complete; then1100ms visible entrance starts without an arbitrary delay. Normal hash/history/scroll stays reversible; displayed framing eases on resize. Demand frames stop after active work, cleanup fences retired preparation and no frame edits canonical state. L split/compact presentation is historical. |
 | Work/loading | CSS spinners/stages continue during actual asynchronous bounded work; worker/backend yielding/cancellation remain separate from presentation. |
 
 No motion/render-disable setting or OS preference suppression is present in the current source. Demand rendering is an idle optimization, never permission to freeze a live transition. These permanent rules also apply to future fixes and restored/empty/error/narrow variants. Keep H's task-oriented copy and honest sample labels; no recurring demo/development commentary. [Current material and browser evidence](../validation/RM-015I.md) is separate from the owner's visual decision and external/device proof.
@@ -38,3 +38,7 @@ Official product references inspected 19 October 2026: [IKEA Kreativ furniture c
 
 
 19October owner visual correction L supersedes the historical I landing control-card implementation. [Primary research](../references/landing-research-2026-10-19.md) and [current L evidence](../validation/RM-015L.md) own the new choreography; no merchant art, external animation service or OS suppression is introduced.
+
+M initial-load evidence distinguishes GPU preparation time, active visible entrance intervals, warm scroll cadence and real paint/cold-network/physical behavior. Never hide an observed maximum or call an old probe a new movement; actual source/browser work and limits live in [M](../validation/RM-015M.md).
+
+M owner refinement retains camera/wall motion while furniture itself slides and turns on the floor as progress advances. Shared authored physical sizes and pure staged paths keep every piece grounded, inside the room and clear of the other footprints throughout travel; reverse scrolling retraces those paths. The initial bed crosses the center, then turns alongside the wall; the desk travels toward daylight, chair aligns and storage clears the middle. This is authored landing presentation, never a visitor-room command or claimed optimizer. Preserve the liked translucent text shading, feathering only its outer seams.
