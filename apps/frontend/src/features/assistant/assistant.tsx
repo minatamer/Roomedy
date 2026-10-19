@@ -6,7 +6,8 @@ import type { AssistantReply } from '@roomedy/contracts/assistant';
 import type { SessionSnapshot } from '../session/state';
 import { thumbnailUrl } from '../catalogue/catalogue';
 import { focusProperties } from '../room-editor/focus';
-import { issueText } from '../room-editor/messages';
+import { failureMessage, issueText } from '../room-editor/messages';
+import { PreviewChangeList } from '../room-editor/preview-change-list';
 import type { AssistantController } from './controller';
 import styles from './assistant.module.css';
 
@@ -22,7 +23,9 @@ export function Assistant({
       controller.getSnapshot,
       controller.getSnapshot,
     ),
-    end = useRef<HTMLDivElement>(null);
+    end = useRef<HTMLDivElement>(null),
+    proposalActions = useRef<HTMLDivElement>(null),
+    composer = useRef<HTMLTextAreaElement>(null);
   const [goalsOpen, setGoalsOpen] = useState(() => state.messages.length === 0);
   const session = controller.session,
     room = roomState.workspace!.current,
@@ -30,6 +33,20 @@ export function Assistant({
   useEffect(() => {
     end.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [state.messages.length, state.busy]);
+  const previewOperation =
+    preview?.source === 'assistant' ? preview.identity.operationId : null;
+  useEffect(() => {
+    if (!previewOperation) return;
+    const target = proposalActions.current;
+    target
+      ?.querySelector<HTMLButtonElement>('button')
+      ?.focus({ preventScroll: true });
+    target?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [previewOperation, state.messages.length]);
+  const focusComposer = () =>
+    requestAnimationFrame(() =>
+      composer.current?.focus({ preventScroll: true }),
+    );
   const focus = (id: string, question: AssistantReply['question'] = null) => {
     if (question) session.cancelPreview();
     if (id === room.roomId) session.setPanel('room');
@@ -346,6 +363,42 @@ export function Assistant({
                       : ` · ${issue.deficitMm} mm deficit`}
                   </button>
                 ))}
+              {reply?.kind === 'proposal' && active && (
+                <>
+                  <PreviewChangeList
+                    current={room}
+                    proposed={preview.room}
+                    className={styles.changeList}
+                  />
+                  <div
+                    ref={proposalActions}
+                    className={styles.proposalActions}
+                    data-room-target="preview"
+                    role="group"
+                    aria-label="Proposed changes"
+                  >
+                    <button
+                      className={styles.applyProposal}
+                      aria-label="Apply proposed changes"
+                      onClick={() => {
+                        const result = controller.apply(message.operationId!);
+                        if (result.ok) focusComposer();
+                        else session.notify(failureMessage(result, room));
+                      }}
+                    >
+                      Apply changes
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (controller.cancel(message.operationId!))
+                          focusComposer();
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              )}
             </article>
           );
         })}
@@ -369,6 +422,7 @@ export function Assistant({
       >
         <label htmlFor="roomedy-message">Ask Roomedy</label>
         <textarea
+          ref={composer}
           id="roomedy-message"
           rows={3}
           value={state.draft}

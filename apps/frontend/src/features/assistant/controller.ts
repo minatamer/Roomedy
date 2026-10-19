@@ -353,8 +353,16 @@ export class AssistantController {
       release?.();
     }
   }
-  cancel() {
+  cancel(operationId?: string) {
+    const candidate = this.session.getSnapshot().candidate;
+    if (
+      operationId !== undefined &&
+      (candidate?.source !== 'assistant' ||
+        candidate.identity.operationId !== operationId)
+    )
+      return false;
     this.session.cancelPreview();
+    return true;
   }
   chooseSuggestion(messageId: number, suggestion: DesignSuggestion) {
     const last = this.state.messages.at(-1),
@@ -376,7 +384,14 @@ export class AssistantController {
     this.session.setPanel('assistant');
     void this.submit(suggestion.request);
   }
-  apply() {
+  apply(operationId?: string) {
+    const candidate = this.session.getSnapshot().candidate;
+    if (
+      operationId !== undefined &&
+      (candidate?.source !== 'assistant' ||
+        candidate.identity.operationId !== operationId)
+    )
+      return { ok: false as const, code: 'stale' as const };
     const label = this.session.getSnapshot().candidate?.label ?? 'Room changes';
     const result = this.session.applyAssistantPreview();
     if (result.ok && result.status === 'applied' && result.receipt)

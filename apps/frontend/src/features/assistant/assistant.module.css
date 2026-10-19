@@ -79,6 +79,30 @@
   gap: 7px;
   margin: 10px 0;
 }
+.changeList {
+  margin: 10px 0;
+  padding-left: 16px;
+  font-size: 11px;
+}
+.proposalActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  scroll-margin-block: 12px;
+}
+.proposalActions button {
+  flex: 1 1 auto;
+  min-height: 44px;
+}
+.proposalActions .applyProposal {
+  background: #70523b;
+  border-color: #70523b;
+  color: #fffdf8;
+}
+.proposalActions .applyProposal:hover:not(:disabled) {
+  background: #513d2d;
+}
 .objectCard {
   display: flex;
   align-items: center;

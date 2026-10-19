@@ -42,6 +42,7 @@ export class SessionController {
   private readonly operations = new ResourceRegistry(16);
   private readonly labels = new Map<string, string>();
   private timer: ReturnType<typeof setTimeout> | undefined;
+  private messageTimer: ReturnType<typeof setTimeout> | undefined;
   private cleaning = false;
   private assistantPreview: {
     token: OperationIdentity;
@@ -104,7 +105,25 @@ export class SessionController {
       ...('message' in change ? { messageKind: 'notice' as const } : {}),
       ...change,
     });
+    if ('message' in change) {
+      this.clearMessageTimer();
+      if (
+        this.state.message &&
+        !['expired', 'disposed'].includes(this.state.phase)
+      ) {
+        const timer = setTimeout(() => {
+          if (this.messageTimer !== timer) return;
+          this.messageTimer = undefined;
+          if (this.active()) this.publish({ message: '' });
+        }, 4000);
+        this.messageTimer = timer;
+      }
+    }
     for (const listener of this.listeners) listener();
+  }
+  private clearMessageTimer() {
+    if (this.messageTimer !== undefined) clearTimeout(this.messageTimer);
+    this.messageTimer = undefined;
   }
   /** Enforced at every action/result entry, independently of timer wake-up. */
   private active(): boolean {
@@ -147,6 +166,7 @@ export class SessionController {
     this.cleaning = false;
   }
   private retire(phase: 'expired' | 'disposed') {
+    this.clearMessageTimer();
     // Fence identity and accepted semantics BEFORE aborting/revoking resources.
     this.state = Object.freeze({
       ...this.state,
@@ -287,6 +307,7 @@ export class SessionController {
       expiresSoon: false,
       clientLoadFailure: false,
     });
+    this.clearMessageTimer();
     this.cleaning = true;
     this.operations.clear();
     this.resources.clear();

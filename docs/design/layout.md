@@ -1,5 +1,11 @@
 # Layout and useful space
 
+## Proposal decisions in chat — RM-015AJ
+
+Keep AI Apply/Cancel in the matching active assistant response with its actual affected objects and bounded change list. Old messages have no live decision controls; operation-bound handlers cannot resolve a newer candidate. The room keeps its full frame height. Manual palette previews retain their separate room-side controls. Read-only inspection points to Assistant, and the existing task tab restores the pending chat rather than forcing it open. Arrival focuses the decision row; successful resolution returns to the composer. Use wrapping44px targets and preserve the ordinary chat/preview motion and Send/keyboard behavior.
+
+Room notices are temporary4s presentation, independent of proposal/current/history. Replacing even the same text restarts its single owned timer; unrelated layout updates do not. Reset/import/expiry/disposal retire it, while explicit expiry information stays intact. No recurring timer or extra row. [Actual feature evidence](../validation/RM-015AJ.md) separates local viewport checks from owner/external approval.
+
 ## Current uncluttered tool row — RM-015AI
 
 Only Furniture, Add piece, Room and Assistant are visible in the editor tool row. Native hidden plus a scoped display rule removes the retained Checks button and tour replay button from layout/focus/AX across responsive styles. Checks evaluation, contextual assistant issue navigation and panel implementation remain; this is a temporary navigation pause, not disabled validation. Header/tool-row bottom borders are removed, keeping warm background continuous and existing selected-button treatment. No new replacement control or row.

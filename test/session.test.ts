@@ -6,6 +6,7 @@ import { failureMessage } from '../apps/frontend/src/features/room-editor/messag
 import { hasBaselineChanges } from '../apps/frontend/src/features/session/state.js';
 import { commandRoom, piece } from './fixtures/command-room.js';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
+import { projectOf } from '../apps/frontend/src/features/session/project.js';
 import {
   beginFloorEdit,
   rotateFloorSelection,
@@ -630,4 +631,82 @@ describe('visible notices are distinct from routine command confirmations', () =
     s.clientPartFailed();
     expect(s.getSnapshot().messageKind).toBe('notice');
   });
+});
+
+describe('transient room notices', () => {
+  it('expires after four seconds without applying or cancelling the pending preview', () => {
+    vi.useFakeTimers();
+    const s = session();
+    expect(
+      s.prepareVisitorPreview(
+        [{ type: 'room-finish', floorFinish: 'walnut', wallFinish: 'sage' }],
+        'Room palette',
+      ).ok,
+    ).toBe(true);
+    const before = s.getSnapshot();
+    vi.advanceTimersByTime(3999);
+    expect(s.getSnapshot().message).toContain('Preview ready');
+    s.setPanel('assistant');
+    vi.advanceTimersByTime(1);
+    expect(s.getSnapshot().message).toBe('');
+    expect(s.getSnapshot().candidate).toBe(before.candidate);
+    expect(s.getSnapshot().pending).toBe(before.pending);
+    expect(s.getSnapshot().workspace).toBe(before.workspace);
+    expect(s.applyVisitorPreview().ok).toBe(true);
+  });
+
+  it.each(['Same notice', 'Replacement notice'])(
+    'gives %s a fresh lifetime without retaining the previous timer',
+    (replacement) => {
+      vi.useFakeTimers();
+      const s = session();
+      s.notify('Same notice');
+      vi.advanceTimersByTime(3000);
+      s.notify(replacement);
+      expect(vi.getTimerCount()).toBe(1);
+      vi.advanceTimersByTime(3999);
+      expect(s.getSnapshot().message).toBe(replacement);
+      vi.advanceTimersByTime(1);
+      expect(s.getSnapshot().message).toBe('');
+      expect(vi.getTimerCount()).toBe(0);
+    },
+  );
+
+  it.each(['reset', 'import'] as const)(
+    '%s retires the old timer without clearing a new generation notice',
+    (action) => {
+      vi.useFakeTimers();
+      const s = session();
+      const project = projectOf(s.getSnapshot())!;
+      s.notify('Old room');
+      vi.advanceTimersByTime(3000);
+      expect(
+        action === 'reset'
+          ? s.reset(commandRoom([piece('b')]))
+          : s.importProject(project),
+      ).toBe(true);
+      s.notify('New room');
+      vi.advanceTimersByTime(1500);
+      expect(s.getSnapshot().message).toBe('New room');
+      vi.advanceTimersByTime(2500);
+      expect(s.getSnapshot().message).toBe('');
+    },
+  );
+
+  it.each(['expired', 'disposed'] as const)(
+    '%s retires all notice callbacks without erasing lifecycle information',
+    (phase) => {
+      vi.useFakeTimers();
+      const s = session();
+      s.notify('Temporary notice');
+      if (phase === 'expired') s.expiredRecovery();
+      else s.dispose();
+      const retired = s.getSnapshot();
+      expect(vi.getTimerCount()).toBe(0);
+      vi.advanceTimersByTime(5000);
+      expect(s.getSnapshot()).toBe(retired);
+      expect(retired.phase).toBe(phase);
+      if (phase === 'expired') expect(retired.message).toContain('expired');
+    },
+  );
 });

@@ -32,6 +32,7 @@ import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import { checkRoom } from '@roomedy/spatial';
 import { ProjectControls } from './project-controls';
+import { PreviewChangeList } from './preview-change-list';
 import styles from './editor.module.css';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
@@ -108,7 +109,7 @@ export function Editor({
     headingRef.current?.focus({ preventScroll: true });
   }, [state.phase, workspaceId]);
   useEffect(() => {
-    if (!state.candidate) return;
+    if (!state.candidate || state.candidate.source === 'assistant') return;
     const target = previewRef.current;
     target
       ?.querySelector<HTMLButtonElement>('button')
@@ -155,7 +156,9 @@ export function Editor({
       ? 'Before is read-only. Return to Current to edit.'
       : state.clientLoadFailure
         ? 'Export your accepted layout or reload the editor before making more changes.'
-        : 'Current is unchanged. Apply or Cancel beside the room before editing these preview values.';
+        : state.candidate?.source === 'assistant'
+          ? 'Current is unchanged. Apply or Cancel this proposal in the assistant before editing.'
+          : 'Current is unchanged. Apply or Cancel beside the room before editing these preview values.';
   const item = shownRoom.furniture.find((f) => f.id === view.selectedId),
     feature = shownRoom.room.features.find((f) => f.id === view.selectedId);
   const rotatePlanSelection = (direction: -1 | 1) => {
@@ -493,7 +496,7 @@ export function Editor({
               </Suspense>
             </CutawayBoundary>
           )}
-          {state.candidate && (
+          {state.candidate && state.candidate.source !== 'assistant' && (
             <div
               className={styles.previewActions}
               ref={previewRef}
@@ -501,45 +504,16 @@ export function Editor({
             >
               <div>
                 <p>{state.candidate.label ?? 'Palette change'} · Preview</p>
-                <ul className={styles.changeList}>
-                  {state.candidate.room.furniture
-                    .filter(
-                      (p) =>
-                        JSON.stringify(p) !==
-                        JSON.stringify(
-                          room.furniture.find((before) => before.id === p.id),
-                        ),
-                    )
-                    .slice(0, 8)
-                    .map((p) => (
-                      <li key={p.id}>
-                        {room.furniture.some((before) => before.id === p.id)
-                          ? 'Change'
-                          : 'Add'}{' '}
-                        {p.label} ·{' '}
-                        {p.ownership === 'owned' ? 'Owned' : 'Proposed'}
-                      </li>
-                    ))}
-                  {room.furniture
-                    .filter(
-                      (p) =>
-                        !state.candidate!.room.furniture.some(
-                          (after) => after.id === p.id,
-                        ),
-                    )
-                    .slice(0, 8)
-                    .map((p) => (
-                      <li key={p.id}>Remove {p.label} from this plan</li>
-                    ))}
-                </ul>
+                <PreviewChangeList
+                  current={room}
+                  proposed={state.candidate.room}
+                  className={styles.changeList}
+                />
               </div>
               <button
                 className={styles.primary}
                 onClick={() => {
-                  const r =
-                    state.candidate?.source === 'assistant'
-                      ? (assistant?.apply() ?? { ok: false, code: 'stale' })
-                      : controller.applyVisitorPreview();
+                  const r = controller.applyVisitorPreview();
                   if (!r.ok)
                     controller.notify(
                       failureMessage(
@@ -553,9 +527,7 @@ export function Editor({
                     );
                 }}
               >
-                {state.candidate.source === 'assistant'
-                  ? 'Apply proposed changes'
-                  : 'Apply palette'}
+                Apply palette
               </button>
               <button
                 onClick={() => {

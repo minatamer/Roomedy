@@ -139,6 +139,37 @@ it('previews one coordinated proposal separately, applies twice idempotently and
   expect(s.runtime.operations.calls()).toBe(dispatched);
   s.close();
 });
+it('binds chat Apply and Cancel to their proposal message instead of a replacement candidate', async () => {
+  const s = await setup();
+  try {
+    const current = s.session.getSnapshot().workspace;
+    await s.assistant.submit('Preview Calm & focused room palette');
+    const oldId = s.session.getSnapshot().candidate!.identity.operationId;
+    await s.assistant.submit('Move the work area near the window');
+    const replacement = s.session.getSnapshot().candidate!;
+    expect(replacement.identity.operationId).not.toBe(oldId);
+    expect(s.assistant.apply(oldId)).toEqual({ ok: false, code: 'stale' });
+    expect(s.assistant.cancel(oldId)).toBe(false);
+    expect(s.session.getSnapshot().candidate).toBe(replacement);
+    expect(s.session.getSnapshot().workspace).toBe(current);
+    expect(s.assistant.apply(replacement.identity.operationId).ok).toBe(true);
+    expect(s.session.getSnapshot().workspace!.history.entries).toHaveLength(1);
+    expect(s.assistant.apply(replacement.identity.operationId)).toEqual({
+      ok: false,
+      code: 'stale',
+    });
+    expect(s.assistant.undo().ok).toBe(true);
+    await s.assistant.submit('Preview Calm & focused room palette');
+    const cancelId = s.session.getSnapshot().candidate!.identity.operationId;
+    const accepted = s.session.getSnapshot().workspace;
+    expect(s.assistant.cancel(cancelId)).toBe(true);
+    expect(s.session.getSnapshot().candidate).toBeNull();
+    expect(s.session.getSnapshot().workspace).toBe(accepted);
+    expect(s.assistant.cancel(cancelId)).toBe(false);
+  } finally {
+    s.close();
+  }
+});
 it('keeps a finish correction grounded across view changes and whole-change Undo', async () => {
   const s = await setup(),
     before = s.session.getSnapshot().workspace!.current;
