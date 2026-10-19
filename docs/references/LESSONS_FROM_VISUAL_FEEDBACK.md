@@ -65,6 +65,8 @@ Use dialogs for focused blocking tasks and contextual panels for work that needs
 
 ### L-08. Motion must run smoothly and at the right time
 
+Latest direct Roomedy owner instruction,19 October2026, makes animation the highest UX priority permanently. This applies to camera travel/orbit/zoom, visible rotation/floor placement, furniture and floor/wall finishes, preview/Apply/Undo/Before, panels, dimensional hero/scroll and loading. Keep demand rendering awake for active targets, then permit idle sleep. Do not add animation/render-off settings or OS suppression. [Current motion ownership](../design/motion.md) and [I evidence](../validation/RM-015I.md) govern implementation; earlier sibling guidance is context only. H's concise task-oriented copy/sample labels and no recurring demo/development warnings also remain permanent. Actual visual acceptance is separate.
+
 Use deliberate entrance, selection, preview/Apply/Undo and panel motion. Ordinary hero content/CTA can enter as soon as usable content is ready; do not add arbitrary buffers. Animate related geometry together, support interruption/reversal and avoid replaying welcome animations on unrelated state changes.
 
 A loading spinner must continue while decoding, searching or waiting. Move bounded expensive work off the interaction path where appropriate. Show an honest short stage such as **Drafting your room…**; omit invented percentages and explanatory filler about why no percentage exists. Preserve designed motion without animation-off/render-off controls or OS suppression. Evidence: E10, E11, E13.

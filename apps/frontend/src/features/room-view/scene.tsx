@@ -43,6 +43,7 @@ import type { RoomFrame } from '../session/state';
 import { ViewAssets } from './assets';
 import type { AssetState } from './assets';
 import {
+  advanceSurfaceColor,
   createSurfaces,
   detailedParts,
   setSurfaceMap,
@@ -169,13 +170,24 @@ function DevelopmentProbe({
 
 // Shared unit geometry is disposed by RoomScene. Declarative materials have explicit
 // ownership because their parent meshes intentionally opt out of recursive disposal.
-function OwnedStandard(props: ThreeElements['meshStandardMaterial']) {
+function OwnedStandard({
+  color,
+  ...props
+}: Omit<ThreeElements['meshStandardMaterial'], 'color'> & { color: string }) {
   const ref = useRef<MeshStandardMaterial>(null);
+  const [initialColor] = useState(color);
+  const target = useMemo(() => new Color(color), [color]);
+  const { invalidate } = useThree();
+  useEffect(() => invalidate(), [target, invalidate]);
+  useFrame((_, delta) => {
+    if (ref.current && advanceSurfaceColor(ref.current.color, target, delta))
+      invalidate();
+  });
   useEffect(() => {
     const owned = ref.current;
     return () => owned?.dispose();
   }, []);
-  return <meshStandardMaterial {...props} ref={ref} />;
+  return <meshStandardMaterial {...props} color={initialColor} ref={ref} />;
 }
 function OwnedBasic(props: ThreeElements['meshBasicMaterial']) {
   const ref = useRef<MeshBasicMaterial>(null);
@@ -632,23 +644,26 @@ function Walls({
   const ref = useRef<InstancedMesh>(null),
     { camera, invalidate } = useThree(),
     bounds = displayRoom(room);
+  const [initialColor] = useState(color);
+  const targetColor = useMemo(() => new Color(color), [color]);
   const material = useMemo(
     () =>
       new MeshStandardMaterial({
-        color,
+        color: initialColor,
         map: surfaces.plaster,
         bumpMap: surfaces.plaster,
         bumpScale: 0.0015,
         roughness: 0.94,
         transparent: true,
       }),
-    [color, surfaces],
+    [initialColor, surfaces],
   );
   const materialRef = useRef(material);
   useEffect(() => {
     materialRef.current = material;
     return () => material.dispose();
   }, [material]);
+  useEffect(() => invalidate(), [targetColor, invalidate]);
   useLayoutEffect(() => {
     const m = ref.current;
     if (!m) return;
@@ -684,13 +699,15 @@ function Walls({
       camera.position.z < bounds.depth &&
       camera.position.y > 0 &&
       camera.position.y < bounds.height;
-    const goal = inside ? 1 : front ? 0.06 : 1,
-      difference = goal - material.opacity;
+    const display = materialRef.current,
+      goal = inside ? 1 : front ? 0.06 : 1,
+      difference = goal - display.opacity;
     if (Math.abs(difference) > 0.002) {
-      materialRef.current.opacity +=
+      display.opacity +=
         difference * (1 - Math.exp(-Math.min(delta, 0.05) * 16));
       invalidate();
     }
+    if (advanceSurfaceColor(display.color, targetColor, delta)) invalidate();
   });
   return (
     <instancedMesh

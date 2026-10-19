@@ -8,11 +8,30 @@ import {
   RGBAFormat,
   SRGBColorSpace,
 } from 'three';
-import type { Material, Object3D } from 'three';
+import type { Color, Material, Object3D } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import type { BoxPart, PhysicalSize } from './representations/definitions';
 
 type Surface = 'floor' | 'wood' | 'fabric' | 'plaster';
+
+/** Mutates only a canvas-owned display color; true keeps demand frames awake. */
+export function advanceSurfaceColor(
+  current: Color,
+  target: Color,
+  delta: number,
+) {
+  const distance =
+    Math.abs(current.r - target.r) +
+    Math.abs(current.g - target.g) +
+    Math.abs(current.b - target.b);
+  if (distance <= 0.001) {
+    current.copy(target);
+    return false;
+  }
+  current.lerp(target, 1 - Math.exp(-Math.min(delta, 0.05) * 16));
+  return true;
+}
+
 const noise = (x: number, y: number) => {
   const hash = Math.imul(x + 71, 374761393) ^ Math.imul(y + 19, 668265263);
   return ((Math.imul(hash ^ (hash >>> 13), 1274126177) >>> 0) % 1024) / 1023;

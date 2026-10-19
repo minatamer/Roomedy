@@ -16,6 +16,20 @@ No animation-off/render-off setting, OS preference suppression or global overrid
 
 Remove recurring demo/prototype/development commentary and simulation-warning sentences from product surfaces; avoid adding them again. Use task-focused labels and concise contextual errors/units/transfer information. Keep technical operation status and verification limits in private diagnostics and evidence documents. Copy cleanup cannot change runtime capability, provider mode, actual execution, permission or measured truth. Authored fixtures do not become personal-photo detections.
 
+## Current ownership audit (RM-015I)
+
+| Interaction | Active owner and lifetime |
+| --- | --- |
+| Camera viewpoints, orbit/look, zoom and inside steps | CameraRig interpolates from its visible pose and invalidates until arrival; direct pointer controls wake frames and interrupt travel. |
+| Furniture translation/quarter-turn/finish | Piece interpolates the displayed group/materials; drag follows the actual floor ray, release/rejection returns through interpolation. Commands occur once through the controller. |
+| Floor/wall finishes and cutaway | Canvas-owned material colors approach their new target without recreating maps/materials or resetting wall opacity. Target changes wake demand frames; final residual settles exactly. |
+| Preview, Apply, Cancel, Undo and Before/Current | Same projection and scene owners; semantic changes supply new display targets. No animation frame writes room/history. |
+| Panels and entry/review stages | useSurfaceMotion observes real containing geometry, cancels/retargets from the displayed size and preserves usable room/composer space. |
+| Landing hero/CTA/scroll | Bounded dimensional room story settles4050ms; manual choices interrupt; anchors scroll smoothly and ready content enters without an arbitrary wait. |
+| Work/loading | CSS spinners/stages continue during actual asynchronous bounded work; worker/backend yielding/cancellation remain separate from presentation. |
+
+No motion/render-disable setting or OS preference suppression is present in the current source. Demand rendering is an idle optimization, never permission to freeze a live transition. These permanent rules also apply to future fixes and restored/empty/error/narrow variants. Keep H's task-oriented copy and honest sample labels; no recurring demo/development commentary. [Current material and browser evidence](../validation/RM-015I.md) is separate from the owner's visual decision and external/device proof.
+
 ## Evidence and research
 
 Inspect actual transitions at phone/tablet/short-laptop sizes, including rapid interruption, reversal and cleanup. Record scenario, build, viewport, repetitions and active-frame timing separately from discrete actions. Physical GPU/touch/IME/heap and real-model/hosted proof remain separate.

@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { describe, it, expect, vi } from 'vitest';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import {
@@ -27,6 +29,7 @@ import type { Triple } from '../apps/frontend/src/features/room-view/adapter.js'
 import { CATALOGUE } from '@roomedy/spatial';
 import { proceduralParts } from '../apps/frontend/src/features/room-view/representations/definitions.js';
 import {
+  advanceSurfaceColor,
   createSurfaces,
   detailedParts,
   surfaceModel,
@@ -36,6 +39,15 @@ import {
   pointOnFloor,
 } from '../apps/frontend/src/features/room-view/manipulation.js';
 import { commandRoom, piece as commandPiece } from './fixtures/command-room.js';
+
+const requireFrontend = createRequire(
+  new URL('../apps/frontend/package.json', import.meta.url),
+);
+const { Color } = (await import(
+  pathToFileURL(requireFrontend.resolve('three/src/math/Color.js')).href
+)) as {
+  Color: new (value: string) => Parameters<typeof advanceSurfaceColor>[0];
+};
 
 describe('3D floor projection into the existing placement policy', () => {
   it('intersects the actual forward ray with floor zero and converts metres to semantic millimetres once', () => {
@@ -103,6 +115,36 @@ describe('3D floor projection into the existing placement policy', () => {
 });
 
 describe('finite close-up surface ownership and physical envelopes', () => {
+  it('keeps finish movement awake until exact convergence without changing the target', () => {
+    const current = new Color('#f3eee2'),
+      target = new Color('#879080'),
+      original = current.clone(),
+      unchangedTarget = target.clone();
+    expect(advanceSurfaceColor(current, target, 1 / 60)).toBe(true);
+    expect(current.equals(original)).toBe(false);
+    expect(current.equals(target)).toBe(false);
+    let frames = 1;
+    while (advanceSurfaceColor(current, target, 1 / 60) && frames < 120)
+      frames++;
+    expect(frames).toBeLessThan(60);
+    expect(current.equals(target)).toBe(true);
+    expect(target.equals(unchangedTarget)).toBe(true);
+    expect(advanceSurfaceColor(current, target, 1 / 60)).toBe(false);
+  });
+
+  it('retargets from the displayed color and caps a resumed long frame', () => {
+    const current = new Color('#f3eee2'),
+      first = new Color('#879080'),
+      next = new Color('#735243');
+    advanceSurfaceColor(current, first, 1 / 60);
+    const visible = current.clone(),
+      expected = visible.clone().lerp(next, 1 - Math.exp(-0.05 * 16));
+    expect(advanceSurfaceColor(current, next, 5)).toBe(true);
+    expect(current.equals(expected)).toBe(true);
+    expect(current.equals(first)).toBe(false);
+    expect(current.equals(next)).toBe(false);
+  });
+
   it('creates deterministic bounded mipmapped surfaces and finite bevels inside the original unit box', () => {
     const a = createSurfaces(),
       b = createSurfaces();

@@ -14,6 +14,7 @@ Before edits, identify the requested task, affected component/states, existing a
 - [ ] Padding, labels, units, primary action alignment, hover/focus borders, touch targets and selected/disabled/error states remain coherent with variable content.
 - [ ] Dialog/panel opening, scroll, outside-click/Escape and focus restoration work without losing unsaved data. Optional chat expansion does not keep shrinking the room.
 - [ ] Motion progresses smoothly while active and can complete/interruption-reverse safely. Automatic landing sequences settle within five seconds with stable readable text. Related preview/progress/panel geometry animates together; ordinary entrances have no arbitrary delay.
+- [ ] Camera travel/orbit/zoom, visible placement/rotation, piece/floor/wall finishes and preview/Apply/Undo/Before interpolate from the displayed state. Demand frames wake for new targets and sleep only after settling. No animation-off/render-off setting or OS suppression; no frame writes canonical room/history.
 - [ ] Loading uses honest stages and keeps useful work visible; no fabricated percentage, frozen spinner or unexplained full-page interruption.
 - [ ] Chat has accessible Send, Enter/Shift+Enter/composition-safe behavior, a reachable composer and no scrollbar/icon overlap. Object/issue cards focus the correct actual room item.
 - [ ] Every visible control changes real canonical state or gives a truthful unavailable result; no purely cosmetic selected state or invented confirmed measurement.
@@ -23,9 +24,9 @@ Before edits, identify the requested task, affected component/states, existing a
 
 | Journey/state | What must be inspected in the actual app |
 | --- | --- |
-| Landing and entry | First viewport CTA; labelled scripted example; sample versus own-room choice is obvious; no unsolicited settings or price/budget claims |
+| Landing and entry | First viewport CTA; labelled sample room; sample versus own-room choice is obvious; no unsolicited settings, recurring demo commentary or price/budget claims |
 | Authored sample | Immediate useful manual room without recognition or hidden provider request; coherent supported furniture/locks |
-| Personal photo selection | Previews/file checks only; concise guidance inside upload; add/remove; explicit **Draft my room** action |
+| Personal photo selection | Previews/file checks only; concise guidance inside upload; add/remove; explicit **Draft my room** or honest **Open sample sketch** action with actual transfer beside it |
 | Draft review | Rough **2D only**, per-value uncertainty, source photo when available, targeted measurements and duplicate/missed-feature correction |
 | Partial inference | Usable output retained for review; no restart just for a missed match; malformed/refused/timeout cases remain distinct |
 | Main editor | Precision plan and synchronized cutaway use same room/selection; room remains usable beside inspector/chat |

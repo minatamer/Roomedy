@@ -1,6 +1,6 @@
 # RM-015I — Make active motion a permanent rule
 
-Status: **Planned**
+Status: **Implemented locally — owner visual approval pending**
 Planning date: **19 October 2026**
 Owner todo: **9/10 — Permanent animation priority** (ordered by implementation dependencies; coverage in queue)
 Depends on: [RM-015H](RM-015H-remove-demo-commentary-from-product-copy.md)
@@ -26,11 +26,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 
 ## Acceptance criteria
 
-- [ ] Record owner priority and recurring no-demo-commentary rule in current authority, superseding earlier presentation wording; exact room/command and rough-2D-first boundaries remain.
-- [ ] Document active motion across camera travel, visible rotation, object placement, panels, hero, scroll and loading; disallow animation-off/render-off settings and OS suppression.
-- [ ] Inspect actual implementation for any disabling setting, CSS media query or render invalidation path that freezes active transitions; fix only reproduced omissions within its owning ticket allocation.
-- [ ] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
-- [ ] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
+- [x] Record owner priority and recurring no-demo-commentary rule in current authority, superseding earlier presentation wording; exact room/command and rough-2D-first boundaries remain.
+- [x] Document active motion across camera travel, visible rotation, object placement, panels, hero, scroll and loading; disallow animation-off/render-off settings and OS suppression.
+- [x] Inspect actual implementation for any disabling setting, CSS media query or render invalidation path that freezes active transitions; fix only reproduced omissions within its owning ticket allocation.
+- [x] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
+- [x] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
 
 ## Verification
 
@@ -47,3 +47,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Handoff
 
 Record real commands/results and findings dispositions in `docs/validation/RM-015I.md`; no source changes during validation. Existing exact-path per-ticket local commit authority remains scoped to validated owned work. Next packet is RM-015J.
+
+## Refined plan before implementation
+
+[Exact11-path audit/fix plan](../commit-plans/RM-015I.md) includes the reproduced instantaneous floor/wall finish owners, a shared bounded surface-color interpolation and meaningful material regressions. All command/history/provider authority and existing material/texture/geometry ownership remain unchanged. Actual1280/390 motion and settled/full-scope validation follow; owner visual approval remains pending.
+
+## Result
+
+[Execution and clean read-only pass1](../validation/RM-015I.md): stable animated floor/wall colors, permanent active motion/copy policy, actual1280/390 motion checks,401tests/root/both builds. No actionable findings; J and owner visual decision follow.
