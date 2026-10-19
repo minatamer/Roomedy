@@ -1,6 +1,12 @@
 # RM-015 measured performance and policy
 
-## Current RM-015N glass and section-motion scenario
+## Current RM-015O local photograph scenario
+
+[O actual evidence](../validation/RM-015O.md). Four local WebPs total515,164bytes (<600KiB): desktop pair359,694bytes/2,592,000source pixels; narrow155,470bytes/1,228,800pixels. These encoded/source counts are not native decode peak or cold-network transfer. Stable picture layers use the existing measure owner, add no WebGL resources, preserve main2million/.35transmission budgets. Final Windows dev1280×720 fresh-document/warm-asset preparation171.3/170.9/166.6ms;68/68/69startup intervals, p9517/16.9/16.8ms,max30.3/27.1/27.9ms. Three warm moves (two forward, one reverse),37/37/35intervals,p9516.9/17/17ms,max19/17.4/17.3ms. Named local p95≤33.4/max≤50ms targets pass;137draws/5geometries/10textures unchanged. Rapid13-size geometry checks during build retain a108.7ms callback maximum; no universal smoothness claim.
+
+Final190inputs/1,760,035bytes/BUILD_ID `aa8d66aed1327592fde2b075ca3bc5db78b227bae1d70ccb31d93863894a0fd4`,414tests/36files/root/both builds. Conservative offline SSR+root/polyfill/dynamic graph12JS1,740,889raw/493,291estimated-gzip bytes;2CSS18,280raw/5296gzip;≤700KiB script target passes for this graph, photos additional. No observed production transfer/paint/LCP/INP/cold-network/physical/native-heap proof. Review4320 stays distinct from production output; no extra listener. N below is historical.
+
+## Historical RM-015N glass and section-motion scenario
 
 [N actual evidence](../validation/RM-015N.md) owns current measurements. Reflection capture uses one128-face PMREM generated locally once before reveal; authored daylight texture256square; transmission capture scale.35 of an already≤2million-pixel renderer (≤245,000capture pixels). No external HDR/image fetch, live cube-camera loop or animation-off setting. Final Windows dev1280×720 three fresh-document/warm-asset runs have69/68/69startup intervals, preparation169.7/176.9/165.6ms before reveal, visible p9516.9/16.8/17.2ms/max23/26.2/26.8ms. Named p95≤33.4/max≤50ms local targets pass; total cold load/paint/physical GPU remains unmeasured. Added physical glass raises preparation cost and representative draws from M78/4geometries/7textures to137/5/10. Three separate warm moves (two forward, one reverse),37intervals each: p9516.9/17/16.9ms,max16.9/17.6/16.9ms. First.25 sample includes a preceding resize, recorded separately. Three entry/Back cycles retain0/1canvas and stable5/10counts; no driver/native-heap proof.13viewport hero/end bounds pass, short568×320 cue remains reachable below fold.
 

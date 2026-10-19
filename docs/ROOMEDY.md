@@ -2,7 +2,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-015A–M committed; owner-requested RM-015N glass/reveal/clean smooth navigation correction locally implemented and validated; actual visual review pending and RM-016 Planned
+**Stage:** RM-015A–N committed; owner-selected RM-015O warm photographic/material background implemented/locally verified; actual visual review pending and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -173,6 +173,8 @@ Research uses official examples/sources in [the landing register](references/lan
 The landing may initialize its own bounded client-loaded Three/R3F scene and reuse existing finite furniture/surface definitions, but never the editor controller, session or provider. Latest [RM-015N](tickets/RM-015N-refine-landing-glass-and-scroll-navigation.md) removes the owner-rejected flat SVG starting room: readable content and warm ambient background remain during loading/graphics failure, then only the actual3D room is revealed. Prepare a bounded physical glass environment/transmission pass and a genuine window aperture without external assets. Upload/compile/warm the finite scene and exact initial pose before revealing the moving canvas; no arbitrary delay. Ready entrances settle within five seconds; scroll-driven choreography follows the visitor without hijacking scroll or suppressing motion. Dispose owned resources/listeners/frames and keep performance evidence scenario-specific. Actual owner visual approval and later quality/security/external checkpoints remain separate.
 
 Section actions keep the URL clean and animate through a finite interruptible journey; incoming legacy fragments are cleaned with framework history state retained. Manual wheel/touch scroll stays native. How it works has a beige animated hover/focus underline, and the hero uses a generous circular-arrow Explore the room cue. Remove exact No account needed. copy from the landing and entry; no change to account-free access. Preserve liked warm text backgrounds/feathered edges, not the rejected flat initial furnishings.
+
+Latest [RM-015O](tickets/RM-015O-create-a-warm-photographic-landing-background.md) replaces the empty flat landing backdrop with owner-selected warm interior photography + textures. Two verified free photographs, four locally optimized responsive crops, warm wood/linen/plaster atmosphere and daylight/shadow gradients sit behind the prominent animated room. Keep the liked translucent text treatment/feathered seams, N glass/navigation/cue and original palette/brand; no gallery, filler copy, shop features or competing initial SVG preview. Photographs are decorative inspiration, not visitor-room reconstruction. Reuse the existing bounded scroll measurement for crossfade/translation; no new scene resources, animation loop, canonical writes or external runtime image service. Source/licence/bytes live in [research](references/landing-background-research-2026-10-19.md) and [asset provenance](../apps/frontend/public/landing/LICENSES.md). Actual result approval remains separate.
 
 ### 4.2 Progressive entry
 
@@ -1302,8 +1304,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Wait for the actual owner visual decision on RM-015N at http://127.0.0.1:4320/. Validated exact24-path local checkpoint is authorized; no inferred result approval. Guide goal remains paused; RM-016 Planned and no external authority.
-Active ticket: RM-015N
+Next action: Complete authorized exact21-path local RM-015O checkpoint and present actual hot-reloaded4320 landing/screenshot for owner visual feedback. Await actual visual decision; keep guide goal paused, RM-016 and later quality/security pending; preserve performance/motion priority and no extra ports/paid/deploy/push/delegation.
+Active ticket: RM-015O
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1328,7 +1330,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T14:56:22+00:00",
+  "updated_at": "2026-10-19T15:20:59+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1496,13 +1498,13 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "LANDING_VISUAL_REVIEW": {
-      "value": "RM-015N physical window transmission/reflection/aperture, removed rejected flat initial SVG room, clean URL450–1050ms interruptible section/skip journeys, legacy fragment cleanup preserving Next history, beige underline/circular cue and removed exact account sentence. Preserved liked warm translucent text style and room choreography. Final185inputs/1,239,238bytes/BUILD_ID8e70695c2cee49e613961da3b6609c924abdadadc6250ba29909782de017677c;414tests/36files/root/both builds, actual13-size/native keyboard/legacy/manual interruption/3entry-Back checks, startup maxima23/26.2/26.8ms, read-only pass1 clean/356local links. Exact24-path local checkpoint prepared; actual result approval absent and physical/hover/AT/native heap/production paint/external proof remains separate.",
-      "source": "human:current-chat/2026-10-19/glass-clean-scroll-underline-first-reveal-cue; docs/validation/RM-015N.md",
+      "value": "RM-015O owner-selected warm local interior photographs/material atmosphere implemented;414tests/36files/root/both builds pass;190inputs/1760035bytes/BUILD_IDaa8d66aed1327592fde2b075ca3bc5db78b227bae1d70ccb31d93863894a0fd4. Actual13-size/photo-ready/3startup/3warm moves/clean section-legacy-skip/entryBack evidence in docs/validation/RM-015O.md. Exact21-path local checkpoint next; actual owner visual decision pending, guide goal paused and RM-016 Planned.",
+      "source": "docs/validation/RM-015O.md; human:current-chat/2026-10-19/selected-warm-interior-photography-textures",
       "confidence": "confirmed"
     },
     "LIVE_REVIEW_URL": {
-      "value": "http://127.0.0.1:4320/ is the sole hot-reloaded browser URL, same-origin API behind existing private4321; extra4390/4391 trees/listeners stopped. Production artifact evidence is separate; never create new review ports. Preserve original unsaved editor tab.",
-      "source": "human:current-chat/2026-10-19/one-unified-hot-reloaded-port; docs/validation/RM-015M.md",
+      "value": "http://127.0.0.1:4320/ sole browser URL; existing private4321 proxy;4390/4391 stopped; original old-origin editor tab preserved. Development review is distinct from exact production artifact.",
+      "source": "docs/validation/RM-015O.md",
       "confidence": "confirmed"
     }
   },
@@ -1512,8 +1514,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015N",
-  "next_action": "Wait for the actual owner visual decision on RM-015N at http://127.0.0.1:4320/. Validated exact24-path local checkpoint is authorized; no inferred result approval. Guide goal remains paused; RM-016 Planned and no external authority.",
+  "active_ticket": "RM-015O",
+  "next_action": "Complete authorized exact21-path local RM-015O checkpoint and present actual hot-reloaded4320 landing/screenshot for owner visual feedback. Await actual visual decision; keep guide goal paused, RM-016 and later quality/security pending; preserve performance/motion priority and no extra ports/paid/deploy/push/delegation.",
   "phases": [
     {
       "id": "01-docs",
@@ -1928,14 +1930,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/tickets/RM-015M-integrate-landing-content-into-the-room.md; docs/commit-plans/RM-015M.md: exact22 paths, direct owner full-scene scope and three measured old entrances with54.7–72ms maxima.",
         "docs/validation/RM-015M.md; docs/design/visual-review.md: final183inputs/1,232,196bytes/BUILD_ID3a6e49439c60a76d2de5be606498c6d45a2b44e5d6a1b36910076e078b01ec36,412tests/35files/root/both builds; purposeful clear grounded furniture paths, preserved warm text backgrounds with feathered seams; actual nine-size/short/native forward/reverse/hash-entry-back and3prepared startup runs; read-only pass2 clean. Sole browser URL4320, private4321 and stopped4390/4391. Exact22-path local checkpoint, actual owner decision pending.",
         "docs/tickets/RM-015N-refine-landing-glass-and-scroll-navigation.md; docs/commit-plans/RM-015N.md: exact22-path direct owner refinement planned before source edits.",
-        "docs/validation/RM-015N.md; docs/design/visual-review.md: final185inputs/1,239,238bytes/BUILD_ID8e70695c2cee49e613961da3b6609c924abdadadc6250ba29909782de017677c,414tests/36files/root/both builds; glass/depth, no flat initial room, clean smooth section/skip/legacy navigation, beige underline/refined cue/account-copy removal. Actual13sizes/3startup/3entryBack cycles, measured local material cost and read-only pass1 clean. Exact24-path checkpoint; actual owner visual decision pending."
+        "docs/validation/RM-015N.md; docs/design/visual-review.md: final185inputs/1,239,238bytes/BUILD_ID8e70695c2cee49e613961da3b6609c924abdadadc6250ba29909782de017677c,414tests/36files/root/both builds; glass/depth, no flat initial room, clean smooth section/skip/legacy navigation, beige underline/refined cue/account-copy removal. Actual13sizes/3startup/3entryBack cycles, measured local material cost and read-only pass1 clean. Exact24-path checkpoint; actual owner visual decision pending.",
+        "docs/tickets/RM-015O-create-a-warm-photographic-landing-background.md; docs/commit-plans/RM-015O.md: exact21-path owner-selected warm photographic background, local licensed crops and bounded existing motion planned before feature edits.",
+        "docs/validation/RM-015O.md; docs/design/visual-review.md: final190inputs/1760035bytes/BUILD_IDaa8d66aed1327592fde2b075ca3bc5db78b227bae1d70ccb31d93863894a0fd4,414tests/36files/root/both builds; licensed responsive515164byte background, actual13-size/photo-ready/3startup/3warm moves/clean section-legacy-skip/entryBack evidence and clean whole-ticket read-only pass1. Exact21-path local checkpoint; actual owner visual approval pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "can the window use good glass texture? ... looks too cartoonish ... remove any routes like this ... scroll is SMOOTh not instant ... on hover for how it works animate a beige underline ... remove this weird starting screen ... initial furniture look weird ... remove No account needed. and this has to be way better designed",
-        "source": "human:current-chat/2026-10-19/glass-clean-smooth-scroll-underline-first-reveal-cue",
-        "scope": "Implement RM-015N landing glass/reveal/navigation/cue and exact copy refinement under the existing local execution/commit loop. Preserve liked text background style, motion and one app URL4320. No result approval, RM-016, delegation or paid/external authority.",
-        "recorded_at": "2026-10-19T14:39:37+00:00"
+        "quote": "What can we do about the white background? It feels a bit like it is empty ... a really cool background ... pictures of furniture or something? Warm interior photography + textures (Recommended)",
+        "source": "human:current-chat/2026-10-19/empty-background-and-selected-warm-interior-photography-textures",
+        "scope": "Implement RM-015O researched local photographic/material background while preserving the animated room and liked palette/text treatment. Existing local execute/validate/commit loop only; no actual visual approval, new app ports, delegation or paid/external authority.",
+        "recorded_at": "2026-10-19T15:05:51+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -1982,6 +1986,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/glass-clean-smooth-scroll-underline-first-reveal-cue",
             "scope": "Implement RM-015N landing glass/reveal/navigation/cue and exact copy refinement under the existing local execution/commit loop. Preserve liked text background style, motion and one app URL4320. No result approval, RM-016, delegation or paid/external authority.",
             "recorded_at": "2026-10-19T14:39:37+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "What can we do about the white background? It feels a bit like it is empty ... a really cool background ... pictures of furniture or something? Warm interior photography + textures (Recommended)",
+            "source": "human:current-chat/2026-10-19/empty-background-and-selected-warm-interior-photography-textures",
+            "scope": "Implement RM-015O researched local photographic/material background while preserving the animated room and liked palette/text treatment. Existing local execute/validate/commit loop only; no actual visual approval, new app ports, delegation or paid/external authority.",
+            "recorded_at": "2026-10-19T15:05:51+00:00"
           }
         }
       ]

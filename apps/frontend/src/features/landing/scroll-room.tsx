@@ -2,6 +2,7 @@
 import { Component, useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import type { ScrollTarget } from './scroll-motion';
 import { boundedProgress } from './scroll-motion';
 import styles from './landing.module.css';
@@ -44,6 +45,17 @@ export function ScrollRoom() {
       target.current.progress = boundedProgress(
         -rect.top /
           Math.max(1, rect.height - document.documentElement.clientHeight),
+      );
+      const progress = target.current.progress,
+        material = Math.sin(progress * Math.PI);
+      element.style.setProperty('--atmosphere-y', `${progress * -36}px`);
+      element.style.setProperty(
+        '--bedroom-alpha',
+        String(0.56 - material * 0.28),
+      );
+      element.style.setProperty(
+        '--material-alpha',
+        String(0.14 + material * 0.34),
       );
       for (const chapter of journey.querySelectorAll<HTMLElement>(
         '[data-room-chapter]',
@@ -90,6 +102,49 @@ export function ScrollRoom() {
   }, []);
   return (
     <div ref={stage} className={styles.stage}>
+      <div
+        className={styles.atmosphere}
+        aria-hidden="true"
+        data-landing-atmosphere
+      >
+        <picture className={styles.bedroomPhoto}>
+          <source
+            media="(max-width: 600px)"
+            srcSet="/landing/bedroom-narrow.webp"
+          />
+          <Image
+            src="/landing/bedroom-wide.webp"
+            alt=""
+            fill
+            unoptimized
+            sizes="100vw"
+            loading="eager"
+            fetchPriority="high"
+            className={styles.photo}
+            onError={(event) => {
+              event.currentTarget.hidden = true;
+            }}
+          />
+        </picture>
+        <picture className={styles.materialPhoto}>
+          <source
+            media="(max-width: 600px)"
+            srcSet="/landing/material-narrow.webp"
+          />
+          <Image
+            src="/landing/material-wide.webp"
+            alt=""
+            fill
+            unoptimized
+            sizes="100vw"
+            className={styles.photo}
+            onError={(event) => {
+              event.currentTarget.hidden = true;
+            }}
+          />
+        </picture>
+        <div className={styles.daylight} />
+      </div>
       <div
         className={styles.roomVisual}
         role={ready && !lost ? 'img' : undefined}

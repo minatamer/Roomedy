@@ -1,6 +1,6 @@
 # Roomedy motion and product-language policy
 
-19 October 2026. Direct owner priority: animations are the highest interaction priority throughout Roomedy, especially in 3D. The pre-review revision queue extends through RM-015M; the owner selected a scroll-driven assembling/rotating/opening furniture landing. Actual owner visual acceptance remains pending.
+19 October 2026. Direct owner priority: animations are the highest interaction priority throughout Roomedy, especially in 3D. The pre-review revision queue extends through RM-015O; the owner selected a scroll-driven assembling/rotating/opening furniture landing. Actual owner visual acceptance remains pending.
 
 ## Choreography
 
@@ -46,3 +46,7 @@ M owner refinement retains camera/wall motion while furniture itself slides and 
 ## Current N section and reveal refinement
 
 [RM-015N](../tickets/RM-015N-refine-landing-glass-and-scroll-navigation.md) removes the flat SVG room shown before3D readiness. Warm SSR content remains, then the actual prepared scene fades in; no competing furniture artwork, arbitrary wait or motion suppression. Glass reflection/transmission preparation stays finite before reveal. Section/skip buttons use one450–1050ms cubic journey from the displayed scroll position, cancel/retarget on a new request, and retire on wheel/touch/pointer/key/resize/hidden/unmount. Per-frame writes change only scroll position. Normal manual scrolling stays native. Native behavior:smooth jumped in IAB, motivating this bounded presentation owner. Clean legacy fragments with Next history state preserved; no section hash routes. Beige underline and circular-arrow hover/focus geometry interpolate in280ms.
+
+## Current O photographic background motion
+
+[O](../tickets/RM-015O-create-a-warm-photographic-landing-background.md) reuses ScrollRoom's passive queued measurement to set only bounded CSS crossfade/translation variables. Photography moves0→−36px across the whole journey, constant1.06scale; bedroom alpha.28–.56 and material alpha.14–.48 ease through420ms while the existing room choreography remains independent. Reverse/interruptible normal scroll retraces the presentation, with no new loop, perpetual animation, React/frame updates, canonical writes or GPU material/texture changes. Static colour filters/light masks do not animate their filter kernels. Ready3D entrance/cleanup and finite N section journeys remain intact.

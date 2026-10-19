@@ -1,7 +1,7 @@
 .landing {
   position: relative;
   overflow: clip;
-  background: var(--ivory);
+  background: #d6c4a6;
 }
 .header {
   position: absolute;
@@ -26,7 +26,56 @@
   inset: 0;
 }
 .roomVisual {
-  background: radial-gradient(ellipse at 72% 45%, #dfd2b652, transparent 68%);
+  background: radial-gradient(ellipse at 68% 45%, #eadbb52e, transparent 70%);
+}
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  background:
+    radial-gradient(ellipse at 15% 65%, #bd9b6f82, transparent 60%),
+    linear-gradient(115deg, #d7c3a3, #e5d6bc 48%, #c4a77f);
+}
+.bedroomPhoto,
+.materialPhoto {
+  position: absolute;
+  inset: -48px;
+  transform: translate3d(0, var(--atmosphere-y, 0px), 0) scale(1.06);
+  transition: opacity 420ms ease;
+}
+.bedroomPhoto {
+  opacity: var(--bedroom-alpha, 0.56);
+  mask-image: linear-gradient(100deg, #000 5%, #000c 40%, #0004 75%, #0008);
+}
+.materialPhoto {
+  opacity: var(--material-alpha, 0.14);
+  mask-image: linear-gradient(90deg, #000, #000d 38%, transparent 82%);
+}
+.photo {
+  object-fit: cover;
+  object-position: center 58%;
+  filter: saturate(0.65) sepia(0.1);
+}
+.daylight {
+  position: absolute;
+  inset: -20%;
+  background:
+    linear-gradient(
+      123deg,
+      transparent 35%,
+      #fff2c14a 36%,
+      #fff2c112 48%,
+      transparent 49%
+    ),
+    linear-gradient(
+      123deg,
+      transparent 53%,
+      #5d422b12 54%,
+      #5d422b12 59%,
+      transparent 60%
+    ),
+    radial-gradient(ellipse at 60% 18%, #fff1cf55, transparent 58%);
+  transform: translate3d(0, var(--atmosphere-y, 0px), 0);
 }
 .canvas {
   opacity: 0;
@@ -81,10 +130,10 @@
   pointer-events: none;
   background: linear-gradient(
     90deg,
-    #f4efe5f5 0%,
-    #f4efe5e8 25%,
-    #f4efe5b8 43%,
-    #f4efe52b 65%,
+    #efe1cadc 0%,
+    #efe1cac9 25%,
+    #efe1ca9e 43%,
+    #efe1ca20 65%,
     transparent 90%
   );
 }
@@ -212,10 +261,10 @@
 .right::before {
   background: linear-gradient(
     270deg,
-    #f4efe5f5,
-    #f4efe5e8 25%,
-    #f4efe5a8 43%,
-    #f4efe52b 65%,
+    #efe1cadc,
+    #efe1cac9 25%,
+    #efe1ca9e 43%,
+    #efe1ca20 65%,
     transparent 90%
   );
 }
@@ -279,7 +328,7 @@
   align-items: center;
 }
 .why::before {
-  background: linear-gradient(0deg, #f4efe5f5, #f4efe5d8 65%, #f4efe588);
+  background: linear-gradient(0deg, #e7d7bbf0, #e7d7bbcf 65%, #e7d7bb88);
 }
 .valueContent {
   position: relative;
@@ -359,9 +408,9 @@
 .invitation::before {
   background: radial-gradient(
     ellipse at center,
-    #f4efe5f5 15%,
-    #f4efe5dc 44%,
-    #f4efe550 80%,
+    #eadbc1e8 15%,
+    #eadbc1c7 44%,
+    #eadbc150 80%,
     transparent
   );
 }
@@ -391,7 +440,7 @@
   padding: 30px 24px 40px;
   display: flex;
   justify-content: center;
-  background: linear-gradient(to bottom, transparent, #f4efe5b8);
+  background: linear-gradient(to bottom, transparent, #d8c5a7c9);
 }
 @media (max-width: 899px) {
   .chapter {
@@ -403,19 +452,19 @@
   .chapter::before {
     background: linear-gradient(
       90deg,
-      #f4efe5e8,
-      #f4efe5cf 40%,
-      #f4efe588 70%,
-      #f4efe54a
+      #efe1cadc,
+      #efe1cabe 40%,
+      #efe1ca78 70%,
+      #efe1ca35
     );
   }
   .right::before {
     background: linear-gradient(
       270deg,
-      #f4efe5e8,
-      #f4efe5cf 40%,
-      #f4efe588 70%,
-      #f4efe54a
+      #efe1cadc,
+      #efe1cabe 40%,
+      #efe1ca78 70%,
+      #efe1ca35
     );
   }
   .hero h1 {
@@ -440,7 +489,7 @@
     font-size: 20px;
   }
   .why::before {
-    background: #f4efe5da;
+    background: #e7d7bbd4;
   }
 }
 @media (max-width: 600px) {
@@ -458,10 +507,10 @@
   .right::before {
     background: linear-gradient(
       0deg,
-      #f4efe5ed 12%,
-      #f4efe5d4 50%,
-      #f4efe580 78%,
-      #f4efe538
+      #efe1cae6 12%,
+      #efe1cacc 50%,
+      #efe1ca78 78%,
+      #efe1ca24
     );
   }
   .hero {
@@ -558,7 +607,7 @@
     font-size: 9px;
   }
   .invitation::before {
-    background: #f4efe5b8;
+    background: #eadbc1b8;
   }
   .footer {
     padding-block: 25px 35px;
