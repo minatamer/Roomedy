@@ -29,6 +29,7 @@ class GraphicsBoundary extends Component<
 
 export function ScrollRoom() {
   const stage = useRef<HTMLDivElement>(null),
+    photo = useRef<HTMLPictureElement>(null),
     target = useRef<ScrollTarget>({ progress: 0, visible: true });
   const [ready, setReady] = useState(false),
     [lost, setLost] = useState(false);
@@ -38,7 +39,12 @@ export function ScrollRoom() {
     const element = stage.current,
       journey = element?.closest<HTMLElement>('[data-landing-journey]');
     if (!element || !journey) return;
-    let frame = 0;
+    const chapters = Array.from(
+      journey.querySelectorAll<HTMLElement>('[data-room-chapter]'),
+      (element) => ({ element, y: '', opacity: '' }),
+    );
+    let frame = 0,
+      photoTransform = '';
     const measure = () => {
       frame = 0;
       const rect = journey.getBoundingClientRect();
@@ -46,35 +52,33 @@ export function ScrollRoom() {
         -rect.top /
           Math.max(1, rect.height - document.documentElement.clientHeight),
       );
-      const progress = target.current.progress,
-        material = Math.sin(progress * Math.PI);
-      element.style.setProperty('--atmosphere-y', `${progress * -36}px`);
-      element.style.setProperty(
-        '--bedroom-alpha',
-        String(0.56 - material * 0.28),
-      );
-      element.style.setProperty(
-        '--material-alpha',
-        String(0.14 + material * 0.34),
-      );
-      for (const chapter of journey.querySelectorAll<HTMLElement>(
-        '[data-room-chapter]',
-      )) {
-        const bounds = chapter.getBoundingClientRect(),
-          distance =
-            (bounds.top +
-              Math.min(bounds.height, document.documentElement.clientHeight) /
-                2 -
-              document.documentElement.clientHeight / 2) /
-            Math.max(1, document.documentElement.clientHeight);
-        chapter.style.setProperty(
-          '--copy-y',
-          `${Math.max(-16, Math.min(16, distance * 12))}px`,
-        );
-        chapter.style.setProperty(
-          '--copy-opacity',
-          String(1 - Math.min(0.12, Math.abs(distance) * 0.08)),
-        );
+      // Finish geometry reads before any style writes can invalidate layout.
+      const height = document.documentElement.clientHeight,
+        positions = chapters.map((chapter) => {
+          const bounds = chapter.element.getBoundingClientRect();
+          return {
+            chapter,
+            distance:
+              (bounds.top + Math.min(bounds.height, height) / 2 - height / 2) /
+              Math.max(1, height),
+          };
+        }),
+        transform = `translate3d(0, ${target.current.progress * -36}px, 0)`;
+      if (photo.current && transform !== photoTransform) {
+        photo.current.style.transform = transform;
+        photoTransform = transform;
+      }
+      for (const { chapter, distance } of positions) {
+        const y = `${Math.max(-16, Math.min(16, distance * 12))}px`,
+          opacity = String(1 - Math.min(0.12, Math.abs(distance) * 0.08));
+        if (y !== chapter.y) {
+          chapter.element.style.setProperty('--copy-y', y);
+          chapter.y = y;
+        }
+        if (opacity !== chapter.opacity) {
+          chapter.element.style.setProperty('--copy-opacity', opacity);
+          chapter.opacity = opacity;
+        }
       }
       if (target.current.visible) target.current.wake?.();
     };
@@ -101,13 +105,17 @@ export function ScrollRoom() {
     };
   }, []);
   return (
-    <div ref={stage} className={styles.stage}>
+    <div
+      ref={stage}
+      className={styles.stage}
+      data-room-status={lost ? 'unavailable' : ready ? 'ready' : 'loading'}
+    >
       <div
         className={styles.atmosphere}
         aria-hidden="true"
         data-landing-atmosphere
       >
-        <picture className={styles.bedroomPhoto}>
+        <picture ref={photo} className={styles.bedroomPhoto}>
           <source
             media="(max-width: 600px)"
             srcSet="/landing/bedroom-narrow.webp"
@@ -119,24 +127,7 @@ export function ScrollRoom() {
             unoptimized
             sizes="100vw"
             loading="eager"
-            fetchPriority="high"
-            className={styles.photo}
-            onError={(event) => {
-              event.currentTarget.hidden = true;
-            }}
-          />
-        </picture>
-        <picture className={styles.materialPhoto}>
-          <source
-            media="(max-width: 600px)"
-            srcSet="/landing/material-narrow.webp"
-          />
-          <Image
-            src="/landing/material-wide.webp"
-            alt=""
-            fill
-            unoptimized
-            sizes="100vw"
+            fetchPriority="low"
             className={styles.photo}
             onError={(event) => {
               event.currentTarget.hidden = true;

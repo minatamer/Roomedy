@@ -1,0 +1,5 @@
+# RM-015Q — Add restrained warm room lighting
+
+Status: **Planned; held behind RM-015P performance correction and actual feedback**. This records the prior direct request, not implementation or a new approval.
+
+Owner wants warm lighting inside the landing room, dynamic lighting with shadows, without overdoing it. Latest instruction explicitly prioritizes fixing the lag introduced by background additions first. Preserve this request after P. Before implementation allocate exact paths and plan restrained daylight/interior warmth through existing demand-frame/shadow ownership; investigate reusing the existing single1024shadow map before adding lights/passes. Keep original palette, floor/furniture colour legibility, glass, responsive room/copy and performance. No pulsing/bloom/perpetual loop, settings, paid assets, editor or semantic-room changes. Measure startup/continuous input/resource cost against P, validate to clean, exact local checkpoint and present actual result. Actual owner visual result and external/device/paint/native-memory proof stay separate. RM-016 remains behind the overall visual gate.

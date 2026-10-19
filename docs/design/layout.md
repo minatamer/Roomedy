@@ -30,3 +30,10 @@ N supersedes M's dimensional SVG fallback: the owner rejected its initial furnit
 ## Current O photographic atmosphere
 
 The owner selected warm interior photography + textures after finding the flat background empty. Use a coherent full-viewport photographic/material field behind the3D room, not a new gallery or competing panel. The liked warm translucent copy shading/rules and feathered outer seams remain, warmed to oat/sand for the new imagery. Local decorative bedroom/linen/oak and plaster/wood/daylight crops supply material detail; soft masks, adequate protected text contrast and visible room geometry control the hierarchy. Responsive wide/narrow pictures have fixed absolute geometry and no layout shift.48px overscan safely covers the bounded36px travel even on short screens. Gradients remain useful if images/graphics fail, without the rejected initial SVG room. Keep N clean smooth controls/cue and brand/icons.
+
+
+## Current P background and cue —19October2026
+
+P retains the original oak/linen photo and warm substrate as one responsive layer; retire material photo crops and live photo masks/filters/crossfade. Keep liked feathered chapter shading/rules. A single leaf transform moves within48px overscan; viewport-sized static daylight avoids140% moving surfaces. The Explore the room group is a hero flex child outside transformed copy, align-self:center, retaining natural flow and spacing on short/phone screens. No absolute viewport positioning or overlap with the CTA.
+
+P follow-up: cue is positioned above chapter::before shading rather than beneath it; stronger cocoa label/arrow and oat circle restore clarity. Header Start designing has a landing-scoped frosted fill, highlight and one static8px backdrop blur bounded to its small existing button. No viewport blur. Owner-selected readiness-driven hero/cue fade changes opacity, not layout; header and focus/no-JS fallback remain useful.

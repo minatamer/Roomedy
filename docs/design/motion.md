@@ -50,3 +50,10 @@ M owner refinement retains camera/wall motion while furniture itself slides and 
 ## Current O photographic background motion
 
 [O](../tickets/RM-015O-create-a-warm-photographic-landing-background.md) reuses ScrollRoom's passive queued measurement to set only bounded CSS crossfade/translation variables. Photography moves0→−36px across the whole journey, constant1.06scale; bedroom alpha.28–.56 and material alpha.14–.48 ease through420ms while the existing room choreography remains independent. Reverse/interruptible normal scroll retraces the presentation, with no new loop, perpetual animation, React/frame updates, canonical writes or GPU material/texture changes. Static colour filters/light masks do not animate their filter kernels. Ready3D entrance/cleanup and finite N section journeys remain intact.
+
+
+## Current P performance-first motion —19October2026
+
+P preserves full3D/copy/section motion and36px photo parallax while removing redundant photographic crossfade/filter/mask work. Only the picture leaf changes transform; one will-change:transform hint, no per-frame stage variables or new loop. Geometry reads finish before changed-only chapter style writes. Real upload/compile/first-shadow readiness stays; reveal fade220ms instead of380ms, no fixed wait. Lighting/shadows remain unchanged until held Q. Prior O combined-photo motion is historical.
+
+Owner follow-up in P: real room readiness/failure now controls hero/cue opacity,360ms fade under media(scripting:enabled), with no fixed timer or new loop. Stage status derives existing ready/lost state. Keyboard focus reveals copy/cue during loading; no-JS/unsupported-media keeps SSR visible. Header remains available. Keep the220ms actual room reveal, not an invented guarantee of instant WebGL.

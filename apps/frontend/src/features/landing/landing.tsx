@@ -43,22 +43,19 @@ export function Landing() {
                 <Link className="button primary" href="/demo">
                   Start designing <span aria-hidden="true">↗</span>
                 </Link>
-                <SectionScroll
-                  className={styles.scrollCue}
-                  target="how-it-works"
-                >
-                  <span className={styles.cueArrow} aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M12 5v14m-5-5 5 5 5-5"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                      />
-                    </svg>
-                  </span>
-                  <span>Explore the room</span>
-                </SectionScroll>
               </div>
+              <SectionScroll className={styles.scrollCue} target="how-it-works">
+                <span className={styles.cueArrow} aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 5v14m-5-5 5 5 5-5"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                    />
+                  </svg>
+                </span>
+                <span>Explore the room</span>
+              </SectionScroll>
             </section>
             <section
               className={styles.chapter}
