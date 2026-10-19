@@ -1,6 +1,6 @@
 # RM-015B — Animate the landing room
 
-Status: **Planned**
+Status: **Complete locally — actual joint visual/physical evidence pending**
 Planning date: **19 October 2026**
 Owner todo: **2/10 — 3D-related landing hero** (ordered by implementation dependencies; coverage in queue)
 Depends on: [RM-015A](RM-015A-establish-motion-first-interactions.md)
@@ -18,17 +18,18 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Exact proposed implementation ownership
 
 - `apps/frontend/src/features/landing/room-story.tsx`
+- `apps/frontend/src/features/landing/room-diorama.tsx`
 - `apps/frontend/src/features/landing/landing.tsx`
 - `apps/frontend/src/app/globals.css`
 - `docs/commit-plans/RM-015B.md`, `docs/validation/RM-015B.md`, this ticket, and canonical progress through its helper.
 
 ## Acceptance criteria
 
-- [ ] Hero presents a convincing dimensional room reveal and coordinated furniture rearrangement; retain the real supported sample geometry and readable message/CTA.
-- [ ] Automatic introduction finishes within five seconds; user-triggered preview/Apply/Undo replay smooth movement. Scroll CTA moves smoothly and lands on its actual section.
-- [ ] Hero remains lightweight, responsive and independent of the heavy studio controller/provider. No runtime remote media/assets or invented live response.
-- [ ] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
-- [ ] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
+- [x] Hero presents a convincing dimensional room reveal and coordinated furniture rearrangement; retain the real supported sample geometry and readable message/CTA.
+- [x] Automatic introduction finishes within five seconds; user-triggered preview/Apply/Undo replay smooth movement. Scroll CTA moves smoothly and lands on its actual section.
+- [x] Hero remains lightweight, responsive and independent of the heavy studio controller/provider. No runtime remote media/assets or invented live response.
+- [x] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
+- [x] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
 
 ## Verification
 
@@ -45,3 +46,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Handoff
 
 Record real commands/results and findings dispositions in `docs/validation/RM-015B.md`; no source changes during validation. Existing exact-path per-ticket local commit authority remains scoped to validated owned work. Next packet is RM-015C.
+
+## Refined implementation before edits
+
+See [exact allocation](../commit-plans/RM-015B.md). Build a dimensional SVG diorama from the shared pure procedural furniture parts and canonical transforms, preserving the existing five-second schedule. The old flat RoomPlan has no outside consumers. The landing keeps no WebGL/studio worker/provider and introduces no new asset/network dependency. Active UI controls interrupt the automatic schedule, with whole-object transforms interpolated and a fixed viewBox so text/CTA never jump.
+
+## Actual local outcome
+
+[Receipt](../validation/RM-015B.md): dimensional hero with shared procedural geometry, target footprints, finite coordinated reveal and interruptible Preview/Apply/Undo, reachable smooth section CTA, actual1280x720/390x844 evidence, settled346-test/seven-boundary/root/build gate and clean read-only pass1. No studio canvas/provider or external asset dependency. Next C remains separate implementation.

@@ -208,15 +208,6 @@ h1:focus {
   border: 1px solid #cbb99d;
   border-radius: 20px;
 }
-.room-plan {
-  display: block;
-  width: 100%;
-  height: 360px;
-  padding: 17px 4px 10px;
-}
-.room-piece {
-  transition: transform 0.65s cubic-bezier(0.2, 0.75, 0.2, 1);
-}
 .assistant-note {
   position: absolute;
   left: 22px;
@@ -553,9 +544,6 @@ h1:focus {
   background: #ece1cd;
   border-radius: 15px;
 }
-.sample-plan .room-plan {
-  height: 330px;
-}
 .entry-summary {
   flex: 1;
 }
@@ -605,9 +593,6 @@ h1:focus {
     min-height: 535px;
     padding-block: 10px 35px;
   }
-  .room-plan {
-    height: 320px;
-  }
   .hero h1 {
     font-size: 62px;
   }
@@ -631,9 +616,6 @@ h1:focus {
   }
   .story-card {
     padding: 20px 18px 0;
-  }
-  .room-plan {
-    height: 330px;
   }
   .story-bottom {
     margin-inline: -18px;
@@ -717,9 +699,6 @@ h1:focus {
   }
   .story-card {
     padding: 18px 20px 0;
-  }
-  .room-plan {
-    height: 320px;
   }
   .story-bottom {
     display: flex;
@@ -870,9 +849,6 @@ h1:focus {
   .sample-plan {
     width: 100%;
   }
-  .sample-plan .room-plan {
-    height: 300px;
-  }
   .entry-summary {
     width: 100%;
   }
@@ -906,9 +882,6 @@ h1:focus {
   }
   .story-topline > span:last-child {
     display: none;
-  }
-  .room-plan {
-    height: 290px;
   }
   .story-bottom {
     display: block;
@@ -959,4 +932,74 @@ button:active:not(:disabled),
 }
 .choice-card:focus-visible {
   transform: translateY(-3px);
+}
+
+.room-diorama {
+  width: 100%;
+  height: 335px;
+  display: block;
+  overflow: visible;
+  padding-block: 12px;
+}
+.diorama-piece {
+  transition: transform 700ms cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+.diorama-floor {
+  animation: diorama-arrive 650ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+.diorama-walls {
+  animation: diorama-rise 850ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+.diorama-object {
+  animation: diorama-arrive 850ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+.hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 44px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.hero-scroll span {
+  display: inline-block;
+  transition: transform 250ms cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+.hero-scroll:hover span,
+.hero-scroll:focus-visible span {
+  transform: translateY(5px);
+}
+@keyframes diorama-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes diorama-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scaleY(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+@media (max-width: 700px) {
+  .room-diorama {
+    height: 320px;
+  }
+}
+@media (min-width: 1100px) and (max-height: 760px) {
+  .room-diorama {
+    height: 300px;
+  }
+  .hero-scroll {
+    margin-top: 4px;
+  }
 }

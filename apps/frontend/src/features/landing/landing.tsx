@@ -31,6 +31,9 @@ export function Landing() {
               Try the demo <span aria-hidden="true">↗</span>
             </Link>
             <p className="cta-note">Start with a sample. No account needed.</p>
+            <a className="hero-scroll" href="#how-it-works">
+              See how it works <span aria-hidden="true">↓</span>
+            </a>
           </div>
           <div className="hero-art">
             <RoomStory room={createRoomFixture()} />

@@ -1302,8 +1302,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: RM-015A local gate346tests/seven boundaries/builds and read-only pass1 clean. Create its authorized exact25-path checkpoint, then execute B landing animation and continue C–J clean loops before actual joint visual review. No paid/live/push/deploy/reset/delegation.
-Active ticket: RM-015B
+Next action: B settled346-test/seven-boundary/root/build gate and read-only pass1 clean; create authorized exact8-path checkpoint, then execute C interior camera travel and continue D–J clean loops before actual joint visual review. No paid/live/push/deploy/reset/delegation.
+Active ticket: RM-015C
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1328,7 +1328,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T08:13:07+00:00",
+  "updated_at": "2026-10-19T08:24:02+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1502,8 +1502,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015B",
-  "next_action": "RM-015A local gate346tests/seven boundaries/builds and read-only pass1 clean. Create its authorized exact25-path checkpoint, then execute B landing animation and continue C–J clean loops before actual joint visual review. No paid/live/push/deploy/reset/delegation.",
+  "active_ticket": "RM-015C",
+  "next_action": "B settled346-test/seven-boundary/root/build gate and read-only pass1 clean; create authorized exact8-path checkpoint, then execute C interior camera travel and continue D–J clean loops before actual joint visual review. No paid/live/push/deploy/reset/delegation.",
   "phases": [
     {
       "id": "01-docs",
@@ -1898,7 +1898,8 @@ This checklist records local work. Human approvals and unresolved external check
       },
       "evidence": [
         "docs/validation/RM-015A.md",
-        "docs/tickets/RM-015B-animate-the-landing-room.md"
+        "docs/validation/RM-015B.md",
+        "docs/tickets/RM-015C-add-smooth-interior-camera-exploration.md"
       ],
       "blockers": [],
       "approval": {
