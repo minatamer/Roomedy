@@ -2,7 +2,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** V code checkpoint e0dd545; W default welcome/smooth-tour code locally validated; actual browser/visual acceptance pending, Q held and RM-016 Planned
+**Stage:** W checkpoint9a6c6d2; X four-format exports locally verified, actual owner visual approval pending; direct photo-page corrections next, Q held and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -1318,8 +1318,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Complete pending actual T/U/V/W browser interaction and guide-motion checks once input control/manual Start evidence is available, then continue current owner visual feedback. Local code checkpoints are distinct from actual acceptance; guide paused, Q held and RM-016 Planned.
-Active ticket: RM-015W
+Next action: Checkpoint corrected X after exact root/build verification, then plan and execute latest direct photo-card/viewer/shared-glass/corner-example/capture-guide feedback as Y. Actual X/overall owner visual acceptance remains pending, guide paused, Q held and RM-016 Planned.
+Active ticket: RM-015X
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1344,7 +1344,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T18:34:21+00:00",
+  "updated_at": "2026-10-19T19:14:19+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1533,8 +1533,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015W",
-  "next_action": "Complete pending actual T/U/V/W browser interaction and guide-motion checks once input control/manual Start evidence is available, then continue current owner visual feedback. Local code checkpoints are distinct from actual acceptance; guide paused, Q held and RM-016 Planned.",
+  "active_ticket": "RM-015X",
+  "next_action": "Checkpoint corrected X after exact root/build verification, then plan and execute latest direct photo-card/viewer/shared-glass/corner-example/capture-guide feedback as Y. Actual X/overall owner visual acceptance remains pending, guide paused, Q held and RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -1966,14 +1966,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015V.md:14exact paths and deterministic doorway/opposite-quadrant/safe-motion plan before edits.",
         "docs/validation/RM-015V.md:14paths,469tests/39files/seven boundaries/root/both builds,194inputs/1539995bytes/BUILD_ID0a8b96b4f6afcba4d093684584dfedd7fb54ff32579ec306522e9c5b7ef230e7; same-door opposite-corner target and safe intended-area fallback. Read-only pass1 no actionable source findings; pure CPU timing distinct from pending actual T/U/V browser and owner visual checks.",
         "docs/commit-plans/RM-015W.md:21paths allocated before source edits; direct default-tour scope and read-only Retailor comparison.",
-        "docs/validation/RM-015W.md:21paths,496tests/40files/seven boundaries/root/assets/both builds,197inputs/1561335bytes/BUILD_ID62bea8751b242ebb505a93b513f5f48e9a4ff3ce3c5649870773493317798e8b; immediate default fresh-room welcome and real-target guide. Ten actual welcome-size observations. Medium guide-event finding independently fixed; read-only pass2 no actionable source findings. Actual T/U/V/W guided/browser motion and owner acceptance remain unverified; automated Start unchanged, no JS dialog, manual check pending."
+        "docs/validation/RM-015W.md:21paths,496tests/40files/seven boundaries/root/assets/both builds,197inputs/1561335bytes/BUILD_ID62bea8751b242ebb505a93b513f5f48e9a4ff3ce3c5649870773493317798e8b; immediate default fresh-room welcome and real-target guide. Ten actual welcome-size observations. Medium guide-event finding independently fixed; read-only pass2 no actionable source findings. Actual T/U/V/W guided/browser motion and owner acceptance remain unverified; automated Start unchanged, no JS dialog, manual check pending.",
+        "docs/commit-plans/RM-015X.md:25paths allocated before edits; snapshot GLB, branded raster-presentation PDF and semantic project preservation plan.",
+        "docs/validation/RM-015X.md:27allocated paths;525tests/42files/seven boundaries, actual four-format native downloads and JSON reimport, all latest native PDF/edge layout pages inspected, three responsive export sizes. Pass1 metadata finding independently corrected, read-only pass2 has no actionable findings. Actual owner approval/external limits stay pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "the quick tour should be on by default, but check what i did in retailor to make sure the tour is programmed and animated smoothly.",
-        "source": "human:current-chat/2026-10-19/default-tour",
-        "scope": "Execute W under existing exact local execute/validate/checkpoint loop; actual visual acceptance remains pending.",
-        "recorded_at": "2026-10-19T18:16:40+00:00"
+        "quote": "export should not in json it feels off, is it usable in json ? is there no 3d object we can export as? also i wanna be able to export a pdf portfolio of our design",
+        "source": "human:current-chat/2026-10-19/design-exports",
+        "scope": "Execute X useful3D/PDF/editorial export correction under existing exact local verification/checkpoint loop; no actual visual approval.",
+        "recorded_at": "2026-10-19T18:41:08+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2092,6 +2094,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/default-tour",
             "scope": "Execute W under existing exact local execute/validate/checkpoint loop; actual visual acceptance remains pending.",
             "recorded_at": "2026-10-19T18:16:40+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "export should not in json it feels off, is it usable in json ? is there no 3d object we can export as? also i wanna be able to export a pdf portfolio of our design",
+            "source": "human:current-chat/2026-10-19/design-exports",
+            "scope": "Execute X useful3D/PDF/editorial export correction under existing exact local verification/checkpoint loop; no actual visual approval.",
+            "recorded_at": "2026-10-19T18:41:08+00:00"
           }
         }
       ]

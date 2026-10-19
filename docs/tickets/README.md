@@ -9,7 +9,7 @@ Current instruction: execute and validate tickets in numeric order, stage/commit
 
 Owner-requested revision: incorporate lessons from the four referenced visual/manual-test chats before proceeding. Read [repository instructions](../../AGENTS.md), [feedback guidelines and their evidence](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and the [feature/review checklist](../design/REVIEW_CHECKLIST.md). These are requirements for the existing packets, not additional product features or authorization to implement.
 
-**Current 19 October steering:** RM-015A–W below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
+**Current 19 October steering:** RM-015A–X below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
 
 ## Why twenty original packets
 
@@ -60,7 +60,8 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015U](RM-015U-drag-windows-along-their-walls.md) | Drag windows along their walls | RM-015T | Code implemented/root verified; actual browser/visual checks pending |
 | [RM-015V](RM-015V-frame-the-corner-opposite-the-doorway.md) | Frame the corner opposite the doorway | RM-015U | Code implemented/root verified; actual browser/visual checks pending |
 | [RM-015W](RM-015W-start-the-quick-tour-by-default.md) | Automatic welcome and smooth, skippable quick tour | RM-015V | Code locally verified; actual guide/browser/visual checks pending |
-| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015W | Planned; held behind current owner corrections and actual feedback |
+| [RM-015X](RM-015X-export-3d-models-and-design-portfolios.md) | GLB/OBJ models, editable JSON and branded PDF portfolio | RM-015W | Locally verified; actual owner visual approval pending |
+| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015X | Planned; held behind current owner corrections and actual feedback |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |

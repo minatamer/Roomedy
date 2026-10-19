@@ -7,6 +7,7 @@ import {
   readProject,
   projectMessages,
 } from '../session/project';
+import { ExportDialog } from './export-dialog';
 import styles from './editor.module.css';
 type Decision = {
   kind: 'import' | 'reset';
@@ -72,6 +73,7 @@ export function ProjectControls({
     mounted = useRef(false);
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState(''),
+    [exporting, setExporting] = useState(false),
     [decision, setDecision] = useState<Decision | null>(null);
   useEffect(() => {
     if (decision && dialog.current && !dialog.current.open)
@@ -218,21 +220,28 @@ export function ProjectControls({
       );
       return;
     }
-    downloadRelease.current?.();
-    const url = URL.createObjectURL(
+    downloadBlob(
       new Blob([text], { type: 'application/json' }),
+      'roomedy-project.json',
     );
+  };
+  const downloadBlob = (blob: Blob, name: string) => {
+    downloadRelease.current?.();
+    const url = URL.createObjectURL(blob);
     let timer: ReturnType<typeof setTimeout> | undefined;
     const release = controller.ownResource(() => {
       clearTimeout(timer);
       URL.revokeObjectURL(url);
     });
-    if (!release) return;
+    if (!release) {
+      URL.revokeObjectURL(url);
+      return;
+    }
     downloadRelease.current = release;
     try {
       const anchor = document.createElement('a');
       anchor.href = url;
-      anchor.download = 'roomedy-project.json';
+      anchor.download = name;
       anchor.click();
       timer = setTimeout(() => {
         release();
@@ -258,11 +267,12 @@ export function ProjectControls({
         <summary>Project</summary>
         <div className={styles.projectOptions}>
           <p>
-            JSON includes Current, Before and measurement labels. No photos,
-            chat or Undo history.
+            Take your Current design with you, or save a project to edit later.
           </p>
           <div className={styles.projectFileActions}>
-            <button onClick={download}>Export project</button>
+            <button disabled={busy} onClick={() => setExporting(true)}>
+              Export
+            </button>
             <label className={styles.projectImport}>
               Import project
               <input
@@ -270,7 +280,7 @@ export function ProjectControls({
                 type="file"
                 aria-label="Import project"
                 aria-describedby={fileHintId}
-                accept=".json,application/json"
+                accept=".roomedy,.json,application/vnd.roomedy.project+json,application/json"
                 disabled={busy}
                 onChange={(e) => {
                   const file = e.currentTarget.files?.[0];
@@ -280,7 +290,7 @@ export function ProjectControls({
               />
             </label>
           </div>
-          <p id={fileHintId}>JSON · up to 1 MiB</p>
+          <p id={fileHintId}>Roomedy project · up to 1 MiB</p>
           {busy && <p role="status">Reading project…</p>}
           {message && <p role="alert">{message}</p>}
           <hr />
@@ -289,6 +299,21 @@ export function ProjectControls({
           </button>
         </div>
       </details>
+      {exporting && (
+        <ExportDialog
+          controller={controller}
+          onClose={() => {
+            setExporting(false);
+            requestAnimationFrame(() =>
+              menu.current
+                ?.querySelector('summary')
+                ?.focus({ preventScroll: true }),
+            );
+          }}
+          onProject={download}
+          onDownload={downloadBlob}
+        />
+      )}
       {decision && (
         <dialog
           ref={dialog}

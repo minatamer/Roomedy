@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Current design export:** [RM-015X](tickets/RM-015X-export-3d-models-and-design-portfolios.md), [27-path plan](commit-plans/RM-015X.md), [primary sources](references/design-export-2026-10-19.md) and [receipt](validation/RM-015X.md). Owner selects GLB, OBJ/MTL/textures ZIP, editable JSON and a warm branded PDF portfolio. Native downloads/reimport and rendered page inspection passed alongside525tests/root/both builds. Actual visual acceptance remains pending.
+
 **Current tour correction:** [RM-015W](tickets/RM-015W-start-the-quick-tour-by-default.md), [21-path plan](commit-plans/RM-015W.md), [Retailor source comparison](references/retailor-tour-2026-10-19.md) and [receipt](validation/RM-015W.md). Owner selects immediate default welcome, Start/Skip and smooth real-target guidance. Actual visual acceptance remains pending.
 
 **Current camera correction:** [RM-015V](tickets/RM-015V-frame-the-corner-opposite-the-doorway.md), [14-path plan](commit-plans/RM-015V.md), [evidence and pending native checks](validation/RM-015V.md). Corner uses the diagonal opposite of the doorway’s nearest corner, with the same selected doorway, safe intended-area fallback and unchanged continuous flight. T/U/V actual browser completion and visual approval remain pending; Q held and RM-016 Planned.

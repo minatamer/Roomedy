@@ -50,3 +50,14 @@ No option is inferred. RM-016 and later quality/security/release checkpoints awa
 
 
 New direct feedback during R preparation requests boundary-clamped furniture dragging, stable room-frame size during selection/movement, removal of redundant under-frame checks/routine acknowledgements, and removal of Your room /2D plan from the studio navbar. Those are the next S correction, not claimed as delivered or approved by this R checkpoint. Q remains held and RM-016 Planned.
+
+
+## RM-015X design exports —19 October2026
+
+Project → Export offers PDF portfolio, GLB3D model, OBJ/MTL/diffuse-texture ZIP and editable JSON. JSON retains the closed version1 Current/Before/provenance format and1MiB import ceiling; old JSON and .roomedy extensions use the same validator. PDF/model files are presentation/interchange outputs, not accepted import files or native parametric CAD/BIM. Owner format research selected both GLB and OBJ; GLB better retains PBR appearance, OBJ carries diffuse materials plus explicit metre/Y-up instructions.
+
+A single lazily loaded local job freezes accepted Current regardless of Before/proposal/camera display; it never applies a proposal or alters editor camera, selection, commands/history. Edits, reset/import/expiry/unmount, explicit cancellation and a30second deadline fence late downloads. Existing local assets, spatial adapters, camera safety and representation policy own geometry. Missing furniture sizes stay explicit markers; estimates and approximate outlines remain labelled. Node/triangle/texture/byte/page bounds live in POLICY. Transient asset/material/map/WebGL/shadow/canvas/object-URL resources are owned and retired. Native serialization cannot be interrupted mid-task; admission remains held until its factory settles.
+
+PDF has three useful pages for empty rooms, otherwise four to six: editorial3D overview, two actual distinct perspectives (safe entrance/opposite corner where available), one2D plan with factual notes/finishes, and a paginated furniture schedule. Warm Arial/Georgia typography and oat/walnut/cocoa match the landing.2200×1556 JPEG pages create landscape A4 presentation output: text/graphics are rasterized, not searchable/vector/tagged PDF or PDF/A; no blanket accessibility claim. No raw input photos/chat/provider payloads are exported.
+
+Feature review must inspect all latest rendered PDF pages plus bounded/unknown/empty cases, keyboard/progress/cancel/error/focus, phone/short-height dialog geometry, actual file downloads/reimport, physical transforms and lifecycle fences. Current evidence and unperformed checks remain distinct in [RM-015X receipt](../validation/RM-015X.md). Owner approval is pending; this correction does not resolve Q, earlier native journeys or RM-016.

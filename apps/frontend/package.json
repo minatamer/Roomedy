@@ -10,11 +10,12 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@roomedy/contracts": "workspace:*",
-    "@roomedy/spatial": "workspace:*",
     "@react-three/drei": "10.7.9",
     "@react-three/fiber": "9.8.2",
+    "@roomedy/contracts": "workspace:*",
+    "@roomedy/spatial": "workspace:*",
     "next": "16.4.2",
+    "pdf-lib": "1.17.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "server-only": "0.0.1",
