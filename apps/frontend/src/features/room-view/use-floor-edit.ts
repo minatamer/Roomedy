@@ -179,22 +179,27 @@ export function useFloorEdit(
         return;
       event.stopPropagation();
       const rect = canvasRef.current?.getBoundingClientRect();
-      const next = floorPlacement(
-        old.edit.room,
-        old.edit.item,
-        event.ray,
-        old.offset,
-        snap,
-      );
-      if (
-        !next ||
-        !rect ||
-        !sameViewport(rect, old.rect) ||
-        event.clientX < rect.left ||
-        event.clientX > rect.right ||
-        event.clientY < rect.top ||
-        event.clientY > rect.bottom
-      ) {
+      const outside =
+        !!rect &&
+        (event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom);
+      const projected = floorPlacement(
+          old.edit.room,
+          old.edit.item,
+          event.ray,
+          old.offset,
+          snap,
+        ),
+        displayed = pose.current;
+      // Beyond the perspective horizon, keep the last displayed valid floor pose.
+      const next =
+        projected ??
+        (outside && displayed?.id === piece.id
+          ? { x: displayed.x, z: displayed.z }
+          : null);
+      if (!next || !rect || !sameViewport(rect, old.rect)) {
         cancel(true);
         return;
       }

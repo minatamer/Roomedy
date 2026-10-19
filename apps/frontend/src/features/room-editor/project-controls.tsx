@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { POLICY } from '@roomedy/contracts/policy';
 import type { Project } from '@roomedy/contracts/project';
 import type { SessionController } from '../session/controller';
@@ -61,7 +61,8 @@ export function ProjectControls({
   controller: SessionController;
   onNewRoom: () => void;
 }) {
-  const menu = useRef<HTMLDetailsElement>(null),
+  const fileHintId = useId(),
+    menu = useRef<HTMLDetailsElement>(null),
     input = useRef<HTMLInputElement>(null),
     readRelease = useRef<(() => void) | null>(null),
     downloadRelease = useRef<(() => void) | null>(null),
@@ -260,23 +261,29 @@ export function ProjectControls({
             JSON includes Current, Before and measurement labels. No photos,
             chat or Undo history.
           </p>
-          <button onClick={download}>Export project</button>
-          <label className={styles.projectImport}>
-            Import project · JSON, up to 1 MiB
-            <input
-              ref={input}
-              type="file"
-              accept=".json,application/json"
-              disabled={busy}
-              onChange={(e) => {
-                const file = e.currentTarget.files?.[0];
-                e.currentTarget.value = '';
-                if (file) void load(file);
-              }}
-            />
-          </label>
+          <div className={styles.projectFileActions}>
+            <button onClick={download}>Export project</button>
+            <label className={styles.projectImport}>
+              Import project
+              <input
+                ref={input}
+                type="file"
+                aria-label="Import project"
+                aria-describedby={fileHintId}
+                accept=".json,application/json"
+                disabled={busy}
+                onChange={(e) => {
+                  const file = e.currentTarget.files?.[0];
+                  e.currentTarget.value = '';
+                  if (file) void load(file);
+                }}
+              />
+            </label>
+          </div>
+          <p id={fileHintId}>JSON · up to 1 MiB</p>
           {busy && <p role="status">Reading project…</p>}
           {message && <p role="alert">{message}</p>}
+          <hr />
           <button onClick={() => reviewDecision('reset')}>
             Start a new room
           </button>

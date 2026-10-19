@@ -1,0 +1,18 @@
+# RM-015T — Separate photo and manual room entry
+
+Status: **Planned; direct owner correction before joint visual acceptance**. Depends on RM-015S; Q lighting held and RM-016 Planned. Current authority: latest direct owner feedback in this chat, existing plan→execute→read-only validate→independently fix/revalidate→exact local commit loop. Not an actual result approval or paid/live/delegation/deploy/push/new-port authority.
+
+## Thorough implementation plan
+
+The owner clarifies exactly two paths: Upload photos→extract→rough2D review/correction→accepted2D/3D; Build manually→empty/few-pieces/furnished→editor. Replace the confusing sample/my-room split, retain useful adaptive previews and intentional smooth navigation. Photo path goes directly to upload; condition presets belong to manual creation. Diagnose whether explicit source choices accidentally restore the same existing room, preserve recoverable accepted work/confirmation/lifecycle instead of silently discarding it, and keep canonical query/back/focus/restoration coherent (legacy URLs supported safely). Fake/paid-off upload includes locally supplied coherent example images that travel through the real finite preparation/request/draft/review/accept flow. Inspect existing assets/licences/provider schema before final exact path allocation; use no paid generation/download or runtime external image service. Example source images and scripted fixture must match visible furniture/room, with provided measurements/provenance distinct from extraction/visitor confirmation. Do not pretend arbitrary-photo fake output is real reconstruction. Keep existing unavailable-real/manual alternatives honest without adding redundant demo warnings. Review remains rough2D only; accepted studio uses shared2D/3D.
+
+Redesign the reported upload page: aligned chooser/type/primary action, coherent warm oat/sand surfaces/typography and transparent header/consistent navigation. Integrate useful example-photo selection in fake mode; remove the competing manual-setup CTA from this upload task because manual creation has its own entry path. Preserve concise contextual transfer/approximation/format/limits/errors, source/draft/visitor corrections, bounded decode/raw-photo cleanup/cancellation/expiry/privacy and runtime mode authority. No extra settings/filler/house/viewport blur, paid provider or new app port. Plan exact owners before implementation. Test both complete paths, all manual conditions, provided images and actual fake request→review→accepted2D/3D, live-unavailable behavior, restoration/import/reset/navigation/late responses and narrow/short alignment. Run meaningful scoped/root/exact builds, validate/fix/revalidate clean and exact local commit; actual owner/device/provider/paint acceptance remains separate.
+
+## Acceptance
+
+- [ ] Selected complete behavior and owning states implemented through existing shared authority, preserving finite bounds, truthful provenance and useful failure paths.
+- [ ] Current responsive/interaction and meaningful deterministic evidence recorded, with exact local root/build/source gate.
+- [ ] Full allocated-scope read-only validation clean after independently checked findings; exact authorized local checkpoint.
+- [ ] Actual owner visual acceptance — remains pending; external/device/native/paint/Linux/hosted/live limitations explicit.
+
+Precision: [blueprint](../ROOMEDY.md), [layout](../design/layout.md), [room view](../design/room-view.md), [motion](../design/motion.md), [checklist](../design/REVIEW_CHECKLIST.md), [feedback](../references/LESSONS_FROM_VISUAL_FEEDBACK.md). Allocate and document exact code/test/evidence owners before any implementation edit.

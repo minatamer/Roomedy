@@ -1,5 +1,6 @@
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import type { RoomDocument, Furniture, Feature } from '@roomedy/contracts/room';
+import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
 import type { Measurement } from '@roomedy/contracts/primitives';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { parseDraftHypothesis } from '@roomedy/contracts/intake';
@@ -131,7 +132,7 @@ export function draftFurniture(
     },
     ownership: owned ? 'owned' : 'proposed',
     preference: owned ? 'keep' : 'flexible',
-    locks: { dimensions: owned, position: false, rotation: false },
+    locks: { ...DEFAULT_FURNITURE_LOCKS },
     finish: entry.finishes[0]!,
   };
 }

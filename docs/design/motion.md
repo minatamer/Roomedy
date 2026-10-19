@@ -64,3 +64,5 @@ R preserves the existing finite entry/panel natural-size motion and ready-state 
 
 
 R header refinement: source Back to home uses the landing CTA’s warm frosted gradient, highlight/border/shadow,8px blur and220ms hover/focus. The condition-step Back moves into that header position, with accessible Back to room choices; linked brand remains home. No floating heading Back row or duplicate navigation control. Blur is confined to the small existing header target; the route photo remains static/unblurred. Verify source and condition phone/short fit and preserve real reducer/focus behavior.
+
+S preserves continuous3D transforms and existing natural-content panel motion for Advanced expansion; controls stay mounted and drafts survive disclosure. Routine confirmation text no longer changes room geometry. Necessary notice reveal is finite260ms and does not intercept pointers; no new renderer, loop, animation setting or motion suppression. Captured dragging displays the same bounded physical placement used by the final command. Actual frame stability is geometry evidence, not a GPU/paint smoothness guarantee.

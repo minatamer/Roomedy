@@ -600,3 +600,21 @@ describe('finite per-canvas model ownership', () => {
     }
   });
 });
+
+describe('outward 3D floor dragging', () => {
+  it('uses the same bounded physical corner as2D and retains the grab offset', () => {
+    const item = commandPiece('odd', 2000, 2500, { width: 1501, depth: 601 });
+    const room = commandRoom([item]);
+    for (const snap of [false, true])
+      expect(
+        floorPlacement(
+          room,
+          item,
+          { origin: { x: -5, y: 2, z: 15 }, direction: { x: 0, y: -1, z: 0 } },
+          { x: 200, z: 300 },
+          snap,
+        ),
+      ).toEqual({ x: 750.5, z: 9699.5 });
+    expect(item.pose.centerX).toBe(2000);
+  });
+});

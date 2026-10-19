@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
+import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { CATALOGUE } from '@roomedy/spatial';
 import { thumbnailUrl } from '../catalogue/catalogue';
@@ -83,7 +84,7 @@ function PlacementForm({
           },
           ownership: 'proposed',
           preference: 'flexible',
-          locks: { position: false, rotation: false, dimensions: false },
+          locks: { ...DEFAULT_FURNITURE_LOCKS },
           finish: entry.finishes[0]!,
         };
         const result = controller.dispatch(

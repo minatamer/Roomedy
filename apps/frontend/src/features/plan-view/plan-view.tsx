@@ -24,6 +24,8 @@ type Gesture = {
   offsetZ: number;
   revision: number;
   target: SVGGElement;
+  viewport: { left: number; top: number; width: number; height: number };
+  viewBox: string;
 };
 type Ghost = { id: string; x: number; z: number };
 export function PlanView({
@@ -112,10 +114,24 @@ export function PlanView({
       controller.notify('Move cancelled. The room is unchanged.');
     }
   };
+  const sameViewport = (drag: Gesture) => {
+    const rect = svg.current?.getBoundingClientRect();
+    return (
+      !!rect &&
+      (['left', 'top', 'width', 'height'] as const).every(
+        (axis) => Math.abs(rect[axis] - drag.viewport[axis]) <= 1,
+      ) &&
+      drag.viewBox === `${box.x} ${box.z} ${box.width} ${box.depth}`
+    );
+  };
   const move = (event: PointerEvent<SVGGElement>, item: Furniture) => {
     if (readOnly) return;
     const drag = gesture.current;
     if (!drag || event.pointerId !== drag.pointerId) return;
+    if (!sameViewport(drag)) {
+      cancel();
+      return;
+    }
     const p = point(event);
     if (!p) return;
     const position = snapPosition(
@@ -133,17 +149,9 @@ export function PlanView({
     }
     const drag = gesture.current;
     if (!drag || event.pointerId !== drag.pointerId) return;
-    const rect = svg.current!.getBoundingClientRect(),
-      p = point(event);
+    const p = point(event);
     const revision = controller.getSnapshot().workspace?.current.roomRevision;
-    if (
-      !p ||
-      event.clientX < rect.left ||
-      event.clientX > rect.right ||
-      event.clientY < rect.top ||
-      event.clientY > rect.bottom ||
-      revision !== drag.revision
-    ) {
+    if (!p || !sameViewport(drag) || revision !== drag.revision) {
       cancel();
       return;
     }
@@ -388,6 +396,8 @@ export function PlanView({
                   offsetZ: p.z - item.pose.centerZ,
                   revision: state.workspace!.current.roomRevision,
                   target: event.currentTarget,
+                  viewport: svg.current!.getBoundingClientRect(),
+                  viewBox: `${box.x} ${box.z} ${box.width} ${box.depth}`,
                 };
               }}
               onPointerMove={(e) => move(e, item)}

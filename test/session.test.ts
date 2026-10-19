@@ -596,3 +596,38 @@ describe('one canonical session and effect authority', () => {
     expect(s.getSnapshot().phase).toBe('expired');
   });
 });
+
+describe('visible notices are distinct from routine command confirmations', () => {
+  it('keeps failure notices contextual after successful edits and preserves one command/Undo', () => {
+    const s = session(),
+      before = s.getSnapshot().workspace!.current;
+    expect(
+      s.dispatch(
+        [
+          {
+            type: 'move',
+            id: 'a',
+            pose: { centerX: 2500, centerZ: 2000, quarterTurns: 0 },
+          },
+        ],
+        'Move piece',
+      ),
+    ).toMatchObject({ ok: true, changed: true });
+    expect(s.getSnapshot()).toMatchObject({
+      message: 'Move piece.',
+      messageKind: 'confirmation',
+    });
+    const changed = s.getSnapshot().workspace;
+    s.notify('Position is locked. Unlock it in properties to move this piece.');
+    expect(s.getSnapshot()).toMatchObject({ messageKind: 'notice' });
+    expect(s.getSnapshot().workspace).toBe(changed);
+    expect(s.getSnapshot().workspace!.history.entries).toHaveLength(1);
+    expect(s.undo()).toEqual({ ok: true });
+    expect(s.getSnapshot().messageKind).toBe('confirmation');
+    expect(s.getSnapshot().workspace!.current.furniture).toEqual(
+      before.furniture,
+    );
+    s.clientPartFailed();
+    expect(s.getSnapshot().messageKind).toBe('notice');
+  });
+});

@@ -1,6 +1,8 @@
 # Roomedy documentation
 
-**Current demo-space correction:** [RM-015R](tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](commit-plans/RM-015R.md), [actual evidence](validation/RM-015R.md). Adaptive source/condition previews, useful photo intake and the shared static warm local backdrop across the whole demo, without the landing house. P committed825b5af. Local checks and actual visual acceptance are separate; Q lighting held, RM-016 Planned. [Open demo](http://127.0.0.1:4320/demo).
+**Current editor correction:** [RM-015S](tickets/RM-015S-stabilize-and-simplify-room-editing.md), [exact39-path plan](commit-plans/RM-015S.md), [actual evidence](validation/RM-015S.md). Stable2D/3D furniture dragging, shared defaults, simpler warm inspector/chrome/Project. T/U/V follow; actual visual approval pending and Q held.
+
+**Previous demo-space correction:** [RM-015R](tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](commit-plans/RM-015R.md), [actual evidence](validation/RM-015R.md). Adaptive source/condition previews, useful photo intake and the shared static warm local backdrop across the whole demo, without the landing house. P committed825b5af. Local checks and actual visual acceptance are separate; Q lighting held, RM-016 Planned. [Open demo](http://127.0.0.1:4320/demo).
 
 **Prior landing performance correction:** [RM-015P](tickets/RM-015P-restore-smooth-landing-scrolling.md), [exact20-path plan](commit-plans/RM-015P.md), [actual evidence](validation/RM-015P.md): owner reports lag after O; reduce photographic/compositing and scroll-layout work first, preserve the warm room journey, center the cue and shorten the readiness fade. [Warm lighting Q](tickets/RM-015Q-add-restrained-warm-room-lighting.md) is held. Final414-test/root/both-build gate and exact188-input artifact pass. Actual review4320 and visual/smoothness decision pending; RM-016 Planned.
 

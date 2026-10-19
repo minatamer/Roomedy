@@ -1,5 +1,8 @@
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
-import { roomDocumentSchema } from '@roomedy/contracts/room';
+import {
+  DEFAULT_FURNITURE_LOCKS,
+  roomDocumentSchema,
+} from '@roomedy/contracts/room';
 import { VERSIONS } from '@roomedy/contracts/policy';
 import { findCatalogueEntry } from '@roomedy/spatial';
 
@@ -15,7 +18,6 @@ function piece(
   z: number,
   turns: 0 | 1 | 2 | 3,
   owned: boolean,
-  fixedPosition = false,
 ): Furniture {
   const entry = findCatalogueEntry(catalogueId, VERSIONS.catalogue)!;
   return {
@@ -36,7 +38,7 @@ function piece(
     },
     ownership: owned ? 'owned' : 'proposed',
     preference: owned ? 'keep' : 'flexible',
-    locks: { dimensions: owned, position: fixedPosition, rotation: false },
+    locks: { ...DEFAULT_FURNITURE_LOCKS },
     finish: entry.finishes[0]!,
   };
 }
@@ -93,7 +95,7 @@ const base: RoomDocument = {
     piece('bed_1', 'procedural-bed', 1000, 1600, 0, true),
     piece('desk_1', 'procedural-desk', 3200, 1000, 0, true),
     piece('chair_1', 'chair-desk-fixed', 3200, 1700, 2, false),
-    piece('wardrobe_1', 'wardrobe-hinged', 3250, 3200, 0, true, true),
+    piece('wardrobe_1', 'wardrobe-hinged', 3250, 3200, 0, true),
     piece('storage_1', 'procedural-storage', 2200, 3900, 1, false),
   ],
   intent: {

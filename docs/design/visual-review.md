@@ -1,6 +1,10 @@
 # RM-015 current frontend review
 
-Status: **RM-015R adaptive demo-space/background correction locally implemented and checked; actual owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
+Status: **RM-015S editor correction locally implemented and checked; actual owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
+
+## Current S editor result
+
+[S ticket](../tickets/RM-015S-stabilize-and-simplify-room-editing.md), [39-path plan](../commit-plans/RM-015S.md), [actual checks](../validation/RM-015S.md). Stable room geometry, captured outward dragging in2D/3D, new movement/rotation unlocked and dimensions protected, basic/Advanced warm inspector, transparent navbar/simple labels and matching Project actions. Final429tests/root/both builds pass;191inputs/1,505,081bytes/BUILD_ID9666cc877a51ac2f3cab79db5169ca484ef213e2c6d6cf20b4b6cc6f2a58d039. Native partial/furnished drag/Undo, contextual locked/error paths and45nine-size DOM rows recorded. Actual visual decision remains pending; selected T/U/V corrections follow, Q held. R details below remain historical context.
 
 ## Current hot-reloaded review
 

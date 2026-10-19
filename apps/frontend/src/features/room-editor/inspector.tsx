@@ -145,29 +145,6 @@ function PositionForm({
         <button type="submit" disabled={item.locks.position}>
           Set position
         </button>
-        <button
-          type="button"
-          disabled={item.locks.rotation}
-          onClick={() => {
-            const r = controller.dispatch(
-              [
-                {
-                  type: 'rotate',
-                  id: item.id,
-                  quarterTurns: ((item.pose.quarterTurns + 1) % 4) as
-                    0 | 1 | 2 | 3,
-                },
-              ],
-              'Rotate piece',
-            );
-            if (!r.ok)
-              controller.notify(
-                failureMessage(r, controller.getSnapshot().workspace?.current),
-              );
-          }}
-        >
-          Rotate 90°
-        </button>
       </div>
       <p className={styles.hint}>
         Rotation: {item.pose.quarterTurns * 90}°. Arrow keys move 10 mm; Shift
@@ -330,6 +307,16 @@ export function FurnitureInspector({
           {item.label}
         </h2>
       </div>
+      <p className={styles.dimensionSummary}>
+        {(['width', 'depth', 'height'] as const).map((axis, index) => (
+          <span key={axis}>
+            {index > 0 ? ' × ' : ''}
+            {item.dimensions[axis].status === 'estimated' ? '≈' : ''}
+            {item.dimensions[axis].value ?? '?'}
+          </span>
+        ))}{' '}
+        mm
+      </p>
       <div className={styles.section}>
         <label className={styles.checkLabel}>
           <input
@@ -372,71 +359,7 @@ export function FurnitureInspector({
             <option value="replace">May replace</option>
           </select>
         </label>
-        <fieldset>
-          <legend>Protect properties independently</legend>
-          {(['position', 'rotation', 'dimensions'] as const).map((lock) => (
-            <label className={styles.checkLabel} key={lock}>
-              <input
-                type="checkbox"
-                checked={item.locks[lock]}
-                onChange={(e) =>
-                  run(
-                    [
-                      {
-                        type: 'set-locks',
-                        id: item.id,
-                        locks: { ...item.locks, [lock]: e.target.checked },
-                      },
-                    ],
-                    `Update ${lock} lock`,
-                  )
-                }
-              />
-              {lock} lock
-            </label>
-          ))}
-        </fieldset>
-        <p className={styles.hint}>
-          Size locks protect resizing. A deliberate measurement correction
-          records physical truth.
-        </p>
       </div>
-      <PositionForm controller={controller} item={item} />
-      <div className={styles.section}>
-        <h3>Measured dimensions</h3>
-        <p className={styles.hint}>
-          Confirm only values you have measured. Other evidence stays as it is.
-        </p>
-        <div className={styles.measurementGrid}>
-          {(['width', 'depth', 'height'] as const).map((field) => (
-            <MeasurementField
-              key={field}
-              controller={controller}
-              target={{ kind: 'furniture', id: item.id, field }}
-              measurement={item.dimensions[field]}
-              label={field[0]!.toUpperCase() + field.slice(1)}
-              max={POLICY.furnitureEdgeMm}
-            />
-          ))}
-        </div>
-        {item.ownership === 'owned' &&
-          Object.values(size).every((v) => v > 0) &&
-          !supportsDimensions(entry, size) && (
-            <p className={styles.notice}>
-              Measured size retained. Model detail is limited; this plan uses
-              the true footprint.
-            </p>
-          )}
-      </div>
-      {item.ownership === 'proposed' && entry.adjustable && (
-        <ResizeForm controller={controller} item={item} />
-      )}
-      {item.ownership === 'proposed' && !entry.adjustable && (
-        <p className={styles.hint}>
-          This proposed variant has one supported size. Choose another variant
-          to replace it.
-        </p>
-      )}
       <div className={styles.section}>
         <label>
           Piece finish
@@ -466,6 +389,96 @@ export function FurnitureInspector({
           </select>
         </label>
       </div>
+      <button
+        disabled={item.locks.rotation}
+        onClick={() =>
+          run(
+            [
+              {
+                type: 'rotate',
+                id: item.id,
+                quarterTurns: ((item.pose.quarterTurns + 1) % 4) as
+                  0 | 1 | 2 | 3,
+              },
+            ],
+            'Rotate piece',
+          )
+        }
+      >
+        Rotate 90°
+      </button>
+      <details className={styles.advanced}>
+        <summary>
+          Advanced <span>Measurements, position & locks</span>
+        </summary>
+        <div className={styles.section}>
+          <fieldset>
+            <legend>Protect properties independently</legend>
+            {(['position', 'rotation', 'dimensions'] as const).map((lock) => (
+              <label className={styles.checkLabel} key={lock}>
+                <input
+                  type="checkbox"
+                  checked={item.locks[lock]}
+                  onChange={(e) =>
+                    run(
+                      [
+                        {
+                          type: 'set-locks',
+                          id: item.id,
+                          locks: { ...item.locks, [lock]: e.target.checked },
+                        },
+                      ],
+                      `Update ${lock} lock`,
+                    )
+                  }
+                />
+                {lock} lock
+              </label>
+            ))}
+          </fieldset>
+          <p className={styles.hint}>
+            Size locks protect resizing. A deliberate measurement correction
+            records physical truth.
+          </p>
+        </div>
+        <PositionForm controller={controller} item={item} />
+        <div className={styles.section}>
+          <h3>Measured dimensions</h3>
+          <p className={styles.hint}>
+            Confirm only values you have measured. Other evidence stays as it
+            is.
+          </p>
+          <div className={styles.measurementGrid}>
+            {(['width', 'depth', 'height'] as const).map((field) => (
+              <MeasurementField
+                key={field}
+                controller={controller}
+                target={{ kind: 'furniture', id: item.id, field }}
+                measurement={item.dimensions[field]}
+                label={field[0]!.toUpperCase() + field.slice(1)}
+                max={POLICY.furnitureEdgeMm}
+              />
+            ))}
+          </div>
+          {item.ownership === 'owned' &&
+            Object.values(size).every((v) => v > 0) &&
+            !supportsDimensions(entry, size) && (
+              <p className={styles.notice}>
+                Measured size retained. Model detail is limited; this plan uses
+                the true footprint.
+              </p>
+            )}
+        </div>
+        {item.ownership === 'proposed' && entry.adjustable && (
+          <ResizeForm controller={controller} item={item} />
+        )}
+        {item.ownership === 'proposed' && !entry.adjustable && (
+          <p className={styles.hint}>
+            This proposed variant has one supported size. Choose another variant
+            to replace it.
+          </p>
+        )}
+      </details>
       <div className={styles.section}>
         <div className={styles.actionRow}>
           <button disabled={protectedRemoval} onClick={onReplace}>
@@ -483,7 +496,8 @@ export function FurnitureInspector({
         </div>
         {protectedRemoval && (
           <p className={styles.hint}>
-            Unlock protected properties to remove or replace this piece.
+            Open Advanced to unlock properties before removing or replacing this
+            piece.
           </p>
         )}
       </div>

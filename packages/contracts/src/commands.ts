@@ -44,7 +44,8 @@ const candidateFurniture = furnitureSchema.refine(
   (f) =>
     f.ownership === 'proposed' &&
     f.preference === 'flexible' &&
-    Object.values(f.locks).every((v) => !v) &&
+    !f.locks.position &&
+    !f.locks.rotation &&
     Object.values(f.dimensions).every((m) => m.status !== 'confirmed') &&
     f.pose.provenance.status !== 'confirmed',
 );

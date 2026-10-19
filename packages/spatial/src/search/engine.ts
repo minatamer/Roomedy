@@ -16,6 +16,7 @@ import type {
   SearchCandidate,
 } from '@roomedy/contracts/search';
 import type { Furniture } from '@roomedy/contracts/room';
+import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
 import { validateRoom, preservesHardIssue } from '../commands.js';
 import { checkRoom } from '../checks.js';
 import { findCatalogueEntry } from '../catalogue.js';
@@ -76,7 +77,7 @@ export function proposedSearchPiece(choice: SearchChoice): Furniture | null {
     },
     ownership: 'proposed',
     preference: 'flexible',
-    locks: { position: false, rotation: false, dimensions: false },
+    locks: { ...DEFAULT_FURNITURE_LOCKS },
     finish: choice.finish ?? entry.finishes[0]!,
   };
 }

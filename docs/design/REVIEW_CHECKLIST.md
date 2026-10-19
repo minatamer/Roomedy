@@ -99,3 +99,5 @@ Check source and all three condition choices against available height/width, wit
 
 
 R header refinement: source Back to home uses the landing CTA’s warm frosted gradient, highlight/border/shadow,8px blur and220ms hover/focus. The condition-step Back moves into that header position, with accessible Back to room choices; linked brand remains home. No floating heading Back row or duplicate navigation control. Blur is confined to the small existing header target; the route photo remains static/unblurred. Verify source and condition phone/short fit and preserve real reducer/focus behavior.
+
+S checks: actual partial/furnished3D native drag and outside captured release,2D/3D clamping with Snap on/off/rotations/odd sizes, unchanged SVG/viewBox/canvas after commit/Undo/errors; explicit lock and collision rejection retained. Check new factories separately from old persisted locks. Inspect basic/Advanced/empty typography and field errors/focus, matching Project row/chooser/Cancel/Reset and nine sizes. Do not infer a GPU result from canvas fallback DOM or a desktop-emulated screenshot. T photo/manual, U windows and V opposite-door Corner remain separately owned.

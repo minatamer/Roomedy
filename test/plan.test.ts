@@ -79,3 +79,53 @@ describe('precision plan display adapter', () => {
     expect(nudgePosition(a, 'ArrowDown', true).centerZ).toBe(2100);
   });
 });
+
+describe('dragged furniture stays against the intended physical room edge', () => {
+  for (const turns of [0, 1, 2, 3] as const)
+    for (const snap of [false, true])
+      it(`clamps every outward corner at turn ${turns}, snap ${snap}`, () => {
+        const item = piece('odd', 2000, 2500, {
+          width: 1501,
+          depth: 601,
+          quarterTurns: turns,
+        });
+        const room = commandRoom([item]),
+          before = JSON.stringify(room);
+        const xRadius = turns % 2 ? 300.5 : 750.5;
+        const zRadius = turns % 2 ? 750.5 : 300.5;
+        for (const x of [-20000, 20000])
+          for (const z of [-20000, 20000])
+            expect(snapPosition(room, item, { x, z }, snap)).toEqual({
+              x: x < 0 ? xRadius : 10000 - xRadius,
+              z: z < 0 ? zRadius : 10000 - zRadius,
+            });
+        expect(JSON.stringify(room)).toBe(before);
+      });
+  it('clamps a crossed edge without losing precision on the other axis or inventing unknown bounds', () => {
+    const item = piece('a'),
+      room = commandRoom([item]);
+    expect(snapPosition(room, item, { x: -5000, z: 2300.25 }, false)).toEqual({
+      x: 600,
+      z: 2300.5,
+    });
+    room.room.width = { value: null, status: 'unknown', sourceId: null };
+    expect(snapPosition(room, item, { x: -5000, z: 20000 }, false)).toEqual({
+      x: -5000,
+      z: 9700,
+    });
+    item.dimensions.width = { value: null, status: 'unknown', sourceId: null };
+    expect(snapPosition(room, item, { x: -5000, z: 20000 }, true)).toEqual({
+      x: -5000,
+      z: 20000,
+    });
+  });
+  it('leaves an impossible footprint for shared validation instead of resizing or reversing its interval', () => {
+    const item = piece('wide', 2000, 2000, { width: 12000 }),
+      room = commandRoom([item]);
+    expect(snapPosition(room, item, { x: 12000, z: -5000 }, false)).toEqual({
+      x: 12000,
+      z: 300,
+    });
+    expect(item.dimensions.width.value).toBe(12000);
+  });
+});

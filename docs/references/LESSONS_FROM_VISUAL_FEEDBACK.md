@@ -258,3 +258,9 @@ The owner rejects the first demo screen’s large unused lower area and explicit
 
 
 R header refinement: source Back to home uses the landing CTA’s warm frosted gradient, highlight/border/shadow,8px blur and220ms hover/focus. The condition-step Back moves into that header position, with accessible Back to room choices; linked brand remains home. No floating heading Back row or duplicate navigation control. Blur is confined to the small existing header target; the route photo remains static/unblurred. Verify source and condition phone/short fit and preserve real reducer/focus behavior.
+
+## Direct editor and entry corrections —19October2026
+
+Owner asks outward dragging to express “as far left/up as possible,” stable frame size after edits, removal of redundant checks/Move piece/header subtitle, simple2D/3D names, usable3D dragging, unlocked movement/rotation with protected dimensions, basic/Advanced properties with fitting theme, transparent navbar and equal Export/Import row separated from Reset. [S](../tickets/RM-015S-stabilize-and-simplify-room-editing.md) owns that correction. Diagnose real event/geometry/lock behavior before bypassing authority. Never silently erase deliberate saved locks when changing defaults. Useful errors remain without consuming room space.
+
+The owner distinguishes photo extraction/review (including example photos in fake mode) from manual empty/partial/furnished entry, asks consistent upload design, wall-constrained window dragging, and Corner diagonally opposite the nearest doorway corner. T/U/V own these selected follow-ups in that order. This is new implementation scope, not actual visual approval or live/paid/delegation authority.

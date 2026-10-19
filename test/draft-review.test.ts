@@ -10,6 +10,7 @@ import {
   adoptHypothesis,
   correctDraft,
   createDraft,
+  draftFurniture,
   mergeDraftPieces,
   removeDraftPiece,
   nextQuestion,
@@ -627,5 +628,27 @@ describe('review lifetime and accepted handoff', () => {
     expect(session.getSnapshot().workspace).toBeNull();
     review.dispose();
     session.dispose();
+  });
+});
+
+describe('draft furniture starts with explicit editing defaults', () => {
+  it('unlocks placement and rotation without manufacturing measurements for owned or proposed pieces', () => {
+    const draft = createDraft('furnished', 'review_defaults');
+    for (const owned of [false, true]) {
+      const item = draftFurniture(
+        draft,
+        'procedural-desk',
+        owned ? 'owned' : 'proposed',
+        owned,
+      )!;
+      expect(item.locks).toEqual({
+        position: false,
+        rotation: false,
+        dimensions: true,
+      });
+      expect(item.dimensions.width.status).toBe(
+        owned ? 'unknown' : 'estimated',
+      );
+    }
   });
 });

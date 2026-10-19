@@ -120,3 +120,7 @@ Final production cfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428
 
 
 R header refinement: source Back to home uses the landing CTA’s warm frosted gradient, highlight/border/shadow,8px blur and220ms hover/focus. The condition-step Back moves into that header position, with accessible Back to room choices; linked brand remains home. No floating heading Back row or duplicate navigation control. Blur is confined to the small existing header target; the route photo remains static/unblurred. Verify source and condition phone/short fit and preserve real reducer/focus behavior.
+
+## S editor correction
+
+No new image/renderer/frame loop or dependency. Existing panel ResizeObserver animates natural content, notices are out of room layout, and both drag previews reuse the existing bounded footprint adapter. Actual1366×680 partial SVG732.1875×400.578125/frame290.0738×331.5129 stayed constant on select/nudge/outside drag/Advanced. Partial3Dcanvas732.1875×368.078125 stayed constant through move/lock notice/Undo; furnishedcanvas732.1875×396.578125 stayed constant through first-selection drag.45 actual DOM observations cover nine sizes in2D/3D basic/Advanced and Project. These do not measure continuous GPU/compositor frames, physical touch or native memory. [S receipt](../validation/RM-015S.md) carries source/build and limitation evidence.

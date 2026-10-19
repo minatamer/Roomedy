@@ -183,3 +183,19 @@ describe('authored fixture truth', () => {
     expect(nearestAccessX).toBeGreaterThan(1100);
   });
 });
+
+describe('owner-selected initial furniture protection', () => {
+  it('starts owned and proposed presets movable and rotatable, protects only dimensions and isolates lock changes', () => {
+    for (const kind of ['sample', 'partial'] as const) {
+      const room = createRoomFixture(kind);
+      for (const item of room.furniture)
+        expect(item.locks).toEqual({
+          position: false,
+          rotation: false,
+          dimensions: true,
+        });
+      room.furniture[0]!.locks.position = true;
+      expect(createRoomFixture(kind).furniture[0]!.locks.position).toBe(false);
+    }
+  });
+});

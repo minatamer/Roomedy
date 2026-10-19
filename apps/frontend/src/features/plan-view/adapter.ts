@@ -48,11 +48,21 @@ export function snapPosition(
   raw: { x: number; z: number },
   enabled: boolean,
 ) {
-  if (!enabled) return { x: half(raw.x), z: half(raw.z) };
   const bounds = footprint(item);
   if (!bounds) return { x: half(raw.x), z: half(raw.z) };
   const w = (bounds.maxX - bounds.minX) / 2,
     d = (bounds.maxZ - bounds.minZ) / 2;
+  const constrain = (v: number, radius: number, edge: number | null) =>
+    edge !== null && edge >= radius * 2
+      ? Math.max(radius, Math.min(edge - radius, half(v)))
+      : half(v);
+  const inside = (point: { x: number; z: number }) => ({
+    x: constrain(point.x, w, room.room.width.value),
+    z: constrain(point.z, d, room.room.depth.value),
+  });
+  // Clamping is independent of optional grid/edge snapping, in actual physical mm.
+  const requested = inside(raw);
+  if (!enabled) return requested;
   const xs: number[] = [],
     zs: number[] = [];
   if (room.room.width.value !== null) xs.push(w, room.room.width.value - w);
@@ -62,9 +72,9 @@ export function snapPosition(
     const r = footprint(other);
     if (!r) continue;
     // Edge contact only when the perpendicular spans actually meet.
-    if (raw.z + d >= r.minZ && raw.z - d <= r.maxZ)
+    if (requested.z + d >= r.minZ && requested.z - d <= r.maxZ)
       xs.push(r.minX - w, r.maxX + w);
-    if (raw.x + w >= r.minX && raw.x - w <= r.maxX)
+    if (requested.x + w >= r.minX && requested.x - w <= r.maxX)
       zs.push(r.minZ - d, r.maxZ + d);
   }
   const closest = (v: number, targets: number[]) => {
@@ -73,7 +83,7 @@ export function snapPosition(
       .sort((a, b) => Math.abs(a - v) - Math.abs(b - v) || a - b);
     return half(eligible[0] ?? Math.round(v / 50) * 50);
   };
-  return { x: closest(raw.x, xs), z: closest(raw.z, zs) };
+  return inside({ x: closest(requested.x, xs), z: closest(requested.z, zs) });
 }
 export function nudgePosition(
   item: Furniture,

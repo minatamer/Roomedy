@@ -81,6 +81,7 @@ export class SessionController {
       pending: null,
       candidate: null,
       message: '',
+      messageKind: 'notice',
       undoLabel: null,
       comparison: 'current',
       persistence: 'checking',
@@ -98,7 +99,11 @@ export class SessionController {
     };
   };
   private publish(change: Partial<SessionSnapshot>) {
-    this.state = Object.freeze({ ...this.state, ...change });
+    this.state = Object.freeze({
+      ...this.state,
+      ...('message' in change ? { messageKind: 'notice' as const } : {}),
+      ...change,
+    });
     for (const listener of this.listeners) listener();
   }
   /** Enforced at every action/result entry, independently of timer wake-up. */
@@ -536,6 +541,7 @@ export class SessionController {
         selectedId: remains ? selectedId : null,
       },
       message: changed ? `${label}.` : 'No change needed.',
+      messageKind: 'confirmation',
       undoLabel:
         this.labels.get(
           result.workspace.history.entries.at(-1)?.commandId ?? '',
@@ -637,6 +643,7 @@ export class SessionController {
           result.workspace.history.entries.at(-1)?.commandId ?? '',
         ) ?? null,
       message: 'Last change undone.',
+      messageKind: 'confirmation',
     });
     return { ok: true };
   }

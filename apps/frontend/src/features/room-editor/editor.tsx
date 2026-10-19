@@ -152,9 +152,6 @@ export function Editor({
   const item = shownRoom.furniture.find((f) => f.id === view.selectedId),
     feature = shownRoom.room.features.find((f) => f.id === view.selectedId);
   const hard = shownChecks.issues.filter((i) => i.severity === 'hard').length;
-  const unassessed = shownChecks.coverage.filter(
-    (c) => c.status === 'unassessed' || c.unassessed > 0,
-  ).length;
   const open = (panel: Panel) => {
     setReplacementId(null);
     controller.setPanel(panel);
@@ -185,9 +182,6 @@ export function Editor({
         >
           <Brand />
         </div>
-        <span className={styles.editorLabel}>
-          Your room / {roomView === 'plan' ? '2D plan' : '3D cutaway'}
-        </span>
         <div className={styles.headerActions}>
           <button
             aria-disabled={
@@ -287,7 +281,7 @@ export function Editor({
                 aria-pressed={roomView === 'plan'}
                 onClick={() => setRoomView('plan')}
               >
-                2D plan
+                2D
               </button>
               <button
                 aria-pressed={roomView === 'cutaway'}
@@ -296,7 +290,7 @@ export function Editor({
                   setRoomView('cutaway');
                 }}
               >
-                3D cutaway
+                3D
               </button>
             </div>
           </div>
@@ -508,28 +502,25 @@ export function Editor({
               </button>
             </div>
           )}
-          <div className={styles.roomStatus}>
-            {view.selectedId && (
-              <button
-                className={styles.mobileReturn}
-                onClick={() => open('inspector')}
-              >
-                {item?.label ?? feature?.kind ?? 'Selection'} · Edit properties
-                ↗
-              </button>
-            )}
-            <button onClick={() => open('checks')}>
-              {hard
-                ? `${hard} space ${hard === 1 ? 'issue' : 'issues'}`
-                : 'No blocking issue in the modeled checks'}
-              {unassessed
-                ? ` · ${unassessed} incomplete ${unassessed === 1 ? 'check' : 'checks'}`
-                : ''}
+          {view.selectedId && (
+            <button
+              className={styles.mobileReturn}
+              onClick={() => open('inspector')}
+            >
+              {item?.label ?? feature?.kind ?? 'Selection'} · Edit properties ↗
             </button>
-            <p role="status" aria-live="polite">
-              {state.message}
-            </p>
-          </div>
+          )}
+          <p
+            role="status"
+            aria-live="polite"
+            className={
+              !state.message || state.messageKind === 'confirmation'
+                ? styles.announcement
+                : styles.roomNotice
+            }
+          >
+            {state.message}
+          </p>
         </section>
         <aside
           className={`${styles.panel} ${view.panel === 'assistant' ? styles.assistantPanel : ''}`}

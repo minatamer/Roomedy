@@ -13,6 +13,13 @@ import {
   revisionSchema,
 } from './primitives.js';
 
+/** Initial product defaults only; imported and visitor-selected locks stay authoritative. */
+export const DEFAULT_FURNITURE_LOCKS = Object.freeze({
+  position: false,
+  rotation: false,
+  dimensions: true,
+});
+
 export const dimensionsSchema = z.strictObject({
   width: measurementSchema(POLICY.furnitureEdgeMm),
   depth: measurementSchema(POLICY.furnitureEdgeMm),

@@ -180,3 +180,57 @@ it('revalidates goal satisfaction as well as scope when a candidate is substitut
   expect(checked.facts.requiredPiecesPlaced).toBe(0);
   expect(checked.affectedIds).not.toContain('unrelated_shelf');
 });
+
+it('permits default size protection on a scoped new piece without granting placement locks or lock-edit authority', () => {
+  const room = commandRoom(),
+    choice = {
+      id: 'new_desk',
+      catalogueId: 'procedural-desk',
+      size: null,
+      finish: null,
+    };
+  const scope = scopeFor(room, goal({ kind: 'furnish', additions: [choice] }));
+  const added = proposedSearchPiece(choice)!;
+  added.pose.centerX = 2000;
+  added.pose.centerZ = 2000;
+  expect(added.locks).toEqual({
+    position: false,
+    rotation: false,
+    dimensions: true,
+  });
+  expect(
+    evaluateScopedBatch(room, [{ type: 'add', furniture: added }], scope).ok,
+  ).toBe(true);
+  for (const lock of ['position', 'rotation'] as const)
+    expect(
+      evaluateScopedBatch(
+        room,
+        [
+          {
+            type: 'add',
+            furniture: { ...added, locks: { ...added.locks, [lock]: true } },
+          },
+        ],
+        scope,
+      ).ok,
+    ).toBe(false);
+  expect(
+    evaluateScopedBatch(
+      room,
+      [
+        {
+          type: 'add',
+          furniture: { ...added, locks: { ...added.locks, dimensions: false } },
+        },
+      ],
+      scope,
+    ).ok,
+  ).toBe(true);
+  expect(
+    evaluateScopedBatch(
+      room,
+      [{ type: 'set-locks', id: added.id, locks: added.locks } as never],
+      scope,
+    ).ok,
+  ).toBe(false);
+});
