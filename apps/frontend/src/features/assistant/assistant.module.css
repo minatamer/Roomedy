@@ -17,10 +17,6 @@
   letter-spacing: -0.5px;
   margin: 0;
 }
-.heading button {
-  font-size: 10px;
-  padding: 8px;
-}
 .mode,
 .note {
   font-size: 11px;
@@ -177,65 +173,6 @@
     transform: rotate(360deg);
   }
 }
-.tourOutline {
-  position: fixed;
-  z-index: 90;
-  border: 2px solid #a06b42;
-  border-radius: 12px;
-  pointer-events: none;
-  box-shadow: 0 0 0 3px #f4e4cb80;
-  transition:
-    left 0.2s,
-    top 0.2s,
-    width 0.2s,
-    height 0.2s;
-}
-.tourCard {
-  position: fixed;
-  z-index: 91;
-  width: min(300px, calc(100vw - 32px));
-  max-height: calc(100svh - 24px);
-  overflow: auto;
-  box-sizing: border-box;
-  background: #fffaf1;
-  color: #372c22;
-  border: 1px solid #bea282;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 12px 35px #35221324;
-  font-size: 13px;
-  line-height: 1.5;
-  animation: tourIn 0.2s ease-out;
-}
-.tourCard h3 {
-  font-size: 17px;
-  margin: 0 0 8px;
-}
-.tourCard p {
-  margin: 0 0 12px;
-}
-.tourCard div {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-.tourCard button {
-  min-height: 44px;
-  padding: 9px 13px;
-  border: 1px solid #cbbda9;
-  background: #efe2cf;
-  border-radius: 8px;
-}
-@keyframes tourIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 .goalOptions {
   flex-shrink: 0;
@@ -287,9 +224,6 @@
 
 .heading h2 {
   min-width: 0;
-}
-.heading button {
-  flex-shrink: 0;
 }
 .welcome {
   display: grid;

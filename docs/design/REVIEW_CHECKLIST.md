@@ -38,7 +38,7 @@ Before edits, identify the requested task, affected component/states, existing a
 | Comparison | Before is read-only and baseline stays fixed; active proposal resolved; same view/camera; no provider/history effect |
 | Refresh/reset/import/expiry | Fixed two-hour semantic recovery; originals unavailable after refresh; no old request/write resurrection; invalid import preserves work |
 | Busy/verification/provider failure | Quiet verification when supported; visible fallback when interaction is needed; finite server controls retained and manual work preserved |
-| Tour, if used | Optional Start/Skip; actual target/layout/scroll readiness; card/highlight together; coherent focus and viewport changes |
+| Tour | Automatic fresh accepted-room welcome without delay; Start/Skip/replay; recovered/imported work uninterrupted; actual target/layout/scroll readiness; synchronized card/highlight, Back/Escape/focus/lifecycle and short/narrow fit |
 
 ## Size and interaction evidence
 
@@ -101,3 +101,5 @@ Check source and all three condition choices against available height/width, wit
 R header refinement: source Back to home uses the landing CTA’s warm frosted gradient, highlight/border/shadow,8px blur and220ms hover/focus. The condition-step Back moves into that header position, with accessible Back to room choices; linked brand remains home. No floating heading Back row or duplicate navigation control. Blur is confined to the small existing header target; the route photo remains static/unblurred. Verify source and condition phone/short fit and preserve real reducer/focus behavior.
 
 S checks: actual partial/furnished3D native drag and outside captured release,2D/3D clamping with Snap on/off/rotations/odd sizes, unchanged SVG/viewBox/canvas after commit/Undo/errors; explicit lock and collision rejection retained. Check new factories separately from old persisted locks. Inspect basic/Advanced/empty typography and field errors/focus, matching Project row/chooser/Cancel/Reset and nine sizes. Do not infer a GPU result from canvas fallback DOM or a desktop-emulated screenshot. T photo/manual, U windows and V opposite-door Corner remain separately owned.
+
+W checks: fresh manual conditions and accepted photo room offer welcome, restored/imported work does not replay; Start/Skip/Back/Next/Done/Escape/manual replay, no unrelated panel/view restart. Inspect all real targets, fade before scroll, measured card/viewport/ancestor readiness and missing-target escape. Check nine sizes plus short/keyboard-offset geometry; cancellation/late callbacks, reset/import/expiry/unmount cleanup, unchanged semantics/history/provider work. Screenshot/DOM evidence alone does not establish native input, continuous-frame or physical acceptance.

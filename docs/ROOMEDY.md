@@ -2,7 +2,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** U code checkpoint630df3c; V door-relative Corner code locally validated; T/U/V actual browser checks pending, Q held and RM-016 Planned
+**Stage:** V code checkpoint e0dd545; W default welcome/smooth-tour code locally validated; actual browser/visual acceptance pending, Q held and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -185,6 +185,8 @@ Latest [P](tickets/RM-015P-restore-smooth-landing-scrolling.md) supersedes O's t
 The sample route opens the main editor immediately with authored dimensions and a purposeful arrangement. Adding a room uses a guided intake panel beside a rough, editable 2D sketch of walls, openings and labelled furniture footprints. Keep initial review in 2D while the visitor corrects the draft and measurements; introduce 3D only after they continue to the main editor. Preserve progress when switching relevant panels.
 
 If live AI is unavailable, the supplied sample and manual editor should still be useful. The assistant can explain its current availability. A public failure must not quietly replace the provider response with a scripted success. Development fixtures use an explicit simulation label.
+
+W lifts the short orientation to accepted-editor scope. Fresh manual and accepted-photo rooms offer a welcome immediately after hydration, with Start/Skip and one Quick tour replay; recovered/imported work stays uninterrupted through existing flags, without new persistent state. Three actual targets, measured responsive placement, existing finite cubic scrolling, synchronized fade/reveal and bounded target/ancestor-motion readiness preserve room/history/proposal/drafts. [W plan](commit-plans/RM-015W.md), [Retailor comparison](references/retailor-tour-2026-10-19.md) and [receipt](validation/RM-015W.md) distinguish actual local evidence from pending browser input/paint/owner approval. Q held, guide paused and RM-016 Planned.
 
 V makes Corner the diagonally opposite corner from the nearest corner of the recorded doorway, sharing Doorway’s relevant-door selection. Ties are deterministic; unknown/invalid anchors remain unavailable, and obstacle fallback stays in the intended opposite quadrant. Existing camera flight and live comparison continuity remain; no semantic data or renderer change. [V plan](commit-plans/RM-015V.md) and [evidence](validation/RM-015V.md) distinguish current pure/code/CPU results from pending native T/U/V interaction and owner visual checks. Q remains held and RM-016 Planned.
 
@@ -895,7 +897,7 @@ The signature moment is **ask for a useful room change → inspect the coordinat
 | P-01. Guided sketch corrections | A clean 2D sketch shows labelled footprints, door/window markers and approximate dimension badges. Selecting a feature focuses its measurement question and an available source photo. Ask one essential question at a time and offer an explicit unknown/estimate path. | Reference a source only while available; no invented detection boxes or confirmation. No 3D during initial review. |
 | P-02. Visual ownership cards | Pair an available source thumbnail with a similar supported furniture representation, dimensions and **Keep / May replace / Remove from plan** choices. | Position and dimension locks are independent. Source photos stay transient; their loss on refresh does not erase accepted room data. |
 | P-03. Visual goals and finish directions | Offer relevant goals such as **More desk space**, **Clear the entrance** and **More storage**. Preview the coherent **Warm & simple**, **Light & airy** and **Calm & focused** directions in the main editor. | Establish supported room purpose first. Changes affect supported finishes and eligible proposed pieces while preserving retained furniture/locks. Exact swatches and assets are design implementation work within the selected direction. |
-| P-04. Contextual assistant actions | Selecting a desk offers **Move near the window** or **Check chair space**; selecting an issue offers **Explain this** or **Find another arrangement**. Include useful object cards, suggestions and a short optional tour. | Selection itself never dispatches a metered request. Deliberate supported actions use the same proposal/command authority. |
+| P-04. Contextual assistant actions | Selecting a desk offers **Move near the window** or **Check chair space**; selecting an issue offers **Explain this** or **Find another arrangement**. Include useful object cards, suggestions and a short skippable tour, with automatic fresh-room welcome under RM-015W. | Selection itself never dispatches a metered request. Deliberate supported actions use the same proposal/command authority. |
 | P-05. Explanatory previews | Show affected footprints/ghost positions, a short change list, what stays protected, computed checks and remaining unknowns. Keep Apply/Cancel beside the room. | No invented improvement percentages or quality scores; preserve atomic validation and revision fencing. |
 | P-06. Before/Current peek | Include one read-only accepted starting layout and compare it with the committed current room from the same editor view/camera. | This selected refinement uses a bounded baseline, not multiple generated alternatives or a second editable state authority. Undo is separate. See section 9.6. |
 | P-07. Sketch-to-studio transition | Keep one coherent workspace: correct the rough 2D sketch, review dimensions, then continue into the main editor where the 3D cutaway becomes available. Panels adapt around the canvas; mobile uses focused sheets. | No 3D during initial review. Keep the transition explicit without a technical settings/loading screen. |
@@ -917,14 +919,14 @@ Guest recovery restores accepted semantic room data and its read-only baseline l
 
 ### 19.6 Prevention guidelines from prior visual feedback
 
-The owner asked to learn from four actual Retailor chats before implementation. The [evidence-based lessons](references/LESSONS_FROM_VISUAL_FEEDBACK.md) and [review checklist](design/REVIEW_CHECKLIST.md) now govern the existing plan. Their purpose is to avoid repeated preventable corrections, not to import another product's UI. Roomedy's palette, optional tour, selected export, authored sample and 2D-review/main-editor-3D boundary remain intact.
+The owner asked to learn from four actual Retailor chats before implementation. The [evidence-based lessons](references/LESSONS_FROM_VISUAL_FEEDBACK.md) and [review checklist](design/REVIEW_CHECKLIST.md) now govern the existing plan. Their purpose is to avoid repeated preventable corrections, not to import another product's UI. Roomedy's palette, short skippable tour (automatic welcome now explicitly selected in RM-015W), selected export, authored sample and 2D-review/main-editor-3D boundary remain intact.
 
 | Guideline | Roomedy requirement |
 | --- | --- |
 | Useful and concise | Every new control/copy block serves a documented task; no filler slogans, developer CTAs, duplicate status banners or unasked-for settings |
 | Stable and consistent | Fonts/marks/spacing survive refresh; fixes cover relevant component states while room finishes stay independent of platform chrome |
 | Room first | The room and next action remain usable on short laptops and narrow screens, without dead columns, oversized chat panels or overlapping scrollbars |
-| Smooth and coordinated | Actual panel/preview geometry moves together; entrance motion starts when ready and loading indicators keep running; optional tour targets/cards appear together after real readiness |
+| Smooth and coordinated | Actual panel/preview geometry moves together; entrance motion starts when ready and loading indicators keep running; fresh-room welcome appears immediately; guided targets/cards appear together after actual readiness |
 | Clear interaction | Reachable primary actions, field-specific validation/units, accessible Send/Enter behavior and object cards that focus real room IDs |
 | Honest correction | Partial usable inference stays reviewable; selected files/corrections are preserved; technical failure and hard arrangement blockers remain distinct |
 
@@ -1316,8 +1318,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Complete pending T/U/V actual browser checks once test control is restored, then present the current result for actual owner visual decision. Code checkpoints remain distinct; guide paused, Q held and RM-016 Planned.
-Active ticket: RM-015V
+Next action: Complete pending actual T/U/V/W browser interaction and guide-motion checks once input control/manual Start evidence is available, then continue current owner visual feedback. Local code checkpoints are distinct from actual acceptance; guide paused, Q held and RM-016 Planned.
+Active ticket: RM-015W
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1342,7 +1344,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T18:11:20+00:00",
+  "updated_at": "2026-10-19T18:34:21+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1531,8 +1533,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015V",
-  "next_action": "Complete pending T/U/V actual browser checks once test control is restored, then present the current result for actual owner visual decision. Code checkpoints remain distinct; guide paused, Q held and RM-016 Planned.",
+  "active_ticket": "RM-015W",
+  "next_action": "Complete pending actual T/U/V/W browser interaction and guide-motion checks once input control/manual Start evidence is available, then continue current owner visual feedback. Local code checkpoints are distinct from actual acceptance; guide paused, Q held and RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -1962,14 +1964,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015U.md:17exact paths, same-wall window offset/preview/command/provenance/cancellation plan before edits.",
         "docs/validation/RM-015U.md:17paths,451tests/38files/seven boundaries/root/both builds,194inputs/1537856bytes/BUILD_ID85b702b15a070758551b4d37a170f3719b4b3550ca9dd95ac081abd4a258cf58; corrected canonical/display identity, clamp and finite motion. Read-only source review no actionable findings; actual browser/visual checks remain unverified after pending dialog/control failure.",
         "docs/commit-plans/RM-015V.md:14exact paths and deterministic doorway/opposite-quadrant/safe-motion plan before edits.",
-        "docs/validation/RM-015V.md:14paths,469tests/39files/seven boundaries/root/both builds,194inputs/1539995bytes/BUILD_ID0a8b96b4f6afcba4d093684584dfedd7fb54ff32579ec306522e9c5b7ef230e7; same-door opposite-corner target and safe intended-area fallback. Read-only pass1 no actionable source findings; pure CPU timing distinct from pending actual T/U/V browser and owner visual checks."
+        "docs/validation/RM-015V.md:14paths,469tests/39files/seven boundaries/root/both builds,194inputs/1539995bytes/BUILD_ID0a8b96b4f6afcba4d093684584dfedd7fb54ff32579ec306522e9c5b7ef230e7; same-door opposite-corner target and safe intended-area fallback. Read-only pass1 no actionable source findings; pure CPU timing distinct from pending actual T/U/V browser and owner visual checks.",
+        "docs/commit-plans/RM-015W.md:21paths allocated before source edits; direct default-tour scope and read-only Retailor comparison.",
+        "docs/validation/RM-015W.md:21paths,496tests/40files/seven boundaries/root/assets/both builds,197inputs/1561335bytes/BUILD_ID62bea8751b242ebb505a93b513f5f48e9a4ff3ce3c5649870773493317798e8b; immediate default fresh-room welcome and real-target guide. Ten actual welcome-size observations. Medium guide-event finding independently fixed; read-only pass2 no actionable source findings. Actual T/U/V/W guided/browser motion and owner acceptance remain unverified; automated Start unchanged, no JS dialog, manual check pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "\"corner\" view is always the corner opposite to the door way nearest corner",
-        "source": "human:current-chat/2026-10-19/door-relative-corner",
-        "scope": "Execute V target/camera correction with existing local verification/checkpoint loop; no actual visual approval.",
-        "recorded_at": "2026-10-19T17:59:58+00:00"
+        "quote": "the quick tour should be on by default, but check what i did in retailor to make sure the tour is programmed and animated smoothly.",
+        "source": "human:current-chat/2026-10-19/default-tour",
+        "scope": "Execute W under existing exact local execute/validate/checkpoint loop; actual visual acceptance remains pending.",
+        "recorded_at": "2026-10-19T18:16:40+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2079,6 +2083,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/door-relative-corner",
             "scope": "Execute V target/camera correction with existing local verification/checkpoint loop; no actual visual approval.",
             "recorded_at": "2026-10-19T17:59:58+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "the quick tour should be on by default, but check what i did in retailor to make sure the tour is programmed and animated smoothly.",
+            "source": "human:current-chat/2026-10-19/default-tour",
+            "scope": "Execute W under existing exact local execute/validate/checkpoint loop; actual visual acceptance remains pending.",
+            "recorded_at": "2026-10-19T18:16:40+00:00"
           }
         }
       ]

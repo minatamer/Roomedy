@@ -8,7 +8,6 @@ import { thumbnailUrl } from '../catalogue/catalogue';
 import { focusProperties } from '../room-editor/focus';
 import { issueText } from '../room-editor/messages';
 import type { AssistantController } from './controller';
-import { AssistantTour } from './tour';
 import styles from './assistant.module.css';
 
 export function Assistant({
@@ -118,10 +117,13 @@ export function Assistant({
     </details>
   );
   return (
-    <section className={styles.assistant} aria-label="Roomedy assistant">
+    <section
+      className={styles.assistant}
+      data-room-target="assistant"
+      aria-label="Roomedy assistant"
+    >
       <div className={styles.heading}>
         <h2 tabIndex={-1}>Roomedy assistant</h2>
-        <AssistantTour />
       </div>
       {state.mode !== 'fake' && (
         <p className={styles.mode}>

@@ -1,8 +1,12 @@
 # RM-015 current frontend review
 
-Status: **RM-015V Corner code locally validated; T/U/V actual browser checks and owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
+Status: **RM-015W default-tour code locally validated; actual T/U/V/W browser and owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
 
-## Current V Corner result and browser limit
+## Current W default-tour correction
+
+[W ticket](../tickets/RM-015W-start-the-quick-tour-by-default.md), [21-path plan](../commit-plans/RM-015W.md), [Retailor source comparison](../references/retailor-tour-2026-10-19.md) and [receipt](../validation/RM-015W.md). Immediate fresh-room welcome at editor scope, actual three-step targets, finite coordinated fade/scroll/settle/reveal and Skip/replay. Existing recovered/imported flags avoid interruption without persistence changes. Current496tests/40files/seven boundaries/root/both builds pass with197inputs/1,561,335bytes/BUILD_ID62bea8751b242ebb505a93b513f5f48e9a4ff3ce3c5649870773493317798e8b. Actual welcome/focus and nine-size plus short-height card/action containment are observed; automated clicks remain unchanged and no JS dialog is reported. A direct manual Start check is pending. This is not an actual guided-motion/owner pass. Q held, guide paused and RM-016 Planned.
+
+## Prior V Corner result and browser limit
 
 [V ticket](../tickets/RM-015V-frame-the-corner-opposite-the-doorway.md), [14-path plan](../commit-plans/RM-015V.md), [evidence](../validation/RM-015V.md). Corner is diagonally opposite the corner nearest the same recorded doorway used by Doorway. Recorded valid position and both floor spans are required, midpoint ties are deterministic, and safe fallback stays in that opposite quadrant. Existing flight and comparison continuity remain. Current469tests/39files/seven boundaries/root/both builds pass;194inputs/1,539,995bytes/BUILD_ID0a8b96b4f6afcba4d093684584dfedd7fb54ff32579ec306522e9c5b7ef230e7. Pure CPU target timings do not prove native travel smoothness. Actual forward/reverse/retarget/resize and partial/furnished2D→3D camera checks, plus remaining T/U journeys, stay unverified after the test-confirmation/control stall. No restored control or owner acceptance is inferred. Q held, guide paused and RM-016 Planned.
 

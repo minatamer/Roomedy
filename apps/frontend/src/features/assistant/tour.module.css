@@ -1,0 +1,149 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: auto;
+  color: #43362b;
+}
+.presentation > * {
+  animation: tourEnter 220ms ease-out both;
+}
+.presentation[data-leaving='true'] > * {
+  animation: tourLeave 180ms ease both;
+}
+.scrim {
+  position: fixed;
+  background: #4c382638;
+  pointer-events: none;
+}
+.highlight {
+  position: fixed;
+  box-sizing: border-box;
+  border: 2px solid #9a704e;
+  border-radius: 12px;
+  box-shadow: 0 0 0 4px #efe0c180;
+  pointer-events: none;
+}
+.card {
+  position: fixed;
+  box-sizing: border-box;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 22px;
+  border: 1px solid #ceb99c;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fffaf0, #f2e7d6);
+  box-shadow:
+    0 16px 60px #4c352b35,
+    inset 0 1px #fffdf7;
+  color: #43362b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.measuring {
+  visibility: hidden;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+}
+.card small {
+  color: #80634d;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.card h2 {
+  margin: 16px 0 10px;
+  font-size: 25px;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+  font-weight: 500;
+}
+.card p {
+  margin: 0 0 20px;
+}
+.progress {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+.progress span {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: #dbccb6;
+  transition: background 220ms;
+}
+.progress span[data-current='true'] {
+  background: #886044;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.actions button {
+  min-height: 44px;
+  min-width: 44px;
+  border: 1px solid #c9b69c;
+  border-radius: 11px;
+  padding: 9px 12px;
+  background: #eee0cb;
+  color: #4f3e30;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    background 180ms,
+    transform 180ms;
+}
+.actions button:hover:enabled {
+  background: #e4d3b8;
+  transform: translateY(-1px);
+}
+.actions button:last-child {
+  margin-left: auto;
+  background: #76533b;
+  border-color: #76533b;
+  color: #fffaf2;
+}
+.actions button:last-child:hover:enabled {
+  background: #5e412f;
+}
+.actions .skip {
+  background: transparent;
+  border-color: transparent;
+}
+.actions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.actions button:focus-visible {
+  outline: 3px solid #956444;
+  outline-offset: 3px;
+}
+@keyframes tourEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tourLeave {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (max-width: 480px), (max-height: 500px) {
+  .card {
+    padding: 18px;
+  }
+  .card h2 {
+    font-size: 22px;
+  }
+}

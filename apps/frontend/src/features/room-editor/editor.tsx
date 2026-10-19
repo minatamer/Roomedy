@@ -3,6 +3,8 @@ import { thumbnailUrl, findCatalogueEntry } from '../catalogue/catalogue';
 import { useSurfaceMotion } from './use-surface-motion';
 import { AssistantController } from '../assistant/controller';
 import { Assistant } from '../assistant/assistant';
+import { AssistantTour } from '../assistant/tour';
+import { automaticallyOfferTour } from '../assistant/tour-runtime';
 import type { CameraPose } from '../room-view/adapter';
 import {
   Component,
@@ -170,7 +172,7 @@ export function Editor({
     { id: 'assistant', label: 'Assistant' },
   ];
   return (
-    <div className={styles.studio}>
+    <div className={styles.studio} data-room-tour-root>
       <header className={styles.header}>
         <div
           onClickCapture={(e) => {
@@ -222,6 +224,11 @@ export function Editor({
               {panel.label}
             </button>
           ))}
+          <AssistantTour
+            key={workspace.workspaceId}
+            controller={controller}
+            autoStart={automaticallyOfferTour(state)}
+          />
         </nav>
         <section
           className={styles.canvasColumn}
@@ -256,6 +263,7 @@ export function Editor({
               className={styles.comparison}
               role="group"
               aria-label="Compare arrangement"
+              data-room-target="comparison"
             >
               <button
                 aria-pressed={before}

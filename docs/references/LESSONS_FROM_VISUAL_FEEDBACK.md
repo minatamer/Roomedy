@@ -31,7 +31,7 @@ Keep essential transfer disclosure, approximation status, limits at input, actio
 
 Read the latest correction and its surface before applying it globally. Fix all variants of the same owning component/state, including refresh and errors, while preserving intentional differences elsewhere. A platform palette change must not overwrite selected room finishes. A browser icon can need different contrast from the website wordmark. Keep superseded choices in history, not competing active instructions.
 
-Do not add a new full-screen hero video, auto-start tour, logo generator or dashboard because it was requested for Retailor. Do not ask the owner to approve every small style adjustment already inside the selected direction. Evidence: E02, E03, E27.
+Do not add a new full-screen hero video, logo generator or dashboard because it was requested for Retailor. Latest direct Roomedy feedback now explicitly selects the automatic fresh-room tour welcome in RM-015W; this supersedes the earlier manual-only offer, not optional participation. Do not ask the owner to approve every small style adjustment already inside the selected direction. Evidence: E02, E03, E27.
 
 ### L-03. Give space to the primary task
 
@@ -73,9 +73,9 @@ A loading spinner must continue while decoding, searching or waiting. Move bound
 
 ### L-09. Keep the optional tour coherent
 
-Roomedy's short tour remains optional and skippable. If shown, wait for real layout/scroll readiness, offer a clear Start/Skip entry, and reveal target highlight and card together. Re-measure after panel/viewport changes; do not draw a rectangle before scrolling reaches its target. Move focus safely and support Back/Skip/Escape/replay where implemented.
+Latest direct Roomedy instruction selects an immediate automatic welcome on fresh accepted-room entry (RM-015W). Participation remains skippable, with Start/Skip and manual replay. The welcome has no arbitrary buffer; guided steps wait for actual layout/scroll/ancestor-motion readiness and reveal target highlight and card together. Re-measure after panel/viewport changes; do not draw a rectangle before scrolling reaches its target. Move focus safely and support Back/Skip/Escape/replay where implemented.
 
-Explain real tasks, not a tour of every button. A same-target step can update seamlessly; a moved target needs a coherent transition. Do not import Retailor's auto-start policy or exact delay as a new Roomedy requirement. Evidence: E12.
+Explain real tasks, not a tour of every button. A same-target step can update seamlessly; a moved target needs a coherent transition. The owner’s explicit Roomedy request supplies automatic-welcome authority; Retailor’s latest implementation supplies transition evidence. Its old1000ms welcome delay was superseded and is not adopted. Recovered/imported rooms remain uninterrupted, using existing flags without persistent tour metadata. Evidence: E12.
 
 ### L-10. Make chat usable before making it decorative
 
