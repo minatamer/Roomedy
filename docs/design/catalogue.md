@@ -8,7 +8,7 @@ All sizes are outer physical **width × depth × height in mm**, local front +Z.
 
 | Versioned catalogue ID | Nominal size | Supported dimensions / representation | Access |
 | --- | --- | --- | --- |
-| `procedural-bed` | 1600 × 2100 × 850 | W1000–2000, D1900–2200, H450–1100; rebuilt frame/headboard/soft parts | 600, open access |
+| `procedural-bed` | 1600 × 2100 × 850 | W1000–2200, D1900–2400, H450–1100; rebuilt frame/headboard/soft parts | 600, open access |
 | `procedural-desk` | 1200 × 600 × 740 | W900–1800, D500–900, H680–820; rebuilt top/legs/rail | 800, open access |
 | `procedural-chair` | 550 × 550 × 900 | W450–750, D450–800, H750–1300; rebuilt seat/back/legs | 800, pullout behind local front |
 | `wardrobe-hinged` | 1200 × 600 × 2100 | W800–2400, D450–700, H1600–2600; rebuilt carcass/doors | 800, hinged |
@@ -74,3 +74,11 @@ See [RM-002 validation](../validation/RM-002.md). Prepared thumbnail images were
 ## RM-015D renderer detail (19 October2026)
 
 Original GLB bytes, exact manifests/licences/thumbnails and catalogue/physical definitions remain unchanged. Renderer-only bevels, two pillows within the existing pillow envelope, recessed wardrobe fronts/handles and owned material maps improve close-up interiors. Shared physical bounds, scale1 fixed assets, odd/half-mm geometry, strict proposed variants and same-size fallback retain their original authority. Fixed models have reviewed UVs and named wood/carpet/metal materials; renderer instances copy those materials, retain cache-owned geometry and borrow bounded canvas-owned maps. Unsupported measured owned-size bounds remain simple geometry and keep their existing contextual notice. See [the room renderer policy](room-view.md) and [actual receipt](../validation/RM-015D.md). No new asset preparation/source/licence or purchased download was needed.
+
+## AA useful sizing shortcuts
+
+One shared source-backed registry provides14regional mattress choices: metric Single/Double/Queen/King, UK Single/Double/King/Super king, US Twin/TwinXL/Full/Queen/King/CaliforniaKing. Labels include exact cm/in dimensions and sizing system.25.4mm/in rounds to nearest integer mm. A chosen bed starts with an **estimated100mm total width and depth frame allowance**, explicitly shown, with editable overall dimensions; it is not a measured universal allowance or a mattress-only footprint. Bed height stays unchanged. Offered procedural maximum2200×2400mm supports large frames; default1600×2100×850 and geometry/assets stay unchanged.
+
+Common planning presets cover adjustable desk120×60/140×60/160×80cm, wardrobe100×60×201/150×60×201/200×60×236cm, and shelf40×28×202/80×28×106/80×28×202cm; filter actual catalogue support, so sliding wardrobe omits unsupported100cm width. These are dimensional conveniences, not exact brand assets or universal furniture standards. Fixed prepared variants and chairs receive no invented size presets. Current/custom values and Advanced measured fields remain available. [Primary evidence/dispositions](../references/furniture-sizes-2026-10-19.md).
+
+The shared basic form appears high in inspector/photo review and before Add/Replace placement. Choosing a preset only edits its local fields. Explicit Unlock size is separate from Use size; defaults and starting-state locks remain. One visitor-only set-size-estimate updates changed axes to estimated/visitor-estimate and preserves omitted/unchanged evidence, ownership, pose, other locks and baseline. Final spatial/variant policy and whole-change Undo remain. Preset selection is transient, retained after its successful apply, cleared on differing Undo/current size or new item/workspace identity; no project schema or persisted mattress-brand fact is added. Actual checks/limits are in [AA](../validation/RM-015AA.md).

@@ -32,8 +32,8 @@ const records = catalogueSchema.parse([
     category: 'bed',
     assetId: 'bed',
     size: {
-      width: range(1000, 1600, 2000),
-      depth: range(1900, 2100, 2200),
+      width: range(1000, 1600, 2200),
+      depth: range(1900, 2100, 2400),
       height: range(450, 850, 1100),
     },
     accessMm: 600,

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
@@ -10,6 +10,9 @@ import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import styles from './editor.module.css';
+import { FurnitureSizeFields } from './furniture-size-form';
+import { furnitureSizePresets, parseSizeInput } from './size-presets';
+import type { SizeInputValues } from './size-presets';
 
 function PlacementForm({
   entry,
@@ -30,6 +33,12 @@ function PlacementForm({
     error: '',
     field: 'x',
   });
+  const [sizeValues, setSizeValues] = useState<SizeInputValues>({
+    preset: '',
+    width: String(entry.size.width.default),
+    depth: String(entry.size.depth.default),
+  });
+  const errorId = useId();
   const form = useRef<HTMLFormElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -42,6 +51,18 @@ function PlacementForm({
       className={styles.section}
       onSubmit={(e) => {
         e.preventDefault();
+        const chosenSize = parseSizeInput(sizeValues, entry, false);
+        if (!chosenSize.ok) {
+          setValues((v) => ({
+            ...v,
+            error: chosenSize.message,
+            field: chosenSize.field,
+          }));
+          form.current
+            ?.querySelector<HTMLInputElement>(`[name="${chosenSize.field}"]`)
+            ?.focus();
+          return;
+        }
         for (const axis of ['x', 'z'] as const) {
           const n = Number(values[axis]);
           if (
@@ -72,9 +93,11 @@ function PlacementForm({
           catalogueId: entry.id,
           catalogueVersion: entry.version,
           dimensions: {
-            width: estimated(entry.size.width.default),
-            depth: estimated(entry.size.depth.default),
-            height: estimated(entry.size.height.default),
+            width: estimated(chosenSize.size.width),
+            depth: estimated(chosenSize.size.depth),
+            height: estimated(
+              chosenSize.size.height ?? entry.size.height.default,
+            ),
           },
           pose: {
             centerX: Number(values.x),
@@ -116,9 +139,21 @@ function PlacementForm({
         {replacement ? 'Replace with' : 'Add'} {entry.label}
       </h3>
       <p>
-        {entry.size.width.default} × {entry.size.depth.default} ×{' '}
-        {entry.size.height.default} mm · proposed size
+        {sizeValues.width || '?'} × {sizeValues.depth || '?'} ×{' '}
+        {sizeValues.height ?? entry.size.height.default} mm · proposed size
       </p>
+      {furnitureSizePresets(entry).length > 0 && (
+        <FurnitureSizeFields
+          entry={entry}
+          values={sizeValues}
+          onChange={(values) => {
+            setSizeValues(values);
+            setValues((v) => ({ ...v, error: '', field: '' }));
+          }}
+          errorField={values.error ? values.field : ''}
+          errorId={errorId}
+        />
+      )}
       {replacement && (
         <p className={styles.notice}>
           This explicitly replaces {replacement.label} (
@@ -146,7 +181,7 @@ function PlacementForm({
         ))}
       </div>
       {values.error && (
-        <p role="alert" className={styles.error}>
+        <p role="alert" id={errorId} className={styles.error}>
           {values.error}
         </p>
       )}

@@ -61,6 +61,14 @@ export const proposalActionSchema = z.discriminatedUnion('type', [
 ]);
 export const visitorActionSchema = z.discriminatedUnion('type', [
   ...transformActions,
+  // Visitor planning estimates may describe owned pieces without claiming a measured correction.
+  z.strictObject({
+    type: z.literal('set-size-estimate'),
+    id: idSchema,
+    width: z.number().int().min(1).max(POLICY.furnitureEdgeMm),
+    depth: z.number().int().min(1).max(POLICY.furnitureEdgeMm),
+    height: z.number().int().min(1).max(POLICY.furnitureEdgeMm).optional(),
+  }),
   z.strictObject({ type: z.literal('add'), furniture: furnitureSchema }),
   z.strictObject({
     type: z.literal('replace'),

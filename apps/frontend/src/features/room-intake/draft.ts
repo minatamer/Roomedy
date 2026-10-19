@@ -234,15 +234,28 @@ export function correctDraft(
       ok: false,
       message:
         result.code === 'locked'
-          ? 'Unlock that property before changing its planned placement.'
+          ? actions.some((a) => a.type === 'set-size-estimate')
+            ? 'Unlock size before changing its estimate.'
+            : 'Unlock that property before changing its planned placement.'
           : result.code === 'new-conflict'
-            ? 'That placement adds a space conflict. Keep the current position or correct the measurements.'
+            ? actions.some((a) => a.type === 'set-size-estimate')
+              ? 'That size adds a space conflict. Keep the current size or move the piece.'
+              : 'That placement adds a space conflict. Keep the current position or correct the measurements.'
             : 'This correction is outside the supported room rules.',
     };
   if (!result.changed) return { ok: true, draft };
   const next = structuredClone(draft);
   next.room = result.room;
   for (const action of actions) {
+    if (action.type === 'set-size-estimate') {
+      for (const axis of ['width', 'depth', 'height'] as const) {
+        if (
+          action[axis] !== undefined &&
+          !next.reviewed.includes(`${action.id}:${axis}`)
+        )
+          next.reviewed.push(`${action.id}:${axis}`);
+      }
+    }
     const key =
       action.type === 'confirm-measurement'
         ? `${action.target.id}:${action.target.field}`

@@ -8,6 +8,7 @@ import { MeasurementField, measurementLabel } from './measurements';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import styles from './editor.module.css';
+import { FurnitureSizeForm } from './furniture-size-form';
 
 function PositionForm({
   controller,
@@ -317,6 +318,31 @@ export function FurnitureInspector({
         ))}{' '}
         mm
       </p>
+      <FurnitureSizeForm
+        key={`${controller.getSnapshot().generation}/${item.id}/${item.catalogueId}/${item.ownership}`}
+        item={item}
+        onCommit={(action) => {
+          const r = run([action], 'Change size estimate');
+          return r.ok
+            ? null
+            : failureMessage(r, controller.getSnapshot().workspace?.current);
+        }}
+        onUnlock={() => {
+          const r = run(
+            [
+              {
+                type: 'set-locks',
+                id: item.id,
+                locks: { ...item.locks, dimensions: false },
+              },
+            ],
+            'Unlock size',
+          );
+          return r.ok
+            ? null
+            : failureMessage(r, controller.getSnapshot().workspace?.current);
+        }}
+      />
       <div className={styles.section}>
         <label className={styles.checkLabel}>
           <input

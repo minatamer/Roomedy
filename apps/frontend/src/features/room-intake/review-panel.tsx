@@ -7,6 +7,7 @@ import type { VisitorAction } from '@roomedy/contracts/commands';
 import { CATALOGUE, findCatalogueEntry } from '@roomedy/spatial';
 import { MeasurementInput } from '../room-editor/measurements';
 import { draftFeature } from './draft';
+import { FurnitureSizeForm } from '../room-editor/furniture-size-form';
 import type { ReviewController, ReviewSnapshot } from './review-controller';
 import editorStyles from '../room-editor/editor.module.css';
 import styles from './intake.module.css';
@@ -320,6 +321,25 @@ function PiecePanel({
           ))}
         </select>
       </label>
+      <FurnitureSizeForm
+        key={`${controller.session.getSnapshot().generation}/${piece.id}/${piece.catalogueId}/${piece.ownership}`}
+        item={piece}
+        onCommit={(action) =>
+          controller.command([action], 'Size estimate updated.')
+        }
+        onUnlock={() =>
+          controller.command(
+            [
+              {
+                type: 'set-locks',
+                id: piece.id,
+                locks: { ...piece.locks, dimensions: false },
+              },
+            ],
+            'Size unlocked.',
+          )
+        }
+      />
       <label className={editorStyles.checkLabel}>
         <input
           type="checkbox"

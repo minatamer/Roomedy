@@ -1,10 +1,12 @@
 # Roomedy — product and engineering blueprint
 
+**Current furniture-size feedback:** [RM-015AA](tickets/RM-015AA-add-useful-furniture-size-presets.md), [24-path plan](commit-plans/RM-015AA.md), [primary research](references/furniture-sizes-2026-10-19.md) and [evidence](validation/RM-015AA.md) follow committed Z59dae0a. Owner selects Single/Queen/King and other useful sizing shortcuts. Regional bed dimensions distinguish mattress/frame; common adjustable desk/wardrobe/shelf presets and custom values use shared estimate/lock/spatial/Undo authority. Actual visual approval remains pending; Q held, guide paused, RM-016 Planned.
+
 **Current photo simplification:** [RM-015Z](tickets/RM-015Z-simplify-photo-intake-and-infer-photo-roles.md), [27-path plan](commit-plans/RM-015Z.md) and [evidence](validation/RM-015Z.md) follow committed Y27b0130. Latest owner selects concise matched cards and automatic photo understanding: no visitor type selector, retained animated guide/gallery/viewer, one explicit Draft beside prepared uploads. Bounded source classification protects uncertain room scale. Actual owner visual acceptance remains pending; Q held and RM-016 Planned.
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** Y checkpoint27b0130; Z simple photo cards/automatic source understanding locally verified539tests/root/both builds, read-only pass1 clean, exact checkpoint ready; actual owner visual approval pending, Q held and RM-016 Planned
+**Stage:** Z checkpoint59dae0a; AA source-backed furniture sizing locally verified555tests/root/both builds; read-only pass1 clean, checkpoint prepared; actual owner visual approval pending, Q held and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -1320,8 +1322,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Continue actual owner visual feedback on sole4320 after the authorized exact27-path RM-015Z local checkpoint. Current photo cards/automatic source understanding and prior exports are reviewable; Q held, guide goal paused, RM-016 Planned. No actual visual approval, paid/live calls, deploy/push/reset or delegation inferred.
-Active ticket: RM-015Z
+Next action: Continue actual owner visual feedback on sole4320 after the authorized exact24-path RM-015AA local checkpoint. Popular bed/common furniture presets and prior photo/export corrections are reviewable. Q held, guide goal paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.
+Active ticket: RM-015AA
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1346,7 +1348,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T20:22:46+00:00",
+  "updated_at": "2026-10-19T20:53:50+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1535,8 +1537,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015Z",
-  "next_action": "Continue actual owner visual feedback on sole4320 after the authorized exact27-path RM-015Z local checkpoint. Current photo cards/automatic source understanding and prior exports are reviewable; Q held, guide goal paused, RM-016 Planned. No actual visual approval, paid/live calls, deploy/push/reset or delegation inferred.",
+  "active_ticket": "RM-015AA",
+  "next_action": "Continue actual owner visual feedback on sole4320 after the authorized exact24-path RM-015AA local checkpoint. Popular bed/common furniture presets and prior photo/export corrections are reviewable. Q held, guide goal paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.",
   "phases": [
     {
       "id": "01-docs",
@@ -1974,14 +1976,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015Y.md:25paths allocated before edits; direct owner photo/gallery/glass/capture-guide requests.",
         "docs/validation/RM-015Y.md:25paths,526tests/42files/seven boundaries/root/assets/both builds,212inputs/1800508bytes/BUILD_ID41637f229a95a7e2c9b5a0f269106f1a1e2f6afeace2f509116f7e740ad1347d;26fresh empty/six-photo responsive observations,4viewer sizes, keyboard/focus/error/reorder/guide/fake2D journey; read-only pass1 no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending.",
         "docs/commit-plans/RM-015Z.md:27paths allocated before source edits, latest direct owner simpler cards/automatic photo role requirements; Y27b0130 committed.",
-        "docs/validation/RM-015Z.md:27paths,539tests/43files/seven boundaries/root/assets/both builds;212inputs/1800640bytes/BUILD_IDca0265f57ee524c5b79a4527a44301609be7403d2da269a97681535762d20827.26native empty/six-photo responsive states, guide/viewer/error and automatic fake2D journey; read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external proof pending."
+        "docs/validation/RM-015Z.md:27paths,539tests/43files/seven boundaries/root/assets/both builds;212inputs/1800640bytes/BUILD_IDca0265f57ee524c5b79a4527a44301609be7403d2da269a97681535762d20827.26native empty/six-photo responsive states, guide/viewer/error and automatic fake2D journey; read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external proof pending.",
+        "docs/commit-plans/RM-015AA.md:24paths allocated before source edits; direct owner popular bed/other useful furniture sizing request, primary sizing research. Z59dae0a committed.",
+        "docs/validation/RM-015AA.md:24paths;555tests/44files/seven boundaries/assets/root/both builds,214inputs/1815760bytes/BUILD_ID4d678008fd6e9befe7510bdf959e5f2976ea1efae73a47879100368324801a3d.13native sizes with44px controls/0horizontal overflow, actual2D/3D size/Undo/rejection/Add/Replace/photo-review checks. Read-only pass1 Meets ticket, no actionable findings. Exact checkpoint separately authorized; actual visual/physical/live/external limits pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "the 2 cards have too much content for no reason; do these edits and allign them dynamically. AI should automatically understand room view vs furniture details without the user having to mention.",
-        "source": "human:current-chat/2026-10-19/simpler-photo-cards-automatic-types",
-        "scope": "RM-015Z implementation corrections only; no result approval",
-        "recorded_at": "2026-10-19T20:04:10+00:00"
+        "quote": "for bed make sure they can choose popular bed sizes (single king queen etc..) try to apply this to other furtnute with known sizes, anything that can help the user",
+        "source": "human:current-chat/2026-10-19/furniture-size-presets",
+        "scope": "RM-015AA implementation only, not visual result approval",
+        "recorded_at": "2026-10-19T20:28:46+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2127,6 +2131,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/simpler-photo-cards-automatic-types",
             "scope": "RM-015Z implementation corrections only; no result approval",
             "recorded_at": "2026-10-19T20:04:10+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "for bed make sure they can choose popular bed sizes (single king queen etc..) try to apply this to other furtnute with known sizes, anything that can help the user",
+            "source": "human:current-chat/2026-10-19/furniture-size-presets",
+            "scope": "RM-015AA implementation only, not visual result approval",
+            "recorded_at": "2026-10-19T20:28:46+00:00"
           }
         }
       ]

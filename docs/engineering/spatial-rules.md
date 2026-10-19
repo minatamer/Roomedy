@@ -55,3 +55,9 @@ History is bounded to 20 snapshots and 2 MiB, pruning oldest entries determinist
 ## Evidence boundary
 
 The RM-003 validation receipt records actual tests/builds, read-only review and any remaining local defects. Geometry fixtures use independently derived facts rather than the engine as their oracle. Photos, real-provider quality, layout-search success, R3F/browser behavior, storage, actual Linux/hosted execution and owner visual/security decisions remain separate ticket evidence.
+
+## AA visitor planning size estimates
+
+`set-size-estimate` is a visitor-only bounded action with integer width/depth and optional height. It exists separately from measured corrections and assistant/proposed-only resize: presets can describe owned furniture without falsely confirming it. It respects the original dimension lock even if another action unlocks it in the same batch; UI Unlock is a separate explicit command. Only changed provided axes become estimated/visitor-estimate; omitted/unchanged confirmed/extracted/unknown values survive. Ownership/preferences/poses/other locks do not change. No assistant action/schema/scope expansion, no inclusion in measurementActions and no bypass of final hard-conflict/repair/variant checks. Fixed proposed variants and catalogue bounds remain strict; owned physical evidence remains independent of representation eligibility. One atomic dispatch and normal Undo/replay/expiry authority owns the result.
+
+Review’s same authority records deliberate per-axis keys for provided estimates, preserving them through later hypotheses. Presets never claim physical measurement, exact product geometry, certified clearance or a real-provider action. [AA plan/evidence](../validation/RM-015AA.md) and [manufacturer research](../references/furniture-sizes-2026-10-19.md) distinguish defaults from actual facts.

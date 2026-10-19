@@ -1013,3 +1013,12 @@
 .advanced > .section:first-of-type {
   margin-top: 0;
 }
+
+.sizeFields {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.sizeFields .twoFields {
+  align-items: start;
+}
