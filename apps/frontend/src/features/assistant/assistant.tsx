@@ -78,15 +78,15 @@ export function Assistant({
         <h2 tabIndex={-1}>Roomedy assistant</h2>
         <AssistantTour />
       </div>
-      <p className={styles.mode}>
-        {state.mode === 'fake'
-          ? 'Simulated assistant · authored responses'
-          : state.mode === 'live'
+      {state.mode !== 'fake' && (
+        <p className={styles.mode}>
+          {state.mode === 'live'
             ? 'Send shares this room and your message with the AI provider.'
             : state.mode === 'loading'
               ? 'Checking assistant availability…'
               : 'Assistant unavailable · manual editing is ready'}
-      </p>
+        </p>
+      )}
       <details
         className={styles.goalOptions}
         open={goalsOpen}

@@ -290,18 +290,23 @@ export function designSuggestions(
     intent.finish !== null ||
     intent.palette !== null;
   if (intent.goal === 'open-space' && !unrelated && !intent.targetIds.length)
-    return [option('Preview a more open layout', 'Make the room less cramped')];
+    return room.furniture.some((p) => !p.locks.position)
+      ? [option('Preview a more open layout', 'Make the room less cramped')]
+      : [];
   if (
     intent.goal === 'work-by-window' &&
     !unrelated &&
     !intent.targetIds.length
   )
-    return [
-      option(
-        'Preview the work area by the window',
-        'Move the work area near the window',
-      ),
-    ];
+    return room.furniture.filter((p) => category(p) === 'desk').length === 1 &&
+      room.room.features.some((f) => f.kind === 'window')
+      ? [
+          option(
+            'Preview the work area by the window',
+            'Move the work area near the window',
+          ),
+        ]
+      : [];
   if (
     intent.goal === 'palette' &&
     intent.palette &&
@@ -325,7 +330,14 @@ export function designSuggestions(
       : intent.finish === null)
   ) {
     const piece = room.furniture.find((p) => p.id === intent.targetIds[0])!;
-    if (intent.goal === 'piece-finish')
+    if (intent.goal === 'piece-finish') {
+      if (
+        !findCatalogueEntry(
+          piece.catalogueId,
+          piece.catalogueVersion,
+        )?.finishes.includes(intent.finish!)
+      )
+        return [];
       return [
         option(
           `Preview ${piece.label} in ${intent.finish}`,
@@ -333,6 +345,7 @@ export function designSuggestions(
           piece.id,
         ),
       ];
+    }
     return [
       option(
         `Move ${piece.label} to the ${intent.goal}`,
@@ -357,7 +370,16 @@ export function designSuggestions(
     return [option('Review the room checks', 'Explain the room checks')];
   if (intent.goal === 'clarify' && !unrelated && !intent.targetIds.length)
     return [
-      option('Preview a more open layout', 'Make the room less cramped'),
+      ...(room.furniture.length === 0
+        ? [
+            option(
+              'Furnish with essentials',
+              'Add a bed, desk, chair and wardrobe',
+            ),
+          ]
+        : room.furniture.some((p) => !p.locks.position)
+          ? [option('Preview a more open layout', 'Make the room less cramped')]
+          : []),
       option('Preview a calm palette', 'Preview calm room palette'),
       option('Review the room checks', 'Explain the room checks'),
     ];

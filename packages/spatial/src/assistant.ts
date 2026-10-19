@@ -2,9 +2,10 @@ import type { AssistantReply } from '@roomedy/contracts/assistant';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { ActionScope, ProposalAction } from '@roomedy/contracts/commands';
 import type { SearchGoal } from '@roomedy/contracts/search';
+import type { SearchResult } from '@roomedy/contracts/search';
 import { findCatalogueEntry, CATALOGUE } from './catalogue.js';
 import { checkRoom } from './checks.js';
-import { designerRequest, designPalette } from './design.js';
+import { designerRequest, designPalette, designSuggestions } from './design.js';
 import type { DesignTurn } from './design.js';
 
 const clarificationLabel =
@@ -46,6 +47,96 @@ export function emptyAssistantReply(
     question: null,
     control: null,
     blockedIssue: null,
+  };
+}
+/** Same factual alternative in browser/backend; no candidate is never a fabricated success. */
+export function assistantSearchFallback(
+  room: RoomDocument,
+  task: AssistantTask,
+  found: SearchResult,
+): AssistantReply {
+  if (found.question)
+    return {
+      ...emptyAssistantReply(
+        room,
+        'Review this measurement so I can check the arrangement.',
+        'visitor-action',
+      ),
+      objectIds: [found.question.id],
+      question: found.question,
+      control: 'measurement',
+    };
+  const finish = task.goal?.pieceFinishes.find((f) => {
+    const piece = room.furniture.find((p) => p.id === f.id);
+    return (
+      piece &&
+      !findCatalogueEntry(
+        piece.catalogueId,
+        piece.catalogueVersion,
+      )?.finishes.includes(f.finish)
+    );
+  });
+  if (finish) {
+    const piece = room.furniture.find((p) => p.id === finish.id)!,
+      entry = findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)!;
+    return {
+      ...emptyAssistantReply(
+        room,
+        `${piece.label} offers ${entry.finishes.join(', ')}. Which of those finishes would you like?`,
+        'clarification',
+      ),
+      objectIds: [piece.id],
+    };
+  }
+  const locked = room.furniture.find(
+    (p) =>
+      task.objectIds.includes(p.id) && (p.locks.position || p.locks.rotation),
+  );
+  const palette =
+    room.room.floorFinish === 'walnut' && room.room.wallFinish === 'sage'
+      ? 'light'
+      : 'calm';
+  const suggestions = designSuggestions(room, {
+    goal: 'palette',
+    targetIds: [],
+    categories: [],
+    finish: null,
+    palette,
+  });
+  if (locked && found.alternatives.includes('review-lock'))
+    return {
+      ...emptyAssistantReply(
+        room,
+        `${locked.label} is protected. Review its lock, or try a palette change.`,
+        'visitor-action',
+      ),
+      objectIds: [locked.id],
+      control: locked.locks.position ? 'position-lock' : 'rotation-lock',
+      suggestions,
+    };
+  if (task.goal?.additions.length || task.goal?.replacements.length)
+    return {
+      ...emptyAssistantReply(
+        room,
+        'I haven’t found a layout for those pieces with the current constraints. Try fewer essentials or review the offered sizes.',
+      ),
+      catalogueIds: [
+        ...new Set(
+          [
+            ...(task.goal.additions ?? []),
+            ...(task.goal.replacements ?? []),
+          ].map((p) => p.catalogueId),
+        ),
+      ].slice(0, 8),
+      objectIds: task.objectIds,
+    };
+  return {
+    ...emptyAssistantReply(
+      room,
+      'I haven’t found an improvement with the current constraints. We can try a palette change, or review the pieces you want to move.',
+    ),
+    objectIds: task.objectIds,
+    suggestions,
   };
 }
 /** Pure application policy, not model-generated authority. Unresolved language is clarified before any mutation capability exists. */
@@ -706,6 +797,19 @@ export function resolveAssistantTask(
       };
     }
   }
+  if (
+    task.kind === 'clarify' &&
+    task.label === clarificationLabel &&
+    /\b(keep|keeping|leave|preserve|retain|only|just)\b/.test(
+      text.toLowerCase(),
+    )
+  )
+    return {
+      ...task,
+      label:
+        'Which exact pieces may change, and which must stay in place? Name one layout goal with those pieces.',
+      objectIds: [...design.excluded],
+    };
   if (
     task.kind === 'clarify' &&
     task.label === clarificationLabel &&

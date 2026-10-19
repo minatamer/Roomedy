@@ -1302,8 +1302,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: RM-015F implementation and final384-test/root/build gate passed; two findings independently fixed, read-only pass2 clean. Record authorized exact24-path local commit, then thoroughly plan/execute G sample parity. G-J and actual joint visual review remain before RM-016.
-Active ticket: RM-015F
+Next action: RM-015G final399-test/root/build gate and clean read-only pass2 passed after2 independently reproduced fixes. Record authorized exact17-path local commit, then plan/execute H product-wide copy cleanup. I/J and actual joint visual decision remain before RM-016.
+Active ticket: RM-015G
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1328,7 +1328,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T10:43:41+00:00",
+  "updated_at": "2026-10-19T11:09:15+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1502,8 +1502,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015F",
-  "next_action": "RM-015F implementation and final384-test/root/build gate passed; two findings independently fixed, read-only pass2 clean. Record authorized exact24-path local commit, then thoroughly plan/execute G sample parity. G-J and actual joint visual review remain before RM-016.",
+  "active_ticket": "RM-015G",
+  "next_action": "RM-015G final399-test/root/build gate and clean read-only pass2 passed after2 independently reproduced fixes. Record authorized exact17-path local commit, then plan/execute H product-wide copy cleanup. I/J and actual joint visual decision remain before RM-016.",
   "phases": [
     {
       "id": "01-docs",
@@ -1904,7 +1904,9 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/tickets/RM-015E-edit-furniture-directly-in-3d.md",
         "docs/validation/RM-015E.md: direct floor-plane3D editing, one command/Undo, desktop/phone interaction checks,360tests and both builds; clean read-only pass1.",
         "docs/commit-plans/RM-015F.md: exact22-path refined plan; E dependency committed66c4dca.",
-        "docs/validation/RM-015F.md: conversational scoped designer, typed interpretation/clarification, explicit owned finish, computed space/style proposals,384tests/both builds and clean read-only pass2."
+        "docs/validation/RM-015F.md: conversational scoped designer, typed interpretation/clarification, explicit owned finish, computed space/style proposals,384tests/both builds and clean read-only pass2.",
+        "docs/commit-plans/RM-015G.md: exact15-path plan; current sample baseline finds valid empty/partial/work candidates, without geometry/limit changes.",
+        "docs/validation/RM-015G.md: actual3 sample conversations,5 injected Responses parity cases, zero actual metered dispatches,399tests/both builds; two reference/constraint findings fixed and read-only pass2 clean."
       ],
       "blockers": [],
       "approval": {

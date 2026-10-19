@@ -3,6 +3,9 @@ import {
   resolveAssistantTask,
   LayoutSearch,
   evaluateScopedBatch,
+  designSuggestions,
+  assistantSearchFallback,
+  emptySearchResult,
 } from '@roomedy/spatial';
 import {
   windowCase,
@@ -10,6 +13,7 @@ import {
   partialCase,
 } from './fixtures/search-corpus.js';
 import { piece, commandRoom, known } from './fixtures/command-room.js';
+import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 const run = (
   room: ReturnType<typeof commandRoom>,
   text: string,
@@ -367,4 +371,61 @@ it.each([
   expect(task.kind).toBe('clarify');
   expect(task.scope.actionKinds).toEqual([]);
   expect(task.interpret).not.toBe(true);
+});
+it('offers state-aware clarification without promising a nonexistent layout or unsupported piece finish', () => {
+  const empty = createRoomFixture('empty'),
+    intent = {
+      goal: 'clarify' as const,
+      targetIds: [],
+      categories: [],
+      finish: null,
+      palette: null,
+    };
+  const options = designSuggestions(empty, intent);
+  expect(
+    resolveAssistantTask(empty, options[0]!.request, null, 'op').goal
+      ?.additions,
+  ).toHaveLength(4);
+  expect(designSuggestions(empty, { ...intent, goal: 'open-space' })).toEqual(
+    [],
+  );
+  expect(
+    designSuggestions(createRoomFixture('sample'), {
+      ...intent,
+      goal: 'piece-finish',
+      targetIds: ['chair_1'],
+      finish: 'walnut',
+    }),
+  ).toEqual([]);
+});
+it('keeps no-candidate alternatives truthful and separately authorized', () => {
+  const room = commandRoom([piece('desk')]),
+    task = run(room, 'Make it less cramped'),
+    before = structuredClone(room);
+  const found = emptySearchResult(
+    {
+      workspaceId: 'w',
+      generation: 0,
+      operationId: 'operation',
+      roomId: room.roomId,
+      inputRevision: 0,
+    },
+    42,
+    'deadline',
+  );
+  const reply = assistantSearchFallback(room, task, found);
+  expect(reply.kind).toBe('explanation');
+  expect(reply.actions).toBeNull();
+  expect(room).toEqual(before);
+  const option = reply.suggestions![0]!,
+    next = run(room, option.request);
+  expect(option.roomRevision).toBe(room.roomRevision);
+  expect(next.scope.actionKinds).toEqual(['room-finish']);
+  expect(next.scope.targetIds).toEqual([]);
+  found.question = { id: 'desk', field: 'width' };
+  const measured = assistantSearchFallback(room, task, found);
+  expect(measured.question).toEqual(found.question);
+  expect(measured.control).toBe('measurement');
+  expect(measured.objectIds).toEqual(['desk']);
+  expect(measured.actions).toBeNull();
 });

@@ -52,7 +52,11 @@ export const COORDINATES = Object.freeze({
   rotations: 4,
 } as const);
 
-export { resolveAssistantTask, emptyAssistantReply } from './assistant.js';
+export {
+  resolveAssistantTask,
+  emptyAssistantReply,
+  assistantSearchFallback,
+} from './assistant.js';
 export type { AssistantTask } from './assistant.js';
 export { designSuggestions } from './design.js';
 export { searchFacts } from './search/facts.js';

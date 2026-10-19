@@ -12,6 +12,7 @@ import {
   emptyAssistantReply,
   resolveAssistantTask,
   jsonBytes,
+  assistantSearchFallback,
 } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { operationAvailability } from '../session/operation-client';
@@ -309,18 +310,7 @@ export class AssistantController {
             );
             return;
           }
-          finish({
-            ...emptyAssistantReply(
-              workspace.current,
-              found.question
-                ? 'Review this relevant measurement before asking for the arrangement.'
-                : 'No better arrangement was found within this bounded search. Review a lock, measurement or selected essential before retrying.',
-              found.question ? 'visitor-action' : 'explanation',
-            ),
-            objectIds: found.question ? [found.question.id] : task.objectIds,
-            question: found.question,
-            control: found.question ? 'measurement' : null,
-          });
+          finish(assistantSearchFallback(workspace.current, task, found));
           return;
         }
         localCandidate = found.candidate;

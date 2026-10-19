@@ -18,6 +18,7 @@ import {
   proposedSearchPiece,
   validateSearchCandidate,
   searchFacts,
+  assistantSearchFallback,
 } from '@roomedy/spatial';
 import type { AssistantTask } from '@roomedy/spatial';
 import { runBackendLayoutSearch } from './layout-search.js';
@@ -203,18 +204,7 @@ export function createAssistantTools(
         ],
         search.candidate.facts,
       );
-    reply = {
-      ...emptyAssistantReply(
-        room,
-        search.question
-          ? 'One relevant measurement is needed before this arrangement can be proposed.'
-          : 'No better arrangement was found within this bounded search. Review a measurement, lock or selected essential and try a new request.',
-      ),
-      kind: search.question ? 'visitor-action' : 'explanation',
-      objectIds: search.question ? [search.question.id] : task.objectIds,
-      question: search.question,
-      control: search.question ? 'measurement' : null,
-    };
+    reply = assistantSearchFallback(room, task, search);
     return {
       ok: true,
       termination: search.termination,

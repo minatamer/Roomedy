@@ -15,7 +15,16 @@ import type {
   ProviderOutcome,
   ProviderRequest,
 } from '../apps/backend/src/providers/provider.js';
-import { resolveAssistantTask } from '@roomedy/spatial';
+import {
+  resolveAssistantTask,
+  createCommandWorkspace,
+  prepareCommand,
+  applyCommand,
+  undoCommand,
+} from '@roomedy/spatial';
+import { POLICY } from '@roomedy/contracts/policy';
+import type { DesignIntent } from '@roomedy/contracts/assistant';
+import { assistantFakeResponse } from '../apps/backend/src/assistant/fake.js';
 import { windowCase } from './fixtures/search-corpus.js';
 import {
   commandRoom,
@@ -23,10 +32,14 @@ import {
   door,
   known,
   unknown,
+  envelope,
 } from './fixtures/command-room.js';
 import {
   assistantInput,
   localAssistantCandidate,
+  sampleAssistantStories,
+  sampleAssistantInput,
+  assistantProtocolFixture,
 } from './fixtures/assistant.js';
 import { identityIds } from './fixtures/operation.js';
 function runtime(provider = createRoomedyFakeProvider()) {
@@ -586,4 +599,230 @@ it('prepares a coordinated spatial/style batch with actual facts and rejects an 
       { type: 'finish', id: 'unrelated_shelf', finish: 'ivory' },
     ]).ok,
   ).toBe(false);
+});
+it.each(sampleAssistantStories)(
+  'matches fake and injected Responses proposals/Apply/Undo for actual $kind sample',
+  async (story) => {
+    const input = sampleAssistantInput(story);
+    input.localCandidate = localAssistantCandidate(
+      input,
+      POLICY.searchCandidates,
+    );
+    expect(input.localCandidate).not.toBeNull();
+    const before = structuredClone(input.room),
+      signal = new AbortController().signal;
+    const fake = await createAssistantHandler(vi.fn(), identityIds())(input, {
+      signal,
+      call: (req) => assistantFakeResponse(req, signal),
+    });
+    let round = 0;
+    const fetcher = vi.fn<typeof fetch>(async () =>
+      Response.json(
+        assistantProtocolFixture(round++ === 0 ? 'find_arrangements' : 'done'),
+      ),
+    );
+    const port = createResponsesProvider(
+      'synthetic-key',
+      'fixture-model',
+      fetcher,
+    );
+    const protocol = await createAssistantHandler(vi.fn(), identityIds())(
+      input,
+      {
+        signal,
+        call: async (req) => {
+          const job = port.start(req, signal);
+          await job.settled;
+          return job.result;
+        },
+      },
+    );
+    expect(fake.kind).toBe('completed');
+    expect(protocol.kind).toBe('completed');
+    expect(protocol.assistant).toEqual(fake.assistant);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(input.room).toEqual(before);
+    const task = resolveAssistantTask(
+      input.room,
+      input.text,
+      input.selectedId,
+      input.identity.operationId,
+      input.context,
+    );
+    for (const reply of [fake.assistant!, protocol.assistant!]) {
+      const workspace = createCommandWorkspace(input.room, {
+        workspaceId: 'parity',
+        generation: 0,
+      });
+      const command = envelope(workspace, reply.actions!);
+      expect(
+        prepareCommand(workspace, command, 'assistant', task.scope).ok,
+      ).toBe(true);
+      const applied = applyCommand(workspace, command, 'assistant', task.scope);
+      expect(applied.ok).toBe(true);
+      if (!applied.ok) throw new Error('fixture-apply');
+      expect(applied.workspace.current.furniture).toHaveLength(story.count);
+      expect(applied.workspace.history.entries).toHaveLength(1);
+      const undone = undoCommand(applied.workspace);
+      expect(undone.ok).toBe(true);
+      if (undone.ok)
+        expect(undone.workspace.current.furniture).toEqual(before.furniture);
+    }
+  },
+  30_000,
+);
+it.each([
+  {
+    text: 'The furniture needs a quieter visual rhythm',
+    intent: {
+      goal: 'palette',
+      targetIds: [],
+      categories: [],
+      finish: null,
+      palette: 'calm',
+    },
+  },
+  {
+    text: 'I prefer dark wood for this desk',
+    intent: {
+      goal: 'piece-finish',
+      targetIds: ['desk'],
+      categories: [],
+      finish: 'walnut',
+      palette: null,
+    },
+  },
+] as { text: string; intent: DesignIntent }[])(
+  'matches authored interpretation and injected Responses intent for $text',
+  async ({ text, intent }) => {
+    const input = assistantInput(windowCase().room, text),
+      signal = new AbortController().signal;
+    const fake = await createAssistantHandler(vi.fn(), identityIds())(input, {
+      signal,
+      call: (req) => assistantFakeResponse(req, signal),
+    });
+    const fetcher = vi.fn<typeof fetch>(async () =>
+        Response.json(assistantProtocolFixture(intent)),
+      ),
+      port = createResponsesProvider('synthetic-key', 'fixture-model', fetcher);
+    const protocol = await createAssistantHandler(vi.fn(), identityIds())(
+      input,
+      {
+        signal,
+        call: async (req) => {
+          const job = port.start(req, signal);
+          await job.settled;
+          return job.result;
+        },
+      },
+    );
+    expect(protocol.assistant).toEqual(fake.assistant);
+    expect(fake.assistant?.actions).toBeNull();
+    expect(fake.assistant?.suggestions).toHaveLength(1);
+    expect(fetcher).toHaveBeenCalledOnce();
+  },
+);
+
+it('asks a grounded choice for absent or ambiguous offline targets without inventing a piece or proposal', async () => {
+  for (const room of [
+    commandRoom(),
+    commandRoom([piece('first'), piece('second', 5000, 2000)]),
+  ]) {
+    const input = assistantInput(room, 'I prefer dark wood for this desk'),
+      before = structuredClone(room),
+      signal = new AbortController().signal;
+    const result = await createAssistantHandler(vi.fn(), identityIds())(input, {
+      signal,
+      call: (req) => assistantFakeResponse(req, signal),
+    });
+    expect(result.assistant?.kind).toBe('clarification');
+    expect(result.assistant?.actions).toBeNull();
+    expect(
+      result.assistant?.suggestions?.every((s) => s.selectedId === null),
+    ).toBe(true);
+    expect(room).toEqual(before);
+  }
+});
+it('bounds offline interpretation parsing and never calls a tool absent from the offered set', async () => {
+  const signal = new AbortController().signal;
+  for (const data of [
+    null,
+    { request: 'request', room: {} },
+    { request: 7, task: { kind: 'search' } },
+    { request: 'request', task: { kind: 'unknown' } },
+  ]) {
+    const result = await assistantFakeResponse(
+      {
+        instructions: 'fixture',
+        input: [
+          {
+            role: 'user',
+            content: [{ type: 'input_text', text: JSON.stringify(data) }],
+          },
+        ],
+        format: { name: 'room_design_intent_1', schema: {} },
+        tools: [],
+      },
+      signal,
+    );
+    expect(result.kind).toBe('malformed');
+  }
+  const result = await assistantFakeResponse(
+    {
+      instructions: 'fixture',
+      input: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'input_text',
+              text: JSON.stringify({
+                request: 'Move the desk near the window',
+                task: { kind: 'search' },
+              }),
+            },
+          ],
+        },
+      ],
+      format: { name: 'room_assistant_1', schema: {} },
+      tools: [],
+    },
+    signal,
+  );
+  expect(result.kind).toBe('malformed');
+});
+
+it('prioritizes an explicitly named offline target over an incompatible current selection', async () => {
+  const input = sampleAssistantInput(sampleAssistantStories[2]);
+  input.text = 'I prefer dark wood for this wardrobe';
+  input.selectedId = 'desk_1';
+  const signal = new AbortController().signal;
+  const result = await createAssistantHandler(vi.fn(), identityIds())(input, {
+    signal,
+    call: (req) => assistantFakeResponse(req, signal),
+  });
+  expect(result.assistant?.suggestions).toMatchObject([
+    {
+      selectedId: 'wardrobe_1',
+      request: 'Preview this selected piece finish walnut',
+    },
+  ]);
+  expect(result.assistant?.actions).toBeNull();
+});
+it('keeps unresolved restrictive wording as a grounded clarification without a broader actionable choice', async () => {
+  const input = sampleAssistantInput(sampleAssistantStories[2]);
+  input.text = 'The room feels boxed in but keep my bed in place';
+  const before = structuredClone(input.room),
+    signal = new AbortController().signal,
+    call = vi.fn((req: ProviderRequest) => assistantFakeResponse(req, signal));
+  const result = await createAssistantHandler(vi.fn(), identityIds())(input, {
+    signal,
+    call,
+  });
+  expect(call).not.toHaveBeenCalled();
+  expect(result.assistant?.kind).toBe('clarification');
+  expect(result.assistant?.actions).toBeNull();
+  expect(result.assistant?.objectIds).toContain('bed_1');
+  expect(result.assistant?.suggestions ?? []).toEqual([]);
+  expect(input.room).toEqual(before);
 });
