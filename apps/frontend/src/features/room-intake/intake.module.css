@@ -3,12 +3,12 @@
   background: transparent;
   color: #3e3126;
 }
-.intake button,
+.intake button:not(:global(.glass-control), .photoOpen),
 .intake select,
 .intake input {
   font: inherit;
 }
-.intake button,
+.intake button:not(:global(.glass-control), .photoOpen),
 .intake .fileButton {
   min-height: 44px;
   border: 1px solid #d4c6b5;
@@ -23,7 +23,7 @@
     border-color 0.2s,
     box-shadow 0.2s;
 }
-.intake button:hover:not(:disabled),
+.intake button:not(:global(.glass-control), .photoOpen):hover:not(:disabled),
 .fileButton:hover {
   background: #eae0ce;
   border-color: #a38764;
@@ -33,7 +33,7 @@
   opacity: 0.45;
   cursor: default;
 }
-.intake button:focus-visible,
+.intake button:not(:global(.glass-control)):focus-visible,
 .intake input:focus-visible,
 .intake select:focus-visible,
 .fileButton:focus-within {
@@ -76,9 +76,6 @@
   font-size: 12px;
   color: #79664f;
 }
-.header > button {
-  margin-left: auto;
-}
 .main {
   max-width: 1600px;
   margin: auto;
@@ -99,30 +96,6 @@
   letter-spacing: 0.13em;
   margin: 0 0 12px;
   color: #806749;
-}
-.upload {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 180px auto;
-  align-items: center;
-  gap: 22px;
-  padding: 28px;
-  border: 1px dashed #bda381;
-  border-radius: 18px;
-  background: #eee3d1;
-}
-.upload h2 {
-  font-size: 23px;
-  margin: 0 0 12px;
-}
-.upload p {
-  max-width: 640px;
-  font-size: 13px;
-  line-height: 1.6;
-  margin: 0;
-}
-.upload > .hint {
-  grid-column: 1/-1;
-  max-width: none;
 }
 .intake .fileButton {
   display: flex;
@@ -145,42 +118,6 @@
   line-height: 1.55;
   margin: 10px 0;
 }
-.photos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 16px;
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-}
-.photos > li {
-  background: #fffdf8;
-  border: 1px solid #ded3c3;
-  border-radius: 14px;
-  padding: 15px;
-  min-width: 0;
-  animation: arrive 0.25s ease-out;
-}
-.photoPreview {
-  height: clamp(180px, 34svh, 360px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  background: #eee7da;
-  margin-bottom: 15px;
-}
-.photoPreview img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.photoPreview p {
-  font-size: 12px;
-}
 .processing::before {
   content: '';
   display: block;
@@ -196,25 +133,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-}
-.startActions {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 18px;
-  margin: 0;
-  padding: 22px;
-  border: 1px solid #ded3c3;
-  border-radius: 16px;
-  background: #fffdf8;
-}
-.startActions p {
-  font-size: 12px;
-  line-height: 1.6;
-  max-width: 520px;
-}
-.startActions .primary {
-  width: 100%;
 }
 .reviewTools {
   display: flex;
@@ -445,12 +363,6 @@
   .intake .reviewPanel {
     padding: 20px;
   }
-  .upload {
-    grid-template-columns: 1fr 180px;
-  }
-  .upload > div {
-    grid-column: 1/-1;
-  }
 }
 @media (max-width: 759px) {
   .header {
@@ -481,7 +393,6 @@
   .catalogue {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-  .startActions,
   .acceptBar {
     align-items: stretch;
     flex-direction: column;
@@ -501,19 +412,6 @@
   }
   .title {
     margin-bottom: 24px;
-  }
-  .upload {
-    grid-template-columns: 1fr;
-    padding: 21px;
-    gap: 16px;
-  }
-  .upload > div,
-  .upload > .hint {
-    grid-column: auto;
-  }
-  .photoPreview,
-  .photoPreview img {
-    height: 200px;
   }
   .sketch {
     min-height: 300px;
@@ -591,44 +489,9 @@
 .title {
   grid-column: 1;
 }
-.photoLayout,
 .reviewLayout,
 .acceptBar {
   grid-column: 1 / -1;
-}
-.photoLayout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
-  gap: 24px;
-  align-items: stretch;
-}
-.photoMain {
-  min-width: 0;
-}
-.photoMain > .upload {
-  grid-template-columns: minmax(0, 1fr) minmax(160px, 1fr);
-  min-height: clamp(280px, calc(100svh - 235px), 620px);
-  grid-template-rows: 1fr auto auto;
-  align-content: stretch;
-  align-items: end;
-  background: #fffaf1f0;
-}
-.photoMain > .upload > div:first-child {
-  grid-column: 1 / -1;
-  align-self: center;
-}
-.photoMain > .upload h2 {
-  font-size: clamp(26px, 2.5vw, 36px);
-  max-width: 24ch;
-}
-.startActions {
-  align-self: start;
-  background: #fffaf1f0;
-}
-@media (max-width: 759px), (max-height: 500px) {
-  .photoMain > .upload {
-    min-height: 280px;
-  }
 }
 @media (min-width: 1180px) {
   .reviewLayout {
@@ -656,14 +519,6 @@
     height: 76px;
   }
 }
-@media (max-width: 1200px) {
-  .upload {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-  .upload > div:first-child {
-    grid-column: 1 / -1;
-  }
-}
 @media (max-width: 759px) {
   .main .flow {
     grid-template-columns: minmax(0, 1fr);
@@ -672,77 +527,338 @@
     grid-column: 1;
     grid-row: auto;
   }
-  .photoLayout {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-  }
-}
-@media (max-width: 480px) {
-  .upload {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
-.photoMain:has(.photos) > .upload {
-  min-height: 0;
-  grid-template-rows: auto auto auto;
+.header :global(.glass-control) {
+  margin-left: auto;
 }
-.photoMain:has(.photos) > .upload h2 {
-  max-width: none;
-  font-size: 26px;
+.photoLayout {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
 }
-@media (max-width: 480px) {
-  .photoMain > .upload {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.photoMain,
+.startActions {
+  min-width: 0;
+  min-height: clamp(500px, calc(100svh - 230px), 740px);
+  padding: 24px;
+  border: 1px solid #d5c1a4;
+  border-radius: 20px;
+  background: #fffaf1f2;
 }
-
-.header > button {
-  border-radius: 999px;
-  border-color: #e8ddc7;
-  background: linear-gradient(135deg, #fffaf1d9, #e7d9bfa8);
-  box-shadow:
-    inset 0 1px 0 #fffcf5bf,
-    0 6px 18px #6a4b2410;
-  backdrop-filter: blur(8px);
+.photoMain {
+  display: flex;
+  flex-direction: column;
 }
 .photoMain > .upload {
-  border-style: solid;
-  border-color: #d5c1a4;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.upload h2 {
+  font-size: clamp(25px, 2.4vw, 34px);
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+.upload p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+.captureArea {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+.photoFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: end;
+}
+.photoHelp {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+}
+.photoHelp .hint {
+  font-size: 11px;
+  color: #7b654c;
+}
+.intake .guideToggle {
+  padding: 4px 10px;
+  min-height: 44px;
+  background: #efe1c9;
+  border-radius: 9px;
+}
+.photos {
+  min-height: 272px;
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  max-width: 100%;
+  padding: 3px 3px 12px;
+  margin: 0;
+  scrollbar-color: #bba17c #eee3d1;
+}
+.photos > li {
+  flex: 0 0 min(260px, 85%);
+  min-width: 0;
+  scroll-snap-align: start;
+  padding: 12px;
+  border: 1px solid #ded3c3;
+  border-radius: 14px;
+  background: #f5ecdd;
+  animation: arrive 0.25s ease-out;
+}
+.photos:focus-visible,
+.exampleImages:focus-visible {
+  outline: 3px solid #94623e;
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+.photoPreview {
+  height: 135px;
+  margin-bottom: 10px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e9deca;
+}
+.photoPreview p {
+  font-size: 12px;
+}
+.photoLayout .photoOpen {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 44px;
+  position: relative;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e9deca;
+}
+.photoOpen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 300ms cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+.photoLayout .photoOpen:hover {
+  background: #e9deca;
+}
+.photoOpen:hover img {
+  transform: scale(1.025);
+}
+.photoOpen > span {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: block;
+  padding: 5px 8px;
+  border-radius: 20px;
+  background: #fff8e5e6;
+  color: #5d432d;
+  font-size: 10px;
+  box-shadow: 0 2px 8px #49321b12;
+}
+.photos label {
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+.photos select {
+  min-height: 44px;
+  margin-top: 4px;
+}
+.photos .actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px 34px;
+  gap: 4px;
+}
+.photos .actions button {
+  padding: 6px 3px;
+  min-height: 44px;
+  font-size: 10px;
+}
+.startActions {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+}
+.examples {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
 }
 .examples h2 {
-  font-size: 24px;
+  font-size: clamp(24px, 2.1vw, 30px);
+  font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.035em;
-  margin: 0 0 16px;
+  margin: 0 0 18px;
 }
-.examples button {
+.examples > button {
   width: 100%;
 }
 .exampleImages {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex: 1;
   gap: 12px;
-  margin-bottom: 14px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  padding: 3px 3px 12px;
+  margin-bottom: 12px;
+  scrollbar-color: #bba17c #eee3d1;
 }
 .exampleImages figure {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 calc(50% - 6px);
+  min-width: 160px;
   margin: 0;
-  min-width: 0;
+  scroll-snap-align: start;
+}
+.exampleImages .photoOpen {
+  flex: 1;
+  min-height: 160px;
+  max-height: 380px;
 }
 .exampleImages img {
-  display: block;
-  width: 100%;
-  height: clamp(160px, 28svh, 260px);
-  object-fit: cover;
-  border-radius: 12px;
+  object-fit: contain;
 }
 .exampleImages figcaption {
   font-size: 11px;
-  margin-top: 6px;
+  margin-top: 7px;
   color: #79664f;
 }
-@media (min-width: 1000px) {
+.draftAction {
+  margin-top: auto;
+}
+.draftAction > p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+.startActions .primary {
+  width: 100%;
+}
+@media (max-width: 999px) {
   .photoLayout {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+    grid-template-columns: minmax(0, 1fr);
   }
+  .photoMain,
+  .startActions {
+    min-height: 0;
+  }
+  .captureArea {
+    margin-block: 0 6px;
+  }
+  .exampleImages {
+    flex: none;
+  }
+  .exampleImages .photoOpen {
+    height: 220px;
+  }
+  .exampleImages figure {
+    flex-basis: calc(50% - 6px);
+  }
+  .photoMain,
+  .startActions {
+    padding: 22px;
+  }
+}
+@media (max-width: 480px) {
+  .photoLayout {
+    gap: 16px;
+  }
+  .photoMain,
+  .startActions {
+    padding: 18px;
+  }
+  .photoFields {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .photos > li {
+    flex-basis: 85%;
+  }
+  .exampleImages figure {
+    flex-basis: 84%;
+    min-width: 0;
+  }
+  .exampleImages .photoOpen {
+    height: 200px;
+  }
+  .photoMain > .upload {
+    gap: 16px;
+  }
+}
+
+.uploadHeading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.uploadHeading h2 {
+  font-size: clamp(25px, 2.4vw, 30px);
+  margin: 0;
+}
+.uploadHeading p {
+  grid-column: 1 / -1;
+}
+.photoMain:has(.photos) {
+  padding: 22px;
+}
+.photoMain:has(.photos) > .upload {
+  gap: 14px;
+}
+.photoMain:has(.photos) .photoPreview {
+  height: 110px;
+}
+.photos label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.photos select {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  margin-top: 0;
+}
+
+.photoLayout:not([data-examples='true']) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.photoLayout:not([data-examples='true']) > .startActions {
+  min-height: 0;
 }

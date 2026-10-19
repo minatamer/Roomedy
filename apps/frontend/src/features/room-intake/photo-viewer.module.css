@@ -1,0 +1,91 @@
+.viewer {
+  width: min(1180px, calc(100vw - 32px));
+  max-height: calc(100svh - 32px);
+  padding: 16px;
+  border: 1px solid #d5c1a4;
+  border-radius: 20px;
+  background: #f7efe2;
+  color: #43352a;
+  overflow: auto;
+  box-shadow: 0 24px 100px #3e2e2c40;
+  animation: arrive 220ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+.viewer::backdrop {
+  background: #392c24a6;
+}
+.viewer header,
+.viewer footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.viewer header {
+  padding: 0 0 12px;
+}
+.viewer h2 {
+  font-size: clamp(17px, 2.5vw, 24px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.viewer button {
+  font: inherit;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid #cdb99c;
+  border-radius: 50%;
+  background: #eee1cb;
+  color: #59402e;
+  cursor: pointer;
+  transition:
+    background 180ms,
+    transform 180ms;
+}
+.viewer button:hover:enabled {
+  background: #e4cfad;
+  transform: translateY(-1px);
+}
+.viewer button:focus-visible {
+  outline: 3px solid #94623e;
+  outline-offset: 3px;
+}
+.viewer button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.image {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e9decb;
+}
+.image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100svh - 192px);
+  object-fit: contain;
+}
+.viewer footer {
+  justify-content: center;
+  padding-top: 12px;
+}
+.viewer footer p {
+  font-size: 12px;
+  min-width: 64px;
+  text-align: center;
+  margin: 0;
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

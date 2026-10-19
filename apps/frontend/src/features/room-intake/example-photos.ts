@@ -1,16 +1,16 @@
 export const EXAMPLE_PHOTOS = [
   {
-    path: '/landing/bedroom-wide.webp',
-    label: 'Bedroom view',
+    path: '/examples/bedroom-corner-one.webp',
+    label: 'From the first corner',
     purpose: 'room' as const,
   },
   {
-    path: '/landing/bedroom-narrow.webp',
-    label: 'Bedside detail',
-    purpose: 'furniture' as const,
+    path: '/examples/bedroom-corner-two.webp',
+    label: 'From the opposite corner',
+    purpose: 'room' as const,
   },
 ] as const;
-/** Fixed local licensed crops, bounded before joining chunks; ordinary decoder still validates pixels. */
+/** Fixed local authored room views, bounded before joining chunks; ordinary decoder still validates pixels. */
 export async function loadExamplePhotos(
   signal: AbortSignal,
   transport: typeof fetch = fetch,

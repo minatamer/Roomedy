@@ -1,9 +1,10 @@
+import { readFile } from 'node:fs/promises';
 import { expect, it, vi } from 'vitest';
 import {
   loadExamplePhotos,
   EXAMPLE_PHOTOS,
 } from '../apps/frontend/src/features/room-intake/example-photos.js';
-it('fetches only the two local crops as bounded blobs without invoking drafting', async () => {
+it('fetches only the two local room views as bounded blobs without invoking drafting', async () => {
   const transport = vi
     .fn<typeof fetch>()
     .mockImplementation(async () => new Response(new Uint8Array([1, 2, 3])));
@@ -51,4 +52,26 @@ it('rejects excessive bytes, retained fragments, empty/missing responses and abo
   });
   await expect(loadExamplePhotos(abort.signal, transport)).rejects.toThrow();
   expect(transport).toHaveBeenCalledTimes(1);
+});
+
+it('loads both real local WebP assets as bounded room views without provider dispatch', async () => {
+  const transport = vi.fn<typeof fetch>().mockImplementation(async (path) => {
+    const bytes = await readFile(
+      new URL('../apps/frontend/public' + path, import.meta.url),
+    );
+    return new Response(new Uint8Array(bytes));
+  });
+  const photos = await loadExamplePhotos(
+    new AbortController().signal,
+    transport,
+  );
+  for (const [i, blob] of photos.entries()) {
+    expect(blob.size).toBeGreaterThan(1000);
+    expect(blob.size).toBeLessThanOrEqual(256 * 1024);
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    expect(new TextDecoder().decode(bytes.slice(0, 4))).toBe('RIFF');
+    expect(new TextDecoder().decode(bytes.slice(8, 12))).toBe('WEBP');
+    expect(EXAMPLE_PHOTOS[i]!.purpose).toBe('room');
+  }
+  expect(transport).toHaveBeenCalledTimes(2);
 });

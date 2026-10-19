@@ -11,6 +11,8 @@ import type { ReviewController } from './review-controller';
 import type { PhotoPurpose } from './photo-store';
 import styles from './intake.module.css';
 import { draftFromPhotos, recognitionAvailability } from './recognition-client';
+import { CaptureGuide } from './capture-guide';
+import { PhotoViewer } from './photo-viewer';
 import { EXAMPLE_PHOTOS, loadExamplePhotos } from './example-photos';
 import type { PublicConfig } from '@roomedy/contracts/api';
 
@@ -33,6 +35,35 @@ export function Intake({
   const motion = useSurfaceMotion(state.stage);
   const exampleAbort = useRef<AbortController | null>(null);
   const [examplesBusy, setExamplesBusy] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false),
+    [viewing, setViewing] = useState<{
+      source: 'example' | 'photo';
+      id: string;
+    } | null>(null);
+  const photoTrigger = useRef<HTMLButtonElement | null>(null);
+  const openPhoto = (
+    source: 'example' | 'photo',
+    id: string,
+    trigger: HTMLButtonElement,
+  ) => {
+    photoTrigger.current = trigger;
+    setViewing({ source, id });
+  };
+  const closePhoto = () => {
+    setViewing(null);
+    requestAnimationFrame(() => {
+      if (photoTrigger.current?.isConnected)
+        photoTrigger.current.focus({ preventScroll: true });
+    });
+  };
+  const viewerItems =
+    viewing?.source === 'example'
+      ? EXAMPLE_PHOTOS.map((p) => ({ id: p.path, url: p.path, label: p.label }))
+      : state.photos.flatMap((p, i) =>
+          p.previewUrl
+            ? [{ id: p.id, url: p.previewUrl, label: `Room photo ${i + 1}` }]
+            : [],
+        );
   useEffect(
     () => () => {
       exampleAbort.current?.abort();
@@ -136,6 +167,7 @@ export function Intake({
           <Brand />
         </div>
         <button
+          className="glass-control"
           onClick={() => {
             if (leave()) onBack();
           }}
@@ -161,152 +193,195 @@ export function Intake({
               </h1>
             </div>
             {state.stage === 'photos' ? (
-              <div className={styles.photoLayout}>
+              <div
+                className={styles.photoLayout}
+                data-examples={availability?.mode === 'fake'}
+              >
                 <div className={styles.photoMain}>
                   <section
                     className={styles.upload}
                     aria-label="Local room photos"
                   >
-                    <div>
-                      <h2>A few photos. A new perspective.</h2>
+                    <div className={styles.uploadHeading}>
+                      <h2>
+                        {state.photos.length
+                          ? 'Your room photos.'
+                          : 'A few photos. A new perspective.'}
+                      </h2>
+                      {state.photos.length > 0 && (
+                        <button
+                          type="button"
+                          className={styles.guideToggle}
+                          onClick={() => setGuideOpen((v) => !v)}
+                        >
+                          {guideOpen ? 'Show photos' : 'Photo guide'}
+                        </button>
+                      )}
                       <p>
                         Show corners, doors, windows and fixed features.
                         Furniture details help identify pieces, but cannot
                         establish the room’s scale.
                       </p>
                     </div>
-                    <label>
-                      Photo kind
-                      <select
-                        value={purpose}
-                        onChange={(e) =>
-                          setPurpose(e.target.value as PhotoPurpose)
-                        }
-                      >
-                        <option value="room">Room views</option>
-                        <option value="furniture">Furniture details</option>
-                      </select>
-                    </label>
-                    <label className={styles.fileButton}>
-                      Choose photos
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        multiple
-                        onChange={(e) => {
-                          files(e.target.files);
-                          e.target.value = '';
-                        }}
-                      />
-                    </label>
-                    <p className={styles.hint}>
-                      Still JPEG, PNG or WebP · Up to 6 photos, 8 MiB each / 24
-                      MiB total · Up to 16 MP and 8000 px per side. Export HEIC
-                      as JPEG first.
-                    </p>
+                    <div className={styles.captureArea}>
+                      {!state.photos.length || guideOpen ? (
+                        <CaptureGuide />
+                      ) : (
+                        <ul
+                          className={styles.photos}
+                          tabIndex={0}
+                          aria-label="Selected room photos"
+                        >
+                          {state.photos.map((photo, index) => (
+                            <li
+                              key={photo.id}
+                              data-photo-id={photo.id}
+                              {...(process.env.NODE_ENV === 'development'
+                                ? {
+                                    'data-decode-ms': Math.round(
+                                      photo.decodeMs,
+                                    ),
+                                    'data-prepare-ms': Math.round(
+                                      photo.prepareMs,
+                                    ),
+                                    'data-normalized-bytes':
+                                      photo.normalizedBytes,
+                                  }
+                                : {})}
+                            >
+                              <div className={styles.photoPreview}>
+                                {photo.previewUrl ? (
+                                  <button
+                                    type="button"
+                                    className={styles.photoOpen}
+                                    aria-label={`View photo ${index + 1}`}
+                                    onClick={(e) =>
+                                      openPhoto(
+                                        'photo',
+                                        photo.id,
+                                        e.currentTarget,
+                                      )
+                                    }
+                                  >
+                                    <Image
+                                      src={photo.previewUrl}
+                                      width={640}
+                                      height={480}
+                                      alt={`Local preview of photo ${index + 1}`}
+                                      unoptimized
+                                    />
+                                    <span aria-hidden="true">View ↗</span>
+                                  </button>
+                                ) : (
+                                  <p
+                                    className={
+                                      photo.status === 'queued' ||
+                                      photo.status === 'processing'
+                                        ? styles.processing
+                                        : undefined
+                                    }
+                                  >
+                                    {photo.status === 'failed'
+                                      ? 'Could not open photo'
+                                      : photo.status === 'queued'
+                                        ? 'Waiting to prepare…'
+                                        : 'Preparing photo…'}
+                                  </p>
+                                )}
+                              </div>
+                              <label>
+                                Photo {index + 1} type
+                                <select
+                                  value={photo.purpose}
+                                  onChange={(e) =>
+                                    controller.photos.purpose(
+                                      photo.id,
+                                      e.target.value as PhotoPurpose,
+                                    )
+                                  }
+                                >
+                                  <option value="room">Room view</option>
+                                  <option value="furniture">
+                                    Furniture detail
+                                  </option>
+                                </select>
+                              </label>
+                              {photo.message && (
+                                <p role="alert" className={styles.error}>
+                                  {photo.message}
+                                </p>
+                              )}
+                              <div className={styles.actions}>
+                                <button
+                                  onClick={() =>
+                                    controller.photos.remove(photo.id)
+                                  }
+                                >
+                                  Remove photo {index + 1}
+                                </button>
+                                <button
+                                  disabled={index === 0}
+                                  aria-label={`Move photo ${index + 1} earlier`}
+                                  onClick={() =>
+                                    controller.photos.reorder(photo.id, -1)
+                                  }
+                                >
+                                  ↑
+                                </button>
+                                <button
+                                  disabled={index === state.photos.length - 1}
+                                  aria-label={`Move photo ${index + 1} later`}
+                                  onClick={() =>
+                                    controller.photos.reorder(photo.id, 1)
+                                  }
+                                >
+                                  ↓
+                                </button>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    <div className={styles.photoFields}>
+                      <label>
+                        Photo kind
+                        <select
+                          value={purpose}
+                          onChange={(e) =>
+                            setPurpose(e.target.value as PhotoPurpose)
+                          }
+                        >
+                          <option value="room">Room views</option>
+                          <option value="furniture">Furniture details</option>
+                        </select>
+                      </label>
+                      <label className={styles.fileButton}>
+                        Choose photos
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          multiple
+                          onChange={(e) => {
+                            files(e.target.files);
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+                    </div>
+                    <div className={styles.photoHelp}>
+                      <p className={styles.hint}>
+                        Still JPEG, PNG or WebP · Up to 6 photos, 8 MiB each /
+                        24 MiB total · Up to 16 MP and 8000 px per side. Export
+                        HEIC as JPEG first.
+                      </p>
+                    </div>
                     {state.message && (
                       <p role="alert" className={styles.error}>
                         {state.message}
                       </p>
                     )}
                   </section>
-                  {state.photos.length > 0 && (
-                    <ul className={styles.photos}>
-                      {state.photos.map((photo, index) => (
-                        <li
-                          key={photo.id}
-                          data-photo-id={photo.id}
-                          {...(process.env.NODE_ENV === 'development'
-                            ? {
-                                'data-decode-ms': Math.round(photo.decodeMs),
-                                'data-prepare-ms': Math.round(photo.prepareMs),
-                                'data-normalized-bytes': photo.normalizedBytes,
-                              }
-                            : {})}
-                        >
-                          <div className={styles.photoPreview}>
-                            {photo.previewUrl ? (
-                              <Image
-                                src={photo.previewUrl}
-                                width={640}
-                                height={480}
-                                alt={`Local preview of photo ${index + 1}`}
-                                unoptimized
-                              />
-                            ) : (
-                              <p
-                                className={
-                                  photo.status === 'queued' ||
-                                  photo.status === 'processing'
-                                    ? styles.processing
-                                    : undefined
-                                }
-                              >
-                                {photo.status === 'failed'
-                                  ? 'Could not open photo'
-                                  : photo.status === 'queued'
-                                    ? 'Waiting to prepare…'
-                                    : 'Preparing photo…'}
-                              </p>
-                            )}
-                          </div>
-                          <label>
-                            Photo {index + 1} type
-                            <select
-                              value={photo.purpose}
-                              onChange={(e) =>
-                                controller.photos.purpose(
-                                  photo.id,
-                                  e.target.value as PhotoPurpose,
-                                )
-                              }
-                            >
-                              <option value="room">Room view</option>
-                              <option value="furniture">
-                                Furniture detail
-                              </option>
-                            </select>
-                          </label>
-                          {photo.message && (
-                            <p role="alert" className={styles.error}>
-                              {photo.message}
-                            </p>
-                          )}
-                          <div className={styles.actions}>
-                            <button
-                              onClick={() => controller.photos.remove(photo.id)}
-                            >
-                              Remove photo {index + 1}
-                            </button>
-                            <button
-                              disabled={index === 0}
-                              aria-label={`Move photo ${index + 1} earlier`}
-                              onClick={() =>
-                                controller.photos.reorder(photo.id, -1)
-                              }
-                            >
-                              ↑
-                            </button>
-                            <button
-                              disabled={index === state.photos.length - 1}
-                              aria-label={`Move photo ${index + 1} later`}
-                              onClick={() =>
-                                controller.photos.reorder(photo.id, 1)
-                              }
-                            >
-                              ↓
-                            </button>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {state.photos.length > 0 && (
-                    <p className={styles.hint}>
-                      Add a replacement before removing a photo. Measurements
-                      stay in the sketch.
-                    </p>
-                  )}
                 </div>
                 <div className={styles.startActions}>
                   {availability?.mode === 'fake' && (
@@ -316,16 +391,35 @@ export function Intake({
                     >
                       <p className={styles.eyebrow}>A ROOM TO EXPLORE</p>
                       <h2>Start with these photos.</h2>
-                      <div className={styles.exampleImages}>
-                        {EXAMPLE_PHOTOS.map((example) => (
+                      <div
+                        className={styles.exampleImages}
+                        tabIndex={0}
+                        aria-label="Example photo gallery"
+                      >
+                        {EXAMPLE_PHOTOS.map((example, index) => (
                           <figure key={example.path}>
-                            <Image
-                              src={example.path}
-                              width={320}
-                              height={220}
-                              alt={example.label}
-                              unoptimized
-                            />
+                            <button
+                              type="button"
+                              className={styles.photoOpen}
+                              aria-label={`View ${example.label.toLowerCase()}`}
+                              onClick={(e) =>
+                                openPhoto(
+                                  'example',
+                                  example.path,
+                                  e.currentTarget,
+                                )
+                              }
+                            >
+                              <Image
+                                src={example.path}
+                                loading={index === 0 ? 'eager' : 'lazy'}
+                                width={1280}
+                                height={960}
+                                alt={example.label}
+                                unoptimized
+                              />
+                              <span aria-hidden="true">View ↗</span>
+                            </button>
                             <figcaption>{example.label}</figcaption>
                           </figure>
                         ))}
@@ -345,7 +439,7 @@ export function Intake({
                       </button>
                     </section>
                   )}
-                  <div>
+                  <div className={styles.draftAction}>
                     <p id="photo-transfer">
                       {availability === undefined
                         ? 'Checking photo drafting…'
@@ -596,6 +690,15 @@ export function Intake({
           </div>
         </div>
       </main>
+      {viewing && (
+        <PhotoViewer
+          items={viewerItems}
+          selectedId={viewing.id}
+          onSelect={(id) => setViewing({ ...viewing, id })}
+          onClose={closePhoto}
+          session={controller.session}
+        />
+      )}
     </div>
   );
 }

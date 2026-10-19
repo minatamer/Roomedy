@@ -1,0 +1,148 @@
+.guide {
+  min-width: 0;
+  width: 100%;
+  color: #6f543b;
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.guide .top p {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+.guide .top button.replay {
+  min-height: 44px;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  font-size: 11px;
+  white-space: nowrap;
+  color: #78553d;
+}
+.guide .top button.replay:hover {
+  background: #eaddc8;
+}
+.guide svg {
+  display: block;
+  width: 100%;
+  height: clamp(165px, 23svh, 235px);
+  overflow: visible;
+}
+.body {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 6px;
+}
+.guide .steps p {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.steps b {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid #c9ad88;
+  font-size: 10px;
+  font-weight: 400;
+}
+.person {
+  transform: translate(192px, 54px);
+  animation: walk 4.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.first {
+  animation: first 4.6s ease both;
+}
+.second {
+  opacity: 0.45;
+  animation: second 4.6s ease both;
+}
+@keyframes walk {
+  0%,
+  27% {
+    transform: translate(180px, 182px);
+  }
+  59% {
+    transform: translate(300px, 118px);
+  }
+  69% {
+    transform: translate(260px, 73px);
+  }
+  78%,
+  100% {
+    transform: translate(192px, 54px);
+  }
+}
+@keyframes first {
+  0%,
+  22% {
+    opacity: 0.45;
+  }
+  30%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes second {
+  0%,
+  75% {
+    opacity: 0;
+  }
+  86%,
+  100% {
+    opacity: 0.45;
+  }
+}
+@media (max-width: 480px) {
+  .body {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .guide svg {
+    height: 190px;
+  }
+  .guide .top p {
+    max-width: 20ch;
+    font-size: 8px;
+  }
+}
+
+.flash {
+  animation: flash 4.6s ease both;
+  opacity: 0;
+}
+@keyframes flash {
+  0%,
+  15%,
+  25%,
+  78%,
+  90%,
+  100% {
+    opacity: 0;
+  }
+  19%,
+  84% {
+    opacity: 0.85;
+  }
+}

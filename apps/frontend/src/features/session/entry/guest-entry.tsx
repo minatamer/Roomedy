@@ -85,12 +85,12 @@ export function GuestEntry({
       <header className="site-header shell">
         <Brand />
         {state.step === 'source' ? (
-          <Link href="/" className="text-link">
+          <Link href="/" className="glass-control">
             Back to home <span aria-hidden="true">↗</span>
           </Link>
         ) : (
           <button
-            className="text-link"
+            className="glass-control"
             aria-label="Back to room choices"
             onClick={() => dispatch({ type: 'back' })}
           >

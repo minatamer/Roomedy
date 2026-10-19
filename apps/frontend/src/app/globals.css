@@ -174,7 +174,11 @@ h1:focus {
 .skip-link:focus {
   top: 15px;
 }
-.text-link {
+.glass-control {
+  font-family: inherit;
+  color: #43352a;
+  text-decoration: none;
+  cursor: pointer;
   font-size: 12px;
   min-height: 44px;
   padding: 13px 20px;
@@ -194,8 +198,12 @@ h1:focus {
     background 220ms ease,
     box-shadow 220ms ease;
 }
-.text-link:hover,
-.text-link:focus-visible {
+.glass-control:focus-visible {
+  outline: 3px solid #94623e;
+  outline-offset: 3px;
+}
+.glass-control:hover,
+.glass-control:focus-visible {
   background: linear-gradient(135deg, #fff1dde8, #efddbed4);
   box-shadow:
     inset 0 1px 0 #fff9eb,
@@ -238,7 +246,7 @@ h1:focus {
   .cta-note {
     font-size: 10px;
   }
-  .text-link {
+  .glass-control {
     font-size: 10px;
     padding: 10px 14px;
   }

@@ -2,7 +2,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** W checkpoint9a6c6d2; X four-format exports locally verified, actual owner visual approval pending; direct photo-page corrections next, Q held and RM-016 Planned
+**Stage:** X checkpoint83f3716; Y photo-gallery/responsive/capture-guide correction locally verified; exact checkpoint prepared; actual owner visual approval pending, Q held and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -1318,8 +1318,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Checkpoint corrected X after exact root/build verification, then plan and execute latest direct photo-card/viewer/shared-glass/corner-example/capture-guide feedback as Y. Actual X/overall owner visual acceptance remains pending, guide paused, Q held and RM-016 Planned.
-Active ticket: RM-015X
+Next action: Create the exact25-path Y local checkpoint after final byte/index checks, then continue actual owner visual feedback. Current X/Y reviewable changes are complete locally; guide goal stays paused, Q held, RM-016 Planned. No actual visual approval, paid calls, deploy/push/reset consumption or delegation inferred.
+Active ticket: RM-015Y
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1344,7 +1344,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T19:14:19+00:00",
+  "updated_at": "2026-10-19T19:55:05+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1533,8 +1533,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015X",
-  "next_action": "Checkpoint corrected X after exact root/build verification, then plan and execute latest direct photo-card/viewer/shared-glass/corner-example/capture-guide feedback as Y. Actual X/overall owner visual acceptance remains pending, guide paused, Q held and RM-016 Planned.",
+  "active_ticket": "RM-015Y",
+  "next_action": "Create the exact25-path Y local checkpoint after final byte/index checks, then continue actual owner visual feedback. Current X/Y reviewable changes are complete locally; guide goal stays paused, Q held, RM-016 Planned. No actual visual approval, paid calls, deploy/push/reset consumption or delegation inferred.",
   "phases": [
     {
       "id": "01-docs",
@@ -1968,14 +1968,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015W.md:21paths allocated before source edits; direct default-tour scope and read-only Retailor comparison.",
         "docs/validation/RM-015W.md:21paths,496tests/40files/seven boundaries/root/assets/both builds,197inputs/1561335bytes/BUILD_ID62bea8751b242ebb505a93b513f5f48e9a4ff3ce3c5649870773493317798e8b; immediate default fresh-room welcome and real-target guide. Ten actual welcome-size observations. Medium guide-event finding independently fixed; read-only pass2 no actionable source findings. Actual T/U/V/W guided/browser motion and owner acceptance remain unverified; automated Start unchanged, no JS dialog, manual check pending.",
         "docs/commit-plans/RM-015X.md:25paths allocated before edits; snapshot GLB, branded raster-presentation PDF and semantic project preservation plan.",
-        "docs/validation/RM-015X.md:27allocated paths;525tests/42files/seven boundaries, actual four-format native downloads and JSON reimport, all latest native PDF/edge layout pages inspected, three responsive export sizes. Pass1 metadata finding independently corrected, read-only pass2 has no actionable findings. Actual owner approval/external limits stay pending."
+        "docs/validation/RM-015X.md:27allocated paths;525tests/42files/seven boundaries, actual four-format native downloads and JSON reimport, all latest native PDF/edge layout pages inspected, three responsive export sizes. Pass1 metadata finding independently corrected, read-only pass2 has no actionable findings. Actual owner approval/external limits stay pending.",
+        "docs/commit-plans/RM-015Y.md:25paths allocated before edits; direct owner photo/gallery/glass/capture-guide requests.",
+        "docs/validation/RM-015Y.md:25paths,526tests/42files/seven boundaries/root/assets/both builds,212inputs/1800508bytes/BUILD_ID41637f229a95a7e2c9b5a0f269106f1a1e2f6afeace2f509116f7e740ad1347d;26fresh empty/six-photo responsive observations,4viewer sizes, keyboard/focus/error/reorder/guide/fake2D journey; read-only pass1 no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "export should not in json it feels off, is it usable in json ? is there no 3d object we can export as? also i wanna be able to export a pdf portfolio of our design",
-        "source": "human:current-chat/2026-10-19/design-exports",
-        "scope": "Execute X useful3D/PDF/editorial export correction under existing exact local verification/checkpoint loop; no actual visual approval.",
-        "recorded_at": "2026-10-19T18:41:08+00:00"
+        "quote": "sample photos should be clickable to be viewed, the 2 cards in this page should be same height ... add a horizontal scroll ... not consistently matching according to screen size ... on hover of room choices is bugged ... shareable class ... sample photos ... 2 different corners ... a cool guide ... room and a person taking a photo with phone from 2 different corners",
+        "source": "human:current-chat/2026-10-19/photo-capture-feedback",
+        "scope": "Latest direct photo-intake visual/interaction corrections, no result approval.",
+        "recorded_at": "2026-10-19T19:17:08+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2103,6 +2105,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/design-exports",
             "scope": "Execute X useful3D/PDF/editorial export correction under existing exact local verification/checkpoint loop; no actual visual approval.",
             "recorded_at": "2026-10-19T18:41:08+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "sample photos should be clickable to be viewed, the 2 cards in this page should be same height ... add a horizontal scroll ... not consistently matching according to screen size ... on hover of room choices is bugged ... shareable class ... sample photos ... 2 different corners ... a cool guide ... room and a person taking a photo with phone from 2 different corners",
+            "source": "human:current-chat/2026-10-19/photo-capture-feedback",
+            "scope": "Latest direct photo-intake visual/interaction corrections, no result approval.",
+            "recorded_at": "2026-10-19T19:17:08+00:00"
           }
         }
       ]
