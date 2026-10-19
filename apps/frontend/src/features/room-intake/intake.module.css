@@ -542,7 +542,7 @@
 .photoMain,
 .startActions {
   min-width: 0;
-  min-height: clamp(500px, calc(100svh - 230px), 740px);
+  min-height: clamp(440px, calc(100svh - 230px), 680px);
   padding: 24px;
   border: 1px solid #d5c1a4;
   border-radius: 20px;
@@ -586,6 +586,9 @@
   gap: 18px;
   align-items: end;
 }
+.photoFields > :only-child {
+  grid-column: 1 / -1;
+}
 .photoHelp {
   display: flex;
   flex-direction: column;
@@ -603,7 +606,7 @@
   border-radius: 9px;
 }
 .photos {
-  min-height: 272px;
+  min-height: 212px;
   align-items: flex-start;
   display: flex;
   gap: 14px;
@@ -682,14 +685,6 @@
   font-size: 10px;
   box-shadow: 0 2px 8px #49321b12;
 }
-.photos label {
-  font-size: 11px;
-  margin-bottom: 10px;
-}
-.photos select {
-  min-height: 44px;
-  margin-top: 4px;
-}
 .photos .actions {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 34px 34px;
@@ -757,17 +752,6 @@
   font-size: 11px;
   margin-top: 7px;
   color: #79664f;
-}
-.draftAction {
-  margin-top: auto;
-}
-.draftAction > p {
-  font-size: 12px;
-  line-height: 1.6;
-  margin: 0 0 12px;
-}
-.startActions .primary {
-  width: 100%;
 }
 @media (max-width: 999px) {
   .photoLayout {
@@ -843,22 +827,6 @@
 .photoMain:has(.photos) .photoPreview {
   height: 110px;
 }
-.photos label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-.photos select {
-  flex: 1;
-  min-width: 0;
-  width: auto;
-  margin-top: 0;
-}
-
 .photoLayout:not([data-examples='true']) {
   grid-template-columns: minmax(0, 1fr);
-}
-.photoLayout:not([data-examples='true']) > .startActions {
-  min-height: 0;
 }

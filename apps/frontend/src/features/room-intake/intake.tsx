@@ -8,7 +8,6 @@ import { nextQuestion } from './draft';
 import { RoughSketch } from './rough-sketch';
 import { ReviewPanel } from './review-panel';
 import type { ReviewController } from './review-controller';
-import type { PhotoPurpose } from './photo-store';
 import styles from './intake.module.css';
 import { draftFromPhotos, recognitionAvailability } from './recognition-client';
 import { CaptureGuide } from './capture-guide';
@@ -28,7 +27,6 @@ export function Intake({
       controller.getSnapshot,
       controller.getSnapshot,
     ),
-    [purpose, setPurpose] = useState<PhotoPurpose>('room'),
     [owned, setOwned] = useState(state.draft.room.intent.condition !== 'empty');
   const [reviewVisited, setReviewVisited] = useState(state.stage === 'review');
   if (!reviewVisited && state.stage === 'review') setReviewVisited(true);
@@ -151,7 +149,7 @@ export function Intake({
       controller.notify('Choose up to six photos at a time.');
       return;
     }
-    controller.addPhotos(Array.from(list), purpose);
+    controller.addPhotos(Array.from(list), 'auto');
   };
   return (
     <div className={styles.intake}>
@@ -217,11 +215,7 @@ export function Intake({
                           {guideOpen ? 'Show photos' : 'Photo guide'}
                         </button>
                       )}
-                      <p>
-                        Show corners, doors, windows and fixed features.
-                        Furniture details help identify pieces, but cannot
-                        establish the room’s scale.
-                      </p>
+                      <p>Include the floor, walls, doors and windows.</p>
                     </div>
                     <div className={styles.captureArea}>
                       {!state.photos.length || guideOpen ? (
@@ -289,23 +283,6 @@ export function Intake({
                                   </p>
                                 )}
                               </div>
-                              <label>
-                                Photo {index + 1} type
-                                <select
-                                  value={photo.purpose}
-                                  onChange={(e) =>
-                                    controller.photos.purpose(
-                                      photo.id,
-                                      e.target.value as PhotoPurpose,
-                                    )
-                                  }
-                                >
-                                  <option value="room">Room view</option>
-                                  <option value="furniture">
-                                    Furniture detail
-                                  </option>
-                                </select>
-                              </label>
                               {photo.message && (
                                 <p role="alert" className={styles.error}>
                                   {photo.message}
@@ -343,19 +320,14 @@ export function Intake({
                         </ul>
                       )}
                     </div>
+                    <div className={styles.photoHelp}>
+                      <p className={styles.hint}>
+                        Still JPEG, PNG or WebP · Up to 6 photos, 8 MiB each /
+                        24 MiB total · Up to 16 MP and 8000 px per side. Export
+                        HEIC as JPEG first.
+                      </p>
+                    </div>
                     <div className={styles.photoFields}>
-                      <label>
-                        Photo kind
-                        <select
-                          value={purpose}
-                          onChange={(e) =>
-                            setPurpose(e.target.value as PhotoPurpose)
-                          }
-                        >
-                          <option value="room">Room views</option>
-                          <option value="furniture">Furniture details</option>
-                        </select>
-                      </label>
                       <label className={styles.fileButton}>
                         Choose photos
                         <input
@@ -368,14 +340,56 @@ export function Intake({
                           }}
                         />
                       </label>
+                      {state.photos.length > 0 && (
+                        <button
+                          className={styles.primary}
+                          disabled={
+                            !availability?.capabilities.recognition ||
+                            state.recognition !== 'idle' ||
+                            state.photos.some((p) => p.status !== 'ready')
+                          }
+                          aria-describedby={
+                            availability?.mode === 'live'
+                              ? 'photo-transfer'
+                              : undefined
+                          }
+                          aria-busy={state.recognition !== 'idle'}
+                          onClick={() => void draftFromPhotos(controller)}
+                        >
+                          Draft my room
+                        </button>
+                      )}
                     </div>
-                    <div className={styles.photoHelp}>
-                      <p className={styles.hint}>
-                        Still JPEG, PNG or WebP · Up to 6 photos, 8 MiB each /
-                        24 MiB total · Up to 16 MP and 8000 px per side. Export
-                        HEIC as JPEG first.
-                      </p>
-                    </div>
+                    {availability?.mode === 'live' &&
+                      state.photos.length > 0 && (
+                        <p id="photo-transfer" className={styles.hint}>
+                          Drafting sends prepared photos to the AI provider.
+                          Metadata is removed; image details remain visible.
+                        </p>
+                      )}
+                    {state.recognition !== 'idle' && (
+                      <div className={styles.drafting} role="status">
+                        <span aria-hidden="true" />
+                        {state.recognition === 'preparing'
+                          ? 'Preparing photos…'
+                          : 'Drafting sketch…'}
+                        <button onClick={() => controller.cancelDraft()}>
+                          Cancel drafting
+                        </button>
+                      </div>
+                    )}
+                    {availability !== undefined &&
+                      !availability?.capabilities.recognition && (
+                        <p className={styles.hint}>
+                          Photo drafting is unavailable. Return to Room choices
+                          to build manually.
+                        </p>
+                      )}
+                    {reviewVisited && (
+                      <button onClick={() => controller.startReview()}>
+                        Return to sketch
+                      </button>
+                    )}
                     {state.message && (
                       <p role="alert" className={styles.error}>
                         {state.message}
@@ -383,8 +397,8 @@ export function Intake({
                     )}
                   </section>
                 </div>
-                <div className={styles.startActions}>
-                  {availability?.mode === 'fake' && (
+                {availability?.mode === 'fake' && (
+                  <div className={styles.startActions}>
                     <section
                       className={styles.examples}
                       aria-label="Example room photos"
@@ -438,57 +452,8 @@ export function Intake({
                           : 'Use example photos'}
                       </button>
                     </section>
-                  )}
-                  <div className={styles.draftAction}>
-                    <p id="photo-transfer">
-                      {availability === undefined
-                        ? 'Checking photo drafting…'
-                        : availability?.capabilities.recognition
-                          ? availability.mode === 'fake'
-                            ? 'Prepared photos are sent to Roomedy to open an example sketch.'
-                            : 'Drafting sends prepared photos to the AI provider. Metadata is removed; image details remain visible.'
-                          : 'Photo drafting is unavailable. Your selected photos stay local.'}
-                    </p>
-                    <button
-                      className={styles.primary}
-                      disabled={
-                        !availability?.capabilities.recognition ||
-                        state.recognition !== 'idle' ||
-                        !state.photos.length ||
-                        state.photos.some((p) => p.status !== 'ready')
-                      }
-                      aria-describedby="photo-transfer"
-                      aria-busy={state.recognition !== 'idle'}
-                      onClick={() => void draftFromPhotos(controller)}
-                    >
-                      {availability?.mode === 'fake'
-                        ? 'Draft from photos'
-                        : 'Draft my room'}
-                    </button>
-                    {state.recognition !== 'idle' && (
-                      <div className={styles.drafting} role="status">
-                        <span aria-hidden="true" />{' '}
-                        {state.recognition === 'preparing'
-                          ? 'Preparing photos…'
-                          : 'Drafting sketch…'}{' '}
-                        <button onClick={() => controller.cancelDraft()}>
-                          Cancel drafting
-                        </button>
-                      </div>
-                    )}
                   </div>
-                  {reviewVisited && (
-                    <button onClick={() => controller.startReview()}>
-                      Return to sketch
-                    </button>
-                  )}
-                  {!availability?.capabilities.recognition &&
-                    availability !== undefined && (
-                      <p className={styles.hint}>
-                        Return to Room choices to build manually.
-                      </p>
-                    )}
-                </div>
+                )}
               </div>
             ) : (
               <>

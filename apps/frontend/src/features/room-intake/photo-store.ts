@@ -3,7 +3,7 @@ import { photoManifestSchema } from '@roomedy/contracts/intake';
 import { imageErrorMessage, preparePhoto } from './images';
 import type { PreparedPhoto } from './images';
 
-export type PhotoPurpose = 'room' | 'furniture';
+export type PhotoPurpose = 'auto' | 'room' | 'furniture';
 export interface PhotoItem {
   readonly id: string;
   readonly purpose: PhotoPurpose;

@@ -8,7 +8,7 @@ export const photoManifestSchema = z
   .array(
     z.strictObject({
       id: idSchema,
-      purpose: z.enum(['room', 'furniture']),
+      purpose: z.enum(['auto', 'room', 'furniture']),
       type: imageTypeSchema,
       width: z.number().int().min(1).max(POLICY.normalizedEdge),
       height: z.number().int().min(1).max(POLICY.normalizedEdge),
@@ -82,6 +82,16 @@ export const draftObservationSchema = z.strictObject({
 export const draftHypothesisSchema = z
   .strictObject({
     version: z.literal(1),
+    // Legacy explicit-purpose adapters may omit this; automatic requests require a complete map.
+    sourcePurposes: z
+      .array(
+        z.strictObject({
+          id: idSchema,
+          purpose: z.enum(['room', 'furniture', 'unknown']),
+        }),
+      )
+      .max(POLICY.photos)
+      .optional(),
     shape: z.enum(['rectangle', 'unknown', 'unsupported']),
     frameEvidence: evidenceSchema,
     room: z.strictObject({
@@ -127,7 +137,11 @@ export const draftHypothesisJsonSchema = () =>
 export type DraftHypothesis = z.infer<typeof draftHypothesisSchema>;
 export type DraftObservation = z.infer<typeof draftObservationSchema>;
 export type PhotoManifest = z.infer<typeof photoManifestSchema>;
-export function parseDraftHypothesis(raw: unknown, sources: readonly string[]) {
+export function parseDraftHypothesis(
+  raw: unknown,
+  sources: readonly string[],
+  automaticSources: readonly string[] = [],
+) {
   const parsed = draftHypothesisSchema.safeParse(raw);
   if (
     !parsed.success ||
@@ -135,7 +149,17 @@ export function parseDraftHypothesis(raw: unknown, sources: readonly string[]) {
     new Set(sources).size !== sources.length
   )
     return null;
-  const allowed = new Set(sources);
+  const allowed = new Set(sources),
+    roles = parsed.data.sourcePurposes;
+  if (
+    automaticSources.some((id) => !allowed.has(id)) ||
+    (automaticSources.length > 0 && !roles) ||
+    (roles &&
+      (roles.length !== sources.length ||
+        new Set(roles.map((s) => s.id)).size !== roles.length ||
+        roles.some((s) => !allowed.has(s.id))))
+  )
+    return null;
   const measurements = [
     ...Object.values(parsed.data.room),
     ...parsed.data.observations.flatMap((o) => [
@@ -173,6 +197,27 @@ export function parseDraftHypothesis(raw: unknown, sources: readonly string[]) {
     measurements.some((m) => m.sourceId !== null && !allowed.has(m.sourceId))
   )
     return null;
+  if (roles) {
+    const roomSources = new Set(
+      roles.filter((s) => s.purpose === 'room').map((s) => s.id),
+    );
+    if (
+      parsed.data.frameEvidence.sourceId &&
+      !roomSources.has(parsed.data.frameEvidence.sourceId)
+    ) {
+      parsed.data.shape = 'unknown';
+      parsed.data.frameEvidence = { status: 'unknown', sourceId: null };
+    }
+    for (const axis of ['width', 'depth', 'height'] as const) {
+      const measurement = parsed.data.room[axis];
+      if (measurement.sourceId && !roomSources.has(measurement.sourceId))
+        parsed.data.room[axis] = {
+          status: 'unknown',
+          value: null,
+          sourceId: null,
+        };
+    }
+  }
   return parsed.data;
 }
 

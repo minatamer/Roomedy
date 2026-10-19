@@ -61,8 +61,9 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015V](RM-015V-frame-the-corner-opposite-the-doorway.md) | Frame the corner opposite the doorway | RM-015U | Code implemented/root verified; actual browser/visual checks pending |
 | [RM-015W](RM-015W-start-the-quick-tour-by-default.md) | Automatic welcome and smooth, skippable quick tour | RM-015V | Code locally verified; actual guide/browser/visual checks pending |
 | [RM-015X](RM-015X-export-3d-models-and-design-portfolios.md) | GLB/OBJ models, editable JSON and branded PDF portfolio | RM-015W | Locally verified; actual owner visual approval pending |
-| [RM-015Y](RM-015Y-refine-photo-capture-and-responsive-cards.md) | Responsive photo cards/viewer, coherent corner photos and capture guide | RM-015X | Locally verified; checkpoint prepared, owner visual approval pending |
-| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015Y | Planned; held behind current owner corrections and actual feedback |
+| [RM-015Y](RM-015Y-refine-photo-capture-and-responsive-cards.md) | Responsive photo cards/viewer, coherent corner photos and capture guide | RM-015X | Committed27b0130; owner visual approval pending |
+| [RM-015Z](RM-015Z-simplify-photo-intake-and-infer-photo-roles.md) | Concise matched photo cards and automatic source understanding | RM-015Y | Locally verified539tests/root/builds; read-only pass1 clean, checkpoint ready; owner approval pending |
+| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015Z | Planned; held behind current owner corrections and actual feedback |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |

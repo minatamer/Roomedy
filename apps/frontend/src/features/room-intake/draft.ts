@@ -27,6 +27,7 @@ export interface ReviewSource {
   id: string;
   purpose: PhotoPurpose;
   available: boolean;
+  detectedPurpose?: 'room' | 'furniture' | 'unknown';
 }
 export interface EvidenceLink {
   entityId: string;
@@ -471,16 +472,24 @@ export function adoptHypothesis(
     parsed = parseDraftHypothesis(
       raw,
       available.map((s) => s.id),
+      available.filter((s) => s.purpose === 'auto').map((s) => s.id),
     );
   if (!parsed)
     return {
       ok: false,
       message: 'The draft response needs a supported structured review.',
     };
-  const next = structuredClone(draft),
-    roomSources = new Set(
-      available.filter((s) => s.purpose === 'room').map((s) => s.id),
-    );
+  const next = structuredClone(draft);
+  for (const source of next.sources) {
+    if (source.available && source.purpose === 'auto')
+      source.detectedPurpose = parsed.sourcePurposes!.find(
+        (s) => s.id === source.id,
+      )!.purpose;
+  }
+  reconcileRoomEvidence(next);
+  const roomSources = new Set(
+    next.sources.filter((s) => s.available && isRoomSource(s)).map((s) => s.id),
+  );
   if (
     !next.frameReviewed &&
     !next.reviewed.includes(`${next.room.roomId}:shape`)
@@ -763,4 +772,50 @@ export function nextQuestion(
       };
   }
   return null;
+}
+
+/** Automatic sources need actual classified room context before they can support a frame/scale. */
+export function isRoomSource(source: ReviewSource) {
+  return (
+    source.purpose === 'room' ||
+    (source.purpose === 'auto' && source.detectedPurpose === 'room')
+  );
+}
+
+/** A furniture-detail source cannot regain room-scale authority through semantic Undo. */
+export function reconcileRoomEvidence(draft: ReviewDraft) {
+  let changed = false;
+  for (const axis of ['width', 'depth', 'height'] as const) {
+    const value = draft.room.room[axis],
+      source = draft.sources.find((s) => s.id === value.sourceId);
+    if (
+      value.status !== 'confirmed' &&
+      source &&
+      !isRoomSource(source) &&
+      !draft.reviewed.includes(`${draft.room.roomId}:${axis}`)
+    ) {
+      draft.room.room[axis] = unknown();
+      changed = true;
+    }
+  }
+  if (changed)
+    for (const link of draft.links) {
+      const piece = draft.room.furniture.find((p) => p.id === link.entityId);
+      if (
+        piece &&
+        link.normalized &&
+        !piece.locks.position &&
+        piece.pose.provenance.status === 'estimated' &&
+        piece.pose.provenance.sourceId === 'draft-estimate'
+      )
+        Object.assign(piece.pose, displayPosition(draft, link.normalized));
+    }
+  if (
+    !draft.frameReviewed &&
+    !draft.reviewed.includes(`${draft.room.roomId}:shape`) &&
+    draft.sources.length > 0 &&
+    !draft.sources.some(isRoomSource)
+  )
+    draft.shape = 'unknown';
+  return changed;
 }

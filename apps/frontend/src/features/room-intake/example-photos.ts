@@ -2,12 +2,12 @@ export const EXAMPLE_PHOTOS = [
   {
     path: '/examples/bedroom-corner-one.webp',
     label: 'From the first corner',
-    purpose: 'room' as const,
+    purpose: 'auto' as const,
   },
   {
     path: '/examples/bedroom-corner-two.webp',
     label: 'From the opposite corner',
-    purpose: 'room' as const,
+    purpose: 'auto' as const,
   },
 ] as const;
 /** Fixed local authored room views, bounded before joining chunks; ordinary decoder still validates pixels. */

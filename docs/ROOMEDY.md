@@ -1,8 +1,10 @@
 # Roomedy — product and engineering blueprint
 
+**Current photo simplification:** [RM-015Z](tickets/RM-015Z-simplify-photo-intake-and-infer-photo-roles.md), [27-path plan](commit-plans/RM-015Z.md) and [evidence](validation/RM-015Z.md) follow committed Y27b0130. Latest owner selects concise matched cards and automatic photo understanding: no visitor type selector, retained animated guide/gallery/viewer, one explicit Draft beside prepared uploads. Bounded source classification protects uncertain room scale. Actual owner visual acceptance remains pending; Q held and RM-016 Planned.
+
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** X checkpoint83f3716; Y photo-gallery/responsive/capture-guide correction locally verified; exact checkpoint prepared; actual owner visual approval pending, Q held and RM-016 Planned
+**Stage:** Y checkpoint27b0130; Z simple photo cards/automatic source understanding locally verified539tests/root/both builds, read-only pass1 clean, exact checkpoint ready; actual owner visual approval pending, Q held and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -1318,8 +1320,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Create the exact25-path Y local checkpoint after final byte/index checks, then continue actual owner visual feedback. Current X/Y reviewable changes are complete locally; guide goal stays paused, Q held, RM-016 Planned. No actual visual approval, paid calls, deploy/push/reset consumption or delegation inferred.
-Active ticket: RM-015Y
+Next action: Continue actual owner visual feedback on sole4320 after the authorized exact27-path RM-015Z local checkpoint. Current photo cards/automatic source understanding and prior exports are reviewable; Q held, guide goal paused, RM-016 Planned. No actual visual approval, paid/live calls, deploy/push/reset or delegation inferred.
+Active ticket: RM-015Z
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1344,7 +1346,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T19:55:05+00:00",
+  "updated_at": "2026-10-19T20:22:46+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1533,8 +1535,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015Y",
-  "next_action": "Create the exact25-path Y local checkpoint after final byte/index checks, then continue actual owner visual feedback. Current X/Y reviewable changes are complete locally; guide goal stays paused, Q held, RM-016 Planned. No actual visual approval, paid calls, deploy/push/reset consumption or delegation inferred.",
+  "active_ticket": "RM-015Z",
+  "next_action": "Continue actual owner visual feedback on sole4320 after the authorized exact27-path RM-015Z local checkpoint. Current photo cards/automatic source understanding and prior exports are reviewable; Q held, guide goal paused, RM-016 Planned. No actual visual approval, paid/live calls, deploy/push/reset or delegation inferred.",
   "phases": [
     {
       "id": "01-docs",
@@ -1970,14 +1972,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015X.md:25paths allocated before edits; snapshot GLB, branded raster-presentation PDF and semantic project preservation plan.",
         "docs/validation/RM-015X.md:27allocated paths;525tests/42files/seven boundaries, actual four-format native downloads and JSON reimport, all latest native PDF/edge layout pages inspected, three responsive export sizes. Pass1 metadata finding independently corrected, read-only pass2 has no actionable findings. Actual owner approval/external limits stay pending.",
         "docs/commit-plans/RM-015Y.md:25paths allocated before edits; direct owner photo/gallery/glass/capture-guide requests.",
-        "docs/validation/RM-015Y.md:25paths,526tests/42files/seven boundaries/root/assets/both builds,212inputs/1800508bytes/BUILD_ID41637f229a95a7e2c9b5a0f269106f1a1e2f6afeace2f509116f7e740ad1347d;26fresh empty/six-photo responsive observations,4viewer sizes, keyboard/focus/error/reorder/guide/fake2D journey; read-only pass1 no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending."
+        "docs/validation/RM-015Y.md:25paths,526tests/42files/seven boundaries/root/assets/both builds,212inputs/1800508bytes/BUILD_ID41637f229a95a7e2c9b5a0f269106f1a1e2f6afeace2f509116f7e740ad1347d;26fresh empty/six-photo responsive observations,4viewer sizes, keyboard/focus/error/reorder/guide/fake2D journey; read-only pass1 no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending.",
+        "docs/commit-plans/RM-015Z.md:27paths allocated before source edits, latest direct owner simpler cards/automatic photo role requirements; Y27b0130 committed.",
+        "docs/validation/RM-015Z.md:27paths,539tests/43files/seven boundaries/root/assets/both builds;212inputs/1800640bytes/BUILD_IDca0265f57ee524c5b79a4527a44301609be7403d2da269a97681535762d20827.26native empty/six-photo responsive states, guide/viewer/error and automatic fake2D journey; read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external proof pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "sample photos should be clickable to be viewed, the 2 cards in this page should be same height ... add a horizontal scroll ... not consistently matching according to screen size ... on hover of room choices is bugged ... shareable class ... sample photos ... 2 different corners ... a cool guide ... room and a person taking a photo with phone from 2 different corners",
-        "source": "human:current-chat/2026-10-19/photo-capture-feedback",
-        "scope": "Latest direct photo-intake visual/interaction corrections, no result approval.",
-        "recorded_at": "2026-10-19T19:17:08+00:00"
+        "quote": "the 2 cards have too much content for no reason; do these edits and allign them dynamically. AI should automatically understand room view vs furniture details without the user having to mention.",
+        "source": "human:current-chat/2026-10-19/simpler-photo-cards-automatic-types",
+        "scope": "RM-015Z implementation corrections only; no result approval",
+        "recorded_at": "2026-10-19T20:04:10+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2114,6 +2118,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/photo-capture-feedback",
             "scope": "Latest direct photo-intake visual/interaction corrections, no result approval.",
             "recorded_at": "2026-10-19T19:17:08+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "the 2 cards have too much content for no reason; do these edits and allign them dynamically. AI should automatically understand room view vs furniture details without the user having to mention.",
+            "source": "human:current-chat/2026-10-19/simpler-photo-cards-automatic-types",
+            "scope": "RM-015Z implementation corrections only; no result approval",
+            "recorded_at": "2026-10-19T20:04:10+00:00"
           }
         }
       ]

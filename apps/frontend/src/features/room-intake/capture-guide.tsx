@@ -127,24 +127,6 @@ export function CaptureGuide() {
             <rect x="11" y="-29" width="4" height="7" rx="1" fill="#b5c7bd" />
           </g>
         </svg>
-        <div className={styles.steps}>
-          <p>
-            <b>1</b>
-            <span>
-              Stand in a corner.
-              <br />
-              Include the floor and walls.
-            </span>
-          </p>
-          <p>
-            <b>2</b>
-            <span>
-              Move to the opposite corner.
-              <br />
-              Keep some of the same furniture in view.
-            </span>
-          </p>
-        </div>
       </div>
     </div>
   );

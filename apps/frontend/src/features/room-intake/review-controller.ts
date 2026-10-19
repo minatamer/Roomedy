@@ -18,8 +18,7 @@ import {
   createDraft,
   draftFeature,
   finishDraft,
-  unknown,
-  displayPosition,
+  reconcileRoomEvidence,
   mergeDraftPieces,
   removeDraftPiece,
   splitDraftPiece,
@@ -479,40 +478,3 @@ const unknownMeasurement = () => ({
   status: 'unknown' as const,
   sourceId: null,
 });
-
-/** A furniture-detail source cannot regain room-scale authority through semantic Undo. */
-function reconcileRoomEvidence(draft: ReviewDraft) {
-  let changed = false;
-  for (const axis of ['width', 'depth', 'height'] as const) {
-    const value = draft.room.room[axis],
-      source = draft.sources.find((s) => s.id === value.sourceId);
-    if (
-      value.status !== 'confirmed' &&
-      source?.purpose === 'furniture' &&
-      !draft.reviewed.includes(`${draft.room.roomId}:${axis}`)
-    ) {
-      draft.room.room[axis] = unknown();
-      changed = true;
-    }
-  }
-  if (changed)
-    for (const link of draft.links) {
-      const piece = draft.room.furniture.find((p) => p.id === link.entityId);
-      if (
-        piece &&
-        link.normalized &&
-        !piece.locks.position &&
-        piece.pose.provenance.status === 'estimated' &&
-        piece.pose.provenance.sourceId === 'draft-estimate'
-      )
-        Object.assign(piece.pose, displayPosition(draft, link.normalized));
-    }
-  if (
-    !draft.frameReviewed &&
-    !draft.reviewed.includes(`${draft.room.roomId}:shape`) &&
-    draft.sources.length > 0 &&
-    draft.sources.every((s) => s.purpose === 'furniture')
-  )
-    draft.shape = 'unknown';
-  return changed;
-}

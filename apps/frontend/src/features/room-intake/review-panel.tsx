@@ -245,7 +245,20 @@ function Evidence({
               {available.map((p) => (
                 <option key={p.id} value={p.id}>
                   Photo {state.photos.indexOf(p) + 1} ·{' '}
-                  {p.purpose === 'room' ? 'Room view' : 'Furniture detail'}
+                  {(() => {
+                    const source = state.draft.sources.find(
+                      (s) => s.id === p.id,
+                    );
+                    const role =
+                      p.purpose === 'auto'
+                        ? source?.detectedPurpose
+                        : p.purpose;
+                    return role === 'room'
+                      ? 'Room view'
+                      : role === 'furniture'
+                        ? 'Furniture detail'
+                        : 'Photo';
+                  })()}
                 </option>
               ))}
             </select>

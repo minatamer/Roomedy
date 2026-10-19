@@ -79,6 +79,7 @@ export function recognitionFixture(
     groups.push([o.ref]);
   return {
     version: 1,
+    sourcePurposes: sources.map((id) => ({ id, purpose: 'unknown' as const })),
     shape: 'unknown',
     frameEvidence: evidence(),
     room,
@@ -126,6 +127,11 @@ export function bedroomExample(
   ]);
   return {
     ...base,
+    sourcePurposes: sources.map(({ id, purpose }) => ({
+      id,
+      purpose:
+        purpose === 'furniture' ? ('furniture' as const) : ('room' as const),
+    })),
     shape: source ? 'rectangle' : 'unknown',
     frameEvidence: source
       ? { status: 'estimated', sourceId: source }

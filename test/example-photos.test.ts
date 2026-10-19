@@ -71,7 +71,7 @@ it('loads both real local WebP assets as bounded room views without provider dis
     const bytes = new Uint8Array(await blob.arrayBuffer());
     expect(new TextDecoder().decode(bytes.slice(0, 4))).toBe('RIFF');
     expect(new TextDecoder().decode(bytes.slice(8, 12))).toBe('WEBP');
-    expect(EXAMPLE_PHOTOS[i]!.purpose).toBe('room');
+    expect(EXAMPLE_PHOTOS[i]!.purpose).toBe('auto');
   }
   expect(transport).toHaveBeenCalledTimes(2);
 });

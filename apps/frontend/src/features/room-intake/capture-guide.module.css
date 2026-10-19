@@ -29,39 +29,12 @@
 .guide svg {
   display: block;
   width: 100%;
-  height: clamp(165px, 23svh, 235px);
+  height: clamp(190px, 30svh, 300px);
   overflow: visible;
 }
 .body {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 16px;
-  align-items: center;
-}
-.steps {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin-top: 6px;
-}
-.guide .steps p {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.6;
-}
-.steps b {
-  display: grid;
   place-items: center;
-  flex: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid #c9ad88;
-  font-size: 10px;
-  font-weight: 400;
 }
 .person {
   transform: translate(192px, 54px);
@@ -111,14 +84,6 @@
   }
 }
 @media (max-width: 480px) {
-  .body {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-  .steps {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
   .guide svg {
     height: 190px;
   }
