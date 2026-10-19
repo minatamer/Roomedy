@@ -70,7 +70,7 @@
   gap: 24px;
   padding: 20px 32px;
   border-bottom: 1px solid #dfd4c5;
-  background: #fbf5eae8;
+  background: transparent;
 }
 .header > span {
   font-size: 12px;
@@ -610,15 +610,16 @@
   min-height: clamp(280px, calc(100svh - 235px), 620px);
   grid-template-rows: 1fr auto auto;
   align-content: stretch;
-  background: #eee0c8ed;
+  align-items: end;
+  background: #fffaf1f0;
 }
 .photoMain > .upload > div:first-child {
   grid-column: 1 / -1;
   align-self: center;
 }
 .photoMain > .upload h2 {
-  font-size: clamp(26px, 3vw, 40px);
-  max-width: 16ch;
+  font-size: clamp(26px, 2.5vw, 36px);
+  max-width: 24ch;
 }
 .startActions {
   align-self: start;
@@ -693,5 +694,55 @@
 @media (max-width: 480px) {
   .photoMain > .upload {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.header > button {
+  border-radius: 999px;
+  border-color: #e8ddc7;
+  background: linear-gradient(135deg, #fffaf1d9, #e7d9bfa8);
+  box-shadow:
+    inset 0 1px 0 #fffcf5bf,
+    0 6px 18px #6a4b2410;
+  backdrop-filter: blur(8px);
+}
+.photoMain > .upload {
+  border-style: solid;
+  border-color: #d5c1a4;
+}
+.examples h2 {
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  margin: 0 0 16px;
+}
+.examples button {
+  width: 100%;
+}
+.exampleImages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.exampleImages figure {
+  margin: 0;
+  min-width: 0;
+}
+.exampleImages img {
+  display: block;
+  width: 100%;
+  height: clamp(160px, 28svh, 260px);
+  object-fit: cover;
+  border-radius: 12px;
+}
+.exampleImages figcaption {
+  font-size: 11px;
+  margin-top: 6px;
+  color: #79664f;
+}
+@media (min-width: 1000px) {
+  .photoLayout {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
   }
 }

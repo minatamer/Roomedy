@@ -2,7 +2,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** RM-015R committed5d4a3c3; RM-015S editor correction under local verification; T/U/V next, Q held, actual visual approval pending and RM-016 Planned
+**Stage:** S committed4420f69; T distinct photo/manual entry under local verification; U/V next, Q held, actual visual approval pending and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -185,6 +185,8 @@ Latest [P](tickets/RM-015P-restore-smooth-landing-scrolling.md) supersedes O's t
 The sample route opens the main editor immediately with authored dimensions and a purposeful arrangement. Adding a room uses a guided intake panel beside a rough, editable 2D sketch of walls, openings and labelled furniture footprints. Keep initial review in 2D while the visitor corrects the draft and measurements; introduce 3D only after they continue to the main editor. Preserve progress when switching relevant panels.
 
 If live AI is unavailable, the supplied sample and manual editor should still be useful. The assistant can explain its current availability. A public failure must not quietly replace the provider response with a scripted success. Development fixtures use an explicit simulation label.
+
+T supersedes the old sample/my-room entry split. Build manually selects empty/partial/furnished presets and opens the editor. Upload photos opens photo preparation directly, then rough 2D correction and accepted 2D/3D. Optional local example photos in fake mode use ordinary decoding/admission/drafting; measurements remain reviewable estimates. Deliberate fresh choices preserve recovered accepted work until an explicit replacement decision, while refresh keeps ordinary recovery. [T plan](commit-plans/RM-015T.md) and [evidence](validation/RM-015T.md) own current implementation/checks and browser limits. U windows and V opposite-door Corner follow; actual visual approval remains pending.
 
 RM-015S editor correction: footprint-aware outward furniture drags clamp to feasible walls/corners in both2D/3D, captured release commits one validated command/Undo, and unknown/impossible dimensions retain honest validation. New furniture defaults to unlocked position/rotation and locked dimensions; explicit imported/restored/user locks stay authoritative. Routine confirmations are accessible but outside layout; genuine failures overlay without shrinking the frame. View names are2D/3D, studio header transparent, furniture inspector basic plus Advanced, warm panel typography, and matching Export/Import row separated from Reset. [S evidence](validation/RM-015S.md) owns current local checks; actual owner approval remains pending. T photo/manual separation, U wall-constrained windows and V door-relative Corner follow before held Q; RM-016 Planned.
 
@@ -1310,8 +1312,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Save exact validated S39-path local checkpoint, then execute already selected T photo/manual, U window dragging and V doorway-relative Corner. Actual visual approval pending, guide paused, Q held and RM-016 Planned.
-Active ticket: RM-015S
+Next action: Save exact T local code-validated checkpoint without claiming final browser acceptance; execute independent selected U windows and V doorway-relative Corner, then return to T/U/V actual checks when pending test-dialog dismissal restores browser control. Guide paused, Q held and RM-016 Planned.
+Active ticket: RM-015T
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1336,7 +1338,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T17:06:42+00:00",
+  "updated_at": "2026-10-19T17:30:39+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1525,8 +1527,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015S",
-  "next_action": "Save exact validated S39-path local checkpoint, then execute already selected T photo/manual, U window dragging and V doorway-relative Corner. Actual visual approval pending, guide paused, Q held and RM-016 Planned.",
+  "active_ticket": "RM-015T",
+  "next_action": "Save exact T local code-validated checkpoint without claiming final browser acceptance; execute independent selected U windows and V doorway-relative Corner, then return to T/U/V actual checks when pending test-dialog dismissal restores browser control. Guide paused, Q held and RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -1950,14 +1952,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015R.md; docs/design/visual-review.md: exact22-path adaptive demo/photo/glass header correction,191inputs/1500858bytes/BUILD_IDdee4dd163ab4881a2f4f313551f4bbce852d16dfbefd681efde416ebb985f8c8,414tests/36files/seven boundaries/root/both builds and whole-ticket read-only pass2 clean. Actual owner visual approval pending; newer direct S editor feedback queued; Q held.",
         "docs/commit-plans/RM-015S.md; docs/tickets/RM-015S-stabilize-and-simplify-room-editing.md: exact39-path plan before implementation; actual22px frame shrink baseline. T/U/V direct requests recorded Planned before held Q.",
         "docs/validation/RM-015S.md:39allocated paths;429tests/36files/seven boundaries/root/both builds;191inputs/1505081bytes/BUILD_ID9666cc877a51ac2f3cab79db5169ca484ef213e2c6d6cf20b4b6cc6f2a58d039, actual partial/furnished/outside drag+Undo/locks/fieldfocus and45nine-size DOM rows. Actual owner acceptance pending; read-only review next.",
-        "docs/validation/RM-015S.md: settled39-path read-only pass1 clean; no actionable findings.429tests/root/exact191inputs and build current. Exact local checkpoint authorized separately from pending owner visual approval."
+        "docs/validation/RM-015S.md: settled39-path read-only pass1 clean; no actionable findings.429tests/root/exact191inputs and build current. Exact local checkpoint authorized separately from pending owner visual approval.",
+        "docs/commit-plans/RM-015T.md:29-path source/recovery/example-photo plan, no source edits yet.",
+        "docs/validation/RM-015T.md:28-path current code review has no actionable source findings;432tests/37files/seven boundaries/root/both builds,193inputs/1516490bytes/BUILD_ID3cad8f3e95adb084212e0d4d5daf668d6e43b593e73b981551c4680ec2103ccf. Final actual browser checks remain unverified after native dialog/control failure; local code checkpoint only, no visual approval."
       ],
       "blockers": [],
       "approval": {
-        "quote": "if i drag it outside frame ... corner ... frame gets smaller ... remove these ... remove this from navbar ... not letting me drag and move furniture in3d ... just2D and3D ... simplified version with an advanced ... typography and colors dont fit ... navbar no background ... Export Import same row ... position and rotation unlocked by default, only dimensions locked",
-        "source": "human:current-chat/2026-10-19/continued-editor-visual-feedback",
-        "scope": "Execute S editor correction then separately selected T photo/manual entry, U window drag and V door-relative Corner. Existing exact local checkpoint loop; no actual visual approval or external authority.",
-        "recorded_at": "2026-10-19T16:43:22+00:00"
+        "quote": "either you upload pictures and we extract and produce a2d3d ... or you do it manually ... empty ... few pieces ... already furnished ... for upload pics we should have pics for fake mode ... fix design ... misalignments wrong background inconsistencies",
+        "source": "human:current-chat/2026-10-19/photo-manual-and-upload-feedback",
+        "scope": "Execute T under existing local ticket loop, then U and V; no actual visual approval.",
+        "recorded_at": "2026-10-19T17:09:39+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2040,6 +2044,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/continued-editor-visual-feedback",
             "scope": "Execute S editor correction then separately selected T photo/manual entry, U window drag and V door-relative Corner. Existing exact local checkpoint loop; no actual visual approval or external authority.",
             "recorded_at": "2026-10-19T16:43:22+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "either you upload pictures and we extract and produce a2d3d ... or you do it manually ... empty ... few pieces ... already furnished ... for upload pics we should have pics for fake mode ... fix design ... misalignments wrong background inconsistencies",
+            "source": "human:current-chat/2026-10-19/photo-manual-and-upload-feedback",
+            "scope": "Execute T under existing local ticket loop, then U and V; no actual visual approval.",
+            "recorded_at": "2026-10-19T17:09:39+00:00"
           }
         }
       ]

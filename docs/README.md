@@ -1,6 +1,8 @@
 # Roomedy documentation
 
-**Current editor correction:** [RM-015S](tickets/RM-015S-stabilize-and-simplify-room-editing.md), [exact39-path plan](commit-plans/RM-015S.md), [actual evidence](validation/RM-015S.md). Stable2D/3D furniture dragging, shared defaults, simpler warm inspector/chrome/Project. T/U/V follow; actual visual approval pending and Q held.
+**Current entry correction:** [RM-015T](tickets/RM-015T-separate-photo-and-manual-room-entry.md), [28-path plan](commit-plans/RM-015T.md), [actual evidence and pending browser checks](validation/RM-015T.md). Photo entry and manual presets are distinct, local fake example photos use the real preparation/draft/review path, and fresh choices preserve saved work until an explicit decision. U/V follow; actual visual approval remains pending.
+
+**Previous editor correction:** [RM-015S](tickets/RM-015S-stabilize-and-simplify-room-editing.md), [exact39-path plan](commit-plans/RM-015S.md), [actual evidence](validation/RM-015S.md). Stable2D/3D furniture dragging, shared defaults, simpler warm inspector/chrome/Project. T/U/V follow; actual visual approval pending and Q held.
 
 **Previous demo-space correction:** [RM-015R](tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](commit-plans/RM-015R.md), [actual evidence](validation/RM-015R.md). Adaptive source/condition previews, useful photo intake and the shared static warm local backdrop across the whole demo, without the landing house. P committed825b5af. Local checks and actual visual acceptance are separate; Q lighting held, RM-016 Planned. [Open demo](http://127.0.0.1:4320/demo).
 

@@ -11,6 +11,7 @@ import type { ReviewController } from './review-controller';
 import type { PhotoPurpose } from './photo-store';
 import styles from './intake.module.css';
 import { draftFromPhotos, recognitionAvailability } from './recognition-client';
+import { EXAMPLE_PHOTOS, loadExamplePhotos } from './example-photos';
 import type { PublicConfig } from '@roomedy/contracts/api';
 
 export function Intake({
@@ -27,7 +28,47 @@ export function Intake({
     ),
     [purpose, setPurpose] = useState<PhotoPurpose>('room'),
     [owned, setOwned] = useState(state.draft.room.intent.condition !== 'empty');
+  const [reviewVisited, setReviewVisited] = useState(state.stage === 'review');
+  if (!reviewVisited && state.stage === 'review') setReviewVisited(true);
   const motion = useSurfaceMotion(state.stage);
+  const exampleAbort = useRef<AbortController | null>(null);
+  const [examplesBusy, setExamplesBusy] = useState(false);
+  useEffect(
+    () => () => {
+      exampleAbort.current?.abort();
+    },
+    [controller],
+  );
+  const addExamples = async () => {
+    if (exampleAbort.current || availability?.mode !== 'fake') return;
+    const abort = new AbortController();
+    exampleAbort.current = abort;
+    const release = controller.session.ownResource(() => abort.abort());
+    if (!release) {
+      exampleAbort.current = null;
+      controller.notify(
+        'Photo preparation is busy. Try again when the current task finishes.',
+      );
+      return;
+    }
+    setExamplesBusy(true);
+    try {
+      const photos = await loadExamplePhotos(abort.signal);
+      if (abort.signal.aborted) return;
+      photos.forEach((photo, i) =>
+        controller.addPhotos([photo], EXAMPLE_PHOTOS[i]!.purpose),
+      );
+    } catch {
+      if (!abort.signal.aborted)
+        controller.notify(
+          'The example photos could not load. Choose your photos or try again.',
+        );
+    } finally {
+      if (!abort.signal.aborted) setExamplesBusy(false);
+      release();
+      if (exampleAbort.current === abort) exampleAbort.current = null;
+    }
+  };
   const [availability, setAvailability] = useState<
     PublicConfig | null | undefined
   >(undefined);
@@ -94,13 +135,12 @@ export function Intake({
         >
           <Brand />
         </div>
-        <span>Bring your room together</span>
         <button
           onClick={() => {
             if (leave()) onBack();
           }}
         >
-          Change room
+          ← Room choices
         </button>
       </header>
       <main id="main-content" className={styles.main}>
@@ -116,7 +156,7 @@ export function Intake({
                 {state.stage === 'photos'
                   ? 'Bring the room into view.'
                   : state.simulated
-                    ? 'Review the sample sketch.'
+                    ? 'Review the example sketch.'
                     : 'Review your rough sketch.'}
               </h1>
             </div>
@@ -128,7 +168,7 @@ export function Intake({
                     aria-label="Local room photos"
                   >
                     <div>
-                      <h2>Photos, if you have them.</h2>
+                      <h2>A few photos. A new perspective.</h2>
                       <p>
                         Show corners, doors, windows and fixed features.
                         Furniture details help identify pieces, but cannot
@@ -269,13 +309,49 @@ export function Intake({
                   )}
                 </div>
                 <div className={styles.startActions}>
+                  {availability?.mode === 'fake' && (
+                    <section
+                      className={styles.examples}
+                      aria-label="Example room photos"
+                    >
+                      <p className={styles.eyebrow}>A ROOM TO EXPLORE</p>
+                      <h2>Start with these photos.</h2>
+                      <div className={styles.exampleImages}>
+                        {EXAMPLE_PHOTOS.map((example) => (
+                          <figure key={example.path}>
+                            <Image
+                              src={example.path}
+                              width={320}
+                              height={220}
+                              alt={example.label}
+                              unoptimized
+                            />
+                            <figcaption>{example.label}</figcaption>
+                          </figure>
+                        ))}
+                      </div>
+                      <button
+                        disabled={
+                          examplesBusy ||
+                          state.recognition !== 'idle' ||
+                          state.photos.length > 4
+                        }
+                        aria-busy={examplesBusy}
+                        onClick={() => void addExamples()}
+                      >
+                        {examplesBusy
+                          ? 'Preparing examples…'
+                          : 'Use example photos'}
+                      </button>
+                    </section>
+                  )}
                   <div>
                     <p id="photo-transfer">
                       {availability === undefined
                         ? 'Checking photo drafting…'
                         : availability?.capabilities.recognition
                           ? availability.mode === 'fake'
-                            ? 'Opening the sample sketch sends prepared photos to Roomedy.'
+                            ? 'Prepared photos are sent to Roomedy to open an example sketch.'
                             : 'Drafting sends prepared photos to the AI provider. Metadata is removed; image details remain visible.'
                           : 'Photo drafting is unavailable. Your selected photos stay local.'}
                     </p>
@@ -292,7 +368,7 @@ export function Intake({
                       onClick={() => void draftFromPhotos(controller)}
                     >
                       {availability?.mode === 'fake'
-                        ? 'Open sample sketch'
+                        ? 'Draft from photos'
                         : 'Draft my room'}
                     </button>
                     {state.recognition !== 'idle' && (
@@ -307,14 +383,17 @@ export function Intake({
                       </div>
                     )}
                   </div>
-                  <button
-                    className={styles.primary}
-                    onClick={() => {
-                      controller.startReview();
-                    }}
-                  >
-                    Set up the rough sketch manually ↗
-                  </button>
+                  {reviewVisited && (
+                    <button onClick={() => controller.startReview()}>
+                      Return to sketch
+                    </button>
+                  )}
+                  {!availability?.capabilities.recognition &&
+                    availability !== undefined && (
+                      <p className={styles.hint}>
+                        Return to Room choices to build manually.
+                      </p>
+                    )}
                 </div>
               </div>
             ) : (

@@ -115,7 +115,7 @@ it.each(['empty', 'partial', 'furnished'] as const)(
       expect(review.getSnapshot().stage).toBe('review');
       expect(session.getSnapshot().workspace).toBeNull();
       expect(review.getSnapshot().draft.room.furniture).toHaveLength(
-        condition === 'empty' ? 0 : 1,
+        condition === 'empty' ? 0 : condition === 'furnished' ? 2 : 1,
       );
       let repairActions = 0;
       review.shape('rectangle');
@@ -139,15 +139,14 @@ it.each(['empty', 'partial', 'furnished'] as const)(
       }
       if (condition === 'furnished')
         for (const category of [
-          'procedural-bed',
+          'procedural-desk',
           'procedural-chair',
           'wardrobe-hinged',
-          'procedural-storage',
         ]) {
           review.addPiece(category);
           repairActions++;
         }
-      expect(repairActions).toBe(condition === 'furnished' ? 8 : 4);
+      expect(repairActions).toBe(condition === 'furnished' ? 7 : 4);
       expect(review.accept()).toBe(true);
       expect(session.getSnapshot().phase).toBe('editor');
       expect(session.getSnapshot().workspace!.current.furniture).toHaveLength(
@@ -204,8 +203,29 @@ it.each(['empty', 'partial', 'furnished'] as const)(
       expect(parsed.ok).toBe(true);
       if (!parsed.ok) throw new Error('invalid-test-project');
       expect(encoded).not.toMatch(
-        /photo_|blob:|candidate|messages|grants|history|receipts/,
+        /blob:|data:image|manifest|filename|candidate|messages|grants|history|receipts/,
       );
+      for (const image of prepared.images)
+        expect(encoded).not.toContain(image.data);
+      const inspectSources = (value: unknown, key = '') => {
+        if (typeof value === 'string' && value.startsWith('photo_')) {
+          expect(key).toBe('sourceId');
+          expect([
+            'photo_1',
+            'photo_2',
+            'photo_3',
+            'photo_4',
+            'photo_5',
+            'photo_6',
+          ]).toContain(value);
+        } else if (Array.isArray(value))
+          value.forEach((item) => inspectSources(item));
+        else if (value && typeof value === 'object')
+          Object.entries(value).forEach(([name, field]) =>
+            inspectSources(field, name),
+          );
+      };
+      inspectSources(parsed.value);
       const recovered = new SessionController(undefined, {
         now: () => now,
         id: identityIds('refresh'),

@@ -18,6 +18,7 @@ import {
 } from '../apps/backend/src/recognition/recognize.js';
 import {
   createRecognitionFakeProvider,
+  bedroomExample,
   recognitionFixture,
 } from '../apps/backend/src/recognition/fixtures.js';
 import type { RecognitionCase } from '../apps/backend/src/recognition/fixtures.js';
@@ -86,7 +87,7 @@ describe('admitted photo interpretation', () => {
       expect(result.body.kind).toBe('completed');
       expect(result.body.simulation).toBe(true);
       expect(result.body.draft.observations.length).toBe(
-        condition === 'empty' ? 0 : 1,
+        condition === 'empty' ? 0 : condition === 'furnished' ? 2 : 1,
       );
       expect(runtime.operations.calls()).toBe(1);
       expect(runtime.meteredDispatches()).toBe(0);
@@ -368,4 +369,52 @@ it('unsupported categories remain unassigned and correctable without inventing a
   expect(d.observations).toHaveLength(1);
   expect(d.room.furniture).toHaveLength(0);
   expect(d.frameReviewed).toBe(false);
+});
+
+it('groups the provided bedroom crops into one bed and cabinet, with reviewable estimates and no invented openings or confirmation', () => {
+  const sources = [
+    { id: 'room_photo', purpose: 'room' },
+    { id: 'detail_photo', purpose: 'furniture' },
+  ];
+  const raw = bedroomExample(sources);
+  expect(
+    parseDraftHypothesis(
+      raw,
+      sources.map((s) => s.id),
+    ),
+  ).not.toBeNull();
+  expect(raw.groups).toHaveLength(2);
+  expect(raw.groups.every((g) => g.length === 2)).toBe(true);
+  expect(raw.observations.every((o) => o.kind === 'furniture')).toBe(true);
+  expect(raw.room.width).toEqual({
+    value: 4200,
+    status: 'estimated',
+    sourceId: 'room_photo',
+  });
+  const d = createDraft('furnished', 'review_example');
+  d.sources = sources.map((s) => ({
+    ...s,
+    purpose: s.purpose as 'room' | 'furniture',
+    available: true,
+  }));
+  let id = 0;
+  const result = adoptHypothesis(d, raw, () => `example_${++id}`);
+  expect(result.ok).toBe(true);
+  if (!result.ok) return;
+  expect(result.draft.room.furniture.map((p) => p.catalogueId).sort()).toEqual([
+    'bedside-storage-fixed',
+    'procedural-bed',
+  ]);
+  expect(
+    result.draft.room.furniture.every(
+      (p) => p.dimensions.width.status === 'estimated',
+    ),
+  ).toBe(true);
+  expect(result.draft.frameReviewed).toBe(false);
+  const details = bedroomExample([
+    { id: 'detail_photo', purpose: 'furniture' },
+  ]);
+  expect(details.shape).toBe('unknown');
+  expect(details.room.width.value).toBeNull();
+  expect(details.frameEvidence.status).toBe('unknown');
 });

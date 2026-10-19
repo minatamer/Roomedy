@@ -87,6 +87,65 @@ export function recognitionFixture(
   };
 }
 /** Default demo varies only by declared starting condition; no image recognition claim. */
+export function bedroomExample(
+  sources: readonly { id: string; purpose?: string }[],
+): DraftHypothesis {
+  const source = sources.find((s) => s.purpose !== 'furniture')?.id;
+  const estimate = (value: number, sourceId: string) => ({
+    value,
+    status: 'estimated' as const,
+    sourceId,
+  });
+  const base = recognitionFixture(
+    'repeated-desk',
+    sources.map((s) => s.id),
+  );
+  const observations = base.observations.flatMap((template, index) => [
+    {
+      ...template,
+      ref: `bed_${index}`,
+      catalogueId: 'procedural-bed',
+      label: 'Bed',
+      finish: 'ivory' as const,
+      width: estimate(1600, template.sourceId),
+      depth: estimate(2100, template.sourceId),
+      height: estimate(850, template.sourceId),
+      sketch: { x: 0.25, z: 0.45, quarterTurns: 0 as const },
+    },
+    {
+      ...template,
+      ref: `cabinet_${index}`,
+      catalogueId: 'bedside-storage-fixed',
+      label: 'Bedside cabinet',
+      finish: 'ivory' as const,
+      width: estimate(540, template.sourceId),
+      depth: estimate(440, template.sourceId),
+      height: estimate(470, template.sourceId),
+      sketch: { x: 0.75, z: 0.3, quarterTurns: 0 as const },
+    },
+  ]);
+  return {
+    ...base,
+    shape: source ? 'rectangle' : 'unknown',
+    frameEvidence: source
+      ? { status: 'estimated', sourceId: source }
+      : evidence(),
+    room: source
+      ? {
+          width: estimate(4200, source),
+          depth: estimate(4800, source),
+          height: estimate(2700, source),
+        }
+      : base.room,
+    observations,
+    groups: [
+      observations.filter((o) => o.ref.startsWith('bed_')).map((o) => o.ref),
+      observations
+        .filter((o) => o.ref.startsWith('cabinet_'))
+        .map((o) => o.ref),
+    ],
+  };
+}
 export function createRecognitionFakeProvider() {
   return createFakeProvider(async (request, signal) => {
     if (signal.aborted) return { kind: 'cancelled' };
@@ -97,7 +156,7 @@ export function createRecognitionFakeProvider() {
     try {
       context = JSON.parse(first[0].text) as {
         condition: string;
-        sources: { id: string }[];
+        sources: { id: string; purpose?: string }[];
       };
     } catch {
       return { kind: 'malformed' };
@@ -107,10 +166,13 @@ export function createRecognitionFakeProvider() {
     return {
       kind: 'completed',
       calls: [],
-      data: recognitionFixture(
-        context.condition === 'empty' ? 'empty' : 'repeated-desk',
-        context.sources.map((s) => s.id),
-      ),
+      data:
+        context.condition === 'furnished'
+          ? bedroomExample(context.sources)
+          : recognitionFixture(
+              context.condition === 'empty' ? 'empty' : 'repeated-desk',
+              context.sources.map((s) => s.id),
+            ),
     };
   });
 }

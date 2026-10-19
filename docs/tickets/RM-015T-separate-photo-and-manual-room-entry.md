@@ -1,6 +1,6 @@
 # RM-015T — Separate photo and manual room entry
 
-Status: **Planned; direct owner correction before joint visual acceptance**. Depends on RM-015S; Q lighting held and RM-016 Planned. Current authority: latest direct owner feedback in this chat, existing plan→execute→read-only validate→independently fix/revalidate→exact local commit loop. Not an actual result approval or paid/live/delegation/deploy/push/new-port authority.
+Status: **Code implemented/locally validated; final browser checks and visual acceptance pending**. Depends on RM-015S; Q lighting held and RM-016 Planned. Current authority: latest direct owner feedback in this chat, existing plan→execute→read-only validate→independently fix/revalidate→exact local commit loop. Not an actual result approval or paid/live/delegation/deploy/push/new-port authority.
 
 ## Thorough implementation plan
 
@@ -10,9 +10,13 @@ Redesign the reported upload page: aligned chooser/type/primary action, coherent
 
 ## Acceptance
 
-- [ ] Selected complete behavior and owning states implemented through existing shared authority, preserving finite bounds, truthful provenance and useful failure paths.
+- [x] Selected complete behavior and owning states implemented through existing shared authority, preserving finite bounds, truthful provenance and useful failure paths.
 - [ ] Current responsive/interaction and meaningful deterministic evidence recorded, with exact local root/build/source gate.
 - [ ] Full allocated-scope read-only validation clean after independently checked findings; exact authorized local checkpoint.
 - [ ] Actual owner visual acceptance — remains pending; external/device/native/paint/Linux/hosted/live limitations explicit.
 
 Precision: [blueprint](../ROOMEDY.md), [layout](../design/layout.md), [room view](../design/room-view.md), [motion](../design/motion.md), [checklist](../design/REVIEW_CHECKLIST.md), [feedback](../references/LESSONS_FROM_VISUAL_FEEDBACK.md). Allocate and document exact code/test/evidence owners before any implementation edit.
+
+[Exact28-path execution plan](../commit-plans/RM-015T.md). S committed4420f69; shared-recovery diagnosis and bounded example/provenance decisions recorded before implementation.
+
+Local code gate432tests/root/both builds passed. Actual final browser matrix/journey checks remain unchecked after native confirmation/control failure; do not report full acceptance. Read-only review and exact code checkpoint do not waive them. U/V can proceed as independent selected code work while that external browser-control input is pending.

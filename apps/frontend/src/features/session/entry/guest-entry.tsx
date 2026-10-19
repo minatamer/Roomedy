@@ -62,14 +62,16 @@ export function GuestEntry({
     window.history.replaceState(null, '', entryHref(state));
   }, [state]);
   if (state.step === 'ready')
-    return state.intent.source === 'sample' ? (
+    return state.intent.source === 'manual' ? (
       <EditorEntry
         condition={state.intent.condition}
+        fresh={!!state.fresh}
         onBack={() => dispatch({ type: 'back' })}
       />
     ) : (
       <IntakeEntry
         condition={state.intent.condition}
+        fresh={!!state.fresh}
         onBack={() => dispatch({ type: 'back' })}
       />
     );
@@ -110,7 +112,7 @@ export function GuestEntry({
               </h1>
               <p>
                 {state.step === 'source'
-                  ? 'Explore a sample or start with your room.'
+                  ? 'Start from photos, or build a room yourself.'
                   : state.step === 'condition'
                     ? 'Choose the starting point that feels closest.'
                     : 'Photos become a rough 2D sketch for you to review before the main editor.'}
@@ -120,21 +122,21 @@ export function GuestEntry({
               <div className="entry-options source-options">
                 <button
                   className="choice-card"
-                  onClick={() => dispatch({ type: 'source', source: 'sample' })}
+                  onClick={() => dispatch({ type: 'source', source: 'manual' })}
                 >
                   <span className="choice-art sample-art" aria-hidden="true">
                     {previews.furnished}
                   </span>
                   <span className="choice-title">
-                    Use a sample room <span>↗</span>
+                    Build manually <span>↗</span>
                   </span>
                   <span className="choice-copy">
-                    Start with a room you can edit right away.
+                    Choose an empty room, a few pieces or a furnished layout.
                   </span>
                 </button>
                 <button
                   className="choice-card"
-                  onClick={() => dispatch({ type: 'source', source: 'own' })}
+                  onClick={() => dispatch({ type: 'source', source: 'photos' })}
                 >
                   <span className="choice-art own-art" aria-hidden="true">
                     <picture>
@@ -155,10 +157,11 @@ export function GuestEntry({
                     </picture>
                   </span>
                   <span className="choice-title">
-                    Add my room <span>↗</span>
+                    Upload photos <span>↗</span>
                   </span>
                   <span className="choice-copy">
-                    Begin with your own bedroom or workspace.
+                    Turn room photos into a sketch, review it, then edit in 2D
+                    and 3D.
                   </span>
                 </button>
               </div>

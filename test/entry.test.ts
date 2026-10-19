@@ -4,119 +4,100 @@ import {
   entryReducer,
   parseEntryIntent,
 } from '../apps/frontend/src/features/session/entry/entry-state.js';
-import type {
-  EntryState,
-  EntrySource,
-} from '../apps/frontend/src/features/session/entry/entry-state.js';
-
-describe('guest entry intent and route handoff', () => {
-  it.each(['sample', 'own'] as const)(
-    'round-trips every supported %s condition without changing the intent',
-    (source) => {
-      for (const condition of ['empty', 'partial', 'furnished'] as const) {
-        const expected = { step: 'ready', intent: { source, condition } };
-        const state = parseEntryIntent(source, condition);
-        expect(state).toEqual(expected);
-        const href = new URL(entryHref(state), 'http://127.0.0.1:4320');
-        expect(href.pathname).toBe('/demo');
-        expect([...href.searchParams.keys()]).toEqual(['start', 'condition']);
-        expect(
-          parseEntryIntent(
-            href.searchParams.get('start') ?? undefined,
-            href.searchParams.get('condition') ?? undefined,
-          ),
-        ).toEqual(expected);
-      }
+import type { EntryState } from '../apps/frontend/src/features/session/entry/entry-state.js';
+describe('distinct manual and photo entry', () => {
+  it.each(['empty', 'partial', 'furnished'] as const)(
+    'round-trips manual %s and legacy sample without a fresh replacement grant',
+    (condition) => {
+      const expected = {
+        step: 'ready',
+        intent: { source: 'manual', condition },
+      };
+      for (const source of ['manual', 'sample'])
+        expect(parseEntryIntent(source, condition)).toEqual(expected);
+      const url = new URL(
+        entryHref(expected as EntryState),
+        'http://127.0.0.1:4320',
+      );
+      expect(
+        parseEntryIntent(
+          url.searchParams.get('start')!,
+          url.searchParams.get('condition')!,
+        ),
+      ).toEqual(expected);
     },
   );
-
-  it('fails closed for invalid, conflicting and prototype-like query inputs', () => {
-    for (const source of [
-      undefined,
-      '',
-      'Sample',
-      'sample,own',
-      '__proto__',
-      'constructor',
-      'https://example.com',
-      ['sample', 'own'],
-      { toString: () => 'sample' },
-    ]) {
-      // Query arrays/objects are untrusted boundary values, outside the typed API.
-      expect(parseEntryIntent(source as string | undefined, 'empty')).toEqual({
-        step: 'source',
-      });
-    }
-    for (const source of ['sample', 'own'] as const)
+  it('photos and legacy own go directly to intake; presets belong only to manual creation', () => {
+    for (const source of ['photos', 'own'])
       for (const condition of [
         undefined,
-        '',
-        'Empty',
-        'empty,furnished',
-        'own',
+        'empty',
+        'partial',
+        'furnished',
         '__proto__',
-        ['empty', 'furnished'],
-      ])
-        expect(
-          parseEntryIntent(source, condition as string | undefined),
-        ).toEqual({ step: 'condition', source });
-  });
-
-  it('does not carry a previous condition into a different source selection', () => {
-    const initial: EntryState = Object.freeze({
-      step: 'ready',
-      intent: Object.freeze({ source: 'sample', condition: 'furnished' }),
-    });
-    const next = entryReducer(initial, { type: 'source', source: 'own' });
-    expect(next).toEqual({ step: 'condition', source: 'own' });
-    expect(entryHref(next)).toBe('/demo?start=own');
-    expect(
-      entryReducer(next, { type: 'condition', condition: 'partial' }),
-    ).toEqual({
-      step: 'ready',
-      intent: { source: 'own', condition: 'partial' },
-    });
-    expect(initial).toEqual({
-      step: 'ready',
-      intent: { source: 'sample', condition: 'furnished' },
+      ]) {
+        const state = parseEntryIntent(source, condition);
+        expect(state).toEqual({
+          step: 'ready',
+          intent: { source: 'photos', condition: 'furnished' },
+        });
+        expect(entryHref(state)).toBe('/demo?start=photos');
+      }
+    expect(parseEntryIntent('manual', undefined)).toEqual({
+      step: 'condition',
+      source: 'manual',
     });
   });
-
-  it.each(['sample', 'own'] as const)(
-    'Back keeps the intentional %s source until the visitor goes back again',
-    (source: EntrySource) => {
-      const ready = parseEntryIntent(source, 'empty');
-      const condition = entryReducer(ready, { type: 'back' });
-      expect(condition).toEqual({ step: 'condition', source });
-      expect(entryHref(condition)).toBe(`/demo?start=${source}`);
-      const reselection = entryReducer(condition, {
-        type: 'condition',
-        condition: 'furnished',
-      });
-      expect(reselection).toEqual({
-        step: 'ready',
-        intent: { source, condition: 'furnished' },
-      });
-      expect(entryReducer(condition, { type: 'back' })).toEqual({
+  it('fresh photo and manual choices are explicit and their transient freshness never enters the route', () => {
+    const source: EntryState = { step: 'source' };
+    const photos = entryReducer(source, { type: 'source', source: 'photos' });
+    expect(photos).toMatchObject({ step: 'ready', fresh: true });
+    expect(entryHref(photos)).toBe('/demo?start=photos');
+    expect(entryReducer(photos, { type: 'back' })).toEqual(source);
+    const manual = entryReducer(source, { type: 'source', source: 'manual' });
+    expect(manual).toEqual({ step: 'condition', source: 'manual' });
+    const ready = entryReducer(manual, {
+      type: 'condition',
+      condition: 'partial',
+    });
+    expect(ready).toEqual({
+      step: 'ready',
+      intent: { source: 'manual', condition: 'partial' },
+      fresh: true,
+    });
+    expect(entryReducer(ready, { type: 'back' })).toEqual(manual);
+    expect(entryReducer(manual, { type: 'back' })).toEqual(source);
+  });
+  it('fails closed for invalid sources/presets and ignores stale condition events', () => {
+    for (const value of [
+      undefined,
+      '',
+      'Manual',
+      '__proto__',
+      'constructor',
+      ['manual', 'photos'],
+      { toString: () => 'manual' },
+    ])
+      expect(parseEntryIntent(value as string | undefined, 'empty')).toEqual({
         step: 'source',
       });
-      expect(ready).toEqual({
-        step: 'ready',
-        intent: { source, condition: 'empty' },
-      });
-    },
-  );
-
-  it('ignores stale condition events outside the condition step and keeps the fresh route clean', () => {
+    for (const condition of [
+      undefined,
+      '',
+      'Empty',
+      '__proto__',
+      ['empty', 'furnished'],
+    ])
+      expect(
+        parseEntryIntent('manual', condition as string | undefined),
+      ).toEqual({ step: 'condition', source: 'manual' });
     const source: EntryState = Object.freeze({ step: 'source' });
-    const ready = parseEntryIntent('own', 'partial');
     expect(
       entryReducer(source, { type: 'condition', condition: 'empty' }),
     ).toBe(source);
-    expect(
-      entryReducer(ready, { type: 'condition', condition: 'furnished' }),
-    ).toBe(ready);
-    expect(entryReducer(source, { type: 'back' })).toEqual(source);
-    expect(entryHref(source)).toBe('/demo');
+    const ready = parseEntryIntent('photos', undefined);
+    expect(entryReducer(ready, { type: 'condition', condition: 'empty' })).toBe(
+      ready,
+    );
   });
 });

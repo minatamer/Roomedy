@@ -3,6 +3,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import type { RoomCondition } from '../session/entry/entry-state';
 import type { SessionController } from '../session/controller';
 import { createGuestSession } from '../session/lifecycle';
+import { RecoveryChoice } from '../session/entry/recovery-choice';
 import { Editor } from '../room-editor/editor';
 import { ReviewController } from './review-controller';
 import { Intake } from './intake';
@@ -54,11 +55,14 @@ function Workspace({
 }
 export default function IntakeEntry({
   condition,
+  fresh = false,
   onBack,
 }: {
   condition: RoomCondition;
+  fresh?: boolean;
   onBack: () => void;
 }) {
+  const [needsChoice, setNeedsChoice] = useState(false);
   const [owned, setOwned] = useState<{
     session: SessionController;
     review: ReviewController | null;
@@ -75,6 +79,7 @@ export default function IntakeEntry({
         session.getSnapshot().phase === 'entry'
           ? new ReviewController(session, condition)
           : null;
+      setNeedsChoice(fresh && guest.session.getSnapshot().recovered);
       pair = { session, review, close: guest.close };
       setOwned(pair);
     });
@@ -83,7 +88,21 @@ export default function IntakeEntry({
       pair?.review?.dispose();
       pair?.close();
     };
-  }, [condition]);
+  }, [condition, fresh]);
+  if (owned && needsChoice)
+    return (
+      <RecoveryChoice
+        photos
+        onContinue={() => setNeedsChoice(false)}
+        onStart={() => {
+          owned.session.reset();
+          const review = new ReviewController(owned.session, condition);
+          // Session-owned cleanup also disposes this replacement review.
+          setOwned({ ...owned, review });
+          setNeedsChoice(false);
+        }}
+      />
+    );
   return owned ? (
     <Workspace {...owned} condition={condition} onBack={onBack} />
   ) : (

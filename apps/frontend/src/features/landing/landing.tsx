@@ -117,9 +117,9 @@ export function Landing() {
                   </svg>
                 </div>
                 <p className={styles.detail}>
-                  Try a ready-to-edit room, or add your own. Photos start as a
-                  rough 2D sketch: review the pieces and measurements, then open
-                  your studio.
+                  Build manually, or start with photos. Photos become a rough 2D
+                  sketch: review the pieces and measurements, then open your
+                  studio.
                 </p>
                 <SectionScroll
                   className={styles.chapterLink}
@@ -286,7 +286,7 @@ export function Landing() {
                   <Link className="button primary" href="/demo">
                     Start designing <span aria-hidden="true">↗</span>
                   </Link>
-                  <p>Try a room, or bring your own.</p>
+                  <p>Build your room, or begin with photos.</p>
                 </div>
               </div>
             </section>

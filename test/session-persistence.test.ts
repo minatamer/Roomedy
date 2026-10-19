@@ -239,3 +239,21 @@ it('a duplicate-tab storage copy gets independent state and resetting it cannot 
     'walnut',
   );
 });
+
+it('reports only a successful recovery without changing its room or treating missing/invalid data as a recovered conflict', () => {
+  vi.useFakeTimers();
+  const first = setup();
+  expect(first.session.getSnapshot().recovered).toBe(false);
+  first.session.dispatch(finish, 'Finish');
+  first.persistence.flush();
+  const saved = first.storage.getItem(RECOVERY_KEY);
+  const restored = setup(first.storage);
+  expect(restored.session.getSnapshot().recovered).toBe(true);
+  expect(
+    restored.session.getSnapshot().workspace!.current.room.floorFinish,
+  ).toBe('walnut');
+  expect(restored.storage.getItem(RECOVERY_KEY)).toBe(saved);
+  const invalid = new MemoryStorage();
+  invalid.values.set(RECOVERY_KEY, '{}');
+  expect(setup(invalid).session.getSnapshot().recovered).toBe(false);
+});

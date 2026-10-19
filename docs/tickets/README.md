@@ -56,7 +56,7 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015P](RM-015P-restore-smooth-landing-scrolling.md) | Performance-first photographic/scroll correction, centered cue and faster readiness fade | RM-015O | Implemented/locally verified; actual smoothness/visual feedback pending |
 | [RM-015R](RM-015R-fill-demo-flow-with-useful-adaptive-content.md) | Adaptive useful demo space and shared static warm photographic background without landing house | RM-015P | Current owner correction; locally implemented, actual visual approval pending |
 | [RM-015S](RM-015S-stabilize-and-simplify-room-editing.md) | Stable/direct furniture editing, simpler themed inspector/chrome/Project | RM-015R | Implemented/locally verified; read-only pass1 clean, actual visual approval pending |
-| [RM-015T](RM-015T-separate-photo-and-manual-room-entry.md) | Separate photo and manual room entry | RM-015S | Direct owner correction; Planned, visual approval pending |
+| [RM-015T](RM-015T-separate-photo-and-manual-room-entry.md) | Separate photo and manual room entry | RM-015S | Code implemented/root validated; final browser checks and visual approval pending |
 | [RM-015U](RM-015U-drag-windows-along-their-walls.md) | Drag windows along their walls | RM-015T | Direct owner correction; Planned, visual approval pending |
 | [RM-015V](RM-015V-frame-the-corner-opposite-the-doorway.md) | Frame the corner opposite the doorway | RM-015U | Direct owner correction; Planned, visual approval pending |
 | [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015V | Planned; held behind current owner corrections and actual feedback |

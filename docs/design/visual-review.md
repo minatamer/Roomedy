@@ -1,8 +1,12 @@
 # RM-015 current frontend review
 
-Status: **RM-015S editor correction locally implemented and checked; actual owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
+Status: **RM-015T entry-flow code locally validated; final browser checks and actual owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
 
-## Current S editor result
+## Current T entry result and browser limit
+
+[T ticket](../tickets/RM-015T-separate-photo-and-manual-room-entry.md), [28-path plan](../commit-plans/RM-015T.md), [actual evidence](../validation/RM-015T.md). Build manually and Upload photos now follow distinct paths. Optional local fake examples use real preparation/admission/review; fresh entry preserves saved work until an explicit choice. Warm upload/navigation/field alignment and existing-review return are connected. Current432tests/seven boundaries/root/both builds pass,193inputs/1,516,490bytes/BUILD_ID3cad8f3e95adb084212e0d4d5daf668d6e43b593e73b981551c4680ec2103ccf. Actual final1280×720 layout has no overflow and aligned44px controls. Earlier native provided-photo drafting reached rough2D. Remaining nine-size/manual/final-accept3D/recovery interactions are **unverified** because the browser automation stalled on an agent test-tab Leave this room confirmation. Requested user dismissal is pending; no visual pass or cleanup success inferred. U/V are independent selected follow-ups; Q held and RM-016 Planned.
+
+## Prior S editor result
 
 [S ticket](../tickets/RM-015S-stabilize-and-simplify-room-editing.md), [39-path plan](../commit-plans/RM-015S.md), [actual checks](../validation/RM-015S.md). Stable room geometry, captured outward dragging in2D/3D, new movement/rotation unlocked and dimensions protected, basic/Advanced warm inspector, transparent navbar/simple labels and matching Project actions. Final429tests/root/both builds pass;191inputs/1,505,081bytes/BUILD_ID9666cc877a51ac2f3cab79db5169ca484ef213e2c6d6cf20b4b6cc6f2a58d039. Native partial/furnished drag/Undo, contextual locked/error paths and45nine-size DOM rows recorded. Actual visual decision remains pending; selected T/U/V corrections follow, Q held. R details below remain historical context.
 
