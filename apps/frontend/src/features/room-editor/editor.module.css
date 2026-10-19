@@ -836,3 +836,28 @@
     transform: translateY(0);
   }
 }
+
+.previewActions {
+  animation: surfaceReveal 340ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+.inventory li,
+.roomStatus > p {
+  animation: surfaceReveal 260ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+.studio button {
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+@keyframes surfaceReveal {
+  from {
+    opacity: 0.35;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

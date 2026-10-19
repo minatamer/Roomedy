@@ -2,6 +2,7 @@
 import { useEffect, useReducer, useRef } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { useSurfaceMotion } from '../../room-editor/use-surface-motion';
 import { Brand } from '../../landing/brand';
 import { entryHref, entryReducer } from './entry-state';
 import type { EntryState, RoomCondition } from './entry-state';
@@ -48,6 +49,7 @@ const conditions: readonly {
 ];
 export function GuestEntry({ initial }: { initial: EntryState }) {
   const [state, dispatch] = useReducer(entryReducer, initial);
+  const motion = useSurfaceMotion(state.step);
   const heading = useRef<HTMLHeadingElement>(null);
   const mounted = useRef(false);
   useEffect(() => {
@@ -81,103 +83,107 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
         </Link>
       </header>
       <main id="main-content" className="entry-main shell">
-        <div className="entry-heading">
-          {state.step !== 'source' && (
-            <button
-              className="back-button"
-              onClick={() => dispatch({ type: 'back' })}
-            >
-              ← Back
-            </button>
-          )}
-          <p className="eyebrow">YOUR SPACE, A FRESH PERSPECTIVE</p>
-          <h1 ref={heading} tabIndex={-1}>
-            {title}
-          </h1>
-          <p>
-            {state.step === 'source'
-              ? 'Explore an authored sample or begin with the room you have.'
-              : state.step === 'condition'
-                ? 'Choose the starting point that feels closest.'
-                : 'Photos become a rough 2D sketch for you to review before the main editor.'}
-          </p>
-        </div>
-        {state.step === 'source' ? (
-          <div className="entry-options source-options">
-            <button
-              className="choice-card"
-              onClick={() => dispatch({ type: 'source', source: 'sample' })}
-            >
-              <span className="choice-art sample-art" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              <span className="choice-title">
-                Use a sample room <span>↗</span>
-              </span>
-              <span className="choice-copy">
-                Get a feel for the possibilities with supplied dimensions.
-              </span>
-            </button>
-            <button
-              className="choice-card"
-              onClick={() => dispatch({ type: 'source', source: 'own' })}
-            >
-              <span className="choice-art own-art" aria-hidden="true">
-                <svg viewBox="0 0 140 90">
-                  <rect
-                    x="22"
-                    y="12"
-                    width="95"
-                    height="65"
-                    rx="8"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="m35 64 25-26 19 19 12-12 17 19M95 29h.1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <circle cx="94" cy="29" r="5" fill="currentColor" />
-                </svg>
-              </span>
-              <span className="choice-title">
-                Add my room <span>↗</span>
-              </span>
-              <span className="choice-copy">
-                Begin with your own bedroom or workspace.
-              </span>
-            </button>
-          </div>
-        ) : (
-          <div className="entry-options condition-options">
-            {conditions.map((condition) => (
-              <button
-                className="choice-card"
-                key={condition.id}
-                onClick={() =>
-                  dispatch({ type: 'condition', condition: condition.id })
-                }
-              >
-                <span className="condition-icon" aria-hidden="true">
-                  {condition.icon}
-                </span>
-                <span className="choice-title">
-                  {condition.title} <span>↗</span>
-                </span>
-                <span className="choice-copy">{condition.copy}</span>
-              </button>
-            ))}
-          </div>
-        )}
+        <div ref={motion} className="motion-surface">
+          <div className="motion-flow">
+            <div className="entry-heading">
+              {state.step !== 'source' && (
+                <button
+                  className="back-button"
+                  onClick={() => dispatch({ type: 'back' })}
+                >
+                  ← Back
+                </button>
+              )}
+              <p className="eyebrow">YOUR SPACE, A FRESH PERSPECTIVE</p>
+              <h1 ref={heading} tabIndex={-1}>
+                {title}
+              </h1>
+              <p>
+                {state.step === 'source'
+                  ? 'Explore an authored sample or begin with the room you have.'
+                  : state.step === 'condition'
+                    ? 'Choose the starting point that feels closest.'
+                    : 'Photos become a rough 2D sketch for you to review before the main editor.'}
+              </p>
+            </div>
+            {state.step === 'source' ? (
+              <div className="entry-options source-options">
+                <button
+                  className="choice-card"
+                  onClick={() => dispatch({ type: 'source', source: 'sample' })}
+                >
+                  <span className="choice-art sample-art" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="choice-title">
+                    Use a sample room <span>↗</span>
+                  </span>
+                  <span className="choice-copy">
+                    Get a feel for the possibilities with supplied dimensions.
+                  </span>
+                </button>
+                <button
+                  className="choice-card"
+                  onClick={() => dispatch({ type: 'source', source: 'own' })}
+                >
+                  <span className="choice-art own-art" aria-hidden="true">
+                    <svg viewBox="0 0 140 90">
+                      <rect
+                        x="22"
+                        y="12"
+                        width="95"
+                        height="65"
+                        rx="8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="m35 64 25-26 19 19 12-12 17 19M95 29h.1"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                      <circle cx="94" cy="29" r="5" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <span className="choice-title">
+                    Add my room <span>↗</span>
+                  </span>
+                  <span className="choice-copy">
+                    Begin with your own bedroom or workspace.
+                  </span>
+                </button>
+              </div>
+            ) : (
+              <div className="entry-options condition-options">
+                {conditions.map((condition) => (
+                  <button
+                    className="choice-card"
+                    key={condition.id}
+                    onClick={() =>
+                      dispatch({ type: 'condition', condition: condition.id })
+                    }
+                  >
+                    <span className="condition-icon" aria-hidden="true">
+                      {condition.icon}
+                    </span>
+                    <span className="choice-title">
+                      {condition.title} <span>↗</span>
+                    </span>
+                    <span className="choice-copy">{condition.copy}</span>
+                  </button>
+                ))}
+              </div>
+            )}
 
-        <p className="entry-footnote">
-          No account. No automatic image transfer.
-        </p>
+            <p className="entry-footnote">
+              No account. No automatic image transfer.
+            </p>
+          </div>
+        </div>
       </main>
     </>
   );

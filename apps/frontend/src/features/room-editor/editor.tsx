@@ -1,3 +1,4 @@
+import { useSurfaceMotion } from './use-surface-motion';
 import { AssistantController } from '../assistant/controller';
 import { Assistant } from '../assistant/assistant';
 import type { CameraPose } from '../room-view/adapter';
@@ -64,6 +65,9 @@ export function Editor({
   );
   const [cutawayOpenedAt, setCutawayOpenedAt] = useState(() =>
     performance.now(),
+  );
+  const panelMotion = useSurfaceMotion(
+    `${state.workspace?.workspaceId ?? 'opening'}:${state.presentation.panel}:${state.presentation.panel === 'inspector' ? state.presentation.selectedId : ''}:${state.comparison}`,
   );
   const roomView = state.presentation.roomView;
   const setRoomView = (view: 'plan' | 'cutaway') =>
@@ -531,205 +535,218 @@ export function Editor({
           tabIndex={-1}
           aria-label="Room properties"
         >
-          <button
-            className={styles.mobileReturn}
-            onClick={() => {
-              headingRef.current?.focus({ preventScroll: true });
-              headingRef.current?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-              });
-            }}
-          >
-            ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
-          </button>
-          {view.panel === 'assistant' &&
-            (readOnly && !state.candidate ? (
-              <section
-                className={`${styles.section} ${styles.readOnlyAssistant}`}
-              >
-                <h2>Roomedy assistant</h2>
-                <p>{inspectionReason}</p>
-                {before && (
-                  <button onClick={() => controller.setComparison('current')}>
-                    Return to Current
-                  </button>
-                )}
-              </section>
-            ) : assistant ? (
-              <Assistant controller={assistant} roomState={state} />
-            ) : (
-              <p role="status">Opening assistant…</p>
-            ))}
-          {view.panel === 'inventory' && (
-            <>
-              <div className={styles.panelTitle}>
-                <p className={styles.eyebrow}>In your room</p>
-                <h2 tabIndex={-1}>Furniture</h2>
-              </div>
-              {shownRoom.furniture.length ? (
-                <ul className={styles.inventory}>
-                  {shownRoom.furniture.map((piece) => (
-                    <li key={piece.id}>
-                      <button
-                        onClick={() => {
-                          controller.select(piece.id);
-                          focusProperties(controller, piece.id);
-                        }}
-                      >
-                        <strong>{piece.label}</strong>
-                        <span>
-                          {piece.dimensions.width.value ?? '?'} ×{' '}
-                          {piece.dimensions.depth.value ?? '?'} mm ·{' '}
-                          {piece.ownership === 'owned' ? 'Owned' : 'Proposed'}
-                        </span>
-                        <span>
-                          {piece.preference === 'keep'
-                            ? 'Keep'
-                            : piece.preference === 'replace'
-                              ? 'May replace'
-                              : 'Flexible'}
-                          {piece.locks.position ? ' · Position locked' : ''}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Add your first piece from the curated catalogue.</p>
-              )}
+          <div ref={panelMotion} className="motion-surface">
+            <div className="motion-flow">
               <button
-                className={styles.primary}
-                disabled={readOnly}
-                onClick={() => open('catalogue')}
-              >
-                Add a piece
-              </button>
-            </>
-          )}
-          {view.panel === 'inspector' && readOnly ? (
-            <section className={styles.section}>
-              <p className={styles.eyebrow}>
-                {before ? 'Before inspection' : 'Read-only inspection'}
-              </p>
-              <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
-                {shownRoom.furniture.find((p) => p.id === view.selectedId)
-                  ?.label ??
-                  shownRoom.room.features.find((f) => f.id === view.selectedId)
-                    ?.kind ??
-                  'Room'}
-              </h2>
-              <p>{inspectionReason}</p>
-              {(() => {
-                const piece = shownRoom.furniture.find(
-                  (p) => p.id === view.selectedId,
-                );
-                return piece ? (
-                  <p>
-                    {piece.dimensions.width.value ?? '?'} ×{' '}
-                    {piece.dimensions.depth.value ?? '?'} ×{' '}
-                    {piece.dimensions.height.value ?? '?'} mm ·{' '}
-                    {piece.ownership === 'owned' ? 'Owned' : 'Proposed'} ·
-                    Similar representation
-                  </p>
-                ) : null;
-              })()}
-              {before && (
-                <button onClick={() => controller.setComparison('current')}>
-                  Return to Current
-                </button>
-              )}
-            </section>
-          ) : (
-            view.panel === 'inspector' &&
-            (item ? (
-              <FurnitureInspector
-                controller={controller}
-                item={item}
-                onReplace={() => {
-                  setReplacementId(item.id);
-                  controller.setPanel('catalogue');
+                className={styles.mobileReturn}
+                onClick={() => {
+                  headingRef.current?.focus({ preventScroll: true });
+                  headingRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                  });
                 }}
-              />
-            ) : feature ? (
-              <FeatureInspector controller={controller} feature={feature} />
-            ) : (
-              <>
-                <h2 tabIndex={-1}>Select a piece</h2>
-                <p>Choose furniture or an opening in the plan.</p>
-                <button onClick={() => open('inventory')}>
-                  Show furniture
-                </button>
-              </>
-            ))
-          )}
-          {view.panel === 'catalogue' &&
-            (readOnly ? (
-              <section className={styles.section}>
-                <h2 tabIndex={-1}>Choose a piece</h2>
-                <p>{inspectionReason}</p>
-                {before ? (
-                  <button onClick={() => controller.setComparison('current')}>
-                    Return to Current
-                  </button>
+              >
+                ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
+              </button>
+              {view.panel === 'assistant' &&
+                (readOnly && !state.candidate ? (
+                  <section
+                    className={`${styles.section} ${styles.readOnlyAssistant}`}
+                  >
+                    <h2>Roomedy assistant</h2>
+                    <p>{inspectionReason}</p>
+                    {before && (
+                      <button
+                        onClick={() => controller.setComparison('current')}
+                      >
+                        Return to Current
+                      </button>
+                    )}
+                  </section>
+                ) : assistant ? (
+                  <Assistant controller={assistant} roomState={state} />
                 ) : (
-                  state.candidate && (
-                    <button onClick={() => controller.cancelPreview()}>
-                      Cancel preview & choose a piece
-                    </button>
-                  )
-                )}
-              </section>
-            ) : (
-              <CataloguePanel
-                key={replacementId ?? 'add'}
-                controller={controller}
-                room={room}
-                replacement={
-                  room.furniture.find((f) => f.id === replacementId) ?? null
-                }
-                onDone={() => setReplacementId(null)}
-              />
-            ))}
-          {view.panel === 'room' &&
-            (readOnly ? (
-              <section className={styles.section}>
-                <p className={styles.eyebrow}>
-                  {before
-                    ? 'Before inspection'
-                    : state.candidate
-                      ? 'Preview inspection'
-                      : 'Room inspection'}
-                </p>
-                <h2 tabIndex={-1}>
-                  {before ? 'Before room' : 'Room inspection'}
-                </h2>
-                <p>
-                  {shownRoom.room.width.value ?? '?'} ×{' '}
-                  {shownRoom.room.depth.value ?? '?'} ×{' '}
-                  {shownRoom.room.height.value ?? '?'} mm
-                </p>
-                <p>
-                  Floor: {shownRoom.room.floorFinish}. Walls:{' '}
-                  {shownRoom.room.wallFinish}.
-                </p>
-                <p>{inspectionReason}</p>
-                {before && (
-                  <button onClick={() => controller.setComparison('current')}>
-                    Return to Current
+                  <p role="status">Opening assistant…</p>
+                ))}
+              {view.panel === 'inventory' && (
+                <>
+                  <div className={styles.panelTitle}>
+                    <p className={styles.eyebrow}>In your room</p>
+                    <h2 tabIndex={-1}>Furniture</h2>
+                  </div>
+                  {shownRoom.furniture.length ? (
+                    <ul className={styles.inventory}>
+                      {shownRoom.furniture.map((piece) => (
+                        <li key={piece.id}>
+                          <button
+                            onClick={() => {
+                              controller.select(piece.id);
+                              focusProperties(controller, piece.id);
+                            }}
+                          >
+                            <strong>{piece.label}</strong>
+                            <span>
+                              {piece.dimensions.width.value ?? '?'} ×{' '}
+                              {piece.dimensions.depth.value ?? '?'} mm ·{' '}
+                              {piece.ownership === 'owned'
+                                ? 'Owned'
+                                : 'Proposed'}
+                            </span>
+                            <span>
+                              {piece.preference === 'keep'
+                                ? 'Keep'
+                                : piece.preference === 'replace'
+                                  ? 'May replace'
+                                  : 'Flexible'}
+                              {piece.locks.position ? ' · Position locked' : ''}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Add your first piece from the curated catalogue.</p>
+                  )}
+                  <button
+                    className={styles.primary}
+                    disabled={readOnly}
+                    onClick={() => open('catalogue')}
+                  >
+                    Add a piece
                   </button>
-                )}
-              </section>
-            ) : (
-              <RoomPanel controller={controller} room={room} />
-            ))}
-          {view.panel === 'checks' && (
-            <ChecksPanel
-              controller={controller}
-              room={shownRoom}
-              checks={shownChecks}
-            />
-          )}
+                </>
+              )}
+              {view.panel === 'inspector' && readOnly ? (
+                <section className={styles.section}>
+                  <p className={styles.eyebrow}>
+                    {before ? 'Before inspection' : 'Read-only inspection'}
+                  </p>
+                  <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
+                    {shownRoom.furniture.find((p) => p.id === view.selectedId)
+                      ?.label ??
+                      shownRoom.room.features.find(
+                        (f) => f.id === view.selectedId,
+                      )?.kind ??
+                      'Room'}
+                  </h2>
+                  <p>{inspectionReason}</p>
+                  {(() => {
+                    const piece = shownRoom.furniture.find(
+                      (p) => p.id === view.selectedId,
+                    );
+                    return piece ? (
+                      <p>
+                        {piece.dimensions.width.value ?? '?'} ×{' '}
+                        {piece.dimensions.depth.value ?? '?'} ×{' '}
+                        {piece.dimensions.height.value ?? '?'} mm ·{' '}
+                        {piece.ownership === 'owned' ? 'Owned' : 'Proposed'} ·
+                        Similar representation
+                      </p>
+                    ) : null;
+                  })()}
+                  {before && (
+                    <button onClick={() => controller.setComparison('current')}>
+                      Return to Current
+                    </button>
+                  )}
+                </section>
+              ) : (
+                view.panel === 'inspector' &&
+                (item ? (
+                  <FurnitureInspector
+                    controller={controller}
+                    item={item}
+                    onReplace={() => {
+                      setReplacementId(item.id);
+                      controller.setPanel('catalogue');
+                    }}
+                  />
+                ) : feature ? (
+                  <FeatureInspector controller={controller} feature={feature} />
+                ) : (
+                  <>
+                    <h2 tabIndex={-1}>Select a piece</h2>
+                    <p>Choose furniture or an opening in the plan.</p>
+                    <button onClick={() => open('inventory')}>
+                      Show furniture
+                    </button>
+                  </>
+                ))
+              )}
+              {view.panel === 'catalogue' &&
+                (readOnly ? (
+                  <section className={styles.section}>
+                    <h2 tabIndex={-1}>Choose a piece</h2>
+                    <p>{inspectionReason}</p>
+                    {before ? (
+                      <button
+                        onClick={() => controller.setComparison('current')}
+                      >
+                        Return to Current
+                      </button>
+                    ) : (
+                      state.candidate && (
+                        <button onClick={() => controller.cancelPreview()}>
+                          Cancel preview & choose a piece
+                        </button>
+                      )
+                    )}
+                  </section>
+                ) : (
+                  <CataloguePanel
+                    key={replacementId ?? 'add'}
+                    controller={controller}
+                    room={room}
+                    replacement={
+                      room.furniture.find((f) => f.id === replacementId) ?? null
+                    }
+                    onDone={() => setReplacementId(null)}
+                  />
+                ))}
+              {view.panel === 'room' &&
+                (readOnly ? (
+                  <section className={styles.section}>
+                    <p className={styles.eyebrow}>
+                      {before
+                        ? 'Before inspection'
+                        : state.candidate
+                          ? 'Preview inspection'
+                          : 'Room inspection'}
+                    </p>
+                    <h2 tabIndex={-1}>
+                      {before ? 'Before room' : 'Room inspection'}
+                    </h2>
+                    <p>
+                      {shownRoom.room.width.value ?? '?'} ×{' '}
+                      {shownRoom.room.depth.value ?? '?'} ×{' '}
+                      {shownRoom.room.height.value ?? '?'} mm
+                    </p>
+                    <p>
+                      Floor: {shownRoom.room.floorFinish}. Walls:{' '}
+                      {shownRoom.room.wallFinish}.
+                    </p>
+                    <p>{inspectionReason}</p>
+                    {before && (
+                      <button
+                        onClick={() => controller.setComparison('current')}
+                      >
+                        Return to Current
+                      </button>
+                    )}
+                  </section>
+                ) : (
+                  <RoomPanel controller={controller} room={room} />
+                ))}
+              {view.panel === 'checks' && (
+                <ChecksPanel
+                  controller={controller}
+                  room={shownRoom}
+                  checks={shownChecks}
+                />
+              )}
+            </div>
+          </div>
         </aside>
       </main>
       <footer className={styles.footer}>

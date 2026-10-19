@@ -1,6 +1,6 @@
 # RM-015 — Verify the responsive, accessible and performant experience
 
-Status: **Awaiting owner — local gate/read-only validation passed; actual visual decision pending**
+Status: **Owner-requested revision in progress — RM-015A–J before joint visual review; visual decision still pending**
 Planning date: **17 October 2026**  
 Milestone: **Performance and frontend visual review**  
 Depends on: [RM-014](RM-014-prepare-linux-images-and-release-runbooks.md)  
@@ -94,3 +94,7 @@ RM-016 starts after the actual visual decision or explicit waiver/defer, not aft
 [Allocation](../commit-plans/RM-015.md), [receipt](../validation/RM-015.md), [performance/raw results](../design/performance.md), [actual visual review](../design/visual-review.md). Final Windows standalone input cfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e;346tests/33files/seven boundaries/root and builds passed. Native final production covered all three starting conditions, Add/Undo, coupled field failures, half-mm keyboard/numeric edits, native drag/whole Undo, comparison/reset/Escape/focus, real worker/fake assistant,3D Apply/Undo and shortened-phone composer. No CSS/authority/policy ceiling changed.
 
 The two compound performance acceptance boxes remain unchecked because actual browser native decode peak and production continuous/discrete paint evidence are unperformed. The fixed200-node maximum-room throughput target missed and remains explicitly recorded; the real250ms yielding adapter passed its named finite local deadline/health/abort thresholds. Measurements are not substituted for physical/hosted/provider capacity. Owner review and real physical/AT/zoom/native-heap cases stay pending. Read-only pass1 found no new actionable findings; actual owner visual review is the current stop. The owner then explicitly withheld visual approval and separately authorized the current15-file plan, staging and checkpoint commit. That commit records this reviewed work; RM-015 remains incomplete and RM-016 has not started.
+
+## Owner-requested revision — 19 October 2026
+
+The latest direct owner instruction authorizes all ten [lettered packets](README.md#owner-requested-pre-review-queue--19-october-2026) before our joint visual session. Continue their execute/validate/fix loop without stopping at the historical candidate presentation. Retain original RM-015 evidence as dated; present a refreshed candidate after J. This is requested revision scope, not owner visual approval or an RM-016 start.
