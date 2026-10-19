@@ -25,7 +25,9 @@ export function focusProperties(controller: SessionController, id?: string) {
     target?.focus({ preventScroll: true });
     target?.scrollIntoView({
       behavior: 'smooth',
-      block: window.matchMedia('(max-width:850px)').matches
+      block: window.matchMedia(
+        '(max-width:759px), (max-width:899px) and (max-height:800px)',
+      ).matches
         ? 'start'
         : 'nearest',
     });

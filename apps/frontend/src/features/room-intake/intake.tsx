@@ -105,7 +105,7 @@ export function Intake({
       </header>
       <main id="main-content" className={styles.main}>
         <div ref={motion} className="motion-surface">
-          <div className="motion-flow">
+          <div className={`motion-flow ${styles.flow}`}>
             <div className={styles.title}>
               <p className={styles.eyebrow}>
                 {state.stage === 'photos'
@@ -121,149 +121,153 @@ export function Intake({
               </h1>
             </div>
             {state.stage === 'photos' ? (
-              <>
-                <section
-                  className={styles.upload}
-                  aria-label="Local room photos"
-                >
-                  <div>
-                    <h2>Photos, if you have them.</h2>
-                    <p>
-                      Show corners, doors, windows and fixed features. Furniture
-                      details help identify pieces, but cannot establish the
-                      room’s scale.
-                    </p>
-                  </div>
-                  <label>
-                    Photo kind
-                    <select
-                      value={purpose}
-                      onChange={(e) =>
-                        setPurpose(e.target.value as PhotoPurpose)
-                      }
-                    >
-                      <option value="room">Room views</option>
-                      <option value="furniture">Furniture details</option>
-                    </select>
-                  </label>
-                  <label className={styles.fileButton}>
-                    Choose photos
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      multiple
-                      onChange={(e) => {
-                        files(e.target.files);
-                        e.target.value = '';
-                      }}
-                    />
-                  </label>
-                  <p className={styles.hint}>
-                    Still JPEG, PNG or WebP · Up to 6 photos, 8 MiB each / 24
-                    MiB total · Up to 16 MP and 8000 px per side. Export HEIC as
-                    JPEG first.
-                  </p>
-                  {state.message && (
-                    <p role="alert" className={styles.error}>
-                      {state.message}
-                    </p>
-                  )}
-                </section>
-                {state.photos.length > 0 && (
-                  <ul className={styles.photos}>
-                    {state.photos.map((photo, index) => (
-                      <li
-                        key={photo.id}
-                        data-photo-id={photo.id}
-                        {...(process.env.NODE_ENV === 'development'
-                          ? {
-                              'data-decode-ms': Math.round(photo.decodeMs),
-                              'data-prepare-ms': Math.round(photo.prepareMs),
-                              'data-normalized-bytes': photo.normalizedBytes,
-                            }
-                          : {})}
+              <div className={styles.photoLayout}>
+                <div className={styles.photoMain}>
+                  <section
+                    className={styles.upload}
+                    aria-label="Local room photos"
+                  >
+                    <div>
+                      <h2>Photos, if you have them.</h2>
+                      <p>
+                        Show corners, doors, windows and fixed features.
+                        Furniture details help identify pieces, but cannot
+                        establish the room’s scale.
+                      </p>
+                    </div>
+                    <label>
+                      Photo kind
+                      <select
+                        value={purpose}
+                        onChange={(e) =>
+                          setPurpose(e.target.value as PhotoPurpose)
+                        }
                       >
-                        <div className={styles.photoPreview}>
-                          {photo.previewUrl ? (
-                            <Image
-                              src={photo.previewUrl}
-                              width={640}
-                              height={480}
-                              alt={`Local preview of photo ${index + 1}`}
-                              unoptimized
-                            />
-                          ) : (
-                            <p
-                              className={
-                                photo.status === 'queued' ||
-                                photo.status === 'processing'
-                                  ? styles.processing
-                                  : undefined
+                        <option value="room">Room views</option>
+                        <option value="furniture">Furniture details</option>
+                      </select>
+                    </label>
+                    <label className={styles.fileButton}>
+                      Choose photos
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        multiple
+                        onChange={(e) => {
+                          files(e.target.files);
+                          e.target.value = '';
+                        }}
+                      />
+                    </label>
+                    <p className={styles.hint}>
+                      Still JPEG, PNG or WebP · Up to 6 photos, 8 MiB each / 24
+                      MiB total · Up to 16 MP and 8000 px per side. Export HEIC
+                      as JPEG first.
+                    </p>
+                    {state.message && (
+                      <p role="alert" className={styles.error}>
+                        {state.message}
+                      </p>
+                    )}
+                  </section>
+                  {state.photos.length > 0 && (
+                    <ul className={styles.photos}>
+                      {state.photos.map((photo, index) => (
+                        <li
+                          key={photo.id}
+                          data-photo-id={photo.id}
+                          {...(process.env.NODE_ENV === 'development'
+                            ? {
+                                'data-decode-ms': Math.round(photo.decodeMs),
+                                'data-prepare-ms': Math.round(photo.prepareMs),
+                                'data-normalized-bytes': photo.normalizedBytes,
+                              }
+                            : {})}
+                        >
+                          <div className={styles.photoPreview}>
+                            {photo.previewUrl ? (
+                              <Image
+                                src={photo.previewUrl}
+                                width={640}
+                                height={480}
+                                alt={`Local preview of photo ${index + 1}`}
+                                unoptimized
+                              />
+                            ) : (
+                              <p
+                                className={
+                                  photo.status === 'queued' ||
+                                  photo.status === 'processing'
+                                    ? styles.processing
+                                    : undefined
+                                }
+                              >
+                                {photo.status === 'failed'
+                                  ? 'Could not open photo'
+                                  : photo.status === 'queued'
+                                    ? 'Waiting to prepare…'
+                                    : 'Preparing photo…'}
+                              </p>
+                            )}
+                          </div>
+                          <label>
+                            Photo {index + 1} type
+                            <select
+                              value={photo.purpose}
+                              onChange={(e) =>
+                                controller.photos.purpose(
+                                  photo.id,
+                                  e.target.value as PhotoPurpose,
+                                )
                               }
                             >
-                              {photo.status === 'failed'
-                                ? 'Could not open photo'
-                                : photo.status === 'queued'
-                                  ? 'Waiting to prepare…'
-                                  : 'Preparing photo…'}
+                              <option value="room">Room view</option>
+                              <option value="furniture">
+                                Furniture detail
+                              </option>
+                            </select>
+                          </label>
+                          {photo.message && (
+                            <p role="alert" className={styles.error}>
+                              {photo.message}
                             </p>
                           )}
-                        </div>
-                        <label>
-                          Photo {index + 1} type
-                          <select
-                            value={photo.purpose}
-                            onChange={(e) =>
-                              controller.photos.purpose(
-                                photo.id,
-                                e.target.value as PhotoPurpose,
-                              )
-                            }
-                          >
-                            <option value="room">Room view</option>
-                            <option value="furniture">Furniture detail</option>
-                          </select>
-                        </label>
-                        {photo.message && (
-                          <p role="alert" className={styles.error}>
-                            {photo.message}
-                          </p>
-                        )}
-                        <div className={styles.actions}>
-                          <button
-                            onClick={() => controller.photos.remove(photo.id)}
-                          >
-                            Remove photo {index + 1}
-                          </button>
-                          <button
-                            disabled={index === 0}
-                            aria-label={`Move photo ${index + 1} earlier`}
-                            onClick={() =>
-                              controller.photos.reorder(photo.id, -1)
-                            }
-                          >
-                            ↑
-                          </button>
-                          <button
-                            disabled={index === state.photos.length - 1}
-                            aria-label={`Move photo ${index + 1} later`}
-                            onClick={() =>
-                              controller.photos.reorder(photo.id, 1)
-                            }
-                          >
-                            ↓
-                          </button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {state.photos.length > 0 && (
-                  <p className={styles.hint}>
-                    Add a replacement before removing a photo. Measurements stay
-                    in the sketch.
-                  </p>
-                )}
+                          <div className={styles.actions}>
+                            <button
+                              onClick={() => controller.photos.remove(photo.id)}
+                            >
+                              Remove photo {index + 1}
+                            </button>
+                            <button
+                              disabled={index === 0}
+                              aria-label={`Move photo ${index + 1} earlier`}
+                              onClick={() =>
+                                controller.photos.reorder(photo.id, -1)
+                              }
+                            >
+                              ↑
+                            </button>
+                            <button
+                              disabled={index === state.photos.length - 1}
+                              aria-label={`Move photo ${index + 1} later`}
+                              onClick={() =>
+                                controller.photos.reorder(photo.id, 1)
+                              }
+                            >
+                              ↓
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {state.photos.length > 0 && (
+                    <p className={styles.hint}>
+                      Add a replacement before removing a photo. Measurements
+                      stay in the sketch.
+                    </p>
+                  )}
+                </div>
                 <div className={styles.startActions}>
                   <div>
                     <p id="photo-transfer">
@@ -312,7 +316,7 @@ export function Intake({
                     Set up the rough sketch manually ↗
                   </button>
                 </div>
-              </>
+              </div>
             ) : (
               <>
                 <div className={styles.reviewTools}>
@@ -407,54 +411,6 @@ export function Intake({
                         </button>
                       ))}
                     </div>
-                    <section className={styles.catalogueSection}>
-                      <div>
-                        <h2>
-                          {owned
-                            ? 'Add an existing piece'
-                            : 'Choose an essential'}
-                        </h2>
-                        <label>
-                          Add as
-                          <select
-                            value={owned ? 'owned' : 'proposed'}
-                            onChange={(e) =>
-                              setOwned(e.target.value === 'owned')
-                            }
-                          >
-                            <option value="owned">Existing furniture</option>
-                            <option value="proposed">Planned essential</option>
-                          </select>
-                        </label>
-                      </div>
-                      {owned || state.draft.frameReviewed ? (
-                        <div className={styles.catalogue}>
-                          {CATALOGUE.map((entry) => (
-                            <button
-                              key={entry.id}
-                              onClick={() => {
-                                controller.addPiece(entry.id, owned);
-                                focusPanel();
-                              }}
-                            >
-                              <Image
-                                src={thumbnailUrl(entry)}
-                                width={150}
-                                height={110}
-                                alt=""
-                                unoptimized
-                              />
-                              <strong>{entry.label}</strong>
-                            </button>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className={styles.hint}>
-                          Review the rectangular room shape before choosing
-                          planned essentials.
-                        </p>
-                      )}
-                    </section>
                   </section>
                   <aside ref={panel} className={styles.panel}>
                     <button
@@ -475,6 +431,52 @@ export function Intake({
                       onFocusSelected={focusPanel}
                     />
                   </aside>
+                  <section className={styles.catalogueSection}>
+                    <div>
+                      <h2>
+                        {owned
+                          ? 'Add an existing piece'
+                          : 'Choose an essential'}
+                      </h2>
+                      <label>
+                        Add as
+                        <select
+                          value={owned ? 'owned' : 'proposed'}
+                          onChange={(e) => setOwned(e.target.value === 'owned')}
+                        >
+                          <option value="owned">Existing furniture</option>
+                          <option value="proposed">Planned essential</option>
+                        </select>
+                      </label>
+                    </div>
+                    {owned || state.draft.frameReviewed ? (
+                      <div className={styles.catalogue}>
+                        {CATALOGUE.map((entry) => (
+                          <button
+                            key={entry.id}
+                            onClick={() => {
+                              controller.addPiece(entry.id, owned);
+                              focusPanel();
+                            }}
+                          >
+                            <Image
+                              src={thumbnailUrl(entry)}
+                              width={150}
+                              height={110}
+                              alt=""
+                              unoptimized
+                            />
+                            <strong>{entry.label}</strong>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className={styles.hint}>
+                        Review the rectangular room shape before choosing
+                        planned essentials.
+                      </p>
+                    )}
+                  </section>
                 </div>
                 <div className={styles.acceptBar}>
                   <div>

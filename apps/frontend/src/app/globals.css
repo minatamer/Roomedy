@@ -78,11 +78,11 @@ h1:focus {
   outline: none;
 }
 .shell {
-  width: min(1180px, calc(100% - 80px));
+  width: min(1520px, calc(100% - 80px));
   margin-inline: auto;
 }
 .site-header {
-  height: 102px;
+  height: 84px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -120,11 +120,11 @@ h1:focus {
 }
 .hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 4vw, 64px);
   align-items: center;
-  min-height: 590px;
-  padding-block: 34px 60px;
+  min-height: 560px;
+  padding-block: 24px 40px;
 }
 .eyebrow {
   text-transform: uppercase;
@@ -360,8 +360,10 @@ h1:focus {
   gap: 10px;
 }
 .entry-main {
-  padding-block: 55px 60px;
-  min-height: calc(100svh - 102px);
+  padding-block: clamp(32px, 7svh, 80px);
+  min-height: calc(100svh - 84px);
+  display: grid;
+  align-content: start;
 }
 .entry-heading {
   text-align: center;
@@ -972,5 +974,54 @@ button:active:not(:disabled),
   }
   .hero-scroll {
     margin-top: 4px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .room-diorama {
+    height: 430px;
+  }
+  .hero-description {
+    max-width: 430px;
+  }
+}
+@media (min-width: 980px) {
+  .entry-main .entry-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.6fr);
+    gap: 16px clamp(30px, 4vw, 64px);
+    align-items: center;
+  }
+  .entry-heading {
+    text-align: left;
+    margin: 0;
+    max-width: none;
+  }
+  .entry-options,
+  .entry-overview {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 100%;
+    max-width: none;
+  }
+  .entry-footnote {
+    grid-column: 1;
+    text-align: left;
+    margin: 0;
+  }
+}
+@media (min-width: 760px) and (max-height: 760px) {
+  .entry-main {
+    padding-block: 24px;
+  }
+  .entry-heading h1 {
+    font-size: clamp(34px, 3.4vw, 48px);
+  }
+  .choice-art {
+    height: 105px;
+    margin-bottom: 16px;
+  }
+  .condition-icon {
+    margin-bottom: 20px;
   }
 }

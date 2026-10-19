@@ -1,3 +1,5 @@
+import Image from 'next/image';
+import { thumbnailUrl, findCatalogueEntry } from '../catalogue/catalogue';
 import { useSurfaceMotion } from './use-surface-motion';
 import { AssistantController } from '../assistant/controller';
 import { Assistant } from '../assistant/assistant';
@@ -232,47 +234,71 @@ export function Editor({
           aria-label={before ? 'Before room' : 'Current room'}
           data-room-target="canvas"
         >
-          <div className={styles.canvasHeading}>
-            <div>
-              <p className={styles.eyebrow}>
-                {before
-                  ? 'Before · read-only'
-                  : state.candidate
-                    ? state.candidate.source === 'assistant'
-                      ? 'Proposal preview'
-                      : 'Palette preview'
-                    : 'Current arrangement'}
-              </p>
-              <h1 ref={headingRef} tabIndex={-1}>
-                {shownRoom.intent.condition === 'empty'
-                  ? 'A little room to begin.'
-                  : 'Make this space yours.'}
-              </h1>
+          <div className={styles.roomToolbar}>
+            <div className={styles.canvasHeading}>
+              <div>
+                <p className={styles.eyebrow}>
+                  {before
+                    ? 'Before · read-only'
+                    : state.candidate
+                      ? state.candidate.source === 'assistant'
+                        ? 'Proposal preview'
+                        : 'Palette preview'
+                      : 'Current arrangement'}
+                </p>
+                <h1 ref={headingRef} tabIndex={-1}>
+                  {shownRoom.intent.condition === 'empty'
+                    ? 'A little room to begin.'
+                    : 'Make this space yours.'}
+                </h1>
+              </div>
+              <span>
+                {shownRoom.furniture.length}{' '}
+                {shownRoom.furniture.length === 1 ? 'piece' : 'pieces'}
+              </span>
             </div>
-            <span>
-              {shownRoom.furniture.length}{' '}
-              {shownRoom.furniture.length === 1 ? 'piece' : 'pieces'}
-            </span>
-          </div>
-          <div
-            className={styles.comparison}
-            role="group"
-            aria-label="Compare arrangement"
-          >
-            <button
-              aria-pressed={before}
-              aria-disabled={!!state.candidate}
-              onClick={() => controller.setComparison('before')}
+
+            <div
+              className={styles.comparison}
+              role="group"
+              aria-label="Compare arrangement"
             >
-              Before
-            </button>
-            <button
-              aria-pressed={!before}
-              aria-disabled={!!state.candidate}
-              onClick={() => controller.setComparison('current')}
+              <button
+                aria-pressed={before}
+                aria-disabled={!!state.candidate}
+                onClick={() => controller.setComparison('before')}
+              >
+                Before
+              </button>
+              <button
+                aria-pressed={!before}
+                aria-disabled={!!state.candidate}
+                onClick={() => controller.setComparison('current')}
+              >
+                Current
+              </button>
+            </div>
+            <div
+              className={styles.viewSwitch}
+              role="group"
+              aria-label="Room view"
             >
-              Current
-            </button>
+              <button
+                aria-pressed={roomView === 'plan'}
+                onClick={() => setRoomView('plan')}
+              >
+                2D plan
+              </button>
+              <button
+                aria-pressed={roomView === 'cutaway'}
+                onClick={() => {
+                  setCutawayOpenedAt(performance.now());
+                  setRoomView('cutaway');
+                }}
+              >
+                3D cutaway
+              </button>
+            </div>
           </div>
           {state.clientLoadFailure && (
             <div className={styles.lifecycleNotice} role="alert">
@@ -291,95 +317,83 @@ export function Editor({
               layout.
             </div>
           )}
-          <div
-            className={styles.viewSwitch}
-            role="group"
-            aria-label="Room view"
-          >
-            <button
-              aria-pressed={roomView === 'plan'}
-              onClick={() => setRoomView('plan')}
-            >
-              2D plan
-            </button>
-            <button
-              aria-pressed={roomView === 'cutaway'}
-              onClick={() => {
-                setCutawayOpenedAt(performance.now());
-                setRoomView('cutaway');
-              }}
-            >
-              3D cutaway
-            </button>
-          </div>
-          {roomView === 'plan' && (
-            <div className={styles.viewTools} aria-label="Plan view controls">
-              <button
-                aria-label="Zoom out"
-                disabled={view.zoom <= 0.6}
-                onClick={() => controller.setView({ zoom: view.zoom - 0.2 })}
-              >
-                −
-              </button>
-              <span>{Math.round(view.zoom * 100)}%</span>
-              <button
-                aria-label="Zoom in"
-                disabled={view.zoom >= 3}
-                onClick={() => controller.setView({ zoom: view.zoom + 0.2 })}
-              >
-                +
-              </button>
-              <button
-                onClick={() =>
-                  controller.setView({ zoom: 1, panX: 0, panZ: 0 })
-                }
-              >
-                Fit room
-              </button>
-              <div
-                className={styles.panButtons}
-                role="group"
-                aria-label="Pan plan"
-              >
-                <button
-                  aria-label="Pan left"
-                  onClick={() => controller.setView({ panX: view.panX - 250 })}
-                >
-                  ←
-                </button>
-                <button
-                  aria-label="Pan up"
-                  onClick={() => controller.setView({ panZ: view.panZ - 250 })}
-                >
-                  ↑
-                </button>
-                <button
-                  aria-label="Pan down"
-                  onClick={() => controller.setView({ panZ: view.panZ + 250 })}
-                >
-                  ↓
-                </button>
-                <button
-                  aria-label="Pan right"
-                  onClick={() => controller.setView({ panX: view.panX + 250 })}
-                >
-                  →
-                </button>
-              </div>
-              <label className={styles.snap}>
-                <input
-                  type="checkbox"
-                  checked={view.snap}
-                  onChange={(e) =>
-                    controller.setView({ snap: e.target.checked })
-                  }
-                />
-                Snap
-              </label>
-            </div>
-          )}
+
           {roomView === 'plan' ? (
-            <PlanView controller={controller} state={state} />
+            <div className={styles.planStage}>
+              <div className={styles.viewTools} aria-label="Plan view controls">
+                <button
+                  aria-label="Zoom out"
+                  disabled={view.zoom <= 0.6}
+                  onClick={() => controller.setView({ zoom: view.zoom - 0.2 })}
+                >
+                  −
+                </button>
+                <span>{Math.round(view.zoom * 100)}%</span>
+                <button
+                  aria-label="Zoom in"
+                  disabled={view.zoom >= 3}
+                  onClick={() => controller.setView({ zoom: view.zoom + 0.2 })}
+                >
+                  +
+                </button>
+                <button
+                  onClick={() =>
+                    controller.setView({ zoom: 1, panX: 0, panZ: 0 })
+                  }
+                >
+                  Fit room
+                </button>
+                <div
+                  className={styles.panButtons}
+                  role="group"
+                  aria-label="Pan plan"
+                >
+                  <button
+                    aria-label="Pan left"
+                    onClick={() =>
+                      controller.setView({ panX: view.panX - 250 })
+                    }
+                  >
+                    ←
+                  </button>
+                  <button
+                    aria-label="Pan up"
+                    onClick={() =>
+                      controller.setView({ panZ: view.panZ - 250 })
+                    }
+                  >
+                    ↑
+                  </button>
+                  <button
+                    aria-label="Pan down"
+                    onClick={() =>
+                      controller.setView({ panZ: view.panZ + 250 })
+                    }
+                  >
+                    ↓
+                  </button>
+                  <button
+                    aria-label="Pan right"
+                    onClick={() =>
+                      controller.setView({ panX: view.panX + 250 })
+                    }
+                  >
+                    →
+                  </button>
+                </div>
+                <label className={styles.snap}>
+                  <input
+                    type="checkbox"
+                    checked={view.snap}
+                    onChange={(e) =>
+                      controller.setView({ snap: e.target.checked })
+                    }
+                  />
+                  Snap
+                </label>
+              </div>
+              <PlanView controller={controller} state={state} />
+            </div>
           ) : (
             <CutawayBoundary
               onFailure={() => controller.clientPartFailed()}
@@ -565,33 +579,50 @@ export function Editor({
                   </div>
                   {shownRoom.furniture.length ? (
                     <ul className={styles.inventory}>
-                      {shownRoom.furniture.map((piece) => (
-                        <li key={piece.id}>
-                          <button
-                            onClick={() => {
-                              controller.select(piece.id);
-                              focusProperties(controller, piece.id);
-                            }}
-                          >
-                            <strong>{piece.label}</strong>
-                            <span>
-                              {piece.dimensions.width.value ?? '?'} ×{' '}
-                              {piece.dimensions.depth.value ?? '?'} mm ·{' '}
-                              {piece.ownership === 'owned'
-                                ? 'Owned'
-                                : 'Proposed'}
-                            </span>
-                            <span>
-                              {piece.preference === 'keep'
-                                ? 'Keep'
-                                : piece.preference === 'replace'
-                                  ? 'May replace'
-                                  : 'Flexible'}
-                              {piece.locks.position ? ' · Position locked' : ''}
-                            </span>
-                          </button>
-                        </li>
-                      ))}
+                      {shownRoom.furniture.map((piece) => {
+                        const entry = findCatalogueEntry(
+                          piece.catalogueId,
+                          piece.catalogueVersion,
+                        );
+                        return (
+                          <li key={piece.id}>
+                            <button
+                              onClick={() => {
+                                controller.select(piece.id);
+                                focusProperties(controller, piece.id);
+                              }}
+                            >
+                              {entry && (
+                                <Image
+                                  src={thumbnailUrl(entry)}
+                                  width={96}
+                                  height={72}
+                                  alt=""
+                                  unoptimized
+                                />
+                              )}
+                              <strong>{piece.label}</strong>
+                              <span>
+                                {piece.dimensions.width.value ?? '?'} ×{' '}
+                                {piece.dimensions.depth.value ?? '?'} mm ·{' '}
+                                {piece.ownership === 'owned'
+                                  ? 'Owned'
+                                  : 'Proposed'}
+                              </span>
+                              <span>
+                                {piece.preference === 'keep'
+                                  ? 'Keep'
+                                  : piece.preference === 'replace'
+                                    ? 'May replace'
+                                    : 'Flexible'}
+                                {piece.locks.position
+                                  ? ' · Position locked'
+                                  : ''}
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })}
                     </ul>
                   ) : (
                     <p>Add your first piece from the curated catalogue.</p>

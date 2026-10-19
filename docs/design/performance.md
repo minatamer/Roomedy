@@ -1,8 +1,13 @@
 # RM-015 measured performance and policy
 
-## Current19October revision (RM-015J)
+## RM-015K layout correction
 
-Current exact173-input SHA/BUILD_ID **8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11**,401-test/root/both-build gate. [Integrated receipt](../validation/RM-015J.md#current-bounded-measurements), [visual review](visual-review.md). Windows/IAB1280×720 development measurements use current source; current production4390 has no development probes. Three repetitions each:
+[Current layout evidence](../validation/RM-015K.md) records actual before/after room geometry and viewport/page/panel bounds. K changes browser presentation and tour positioning; earlier J/I active-frame, CSS bytes and production asset numbers are dated observations, not measurements of K. No new frame/paint/native-memory performance claim is made. Existing finite demand rendering, motion durations and resource authority are unchanged; actual production/Linux/hosted/physical/GPU/heap evidence remains separately pending.
+
+
+## Historical19October integrated revision (RM-015J)
+
+Historical exact173-input SHA/BUILD_ID **8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11**,401-test/root/both-build gate. [Integrated receipt](../validation/RM-015J.md#current-bounded-measurements), [visual review](visual-review.md). Windows/IAB1280×720 development measurements use current source; current production4390 has no development probes. Three repetitions each:
 
 |Scenario|Actual observation|Interpretation|
 |---|---|---|

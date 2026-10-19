@@ -9,7 +9,7 @@ Current instruction: execute and validate tickets in numeric order, stage/commit
 
 Owner-requested revision: incorporate lessons from the four referenced visual/manual-test chats before proceeding. Read [repository instructions](../../AGENTS.md), [feedback guidelines and their evidence](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and the [feature/review checklist](../design/REVIEW_CHECKLIST.md). These are requirements for the existing packets, not additional product features or authorization to implement.
 
-**Current 19 October steering:** RM-015A–J below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
+**Current 19 October steering:** RM-015A–K below are the owner-authorized next queue before the joint RM-015 visual decision. The original twenty packets remain; these lettered follow-ups expand RM-015 without starting RM-016.
 
 ## Why twenty original packets
 
@@ -48,6 +48,7 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015H](RM-015H-remove-demo-commentary-from-product-copy.md) | Remove demo commentary from product copy | RM-015G | Implemented locally; visual approval pending |
 | [RM-015I](RM-015I-make-active-motion-a-permanent-rule.md) | Make active motion a permanent rule | RM-015H | Implemented locally; visual approval pending |
 | [RM-015J](RM-015J-verify-the-revised-interactive-experience.md) | Verify the revised interactive experience | RM-015I | Implemented locally; visual approval pending |
+| [RM-015K](RM-015K-review-and-rebalance-page-layouts.md) | Review and rebalance useful space across all pages | RM-015J | Implemented locally; actual visual approval pending |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |
@@ -60,7 +61,7 @@ The normal execution path is numeric order. Dependencies permit local sequencing
 
 The owner directly authorized all ten todos to be thoroughly planned and executed before the joint visual session. RM-015A–J above are now the next ordered work; RM-016–020 stay later. The request explicitly authorizes plan → execute → validate → verify/fix → revalidate → next without per-ticket owner pauses. Visual acceptance is still pending after J, and original local per-ticket exact-path commit authority remains in force. No paid/live calls, deployment, push, reset credits or delegation.
 
-Current local result: A-I committed through22c9737; J's [integrated evidence](../validation/RM-015J.md) records current173-input8acd4db.../401tests/both builds, production9-size/full-flow checks and clean review. All ten requested local todos are delivered; actual joint visual decision remains pending and RM-016 is still Planned. [Open current review](../design/visual-review.md).
+Current local result: A–J committed through e01a0ca; K's [all-page space evidence](../validation/RM-015K.md) records the final173-input candidate,401tests/both builds, responsive/functional checks and clean revalidation after the expanded-chat fix. All ten original local todos and the additional space correction are delivered; actual joint visual decision remains pending and RM-016 stays Planned. [Open current review](../design/visual-review.md).
 
 Coverage: todo1 motion=A; todo2 hero=B; todo3 interior cameras=C; todo4 close-up quality=D; todo5 3D editing=E; todo6 designer assistance=F; todo7 sample/fake parity=G; todo8 concise copy=H; todo9 permanent motion rules=I; todo10 integrated evidence/documentation=J. Plan acceptance is the user's express instruction to plan and then execute these specific todos, not an inferred approval of generated scope or actual results.
 
@@ -186,3 +187,6 @@ Execution evidence: [RM-001](../validation/RM-001.md) (local foundation, hosted 
 RM-003 local completion: [actual checks](../validation/RM-003.md) and [supported rules](../engineering/spatial-rules.md). RM-003 was committed as `bc349f5`. RM-004 has [local browser and gate evidence](../validation/RM-004.md); its scoped commit is next, followed by RM-005.
 
 RM-005 local completion: [112 tests, final gates, actual interaction/device-size evidence and limits](../validation/RM-005.md), plus the [canonical session/plan contract](../engineering/session-and-plan.md). Its exact scoped commit is next, then RM-006. RM-004 was committed as `bd0bf78debd743b212ae5a1cf2308e2690c9f46e`.
+
+
+19October additional owner correction: [RM-015K](RM-015K-review-and-rebalance-page-layouts.md) follows committed J/e01a0ca and precedes RM-016. Broad layout review/fixes/documentation use the same authorized execute/read-only validate/verify/fix/revalidate/exact local commit loop. [Current K evidence](../validation/RM-015K.md) supersedes J only for the changed candidate; actual joint visual approval remains pending.

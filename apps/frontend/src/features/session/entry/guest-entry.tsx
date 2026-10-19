@@ -84,7 +84,7 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
       </header>
       <main id="main-content" className="entry-main shell">
         <div ref={motion} className="motion-surface">
-          <div className="motion-flow">
+          <div className="motion-flow entry-layout">
             <div className="entry-heading">
               {state.step !== 'source' && (
                 <button

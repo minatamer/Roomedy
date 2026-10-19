@@ -1,5 +1,7 @@
 .studio {
   min-height: 100svh;
+  display: grid;
+  grid-template-rows: 68px minmax(0, 1fr) auto;
   color: #332e28;
   background: #f7f5f0;
 }
@@ -43,13 +45,15 @@
   background: #513d2d;
 }
 .header {
-  height: 78px;
-  padding: 15px 28px;
+  height: 68px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
   border-bottom: 1px solid #ddd7cf;
   background: #fffdf9;
+  position: relative;
+  z-index: 20;
 }
 .header :global(.brand) {
   font-size: 24px;
@@ -72,15 +76,18 @@
 }
 .workspace {
   display: grid;
-  grid-template-columns: 106px minmax(300px, 1fr) 315px;
-  min-height: calc(100svh - 118px);
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 27vw, 420px);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: 'tools tools' 'room panel';
+  min-height: calc(100svh - 104px);
 }
 .toolRail {
-  padding: 22px 10px;
+  grid-area: tools;
+  padding: 7px 20px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-right: 1px solid #e0dbd3;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 1px solid #e0dbd3;
 }
 .toolRail button {
   background: transparent;
@@ -92,8 +99,11 @@
   border-color: #c8b9a4;
 }
 .canvasColumn {
+  grid-area: room;
+  container-type: inline-size;
   min-width: 0;
-  padding: 28px clamp(18px, 3vw, 45px) 18px;
+  min-height: 0;
+  padding: 16px 20px 12px;
   display: flex;
   flex-direction: column;
 }
@@ -102,6 +112,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 15px;
+  margin-bottom: 12px;
 }
 .eyebrow {
   font-size: 9px;
@@ -111,8 +122,8 @@
   margin: 0 0 10px;
 }
 .canvasHeading h1 {
-  font-size: 28px;
-  margin: 0 0 18px;
+  font-size: 26px;
+  margin: 0;
   letter-spacing: -0.04em;
 }
 .canvasHeading > span {
@@ -138,7 +149,7 @@
 .panButtons {
   display: flex;
   gap: 3px;
-  margin-left: auto;
+  margin-left: 0;
 }
 .panButtons button {
   padding-inline: 8px;
@@ -159,7 +170,7 @@
 }
 .planWrap {
   flex: 1;
-  min-height: 390px;
+  min-height: 340px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -168,7 +179,7 @@
 .plan {
   display: block;
   width: 100%;
-  height: clamp(390px, 57vh, 680px);
+  height: clamp(340px, 57vh, 760px);
   overflow: hidden;
 }
 .piece {
@@ -213,20 +224,21 @@
   min-height: 18px;
 }
 .panel {
+  grid-area: panel;
   background: #fffdf9;
   border-left: 1px solid #ddd7cf;
-  padding: 25px 23px 30px;
+  padding: 20px 18px;
   min-width: 0;
-  max-height: calc(100svh - 118px);
+  min-height: 0;
   overflow: auto;
-  scroll-padding: 20px;
+  scroll-padding: 16px;
 }
 .panel:focus {
   outline: 2px solid #a18b72;
   outline-offset: -3px;
 }
 .panelTitle {
-  margin-bottom: 25px;
+  margin-bottom: 16px;
 }
 .panelTitle h2 {
   font-size: 26px;
@@ -363,11 +375,10 @@
 .inventory,
 .issues {
   list-style: none;
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
+  display: grid;
+  gap: 10px;
 }
 .inventory button,
 .issues button {
@@ -392,9 +403,9 @@
   font-size: 11px;
 }
 .catalogue {
-  margin-top: 18px;
+  margin-top: 16px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr));
   gap: 10px;
 }
 .studio .catalogueCard {
@@ -421,8 +432,11 @@
 }
 .coverage {
   list-style: none;
-  margin: 20px 0;
+  margin: 16px 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 0 16px;
 }
 .coverage li {
   display: flex;
@@ -502,191 +516,6 @@
 .expired button {
   margin: 10px 10px 0 0;
 }
-@media (min-width: 1100px) and (max-height: 760px) {
-  .header {
-    height: 68px;
-  }
-  .workspace {
-    min-height: calc(100svh - 108px);
-  }
-  .canvasColumn {
-    padding-top: 20px;
-  }
-  .planWrap {
-    min-height: 330px;
-  }
-  .plan {
-    height: 360px;
-  }
-  .panel {
-    max-height: calc(100svh - 108px);
-  }
-}
-@media (max-width: 1100px) {
-  .workspace {
-    grid-template-columns: 80px minmax(250px, 1fr) 285px;
-  }
-  .toolRail {
-    padding-inline: 5px;
-  }
-  .toolRail button {
-    padding-inline: 6px;
-    font-size: 10px;
-  }
-  .canvasColumn {
-    padding-inline: 18px;
-  }
-  .canvasHeading h1 {
-    font-size: 24px;
-  }
-  .panel {
-    padding: 22px 18px;
-  }
-  .panButtons {
-    margin-left: 0;
-  }
-  .editorLabel {
-    display: none;
-  }
-}
-@media (max-width: 850px) {
-  .header {
-    height: 72px;
-    padding: 12px 20px;
-    gap: 12px;
-  }
-  .headerActions {
-    gap: 6px;
-  }
-  .workspace {
-    grid-template-columns: 1fr;
-    min-height: 0;
-  }
-  .toolRail {
-    flex-direction: row;
-    padding: 10px 20px;
-    border-right: 0;
-    border-bottom: 1px solid #e0dbd3;
-    gap: 8px;
-  }
-  .toolRail button {
-    flex: 1;
-    font-size: 12px;
-  }
-  .canvasColumn {
-    padding: 25px 30px 20px;
-  }
-  .plan {
-    height: 450px;
-  }
-  .mobileReturn {
-    display: block;
-    margin-bottom: 16px;
-  }
-  .panel {
-    max-height: none;
-    overflow: visible;
-    border-left: 0;
-    border-top: 1px solid #ddd7cf;
-    padding: 30px;
-  }
-  .panelTitle {
-    margin-bottom: 20px;
-  }
-  .panel > .section,
-  .panel > fieldset {
-    max-width: 600px;
-  }
-  .inventory {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .catalogue {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .footer {
-    padding-inline: 25px;
-  }
-}
-@media (max-width: 500px) {
-  .header {
-    height: 70px;
-    padding: 10px 16px;
-  }
-  .header :global(.brand) {
-    font-size: 22px;
-    gap: 6px;
-  }
-  .header :global(.brand svg) {
-    width: 22px;
-    height: 22px;
-  }
-  .headerActions button {
-    font-size: 10px;
-    padding: 8px;
-  }
-  .headerActions button:first-child span {
-    display: none;
-  }
-  .toolRail {
-    padding: 8px 12px;
-    gap: 3px;
-  }
-  .toolRail button {
-    padding: 9px 6px;
-    font-size: 10px;
-  }
-  .canvasColumn {
-    padding: 21px 16px 18px;
-  }
-  .canvasHeading h1 {
-    font-size: 23px;
-  }
-  .canvasHeading > span {
-    font-size: 10px;
-  }
-  .viewTools {
-    gap: 4px;
-  }
-  .viewTools button {
-    min-width: 44px;
-    padding: 8px;
-  }
-  .viewTools > span {
-    min-width: 32px;
-  }
-  .panButtons {
-    order: 2;
-  }
-  .snap {
-    margin-left: auto;
-  }
-  .planWrap {
-    min-height: 320px;
-  }
-  .plan {
-    height: 340px;
-  }
-  .planHint {
-    font-size: 9px;
-  }
-  .panel {
-    padding: 25px 20px 30px;
-  }
-  .inventory {
-    grid-template-columns: 1fr;
-  }
-  .catalogue {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .footer {
-    padding-inline: 20px;
-    font-size: 9px;
-  }
-  .footer span {
-    margin-left: 0;
-  }
-}
 
 .piece rect {
   transition:
@@ -696,8 +525,9 @@
 
 .viewSwitch {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
-  margin: 0 0 12px;
+  margin: 0;
 }
 .viewSwitch button[aria-pressed='true'] {
   background: #e7ddcc;
@@ -705,7 +535,7 @@
 }
 
 .assistantPanel {
-  overflow: hidden;
+  overflow: auto;
   padding: 20px 18px 16px;
 }
 .changeList {
@@ -721,7 +551,7 @@
   stroke-dasharray: 65 45;
   opacity: 0.6;
 }
-@media (max-width: 850px) {
+@media (max-width: 759px), (max-width: 899px) and (max-height: 800px) {
   .assistantPanel {
     overflow: visible;
     padding: 24px 20px;
@@ -736,7 +566,7 @@
 .comparison {
   display: flex;
   gap: 6px;
-  margin: 12px 0 2px;
+  margin: 0;
 }
 .comparison button[aria-pressed='true'] {
   background: #e7ddcc;
@@ -859,5 +689,225 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.roomToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+.inventory {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+}
+.inventory button {
+  height: 100%;
+  padding: 10px;
+}
+.inventory img {
+  width: 100%;
+  height: 72px;
+  object-fit: contain;
+}
+.measurementGrid,
+.finishFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 0 12px;
+  align-items: start;
+}
+.goalFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 2px 12px;
+}
+.changeList {
+  max-height: 84px;
+  overflow-y: auto;
+}
+@media (max-width: 1100px) {
+  .canvasColumn {
+    padding-inline: 16px;
+  }
+  .canvasHeading h1 {
+    font-size: 24px;
+  }
+  .panel {
+    padding-inline: 16px;
+  }
+  .editorLabel {
+    display: none;
+  }
+}
+@media (min-width: 900px) and (min-height: 600px),
+  (min-width: 760px) and (min-height: 801px) {
+  .studio {
+    height: 100svh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .workspace {
+    min-height: 0;
+  }
+  .canvasColumn {
+    overflow: auto;
+    scrollbar-gutter: stable;
+  }
+  .planWrap {
+    min-height: 220px;
+  }
+  .plan {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+  }
+  .panel {
+    height: 100%;
+  }
+}
+@media (max-width: 759px), (max-width: 899px) and (max-height: 800px) {
+  .studio {
+    grid-template-rows: 70px auto auto;
+  }
+  .header {
+    height: 70px;
+    padding: 10px 16px;
+    gap: 12px;
+  }
+  .header :global(.brand) {
+    font-size: 22px;
+    gap: 6px;
+  }
+  .header :global(.brand svg) {
+    width: 22px;
+    height: 22px;
+  }
+  .headerActions {
+    gap: 6px;
+  }
+  .headerActions button {
+    font-size: 10px;
+    padding: 8px;
+  }
+  .headerActions button:first-child span {
+    display: none;
+  }
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas: 'tools' 'room' 'panel';
+    min-height: 0;
+  }
+  .toolRail {
+    padding: 8px 12px;
+    gap: 3px;
+  }
+  .toolRail button {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 6px;
+    font-size: 10px;
+  }
+  .canvasColumn {
+    padding: 18px 16px 12px;
+  }
+  .canvasHeading h1 {
+    font-size: 23px;
+  }
+  .canvasHeading > span {
+    font-size: 10px;
+  }
+  .roomToolbar {
+    gap: 8px;
+  }
+  .viewTools {
+    gap: 4px;
+  }
+  .viewTools button {
+    padding: 8px;
+  }
+  .viewTools > span {
+    min-width: 32px;
+  }
+  .panButtons {
+    flex-wrap: wrap;
+  }
+  .snap {
+    margin-left: auto;
+  }
+  .planWrap {
+    min-height: 300px;
+  }
+  .plan {
+    height: clamp(300px, 56svh, 520px);
+  }
+  .mobileReturn {
+    display: block;
+    margin-bottom: 16px;
+  }
+  .panel {
+    height: auto;
+    overflow: visible;
+    border-left: 0;
+    border-top: 1px solid #ddd7cf;
+    padding: 24px 20px;
+  }
+  .footer {
+    padding-inline: 16px;
+    font-size: 9px;
+  }
+  .footer span {
+    margin-left: 0;
+  }
+}
+
+.roomToolbar .canvasHeading {
+  flex: 1 1 270px;
+  min-width: 0;
+  margin-bottom: 0;
+}
+.roomStatus > p:empty {
+  min-height: 0;
+  margin: 0;
+}
+
+.planStage {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  gap: 8px;
+}
+@media (min-width: 900px) and (min-height: 600px),
+  (min-width: 760px) and (min-height: 801px) {
+  @container (min-width: 700px) {
+    .planStage {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: 20px;
+    }
+    .planStage > .viewTools {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
+      align-items: center;
+      gap: 8px;
+    }
+    .planStage .panButtons {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      width: 100%;
+    }
+    .planStage .panButtons button {
+      min-width: 0;
+      padding-inline: 4px;
+    }
+    .planStage .snap {
+      grid-column: 1 / -1;
+      margin-left: 0;
+    }
   }
 }

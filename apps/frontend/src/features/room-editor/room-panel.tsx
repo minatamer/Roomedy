@@ -80,75 +80,81 @@ export function RoomPanel({
       </div>
       <div className={styles.section}>
         <h3>Room measurements</h3>
-        {(['width', 'depth', 'height'] as const).map((field) => (
-          <MeasurementField
-            key={field}
-            controller={controller}
-            target={{ kind: 'room', id: room.roomId, field }}
-            label={field[0]!.toUpperCase() + field.slice(1)}
-            measurement={room.room[field]}
-            max={POLICY.roomEdgeMm}
-          />
-        ))}
+        <div className={styles.measurementGrid}>
+          {(['width', 'depth', 'height'] as const).map((field) => (
+            <MeasurementField
+              key={field}
+              controller={controller}
+              target={{ kind: 'room', id: room.roomId, field }}
+              label={field[0]!.toUpperCase() + field.slice(1)}
+              measurement={room.room[field]}
+              max={POLICY.roomEdgeMm}
+            />
+          ))}
+        </div>
       </div>
       <fieldset className={styles.section}>
         <legend>Make room for</legend>
-        {(['sleep', 'work', 'storage', 'open-space'] as const).map((goal) => (
-          <label key={goal} className={styles.checkLabel}>
-            <input
-              type="checkbox"
-              checked={room.intent.goals.includes(goal)}
-              onChange={(e) =>
-                run(
-                  [
-                    {
-                      type: 'set-intent',
-                      intent: {
-                        ...room.intent,
-                        goals: e.target.checked
-                          ? [...room.intent.goals, goal]
-                          : room.intent.goals.filter((g) => g !== goal),
+        <div className={styles.goalFields}>
+          {(['sleep', 'work', 'storage', 'open-space'] as const).map((goal) => (
+            <label key={goal} className={styles.checkLabel}>
+              <input
+                type="checkbox"
+                checked={room.intent.goals.includes(goal)}
+                onChange={(e) =>
+                  run(
+                    [
+                      {
+                        type: 'set-intent',
+                        intent: {
+                          ...room.intent,
+                          goals: e.target.checked
+                            ? [...room.intent.goals, goal]
+                            : room.intent.goals.filter((g) => g !== goal),
+                        },
                       },
-                    },
-                  ],
-                  'Update room goals',
-                )
-              }
-            />
-            {goal === 'open-space'
-              ? 'Open space'
-              : goal[0]!.toUpperCase() + goal.slice(1)}
-          </label>
-        ))}
+                    ],
+                    'Update room goals',
+                  )
+                }
+              />
+              {goal === 'open-space'
+                ? 'Open space'
+                : goal[0]!.toUpperCase() + goal.slice(1)}
+            </label>
+          ))}
+        </div>
       </fieldset>
       <div className={styles.section}>
         <h3>Finishes</h3>
-        {(['floorFinish', 'wallFinish'] as const).map((field) => (
-          <label key={field}>
-            {field === 'floorFinish' ? 'Floor' : 'Walls'}
-            <select
-              value={room.room[field]}
-              onChange={(e) =>
-                run(
-                  [
-                    {
-                      type: 'room-finish',
-                      floorFinish: room.room.floorFinish,
-                      wallFinish: room.room.wallFinish,
-                      [field]: e.target
-                        .value as RoomDocument['room']['floorFinish'],
-                    },
-                  ],
-                  'Change room finish',
-                )
-              }
-            >
-              {Object.keys(FINISH_PALETTE).map((finish) => (
-                <option key={finish}>{finish}</option>
-              ))}
-            </select>
-          </label>
-        ))}
+        <div className={styles.finishFields}>
+          {(['floorFinish', 'wallFinish'] as const).map((field) => (
+            <label key={field}>
+              {field === 'floorFinish' ? 'Floor' : 'Walls'}
+              <select
+                value={room.room[field]}
+                onChange={(e) =>
+                  run(
+                    [
+                      {
+                        type: 'room-finish',
+                        floorFinish: room.room.floorFinish,
+                        wallFinish: room.room.wallFinish,
+                        [field]: e.target
+                          .value as RoomDocument['room']['floorFinish'],
+                      },
+                    ],
+                    'Change room finish',
+                  )
+                }
+              >
+                {Object.keys(FINISH_PALETTE).map((finish) => (
+                  <option key={finish}>{finish}</option>
+                ))}
+              </select>
+            </label>
+          ))}
+        </div>
         <p className={styles.hint}>
           Preview a palette for the room and compatible proposed furniture.
           Owned finishes stay as recorded.

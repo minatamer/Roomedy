@@ -366,21 +366,25 @@ function PiecePanel({
       <section className={editorStyles.section}>
         <h3>Physical measurements</h3>
         <p>Confirm what you measured. Unknown values can stay unknown.</p>
-        {(['width', 'depth', 'height'] as const).map((axis) => (
-          <Value
-            key={axis}
-            controller={controller}
-            target={{ kind: 'furniture', id: piece.id, field: axis }}
-            value={piece.dimensions[axis]}
-            label={axis[0]!.toUpperCase() + axis.slice(1)}
-            max={
-              piece.ownership === 'owned'
-                ? POLICY.furnitureEdgeMm
-                : (entry?.size[axis].max ?? POLICY.furnitureEdgeMm)
-            }
-            min={piece.ownership === 'owned' ? 1 : (entry?.size[axis].min ?? 1)}
-          />
-        ))}
+        <div className={editorStyles.measurementGrid}>
+          {(['width', 'depth', 'height'] as const).map((axis) => (
+            <Value
+              key={axis}
+              controller={controller}
+              target={{ kind: 'furniture', id: piece.id, field: axis }}
+              value={piece.dimensions[axis]}
+              label={axis[0]!.toUpperCase() + axis.slice(1)}
+              max={
+                piece.ownership === 'owned'
+                  ? POLICY.furnitureEdgeMm
+                  : (entry?.size[axis].max ?? POLICY.furnitureEdgeMm)
+              }
+              min={
+                piece.ownership === 'owned' ? 1 : (entry?.size[axis].min ?? 1)
+              }
+            />
+          ))}
+        </div>
       </section>
       <Position piece={piece} controller={controller} />
       <Evidence id={piece.id} state={state} controller={controller} />
@@ -704,21 +708,23 @@ export function ReviewPanel({
               Check the room shape. Only one rectangular room can be opened.
             </p>
           )}
-          {(['width', 'depth', 'height'] as const).map((axis) => (
-            <Value
-              key={axis}
-              controller={controller}
-              target={{ kind: 'room', id: draft.room.roomId, field: axis }}
-              value={draft.room.room[axis]}
-              label={
-                axis === 'width'
-                  ? 'Room width · left to right'
-                  : axis === 'depth'
-                    ? 'Room depth · top to bottom'
-                    : 'Room height'
-              }
-            />
-          ))}
+          <div className={editorStyles.measurementGrid}>
+            {(['width', 'depth', 'height'] as const).map((axis) => (
+              <Value
+                key={axis}
+                controller={controller}
+                target={{ kind: 'room', id: draft.room.roomId, field: axis }}
+                value={draft.room.room[axis]}
+                label={
+                  axis === 'width'
+                    ? 'Room width · left to right'
+                    : axis === 'depth'
+                      ? 'Room depth · top to bottom'
+                      : 'Room height'
+                }
+              />
+            ))}
+          </div>
           {draft.frameReviewed && (
             <fieldset>
               <legend>Make room for</legend>

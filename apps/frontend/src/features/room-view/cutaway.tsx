@@ -125,7 +125,7 @@ export default function Cutaway({
   return (
     <div className={styles.wrap}>
       <div ref={toolsMotion} className="motion-surface">
-        <div className="motion-flow">
+        <div className={`motion-flow ${styles.toolbar}`}>
           <div
             role="group"
             aria-label="Room viewpoints"

@@ -1,13 +1,13 @@
 .wrap {
   position: relative;
   flex: 1;
-  min-height: 390px;
+  min-height: 340px;
   display: flex;
   flex-direction: column;
 }
 .viewport {
   position: relative;
-  height: clamp(390px, 57vh, 680px);
+  height: clamp(340px, 57svh, 760px);
   width: 100%;
   border-radius: 18px;
   overflow: hidden;
@@ -91,33 +91,12 @@
     transform: translateY(0);
   }
 }
-@media (min-width: 1100px) and (max-height: 760px) {
-  .wrap {
-    min-height: 330px;
-  }
-  .viewport {
-    height: 360px;
-  }
-}
-@media (max-width: 850px) {
-  .viewport {
-    height: 450px;
-  }
-}
-@media (max-width: 500px) {
-  .wrap {
-    min-height: 320px;
-  }
-  .viewport {
-    height: 340px;
-  }
-}
 
 .tools {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  margin: 0 0 8px;
+  margin: 0;
 }
 .tools button {
   min-width: 44px;
@@ -138,4 +117,93 @@
   padding: 8px 10px;
   font-size: 12px;
   cursor: pointer;
+}
+
+.wrap .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  padding-bottom: 8px;
+}
+.toolbar .tools {
+  max-width: 100%;
+}
+.toolbar .tools:last-child {
+  flex-grow: 1;
+}
+@media (min-width: 900px) and (min-height: 600px),
+  (min-width: 760px) and (min-height: 801px) {
+  .wrap {
+    min-height: 220px;
+  }
+  .viewport {
+    flex: 1;
+    min-height: 180px;
+    height: auto;
+  }
+}
+@media (max-width: 759px), (max-width: 899px) and (max-height: 800px) {
+  .wrap {
+    min-height: 300px;
+  }
+  .viewport {
+    height: clamp(300px, 56svh, 520px);
+  }
+  .tools button {
+    font-size: 11px;
+    padding-inline: 8px;
+  }
+}
+
+@media (min-width: 900px) and (min-height: 600px),
+  (min-width: 760px) and (min-height: 801px) {
+  @container (min-width: 700px) {
+    .wrap {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      gap: 0 20px;
+    }
+    .wrap > :global(.motion-surface) {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      min-height: 0;
+      max-height: 100%;
+      overflow-y: auto;
+    }
+    .wrap .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .toolbar .tools {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .toolbar .tools + .tools {
+      border-top: 1px solid #ded8cf;
+      padding-top: 10px;
+    }
+    .toolbar .tools[aria-label='3D camera controls'] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .toolbar .tools button {
+      min-width: 0;
+      padding-inline: 6px;
+      font-size: 11px;
+    }
+    .viewport {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .hint {
+      grid-column: 2;
+      grid-row: 2;
+    }
+    .notice {
+      grid-column: 1 / -1;
+      grid-row: 3;
+    }
+  }
 }

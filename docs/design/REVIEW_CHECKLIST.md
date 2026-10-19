@@ -20,6 +20,9 @@ Before edits, identify the requested task, affected component/states, existing a
 - [ ] Every visible control changes real canonical state or gives a truthful unavailable result; no purely cosmetic selected state or invented confirmed measurement.
 - [ ] Relevant views and loading/empty/error/restored states were actually inspected with the permitted tools; unperformed browser/physical checks stay explicit.
 
+- [ ] Before stacking or reserving blank space, compare actual available width/height and existing useful tasks. Use [layout rules](layout.md): responsive adjacent tasks/cards, actual-column control rails, finite empty chat and matching focus breakpoints; no filler added to occupy space.
+- [ ] Desktop→phone/short-height resize keeps optional guide Skip/Next, composer and Apply/Cancel in reachable scroll regions; inspect settled geometry after active motion.
+
 ## Required room journeys and states
 
 | Journey/state | What must be inspected in the actual app |

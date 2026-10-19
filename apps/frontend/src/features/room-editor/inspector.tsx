@@ -407,16 +407,18 @@ export function FurnitureInspector({
         <p className={styles.hint}>
           Confirm only values you have measured. Other evidence stays as it is.
         </p>
-        {(['width', 'depth', 'height'] as const).map((field) => (
-          <MeasurementField
-            key={field}
-            controller={controller}
-            target={{ kind: 'furniture', id: item.id, field }}
-            measurement={item.dimensions[field]}
-            label={field[0]!.toUpperCase() + field.slice(1)}
-            max={POLICY.furnitureEdgeMm}
-          />
-        ))}
+        <div className={styles.measurementGrid}>
+          {(['width', 'depth', 'height'] as const).map((field) => (
+            <MeasurementField
+              key={field}
+              controller={controller}
+              target={{ kind: 'furniture', id: item.id, field }}
+              measurement={item.dimensions[field]}
+              label={field[0]!.toUpperCase() + field.slice(1)}
+              max={POLICY.furnitureEdgeMm}
+            />
+          ))}
+        </div>
         {item.ownership === 'owned' &&
           Object.values(size).every((v) => v > 0) &&
           !supportsDimensions(entry, size) && (

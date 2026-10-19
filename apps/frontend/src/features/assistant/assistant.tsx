@@ -72,6 +72,51 @@ export function Assistant({
     setGoalsOpen(false);
     void controller.submit();
   };
+  const goalOptions = (
+    <details
+      className={styles.goalOptions}
+      open={goalsOpen}
+      onToggle={(e) => setGoalsOpen(e.currentTarget.open)}
+    >
+      <summary>Room goals & finishes</summary>
+      <div className={styles.goals} aria-label="Room goals">
+        {room.furniture.some(
+          (p) =>
+            findCatalogueEntry(p.catalogueId, p.catalogueVersion)?.category ===
+            'desk',
+        ) &&
+          room.room.features.some((f) => f.kind === 'window') && (
+            <button onClick={() => send('Move the work area near the window')}>
+              Work area by window
+            </button>
+          )}
+        {room.furniture.some((p) => p.ownership === 'owned') ? (
+          <button onClick={() => send('Rearrange what I own')}>
+            Rearrange what I own
+          </button>
+        ) : (
+          <button
+            onClick={() => send('I need a bed, desk, chair and wardrobe')}
+          >
+            Furnish with essentials
+          </button>
+        )}
+        <button onClick={() => send('Explain the room checks')}>
+          Explain checks
+        </button>
+      </div>
+      <div className={styles.finishes} aria-label="Finish directions">
+        {['Warm & simple', 'Light & airy', 'Calm & focused'].map((label) => (
+          <button
+            key={label}
+            onClick={() => send('Preview ' + label + ' room palette')}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </details>
+  );
   return (
     <section className={styles.assistant} aria-label="Roomedy assistant">
       <div className={styles.heading}>
@@ -87,51 +132,6 @@ export function Assistant({
               : 'Assistant unavailable · manual editing is ready'}
         </p>
       )}
-      <details
-        className={styles.goalOptions}
-        open={goalsOpen}
-        onToggle={(e) => setGoalsOpen(e.currentTarget.open)}
-      >
-        <summary>Room goals & finishes</summary>
-        <div className={styles.goals} aria-label="Room goals">
-          {room.furniture.some(
-            (p) =>
-              findCatalogueEntry(p.catalogueId, p.catalogueVersion)
-                ?.category === 'desk',
-          ) &&
-            room.room.features.some((f) => f.kind === 'window') && (
-              <button
-                onClick={() => send('Move the work area near the window')}
-              >
-                Work area by window
-              </button>
-            )}
-          {room.furniture.some((p) => p.ownership === 'owned') ? (
-            <button onClick={() => send('Rearrange what I own')}>
-              Rearrange what I own
-            </button>
-          ) : (
-            <button
-              onClick={() => send('I need a bed, desk, chair and wardrobe')}
-            >
-              Furnish with essentials
-            </button>
-          )}
-          <button onClick={() => send('Explain the room checks')}>
-            Explain checks
-          </button>
-        </div>
-        <div className={styles.finishes} aria-label="Finish directions">
-          {['Warm & simple', 'Light & airy', 'Calm & focused'].map((label) => (
-            <button
-              key={label}
-              onClick={() => send('Preview ' + label + ' room palette')}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </details>
       <div
         className={styles.messages}
         role="log"
@@ -139,11 +139,9 @@ export function Assistant({
         aria-live="polite"
         aria-relevant="additions text"
       >
+        {state.messages.length > 0 && goalOptions}
         {!state.messages.length && (
-          <p className={styles.welcome}>
-            Ask for a room change, inspect a check, or choose a supported
-            finish.
-          </p>
+          <div className={styles.welcome}>{goalOptions}</div>
         )}
         {state.messages.map((message) => {
           const reply = message.reply,

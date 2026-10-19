@@ -80,12 +80,12 @@
   margin-left: auto;
 }
 .main {
-  max-width: 1300px;
+  max-width: 1600px;
   margin: auto;
-  padding: 36px 34px 20px;
+  padding: 28px clamp(20px, 3vw, 48px) 20px;
 }
 .title {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 .title h1 {
   font-size: clamp(27px, 3vw, 40px);
@@ -146,14 +146,16 @@
   margin: 10px 0;
 }
 .photos {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   list-style: none;
   padding: 0;
-  margin: 25px 0;
+  margin: 20px 0;
 }
 .photos > li {
+  flex: 1 1 220px;
+  max-width: 420px;
   background: #fffdf8;
   border: 1px solid #ded3c3;
   border-radius: 14px;
@@ -197,32 +199,41 @@
 }
 .startActions {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  margin: 30px 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  margin: 0;
+  padding: 22px;
+  border: 1px solid #ded3c3;
+  border-radius: 16px;
+  background: #fffdf8;
 }
 .startActions p {
   font-size: 12px;
   line-height: 1.6;
   max-width: 520px;
 }
-.startActions > .primary {
-  flex-shrink: 0;
+.startActions .primary {
+  width: 100%;
 }
 .reviewTools {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 20px;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
 }
 .reviewLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 350px;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  grid-template-areas: 'sketch properties' 'catalogue properties';
+  gap: 20px;
   align-items: start;
 }
 .sketchColumn {
+  grid-area: sketch;
   min-width: 0;
 }
 .question {
@@ -251,7 +262,7 @@
 .sketch svg {
   display: block;
   width: 100%;
-  height: 440px;
+  height: clamp(340px, calc(100svh - 270px), 620px);
 }
 .sketch svg [role='button'] {
   cursor: pointer;
@@ -270,10 +281,11 @@
   margin: 0 0 20px;
 }
 .panel {
+  grid-area: properties;
   min-width: 0;
 }
 .intake .reviewPanel {
-  max-height: max(260px, calc(100svh - 280px));
+  max-height: max(280px, calc(100svh - 190px));
   overflow: auto;
   border: 1px solid #dfd4c5;
   border-radius: 14px;
@@ -297,6 +309,8 @@
   border-color: #a9865e;
 }
 .catalogueSection {
+  grid-area: catalogue;
+  min-width: 0;
   border-top: 1px solid #ded1bc;
   padding-top: 23px;
 }
@@ -438,7 +452,7 @@
     grid-column: 1/-1;
   }
 }
-@media (max-width: 750px) {
+@media (max-width: 759px) {
   .header {
     padding: 17px 22px;
   }
@@ -449,7 +463,8 @@
     padding: 28px 22px 20px;
   }
   .reviewLayout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'sketch' 'properties' 'catalogue';
     gap: 20px;
   }
   .intake .reviewPanel {
@@ -465,9 +480,6 @@
   }
   .catalogue {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .photos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .startActions,
   .acceptBar {
@@ -498,9 +510,6 @@
   .upload > div,
   .upload > .hint {
     grid-column: auto;
-  }
-  .photos {
-    grid-template-columns: 1fr;
   }
   .photoPreview,
   .photoPreview img {
@@ -571,5 +580,83 @@
 @keyframes draft-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+.main .flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 24px;
+}
+.title {
+  grid-column: 1;
+}
+.photoLayout,
+.reviewLayout,
+.acceptBar {
+  grid-column: 1 / -1;
+}
+.photoLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  gap: 24px;
+  align-items: start;
+}
+.photoMain {
+  min-width: 0;
+}
+@media (min-width: 1180px) {
+  .reviewLayout {
+    grid-template-columns: minmax(190px, 240px) minmax(0, 1fr) minmax(
+        320px,
+        400px
+      );
+    grid-template-areas: 'catalogue sketch properties';
+  }
+  .catalogueSection {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .catalogueSection > div:first-child {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .catalogueSection label {
+    width: 100%;
+  }
+  .catalogue {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .catalogue img {
+    height: 76px;
+  }
+}
+@media (max-width: 1200px) {
+  .upload {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .upload > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 759px) {
+  .main .flow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .reviewTools {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .photoLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .photos > li {
+    max-width: none;
+  }
+}
+@media (max-width: 480px) {
+  .upload {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

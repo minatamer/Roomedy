@@ -1302,7 +1302,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: All ten pre-review todos A-J locally complete and validated. Present current exact8acd4db... fake/paid-off Windows4390/4391 and actual screenshots for the joint owner visual decision. RM-016 remains Planned; guide goal paused; external/device/live/Linux/hosted evidence stays pending.
+Next action: Present the actual K layout correction and current exact Windows fake/paid-off standalone4390/private4391, input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd, for the joint owner visual feedback session. RM-015K locally implemented, full gate passed and read-only pass2 clean after independently fixing expanded chat. Exact per-ticket local commit authorized. Actual visual approval is pending; guide goal remains paused, RM-016 Planned; no paid/live/deploy/push/reset/delegation.
 Active ticket: RM-015
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1328,7 +1328,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T11:58:56+00:00",
+  "updated_at": "2026-10-19T12:47:43+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1503,7 +1503,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-015",
-  "next_action": "All ten pre-review todos A-J locally complete and validated. Present current exact8acd4db... fake/paid-off Windows4390/4391 and actual screenshots for the joint owner visual decision. RM-016 remains Planned; guide goal paused; external/device/live/Linux/hosted evidence stays pending.",
+  "next_action": "Present the actual K layout correction and current exact Windows fake/paid-off standalone4390/private4391, input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd, for the joint owner visual feedback session. RM-015K locally implemented, full gate passed and read-only pass2 clean after independently fixing expanded chat. Exact per-ticket local commit authorized. Actual visual approval is pending; guide goal remains paused, RM-016 Planned; no paid/live/deploy/push/reset/delegation.",
   "phases": [
     {
       "id": "01-docs",
@@ -1910,14 +1910,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015H.md: exact17-path plan; actual visible-mode/copy inventory and preservation rules, with G dependency clean.",
         "docs/validation/RM-015H.md:21 paths, concise honest product copy, actual review/error/chat/recovery,399tests/both builds and clean read-only pass1.",
         "docs/validation/RM-015I.md:11 paths, permanent motion/copy authority, animated retained floor/wall materials, actual1280/390 checks,401tests/both builds and clean read-only pass1.",
-        "docs/validation/RM-015J.md; docs/design/visual-review.md: all ten local outcomes, current173-input/BUILD_ID8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11,401tests/both builds, production9-size/full-flow/three-condition/export/recovery/3D checks, current repeated measurements,305local links and clean read-only pass1. Actual owner decision remains unchecked."
+        "docs/validation/RM-015J.md; docs/design/visual-review.md: all ten local outcomes, current173-input/BUILD_ID8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11,401tests/both builds, production9-size/full-flow/three-condition/export/recovery/3D checks, current repeated measurements,305local links and clean read-only pass1. Actual owner decision remains unchecked.",
+        "docs/commit-plans/RM-015K.md; docs/tickets/RM-015K-review-and-rebalance-page-layouts.md: exact26-path allocation, actual1280 canvas y429.5/document948 and wide entry/intake/review baseline.",
+        "docs/validation/RM-015K.md; docs/design/layout.md; docs/design/visual-review.md: exact27-path all-page space correction, final173-input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd,401tests/33files/root/both builds,63 exact-production size/state observations, expanded-chat and tour fixes independently verified; read-only pass2 clean. Actual owner visual decision pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "we will tackle all these before our visual feedback session together ... for each todo you will plan it thoroughly, document it in a ticket ... then execute then validate ... fix any findings ... validate again ... continue to next todo till u finish all my todos thats ur goal",
-        "source": "human:current-chat/2026-10-19/pre-review-todo-loop",
-        "scope": "Ten agreed pre-review todos, implemented and validated in lettered tickets before the joint visual decision. No visual approval or external authority.",
-        "recorded_at": "2026-10-19T07:44:08+00:00"
+        "quote": "Before I do any visual feedback ... so much dead empty space not utilized ... take that into consdering fully do a big review on all our pages, and fix that and document that.",
+        "source": "human:current-chat/2026-10-19/all-page-space-review",
+        "scope": "Review and fix all-page space use in RM-015K before the actual joint visual review; no visual acceptance, paid/live/external/delegation authority.",
+        "recorded_at": "2026-10-19T12:07:15+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -1928,6 +1930,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/pre-review-todo-loop",
             "scope": "Ten agreed pre-review todos, implemented and validated in lettered tickets before the joint visual decision. No visual approval or external authority.",
             "recorded_at": "2026-10-19T07:44:08+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "Before I do any visual feedback ... so much dead empty space not utilized ... take that into consdering fully do a big review on all our pages, and fix that and document that.",
+            "source": "human:current-chat/2026-10-19/all-page-space-review",
+            "scope": "Review and fix all-page space use in RM-015K before the actual joint visual review; no visual acceptance, paid/live/external/delegation authority.",
+            "recorded_at": "2026-10-19T12:07:15+00:00"
           }
         }
       ]
