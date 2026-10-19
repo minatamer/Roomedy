@@ -74,6 +74,10 @@ export function Editor({
     `${state.workspace?.workspaceId ?? 'opening'}:${state.presentation.panel}:${state.presentation.panel === 'inspector' ? state.presentation.selectedId : ''}:${state.comparison}`,
   );
   const roomView = state.presentation.roomView;
+  // RM-015AC: comparison is temporarily hidden; retain its implementation.
+  useEffect(() => {
+    if (state.comparison === 'before') controller.setComparison('current');
+  }, [controller, state.comparison]);
   const setRoomView = (view: 'plan' | 'cutaway') =>
     controller.setRoomView(view);
   const workspaceId = state.workspace?.workspaceId;
@@ -186,6 +190,7 @@ export function Editor({
         </div>
         <div className={styles.headerActions}>
           <button
+            data-room-target="history"
             aria-disabled={
               !state.undoLabel || before || state.clientLoadFailure
             }
@@ -260,6 +265,7 @@ export function Editor({
             </div>
 
             <div
+              hidden
               className={styles.comparison}
               role="group"
               aria-label="Compare arrangement"

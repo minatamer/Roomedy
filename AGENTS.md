@@ -4,6 +4,9 @@ Read [the documentation map](docs/README.md), [current blueprint](docs/ROOMEDY.m
 
 ## Current scope and checkpoint
 
+- Current RM-015AC follows committed AB6db513e. Read [ticket](docs/tickets/RM-015AC-temporarily-hide-room-comparison.md), [14-path plan](docs/commit-plans/RM-015AC.md) and [receipt](docs/validation/RM-015AC.md). Owner explicitly hides Before/Current temporarily without deleting it. Keep full comparison markup/controller/baseline/import/export/tests; native hidden plus scoped display removes controls/layout/focus/AX. A guarded presentation effect returns retained Before to Current. Third tour target is visible Undo with useful Apply/Cancel/Undo copy. Final555tests/root/both builds/current214hashes,13native size checks, full tour/edit/Undo and clean read-only pass1 recorded. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/new ports/delegation/push/deploy.
+
+
 - Current RM-015AB follows committed AA/a8f1c02. Read [AB ticket](docs/tickets/RM-015AB-fill-the-editor-working-height.md), [16-path plan](docs/commit-plans/RM-015AB.md) and [receipt](docs/validation/RM-015AB.md). Owner removes obstructive under-frame boilerplate and requests the full working height for both frame and left controls. Navigation/uncertainty descriptions remain accessible, real issues in Checks/properties and failures/loading inside stable frames. Bounded workspace reaches the saved-footer boundary, narrow/short layouts retain natural flow. Final555tests/root/both builds/current214hashes and read-only pass1 clean;26native responsive geometry states plus real move/Undo/rejection evidence recorded. Actual visual approval pending, Q held, guide paused, RM-016 Planned; no new ports/delegation/paid/live/push/deploy.
 
 

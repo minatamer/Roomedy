@@ -570,6 +570,9 @@
   gap: 6px;
   margin: 0;
 }
+.comparison[hidden] {
+  display: none;
+}
 .comparison button[aria-pressed='true'] {
   background: #e7ddcc;
   border-color: #aa9274;

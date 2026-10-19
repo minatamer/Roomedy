@@ -1,5 +1,8 @@
 # Roomedy — product and engineering blueprint
 
+**Current temporary comparison pause:** [RM-015AC](tickets/RM-015AC-temporarily-hide-room-comparison.md), [14-path plan](commit-plans/RM-015AC.md) and [evidence](validation/RM-015AC.md) follow committed AB6db513e. Before/Current controls are hidden for now; full comparison/baseline/import/export implementation remains. Editor stays Current; the existing last tour step points to Undo. Actual visual approval pending, Q held, guide paused, RM-016 Planned.
+
+
 **Current editor-height correction:** [RM-015AB](tickets/RM-015AB-fill-the-editor-working-height.md), [16-path plan](commit-plans/RM-015AB.md) and [evidence](validation/RM-015AB.md) follow committed AA/a8f1c02. Owner removes under-frame boilerplate and gives the frame/left controls the full available working height. Accessible descriptions and actual Checks/properties/errors remain; sole hot reload4320/private4321. Actual visual approval pending, Q held, guide paused and RM-016 Planned.
 
 
@@ -475,6 +478,9 @@ One accepted instruction is one Undo entry, including coordinated additions/move
 Use bounded history shared by manual and assistant actions, with **Undo last change** labelled by its actual action. Entry count and byte limits remain engineering values to measure; the guest lifetime is fixed at the selected two hours. Redo is deferred. A fresh import/reset starts a new active history.
 
 ### 9.6 Before/Current comparison
+
+**20 October temporary presentation override (RM-015AC):** owner requests hiding Before/Current for now, retaining implementation. Current is the visible editable presentation; baseline/comparison/controller/import/export remain intact. The last tour step targets Undo while comparison controls are hidden. Restoration is a later explicit change; the capability below is retained.
+
 
 Include one read-only baseline captured when the reviewed room first enters the main editor, when an authored sample opens, or from the validated baseline in an imported project. Compare that starting arrangement with the committed current room using the same selected 2D/3D view and camera. Label **Before** and **Current** clearly. The baseline does not update when furniture moves, an AI batch applies or Undo runs.
 
@@ -1325,8 +1331,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Continue actual owner visual feedback on sole4320 after authorized exact16-path RM-015AB local checkpoint. Full editor frame/left-rail height and removed bottom copy are reviewable. Q held, guide paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.
-Active ticket: RM-015AB
+Next action: Continue actual owner visual feedback on sole4320 after authorized exact14-path RM-015AC local checkpoint. Before/Current is hidden temporarily with full implementation retained and tour pointing to Undo. Q held, guide paused, RM-016 Planned; no actual visual approval or external/delegation authority inferred.
+Active ticket: RM-015AC
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1351,7 +1357,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T21:13:21+00:00",
+  "updated_at": "2026-10-19T21:24:23+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1540,8 +1546,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AB",
-  "next_action": "Continue actual owner visual feedback on sole4320 after authorized exact16-path RM-015AB local checkpoint. Full editor frame/left-rail height and removed bottom copy are reviewable. Q held, guide paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.",
+  "active_ticket": "RM-015AC",
+  "next_action": "Continue actual owner visual feedback on sole4320 after authorized exact14-path RM-015AC local checkpoint. Before/Current is hidden temporarily with full implementation retained and tour pointing to Undo. Q held, guide paused, RM-016 Planned; no actual visual approval or external/delegation authority inferred.",
   "phases": [
     {
       "id": "01-docs",
@@ -1983,14 +1989,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015AA.md:24paths allocated before source edits; direct owner popular bed/other useful furniture sizing request, primary sizing research. Z59dae0a committed.",
         "docs/validation/RM-015AA.md:24paths;555tests/44files/seven boundaries/assets/root/both builds,214inputs/1815760bytes/BUILD_ID4d678008fd6e9befe7510bdf959e5f2976ea1efae73a47879100368324801a3d.13native sizes with44px controls/0horizontal overflow, actual2D/3D size/Undo/rejection/Add/Replace/photo-review checks. Read-only pass1 Meets ticket, no actionable findings. Exact checkpoint separately authorized; actual visual/physical/live/external limits pending.",
         "docs/commit-plans/RM-015AB.md:16 paths allocated before source edits; AA a8f1c02 committed. Latest owner removes bottom copy and extends canvas/rail.",
-        "docs/validation/RM-015AB.md:16paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816197bytes/BUILD_ID2d590b7ce6e856fa1bcb0a0aa976bd820d602b432567910cef3bd166d8d9e996.26native responsive states, actual2D/3D full height, camera/move/Undo/Before/Checks/rejection;1280frame+rail gain72.5px to footer. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending."
+        "docs/validation/RM-015AB.md:16paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816197bytes/BUILD_ID2d590b7ce6e856fa1bcb0a0aa976bd820d602b432567910cef3bd166d8d9e996.26native responsive states, actual2D/3D full height, camera/move/Undo/Before/Checks/rejection;1280frame+rail gain72.5px to footer. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending.",
+        "docs/commit-plans/RM-015AC.md:14paths allocated before source edits; AB6db513e committed. Owner hides Before/Current temporarily, retains implementation.",
+        "docs/validation/RM-015AC.md:14paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816467bytes/BUILD_ID5abdfe2d55dc3851d721a033511e7d88fddce7da008415094438c70af8c9dd7d.13native sizes hide comparison with original buttons retained; full3step tour targets Undo, real2D/3D editing/Undo, full frame preserved. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint authorized, actual visual/external evidence pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "i want my edit frame to continue its height to the bottom giving me more screen realestate. same with the controls on the left after we remove the text underneath it",
-        "source": "human:current-chat/2026-10-20/editor-working-height",
-        "scope": "RM-015AB implementation correction only; no visual result approval",
-        "recorded_at": "2026-10-19T21:03:12+00:00"
+        "quote": "before/current feels like a dead feature, HIDE IT only for now, dont delete it yet.",
+        "source": "human:current-chat/2026-10-20/hide-comparison-temporarily",
+        "scope": "RM-015AC temporary presentation correction only; no result approval",
+        "recorded_at": "2026-10-19T21:16:45+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2154,6 +2162,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/editor-working-height",
             "scope": "RM-015AB implementation correction only; no visual result approval",
             "recorded_at": "2026-10-19T21:03:12+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "before/current feels like a dead feature, HIDE IT only for now, dont delete it yet.",
+            "source": "human:current-chat/2026-10-20/hide-comparison-temporarily",
+            "scope": "RM-015AC temporary presentation correction only; no result approval",
+            "recorded_at": "2026-10-19T21:16:45+00:00"
           }
         }
       ]

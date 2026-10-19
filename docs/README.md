@@ -1,5 +1,8 @@
 # Roomedy documentation
 
+**Current temporary comparison pause:** [RM-015AC](tickets/RM-015AC-temporarily-hide-room-comparison.md), [14-path plan](commit-plans/RM-015AC.md) and [evidence](validation/RM-015AC.md) follow committed AB6db513e. Before/Current controls are hidden for now; full comparison/baseline/import/export implementation remains. Editor stays Current; the existing last tour step points to Undo. Final555tests/root/both builds/current214hashes,13native size checks, full tour/edit/Undo and clean read-only pass1 recorded. Actual visual approval pending, Q held, guide paused, RM-016 Planned.
+
+
 **Current editor-height correction:** [RM-015AB](tickets/RM-015AB-fill-the-editor-working-height.md), [16-path plan](commit-plans/RM-015AB.md) and [evidence](validation/RM-015AB.md) follow committed AA/a8f1c02. Owner removes under-frame boilerplate and gives the frame/left controls the full available working height. Accessible descriptions and actual Checks/properties/errors remain; sole hot reload4320/private4321. Final555tests/root/both builds/current214hashes and read-only pass1 clean;26native responsive geometry states plus real move/Undo/rejection evidence recorded. Actual visual approval pending, Q held, guide paused and RM-016 Planned.
 
 

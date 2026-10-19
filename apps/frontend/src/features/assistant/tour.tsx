@@ -32,9 +32,9 @@ const steps = [
     text: 'Ask for a useful change, like moving your work area closer to the window. The assistant works with your room, furniture and preferences.',
   },
   {
-    target: 'comparison',
+    target: 'history',
     title: 'Keep the changes you love.',
-    text: 'Review an assistant proposal, then Apply or Cancel. Before and Current show what changed; Undo reverses your last accepted change.',
+    text: 'Review an assistant proposal, then Apply or Cancel. Undo reverses your last accepted change.',
   },
 ] as const;
 const viewport = (): TourViewport => ({

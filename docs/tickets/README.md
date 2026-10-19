@@ -64,8 +64,9 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015Y](RM-015Y-refine-photo-capture-and-responsive-cards.md) | Responsive photo cards/viewer, coherent corner photos and capture guide | RM-015X | Committed27b0130; owner visual approval pending |
 | [RM-015Z](RM-015Z-simplify-photo-intake-and-infer-photo-roles.md) | Concise matched photo cards and automatic source understanding | RM-015Y | Committed59dae0a; owner visual approval pending |
 | [RM-015AA](RM-015AA-add-useful-furniture-size-presets.md) | Popular bed and useful furniture size presets, shared estimate authority | RM-015Z | Committed a8f1c02;555tests/root/builds/read-only pass1 clean; owner approval pending |
-| [RM-015AB](RM-015AB-fill-the-editor-working-height.md) | Full editor working height, remove obstructive bottom copy | RM-015AA | Locally verified555tests/root/builds; read-only pass1 clean; checkpoint ready, visual approval pending |
-| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015AB | Planned; held behind current owner corrections and actual feedback |
+| [RM-015AB](RM-015AB-fill-the-editor-working-height.md) | Full editor working height, remove obstructive bottom copy | RM-015AA | Committed6db513e;555tests/root/builds/read-only pass1 clean; visual approval pending |
+| [RM-015AC](RM-015AC-temporarily-hide-room-comparison.md) | Temporarily hide Before/Current, retain full feature and coherent tour | RM-015AB | Locally verified555tests/root/builds/read-only pass1 clean; checkpoint ready, visual approval pending |
+| [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015AC | Planned; held behind current owner corrections and actual feedback |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |
