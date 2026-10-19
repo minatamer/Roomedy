@@ -2,7 +2,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** T code checkpoint433a241; U window editing under local code verification; T/U actual browser checks pending, V next, Q held and RM-016 Planned
+**Stage:** U code checkpoint630df3c; V door-relative Corner code locally validated; T/U/V actual browser checks pending, Q held and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -185,6 +185,8 @@ Latest [P](tickets/RM-015P-restore-smooth-landing-scrolling.md) supersedes O's t
 The sample route opens the main editor immediately with authored dimensions and a purposeful arrangement. Adding a room uses a guided intake panel beside a rough, editable 2D sketch of walls, openings and labelled furniture footprints. Keep initial review in 2D while the visitor corrects the draft and measurements; introduce 3D only after they continue to the main editor. Preserve progress when switching relevant panels.
 
 If live AI is unavailable, the supplied sample and manual editor should still be useful. The assistant can explain its current availability. A public failure must not quietly replace the provider response with a scripted success. Development fixtures use an explicit simulation label.
+
+V makes Corner the diagonally opposite corner from the nearest corner of the recorded doorway, sharing Doorway’s relevant-door selection. Ties are deterministic; unknown/invalid anchors remain unavailable, and obstacle fallback stays in the intended opposite quadrant. Existing camera flight and live comparison continuity remain; no semantic data or renderer change. [V plan](commit-plans/RM-015V.md) and [evidence](validation/RM-015V.md) distinguish current pure/code/CPU results from pending native T/U/V interaction and owner visual checks. Q remains held and RM-016 Planned.
 
 U adds direct same-wall window placement in the main editor's 2D/3D views: clamped integer offset, matching glass/aperture preview, canonical/displayed grab identity, one shared command/Undo and estimated visitor-planned offset. Other recorded facts and baseline remain intact. Arrange room is the existing 3D edit mode for furniture and windows; no extra mode or renderer. [U plan](commit-plans/RM-015U.md) and [evidence](validation/RM-015U.md) preserve actual browser/performance limitations while native control is stalled. V implements the selected opposite-doorway Corner; overall visual gate remains pending.
 
@@ -1314,8 +1316,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Save exact U local code checkpoint; execute selected V doorway-relative Corner, then complete pending T/U/V actual checks once browser control is restored. Actual owner visual approval pending, guide paused, Q held and RM-016 Planned.
-Active ticket: RM-015U
+Next action: Complete pending T/U/V actual browser checks once test control is restored, then present the current result for actual owner visual decision. Code checkpoints remain distinct; guide paused, Q held and RM-016 Planned.
+Active ticket: RM-015V
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1340,7 +1342,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T17:57:34+00:00",
+  "updated_at": "2026-10-19T18:11:20+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1529,8 +1531,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015U",
-  "next_action": "Save exact U local code checkpoint; execute selected V doorway-relative Corner, then complete pending T/U/V actual checks once browser control is restored. Actual owner visual approval pending, guide paused, Q held and RM-016 Planned.",
+  "active_ticket": "RM-015V",
+  "next_action": "Complete pending T/U/V actual browser checks once test control is restored, then present the current result for actual owner visual decision. Code checkpoints remain distinct; guide paused, Q held and RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -1958,14 +1960,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015T.md:29-path source/recovery/example-photo plan, no source edits yet.",
         "docs/validation/RM-015T.md:28-path current code review has no actionable source findings;432tests/37files/seven boundaries/root/both builds,193inputs/1516490bytes/BUILD_ID3cad8f3e95adb084212e0d4d5daf668d6e43b593e73b981551c4680ec2103ccf. Final actual browser checks remain unverified after native dialog/control failure; local code checkpoint only, no visual approval.",
         "docs/commit-plans/RM-015U.md:17exact paths, same-wall window offset/preview/command/provenance/cancellation plan before edits.",
-        "docs/validation/RM-015U.md:17paths,451tests/38files/seven boundaries/root/both builds,194inputs/1537856bytes/BUILD_ID85b702b15a070758551b4d37a170f3719b4b3550ca9dd95ac081abd4a258cf58; corrected canonical/display identity, clamp and finite motion. Read-only source review no actionable findings; actual browser/visual checks remain unverified after pending dialog/control failure."
+        "docs/validation/RM-015U.md:17paths,451tests/38files/seven boundaries/root/both builds,194inputs/1537856bytes/BUILD_ID85b702b15a070758551b4d37a170f3719b4b3550ca9dd95ac081abd4a258cf58; corrected canonical/display identity, clamp and finite motion. Read-only source review no actionable findings; actual browser/visual checks remain unverified after pending dialog/control failure.",
+        "docs/commit-plans/RM-015V.md:14exact paths and deterministic doorway/opposite-quadrant/safe-motion plan before edits.",
+        "docs/validation/RM-015V.md:14paths,469tests/39files/seven boundaries/root/both builds,194inputs/1539995bytes/BUILD_ID0a8b96b4f6afcba4d093684584dfedd7fb54ff32579ec306522e9c5b7ef230e7; same-door opposite-corner target and safe intended-area fallback. Read-only pass1 no actionable source findings; pure CPU timing distinct from pending actual T/U/V browser and owner visual checks."
       ],
       "blockers": [],
       "approval": {
-        "quote": "window is not draggable, fix that",
-        "source": "human:current-chat/2026-10-19/window-drag-feedback",
-        "scope": "Independent U window correction under existing local execute/validate/checkpoint loop; actual T/U browser checks and visual approval remain pending.",
-        "recorded_at": "2026-10-19T17:32:21+00:00"
+        "quote": "\"corner\" view is always the corner opposite to the door way nearest corner",
+        "source": "human:current-chat/2026-10-19/door-relative-corner",
+        "scope": "Execute V target/camera correction with existing local verification/checkpoint loop; no actual visual approval.",
+        "recorded_at": "2026-10-19T17:59:58+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2066,6 +2070,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/window-drag-feedback",
             "scope": "Independent U window correction under existing local execute/validate/checkpoint loop; actual T/U browser checks and visual approval remain pending.",
             "recorded_at": "2026-10-19T17:32:21+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "\"corner\" view is always the corner opposite to the door way nearest corner",
+            "source": "human:current-chat/2026-10-19/door-relative-corner",
+            "scope": "Execute V target/camera correction with existing local verification/checkpoint loop; no actual visual approval.",
+            "recorded_at": "2026-10-19T17:59:58+00:00"
           }
         }
       ]

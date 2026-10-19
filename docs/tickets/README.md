@@ -58,7 +58,7 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015S](RM-015S-stabilize-and-simplify-room-editing.md) | Stable/direct furniture editing, simpler themed inspector/chrome/Project | RM-015R | Implemented/locally verified; read-only pass1 clean, actual visual approval pending |
 | [RM-015T](RM-015T-separate-photo-and-manual-room-entry.md) | Separate photo and manual room entry | RM-015S | Code implemented/root validated; final browser checks and visual approval pending |
 | [RM-015U](RM-015U-drag-windows-along-their-walls.md) | Drag windows along their walls | RM-015T | Code implemented/root verified; actual browser/visual checks pending |
-| [RM-015V](RM-015V-frame-the-corner-opposite-the-doorway.md) | Frame the corner opposite the doorway | RM-015U | Direct owner correction; Planned, visual approval pending |
+| [RM-015V](RM-015V-frame-the-corner-opposite-the-doorway.md) | Frame the corner opposite the doorway | RM-015U | Code implemented/root verified; actual browser/visual checks pending |
 | [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015V | Planned; held behind current owner corrections and actual feedback |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |

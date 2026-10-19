@@ -139,7 +139,11 @@ export default function Cutaway({
                 title={
                   available
                     ? label
-                    : `${label} needs a clear position in this room`
+                    : view === 'corner'
+                      ? 'Corner needs a positioned doorway and clear space in the opposite corner'
+                      : view === 'doorway'
+                        ? 'Doorway needs a positioned doorway and a clear view'
+                        : `${label} needs a clear position in this room`
                 }
                 onClick={() => command(view)}
               >

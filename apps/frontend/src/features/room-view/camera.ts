@@ -73,6 +73,36 @@ function navigation(room: RoomDocument) {
 export function cameraPositionAllowed(room: RoomDocument, point: Triple) {
   return navigation(room).free(point);
 }
+/** Doorway and Corner refer to the same first recorded doorway, never an invented pose. */
+function doorwayAnchor(room: RoomDocument) {
+  const door = room.room.features.find(
+    (f) => f.kind === 'door' && f.wall !== 'unknown',
+  );
+  if (!door || door.wall === 'unknown') return null;
+  const span =
+    door.wall === 'north' || door.wall === 'south'
+      ? room.room.width.value
+      : room.room.depth.value;
+  const offset = door.offset.value,
+    width = door.width.value;
+  if (
+    span === null ||
+    offset === null ||
+    width === null ||
+    ![span, offset, width].every(Number.isFinite) ||
+    span <= 0 ||
+    width <= 0 ||
+    offset < 0 ||
+    offset + width > span
+  )
+    return null;
+  const middle = offset + width / 2;
+  return {
+    wall: door.wall,
+    along: metres(middle),
+    nearStart: middle <= span / 2,
+  };
+}
 export function cameraViewPose(
   room: RoomDocument,
   view: CameraView,
@@ -102,20 +132,39 @@ export function cameraViewPose(
     Math.min(1.35, eye),
     bounds.depth / 2,
   ];
-  if (view === 'doorway') {
-    const door = room.room.features.find(
-      (f) => f.kind === 'door' && f.wall !== 'unknown',
-    );
-    if (!door) return null;
-    const u = metres((door.offset.value ?? 0) + (door.width.value ?? 900) / 2);
-    preferred =
-      door.wall === 'north'
-        ? [u, eye, 0.4]
-        : door.wall === 'south'
-          ? [u, eye, bounds.depth - 0.4]
-          : door.wall === 'west'
-            ? [0.4, eye, u]
-            : [bounds.width - 0.4, eye, u];
+  let corner: { east: boolean; south: boolean } | null = null;
+  if (view === 'doorway' || view === 'corner') {
+    const entry = doorwayAnchor(room);
+    if (!entry) return null;
+    if (view === 'doorway') {
+      const u = entry.along;
+      preferred =
+        entry.wall === 'north'
+          ? [u, eye, 0.4]
+          : entry.wall === 'south'
+            ? [u, eye, bounds.depth - 0.4]
+            : entry.wall === 'west'
+              ? [0.4, eye, u]
+              : [bounds.width - 0.4, eye, u];
+    } else {
+      if (room.room.width.value === null || room.room.depth.value === null)
+        return null;
+      const nearestEast =
+        entry.wall === 'east' ||
+        ((entry.wall === 'north' || entry.wall === 'south') &&
+          !entry.nearStart);
+      const nearestSouth =
+        entry.wall === 'south' ||
+        ((entry.wall === 'east' || entry.wall === 'west') && !entry.nearStart);
+      corner = { east: !nearestEast, south: !nearestSouth };
+      const xInset = Math.min(0.45, bounds.width / 4),
+        zInset = Math.min(0.45, bounds.depth / 4);
+      preferred = [
+        corner.east ? bounds.width - xInset : xInset,
+        eye,
+        corner.south ? bounds.depth - zInset : zInset,
+      ];
+    }
   }
   if (view === 'work-area') {
     const desk = room.furniture.find(
@@ -147,7 +196,16 @@ export function cameraViewPose(
     eye,
     clamp(preferred[2], bounds.depth),
   ];
-  let chosen: Triple | null = nav.free(preferred) ? preferred : null,
+  const allowed = (point: Triple) =>
+    nav.free(point) &&
+    (!corner ||
+      ((corner.east
+        ? point[0] >= bounds.width / 2
+        : point[0] <= bounds.width / 2) &&
+        (corner.south
+          ? point[2] >= bounds.depth / 2
+          : point[2] <= bounds.depth / 2)));
+  let chosen: Triple | null = allowed(preferred) ? preferred : null,
     best = Infinity;
   if (!chosen)
     for (let z = 0; z <= steps; z++)
@@ -159,7 +217,7 @@ export function cameraViewPose(
         ];
         const distance =
           (point[0] - preferred[0]) ** 2 + (point[2] - preferred[2]) ** 2;
-        if (distance < best && nav.free(point)) {
+        if (distance < best && allowed(point)) {
           chosen = point;
           best = distance;
         }

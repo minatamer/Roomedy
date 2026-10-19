@@ -1,6 +1,6 @@
 # RM-015V — Frame the corner opposite the doorway
 
-Status: **Planned; direct owner correction before joint visual acceptance**. Depends on RM-015U; Q lighting held and RM-016 Planned. Current authority: latest direct owner feedback in this chat, existing plan→execute→read-only validate→independently fix/revalidate→exact local commit loop. Not an actual result approval or paid/live/delegation/deploy/push/new-port authority.
+Status: **Code locally validated; actual browser checks and owner visual acceptance pending**. Depends on RM-015U; Q lighting held and RM-016 Planned. Current authority: latest direct owner feedback in this chat, existing plan→execute→read-only validate→independently fix/revalidate→exact local commit loop. Not an actual result approval or paid/live/delegation/deploy/push/new-port authority.
 
 ## Thorough implementation plan
 
@@ -8,9 +8,13 @@ The owner defines Corner as the corner diagonally opposite the corner nearest th
 
 ## Acceptance
 
-- [ ] Selected complete behavior and owning states implemented through existing shared authority, preserving finite bounds, truthful provenance and useful failure paths.
+- [x] Selected complete behavior and owning states implemented through existing shared authority, preserving finite bounds, truthful provenance and useful failure paths.
 - [ ] Current responsive/interaction and meaningful deterministic evidence recorded, with exact local root/build/source gate.
-- [ ] Full allocated-scope read-only validation clean after independently checked findings; exact authorized local checkpoint.
+- [x] Full allocated-scope read-only validation has no actionable source findings; exact local code checkpoint under existing authority. Actual acceptance remains pending.
 - [ ] Actual owner visual acceptance — remains pending; external/device/native/paint/Linux/hosted/live limitations explicit.
 
 Precision: [blueprint](../ROOMEDY.md), [layout](../design/layout.md), [room view](../design/room-view.md), [motion](../design/motion.md), [checklist](../design/REVIEW_CHECKLIST.md), [feedback](../references/LESSONS_FROM_VISUAL_FEEDBACK.md). Allocate and document exact code/test/evidence owners before any implementation edit.
+
+[Exact14-path plan](../commit-plans/RM-015V.md). U local code checkpoint630df3c is verified; T/U actual checks remain pending. V adds no room command or source-confirmation authority.
+
+Local gate469tests/39files, seven executable boundaries/root/both builds and current194-input production identity are recorded in [V evidence](../validation/RM-015V.md). Current pure/CPU coverage is complete for the selected rule; responsive/native travel evidence remains unverified behind the test-browser control issue. The combined responsive/interaction acceptance item intentionally stays unchecked.
