@@ -1,6 +1,6 @@
 # RM-015AA — Add useful furniture size presets
 
-Status: **Locally verified555tests/root/both builds; read-only pass1 clean, exact checkpoint prepared**, follows Z59dae0a. Actual result approval pending, Q held, guide paused, RM-016 Planned.
+Status: **Locally verified555tests/root/both builds; read-only pass1 clean, committed a8f1c025f4d8e8a829c63360610cb3cc79e25f9c**, follows Z59dae0a. Actual result approval pending, Q held, guide paused, RM-016 Planned.
 
 Read the entire [24-path plan](../commit-plans/RM-015AA.md), [size research](../references/furniture-sizes-2026-10-19.md), [catalogue](../design/catalogue.md), [shared spatial authority](../engineering/spatial-rules.md), [blueprint furniture policy](../ROOMEDY.md#13-furniture-and-asset-pipeline), [review checklist](../design/REVIEW_CHECKLIST.md) and [feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md).
 

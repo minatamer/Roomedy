@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { PointerEvent, KeyboardEvent } from 'react';
 import type { Feature, Furniture } from '@roomedy/contracts/room';
 import {
@@ -52,6 +52,7 @@ export function PlanView({
   const svg = useRef<SVGSVGElement>(null),
     gesture = useRef<Gesture | null>(null),
     windowGesture = useRef<WindowGesture | null>(null);
+  const descriptionId = useId();
   const [movementGhost, setGhost] = useState<Ghost | null>(null);
   const [windowGhost, setWindowGhost] = useState<WindowPosition | null>(null);
   const before = state.comparison === 'before',
@@ -380,6 +381,7 @@ export function PlanView({
         className={styles.plan}
         viewBox={`${box.x} ${box.z} ${box.width} ${box.depth}`}
         role="group"
+        aria-describedby={descriptionId}
         aria-label={
           before
             ? 'Before room plan. Read-only. Select a piece to inspect it.'
@@ -791,22 +793,22 @@ export function PlanView({
             : `${depth} mm · ${room.room.depth.status}`}
         </text>
       </svg>
-      <p className={styles.planHint}>
-        {ghost
-          ? `Planned centre: ${ghost.x}, ${ghost.z} mm · release to validate`
-          : before
-            ? 'Before is read-only · Return to Current to edit'
-            : state.clientLoadFailure
-              ? 'Editor load failed · Export your layout or reload to continue'
-              : state.candidate
-                ? 'Preview only · Ghosts mark current positions · Cancel to edit by hand'
-                : 'Drag to place · arrow keys to nudge · dimensions in mm'}
-      </p>
-      {(room.room.width.value === null || room.room.depth.value === null) && (
-        <p className={styles.notice}>
-          Outline is illustrative until width and depth are measured.
+      <div id={descriptionId} className={styles.announcement}>
+        <p>
+          {ghost
+            ? `Planned centre: ${ghost.x}, ${ghost.z} mm · release to validate`
+            : before
+              ? 'Before is read-only · Return to Current to edit'
+              : state.clientLoadFailure
+                ? 'Editor load failed · Export your layout or reload to continue'
+                : state.candidate
+                  ? 'Preview only · Ghosts mark current positions · Cancel to edit by hand'
+                  : 'Drag to place · arrow keys to nudge · dimensions in mm'}
         </p>
-      )}
+        {(room.room.width.value === null || room.room.depth.value === null) && (
+          <p>Outline is illustrative until width and depth are measured.</p>
+        )}
+      </div>
     </div>
   );
 }

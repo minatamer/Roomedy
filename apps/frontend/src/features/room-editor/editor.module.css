@@ -195,12 +195,6 @@
 .feature {
   cursor: pointer;
 }
-.planHint {
-  text-align: center;
-  font-size: 10px;
-  color: #75614c;
-  margin: 0 0 12px;
-}
 .announcement {
   position: absolute;
   width: 1px;
@@ -800,6 +794,7 @@
   .canvasColumn {
     overflow: auto;
     scrollbar-gutter: stable;
+    padding-bottom: 0;
   }
   .planWrap {
     min-height: 220px;

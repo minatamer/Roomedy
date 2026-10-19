@@ -1,5 +1,8 @@
 # Roomedy — product and engineering blueprint
 
+**Current editor-height correction:** [RM-015AB](tickets/RM-015AB-fill-the-editor-working-height.md), [16-path plan](commit-plans/RM-015AB.md) and [evidence](validation/RM-015AB.md) follow committed AA/a8f1c02. Owner removes under-frame boilerplate and gives the frame/left controls the full available working height. Accessible descriptions and actual Checks/properties/errors remain; sole hot reload4320/private4321. Actual visual approval pending, Q held, guide paused and RM-016 Planned.
+
+
 **Current furniture-size feedback:** [RM-015AA](tickets/RM-015AA-add-useful-furniture-size-presets.md), [24-path plan](commit-plans/RM-015AA.md), [primary research](references/furniture-sizes-2026-10-19.md) and [evidence](validation/RM-015AA.md) follow committed Z59dae0a. Owner selects Single/Queen/King and other useful sizing shortcuts. Regional bed dimensions distinguish mattress/frame; common adjustable desk/wardrobe/shelf presets and custom values use shared estimate/lock/spatial/Undo authority. Actual visual approval remains pending; Q held, guide paused, RM-016 Planned.
 
 **Current photo simplification:** [RM-015Z](tickets/RM-015Z-simplify-photo-intake-and-infer-photo-roles.md), [27-path plan](commit-plans/RM-015Z.md) and [evidence](validation/RM-015Z.md) follow committed Y27b0130. Latest owner selects concise matched cards and automatic photo understanding: no visitor type selector, retained animated guide/gallery/viewer, one explicit Draft beside prepared uploads. Bounded source classification protects uncertain room scale. Actual owner visual acceptance remains pending; Q held and RM-016 Planned.
@@ -1322,8 +1325,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Continue actual owner visual feedback on sole4320 after the authorized exact24-path RM-015AA local checkpoint. Popular bed/common furniture presets and prior photo/export corrections are reviewable. Q held, guide goal paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.
-Active ticket: RM-015AA
+Next action: Continue actual owner visual feedback on sole4320 after authorized exact16-path RM-015AB local checkpoint. Full editor frame/left-rail height and removed bottom copy are reviewable. Q held, guide paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.
+Active ticket: RM-015AB
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1348,7 +1351,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T20:53:50+00:00",
+  "updated_at": "2026-10-19T21:13:21+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1537,8 +1540,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AA",
-  "next_action": "Continue actual owner visual feedback on sole4320 after the authorized exact24-path RM-015AA local checkpoint. Popular bed/common furniture presets and prior photo/export corrections are reviewable. Q held, guide goal paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.",
+  "active_ticket": "RM-015AB",
+  "next_action": "Continue actual owner visual feedback on sole4320 after authorized exact16-path RM-015AB local checkpoint. Full editor frame/left-rail height and removed bottom copy are reviewable. Q held, guide paused, RM-016 Planned; no actual visual approval or paid/live/deploy/push/reset/delegation inferred.",
   "phases": [
     {
       "id": "01-docs",
@@ -1978,14 +1981,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015Z.md:27paths allocated before source edits, latest direct owner simpler cards/automatic photo role requirements; Y27b0130 committed.",
         "docs/validation/RM-015Z.md:27paths,539tests/43files/seven boundaries/root/assets/both builds;212inputs/1800640bytes/BUILD_IDca0265f57ee524c5b79a4527a44301609be7403d2da269a97681535762d20827.26native empty/six-photo responsive states, guide/viewer/error and automatic fake2D journey; read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external proof pending.",
         "docs/commit-plans/RM-015AA.md:24paths allocated before source edits; direct owner popular bed/other useful furniture sizing request, primary sizing research. Z59dae0a committed.",
-        "docs/validation/RM-015AA.md:24paths;555tests/44files/seven boundaries/assets/root/both builds,214inputs/1815760bytes/BUILD_ID4d678008fd6e9befe7510bdf959e5f2976ea1efae73a47879100368324801a3d.13native sizes with44px controls/0horizontal overflow, actual2D/3D size/Undo/rejection/Add/Replace/photo-review checks. Read-only pass1 Meets ticket, no actionable findings. Exact checkpoint separately authorized; actual visual/physical/live/external limits pending."
+        "docs/validation/RM-015AA.md:24paths;555tests/44files/seven boundaries/assets/root/both builds,214inputs/1815760bytes/BUILD_ID4d678008fd6e9befe7510bdf959e5f2976ea1efae73a47879100368324801a3d.13native sizes with44px controls/0horizontal overflow, actual2D/3D size/Undo/rejection/Add/Replace/photo-review checks. Read-only pass1 Meets ticket, no actionable findings. Exact checkpoint separately authorized; actual visual/physical/live/external limits pending.",
+        "docs/commit-plans/RM-015AB.md:16 paths allocated before source edits; AA a8f1c02 committed. Latest owner removes bottom copy and extends canvas/rail.",
+        "docs/validation/RM-015AB.md:16paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816197bytes/BUILD_ID2d590b7ce6e856fa1bcb0a0aa976bd820d602b432567910cef3bd166d8d9e996.26native responsive states, actual2D/3D full height, camera/move/Undo/Before/Checks/rejection;1280frame+rail gain72.5px to footer. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "for bed make sure they can choose popular bed sizes (single king queen etc..) try to apply this to other furtnute with known sizes, anything that can help the user",
-        "source": "human:current-chat/2026-10-19/furniture-size-presets",
-        "scope": "RM-015AA implementation only, not visual result approval",
-        "recorded_at": "2026-10-19T20:28:46+00:00"
+        "quote": "i want my edit frame to continue its height to the bottom giving me more screen realestate. same with the controls on the left after we remove the text underneath it",
+        "source": "human:current-chat/2026-10-20/editor-working-height",
+        "scope": "RM-015AB implementation correction only; no visual result approval",
+        "recorded_at": "2026-10-19T21:03:12+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2140,6 +2145,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-19/furniture-size-presets",
             "scope": "RM-015AA implementation only, not visual result approval",
             "recorded_at": "2026-10-19T20:28:46+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "i want my edit frame to continue its height to the bottom giving me more screen realestate. same with the controls on the left after we remove the text underneath it",
+            "source": "human:current-chat/2026-10-20/editor-working-height",
+            "scope": "RM-015AB implementation correction only; no visual result approval",
+            "recorded_at": "2026-10-19T21:03:12+00:00"
           }
         }
       ]

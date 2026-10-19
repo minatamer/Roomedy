@@ -1,5 +1,12 @@
 'use client';
-import { Component, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  Component,
+  useCallback,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import type { ErrorInfo, ReactNode, MutableRefObject } from 'react';
 import { PCFShadowMap } from 'three';
 import { Canvas } from '@react-three/fiber';
@@ -45,6 +52,7 @@ export default function Cutaway({
   snap,
   ...props
 }: CutawayProps) {
+  const descriptionId = useId();
   const [ready, setReady] = useState(false),
     [lost, setLost] = useState(false),
     [assets, setAssets] = useState({ loading: 0, failed: 0 });
@@ -281,6 +289,7 @@ export default function Cutaway({
                 invalidateRef.current = invalidate;
                 canvas.tabIndex = 0;
                 canvas.setAttribute('role', 'img');
+                canvas.setAttribute('aria-describedby', descriptionId);
                 canvas.setAttribute(
                   'aria-label',
                   'Room in 3D. Arrow keys look around; plus and minus zoom. Inside the room, W A S D move. Select furniture to inspect.',
@@ -304,42 +313,46 @@ export default function Cutaway({
             Opening the cutaway…
           </p>
         )}
+        {(assets.loading > 0 || assets.failed > 0) && (
+          <p role="status" className={styles.notice}>
+            {assets.loading > 0 ? 'Loading furniture detail. ' : ''}
+            {assets.failed > 0
+              ? 'Some model detail could not load; simple shapes preserve the same sizes.'
+              : ''}
+          </p>
+        )}
       </div>
-      <p className={styles.hint}>
-        {moving
-          ? 'Drag furniture or windows · Arrow keys nudge · R rotates furniture · Esc cancels'
-          : cameraView === 'overview'
-            ? 'Drag to orbit'
-            : 'Drag to look · W A S D to move'}{' '}
-        {moving
-          ? '· Scroll to zoom'
-          : '· Scroll or pinch to zoom · Select a piece to inspect'}
-      </p>
-      {(assets.loading > 0 ||
-        assets.failed > 0 ||
-        unavailable > 0 ||
-        incompleteFeatures ||
-        displayRoom(rendered).approximate ||
-        props.candidate) && (
-        <p role="status" className={styles.notice}>
-          {assets.loading > 0 ? 'Loading furniture detail. ' : ''}
-          {assets.failed > 0
-            ? 'Some model detail could not load; simple shapes preserve the same sizes. '
-            : ''}
-          {unavailable > 0
-            ? 'Some pieces use simple bounds or await dimensions; inspect their properties. '
-            : ''}
-          {displayRoom(rendered).approximate
-            ? 'Room height or outline is approximate. '
-            : ''}
-          {incompleteFeatures
-            ? 'Some openings or obstacles await measurements; review them in the plan. '
-            : ''}
-          {props.candidate
-            ? 'Preview: outlined shapes mark changes; pale outlines show the current arrangement.'
-            : ''}
+      <div id={descriptionId} className={styles.description}>
+        <p>
+          {moving
+            ? 'Drag furniture or windows · Arrow keys nudge · R rotates furniture · Esc cancels'
+            : cameraView === 'overview'
+              ? 'Drag to orbit'
+              : 'Drag to look · W A S D to move'}{' '}
+          {moving
+            ? '· Scroll to zoom'
+            : '· Scroll or pinch to zoom · Select a piece to inspect'}
         </p>
-      )}
+        {(unavailable > 0 ||
+          incompleteFeatures ||
+          displayRoom(rendered).approximate ||
+          props.candidate) && (
+          <p>
+            {unavailable > 0
+              ? 'Some pieces use simple bounds or await dimensions; inspect their properties. '
+              : ''}
+            {displayRoom(rendered).approximate
+              ? 'Room height or outline is approximate. '
+              : ''}
+            {incompleteFeatures
+              ? 'Some openings or obstacles await measurements; review them in the plan. '
+              : ''}
+            {props.candidate
+              ? 'Preview: outlined shapes mark changes; pale outlines show the current arrangement.'
+              : ''}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

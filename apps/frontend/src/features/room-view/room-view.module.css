@@ -24,12 +24,15 @@
   outline: 3px solid #956b43;
   outline-offset: -4px;
 }
-.hint {
-  text-align: center;
-  color: #75614c;
-  font-size: 10px;
-  line-height: 1.5;
-  margin: 5px 0 12px;
+.description {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .loading {
   position: absolute;
@@ -53,10 +56,20 @@
   animation: turn 0.9s linear infinite;
 }
 .notice {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #fff6e7f5;
   font-size: 11px;
   line-height: 1.5;
   color: #765536;
-  margin: 0 0 12px;
+  margin: 0;
+  pointer-events: none;
 }
 .fallback {
   min-height: 330px;
@@ -162,12 +175,12 @@
     .wrap {
       display: grid;
       grid-template-columns: 190px minmax(0, 1fr);
-      grid-template-rows: minmax(0, 1fr) auto auto;
+      grid-template-rows: minmax(0, 1fr);
       gap: 0 20px;
     }
     .wrap > :global(.motion-surface) {
       grid-column: 1;
-      grid-row: 1 / span 2;
+      grid-row: 1;
       min-height: 0;
       max-height: 100%;
       overflow-y: auto;
@@ -196,14 +209,6 @@
     .viewport {
       grid-column: 2;
       grid-row: 1;
-    }
-    .hint {
-      grid-column: 2;
-      grid-row: 2;
-    }
-    .notice {
-      grid-column: 1 / -1;
-      grid-row: 3;
     }
   }
 }
