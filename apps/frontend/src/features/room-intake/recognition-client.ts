@@ -13,8 +13,10 @@ import type { ReviewController } from './review-controller';
 
 type Transport = typeof fetch;
 const base = '/api/roomedy/v1/';
-const outcomes: Record<OperationResult['kind'], string> = {
-  completed: 'Draft observations are ready for your review.',
+const outcomes: Record<
+  Exclude<OperationResult['kind'], 'completed'>,
+  string
+> = {
   refused:
     'These photos could not be interpreted. Change photos or continue manually.',
   incomplete:

@@ -176,8 +176,7 @@ function resolveExplicitTask(
     return {
       ...task,
       kind: 'unsupported',
-      label:
-        'Prices and shopping are outside this demo. I can help compare supported sizes, room layouts and finishes.',
+      label: 'I can help with furniture sizes, layouts and finishes.',
     };
   if (
     /\b(undo|reverse the last change)\b/.test(t) &&

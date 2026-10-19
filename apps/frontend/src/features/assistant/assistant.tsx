@@ -183,12 +183,8 @@ export function Assistant({
                   ))}
                 </div>
               )}
-              {reply?.kind === 'proposal' && (
-                <p className={styles.note}>
-                  {active
-                    ? 'Preview only · Current room unchanged'
-                    : 'Earlier proposal · Use the current room controls for a new change'}
-                </p>
+              {reply?.kind === 'proposal' && active && (
+                <p className={styles.note}>Preview</p>
               )}
               {!!reply?.objectIds.length && (
                 <div className={styles.cards}>
@@ -212,7 +208,7 @@ export function Assistant({
                             )}
                             width={58}
                             height={48}
-                            alt="Similar furniture representation"
+                            alt=""
                             unoptimized
                           />
                         )}
@@ -253,7 +249,7 @@ export function Assistant({
                           src={thumbnailUrl(item)}
                           width={58}
                           height={48}
-                          alt="Supported catalogue representation"
+                          alt=""
                           unoptimized
                         />
                         <span>
@@ -267,17 +263,6 @@ export function Assistant({
                     );
                   })}
                 </div>
-              )}
-              {reply?.facts && (
-                <p className={styles.note}>
-                  {reply.facts.approximate ? 'Approximate inputs · ' : ''}
-                  {reply.facts.coordinatedIds.length > 1
-                    ? 'Desk and chair coordination is included. '
-                    : ''}
-                  {reply.facts.changedIds.length}{' '}
-                  {reply.facts.changedIds.length === 1 ? 'change' : 'changes'}{' '}
-                  to review.
-                </p>
               )}
               {reply?.question && (
                 <button

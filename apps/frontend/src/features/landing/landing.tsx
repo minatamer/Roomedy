@@ -10,7 +10,7 @@ export function Landing() {
         <nav aria-label="Main navigation">
           <a href="#how-it-works">How it works</a>
           <Link className="nav-cta" href="/demo">
-            Try the demo <span aria-hidden="true">↗</span>
+            Start designing <span aria-hidden="true">↗</span>
           </Link>
         </nav>
       </header>
@@ -28,16 +28,15 @@ export function Landing() {
               arrange it yourself, or ask for a little help.
             </p>
             <Link className="button primary" href="/demo">
-              Try the demo <span aria-hidden="true">↗</span>
+              Start designing <span aria-hidden="true">↗</span>
             </Link>
-            <p className="cta-note">Start with a sample. No account needed.</p>
+            <p className="cta-note">No account needed.</p>
             <a className="hero-scroll" href="#how-it-works">
               See how it works <span aria-hidden="true">↓</span>
             </a>
           </div>
           <div className="hero-art">
             <RoomStory room={createRoomFixture()} />
-            <p className="art-caption">Your ideas. A room you can change.</p>
           </div>
         </section>
         <section
@@ -78,19 +77,9 @@ export function Landing() {
             </li>
           </ol>
         </section>
-        <aside className="privacy-note shell">
-          <span aria-hidden="true">↳</span>
-          <p>
-            Photos are a starting point, not a measurement. Selected images
-            transfer only when you ask to draft, when photo drafting is
-            available. Originals stay out of local recovery; accepted room data
-            can recover for two hours.
-          </p>
-        </aside>
       </main>
       <footer className="site-footer shell">
         <Brand />
-        <p>A fresh way to look at your space.</p>
         <span>tryroomedy.com</span>
       </footer>
     </>

@@ -28,7 +28,9 @@ export function Intake({
     [purpose, setPurpose] = useState<PhotoPurpose>('room'),
     [owned, setOwned] = useState(state.draft.room.intent.condition !== 'empty');
   const motion = useSurfaceMotion(state.stage);
-  const [availability, setAvailability] = useState<PublicConfig | null>(null);
+  const [availability, setAvailability] = useState<
+    PublicConfig | null | undefined
+  >(undefined);
   useEffect(() => {
     const abort = new AbortController();
     void recognitionAvailability(abort.signal).then((config) => {
@@ -113,7 +115,9 @@ export function Intake({
               <h1 ref={heading} tabIndex={-1}>
                 {state.stage === 'photos'
                   ? 'Bring the room into view.'
-                  : 'Review your rough sketch.'}
+                  : state.simulated
+                    ? 'Review the sample sketch.'
+                    : 'Review your rough sketch.'}
               </h1>
             </div>
             {state.stage === 'photos' ? (
@@ -206,7 +210,7 @@ export function Intake({
                           )}
                         </div>
                         <label>
-                          Photo {index + 1} evidence
+                          Photo {index + 1} type
                           <select
                             value={photo.purpose}
                             onChange={(e) =>
@@ -220,12 +224,6 @@ export function Intake({
                             <option value="furniture">Furniture detail</option>
                           </select>
                         </label>
-                        {photo.width !== null && (
-                          <p className={styles.hint}>
-                            {photo.width} × {photo.height} pixels · Local
-                            preview
-                          </p>
-                        )}
                         {photo.message && (
                           <p role="alert" className={styles.error}>
                             {photo.message}
@@ -262,19 +260,20 @@ export function Intake({
                 )}
                 {state.photos.length > 0 && (
                   <p className={styles.hint}>
-                    To replace a photo, add its replacement and check the
-                    preview before removing the old one. Linked measurements
-                    stay in the sketch.
+                    Add a replacement before removing a photo. Measurements stay
+                    in the sketch.
                   </p>
                 )}
                 <div className={styles.startActions}>
                   <div>
                     <p id="photo-transfer">
-                      {availability?.capabilities.recognition
-                        ? availability.mode === 'fake'
-                          ? 'Simulated drafting sends prepared photos to this local demo. The authored result does not interpret your photos.'
-                          : 'Draft my room sends prepared photos to the AI provider. Metadata is removed; details visible in the image remain. Review every estimate.'
-                        : 'Photo drafting is unavailable. Your selected photos stay local.'}
+                      {availability === undefined
+                        ? 'Checking photo drafting…'
+                        : availability?.capabilities.recognition
+                          ? availability.mode === 'fake'
+                            ? 'Opening the sample sketch sends prepared photos to Roomedy.'
+                            : 'Drafting sends prepared photos to the AI provider. Metadata is removed; image details remain visible.'
+                          : 'Photo drafting is unavailable. Your selected photos stay local.'}
                     </p>
                     <button
                       className={styles.primary}
@@ -285,18 +284,19 @@ export function Intake({
                         state.photos.some((p) => p.status !== 'ready')
                       }
                       aria-describedby="photo-transfer"
+                      aria-busy={state.recognition !== 'idle'}
                       onClick={() => void draftFromPhotos(controller)}
                     >
-                      {state.recognition === 'idle'
-                        ? 'Draft my room'
-                        : state.recognition === 'preparing'
-                          ? 'Preparing request…'
-                          : 'Drafting room…'}
+                      {availability?.mode === 'fake'
+                        ? 'Open sample sketch'
+                        : 'Draft my room'}
                     </button>
                     {state.recognition !== 'idle' && (
                       <div className={styles.drafting} role="status">
-                        <span aria-hidden="true" /> Preparing a correctable
-                        sketch…{' '}
+                        <span aria-hidden="true" />{' '}
+                        {state.recognition === 'preparing'
+                          ? 'Preparing photos…'
+                          : 'Drafting sketch…'}{' '}
                         <button onClick={() => controller.cancelDraft()}>
                           Cancel drafting
                         </button>
@@ -315,12 +315,6 @@ export function Intake({
               </>
             ) : (
               <>
-                {state.simulated && (
-                  <p className={styles.simulation} role="status">
-                    Simulated draft · An authored example, not an interpretation
-                    of your photos. Correct it to match your room.
-                  </p>
-                )}
                 <div className={styles.reviewTools}>
                   <button onClick={() => controller.showPhotos()}>
                     ← Photos
@@ -491,15 +485,9 @@ export function Intake({
                       · {incomplete} incomplete{' '}
                       {incomplete === 1 ? 'check' : 'checks'}
                     </p>
-                    <p className={styles.hint}>
-                      {approximate
-                        ? 'Room scale is still approximate. Dependent checks remain incomplete.'
-                        : 'Measurements and unresolved facts stay as reviewed.'}
-                    </p>
                     {!state.draft.frameReviewed && (
                       <p className={styles.hint}>
-                        Review the room shape before opening the studio. This
-                        version supports one rectangle.
+                        Review the room shape to continue.
                       </p>
                     )}
                     {state.photos.length > 0 && (
@@ -527,10 +515,6 @@ export function Intake({
           </div>
         </div>
       </main>
-      <footer className={styles.footer}>
-        One rectangular bedroom or workspace · Photos are transient · Changes
-        stay in this tab for now
-      </footer>
     </div>
   );
 }

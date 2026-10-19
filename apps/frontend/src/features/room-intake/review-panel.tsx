@@ -701,9 +701,7 @@ export function ReviewPanel({
           </label>
           {draft.shape === 'unsupported' && (
             <p className={editorStyles.notice}>
-              This version supports one rectangular room. Keep this draft while
-              checking your room shape; extra corners cannot be silently
-              converted.
+              Check the room shape. Only one rectangular room can be opened.
             </p>
           )}
           {(['width', 'depth', 'height'] as const).map((axis) => (

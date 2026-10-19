@@ -1,6 +1,6 @@
 # RM-015H — Remove demo commentary from product copy
 
-Status: **Planned**
+Status: **Implemented locally — owner visual approval pending**
 Planning date: **19 October 2026**
 Owner todo: **8/10 — Concise product language** (ordered by implementation dependencies; coverage in queue)
 Depends on: [RM-015G](RM-015G-complete-sample-assistant-parity.md)
@@ -28,11 +28,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 
 ## Acceptance criteria
 
-- [ ] Remove recurring demo/prototype/development/simulation-warning sentences and filler from landing, assistant, intake and all relevant loading/restored/error variants. Use task-oriented entry labels such as Start designing.
-- [ ] Keep concise actionable field units/errors and essential transfer information at the relevant action; do not replace deleted filler with new filler.
-- [ ] Presentation never changes actual fake/live availability, privacy, transport, geometry or resource enforcement, and authored photo data is never silently represented as detected personal furniture.
-- [ ] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
-- [ ] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
+- [x] Remove recurring demo/prototype/development/simulation-warning sentences and filler from landing, assistant, intake and all relevant loading/restored/error variants. Use task-oriented entry labels such as Start designing.
+- [x] Keep concise actionable field units/errors and essential transfer information at the relevant action; do not replace deleted filler with new filler.
+- [x] Presentation never changes actual fake/live availability, privacy, transport, geometry or resource enforcement, and authored photo data is never silently represented as detected personal furniture.
+- [x] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
+- [x] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
 
 ## Verification
 
@@ -49,3 +49,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Handoff
 
 Record real commands/results and findings dispositions in `docs/validation/RM-015H.md`; no source changes during validation. Existing exact-path per-ticket local commit authority remains scoped to validated owned work. Next packet is RM-015I.
+
+## Refined plan before implementation
+
+[Exact17-path allocation and branch-by-branch copy plan](../commit-plans/RM-015H.md) identifies landing/entry/intake/editor/chat removals, concise essential context and honest sample-sketch labels. Runtime/transport/privacy/geometry/measurement/motion authority stays unchanged. Existing Apply regression will count behavior rather than old technical wording; no new static-copy tests.
+
+## Result
+
+[Execution and clean read-only pass1](../validation/RM-015H.md):21 allocated paths,399tests/root/both builds, actual phone/short-laptop review/error/chat/recovery. No actionable findings. Exact local commit follows; I/J and actual owner visual approval remain.

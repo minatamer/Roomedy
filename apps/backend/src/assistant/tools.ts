@@ -104,9 +104,6 @@ export function createAssistantTools(
     const payload = JSON.stringify(actions);
     if (prepared !== null && payload !== prepared) return reject();
     prepared = payload;
-    const missing = evaluated.checks.coverage.filter(
-      (c) => c.status === 'unassessed' || c.unassessed > 0,
-    ).length;
     const changedPieces = evaluated.affectedIds.flatMap((id) => {
       const p =
         evaluated.room.furniture.find((p) => p.id === id) ??
@@ -127,12 +124,12 @@ export function createAssistantTools(
             centre?.before !== undefined &&
             centre.after !== null &&
             centre.after > centre.before
-          ? `The modeled free centre grows from ${(centre.before / 1e6).toFixed(2)} to ${(centre.after / 1e6).toFixed(2)} m²; furniture sizes stay the same. `
+          ? `The modeled free centre grows from ${(centre.before / 1e6).toFixed(2)} to ${(centre.after / 1e6).toFixed(2)} m². `
           : '';
     const palette = task.extraFinish ?? task.goal?.roomFinish;
     const style = palette
       ? palette.wallFinish === 'clay'
-        ? 'Oak and clay bring warmth without changing owned furniture finishes. '
+        ? 'Oak and clay bring warmth. '
         : palette.wallFinish === 'sage'
           ? 'Walnut and sage give the room a calmer, coordinated palette. '
           : 'Oak and ivory keep the room light and airy. '
@@ -149,7 +146,7 @@ export function createAssistantTools(
       ...emptyAssistantReply(
         room,
         evaluated.changed
-          ? `${invitation}${tradeoff}${style}${missing ? `${missing} ${missing === 1 ? 'check still needs' : 'checks still need'} measurements before relying on the fit.` : 'Review this arrangement, then Apply if it works for you.'}`
+          ? `${invitation}${tradeoff}${style}`.trim()
           : 'This request needs no room change.',
       ),
       kind: evaluated.changed ? 'proposal' : 'explanation',
@@ -245,13 +242,13 @@ export function createAssistantTools(
           : null;
       if (a.issueId && !issue) return reject();
       const hard = checks.issues.filter((i) => i.severity === 'hard').length,
-        missing = checks.coverage.filter(
+        incomplete = checks.coverage.filter(
           (c) => c.status === 'unassessed' || c.unassessed > 0,
         ).length;
       reply = {
         ...emptyAssistantReply(
           room,
-          `${hard ? `${hard} modeled space ${hard === 1 ? 'issue needs' : 'issues need'} review.` : 'No blocking issue was found in the modeled checks.'} ${missing ? `${missing} ${missing === 1 ? 'check still has' : 'checks still have'} missing inputs.` : 'These results apply only to the recorded evidence.'}`,
+          `${hard ? `${hard} ${hard === 1 ? 'space issue needs' : 'space issues need'} review.` : 'No blocking issue was found in the room checks.'}${incomplete ? ` ${incomplete} ${incomplete === 1 ? 'check is' : 'checks are'} incomplete.` : ''}`,
         ),
         objectIds: issue ? issue.objectIds : task.objectIds,
       };

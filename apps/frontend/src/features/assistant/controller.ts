@@ -379,10 +379,7 @@ export class AssistantController {
     const label = this.session.getSnapshot().candidate?.label ?? 'Room changes';
     const result = this.session.applyAssistantPreview();
     if (result.ok && result.status === 'applied' && result.receipt)
-      this.append(
-        'assistant',
-        `${label} applied. Room revision ${result.receipt.committedRevision}. Undo reverses this whole change.`,
-      );
+      this.append('assistant', `${label} applied.`);
     else if (!result.ok)
       this.append(
         'assistant',

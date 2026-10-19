@@ -35,16 +35,15 @@ function Workspace({
     </div>
   ) : state.phase === 'expired' || state.phase === 'disposed' ? (
     <main id="main-content" className={`${styles.intake} ${styles.main}`}>
-      <h1>This room session has expired.</h1>
-      <p>This workspace no longer has an active room.</p>
+      <h1>This room has expired.</h1>
       <button onClick={onBack}>Start a new room</button>
     </main>
   ) : review ? (
     <>
       {state.expiresSoon && (
         <p role="status" className={styles.message}>
-          This session expires in less than five minutes. Finish reviewing to
-          export an accepted room, or start a new room.
+          This room expires in under five minutes. Finish reviewing to export
+          it, or start a new room.
         </p>
       )}
       <Intake controller={review} onBack={onBack} />

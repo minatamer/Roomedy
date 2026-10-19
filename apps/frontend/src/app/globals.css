@@ -275,13 +275,6 @@ h1:focus {
 .story-actions button:not(:disabled):hover {
   box-shadow: 0 0 0 2px #78553d20;
 }
-.art-caption {
-  text-align: center;
-  font-size: 10px;
-  color: var(--muted);
-  margin: 18px 0 0;
-  letter-spacing: 0.03em;
-}
 .how {
   border-top: 1px solid var(--line);
   padding-block: 66px;
@@ -326,23 +319,6 @@ h1:focus {
   font-size: 12px;
   color: var(--muted);
 }
-.privacy-note {
-  padding: 22px 0 28px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-}
-.privacy-note > span {
-  font-size: 25px;
-  color: var(--clay);
-}
-.privacy-note p {
-  font-size: 11px;
-  color: var(--muted);
-  margin: 2px 0;
-  max-width: 760px;
-}
 .site-footer {
   border-top: 1px solid var(--line);
   padding-block: 28px 35px;
@@ -359,9 +335,6 @@ h1:focus {
 .site-footer .brand svg {
   width: 23px;
   height: 23px;
-}
-.site-footer p {
-  margin: 0;
 }
 .site-footer > span {
   margin-left: auto;
@@ -727,10 +700,6 @@ h1:focus {
   .assistant-note p {
     font-size: 11px;
   }
-  .art-caption {
-    font-size: 9px;
-    margin-top: 14px;
-  }
   .how {
     padding-block: 40px;
     gap: 25px;
@@ -759,16 +728,10 @@ h1:focus {
     max-width: 340px;
     font-size: 13px;
   }
-  .privacy-note p {
-    font-size: 10px;
-  }
   .site-footer {
     flex-wrap: wrap;
     gap: 15px;
     padding-block: 25px;
-  }
-  .site-footer p {
-    display: none;
   }
   .entry-main {
     padding-block: 25px 35px;
@@ -863,6 +826,14 @@ h1:focus {
   }
 }
 @media (max-width: 360px) {
+  .site-header {
+    gap: 8px;
+  }
+  .nav-cta {
+    padding-inline: 10px;
+    gap: 6px;
+    white-space: nowrap;
+  }
   .shell {
     width: calc(100% - 32px);
   }

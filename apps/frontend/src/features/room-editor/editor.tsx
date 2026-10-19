@@ -113,10 +113,9 @@ export function Editor({
         <Brand />
         <h1 ref={headingRef} tabIndex={-1}>
           {state.phase === 'expired'
-            ? 'This room session has expired.'
+            ? 'This room has expired.'
             : 'Open a new room.'}
         </h1>
-        <p>This workspace no longer has an active room.</p>
         {source === 'sample' && (
           <button
             onClick={() =>
@@ -162,7 +161,7 @@ export function Editor({
   const leave = () =>
     !hasBaselineChanges(workspace) ||
     window.confirm(
-      'Leave this room? Accepted data can recover in this tab until expiry if storage is available. Photos, drafts and previews will be lost.',
+      'Leave this room? Photos and unfinished changes will be lost. Export first to keep a copy.',
     );
   const panels: { id: Panel; label: string }[] = [
     { id: 'inventory', label: 'Furniture' },
@@ -278,9 +277,8 @@ export function Editor({
           {state.clientLoadFailure && (
             <div className={styles.lifecycleNotice} role="alert">
               <p>
-                Part of the editor could not load. Export your accepted layout
-                or reload to try again. Photos, drafts and proposals are lost on
-                reload; only saved accepted data can recover.
+                Some editor tools couldn’t load. Export your layout before
+                reloading; photos and unfinished changes won’t be kept.
               </p>
               <button onClick={() => window.location.reload()}>
                 Reload editor
@@ -289,8 +287,8 @@ export function Editor({
           )}
           {state.expiresSoon && (
             <div className={styles.lifecycleNotice} role="status">
-              This session expires in less than five minutes. Export a project
-              to keep its accepted layout.
+              This room expires in under five minutes. Export to keep your
+              layout.
             </div>
           )}
           <div
@@ -427,20 +425,7 @@ export function Editor({
               data-room-target="preview"
             >
               <div>
-                <p>
-                  {state.candidate.label ?? 'Palette change'} · Preview only.
-                  Your current room is unchanged.
-                </p>
-                <p className={styles.hint}>
-                  {state.candidate.checks.coverage.some(
-                    (c) =>
-                      c.status === 'unassessed' ||
-                      c.unassessed > 0 ||
-                      c.status === 'approximate',
-                  )
-                    ? 'Some checks remain approximate or incomplete.'
-                    : 'Review the checks for the recorded inputs.'}
-                </p>
+                <p>{state.candidate.label ?? 'Palette change'} · Preview</p>
                 <ul className={styles.changeList}>
                   {state.candidate.room.furniture
                     .filter(
@@ -753,25 +738,13 @@ export function Editor({
         </aside>
       </main>
       <footer className={styles.footer}>
-        {state.recovered || state.imported
-          ? 'Recorded room measurements'
-          : source === 'sample'
-            ? 'Supplied sample measurements'
-            : 'Your reviewed room'}{' '}
-        · Similar furniture representations{' '}
         <span>
           {state.persistence === 'memory-only'
-            ? 'Refresh recovery is unavailable. Export to keep this layout.'
+            ? 'Recovery is unavailable. Export to keep this layout.'
             : state.persistence === 'saved'
-              ? `Recovers in this tab until ${new Date(state.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`
-              : 'Saving accepted layout in this tab…'}
+              ? `Saved in this tab until ${new Date(state.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`
+              : 'Saving layout…'}
         </span>
-        {state.recovered && (
-          <span>Recovered layout. Photos, chat and Undo were not stored.</span>
-        )}
-        {state.imported && (
-          <span>Imported measurement labels are user-supplied.</span>
-        )}
       </footer>
     </div>
   );

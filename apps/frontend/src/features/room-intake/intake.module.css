@@ -385,13 +385,6 @@
 .mobileProperties {
   display: none;
 }
-.footer {
-  font-size: 10px;
-  line-height: 1.6;
-  color: #82694d;
-  padding: 16px 34px;
-  border-top: 1px solid #dfd4c5;
-}
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -534,9 +527,6 @@
   .catalogueSection label {
     width: 100%;
   }
-  .footer {
-    padding-inline: 16px;
-  }
   .reviewTools {
     gap: 5px;
   }
@@ -563,13 +553,6 @@
   animation: arrive 0.35s cubic-bezier(0.2, 0.75, 0.2, 1);
 }
 
-.simulation {
-  background: #eee3d2;
-  color: #493325;
-  padding: 0.75rem 1rem;
-  border-radius: 0.65rem;
-  margin: 0 0 1rem;
-}
 .drafting {
   display: flex;
   align-items: center;

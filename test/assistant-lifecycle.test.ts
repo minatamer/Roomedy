@@ -118,19 +118,18 @@ it('previews one coordinated proposal separately, applies twice idempotently and
   const dispatched = s.runtime.operations.calls();
   s.session.select('desk');
   s.session.setView({ zoom: 1.2 });
+  const messagesBeforeApply = s.assistant.getSnapshot().messages.length;
   const a = s.assistant.apply();
   expect(a.ok && a.status).toBe('applied');
   expect(s.session.getSnapshot().workspace!.history.entries).toHaveLength(1);
   const applied = s.session.getSnapshot().workspace!.current,
+    appliedMessages = s.assistant.getSnapshot().messages,
     b = s.assistant.apply();
   expect(b.ok && b.status).toBe('already-applied');
   expect(s.session.getSnapshot().workspace!.current).toEqual(applied);
   expect(s.session.getSnapshot().workspace!.history.entries).toHaveLength(1);
-  expect(
-    s.assistant
-      .getSnapshot()
-      .messages.filter((m) => m.text.includes('applied. Room revision')),
-  ).toHaveLength(1);
+  expect(appliedMessages).toHaveLength(messagesBeforeApply + 1);
+  expect(s.assistant.getSnapshot().messages).toBe(appliedMessages);
   expect(s.assistant.undo().ok).toBe(true);
   expect({
     ...s.session.getSnapshot().workspace!.current,

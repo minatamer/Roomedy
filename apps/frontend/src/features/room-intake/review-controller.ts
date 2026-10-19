@@ -428,10 +428,7 @@ export class ReviewController {
     if (!this.isCurrent(token)) return false;
     const result = adoptHypothesis(this.state.draft, raw, this.id);
     this.invalidate();
-    const ok = this.commit(
-      result,
-      'Draft observations are ready for your review.',
-    );
+    const ok = this.commit(result, '');
     if (ok) this.publish({ stage: 'review', simulated });
     return ok;
   }

@@ -100,7 +100,7 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
               </h1>
               <p>
                 {state.step === 'source'
-                  ? 'Explore an authored sample or begin with the room you have.'
+                  ? 'Explore a sample or start with your room.'
                   : state.step === 'condition'
                     ? 'Choose the starting point that feels closest.'
                     : 'Photos become a rough 2D sketch for you to review before the main editor.'}
@@ -121,7 +121,7 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
                     Use a sample room <span>↗</span>
                   </span>
                   <span className="choice-copy">
-                    Get a feel for the possibilities with supplied dimensions.
+                    Start with a room you can edit right away.
                   </span>
                 </button>
                 <button
@@ -179,9 +179,9 @@ export function GuestEntry({ initial }: { initial: EntryState }) {
               </div>
             )}
 
-            <p className="entry-footnote">
-              No account. No automatic image transfer.
-            </p>
+            {state.step === 'source' && (
+              <p className="entry-footnote">No account needed.</p>
+            )}
           </div>
         </div>
       </main>

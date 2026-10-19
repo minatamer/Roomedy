@@ -34,7 +34,7 @@ export function RoomStory({ room }: { room: RoomDocument }) {
   return (
     <div className="story-card">
       <div className="story-topline">
-        <span className="story-label">Scripted example</span>
+        <span className="story-label">Sample room</span>
         <span>BEDROOM + WORKSPACE</span>
       </div>
       <RoomDiorama room={room} stage={stage} />
@@ -46,7 +46,7 @@ export function RoomStory({ room }: { room: RoomDocument }) {
       </div>
       <div className="story-bottom">
         <p aria-live="polite">{words[stage]}</p>
-        <div className="story-actions" aria-label="Scripted room example">
+        <div className="story-actions" aria-label="Sample room controls">
           <button
             onClick={() => choose('preview')}
             aria-pressed={stage === 'preview'}
