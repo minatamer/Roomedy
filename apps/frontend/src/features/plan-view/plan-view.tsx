@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { PointerEvent, KeyboardEvent } from 'react';
 import type { Feature, Furniture } from '@roomedy/contracts/room';
 import {
@@ -11,6 +11,7 @@ import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 import { comparisonFrame } from '../session/state';
 import { FINISH_PALETTE } from '../catalogue/finishes';
+import { roomSurface } from '@roomedy/contracts/surfaces';
 import { failureMessage } from '../room-editor/messages';
 import { nudgePosition, planBox, pointInPlan, snapPosition } from './adapter';
 import styles from '../room-editor/editor.module.css';
@@ -42,6 +43,44 @@ type WindowGesture = Pick<
   'pointerId' | 'clientX' | 'clientY' | 'target' | 'viewport' | 'viewBox'
 > & { edit: WindowEdit; grab: number };
 type Ghost = { id: string; x: number; z: number };
+function OrientedFootprint({
+  item,
+  selected,
+}: {
+  item: Furniture;
+  selected: boolean;
+}) {
+  const quarter = useRef(item.pose.quarterTurns);
+  const [angle, setAngle] = useState(item.pose.quarterTurns * 90);
+  useLayoutEffect(() => {
+    const difference = ((item.pose.quarterTurns - quarter.current + 6) % 4) - 2;
+    quarter.current = item.pose.quarterTurns;
+    if (difference) setAngle((previous) => previous + difference * 90);
+  }, [item.pose.quarterTurns]);
+  const w = item.dimensions.width.value,
+    d = item.dimensions.depth.value;
+  if (w === null || d === null) return null;
+  return (
+    <g className={styles.pieceFootprint} transform={`rotate(${angle})`}>
+      <rect
+        x={-w / 2}
+        y={-d / 2}
+        width={w}
+        height={d}
+        rx="35"
+        fill={FINISH_PALETTE[item.finish]}
+        stroke={selected ? '#332b25' : '#5d5147'}
+        strokeWidth={selected ? 35 : 14}
+      />
+      <path
+        d={`M-90 ${d / 2 - 90}L0 ${d / 2 - 25}L90 ${d / 2 - 90}`}
+        fill="none"
+        stroke="#fffaf2"
+        strokeWidth="25"
+      />
+    </g>
+  );
+}
 export function PlanView({
   controller,
   state,
@@ -398,7 +437,7 @@ export function PlanView({
           y={0}
           width={width}
           height={depth}
-          fill={FINISH_PALETTE[room.room.floorFinish]}
+          fill={roomSurface(room.room, 'floor').color}
           opacity=".24"
         />
         <rect
@@ -416,7 +455,7 @@ export function PlanView({
           width={width}
           height={depth}
           fill="none"
-          stroke={FINISH_PALETTE[room.room.wallFinish]}
+          stroke={roomSurface(room.room, 'walls').color}
           strokeWidth="35"
         />
         {room.room.features.map((feature) => {
@@ -621,24 +660,7 @@ export function PlanView({
                   strokeDasharray="50 35"
                 />
               ) : (
-                <g transform={`rotate(${item.pose.quarterTurns * 90})`}>
-                  <rect
-                    x={-w / 2}
-                    y={-d / 2}
-                    width={w}
-                    height={d}
-                    rx="35"
-                    fill={FINISH_PALETTE[item.finish]}
-                    stroke={selected ? '#332b25' : '#5d5147'}
-                    strokeWidth={selected ? 35 : 14}
-                  />
-                  <path
-                    d={`M-90 ${d / 2 - 90}L0 ${d / 2 - 25}L90 ${d / 2 - 90}`}
-                    fill="none"
-                    stroke="#fffaf2"
-                    strokeWidth="25"
-                  />
-                </g>
+                <OrientedFootprint item={item} selected={selected} />
               )}
               <text
                 textAnchor="middle"
@@ -661,15 +683,6 @@ export function PlanView({
                   : category[0]!.toUpperCase() + category.slice(1)}
                 {w === null || d === null ? ' ?' : ''}
               </text>
-              {selected && (
-                <circle
-                  r="75"
-                  fill="#fffaf2"
-                  stroke="#332b25"
-                  strokeWidth="15"
-                  cy="-230"
-                />
-              )}
             </g>
           );
         })}

@@ -106,6 +106,7 @@ export async function captureRoomPictures(
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = PCFShadowMap;
+    projection.prepareGlass(renderer);
     const overview = (side: number) => {
       const box = new Box3().setFromObject(projection!.root),
         center = box.getCenter(new Vector3()),

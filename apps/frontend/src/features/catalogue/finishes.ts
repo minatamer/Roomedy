@@ -1,15 +1,10 @@
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { findCatalogueEntry } from '@roomedy/spatial';
+import { FINISH_COLORS, withSurfacePalette } from '@roomedy/contracts/surfaces';
 
 type Finish = RoomDocument['room']['floorFinish'];
-export const FINISH_PALETTE: Readonly<Record<Finish, string>> = Object.freeze({
-  oak: '#bd9064',
-  ivory: '#f3eee2',
-  clay: '#c97f60',
-  sage: '#8eaa96',
-  walnut: '#735243',
-  charcoal: '#344846',
-});
+export const FINISH_PALETTE: Readonly<Record<Finish, string>> =
+  Object.freeze(FINISH_COLORS);
 export const FINISH_PRESETS = Object.freeze([
   {
     id: 'warm-simple',
@@ -44,11 +39,7 @@ export function previewFinishPreset(
   return {
     room: {
       ...room,
-      room: {
-        ...room.room,
-        floorFinish: preset.floor,
-        wallFinish: preset.wall,
-      },
+      room: withSurfacePalette(room.room, preset.floor, preset.wall),
       furniture: room.furniture.map((item) => {
         if (item.ownership === 'owned') return item;
         const entry = findCatalogueEntry(

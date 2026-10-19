@@ -8,6 +8,7 @@ import { CATALOGUE, findCatalogueEntry } from '@roomedy/spatial';
 import { MeasurementInput } from '../room-editor/measurements';
 import { draftFeature } from './draft';
 import { FurnitureSizeForm } from '../room-editor/furniture-size-form';
+import { SurfaceControls } from '../room-editor/surface-controls';
 import type { ReviewController, ReviewSnapshot } from './review-controller';
 import editorStyles from '../room-editor/editor.module.css';
 import styles from './intake.module.css';
@@ -758,6 +759,11 @@ export function ReviewPanel({
               />
             ))}
           </div>
+          <SurfaceControls
+            key={controller.session.getSnapshot().generation}
+            room={draft.room}
+            onApply={(actions, label) => controller.command(actions, label)}
+          />
           {draft.frameReviewed && (
             <fieldset>
               <legend>Make room for</legend>

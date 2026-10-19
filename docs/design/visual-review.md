@@ -1,5 +1,7 @@
 # RM-015 current frontend review
 
+**Current settled AD–AI checkpoint:** [Batch evidence](../validation/RM-015AD-AI.md) and [exact70-path plan](../commit-plans/RM-015AD-AI-CHECKPOINT.md) record all queued edits implemented before the single settled578-test/root/both-build gate. Current216-file source/BUILD_ID matches; full-scope read-only pass1 is clean. Feature-owned desktop/narrow/focus/edit observations and native GLB/OBJ/PDF export inspection are recorded; four tabs/no divider lines/automatic-tour Skip-focus are the latest visible correction. Exact local checkpoint is prepared. Actual owner visual approval remains pending; Q held, guide paused, RM-016 Planned. Earlier per-packet deferral notes below describe implementation timing and are superseded by this settled evidence; full matrices/physical/AT/GPU/live/Linux/hosted/native-software import remain unclaimed.
+
 Status: **RM-015W default-tour code locally validated; actual T/U/V/W browser and owner visual decision pending.** 19 October2026. [R ticket](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md), [exact22-path plan](../commit-plans/RM-015R.md), [current evidence](../validation/RM-015R.md). Parent P committed825b5af. Q restrained warm lighting stays Planned/held, guide goal paused and RM-016 Planned.
 
 ## Current W default-tour correction
@@ -90,3 +92,8 @@ Latest owner correction removes visible navigation/approximation/representation/
 ## RM-015AC temporary comparison pause —20 October2026
 
 Owner hides Before/Current for now without deletion. Native hidden and a scoped display rule remove its toolbar box, focus and AX presence. Existing comparison markup/handlers/controller/baseline/semantic export/import remain intact, including tests and comparison framing. A guarded effect returns any retained Before presentation to Current, without changing the room/history. The third tour target moves to visible Undo and retains proposal Apply/Cancel/Undo guidance. To restore this feature later, remove the temporary hidden attribute/rule and normalization effect and restore the tour target/copy; do not recreate the underlying capability. [Actual checks](../validation/RM-015AC.md). Actual owner visual approval pending, Q held, guide paused and RM-016 Planned.
+
+
+## RM-015AD wall/floor appearance —20 October2026
+
+Owner requests selectable colours/textures and potential photo-driven replication. Room and rough2D review share separate wall/floor forms; native palette/custom hex/picker controls apply via shared commands and Undo. Supported material estimates flow from the authored fake examples through photo review into accepted3D, with manual corrections retained. Manual custom linen walls/tile floor were inspected in real WebGL; physical geometry and full editor height remain. Real-provider schema/prompt is prepared, actual live quality is unverified. [Evidence](../validation/RM-015AD.md) separates pre-deferral68focused tests/type checks from later native work and pending final gates. That historical queue deferral ended after AI; the current settled batch receipt records passed root/build/exact-source/read-only and native export checks with a prepared local checkpoint. Actual visual approval remains pending. Q held, guide paused, RM-016 Planned; sole4320/private4321.

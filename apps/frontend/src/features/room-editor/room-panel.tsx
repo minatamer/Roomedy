@@ -11,6 +11,7 @@ import { MeasurementField } from './measurements';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import styles from './editor.module.css';
+import { SurfaceControls } from './surface-controls';
 
 export function RoomPanel({
   controller,
@@ -78,6 +79,19 @@ export function RoomPanel({
         <p className={styles.eyebrow}>Your starting point</p>
         <h2 tabIndex={-1}>Room & intention</h2>
       </div>
+      <SurfaceControls
+        key={controller.getSnapshot().generation}
+        room={room}
+        onApply={(actions, label) => {
+          const result = controller.dispatch(actions, label);
+          return result.ok
+            ? null
+            : failureMessage(
+                result,
+                controller.getSnapshot().workspace?.current,
+              );
+        }}
+      />
       <div className={styles.section}>
         <h3>Room measurements</h3>
         <div className={styles.measurementGrid}>
@@ -126,35 +140,7 @@ export function RoomPanel({
         </div>
       </fieldset>
       <div className={styles.section}>
-        <h3>Finishes</h3>
-        <div className={styles.finishFields}>
-          {(['floorFinish', 'wallFinish'] as const).map((field) => (
-            <label key={field}>
-              {field === 'floorFinish' ? 'Floor' : 'Walls'}
-              <select
-                value={room.room[field]}
-                onChange={(e) =>
-                  run(
-                    [
-                      {
-                        type: 'room-finish',
-                        floorFinish: room.room.floorFinish,
-                        wallFinish: room.room.wallFinish,
-                        [field]: e.target
-                          .value as RoomDocument['room']['floorFinish'],
-                      },
-                    ],
-                    'Change room finish',
-                  )
-                }
-              >
-                {Object.keys(FINISH_PALETTE).map((finish) => (
-                  <option key={finish}>{finish}</option>
-                ))}
-              </select>
-            </label>
-          ))}
-        </div>
+        <h3>Room palettes</h3>
         <p className={styles.hint}>
           Preview a palette for the room and compatible proposed furniture.
           Owned finishes stay as recorded.

@@ -1,4 +1,5 @@
 import type { RoomDocument, CheckFacts } from '@roomedy/contracts/room';
+import { roomSurface } from '@roomedy/contracts/surfaces';
 import type { SearchFacts, SearchGoal } from '@roomedy/contracts/search';
 import type { Region } from '@roomedy/contracts/issues';
 import { footprint, intersection, area, localFront } from '../coordinates.js';
@@ -217,7 +218,11 @@ export function searchFacts(
     if (!after.furniture.some((p) => p.id === item.id)) changed.push(item.id);
   if (
     before.room.floorFinish !== after.room.floorFinish ||
-    before.room.wallFinish !== after.room.wallFinish
+    before.room.wallFinish !== after.room.wallFinish ||
+    JSON.stringify(roomSurface(before.room, 'floor')) !==
+      JSON.stringify(roomSurface(after.room, 'floor')) ||
+    JSON.stringify(roomSurface(before.room, 'walls')) !==
+      JSON.stringify(roomSurface(after.room, 'walls'))
   )
     changed.push(before.roomId);
   return {

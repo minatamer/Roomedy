@@ -112,9 +112,11 @@ function scrollToTarget(target: HTMLElement) {
 export function AssistantTour({
   controller,
   autoStart,
+  hideReplay = false,
 }: {
   controller: SessionController;
   autoStart: boolean;
+  hideReplay?: boolean;
 }) {
   const [mounted, setMounted] = useState(false),
     [open, setOpen] = useState(autoStart),
@@ -200,7 +202,9 @@ export function AssistantTour({
       if (root) root.inert = wasInert;
       const target = opener.current?.isConnected
         ? opener.current
-        : replayButton;
+        : replayButton?.hidden
+          ? root?.querySelector<HTMLElement>('h1[tabindex]')
+          : replayButton;
       target?.focus({ preventScroll: true });
     };
   }, [mounted, open, close]);
@@ -440,6 +444,7 @@ export function AssistantTour({
       <button
         type="button"
         ref={replay}
+        hidden={hideReplay}
         data-tour-replay
         onClick={() => {
           opener.current =

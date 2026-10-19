@@ -50,7 +50,6 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  border-bottom: 1px solid #ddd7cf;
   background: transparent;
   position: relative;
   z-index: 20;
@@ -83,12 +82,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  border-bottom: 1px solid #e0dbd3;
 }
 .toolRail button {
   background: transparent;
   border-color: transparent;
   font-size: 11px;
+}
+.toolRail button[hidden] {
+  display: none;
 }
 .toolRail button[aria-pressed='true'] {
   background: #e7ddcc;
@@ -151,6 +152,16 @@
 .panButtons button {
   padding-inline: 8px;
 }
+.rotationButtons {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 5px;
+}
+.rotationButtons button {
+  flex: 1;
+  min-width: 76px;
+  min-height: 44px;
+}
 .snap {
   display: flex;
   align-items: center;
@@ -186,6 +197,9 @@
 }
 .piece:active {
   cursor: grabbing;
+}
+.pieceFootprint {
+  transition: transform 180ms cubic-bezier(0.2, 0.75, 0.2, 1);
 }
 .piece:focus-visible,
 .feature:focus-visible {
@@ -1019,4 +1033,68 @@
 }
 .sizeFields .twoFields {
   align-items: start;
+}
+.surfaceControls {
+  display: grid;
+  gap: 22px;
+}
+.surfaceForm {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.surfaceForm h3 {
+  margin: 0;
+}
+.surfaceError {
+  color: #8a3f2d;
+  font-size: 12px;
+  margin: 0;
+}
+.surfaceForm .twoFields {
+  align-items: start;
+}
+.colourInput {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 6px;
+}
+.surfaceForm .twoFields > div > label {
+  margin: 0;
+}
+.colourInput input[type='text'] {
+  font-size: 11px;
+  padding-inline: 6px;
+}
+.surfaceForm input[type='color'] {
+  padding: 4px;
+  cursor: pointer;
+}
+.surfacePreview {
+  height: 58px;
+  border: 1px solid #c9b69b;
+  border-radius: 10px;
+}
+.surfacePreview[data-texture='planks'],
+.surfacePreview[data-texture='wood'] {
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 23px, #4a2c201f 23px 24px),
+    repeating-linear-gradient(0deg, transparent 0 4px, #ffffff12 4px 5px);
+}
+.surfacePreview[data-texture='tile'] {
+  background-image:
+    linear-gradient(#79634e44 1px, transparent 1px),
+    linear-gradient(90deg, #79634e44 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.surfacePreview[data-texture='carpet'],
+.surfacePreview[data-texture='linen'] {
+  background-image:
+    repeating-linear-gradient(0deg, #ffffff1a 0 1px, #47382815 1px 2px),
+    repeating-linear-gradient(90deg, transparent 0 2px, #ffffff20 2px 3px);
+}
+.surfacePreview[data-texture='plaster'],
+.surfacePreview[data-texture='concrete'] {
+  background-image: radial-gradient(#ffffff40 1px, transparent 1px);
+  background-size: 3px 3px;
 }

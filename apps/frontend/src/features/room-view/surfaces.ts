@@ -4,6 +4,7 @@ import {
   LinearMipmapLinearFilter,
   Mesh,
   MeshStandardMaterial,
+  Matrix3,
   RepeatWrapping,
   RGBAFormat,
   SRGBColorSpace,
@@ -11,8 +12,10 @@ import {
 import type { Color, Material, Object3D } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import type { BoxPart, PhysicalSize } from './representations/definitions';
+import type { SurfaceTexture } from '@roomedy/contracts/surfaces';
 
-type Surface = 'floor' | 'wood' | 'fabric' | 'plaster';
+type Surface =
+  'floor' | 'wood' | 'fabric' | 'plaster' | 'smooth' | 'tile' | 'concrete';
 
 /** Mutates only a canvas-owned display color; true keeps demand frames awake. */
 export function advanceSurfaceColor(
@@ -37,7 +40,8 @@ const noise = (x: number, y: number) => {
   return ((Math.imul(hash ^ (hash >>> 13), 1274126177) >>> 0) % 1024) / 1023;
 };
 function texture(kind: Surface) {
-  const edge = kind === 'floor' ? 512 : kind === 'wood' ? 256 : 128;
+  const edge =
+    kind === 'floor' ? 512 : kind === 'wood' || kind === 'tile' ? 256 : 128;
   const data = new Uint8Array(edge * edge * 4);
   for (let y = 0; y < edge; y++)
     for (let x = 0; x < edge; x++) {
@@ -59,6 +63,10 @@ function texture(kind: Surface) {
         value += (noise(board, 0) - 0.5) * 9;
         if (x % 128 === 0 || joint === 0) value -= 28;
       }
+      if (kind === 'smooth') value = 255;
+      if (kind === 'concrete')
+        value = 235 + n * 12 + Math.sin(u * 3) * Math.sin(v * 2) * 5;
+      if (kind === 'tile') value = x % 64 < 2 || y % 64 < 2 ? 193 : 249 + n * 5;
       const at = (y * edge + x) * 4;
       data[at] =
         data[at + 1] =
@@ -87,6 +95,9 @@ export function createSurfaces() {
     wood: texture('wood'),
     fabric: texture('fabric'),
     plaster: texture('plaster'),
+    smooth: texture('smooth'),
+    tile: texture('tile'),
+    concrete: texture('concrete'),
   };
   const hard = new RoundedBoxGeometry(1, 1, 1, 1, 0.012);
   const soft = new RoundedBoxGeometry(1, 1, 1, 1, 0.1);
@@ -102,6 +113,68 @@ export function createSurfaces() {
   };
 }
 export type Surfaces = ReturnType<typeof createSurfaces>;
+export function roomSurfaceMap(surfaces: Surfaces, texture: SurfaceTexture) {
+  return texture === 'planks'
+    ? surfaces.floor
+    : texture === 'carpet' || texture === 'linen'
+      ? surfaces.fabric
+      : surfaces[texture];
+}
+
+/** Two borrowed samplers, one latest pending target; no textures or room state are created per frame. */
+export function createSurfaceBlend(material: MeshStandardMaterial) {
+  const previous = { value: material.map },
+    progress = { value: 1 },
+    previousTransform = { value: new Matrix3() };
+  let pending: DataTexture | null = null;
+  material.onBeforeCompile = (shader) => {
+    shader.uniforms.roomedyPreviousMap = previous;
+    shader.uniforms.roomedySurfaceMix = progress;
+    shader.uniforms.roomedyPreviousTransform = previousTransform;
+    shader.vertexShader = 'varying vec2 roomedyBaseUv;\n' + shader.vertexShader;
+    shader.vertexShader = shader.vertexShader.replace(
+      '#include <uv_vertex>',
+      '#include <uv_vertex>\n#ifdef USE_MAP\nroomedyBaseUv = MAP_UV;\n#endif',
+    );
+    shader.fragmentShader =
+      'uniform sampler2D roomedyPreviousMap;\nuniform float roomedySurfaceMix;\nuniform mat3 roomedyPreviousTransform;\nvarying vec2 roomedyBaseUv;\n' +
+      shader.fragmentShader;
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <map_fragment>',
+      `
+      #ifdef USE_MAP
+        vec4 surfaceColor = mix(texture2D(roomedyPreviousMap, (roomedyPreviousTransform * vec3(roomedyBaseUv, 1.0)).xy), texture2D(map, vMapUv), roomedySurfaceMix);
+        diffuseColor *= surfaceColor;
+      #endif
+    `,
+    );
+  };
+  material.customProgramCacheKey = () => 'roomedy-surface-blend-v2';
+  material.needsUpdate = true;
+  return {
+    choose(map: DataTexture) {
+      pending = map === material.map ? null : map;
+    },
+    advance(delta: number) {
+      if (progress.value >= 1 && pending) {
+        previous.value = material.map;
+        if (material.map) {
+          material.map.updateMatrix();
+          previousTransform.value.copy(material.map.matrix);
+        }
+        material.map = material.bumpMap = pending;
+        pending = null;
+        material.needsUpdate = true;
+        progress.value = 0;
+      }
+      progress.value = Math.min(
+        1,
+        progress.value + Math.max(0, Math.min(delta, 0.05)) / 0.24,
+      );
+      return progress.value < 1 || pending !== null;
+    },
+  };
+}
 
 export function setSurfaceMap(
   material: MeshStandardMaterial,

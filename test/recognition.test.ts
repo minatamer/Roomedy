@@ -411,10 +411,18 @@ it('groups the provided bedroom crops into one bed and cabinet, with reviewable 
     ),
   ).toBe(true);
   expect(result.draft.frameReviewed).toBe(false);
+  expect(result.draft.room.room.surfaces?.walls?.color).toEqual({
+    value: '#e6dfd2',
+    status: 'estimated',
+    sourceId: 'room_photo',
+  });
+  expect(result.draft.room.room.surfaces?.floor?.texture.value).toBe('planks');
   const details = bedroomExample([
     { id: 'detail_photo', purpose: 'furniture' },
   ]);
   expect(details.shape).toBe('unknown');
   expect(details.room.width.value).toBeNull();
   expect(details.frameEvidence.status).toBe('unknown');
+  expect(details.surfaces?.walls.color.status).toBe('unknown');
+  expect(details.surfaces?.floor.texture.status).toBe('unknown');
 });

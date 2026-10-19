@@ -1,5 +1,8 @@
 import { POLICY } from '@roomedy/contracts/policy';
 import type { Project } from '@roomedy/contracts/project';
+import type { RoomDocument } from '@roomedy/contracts/room';
+import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
+import type { SurfaceTarget } from '@roomedy/contracts/surfaces';
 import { footprint } from '@roomedy/spatial';
 import { FINISH_PALETTE } from '../catalogue/finishes';
 import { featureBox, displayRoom } from '../room-view/adapter';
@@ -118,13 +121,16 @@ function finishName(value: string) {
 }
 function swatch(
   c: Context,
-  finish: keyof typeof FINISH_PALETTE,
+  room: RoomDocument,
+  target: SurfaceTarget,
   x: number,
   y: number,
   label: string,
   width = 140,
 ) {
-  c.fillStyle = FINISH_PALETTE[finish];
+  const finish = roomSurface(room.room, target);
+  const evidence = room.room.surfaces?.[target];
+  c.fillStyle = finish.color;
   c.beginPath();
   c.roundRect(x, y, width, 42, 8);
   c.fill();
@@ -132,7 +138,13 @@ function swatch(
   c.lineWidth = 1;
   c.stroke();
   text(c, label, x, y + 62, 10, palette.muted);
-  text(c, finishName(finish), x, y + 80, 13);
+  text(
+    c,
+    `${evidence?.texture.status === 'estimated' ? '~' : ''}${SURFACE_TEXTURES[finish.texture]} · ${evidence?.color.status === 'estimated' ? '~' : ''}${finish.color}`,
+    x,
+    y + 80,
+    11,
+  );
 }
 function plan(c: Context, project: Project) {
   const room = project.current,
@@ -159,9 +171,9 @@ function plan(c: Context, project: Project) {
   const scale = Math.min(500 / (maxX - minX), 475 / (maxZ - minZ)),
     ox = 85 + (500 - (maxX - minX) * scale) / 2 - minX * scale,
     oy = 205 + (475 - (maxZ - minZ) * scale) / 2 - minZ * scale;
-  c.fillStyle = '#e8dbc6';
+  c.fillStyle = roomSurface(room.room, 'floor').color;
   c.fillRect(ox, oy, width * scale, depth * scale);
-  c.strokeStyle = '#9a8063';
+  c.strokeStyle = roomSurface(room.room, 'walls').color;
   c.lineWidth = 3;
   c.strokeRect(ox, oy, width * scale, depth * scale);
   text(
@@ -417,8 +429,8 @@ export async function createPortfolioPages(
             18,
             3,
           );
-        swatch(c, facts.room.room.floorFinish, 660, 590, 'FLOOR', 160);
-        swatch(c, facts.room.room.wallFinish, 852, 590, 'WALLS', 160);
+        swatch(c, facts.room, 'floor', 660, 590, 'FLOOR', 160);
+        swatch(c, facts.room, 'walls', 852, 590, 'WALLS', 160);
       } else {
         const pieces = facts.inventory[page - 3]!;
         text(c, 'FINISHES & FURNITURE', 52, 113, 10, palette.walnut);
@@ -429,8 +441,8 @@ export async function createPortfolioPages(
           168,
           42,
         );
-        swatch(c, facts.room.room.floorFinish, 52, 200, 'FLOOR', 210);
-        swatch(c, facts.room.room.wallFinish, 300, 200, 'WALLS', 210);
+        swatch(c, facts.room, 'floor', 52, 200, 'FLOOR', 210);
+        swatch(c, facts.room, 'walls', 300, 200, 'WALLS', 210);
         text(c, facts.style, 588, 231, 26, palette.walnut, 'Georgia', 'italic');
         wrap(
           c,

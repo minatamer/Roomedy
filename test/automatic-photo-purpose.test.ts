@@ -112,9 +112,9 @@ it.each(['furniture', 'unknown'] as const)(
     expect(d.room.furniture).toHaveLength(2);
     expect(d.shape).toBe('unknown');
     expect(
-      Object.values(d.room.room)
-        .filter((v) => v && typeof v === 'object' && 'status' in v)
-        .every((v) => v.status === 'unknown'),
+      (['width', 'depth', 'height'] as const).every(
+        (axis) => d.room.room[axis].status === 'unknown',
+      ),
     ).toBe(true);
   },
 );

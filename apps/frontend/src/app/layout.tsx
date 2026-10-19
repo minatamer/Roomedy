@@ -8,22 +8,34 @@ export const metadata: Metadata = {
     'A fresh perspective on your bedroom or workspace. Review a rough 2D sketch, then explore arrangements in 2D and 3D.',
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
-      { url: '/brand/roomedy-icon-96.png', sizes: '96x96', type: 'image/png' },
-      { url: '/brand/roomedy-icon.svg', sizes: 'any', type: 'image/svg+xml' },
       {
-        url: '/brand/roomedy-icon-192.png',
+        url: '/favicon.ico?v=room-mark-2',
+        sizes: '16x16 32x32 48x48',
+        type: 'image/x-icon',
+      },
+      {
+        url: '/brand/roomedy-icon-96.png?v=room-mark-2',
+        sizes: '96x96',
+        type: 'image/png',
+      },
+      {
+        url: '/brand/roomedy-icon.svg?v=room-mark-2',
+        sizes: 'any',
+        type: 'image/svg+xml',
+      },
+      {
+        url: '/brand/roomedy-icon-192.png?v=room-mark-2',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        url: '/brand/roomedy-icon-512.png',
+        url: '/brand/roomedy-icon-512.png?v=room-mark-2',
         sizes: '512x512',
         type: 'image/png',
       },
     ],
     apple: {
-      url: '/brand/roomedy-apple-180.png',
+      url: '/brand/roomedy-apple-180.png?v=room-mark-2',
       sizes: '180x180',
       type: 'image/png',
     },

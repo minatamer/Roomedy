@@ -1,5 +1,7 @@
 # Roomedy visual direction
 
+**Current icon refinement — RM-015AF,20 October2026:** Latest owner supplies a browser-tab crop and selects a larger room shape without the icon dot, on Roomedy's beige. Preserve the existing mark paths/cocoa#43352a; stroked width now occupies about90% of the square. Solid existing soft beige#e7ddcc replaces near-white#f4efe5 for the favicon family only. The96px SVG generates all PNG/Apple/ICO variants; no transparent/white background. Site wordmark remains governed by its earlier explicit selection. [Actual evidence](../validation/RM-015AF.md); owner visual acceptance and Google indexing remain separate.
+
 RM-004 source baseline, 17 October 2026. Actual screenshots, browser behavior and viewport evidence are recorded separately in RM-004 validation; this document is not a visual pass.
 
 The platform uses warm oat `#f4efe5`, paper `#fffaf2`, walnut `#78553d`, cocoa ink `#43352a`, sand and an earthy clay accent `#a96748`. This follows the owner’s latest beige/brown/earth/wood website direction, superseding the earlier teal platform direction. Future studio tools may use black/white neutrals. Room finish colours remain a separate catalogue concern. Typography uses the installed Arial/Helvetica/system sans stack and Georgia/Times italic accents: no font download, loading swap or external runtime asset dependency. The simple room-shaped R mark and flat tactile room SVG are repository-authored code-native artwork. They do not import a sibling logo or claim an exact photographed reconstruction.

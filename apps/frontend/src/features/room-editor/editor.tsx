@@ -33,6 +33,7 @@ import { focusProperties } from './focus';
 import { checkRoom } from '@roomedy/spatial';
 import { ProjectControls } from './project-controls';
 import styles from './editor.module.css';
+import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
 const Cutaway = lazy(() => import('../room-view/cutaway'));
 class CutawayBoundary extends Component<
@@ -157,6 +158,32 @@ export function Editor({
         : 'Current is unchanged. Apply or Cancel beside the room before editing these preview values.';
   const item = shownRoom.furniture.find((f) => f.id === view.selectedId),
     feature = shownRoom.room.features.find((f) => f.id === view.selectedId);
+  const rotatePlanSelection = (direction: -1 | 1) => {
+    const current = controller.getSnapshot();
+    if (
+      !controller.canEdit() ||
+      current.candidate ||
+      current.presentation.roomView !== 'plan'
+    )
+      return;
+    const selected = current.workspace?.current.furniture.find(
+      (piece) => piece.id === current.presentation.selectedId,
+    );
+    if (!selected) return;
+    const result = controller.dispatch(
+      [
+        {
+          type: 'rotate',
+          id: selected.id,
+          quarterTurns: ((selected.pose.quarterTurns + direction + 4) % 4) as
+            0 | 1 | 2 | 3,
+        },
+      ],
+      'Rotate piece',
+    );
+    if (!result.ok)
+      controller.notify(failureMessage(result, current.workspace?.current));
+  };
   const hard = shownChecks.issues.filter((i) => i.severity === 'hard').length;
   const open = (panel: Panel) => {
     setReplacementId(null);
@@ -223,6 +250,7 @@ export function Editor({
           {panels.map((panel) => (
             <button
               key={panel.id}
+              hidden={panel.id === 'checks'}
               aria-pressed={view.panel === panel.id}
               onClick={() => open(panel.id)}
             >
@@ -233,6 +261,7 @@ export function Editor({
             key={workspace.workspaceId}
             controller={controller}
             autoStart={automaticallyOfferTour(state)}
+            hideReplay
           />
         </nav>
         <section
@@ -388,6 +417,29 @@ export function Editor({
                   >
                     →
                   </button>
+                </div>
+                <div
+                  className={styles.rotationButtons}
+                  role="group"
+                  aria-label="Rotate selected furniture"
+                >
+                  {([-1, 1] as const).map((direction) => (
+                    <button
+                      key={direction}
+                      aria-label={`Rotate selected piece 90 degrees ${direction === -1 ? 'counterclockwise' : 'clockwise'}`}
+                      title={
+                        !item
+                          ? 'Select a piece to rotate'
+                          : item.locks.rotation
+                            ? 'Unlock rotation in Advanced settings'
+                            : `Rotate 90° ${direction === -1 ? 'counterclockwise' : 'clockwise'}`
+                      }
+                      disabled={readOnly || !item || item.locks.rotation}
+                      onClick={() => rotatePlanSelection(direction)}
+                    >
+                      {direction === -1 ? '↶' : '↷'} 90°
+                    </button>
+                  ))}
                 </div>
                 <label className={styles.snap}>
                   <input
@@ -747,8 +799,19 @@ export function Editor({
                       {shownRoom.room.height.value ?? '?'} mm
                     </p>
                     <p>
-                      Floor: {shownRoom.room.floorFinish}. Walls:{' '}
-                      {shownRoom.room.wallFinish}.
+                      Floor:{' '}
+                      {
+                        SURFACE_TEXTURES[
+                          roomSurface(shownRoom.room, 'floor').texture
+                        ]
+                      }{' '}
+                      · {roomSurface(shownRoom.room, 'floor').color}. Walls:{' '}
+                      {
+                        SURFACE_TEXTURES[
+                          roomSurface(shownRoom.room, 'walls').texture
+                        ]
+                      }{' '}
+                      · {roomSurface(shownRoom.room, 'walls').color}.
                     </p>
                     <p>{inspectionReason}</p>
                     {before && (

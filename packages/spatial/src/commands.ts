@@ -6,6 +6,11 @@ import type { VisitorAction } from '@roomedy/contracts/commands';
 import { roomDocumentSchema, furnitureSchema } from '@roomedy/contracts/room';
 import type { RoomDocument, CheckFacts } from '@roomedy/contracts/room';
 import type { Measurement } from '@roomedy/contracts/primitives';
+import {
+  emptySurfaceAppearance,
+  roomSurface,
+  withSurfacePalette,
+} from '@roomedy/contracts/surfaces';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { SpatialIssue } from '@roomedy/contracts/issues';
 import { checkRoom } from './checks.js';
@@ -145,6 +150,7 @@ const estimated = (value: number, sourceId: string): Measurement => ({
 const nonspatial = new Set([
   'finish',
   'room-finish',
+  'set-room-surface',
   'set-locks',
   'set-preference',
   'set-ownership',
@@ -229,8 +235,36 @@ export function evaluateBatch(
       continue;
     }
     if (action.type === 'room-finish') {
-      room.room.floorFinish = action.floorFinish;
-      room.room.wallFinish = action.wallFinish;
+      room.room = withSurfacePalette(
+        room.room,
+        action.floorFinish,
+        action.wallFinish,
+      );
+      affected.add(room.roomId);
+      continue;
+    }
+    if (action.type === 'set-room-surface') {
+      const previous =
+        room.room.surfaces?.[action.surface] ?? emptySurfaceAppearance();
+      const visible = roomSurface(room.room, action.surface);
+      const next = { ...previous };
+      if (
+        action.color !== undefined &&
+        action.color.toLowerCase() !== visible.color.toLowerCase()
+      )
+        next.color = {
+          value: action.color.toLowerCase(),
+          status: 'planned',
+          sourceId: 'visitor-plan',
+        };
+      if (action.texture !== undefined && action.texture !== visible.texture)
+        next.texture = {
+          value: action.texture,
+          status: 'planned',
+          sourceId: 'visitor-plan',
+        };
+      if (next.color !== previous.color || next.texture !== previous.texture)
+        room.room.surfaces = { ...room.room.surfaces, [action.surface]: next };
       affected.add(room.roomId);
       continue;
     }

@@ -3,6 +3,7 @@ import {
   DataTexture,
   Matrix3,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
   Vector3,
 } from 'three';
@@ -88,12 +89,14 @@ export async function objFiles(
   root.traverse((node) => {
     if (node instanceof Mesh) meshes.push(node);
   });
-  const materials = new Map<MeshStandardMaterial, string>();
+  const materials = new Map<MeshStandardMaterial | MeshBasicMaterial, string>();
   for (const mesh of meshes)
     for (const m of Array.isArray(mesh.material)
       ? mesh.material
       : [mesh.material]) {
-      if (!(m instanceof MeshStandardMaterial))
+      if (!(
+        m instanceof MeshStandardMaterial || m instanceof MeshBasicMaterial
+      ))
         throw new DesignExportError('failed');
       if (!materials.has(m)) materials.set(m, `finish_${materials.size + 1}`);
     }
@@ -137,7 +140,9 @@ export async function objFiles(
         mi = Array.isArray(mesh.material) ? (group?.materialIndex ?? 0) : 0;
       if (mi !== last) {
         const m = ms[mi];
-        if (!(m instanceof MeshStandardMaterial))
+        if (!(
+          m instanceof MeshStandardMaterial || m instanceof MeshBasicMaterial
+        ))
           throw new DesignExportError('failed');
         add('usemtl ' + materials.get(m));
         last = mi;
@@ -213,6 +218,7 @@ export async function exportObj(
   try {
     check();
     projection = buildDesignScene(room, assets.ready);
+    projection.prepareGlass();
     const files = await objFiles(projection.root, signal, check);
     const { zipSync } = await import('three/addons/libs/fflate.module.js');
     check();

@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Current settled queued edits:** [RM-015AD–AI batch evidence](validation/RM-015AD-AI.md) and [exact70-path checkpoint plan](commit-plans/RM-015AD-AI-CHECKPOINT.md) follow committed AC42b400a. All queued finishes/photo estimates, shared glass, browser icon,2D rotation/direction, horizontal interior dragging and tool-row cleanup are implemented. Native desktop/narrow/focus/edit/export observations are recorded. The queue finished before one settled578-test/root/both-build gate; current216-file source/BUILD_ID matches and full-scope read-only pass1 is clean. GLB/OBJ downloads and all4PDF pages inspected. Exact local checkpoint prepared; actual owner visual approval remains pending, Q held, guide paused, RM-016 Planned. Owner requests no questions while sleeping. Individual receipts preserve historical test timing and explicit unperformed external/device/full-matrix limits.
+
 **Current temporary comparison pause:** [RM-015AC](tickets/RM-015AC-temporarily-hide-room-comparison.md), [14-path plan](commit-plans/RM-015AC.md) and [evidence](validation/RM-015AC.md) follow committed AB6db513e. Before/Current controls are hidden for now; full comparison/baseline/import/export implementation remains. Editor stays Current; the existing last tour step points to Undo. Actual visual approval pending, Q held, guide paused, RM-016 Planned.
 
 
@@ -12,7 +14,7 @@
 
 **Brand:** Roomedy · **Selected domain:** tryroomedy.com  
 **Prepared:** 17 October 2026 · Africa/Cairo  
-**Stage:** Z checkpoint59dae0a; AA source-backed furniture sizing locally verified555tests/root/both builds; read-only pass1 clean, checkpoint prepared; actual owner visual approval pending, Q held and RM-016 Planned
+**Stage:** AD–AI locally validated578tests/root/both builds/current source; clean read-only pass1 and exact local checkpoint prepared; actual owner visual approval pending, Q held, guide paused and RM-016 Planned
 **Visual companion:** [Roomedy overview](ROOMEDY_OVERVIEW.html)  
 **Documentation map:** [Start here](README.md)
 
@@ -1331,8 +1333,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Continue actual owner visual feedback on sole4320 after authorized exact14-path RM-015AC local checkpoint. Before/Current is hidden temporarily with full implementation retained and tour pointing to Undo. Q held, guide paused, RM-016 Planned; no actual visual approval or external/delegation authority inferred.
-Active ticket: RM-015AC
+Next action: Actual owner visual review of the completed AD–AI refinements remains pending. Settled578-test/root/both-build/current-source gates and read-only pass1 passed; exact70-path local checkpoint prepared under existing authority. No question while owner sleeps. Q lighting held, guide goal paused, RM-016 Planned; do not infer result approval or resume later phases. No paid/live/new ports/delegation/push/deploy.
+Active ticket: RM-015AI
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1357,7 +1359,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T21:24:23+00:00",
+  "updated_at": "2026-10-19T23:23:00+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1546,8 +1548,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AC",
-  "next_action": "Continue actual owner visual feedback on sole4320 after authorized exact14-path RM-015AC local checkpoint. Before/Current is hidden temporarily with full implementation retained and tour pointing to Undo. Q held, guide paused, RM-016 Planned; no actual visual approval or external/delegation authority inferred.",
+  "active_ticket": "RM-015AI",
+  "next_action": "Actual owner visual review of the completed AD–AI refinements remains pending. Settled578-test/root/both-build/current-source gates and read-only pass1 passed; exact70-path local checkpoint prepared under existing authority. No question while owner sleeps. Q lighting held, guide goal paused, RM-016 Planned; do not infer result approval or resume later phases. No paid/live/new ports/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -1991,14 +1993,21 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015AB.md:16 paths allocated before source edits; AA a8f1c02 committed. Latest owner removes bottom copy and extends canvas/rail.",
         "docs/validation/RM-015AB.md:16paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816197bytes/BUILD_ID2d590b7ce6e856fa1bcb0a0aa976bd820d602b432567910cef3bd166d8d9e996.26native responsive states, actual2D/3D full height, camera/move/Undo/Before/Checks/rejection;1280frame+rail gain72.5px to footer. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending.",
         "docs/commit-plans/RM-015AC.md:14paths allocated before source edits; AB6db513e committed. Owner hides Before/Current temporarily, retains implementation.",
-        "docs/validation/RM-015AC.md:14paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816467bytes/BUILD_ID5abdfe2d55dc3851d721a033511e7d88fddce7da008415094438c70af8c9dd7d.13native sizes hide comparison with original buttons retained; full3step tour targets Undo, real2D/3D editing/Undo, full frame preserved. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint authorized, actual visual/external evidence pending."
+        "docs/validation/RM-015AC.md:14paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816467bytes/BUILD_ID5abdfe2d55dc3851d721a033511e7d88fddce7da008415094438c70af8c9dd7d.13native sizes hide comparison with original buttons retained; full3step tour targets Undo, real2D/3D editing/Undo, full frame preserved. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint authorized, actual visual/external evidence pending.",
+        "docs/commit-plans/RM-015AD.md:35paths allocated before source edits; AC42b400a committed; direct owner wall/floor colour/texture/photo-estimate selection.",
+        "docs/validation/RM-015AD.md; docs/tickets/RM-015AD-pick-and-infer-wall-and-floor-surfaces.md: exact39-path wall/floor appearance implementation, shared Room/rough2D controls, visitor-only command/Undo and source-bound photo hypotheses; actual1280/390 hot-reloaded fake photo-review-to-3D/custom-hex/error/Undo observations,7 owned maps/finite texture blend. Earlier68focused tests/type checks predate the owner test deferral; no final root/current-build/read-only/checkpoint pass claimed. Latest direct owner says skip routine tests until queued tasks finish, fix observed errors and keep going. Changes remain unstaged/uncommitted; actual visual approval pending.",
+        "docs/validation/RM-015AE.md; docs/commit-plans/RM-015AE.md:16-path shared landing/editor/export glass correction, original physical/daylight parameters and one finite prepared reflection per scene. Actual editor Overview/Doorway/click-to-select and landing render inspected on4320, captured browser errors empty. AD/AE47-path union remains unstaged, whitespace/allocation housekeeping clean. No routine tests/type/root/build/final read-only/checkpoint pass; latest owner test deferral remains, actual visual approval pending.",
+        "docs/validation/RM-015AF.md; docs/commit-plans/RM-015AF.md:16-path larger dot-free browser icon on existing soft beige#e7ddcc, one SVG regenerates96/192/512/Apple180 PNG and16/32/48 ICO. Actual source/served96px art and all six revised head metadata links inspected on4320. AD/AE/AF58-path union remains unstaged, allocation/whitespace housekeeping clean; no routine suite/root/build/final read-only/checkpoint pass or owner/indexing acceptance claimed.",
+        "docs/validation/RM-015AG.md; docs/commit-plans/RM-015AG.md:12-path removal of obstructing plan selection dot, shared-command clockwise/counterclockwise90deg controls and local shortest-angle CSS footprint/arrow motion. Native wardrobe180deg arrow visibility/90deg counterturn/Undo-to180deg observed; desktop frame retained480.578125px,390px controls76x44 and no horizontal overflow. Captured browser errors empty. AD–AG61-path union unstaged with allocation/whitespace housekeeping clean; routine final tests/root/build/read-only/checkpoint and actual owner acceptance remain pending.",
+        "docs/validation/RM-015AH.md; docs/commit-plans/RM-015AH.md:10-path correction after owner clarifies horizontal dragging. Native Corner100px right drag reproduced old room-left/yaw-0.4004rad, corrected room-right/yaw+0.4002rad; equal left drag returns direction with fixed3750/1600/450mm eye, captured errors empty. One horizontal sign change in existing shared interior owner, same smooth motion/capture/edit guards; no camera/room authority expansion. AD–AH64-path union unstaged with allocation/whitespace housekeeping clean; routine final tests/root/build/read-only/checkpoint and actual owner approval remain pending.",
+        "docs/validation/RM-015AD-AI.md — settled AD–AI queue completed before578tests/45files +7boundaries/root/both builds; current216-file source/BUILD_ID0b9b5d4f8871d848efa21e195d3cf9afd171a48b8919e8ff94260aec02a2a88d; clean full-scope read-only pass1; actual native GLB/OBJ downloads and4PDF pages inspected; exact70-path authorized local checkpoint prepared. Actual owner visual acceptance and explicit external/device/full-matrix limits remain pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "before/current feels like a dead feature, HIDE IT only for now, dont delete it yet.",
-        "source": "human:current-chat/2026-10-20/hide-comparison-temporarily",
-        "scope": "RM-015AC temporary presentation correction only; no result approval",
-        "recorded_at": "2026-10-19T21:16:45+00:00"
+        "quote": "dont add quick tour in this like navbar sort of this and remove the horizontal bar thats above and below it\n\nand hide the checks tab for now i dont really like it\n\nim sleeping so dont ask me questions, take recommneded decisisons if needed",
+        "source": "human:current-chat/2026-10-20/tool-row-cleanup-and-sleeping",
+        "scope": "RM-015AI navigation cleanup and routine recommended decisions without questions. All selected queued UI edits completed before settled verification, satisfying earlier skip-tests-until-finished timing. Existing exact local checkpoint authority remains; no actual visual result approval or external authority.",
+        "recorded_at": "2026-10-19T23:01:58+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2171,6 +2180,60 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/hide-comparison-temporarily",
             "scope": "RM-015AC temporary presentation correction only; no result approval",
             "recorded_at": "2026-10-19T21:16:45+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "the wall colors and texture should be allowed to be picked, as also the ai in the picture analysis may be able to capture that stuff and replicate it in the 3d model. same as floor",
+            "source": "human:current-chat/2026-10-20/wall-floor-appearance",
+            "scope": "RM-015AD wall/floor appearance and photo hypotheses implementation only; no visual result approval",
+            "recorded_at": "2026-10-19T21:35:15+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "the window texture isnt the same as the better one in the landing, fix that to match",
+            "source": "human:current-chat/2026-10-20/match-editor-window-glass",
+            "scope": "RM-015AE glass consistency correction only; current routine-test deferral persists, no visual result approval.",
+            "recorded_at": "2026-10-19T22:22:53+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "the logo is not correct at all btw, the shape itself should be bigger and remove the dot, and background should be beige our beige that we use",
+            "source": "human:current-chat/2026-10-20/browser-icon-crop",
+            "scope": "RM-015AF browser-icon correction selected by the attached tab crop; no actual result approval or additional external authority, current test deferral persists.",
+            "recorded_at": "2026-10-19T22:30:06+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "the dot is hiding the arrow which is important for us, also make sure that 2D has rotation controls too",
+            "source": "human:current-chat/2026-10-20/plan-arrow-and-rotation",
+            "scope": "RM-015AG2D arrow/rotation correction only; current test deferral persists, no actual result approval.",
+            "recorded_at": "2026-10-19T22:41:18+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "also the controls of the camera sideaways when viewing from a corner is inverted i think? check it\n\nDragging left/right",
+            "source": "human:current-chat/2026-10-20/corner-drag-inversion-and-clarification",
+            "scope": "RM-015AH interior horizontal dragging correction only; no visual result approval, current routine-test deferral persists.",
+            "recorded_at": "2026-10-19T22:50:04+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "dont add quick tour in this like navbar sort of this and remove the horizontal bar thats above and below it\n\nand hide the checks tab for now i dont really like it\n\nim sleeping so dont ask me questions, take recommneded decisisons if needed",
+            "source": "human:current-chat/2026-10-20/tool-row-cleanup-and-sleeping",
+            "scope": "RM-015AI navigation cleanup and routine recommended decisions without questions. All selected queued UI edits completed before settled verification, satisfying earlier skip-tests-until-finished timing. Existing exact local checkpoint authority remains; no actual visual result approval or external authority.",
+            "recorded_at": "2026-10-19T23:01:58+00:00"
           }
         }
       ]

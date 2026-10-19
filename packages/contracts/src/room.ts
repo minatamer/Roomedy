@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { issueSchema, ruleCoverageSchema } from './issues.js';
 export { issueSchema } from './issues.js';
 import { POLICY, VERSIONS } from './policy.js';
+import { roomSurfacesSchema } from './surfaces.js';
 import {
   finishSchema,
   factProvenanceSchema,
@@ -123,6 +124,7 @@ export const roomDocumentSchema = z
       height: measurementSchema(POLICY.roomEdgeMm),
       floorFinish: finishSchema,
       wallFinish: finishSchema,
+      surfaces: roomSurfacesSchema.optional(),
       features: z.array(featureSchema).max(POLICY.features),
     }),
     furniture: z.array(furnitureSchema).max(POLICY.furniture),

@@ -151,7 +151,15 @@ describe('finite close-up surface ownership and physical envelopes', () => {
     let bytes = 0,
       disposed = 0,
       otherDisposed = 0;
-    for (const key of ['floor', 'wood', 'fabric', 'plaster'] as const) {
+    for (const key of [
+      'floor',
+      'wood',
+      'fabric',
+      'plaster',
+      'smooth',
+      'tile',
+      'concrete',
+    ] as const) {
       const map = a[key],
         other = b[key];
       const pixels = map.image.data,
@@ -163,12 +171,13 @@ describe('finite close-up surface ownership and physical envelopes', () => {
       expect(createHash('sha256').update(pixels).digest('hex')).toBe(
         createHash('sha256').update(otherPixels).digest('hex'),
       );
-      expect(new Set(pixels).size).toBeGreaterThan(2);
+      if (key === 'smooth') expect(new Set(pixels).size).toBe(1);
+      else expect(new Set(pixels).size).toBeGreaterThan(2);
       expect(map.generateMipmaps).toBe(true);
       map.addEventListener('dispose', () => disposed++);
       other.addEventListener('dispose', () => otherDisposed++);
     }
-    expect(bytes).toBeLessThanOrEqual(1.5 * 1024 * 1024);
+    expect(bytes).toBeLessThanOrEqual(2 * 1024 * 1024);
     for (const key of ['hard', 'soft'] as const) {
       const g = a[key];
       g.computeBoundingBox();
@@ -187,11 +196,11 @@ describe('finite close-up surface ownership and physical envelopes', () => {
       b[key].addEventListener('dispose', () => otherDisposed++);
     }
     a.dispose();
-    expect(disposed).toBe(6);
+    expect(disposed).toBe(9);
     expect(otherDisposed).toBe(0);
     expect(() => a.dispose()).not.toThrow();
     b.dispose();
-    expect(otherDisposed).toBe(6);
+    expect(otherDisposed).toBe(9);
   });
   it('keeps decorative pillows, recessed fronts and handles within every min/max physical envelope', () => {
     for (const entry of CATALOGUE)

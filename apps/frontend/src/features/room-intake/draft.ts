@@ -12,6 +12,7 @@ import {
   validateRoom,
 } from '@roomedy/spatial';
 import type { PhotoPurpose } from './photo-store';
+import { emptySurfaceAppearance } from '@roomedy/contracts/surfaces';
 
 export const unknown = () => ({
   value: null,
@@ -247,6 +248,15 @@ export function correctDraft(
   const next = structuredClone(draft);
   next.room = result.room;
   for (const action of actions) {
+    if (action.type === 'set-room-surface') {
+      for (const field of ['color', 'texture'] as const) {
+        const value = next.room.room.surfaces?.[action.surface]?.[field];
+        if (value?.status === 'planned') {
+          const key = `${next.room.roomId}:${action.surface}:${field}`;
+          if (!next.reviewed.includes(key)) next.reviewed.push(key);
+        }
+      }
+    }
     if (action.type === 'set-size-estimate') {
       for (const axis of ['width', 'depth', 'height'] as const) {
         if (
@@ -503,6 +513,31 @@ export function adoptHypothesis(
   const roomSources = new Set(
     next.sources.filter((s) => s.available && isRoomSource(s)).map((s) => s.id),
   );
+  if (parsed.surfaces) {
+    for (const target of ['floor', 'walls'] as const) {
+      const appearance =
+        next.room.room.surfaces?.[target] ?? emptySurfaceAppearance();
+      const incoming = parsed.surfaces[target];
+      if (
+        !next.reviewed.includes(`${next.room.roomId}:${target}:color`) &&
+        incoming.color.sourceId &&
+        roomSources.has(incoming.color.sourceId) &&
+        appearance.color.status !== 'planned'
+      )
+        appearance.color = incoming.color;
+      if (
+        !next.reviewed.includes(`${next.room.roomId}:${target}:texture`) &&
+        incoming.texture.sourceId &&
+        roomSources.has(incoming.texture.sourceId) &&
+        appearance.texture.status !== 'planned'
+      )
+        appearance.texture = incoming.texture;
+      next.room.room.surfaces = {
+        ...next.room.room.surfaces,
+        [target]: appearance,
+      };
+    }
+  }
   if (
     !next.frameReviewed &&
     !next.reviewed.includes(`${next.room.roomId}:shape`)
@@ -798,6 +833,23 @@ export function isRoomSource(source: ReviewSource) {
 /** A furniture-detail source cannot regain room-scale authority through semantic Undo. */
 export function reconcileRoomEvidence(draft: ReviewDraft) {
   let changed = false;
+  for (const target of ['floor', 'walls'] as const) {
+    const appearance = draft.room.room.surfaces?.[target];
+    if (!appearance) continue;
+    for (const field of ['color', 'texture'] as const) {
+      const fact = appearance[field];
+      if (
+        fact.status === 'estimated' &&
+        !draft.reviewed.includes(`${draft.room.roomId}:${target}:${field}`) &&
+        !draft.sources.some(
+          (s) => s.id === fact.sourceId && s.available && isRoomSource(s),
+        )
+      ) {
+        appearance[field] = { value: null, status: 'unknown', sourceId: null };
+        changed = true;
+      }
+    }
+  }
   for (const axis of ['width', 'depth', 'height'] as const) {
     const value = draft.room.room[axis],
       source = draft.sources.find((s) => s.id === value.sourceId);

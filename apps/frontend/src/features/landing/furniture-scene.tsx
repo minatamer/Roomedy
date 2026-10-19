@@ -23,7 +23,7 @@ import {
   landingFurniturePose,
 } from './scroll-motion';
 import { prepareLandingScene } from './prepare-scene';
-import { createWindowGlass } from './window-glass';
+import { createWindowGlass } from '../room-view/window-glass';
 import type { ScrollTarget } from './scroll-motion';
 
 type FurnitureMaterials = {

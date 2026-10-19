@@ -1,5 +1,15 @@
 # Main-editor cutaway
 
+## Interior horizontal grab — RM-015AH
+
+The owner explicitly identifies left/right dragging in Corner as inverted. Interior pointer yaw now adds horizontal delta×0.004 so room content follows the grabbed pointer; vertical drag already uses the matching grab convention. Corner/Doorway/Work area share this owner. Look buttons/Arrow keys retain camera-direction semantics, A/D retains camera-relative strafe, and overview retains OrbitControls. Sensitivity,160ms retarget from displayed pose, pinch, pitch clamps, capture/cleanup/editing guards and safe eye position remain unchanged. No canonical room/history/provider action. [Actual old/fixed native observations and settled evidence](../validation/RM-015AH.md).
+
+## Current window appearance — RM-015AE
+
+The owner requests the same glass as the landing. Both renderers now import the same room-view window-glass factory: pale physical glass,0.96 transmission,0.065 roughness,0.012m optical thickness,1.5IOR, subtle attenuation and the original authored256px daylight gradient. A single128px local RoomEnvironment PMREM is prepared per scene, shared across its windows; transmission resolution is capped at0.35. No HDR/network/extra lights/postprocessing or additional frame owner. Editor scenes without known visible windows allocate no glass resources. Materials, daylight texture and reflection target retire idempotently with their owning scene.
+
+Known openings keep the same adapter dimensions, wall aperture and oriented trim/group. The backdrop sits outside and pane inside; selected trim highlights while the pane stays glass. Same-wall pointer/keyboard movement, preview/Apply/Undo and camera authority are unchanged. Export projection shares material/backdrop, preparing only the daylight for GLB/OBJ and the reflection for PDF WebGL capture. GLB carries physical glass; OBJ retains documented diffuse-material limitations and accepts the Basic daylight material. No raw photo texture or new finish setting. [Actual observations and settled gates](../validation/RM-015AE.md).
+
 RM-006, 18 October 2026. [Ticket](../tickets/RM-006-deliver-synchronized-3d-cutaway.md), [actual checks](../validation/RM-006.md), [catalogue policy](catalogue.md).
 
 ## One room, one projection
@@ -85,3 +95,10 @@ Feature review must inspect all latest rendered PDF pages plus bounded/unknown/e
 ## RM-015AB editor working height —20 October2026
 
 Latest owner correction removes visible navigation/approximation/representation/preview boilerplate below both main-editor frames. Preserve keyboard/uncertainty descriptions through the actual surface’s accessible description; Checks and per-value properties remain authoritative. Real loading/model failure notices overlay the3D frame, actual command/lifecycle errors keep their existing notices, and graphics failure retains2D fallback. A single3D row stretches frame and190px control rail to the saved-footer boundary on bounded layouts;2D likewise reclaims its caption/outline row. Narrow/short layouts keep natural flow, reachable44px controls and owned scrolling. No camera/physical geometry/commands/scene-motion change. [Actual evidence](../validation/RM-015AB.md); visual acceptance remains pending, Q held, guide paused, RM-016 Planned.
+
+
+## AD selectable and inferred appearance —20 October2026
+
+Optional room.surfaces overrides contain independent floor/walls colour and texture facts: unknown, photo-estimated or visitor-planned; explicit bounded source IDs and six-digit hex values, with a maximum of two surfaces. Legacy room finish enums resolve to the exact original colours with plank floor/plaster walls when overrides are absent. Global furniture finishes and website chrome are unchanged. One room-wide wall finish is supported; no per-wall/photo-texture reconstruction claim. Floor choices are planks/tile/concrete/carpet; walls smooth/plaster/wood/linen. Photo hypotheses are estimates from room-purpose views and remain editable in rough2D review before main3D; invalid/foreign evidence is rejected and unavailable/reclassified sources retire only their unreviewed facts.
+
+The existing canvas owns seven deterministic maps:512px floor,256px wood/tile and128px fabric/plaster/smooth/concrete. Base RGBA allocation1,835,008bytes, below2MiB; mipmaps/native memory are additional, not measured by this count. Colours retain existing exponential interpolation. Only room floor/wall materials add a240ms two-colour-sampler blend with one latest pending target; existing bump sampling remains. Prior/current maps retain their independent UV transforms, preventing a scale jump at transition start. No per-frame texture/object/React/canonical allocation, external texture, light/postprocessing change or persistent animation loop. Materials/maps retire through existing ownership. Export uses semantic selected colours/materials, while PDF swatches label estimated colour/texture with~. Exact photo material/colour matching, physical GPU/heap/frame quality and final owner acceptance remain unverified. [AD evidence](../validation/RM-015AD.md); settled final batch tests/builds/read-only checks passed after all queued edits finished; see the receipt reconciliation.

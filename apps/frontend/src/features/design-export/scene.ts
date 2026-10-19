@@ -5,12 +5,13 @@ import {
   MeshStandardMaterial,
   OctahedronGeometry,
 } from 'three';
-import type { BufferGeometry, Material, Object3D } from 'three';
+import type { BufferGeometry, Material, Object3D, WebGLRenderer } from 'three';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry } from '@roomedy/spatial';
 import { FINISH_PALETTE } from '../catalogue/finishes';
+import { roomSurface } from '@roomedy/contracts/surfaces';
 import {
   displayRoom,
   featureBox,
@@ -24,10 +25,12 @@ import { ViewAssets } from '../room-view/assets';
 import type { AssetState } from '../room-view/assets';
 import {
   createSurfaces,
+  roomSurfaceMap,
   detailedParts,
   surfaceModel,
 } from '../room-view/surfaces';
 import { DesignExportError } from './facts';
+import { createWindowGlass } from '../room-view/window-glass';
 
 export async function loadDesignAssets(
   room: RoomDocument,
@@ -101,6 +104,7 @@ export function buildDesignScene(
   const walls = new Map<string, Group>(),
     bounds = displayRoom(room);
   let disposed = false;
+  let windowGlass: ReturnType<typeof createWindowGlass> | undefined;
   root.name = 'Roomedy room';
   root.userData = {
     roomedy: {
@@ -132,9 +136,9 @@ export function buildDesignScene(
   ) => {
     const map =
       role === 'floor'
-        ? surfaces.floor
+        ? roomSurfaceMap(surfaces, roomSurface(room.room, 'floor').texture)
         : role === 'wall'
-          ? surfaces.plaster
+          ? roomSurfaceMap(surfaces, roomSurface(room.room, 'walls').texture)
           : role === 'soft'
             ? surfaces.fabric
             : role === 'metal'
@@ -174,7 +178,7 @@ export function buildDesignScene(
     parent.add(mesh);
     return mesh;
   };
-  const floor = material(FINISH_PALETTE[room.room.floorFinish], 'floor');
+  const floor = material(roomSurface(room.room, 'floor').color, 'floor');
   box(
     root,
     'Floor',
@@ -182,7 +186,7 @@ export function buildDesignScene(
     [bounds.width + 0.24, 0.14, bounds.depth + 0.24],
     floor,
   );
-  const wallMaterial = material(FINISH_PALETTE[room.room.wallFinish], 'wall');
+  const wallMaterial = material(roomSurface(room.room, 'walls').color, 'wall');
   for (const wall of ['north', 'south', 'east', 'west'] as const) {
     const group = new Group();
     group.name = `Wall ${wall}`;
@@ -212,36 +216,35 @@ export function buildDesignScene(
       h = b.size[1],
       d = along ? b.size[2] : b.size[0],
       t = Math.min(0.035, w / 6, h / 6);
-    const opening = material(
-      feature.kind === 'window'
-        ? '#b8ced2'
-        : feature.kind === 'door'
-          ? '#765238'
-          : '#9a8870',
-      feature.kind === 'door' ? 'wood' : 'wall',
-    );
     if (feature.kind === 'window') {
-      opening.map = opening.bumpMap = null;
-      opening.roughness = 0.28;
-      opening.metalness = 0.15;
-      opening.emissive.set('#adc9d1');
-      opening.emissiveIntensity = 0.15;
-    }
-    box(
-      group,
-      feature.kind,
-      [0, 0, 0],
-      [
-        w,
-        h,
-        feature.kind === 'window'
-          ? 0.004
-          : feature.kind === 'door'
-            ? d * 0.6
-            : d,
-      ],
-      opening,
-    );
+      windowGlass ??= createWindowGlass();
+      const daylight = box(
+        group,
+        'Window daylight',
+        [0, 0, -d - 0.035],
+        [w - t * 2, h - t * 2, 0.008],
+        windowGlass.daylight,
+      );
+      daylight.castShadow = daylight.receiveShadow = false;
+      const pane = box(
+        group,
+        'Window glass',
+        [0, 0, d * 0.5],
+        [w - t * 2, h - t * 2, 0.012],
+        windowGlass.material,
+      );
+      pane.castShadow = pane.receiveShadow = false;
+    } else
+      box(
+        group,
+        feature.kind,
+        [0, 0, 0],
+        [w, h, feature.kind === 'door' ? d * 0.6 : d],
+        material(
+          feature.kind === 'door' ? '#765238' : '#9a8870',
+          feature.kind === 'door' ? 'wood' : 'wall',
+        ),
+      );
     if (feature.kind === 'obstacle') continue;
     const trim = material('#e8e0d3');
     for (const [x, y, width, height] of [
@@ -363,6 +366,7 @@ export function buildDesignScene(
     unit.dispose();
     marker.dispose();
     surfaces.dispose();
+    windowGlass?.dispose();
     root.clear();
   };
   let nodes = 0,
@@ -387,6 +391,9 @@ export function buildDesignScene(
     nodes,
     triangles,
     dispose,
+    prepareGlass(renderer?: WebGLRenderer) {
+      if (!disposed) windowGlass?.prepare(renderer);
+    },
     setCutaway(position: Triple, inside: boolean) {
       for (const [wall, group] of walls)
         group.visible =
@@ -414,6 +421,7 @@ export async function exportGlb(
   try {
     check();
     projection = buildDesignScene(room, assets.ready);
+    projection.prepareGlass();
     check();
     const { GLTFExporter } =
       await import('three/addons/exporters/GLTFExporter.js');

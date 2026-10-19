@@ -7,6 +7,10 @@
     "dist"
   ],
   "exports": {
+    "./surfaces": {
+      "types": "./dist/surfaces.d.ts",
+      "default": "./dist/surfaces.js"
+    },
     "./search": {
       "types": "./dist/search.d.ts",
       "default": "./dist/search.js"

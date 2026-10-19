@@ -1,5 +1,17 @@
 # Layout and useful space
 
+## Current uncluttered tool row — RM-015AI
+
+Only Furniture, Add piece, Room and Assistant are visible in the editor tool row. Native hidden plus a scoped display rule removes the retained Checks button and tour replay button from layout/focus/AX across responsive styles. Checks evaluation, contextual assistant issue navigation and panel implementation remain; this is a temporary navigation pause, not disabled validation. Header/tool-row bottom borders are removed, keeping warm background continuous and existing selected-button treatment. No new replacement control or row.
+
+The existing tour owner stays mounted to retain its lifecycle; automatic welcome/Start/Skip remains. A hidden manual replay is not a focus-return target: after restoring inert state, close returns to the visible opener or existing focusable room heading. Actual1280/390 tool sizes, focus and borders live in [AI evidence](../validation/RM-015AI.md). All queued edits finished before the passed [settled batch verification](../validation/RM-015AD-AI.md); actual visual approval remains separate.
+
+## Current2D direction and rotation — RM-015AG
+
+The selected plan footprint uses its existing bold outline/aria-pressed/focus, with no redundant centre dot over the direction arrow. Actual footprint and front arrow share a small local rotating group; the name stays upright. Quarter-turn targets unwrap along the shortest path and use existing180ms CSS transition without per-frame canonical/React writes. Known/unknown footprint representation and room framing remain separate.
+
+Two compact clockwise/counterclockwise90° buttons sit below the plan pan controls and above Snap. They use the existing rotate command and whole-change Undo, with current-selection/read-only/rotation-lock guards and final spatial validation. Disabled buttons offer the selected-object/rotation-lock title; no new bottom copy or modal. The two-button group spans the190px rail and wraps naturally on narrow screens, retaining44px actions. [Actual desktop/phone observations and settled evidence](../validation/RM-015AG.md).
+
 Owner direction,19 October2026; implemented in [RM-015K](../tickets/RM-015K-review-and-rebalance-page-layouts.md), with [actual evidence](../validation/RM-015K.md). These rules apply to future feature and visual work.
 
 Before adding a row or stacking panels, inspect the actual available width and height. Arrange existing tasks beside one another when their content fits. A spare area must have a reason: room geometry, readable text, interaction clearance or deliberate breathing room. Do not fill it with decorative cards, repeated instructions, invented statistics or unsupported features.
@@ -77,3 +89,8 @@ Latest owner correction removes visible navigation/approximation/representation/
 ## RM-015AC temporary comparison pause —20 October2026
 
 Owner hides Before/Current for now without deletion. Native hidden and a scoped display rule remove its toolbar box, focus and AX presence. Existing comparison markup/handlers/controller/baseline/semantic export/import remain intact, including tests and comparison framing. A guarded effect returns any retained Before presentation to Current, without changing the room/history. The third tour target moves to visible Undo and retains proposal Apply/Cancel/Undo guidance. To restore this feature later, remove the temporary hidden attribute/rule and normalization effect and restore the tour target/copy; do not recreate the underlying capability. [Actual checks](../validation/RM-015AC.md). Actual owner visual approval pending, Q held, guide paused and RM-016 Planned.
+
+
+## AD wall/floor choices —20 October2026
+
+Put useful independent Walls/Floor forms near the top of Room, with small texture preview, palette selector, native44px custom-colour picker, bounded hex entry, labelled texture selector and one Apply per surface. Reuse them in rough2D room review. Changed values use shared authority/Undo; invalid hex focuses its field with a precise error. Existing palette previews stay lower in the Room task, preserving unrelated proposed-furniture behaviour. Forms use actual panel width and existing natural scroll regions; room frame height stays unchanged. Photo colour/texture hints remain per-value estimates. Website colours stay independent of chosen room materials. [Current evidence](../validation/RM-015AD.md); the completed queued-edit batch passed its settled root/build/read-only gates; see the linked receipt reconciliation.

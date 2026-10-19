@@ -15,6 +15,7 @@ import {
   assistantSearchFallback,
 } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
+import { FINISH_COLORS, roomSurface } from '@roomedy/contracts/surfaces';
 import { operationAvailability } from '../session/operation-client';
 import { releaseTransport } from '../session/release-client';
 import { askAssistant } from './client';
@@ -275,10 +276,10 @@ export class AssistantController {
         if (
           task.goal.kind === 'appearance' &&
           (!task.goal.roomFinish ||
-            (task.goal.roomFinish.floorFinish ===
-              workspace.current.room.floorFinish &&
-              task.goal.roomFinish.wallFinish ===
-                workspace.current.room.wallFinish)) &&
+            (FINISH_COLORS[task.goal.roomFinish.floorFinish] ===
+              roomSurface(workspace.current.room, 'floor').color &&
+              FINISH_COLORS[task.goal.roomFinish.wallFinish] ===
+                roomSurface(workspace.current.room, 'walls').color)) &&
           task.goal.pieceFinishes.every(
             (f) =>
               workspace.current.furniture.find((p) => p.id === f.id)?.finish ===

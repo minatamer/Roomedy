@@ -1,0 +1,15 @@
+# RM-015AF evidence
+
+## Settled batch reconciliation —20 October2026
+
+The earlier implementation-stage deferral/pending statements below are historical timing records. All queued AD–AI source/native edits finished before the final established gate. The [settled batch receipt](RM-015AD-AI.md) now records578tests/45files,7boundary tests, root checks/both production builds, current216-file exact source/BUILD_ID, clean full-scope read-only pass1 and successful native GLB/OBJ/PDF export inspection. Exact70-path local checkpoint is prepared under existing authority. Actual owner visual acceptance and the explicitly unperformed full matrix/device/AT/GPU/live/Linux/hosted/native-import evidence remain pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/push/deploy.
+
+20 October2026. [16-path plan](../commit-plans/RM-015AF.md), [ticket](../tickets/RM-015AF-enlarge-and-simplify-browser-icon.md). Icon implementation completed; AD/AE/AF remain unstaged with final batch gates deferred. Current direct owner test deferral applies. Actual visual approval pending; no Google indexing inferred.
+
+The existing SVG paths remain, scaled from2.1 to3.4 and centred on their stroked bounds. The mark width grows from about56% to90% of the96px canvas, keeping safe edge margins. The icon circle/dot is removed. Full-canvas#e7ddcc is the existing soft-beige token, replacing near-white oat#f4efe5; cocoa#43352a stays. Website wordmark untouched because the supplied crop selects the tab icon. No AI image generation/new identity/dependency.
+
+The already installed backend sharp package rendered96/192/512px PNGs and180px Apple PNG from the SVG with opaque alpha. The ICO contains16/32/48px PNG entries with the standard6-byte header and16-byte directory records. Root metadata retains correct MIME/sizes and supplies stable `v=room-mark-2` URLs so revised markup requests the new art instead of the old cached URL. Installed Next icon/metadata guide and types were read before that edit; existing public-file metadata approach retained.
+
+Actual local96px PNG was visually inspected. An isolated existing4320 browser tab confirmed all six head icon links have the revised URLs and sizes, including multi-size ICO and Apple180. The actual served96px PNG loaded with the correct native dimensions and visibly larger dot-free mark on beige. A screenshot is saved at `C:/Users/minat/.codex/visualizations/2026/10/19/01a152ff-28f5-7d01-ac0b-1a83aebbc8c8/RM-015AF-browser-icon.png`; the browser viewer's surrounding dark area is outside the96px opaque asset. Viewport override reset and temporary tab closed; user tabs/data untouched. No service/port restart or provider action.
+
+Only asset generation, scoped formatting and source/metadata/native-image inspection were done. Routine tests/type/lint/root/full builds/final exact-input/read-only/checkpoint remain deferred by owner; no new test suite was run. Actual native Chrome tab-cache expiry, Google search indexing, physical/AT/Linux/hosted checks and owner acceptance remain unperformed. Q held, guide paused, RM-016 Planned. No paid/live/delegation/push/deploy or batch commit claimed.

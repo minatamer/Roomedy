@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { POLICY } from './policy.js';
 import { finishSchema, idSchema, labelSchema } from './primitives.js';
+import {
+  surfaceColorSchema,
+  surfaceTextureSchema,
+  isSurfaceTexture,
+} from './surfaces.js';
 
 export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 export const imageTypeSchema = z.enum(IMAGE_TYPES);
@@ -49,6 +54,23 @@ const photoMeasurement = (max: number, min = 1) =>
     }),
   ]);
 const candidateLength = photoMeasurement(POLICY.roomEdgeMm);
+const photoSurfaceFact = <T extends z.ZodType>(value: T) =>
+  z.discriminatedUnion('status', [
+    z.strictObject({
+      value: z.null(),
+      status: z.literal('unknown'),
+      sourceId: z.null(),
+    }),
+    z.strictObject({
+      value,
+      status: z.literal('estimated'),
+      sourceId: idSchema,
+    }),
+  ]);
+const photoSurface = z.strictObject({
+  color: photoSurfaceFact(surfaceColorSchema),
+  texture: photoSurfaceFact(surfaceTextureSchema),
+});
 /** Untrusted adapter output. IDs below are temporary observation references, never canonical room IDs. */
 export const draftObservationSchema = z.strictObject({
   ref: idSchema,
@@ -94,6 +116,9 @@ export const draftHypothesisSchema = z
       .optional(),
     shape: z.enum(['rectangle', 'unknown', 'unsupported']),
     frameEvidence: evidenceSchema,
+    surfaces: z
+      .strictObject({ floor: photoSurface, walls: photoSurface })
+      .optional(),
     room: z.strictObject({
       width: candidateLength,
       depth: candidateLength,
@@ -151,6 +176,29 @@ export function parseDraftHypothesis(
     return null;
   const allowed = new Set(sources),
     roles = parsed.data.sourcePurposes;
+  if (parsed.data.surfaces) {
+    for (const target of ['floor', 'walls'] as const) {
+      const appearance = parsed.data.surfaces[target];
+      if (
+        appearance.texture.value &&
+        !isSurfaceTexture(target, appearance.texture.value)
+      )
+        return null;
+      for (const fact of [appearance.color, appearance.texture])
+        if (fact.sourceId && !allowed.has(fact.sourceId)) return null;
+      const supportsRoom = (id: string) =>
+        roles
+          ? roles.some((r) => r.id === id && r.purpose === 'room')
+          : !automaticSources.includes(id);
+      if (appearance.color.sourceId && !supportsRoom(appearance.color.sourceId))
+        appearance.color = { value: null, status: 'unknown', sourceId: null };
+      if (
+        appearance.texture.sourceId &&
+        !supportsRoom(appearance.texture.sourceId)
+      )
+        appearance.texture = { value: null, status: 'unknown', sourceId: null };
+    }
+  }
   if (
     automaticSources.some((id) => !allowed.has(id)) ||
     (automaticSources.length > 0 && !roles) ||

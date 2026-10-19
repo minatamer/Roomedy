@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Current settled queued edits:** [RM-015AD–AI batch evidence](validation/RM-015AD-AI.md) and [exact70-path checkpoint plan](commit-plans/RM-015AD-AI-CHECKPOINT.md) follow committed AC42b400a. All queued finishes/photo estimates, shared glass, browser icon,2D rotation/direction, horizontal interior dragging and tool-row cleanup are implemented. Native desktop/narrow/focus/edit/export observations are recorded. The queue finished before one settled578-test/root/both-build gate; current216-file source/BUILD_ID matches and full-scope read-only pass1 is clean. GLB/OBJ downloads and all4PDF pages inspected. Exact local checkpoint prepared; actual owner visual approval remains pending, Q held, guide paused, RM-016 Planned. Owner requests no questions while sleeping. Individual receipts preserve historical test timing and explicit unperformed external/device/full-matrix limits.
+
 **Current temporary comparison pause:** [RM-015AC](tickets/RM-015AC-temporarily-hide-room-comparison.md), [14-path plan](commit-plans/RM-015AC.md) and [evidence](validation/RM-015AC.md) follow committed AB6db513e. Before/Current controls are hidden for now; full comparison/baseline/import/export implementation remains. Editor stays Current; the existing last tour step points to Undo. Final555tests/root/both builds/current214hashes,13native size checks, full tour/edit/Undo and clean read-only pass1 recorded. Actual visual approval pending, Q held, guide paused, RM-016 Planned.
 
 

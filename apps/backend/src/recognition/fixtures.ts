@@ -143,6 +143,24 @@ export function bedroomExample(
           height: estimate(2700, source),
         }
       : base.room,
+    surfaces: {
+      floor: {
+        color: source
+          ? { value: '#b9986f', status: 'estimated', sourceId: source }
+          : unknown(),
+        texture: source
+          ? { value: 'planks', status: 'estimated', sourceId: source }
+          : unknown(),
+      },
+      walls: {
+        color: source
+          ? { value: '#e6dfd2', status: 'estimated', sourceId: source }
+          : unknown(),
+        texture: source
+          ? { value: 'smooth', status: 'estimated', sourceId: source }
+          : unknown(),
+      },
+    },
     observations,
     groups: [
       observations.filter((o) => o.ref.startsWith('bed_')).map((o) => o.ref),

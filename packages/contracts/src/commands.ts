@@ -1,5 +1,11 @@
 import { z } from 'zod';
 import { POLICY, VERSIONS } from './policy.js';
+import {
+  surfaceTargetSchema,
+  surfaceColorSchema,
+  surfaceTextureSchema,
+  isSurfaceTexture,
+} from './surfaces.js';
 import { finishSchema, idSchema, revisionSchema } from './primitives.js';
 import {
   roomDocumentSchema,
@@ -61,6 +67,17 @@ export const proposalActionSchema = z.discriminatedUnion('type', [
 ]);
 export const visitorActionSchema = z.discriminatedUnion('type', [
   ...transformActions,
+  z
+    .strictObject({
+      type: z.literal('set-room-surface'),
+      surface: surfaceTargetSchema,
+      color: surfaceColorSchema.optional(),
+      texture: surfaceTextureSchema.optional(),
+    })
+    .refine((a) => a.color !== undefined || a.texture !== undefined)
+    .refine(
+      (a) => a.texture === undefined || isSurfaceTexture(a.surface, a.texture),
+    ),
   // Visitor planning estimates may describe owned pieces without claiming a measured correction.
   z.strictObject({
     type: z.literal('set-size-estimate'),

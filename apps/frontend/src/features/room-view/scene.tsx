@@ -44,18 +44,23 @@ import { ViewAssets } from './assets';
 import type { AssetState } from './assets';
 import {
   advanceSurfaceColor,
+  createSurfaceBlend,
+  roomSurfaceMap,
   createSurfaces,
   detailedParts,
   setSurfaceMap,
   surfaceModel,
 } from './surfaces';
 import type { Surfaces } from './surfaces';
+import { roomSurface } from '@roomedy/contracts/surfaces';
+import type { DataTexture } from 'three';
 import {
   advanceWindowOffset,
   roomWithWindowPreview,
   windowDragTarget,
 } from './window-manipulation';
 import type { FloorEditing } from './use-floor-edit';
+import { createWindowGlass } from './window-glass';
 
 export type CameraAction = {
   kind:
@@ -177,22 +182,46 @@ function DevelopmentProbe({
 // ownership because their parent meshes intentionally opt out of recursive disposal.
 function OwnedStandard({
   color,
+  surfaceMap,
   ...props
-}: Omit<ThreeElements['meshStandardMaterial'], 'color'> & { color: string }) {
+}: Omit<ThreeElements['meshStandardMaterial'], 'color'> & {
+  color: string;
+  surfaceMap?: DataTexture;
+}) {
   const ref = useRef<MeshStandardMaterial>(null);
+  const [initialMap] = useState(surfaceMap);
+  const blend = useRef<ReturnType<typeof createSurfaceBlend> | null>(null);
   const [initialColor] = useState(color);
   const target = useMemo(() => new Color(color), [color]);
   const { invalidate } = useThree();
   useEffect(() => invalidate(), [target, invalidate]);
+  useLayoutEffect(() => {
+    if (initialMap && ref.current)
+      blend.current = createSurfaceBlend(ref.current);
+  }, [initialMap]);
+  useEffect(() => {
+    if (surfaceMap) {
+      blend.current?.choose(surfaceMap);
+      invalidate();
+    }
+  }, [surfaceMap, invalidate]);
   useFrame((_, delta) => {
     if (ref.current && advanceSurfaceColor(ref.current.color, target, delta))
       invalidate();
+    if (blend.current?.advance(delta)) invalidate();
   });
   useEffect(() => {
     const owned = ref.current;
     return () => owned?.dispose();
   }, []);
-  return <meshStandardMaterial {...props} color={initialColor} ref={ref} />;
+  return (
+    <meshStandardMaterial
+      {...props}
+      {...(initialMap ? { map: initialMap, bumpMap: initialMap } : {})}
+      color={initialColor}
+      ref={ref}
+    />
+  );
 }
 function OwnedBasic(props: ThreeElements['meshBasicMaterial']) {
   const ref = useRef<MeshBasicMaterial>(null);
@@ -505,7 +534,7 @@ function CameraRig({
         }
         return;
       }
-      yaw -= (e.clientX - old.x) * 0.004;
+      yaw += (e.clientX - old.x) * 0.004;
       pitch = Math.max(
         -1.1,
         Math.min(1.1, pitch + (e.clientY - old.y) * 0.004),
@@ -650,20 +679,30 @@ function Walls({
     { camera, invalidate } = useThree(),
     bounds = displayRoom(room);
   const [initialColor] = useState(color);
+  const selectedMap = roomSurfaceMap(
+    surfaces,
+    roomSurface(room.room, 'walls').texture,
+  );
+  const [initialMap] = useState(selectedMap);
   const targetColor = useMemo(() => new Color(color), [color]);
   const material = useMemo(
     () =>
       new MeshStandardMaterial({
         color: initialColor,
-        map: surfaces.plaster,
-        bumpMap: surfaces.plaster,
+        map: initialMap,
+        bumpMap: initialMap,
         bumpScale: 0.0015,
         roughness: 0.94,
         transparent: true,
       }),
-    [initialColor, surfaces],
+    [initialColor, initialMap],
   );
   const materialRef = useRef(material);
+  const blend = useMemo(() => createSurfaceBlend(material), [material]);
+  useEffect(() => {
+    blend.choose(selectedMap);
+    invalidate();
+  }, [blend, selectedMap, invalidate]);
   useEffect(() => {
     materialRef.current = material;
     return () => material.dispose();
@@ -713,6 +752,7 @@ function Walls({
       invalidate();
     }
     if (advanceSurfaceColor(display.color, targetColor, delta)) invalidate();
+    if (blend.advance(delta)) invalidate();
   });
   return (
     <instancedMesh
@@ -745,6 +785,7 @@ function Opening({
   feature,
   geometry,
   surfaces,
+  windowGlass,
   selected,
   onSelect,
   editing,
@@ -756,6 +797,7 @@ function Opening({
   feature: RoomDocument['room']['features'][number];
   geometry: BoxGeometry;
   surfaces: Surfaces;
+  windowGlass: ReturnType<typeof createWindowGlass> | null;
   selected: boolean;
   onSelect: SceneProps['onSelect'];
 }) {
@@ -808,29 +850,37 @@ function Opening({
         if (e.delta <= 4) onSelect(feature.id);
       }}
     >
-      <mesh
-        geometry={geometry}
-        scale={[w, h, window ? 0.004 : door ? depth * 0.6 : depth]}
-        dispose={null}
-        receiveShadow
-      >
-        <OwnedStandard
-          color={
-            selected
-              ? '#a77342'
-              : window
-                ? '#b8ced2'
-                : door
-                  ? '#765238'
-                  : '#9a8870'
-          }
-          map={door ? surfaces.wood : window ? null : surfaces.plaster}
-          roughness={window ? 0.28 : 0.7}
-          metalness={window ? 0.15 : 0}
-          emissive={window ? '#adc9d1' : '#000000'}
-          emissiveIntensity={window ? 0.15 : 0}
-        />
-      </mesh>
+      {window && windowGlass ? (
+        <>
+          <mesh
+            geometry={geometry}
+            material={windowGlass.daylight}
+            position={[0, 0, -depth - 0.035]}
+            scale={[w - t * 2, h - t * 2, 0.008]}
+            dispose={null}
+          />
+          <mesh
+            geometry={geometry}
+            material={windowGlass.material}
+            position={[0, 0, depth * 0.5]}
+            scale={[w - t * 2, h - t * 2, 0.012]}
+            dispose={null}
+          />
+        </>
+      ) : (
+        <mesh
+          geometry={geometry}
+          scale={[w, h, door ? depth * 0.6 : depth]}
+          dispose={null}
+          receiveShadow
+        >
+          <OwnedStandard
+            color={selected ? '#a77342' : door ? '#765238' : '#9a8870'}
+            map={door ? surfaces.wood : surfaces.plaster}
+            roughness={0.7}
+          />
+        </mesh>
+      )}
       {(window || door) &&
         trim.map(([x, y, width, height], i) => (
           <mesh
@@ -842,7 +892,7 @@ function Opening({
             receiveShadow
           >
             <OwnedStandard
-              color="#e8e0d3"
+              color={window && selected ? '#a77342' : '#e8e0d3'}
               map={surfaces.wood}
               roughness={0.7}
             />
@@ -1097,7 +1147,7 @@ export function RoomScene(props: SceneProps) {
         ),
       [room, candidate, props.editing.windowPreview],
     );
-  const { invalidate } = useThree();
+  const { gl, invalidate } = useThree();
   const [windowOffsets, setWindowOffsets] = useState(
     () =>
       new Map(
@@ -1153,6 +1203,18 @@ export function RoomScene(props: SceneProps) {
   useEffect(() => () => geometry.dispose(), [geometry]);
   const surfaces = useMemo(() => createSurfaces(), []);
   useEffect(() => () => surfaces.dispose(), [surfaces]);
+  const hasWindows = desiredRoom.room.features.some(
+    (feature) => feature.kind === 'window' && featureBox(desiredRoom, feature),
+  );
+  const windowGlass = useMemo(
+    () => (hasWindows ? createWindowGlass() : null),
+    [hasWindows],
+  );
+  useLayoutEffect(() => {
+    windowGlass?.prepare(gl);
+    invalidate();
+  }, [windowGlass, gl, invalidate]);
+  useEffect(() => () => windowGlass?.dispose(), [windowGlass]);
   const [assets, setAssets] = useState<ReadonlyMap<string, AssetState>>(
     new Map(),
   );
@@ -1242,10 +1304,12 @@ export function RoomScene(props: SceneProps) {
         dispose={null}
       >
         <OwnedStandard
-          color={FINISH_PALETTE[rendered.room.floorFinish]}
+          color={roomSurface(rendered.room, 'floor').color}
           roughness={0.76}
-          map={surfaces.floor}
-          bumpMap={surfaces.floor}
+          surfaceMap={roomSurfaceMap(
+            surfaces,
+            roomSurface(rendered.room, 'floor').texture,
+          )}
           bumpScale={0.001}
         />
       </mesh>
@@ -1254,7 +1318,7 @@ export function RoomScene(props: SceneProps) {
           key={w}
           boxes={walls[w]!}
           geometry={geometry}
-          color={FINISH_PALETTE[rendered.room.wallFinish]}
+          color={roomSurface(rendered.room, 'walls').color}
           wall={w}
           room={rendered}
           surfaces={surfaces}
@@ -1268,6 +1332,7 @@ export function RoomScene(props: SceneProps) {
           dragTarget={windowDragTarget(candidate ?? room, feature)}
           geometry={geometry}
           surfaces={surfaces}
+          windowGlass={windowGlass}
           selected={selectedId === feature.id}
           editing={props.editing}
           onSelect={onSelect}
