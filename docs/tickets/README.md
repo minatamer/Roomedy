@@ -38,16 +38,16 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-013](RM-013-evaluate-ai-and-integrated-product-behavior.md) | Integrated corpus, adversarial checks and a bounded live-evaluation kit | RM-010, RM-011, RM-012 | Local evidence; live calls separately authorized |
 | [RM-014](RM-014-prepare-linux-images-and-release-runbooks.md) | Reproducible Linux images, exact-input proof and local rollout/rollback files | RM-012, RM-013 | Local release preparation |
 | [RM-015](RM-015-verify-responsive-accessible-and-performant-experience.md) | Product/device matrix, measured bounds/performance and owner visual review | RM-014 | **Actual frontend visual decision** |
-| [RM-015A](RM-015A-establish-motion-first-interactions.md) | Establish motion-first interactions | RM-015 local checkpoint | Owner-authorized pre-review revision |
-| [RM-015B](RM-015B-animate-the-landing-room.md) | Animate the landing room | RM-015A | Owner-authorized pre-review revision |
-| [RM-015C](RM-015C-add-smooth-interior-camera-exploration.md) | Add smooth interior camera exploration | RM-015B | Owner-authorized pre-review revision |
-| [RM-015D](RM-015D-polish-close-up-room-materials.md) | Polish close-up room materials | RM-015C | Owner-authorized pre-review revision |
-| [RM-015E](RM-015E-edit-furniture-directly-in-3d.md) | Edit furniture directly in 3D | RM-015D | Owner-authorized pre-review revision |
-| [RM-015F](RM-015F-deliver-conversational-design-assistance.md) | Deliver conversational design assistance | RM-015E | Owner-authorized pre-review revision |
-| [RM-015G](RM-015G-complete-sample-assistant-parity.md) | Complete sample assistant parity | RM-015F | Owner-authorized pre-review revision |
-| [RM-015H](RM-015H-remove-demo-commentary-from-product-copy.md) | Remove demo commentary from product copy | RM-015G | Owner-authorized pre-review revision |
-| [RM-015I](RM-015I-make-active-motion-a-permanent-rule.md) | Make active motion a permanent rule | RM-015H | Owner-authorized pre-review revision |
-| [RM-015J](RM-015J-verify-the-revised-interactive-experience.md) | Verify the revised interactive experience | RM-015I | Owner-authorized pre-review revision |
+| [RM-015A](RM-015A-establish-motion-first-interactions.md) | Establish motion-first interactions | RM-015 local checkpoint | Implemented locally; visual approval pending |
+| [RM-015B](RM-015B-animate-the-landing-room.md) | Animate the landing room | RM-015A | Implemented locally; visual approval pending |
+| [RM-015C](RM-015C-add-smooth-interior-camera-exploration.md) | Add smooth interior camera exploration | RM-015B | Implemented locally; visual approval pending |
+| [RM-015D](RM-015D-polish-close-up-room-materials.md) | Polish close-up room materials | RM-015C | Implemented locally; visual approval pending |
+| [RM-015E](RM-015E-edit-furniture-directly-in-3d.md) | Edit furniture directly in 3D | RM-015D | Implemented locally; visual approval pending |
+| [RM-015F](RM-015F-deliver-conversational-design-assistance.md) | Deliver conversational design assistance | RM-015E | Implemented locally; visual approval pending |
+| [RM-015G](RM-015G-complete-sample-assistant-parity.md) | Complete sample assistant parity | RM-015F | Implemented locally; visual approval pending |
+| [RM-015H](RM-015H-remove-demo-commentary-from-product-copy.md) | Remove demo commentary from product copy | RM-015G | Implemented locally; visual approval pending |
+| [RM-015I](RM-015I-make-active-motion-a-permanent-rule.md) | Make active motion a permanent rule | RM-015H | Implemented locally; visual approval pending |
+| [RM-015J](RM-015J-verify-the-revised-interactive-experience.md) | Verify the revised interactive experience | RM-015I | Implemented locally; visual approval pending |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |
@@ -59,6 +59,8 @@ The normal execution path is numeric order. Dependencies permit local sequencing
 ## Owner-requested pre-review queue — 19 October 2026
 
 The owner directly authorized all ten todos to be thoroughly planned and executed before the joint visual session. RM-015A–J above are now the next ordered work; RM-016–020 stay later. The request explicitly authorizes plan → execute → validate → verify/fix → revalidate → next without per-ticket owner pauses. Visual acceptance is still pending after J, and original local per-ticket exact-path commit authority remains in force. No paid/live calls, deployment, push, reset credits or delegation.
+
+Current local result: A-I committed through22c9737; J's [integrated evidence](../validation/RM-015J.md) records current173-input8acd4db.../401tests/both builds, production9-size/full-flow checks and clean review. All ten requested local todos are delivered; actual joint visual decision remains pending and RM-016 is still Planned. [Open current review](../design/visual-review.md).
 
 Coverage: todo1 motion=A; todo2 hero=B; todo3 interior cameras=C; todo4 close-up quality=D; todo5 3D editing=E; todo6 designer assistance=F; todo7 sample/fake parity=G; todo8 concise copy=H; todo9 permanent motion rules=I; todo10 integrated evidence/documentation=J. Plan acceptance is the user's express instruction to plan and then execute these specific todos, not an inferred approval of generated scope or actual results.
 

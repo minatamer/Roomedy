@@ -1,5 +1,21 @@
 # RM-015 measured performance and policy
 
+## Current19October revision (RM-015J)
+
+Current exact173-input SHA/BUILD_ID **8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11**,401-test/root/both-build gate. [Integrated receipt](../validation/RM-015J.md#current-bounded-measurements), [visual review](visual-review.md). Windows/IAB1280×720 development measurements use current source; current production4390 has no development probes. Three repetitions each:
+
+|Scenario|Actual observation|Interpretation|
+|---|---|---|
+|Warm representative2D→3D / cleanup|291/275/280ms;0canvas after each plan exit|Named warm≤1s threshold passes; no cold-network/driver-reclamation claim|
+|5pieces/2features, Doorway|74intervals each;p95=16.8ms,max16.9ms;79calls/8448triangles;6geometries/7textures/5programs|Local active-frame target p95≤33.4ms passes|
+|40pieces/24windows, Work area|104intervals each;p95=16.8/16.8/16.9ms,max17.6/16.9/17ms;57calls/1980triangles;2geometries/6textures/5programs|Semantic maximum uses honest owned bounds; Doorway disabled without a clear position|
+|Detailed40pieces/2features, Doorway|104intervals each;p95=16.8ms,max17.0/17.2/16.9ms;517calls/59,488triangles;6geometries/7textures/5programs|More demanding D20×14m fixture; exceeds representative draw/triangle targets, though this host's frame samples pass|
+|Current production landing files|9scripts783,939raw/239,878gzip bytes;CSS13,053raw/3586gzip;0canvas|DOM-observed corresponding files;250KiB estimated gzip target passes, not measured network/LCP/INP|
+
+Physical touch/IME/AT/GPU/native decode peak/long heap, production continuous frame/discrete paint/INP/cold-network, Linux/hosted/funded-live/model quality remain unperformed. Actual action correctness/whole Undo and exported semantic bytes are separate from frame timing. No ceiling raised, animation suppressed or external capacity inferred. The D55.9ms long frame and original fixed200-node throughput miss below remain valid dated observations; three later short samples do not erase them. Existing deterministic finite scheduling/health/cancellation checks pass the401-test gate. No new CPU benchmark was needed for J's documentation-only scope.
+
+## Historical18October baseline
+
 18 October 2026. [Raw Node results](performance-results.json), [ticket receipt](../validation/RM-015.md), [visual decision](visual-review.md). This is local engineering evidence, not production-device, Linux, hosted or provider acceptance. The owner visual gate remains open.
 
 ## Method and practical thresholds

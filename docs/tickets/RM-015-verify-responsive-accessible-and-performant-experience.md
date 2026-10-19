@@ -98,3 +98,7 @@ The two compound performance acceptance boxes remain unchecked because actual br
 ## Owner-requested revision — 19 October 2026
 
 The latest direct owner instruction authorizes all ten [lettered packets](README.md#owner-requested-pre-review-queue--19-october-2026) before our joint visual session. Continue their execute/validate/fix loop without stopping at the historical candidate presentation. Retain original RM-015 evidence as dated; present a refreshed candidate after J. This is requested revision scope, not owner visual approval or an RM-016 start.
+
+## Current pre-review revision —19October2026
+
+All requested RM-015A–J local outcomes are reconciled in the [integrated J evidence](../validation/RM-015J.md). Current173-input/BUILD_ID8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11 passed401tests/root/both builds; actual current Windows production9-size and full interaction/three-condition/recovery/export checks plus named development frame/opening measurements are recorded. [Current presentation](../design/visual-review.md) supersedes the older candidate. Scope/limits and original compound external proof criteria remain explicit and unchecked. Local ticket commits and clean validation do not complete this parent visual acceptance. Owner decision remains pending, guide goal paused, RM-016 Planned.

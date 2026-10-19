@@ -1,6 +1,6 @@
 # RM-015J — Verify the revised interactive experience
 
-Status: **Planned**
+Status: **Implemented locally — actual joint visual decision pending**
 Planning date: **19 October 2026**
 Owner todo: **10/10 — Integrated validation and owner presentation** (ordered by implementation dependencies; coverage in queue)
 Depends on: [RM-015I](RM-015I-make-active-motion-a-permanent-rule.md)
@@ -29,12 +29,12 @@ Inspect current owners before edits, preserve existing working paths, and extend
 
 ## Acceptance criteria
 
-- [ ] Reconcile every owner todo against implemented A-I and settled review evidence; refresh current production candidate rather than presenting the old checkpoint.
-- [ ] Exercise full landing -> sample/own-room rough review -> editor -> 3D manipulation/interior camera -> assistant -> Apply/Undo -> Before/Current -> recovery/export at nine sizes and short-height cases.
-- [ ] Measure actual active transitions/frames, interaction and cleanup under named scenarios; retain real target misses and explicit physical/Linux/hosted/live limits.
-- [ ] Prepare actual runnable candidate and inspected screenshots for the joint visual session. Owner approval remains unchecked and RM-016 stays Planned until the real decision.
-- [ ] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
-- [ ] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
+- [x] Reconcile every owner todo against implemented A-I and settled review evidence; refresh current production candidate rather than presenting the old checkpoint.
+- [x] Exercise full landing -> sample/own-room rough review -> editor -> 3D manipulation/interior camera -> assistant -> Apply/Undo -> Before/Current -> recovery/export at nine sizes and short-height cases.
+- [x] Measure actual active transitions/frames, interaction and cleanup under named scenarios; retain real target misses and explicit physical/Linux/hosted/live limits.
+- [x] Prepare actual runnable candidate and inspected screenshots for the joint visual session. Owner approval remains unchecked and RM-016 stays Planned until the real decision.
+- [x] Applicable focused/manual/settled checks recorded, final full-scope read-only validation reports no actionable findings.
+- [x] Scope/non-goals, limits and unperformed external/owner evidence remain explicit.
 
 ## Verification
 
@@ -51,3 +51,11 @@ Inspect current owners before edits, preserve existing working paths, and extend
 ## Handoff
 
 Record real commands/results and findings dispositions in `docs/validation/RM-015J.md`; no source changes during validation. Existing exact-path per-ticket local commit authority remains scoped to validated owned work. Next packet is the actual joint RM-015 visual review, then RM-016 only after owner decision.
+
+## Refined plan before implementation
+
+[Exact10-path integration/candidate plan](../commit-plans/RM-015J.md) binds all A-I commits, current exact Windows standalone identity, nine-size actual states and representative full flows, current bounded measurements and final read-only validation. No product source change is planned; any reproduced finding requires allocation first and refreshed bytes/checks. Actual visual acceptance, RM-016 and external evidence stay pending.
+
+## Result
+
+[Integrated execution and clean read-only pass1](../validation/RM-015J.md): all ten requested local todos reconciled, current173-input8acd4db... Windows standalone,401tests/root/both builds, actual9-size/short-height/full-flow/three-condition/3D/recovery/export checks and named repeated measurements. No actionable findings. Final exact local commit records this work; actual owner visual decision stays unchecked, guide goal paused and RM-016 Planned.

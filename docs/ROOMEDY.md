@@ -1302,8 +1302,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: I locally complete with clean validation. Execute J integrated nine-size/performance/current exact production candidate; then joint owner visual decision, RM-016 remains Planned.
-Active ticket: RM-015J
+Next action: All ten pre-review todos A-J locally complete and validated. Present current exact8acd4db... fake/paid-off Windows4390/4391 and actual screenshots for the joint owner visual decision. RM-016 remains Planned; guide goal paused; external/device/live/Linux/hosted evidence stays pending.
+Active ticket: RM-015
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1315,7 +1315,7 @@ Local commits approved: yes
 - [x] 06-plan-commit — Planning commit (complete)
 - [x] 07-build — Execute and validate tickets (complete_local)
 - [x] 08-performance — Performance investigation (complete_local)
-- [ ] 09-visual-review — Frontend visual approval checkpoint (in_progress)
+- [ ] 09-visual-review — Frontend visual approval checkpoint (awaiting_owner)
 - [ ] 10a-quality — Quality audit and fixes (pending)
 - [ ] 10b-security-review — Security audit and manual review (pending)
 - [ ] 11-security-fixes — Approved security fixes (pending)
@@ -1328,7 +1328,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-19T11:39:27+00:00",
+  "updated_at": "2026-10-19T11:58:56+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1502,8 +1502,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015J",
-  "next_action": "I locally complete with clean validation. Execute J integrated nine-size/performance/current exact production candidate; then joint owner visual decision, RM-016 remains Planned.",
+  "active_ticket": "RM-015",
+  "next_action": "All ten pre-review todos A-J locally complete and validated. Present current exact8acd4db... fake/paid-off Windows4390/4391 and actual screenshots for the joint owner visual decision. RM-016 remains Planned; guide goal paused; external/device/live/Linux/hosted evidence stays pending.",
   "phases": [
     {
       "id": "01-docs",
@@ -1877,7 +1877,7 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "09-visual-review",
       "name": "Frontend visual approval checkpoint",
       "gate": "visual",
-      "status": "in_progress",
+      "status": "awaiting_owner",
       "prompt": {
         "text": "Present Roomedy’s actual frontend for the RM-015 owner visual checkpoint. The runnable Windows standalone fake/paid-off candidate is http://127.0.0.1:4390/ with exact input/BUILD_ID cfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e and matching private review backend4391. Show the actual final studio/proposal screenshot and link the visual/performance/validation evidence. Preserve the owner tab and original services. State the real nine-size, short-height, native keyboard/numeric/drag, rough2D-to-main-editor3D, grounded fake worker, Apply/Undo, lifecycle and measured evidence; distinguish desktop emulation, native-memory/production-frame/paint/physical/AT/zoom/cold-network/Linux/hosted/live limitations. Keep the recorded fixed-work throughput miss visible without raising runtime bounds. Owner visual feedback is pending; no approval or waiver has been supplied for this candidate. Ask whether it is approved as-is, which specific changes are wanted, or whether review is explicitly waived/deferred. Stop here. If approved, skip unsolicited design changes and resume the authorized ordered loop with the scoped RM-015 commit and RM-016. If feedback is supplied, allocate exact owners before that round, preserve functionality/quality/security/efficiency, earthy website palette, independent finishes, rough2D-only initial review, deliberate motion and responsive room geometry; validate only the requested round and re-present for actual owner approval. No animation-off/render-off setting, OS suppression, paid call, deployment, push, reset consumption, delegation or inferred result approval. RM-015 remains awaiting owner and its changes unstaged/uncommitted; no RM-016 or security work now.",
         "sha256": "cfcf2b7ef79b84e06119c071e5bea51c3edb8c5aaa98d26acc31931f918a6629",
@@ -1909,7 +1909,8 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015G.md: actual3 sample conversations,5 injected Responses parity cases, zero actual metered dispatches,399tests/both builds; two reference/constraint findings fixed and read-only pass2 clean.",
         "docs/commit-plans/RM-015H.md: exact17-path plan; actual visible-mode/copy inventory and preservation rules, with G dependency clean.",
         "docs/validation/RM-015H.md:21 paths, concise honest product copy, actual review/error/chat/recovery,399tests/both builds and clean read-only pass1.",
-        "docs/validation/RM-015I.md:11 paths, permanent motion/copy authority, animated retained floor/wall materials, actual1280/390 checks,401tests/both builds and clean read-only pass1."
+        "docs/validation/RM-015I.md:11 paths, permanent motion/copy authority, animated retained floor/wall materials, actual1280/390 checks,401tests/both builds and clean read-only pass1.",
+        "docs/validation/RM-015J.md; docs/design/visual-review.md: all ten local outcomes, current173-input/BUILD_ID8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11,401tests/both builds, production9-size/full-flow/three-condition/export/recovery/3D checks, current repeated measurements,305local links and clean read-only pass1. Actual owner decision remains unchecked."
       ],
       "blockers": [],
       "approval": {

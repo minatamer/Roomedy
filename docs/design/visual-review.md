@@ -1,60 +1,55 @@
-# RM-015 actual frontend review
+# RM-015 current frontend review
 
-Status: **Awaiting actual owner decision; local gate/read-only review complete.** 18 October2026. This page presents Roomedy's actual native-browser evidence; an agent's assessment is not the owner's visual approval. [Performance](performance.md), [validation receipt](../validation/RM-015.md), [ticket](../tickets/RM-015-verify-responsive-accessible-and-performant-experience.md).
+Status: **A–J locally complete; actual joint owner visual decision pending.** 19 October2026. [Integrated evidence](../validation/RM-015J.md), [current performance](performance.md), [parent ticket](../tickets/RM-015-verify-responsive-accessible-and-performant-experience.md). No agent or Git commit supplies visual approval; RM-016 remains Planned.
 
-## Candidate and review scope
+## Current exact runnable candidate
 
-The current review is fake/paid-off: sample/manual editing, authored simulated photo draft and grounded simulated assistant/real browser worker. No real image interpretation, paid provider, deployment or physical-device acceptance is implied. The website keeps oat/sand/beige/walnut/cocoa tones. Neutral studio chrome and independent room finishes remain separate. Photos → rough2D review/correction → accepted precision2D/stylized3D. No initial-review3D control exists.
+[Open Roomedy](http://127.0.0.1:4390/) · [Open the editor](http://127.0.0.1:4390/demo?start=sample&condition=furnished). The retained review browser tab contains an unapplied combined work-area/calm-style preview with actual Apply/Cancel. New tabs recover accepted semantics only; transient proposals/chat are deliberately not restored.
 
-Initial production matrix used committed RM-014 standalone input `7a60eb17e8d4d14deec85db56a1f67923e36d120fcf6e6569c0d351876ab7ba3` at4390/4391. The scoped RM-015 form/copy fixes passed development and exact final production checks. Current standalone4390/4391 input **cfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e** passed346tests/seven boundaries/root/builds and clean read-only pass1; the [receipt](../validation/RM-015.md) binds scope and limits. Original owner tab1 and dev services4320/4321 were preserved. Screenshots use disposable authored test rooms.
+Windows standalone4390/private backend4391, fake/paid-off, exact173-input SHA/BUILD_ID **8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11**. Final401tests/seven boundary cases/root/both builds passed; current readiness/mode/identity agree. [Ten-todo reconciliation and all A–I clean review receipts](../validation/RM-015J.md#todo-reconciliation). Existing dev4320/4321 remain. Historical cfa9981/346-test candidate is superseded; [18October evidence](../validation/RM-015.md) remains dated, not current production proof.
 
-## Actual matrix and feature baseline
+The current review includes dimensional animated hero/smooth scroll, interior camera journeys/look/zoom, close-up stylized surfaces, direct3D floor editing/rotation, shared2D semantics, conversational scoped assistant, useful three-condition samples, concise task copy and permanent active motion. Earthy website identity and independent room finishes remain. Photos→rough2D review/correction→accepted precision2D/synchronized stylized3D. The sample sketch is labelled honestly; actual natural-photo/live-model quality is unverified. No paid/live dispatch, deployment/push/reset/delegation.
 
-| Viewport | Landing | Precision plan | Rough review |
-| --- | --- | --- | --- |
-|320×568|primary CTA315–363px;305px client/scroll|273×340px SVG; scroll to full room/controls|305px client/scroll;0 canvases/3D controls|
-|390×844|CTA334–382;375px client/scroll|343×340px SVG;375px client/scroll|375px client/scroll;2D only|
-|430×932|CTA318–366;415px client/scroll|383×340px SVG;415px client/scroll|415px client/scroll;2D only|
-|768×1024|CTA522–572;753px client/scroll|693×450px SVG; stacked tool/panel route|753px client/scroll; sketch + scrollable measurement panel|
-|1024×768|CTA505–555;1009px client/scroll|608×438px SVG with side inspector|1009px client/scroll;2D only|
-|1280×720|CTA456–506;1265px client/scroll|767×360px SVG with side inspector|1265px client/scroll;2D only|
-|1366×768|CTA529–579;1351px client/scroll|848×438px SVG; real short-laptop state|1351px client/scroll;2D only|
-|1440×900|CTA534–584;1425px client/scroll|918×513px SVG|1425px client/scroll;2D only|
-|1920×1080|CTA538–588;1905px client/scroll|1394×616px SVG; full-page capture verifies right edge|1905px client/scroll;2D only|
+## Actual current nine-size matrix
 
-Each actual screenshot was inspected. Narrow pages deliberately scroll; the header/hero CTA stays in the first landing viewport, while the full illustration continues below the shortest phone. No horizontal page overflow occurred in these states. The568×320 landscape measurement field/Confirm stayed reachable (553px client/scroll). This is desktop viewport simulation, not physical orientation/touch or virtual-keyboard testing. Some wide viewport-only tool screenshots clipped context despite fitting DOM geometry; full-page captures supersede those crops. A full-page capture at nonzero scroll misplaced an offscreen fixed Skip link into the image. Actual DOM showed it unfocused at y=-80px; the final owner screenshot was recaptured after native Control+Home (scrollY=0) and supersedes that capture artifact.
+Windows/IAB Chromium desktop emulation of the same current production candidate and semantic fixtures. Numbers are actual DOM observations; narrow layouts intentionally page-scroll to the full room and inspector. Composer was focused; Apply/Cancel reached by keyboard. No horizontal overflow in any listed state.
 
-Reconciled internal feature baseline: [visual direction](visual-direction.md) and RM-004/005/006/010/011/012/013 receipts. Existing empty/partial/furnished source fixtures and review/intake states retain their dated evidence; this run freshly exercised furnished sample → worker proposal → Apply/whole Undo, and six-photo partial intake → explicit draft → 2D review →4100mm correction → approximate accepted room →3D →refresh. Sample and simulated draft never claim real reconstruction. Unknown dimensions remained unknown and incomplete checks stayed explicit. Historical failure/fallback/expiry tests are not relabelled newly performed physical checks.
+|Viewport|client / scroll width|Landing CTA vertical bounds|Rough review canvas / view|Precision2D px|Interior canvas px / count|Apply px|Focused composer vertical bounds|
+|---|---|---|---|---|---|---|---|
+|320×568|305 / 305|315–363px|0 / 2D only|273×340|273×340 / 1|162×44|430–511px|
+|390×844|375 / 375|334–382px|0 / 2D only|343×340|343×340 / 1|162×44|706–787px|
+|430×932|415 / 415|318–366px|0 / 2D only|383×340|383×340 / 1|162×44|794–875px|
+|768×1024|753 / 753|479–529px|0 / 2D only|693×450|693×450 / 1|162×44|886–967px|
+|1024×768|1009 / 1009|461–511px|0 / 2D only|608×438|608×438 / 1|162×44|491–572px|
+|1280×720|1265 / 1265|432–482px|0 / 2D only|767×360|767×360 / 1|162×44|335–416px|
+|1366×768|1351 / 1351|485–535px|0 / 2D only|848×438|848×438 / 1|162×44|359–440px|
+|1440×900|1425 / 1425|490–540px|0 / 2D only|918×513|918×513 / 1|162×44|425–506px|
+|1920×1080|1905 / 1905|494–544px|0 / 2D only|1394×616|1394×616 / 1|162×44|515–596px|
 
-At390px, proposal Apply/Cancel were44px high and reachable alongside the room by scrolling; at320px they wrapped without overflow. Keyboard Apply committed one coordinated desk/chair change; one Undo reversed it. Enter sent, Shift+Enter inserted a real newline, Send remained visible, and cards focused canonical furniture. IME composition is covered by controlled handler evidence, not an actual physical IME run here. Approximation and preview/current text remain visible. The current task/room retains usable geometry when the assistant opens; it does not repeatedly shrink a desktop canvas.
+Additional568×320 review width error/Confirm and390×500 multiline composer/Send were exercised. Actual production flows covered own-photo normalization/drafting/review/correction/accept, all three sample conditions, work/style candidate, keyboard/numeric/actual3D drag and rejection, shared2D placement, Apply/Cancel/whole Undo, Before/Current, semantic export/import and refresh recovery. [Exact actions, values and limits](../validation/RM-015J.md#actual-production-matrix-and-journeys).
 
-## Criterion-level accessibility dispositions
+## Presentation artifacts
 
-This is a bounded review, **not a blanket WCAG conformance statement**.
+Actual inspected [full studio and coordinated preview](C:/Users/minat/.codex/visualizations/2026/10/19/01a152ff-28f5-7d01-ac0b-1a83aebbc8c8/RM-015J-final-studio.jpg), [landing](C:/Users/minat/.codex/visualizations/2026/10/19/01a152ff-28f5-7d01-ac0b-1a83aebbc8c8/RM-015J-landing-1280x720.jpg), [phone preview controls](C:/Users/minat/.codex/visualizations/2026/10/19/01a152ff-28f5-7d01-ac0b-1a83aebbc8c8/RM-015J-preview-430x932.jpg) and [short composer](C:/Users/minat/.codex/visualizations/2026/10/19/01a152ff-28f5-7d01-ac0b-1a83aebbc8c8/RM-015J-composer-390x500.jpg). These are task-local screenshots, not hosted assets or generated mockups.
 
-| Criterion / concern | Actual evidence / limit |
-| --- | --- |
-|1.3.1 /4.1.2 labels and semantics|Named native buttons/fields, grouped view/starting choices, headings, numeric alternatives and named camera controls inspected. Canvas also has furniture-list/property routes. Full screen-reader/AT acceptance unperformed.|
-|1.4.1 non-colour meaning|Preview/current text, unknown/confirmed dimensions, locked labels and textual check status inspected; colour is not the only issue signal.|
-|1.4.3 contrast, sampled|Actual rendered muted/oat5.87:1, cocoa/oat10.29:1, white/walnut6.63:1. Error/paper7.41:1 and focus/paper4.61:1 from current owning colours. Not an exhaustive all-state/asset audit. [W3C contrast guidance](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).|
-|1.4.4 /1.4.10 zoom/reflow|Actual320px viewport reflow inspected with no page overflow. Native browser Ctrl+plus produced no observable zoom in IAB; actual200%/400% browser zoom is unperformed, not equated to a viewport override.|
-|2.1.1 /2.4.3 /2.4.7 keyboard/focus|Enter/Shift+Enter, numeric submission, Apply/Undo, clear field focus, real focus outline and stage-heading focus observed. Proposed import starts on Cancel; prior reset/import/tour focus receipts remain relevant. Exhaustive keyboard/AT sequence unperformed.|
-|2.5.8 targets / dragging alternatives|Inspected primary/proposal actions44px high; coordinate/numeric/camera buttons provide alternatives. Native phone touch/pinch and exhaustive target-spacing audit unperformed. [W3C target guidance](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).|
-|3.3.1 /3.3.2 errors|Reproduced/fixed stale wrong-axis error ownership and unassociated proposed-size errors. Actual corrected fields receive invalid state, shared alert association and a focus target; valid half-mm placement remains accepted.|
-|4.1.3 status|DOM live status/alert roles and visible completed change/recovery/unknown messages inspected. Actual screen-reader announcement timing unperformed.|
-|2.2.2 automatic motion|Existing finite landing sequence settles by configured4s; final stable text/state and active motion were observed. No animation-off/render-off setting or OS suppression added. No exposed browser animation timeline measurement. [W3C motion guidance](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html).|
-|2.2.1 timing adjustment|**Selected limitation remains:** fixed non-extensible two-hour destructive expiry is not a >20h exception; no evidence establishes another exception. Warning/export does not supply timing adjustment. Product choice preserved. [W3C timing guidance](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html).|
+Artifact root `C:/Users/minat/.codex/visualizations/2026/10/19/01a152ff-28f5-7d01-ac0b-1a83aebbc8c8/` contains raw named9-size state families and matrix/measurement JSON. Representative inspected frames span all9 sizes; rapid-resize archive images may show active motion and are not all settled aesthetic assessments. Some wide viewport screenshots clip right context despite fitting DOM bounds; full-page studio/landing captures supersede those crops for presentation. Saving an uninspected archive image alone is not a pass. No private screenshots/photos are committed.
 
-## Actual artifacts and owner decision
+## Criterion-level dispositions and limits
 
-Artifact root: `C:/Users/minat/.codex/visualizations/2026/10/17/01a14aac-181e-7b73-b283-aa17c2a407f8/`. Landing/plan/rough screenshots are named by the nine actual sizes; `RM-015-plan-1920x1080-full.jpg` supplies the full wide context. Additional images include `RM-015-studio-3D-1280x720.jpg`, `RM-015-proposal-320x568.jpg`, `RM-015-maximum-40pieces-1280x720.jpg`, `RM-015-rough-field-568x320.jpg` and `RM-015-reviewed-room-3D-390x844.jpg`. The19 early JPEG payloads were renamed to `.jpg` after checking their signature; image bytes were preserved, not redrawn. `RM-015-native-measurements.json` and `RM-015-landing-assets.json` retain bounded numeric/asset observations. No private room photos or screenshots are committed.
+|Concern|Current actual evidence / remaining limit|
+|---|---|
+|Labels, semantics and non-colour meaning|Named controls, headings, numeric fields, unknown/confirmed/locked text, Preview and textual checks inspected. Canvas has corresponding furniture list/property/numeric routes. Full AT/screen-reader acceptance unperformed.|
+|Keyboard, focus and field errors|Enter sends, Shift+Enter retains a newline, Send remains visible, keyboard Apply/Undo and floor nudge/R rotation work. Invalid review width0 focuses its field with units/range. IME handler tests are not a physical IME run.|
+|Targets, dragging and reflow|Apply162×44px across9sizes, reachable composer/Send; numeric/keyboard alternatives and actual3D drag/whole Undo verified.320px reflow passes; physical touch/pinch/virtual keyboard and actual200%/400% browser zoom are unperformed.|
+|Motion and status|Active camera/material/panel/hero/loading owners remain awake, interruptible and finite. Hero4050ms sequence is under5s; current named development samples meet33.4ms p95. No disable setting/OS suppression. Production continuous frames/paint/INP are unmeasured.|
+|Contrast|Original named text/error/focus color samples remain dated in18October receipt; current source text palette is preserved. No exhaustive all-state/asset contrast audit or blanket WCAG claim.|
+|Timing adjustment|Selected non-extensible destructive2h expiry remains a known limitation. Warning/Export does not supply timing adjustment or establish an exception.|
+|Quality/capacity|Close-up detail/finite maps and named local measurements were checked. Physical GPU/native decode peak/long heap, difficult codecs, Linux/hosted and funded live model/privacy/challenge evidence remain external.|
 
-- [ ] Owner approves the exact presented candidate as-is.
-- [ ] Owner requests a specific revision (record wording/scope, execute only that round, re-present).
-- [ ] Owner explicitly waives/defers visual review (record exact scope/reason).
+## Owner decision — still unchecked
 
-No option is preselected or inferred. The owner explicitly said the visuals are not approved and separately authorized the current file-level plan, staging and checkpoint commit. See the [exact commit boundary](../commit-plans/RM-015.md). The Git action does not resolve any visual option above. RM-016 remains ineligible and the guide goal stays paused at this review checkpoint; unused account capacity is not permission to bypass the owner's decision.
+- [ ] Approve this exact presented candidate as-is.
+- [ ] Request a specific revision; record scope and re-present its validated result.
+- [ ] Explicitly waive/defer visual review; record scope and reason.
 
-Final production also freshly covered empty0pieces → Add estimated bed → whole Undo0; partial2pieces/locked wardrobe/Before-Current; reset Cancel/Escape/Project focus then explicit reset; furnished5pieces with half-mm keyboard/numeric and native drag/whole Undo. At390×500, the focused multi-line composer retained44px Send at y448–492 with no page overflow. Final worker proposal1005→300mm,3D Apply/Undo and the corrected plural change count passed. This adds current evidence to the historical baseline rather than inferring it.
-
-[Open the local website](http://127.0.0.1:4390/) or use its main-editor browser tab, which contains an unapplied authored proposal. Final actual images: [landing](C:/Users/minat/.codex/visualizations/2026/10/17/01a14aac-181e-7b73-b283-aa17c2a407f8/RM-015-final-landing-1280x720.jpg), [studio and proposal](C:/Users/minat/.codex/visualizations/2026/10/17/01a14aac-181e-7b73-b283-aa17c2a407f8/RM-015-final-studio-review.jpg), [short composer](C:/Users/minat/.codex/visualizations/2026/10/17/01a14aac-181e-7b73-b283-aa17c2a407f8/RM-015-final-composer-390x500.jpg). These are task-local artifacts, not portable hosted assets.
+No option is inferred. This completes the requested local pre-review work. The original guide goal stays paused; RM-016 and later security/release checkpoints await the actual applicable owner decisions. The separate ten-todo goal does not grant that approval.
