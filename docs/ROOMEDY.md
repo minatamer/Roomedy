@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Selected3D direction cue,20October — RM-015AO:** Only selected3D furniture shows a clear outward arrow from its local+Z front. The non-pickable indicator lives in the existing animated Piece group, following displayed movement/rotation/Undo without canonical or per-frame state. It clears with selection and is absent from exports; existing2D arrows remain. [Ticket](tickets/RM-015AO-show-selected-furniture-direction-in-3d.md), [nine-path plan](commit-plans/RM-015AO.md), [evidence](validation/RM-015AO.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Latest selected furniture controls,20October — RM-015AN:** Basic properties show size preset and piece finish; exact sizes, position, ownership/preferences and independent locks are Advanced. Rotation and selected Delete live beside the room in2D/3D arrangement tools, with a shared styled Snap switch. Catalogue owns Replace. Deliberate visitor Apply size/Delete use narrow per-action overrides with unchanged stored locks, strict final checks and one Undo; assistant/ordinary starting-lock behavior remains. [Ticket](tickets/RM-015AN-simplify-selected-furniture-controls.md), [27-path plan](commit-plans/RM-015AN.md), [evidence](validation/RM-015AN.md). This supersedes AA's separate basic Unlock-size action. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Latest owner flow,20October — RM-015AM:** Choose photos → explicit Continue → designed processing → main studio, with all room/furniture corrections in the studio. The separate rough2D review page and pre-studio shape acknowledgement are superseded. Preserve estimates/unknowns, strict reconciliation/validation, one baseline/fixed expiry, transient photo cleanup and default3D with2D available. Fake-only preview is finite and cancellable; live follows actual work without an artificial minimum. [Ticket](tickets/RM-015AM-process-photos-directly-into-the-studio.md), [24-path plan](commit-plans/RM-015AM.md), [evidence](validation/RM-015AM.md). Historical review-first decisions retain their date/evidence; actual visual approval pending, Q held, guide paused, RM-016 Planned.
@@ -1345,8 +1347,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Owner reviews RM-015AN simple preset/finish card, Advanced precision, room-side Delete/Rotate and styled Snap on existing4320/private4321. Exact27-path local checkpoint under existing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/new ports/push/deploy.
-Active ticket: RM-015AN
+Next action: Owner reviews RM-015AO selected3D direction arrow on existing4320/private4321. Exact nine-path local ticket checkpoint under standing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+Active ticket: RM-015AO
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1371,7 +1373,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T08:54:33+00:00",
+  "updated_at": "2026-10-20T09:06:11+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1560,8 +1562,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AN",
-  "next_action": "Owner reviews RM-015AN simple preset/finish card, Advanced precision, room-side Delete/Rotate and styled Snap on existing4320/private4321. Exact27-path local checkpoint under existing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AO",
+  "next_action": "Owner reviews RM-015AO selected3D direction arrow on existing4320/private4321. Exact nine-path local ticket checkpoint under standing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2023,14 +2025,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015Y.md#furniture-capture-follow-up--20-october-2026: 13-path paired room/furniture SVG guide and four-image sample set; actual desktop/390px/short/replay/viewer/fake Continue-to-rough2D observations, all602tests/46files,7boundaries and pnpm check/both builds passed. Built-in imagegen prompts/asset hashes recorded. Default production build identity and current inventory recorded separately; no Linux/live/owner approval claim.",
         "docs/validation/RM-015Y.md#photo-control-cleanup--20-october-2026: seven-path thumbnail View/order cleanup, full-width Remove, four-example public capacity and atomic admission. Scoped format/lint/frontend types and24photo tests passed; actual desktop/390px/short viewer click+Enter/Escape/focus/removal/two+four=six checks passed, console empty, viewport reset/tab closed. Existing recognition prompt forbids role inference from upload order; no live quality/current production-build claim.",
         "docs/validation/RM-015AM.md — photos Continue→designed processing→default3D studio directly; no separate review page or inferred confirmation. Native1280×720/390×844/1280×600 loading, Cancel/retry, actual3D, measurement/condition correction and Undo; browser errors empty. Final624tests/47files,7boundaries/root/both builds;226inputs/2154759bytes/BUILD_ID4022549203fefb78d703d3320f4b811df1e900fa03fc2c6f42b62f6b99e2dcb6. Clean24-path read-only pass2,620local links/missing0; exact local checkpoint prepared. Actual owner visual approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AN.md — basic selected preset/finish, numbers/details Advanced, room-side Delete beside Rotate and shared Snap switch in2D/3D. Narrow explicit visitor protected size/Delete with unchanged locks, strict assistant/final checks and one Undo. Native1440×900/1280×600/390×844 basic/Advanced/preset/error/finish/rotation/Delete/Undo/Snap/catalogue/recovery; errors empty. Initial test-JSX boundary corrected without compiler expansion; final630tests/47files,7boundaries/root/both builds and229inputs/2158848bytes/BUILD_ID4c291864c79665f2fca09aca28787e5c4f7431e6b3146544e0bd21235b3b41fe passed. Clean27-path read-only pass2,606local links/missing0; exact local checkpoint prepared. Actual visual approval pending, Q held, guide paused, RM-016 Planned."
+        "docs/validation/RM-015AN.md — basic selected preset/finish, numbers/details Advanced, room-side Delete beside Rotate and shared Snap switch in2D/3D. Narrow explicit visitor protected size/Delete with unchanged locks, strict assistant/final checks and one Undo. Native1440×900/1280×600/390×844 basic/Advanced/preset/error/finish/rotation/Delete/Undo/Snap/catalogue/recovery; errors empty. Initial test-JSX boundary corrected without compiler expansion; final630tests/47files,7boundaries/root/both builds and229inputs/2158848bytes/BUILD_ID4c291864c79665f2fca09aca28787e5c4f7431e6b3146544e0bd21235b3b41fe passed. Clean27-path read-only pass2,606local links/missing0; exact local checkpoint prepared. Actual visual approval pending, Q held, guide paused, RM-016 Planned.",
+        "docs/validation/RM-015AO.md — only selected3D furniture has a non-pickable front arrow attached to its displayed group; no new state/frame loop/export geometry. Native1440×900/1280×600/390×844 selection/rotation/Undo/cleared/bed-vs-wardrobe/Corner/view-switch/nudge checks, errors empty. Focused52tests; final630tests/47files,7boundaries/root/both builds and229inputs/2160618bytes/BUILD_ID3dae2a99e36f6caae562ca91611840994377cb1bbbf49fcb028e3effee21cb7b passed. Clean nine-path read-only pass1/588local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "quote": "I don't want to see the numbers if I'm not in the advanced setting, right? I just want to see the size preset. I want to see the piece finish. I don't want to see rotate 90 degrees on the right. Rotate is on the left. I want to see a delete button next to the rotate 90 on the left ... Instead of having replace and remove from plan in the right card ... in the Snap maybe let's make it at least in the same design as the other buttons, but in a toggle form",
-        "source": "human:current-chat/2026-10-20/simplify-selected-furniture-controls",
-        "scope": "RM-015AN implementation: basic preset/finish, detailed numbers/options Advanced, selected Delete beside Rotate, shared styled Snap switch. Explicit visitor Apply/Delete may deliberately override relevant protection for that operation without changing saved locks or assistant authority. Not actual visual approval.",
-        "recorded_at": "2026-10-20T08:41:06+00:00"
+        "quote": "i want to when i select a furnite i can see the arrow of its pointing where in 3d only when i select it tho",
+        "source": "human:current-chat/2026-10-20/selected-3d-furniture-direction",
+        "scope": "RM-015AO selected3D front-direction indicator implementation only; no result approval.",
+        "recorded_at": "2026-10-20T09:02:12+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2347,6 +2350,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/simplify-selected-furniture-controls",
             "scope": "RM-015AN implementation: basic preset/finish, detailed numbers/options Advanced, selected Delete beside Rotate, shared styled Snap switch. Explicit visitor Apply/Delete may deliberately override relevant protection for that operation without changing saved locks or assistant authority. Not actual visual approval.",
             "recorded_at": "2026-10-20T08:41:06+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "i want to when i select a furnite i can see the arrow of its pointing where in 3d only when i select it tho",
+            "source": "human:current-chat/2026-10-20/selected-3d-furniture-direction",
+            "scope": "RM-015AO selected3D front-direction indicator implementation only; no result approval.",
+            "recorded_at": "2026-10-20T09:02:12+00:00"
           }
         }
       ]

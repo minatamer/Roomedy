@@ -1,0 +1,8 @@
+# RM-015AO — Show selected furniture direction in3D
+
+Status: **Locally implemented and validated; actual owner visual approval pending**, follows committed `2389731`. Owner: “i want to when i select a furnite i can see the arrow of its pointing where in3d only when i select it tho”, with an outward arrow drawn on a wardrobe. [Nine-path plan](../commit-plans/RM-015AO.md), [blueprint editing](../ROOMEDY.md#7-workspace-and-manual-editing), [motion](../design/motion.md), [checklist](../design/REVIEW_CHECKLIST.md), [feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md). Existing local+Z front and animated Piece group own orientation.
+
+- [x] A clear warm arrow extends from the front of only selected3D furniture, consistently for procedural/local mesh/uncertain-bound representations and camera views. It is an indicator, not furniture geometry or a handle.
+- [x] Arrow follows the existing displayed translation/rotation through drag, rotation, Undo and previews; changing/clearing/deleting selection removes it. No per-frame semantic/history/provider work, new UI setting, light, dependency or service.
+- [x] Ignore arrow ray hits so room picking/dragging remains normal; bounded React-owned geometry/materials dispose on unmount. Existing2D arrows, canonical front, scene/export data and controls unchanged.
+- [x] Actual selection/switch/clear/rotation/Undo and desktop/short/narrow3D observations, scoped checks and settled root/build/current identity, clean read-only review and exact local checkpoint. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.

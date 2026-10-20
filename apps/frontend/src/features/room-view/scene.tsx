@@ -934,6 +934,71 @@ function Opening({
   );
 }
 
+const ignoreDirectionRaycast = () => undefined;
+function SelectedDirection({
+  width,
+  depth,
+  height,
+}: {
+  width: number;
+  depth: number;
+  height: number;
+}) {
+  const length = Math.max(0.9, Math.min(1.2, Math.max(width, depth) * 0.6)),
+    head = 0.22,
+    shaft = length - head;
+  return (
+    <group
+      position={[
+        0,
+        Math.max(0.12, Math.min(0.3, height * 0.25)),
+        depth / 2 + 0.045,
+      ]}
+      rotation={[Math.PI / 2, 0, 0]}
+    >
+      {([true, false] as const).map((halo) => (
+        <group key={String(halo)}>
+          <mesh
+            position={[0, shaft / 2, 0]}
+            raycast={ignoreDirectionRaycast}
+            renderOrder={halo ? 20 : 21}
+          >
+            <cylinderGeometry
+              args={[
+                halo ? 0.038 : 0.022,
+                halo ? 0.038 : 0.022,
+                shaft + (halo ? 0.02 : 0),
+                8,
+              ]}
+            />
+            <OwnedBasic
+              color={halo ? '#fff5df' : '#68432b'}
+              depthTest={false}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </mesh>
+          <mesh
+            position={[0, shaft + head / 2, 0]}
+            raycast={ignoreDirectionRaycast}
+            renderOrder={halo ? 20 : 21}
+          >
+            <coneGeometry
+              args={[halo ? 0.145 : 0.11, head + (halo ? 0.035 : 0), 8]}
+            />
+            <OwnedBasic
+              color={halo ? '#fff5df' : '#68432b'}
+              depthTest={false}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
 function Piece({
   piece,
   selected,
@@ -1126,14 +1191,17 @@ function Piece({
         </mesh>
       )}
       {selected && (
-        <mesh
-          geometry={geometry}
-          position={[0, h / 2, 0]}
-          scale={[w + 0.01, h + 0.01, d + 0.01]}
-          dispose={null}
-        >
-          <OwnedBasic color="#765036" wireframe transparent opacity={0.35} />
-        </mesh>
+        <>
+          <SelectedDirection width={w} depth={d} height={h} />
+          <mesh
+            geometry={geometry}
+            position={[0, h / 2, 0]}
+            scale={[w + 0.01, h + 0.01, d + 0.01]}
+            dispose={null}
+          >
+            <OwnedBasic color="#765036" wireframe transparent opacity={0.35} />
+          </mesh>
+        </>
       )}
     </group>
   );

@@ -46,6 +46,7 @@ Every checkbox below is for the owner's visual review. Leaving it unchecked does
 - [ ] Keep position and rotation unlocked by default; only dimensions start locked. Respect explicit saved/imported locks. [S](../validation/RM-015S.md).
 - [ ] Let windows slide along their wall in both views, with the wall opening and glass moving together. [U](../validation/RM-015U.md).
 - [ ] Keep the furniture front arrow visible without the selection dot covering it; provide clockwise/counterclockwise 2D rotation controls. [AG](../validation/RM-015AG.md).
+- [ ] Show a clear front-direction arrow only on selected3D furniture. It follows displayed movement/rotation/Undo and disappears when selection clears, without intercepting room interaction. [AO](../validation/RM-015AO.md).
 - [ ] Offer familiar regional bed sizes and useful desk/wardrobe/shelf presets, with clear mattress-versus-outer-frame planning sizes and custom measurements. [AA](../validation/RM-015AA.md).
 - [ ] Allow wall/floor color and texture choices, including custom colors. Carry photo-estimated appearance into review/3D without treating estimates as confirmed measurements. [AD](../validation/RM-015AD.md).
 - [ ] Match editor window glass to the landing's physical glass treatment, including export appearance. Inspect the close-up furniture/material detail. [AE](../validation/RM-015AE.md), [D](../validation/RM-015D.md).

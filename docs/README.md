@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Latest selected3D cue:** [RM-015AO](tickets/RM-015AO-show-selected-furniture-direction-in-3d.md) adds a front arrow only on selected furniture, following its displayed translation/rotation. [Nine-path plan](commit-plans/RM-015AO.md), [evidence](validation/RM-015AO.md). No new command, setting, export geometry or light. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Latest selected controls:** [RM-015AN](tickets/RM-015AN-simplify-selected-furniture-controls.md) keeps preset/finish basic and exact dimensions/details Advanced, puts Delete beside room-side Rotate, and shares a styled Snap switch across views. Explicit visitor size/Delete actions preserve locks and one Undo without granting assistant overrides. [27-path plan](commit-plans/RM-015AN.md), [evidence](validation/RM-015AN.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Latest selected flow:** [RM-015AM](tickets/RM-015AM-process-photos-directly-into-the-studio.md) replaces the initial rough-draft review page with photos → Continue → designed processing → main studio and in-studio correction. [24-path plan](commit-plans/RM-015AM.md), [current evidence](validation/RM-015AM.md). Earlier review-first descriptions/receipts are historical for this superseded flow. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
