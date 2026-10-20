@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+Latest AV card alignment follow-up aftercc595b2 puts dimensions and44px drag handles on one centered footer row. Scoped format/lint/frontend types, native19-card desktop/phone geometry and actual drag/Add/Undo pass. [Current evidence](../validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026). Prior full-root/build proof stays historical; actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
 Latest BE window follow-up after1e9176d adds wall-aligned Window names with clear margin fallback and preserved selection/drag/Undo. Scoped checks and67 focused tests/2files pass; actual desktop/phone observations recorded. [Current evidence](../validation/RM-015BE.md#window-labels-follow-up--20october2026). Prior full-root/build proof stays historical; actual owner approval pending, Q held, guide paused, RM-016 Planned.
 
 Latest BE follow-up after74764b4 removes the confirmed suffix from2D dimensions. Scoped format/lint/frontend types and native desktop/phone inspection pass; prior862-test/build proof remains historical. [Current evidence](../validation/RM-015BE.md#dimension-copy-follow-up--20october2026). Actual owner approval pending, Q held, guide paused, RM-016 Planned.

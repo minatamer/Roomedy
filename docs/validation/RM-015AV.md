@@ -1,5 +1,15 @@
 # RM-015AV — Expanded bedroom furniture and bathroom doors
 
+## Card footer alignment follow-up —20October2026
+
+Clean parentcc595b2. Owner marks the TV stand drag grip and asks for alignment. [Exact ten-path follow-up allocation](../commit-plans/RM-015AV.md#card-footer-alignment-follow-up-allocation--20-october2026) precedes source edits. One shared catalogueMeta span groups existing dimensions and grip; a centered flex row with auto top margin aligns card footers across wrapping names. Grip remains44×44px with touch-action none and original data-placement-grip marker. Replacement has the same dimensions footer without a grip. No event handler, placement/command/Undo, catalogue data,3D or export behavior changes.
+
+Scoped Prettier, ESLint zero warnings and frontend type generation/typecheck pass (.release/AV-alignment-types.log). Read-only review covers all ten allocated paths plus catalogue-placement-input touch targeting: closest data-placement-grip still reaches the original grip through the new wrapper. Meets ticket, no actionable findings. No static CSS mirror tests or repeated full suite/build for this local layout correction; all full-suite/build identities below are historical after this follow-up.
+
+Actual disposable empty room tab58 on sole4320/private4321. At1280×720, all19 rendered catalogue cards have dimensions/grip center difference0px,44×44px grips and11px card-bottom inset. Storage filter visibly shows the TV stand footer aligned with adjacent cards. Actual drag from its grip into the3D floor adds the TV stand through normal placement, opens its inspector and enables Undo: Add piece. Actual Undo removes it and restores the empty inventory. At390×844, all19 cards still have center difference0px/minimum44×44px grips, document375px fits viewport390 and native scrolling shows readable paired card rows. These are rendered/native observations, not physical touch/IME/whole accessibility/performance certification. Keyboard handlers and grip-free replacement are source-reviewed, not separately native-tested in this follow-up.
+
+Screenshots visually inspected in C:/Users/minat/.codex/visualizations/2026/10/20/01a15835-0bd9-7d20-9601-faf2b8383623/: RM-015AV-card-footer-alignment.png and RM-015AV-card-footer-phone.png. Temporary tab58 closed and viewport reset. Exact ten owned paths enter the authorized local checkpoint; build-state helper returns visual review to awaiting_owner. Actual owner approval pending, Q held, guide goal paused, RM-016 Planned; no paid/live/config/delegation/new dependency/service/port/push/deploy.
+
 20 October 2026. Local implementation complete; actual owner visual approval remains pending. Parent7d7d1da. Exact63-path allocation and extensions are in [the plan](../commit-plans/RM-015AV.md). No paid/live/key/config/delegation/new dependency/service/port/push/deploy authority was used.
 
 ## Result and shared authority

@@ -4,6 +4,8 @@ Read [the documentation map](docs/README.md), [current blueprint](docs/ROOMEDY.m
 
 ## Current scope and checkpoint
 
+- 20October RM-015AV card alignment follow-up aftercc595b2: dimensions and the existing44px drag grip share one centered footer row, pinned to each catalogue card bottom. Keep wrapping names, native card selection/drag, touch pan versus grip and replacement cards without grips. Exact ten-path allocation/current scoped and native evidence are appended to AV plan/receipt. No fresh full-root/build claim; actual visual approval pending, Q held, guide paused, RM-016 Planned.
+
 - 20October RM-015BE window follow-up after1e9176d: placed2D windows say Window parallel to their wall. Prefer the inner opening position, use clear outer frame margin if furniture covers it; fit small openings, retain unknown geometry and existing drag/selection/Undo. Shared opening labels follow displayed window preview with direct-drag interpolation disabled. Exact eleven-path allocation/current evidence are appended to BE plan/receipt. Scoped checks/native observations pass; prior full-root/build identity remains historical. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
 
 - 20October RM-015BE follow-up after74764b4: owner removes confirmed from2D room dimension labels. Hide that suffix only; retain mm, unknown text and other uncertainty statuses. Shared renderer leaves measurement provenance/commands unchanged. Exact eight-path allocation and scoped/native evidence are appended to the existing BE plan/receipt. No fresh full-root/build claim; actual visual approval pending, Q held, guide paused, RM-016 Planned.

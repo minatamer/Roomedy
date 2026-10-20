@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Catalogue card footer alignment — RM-015AV
+
+Keep dimensions and the existing44×44px drag grip in one vertically centered footer row. Pin that row to the card bottom so neighboring cards align despite wrapped names. Keep the thumbnail/name rhythm, responsive grid, readable wrapping and full grip target; replacement cards keep dimensions without a grip. The existing button/keyboard/placement owner and data-placement-grip touch distinction remain authoritative.
+
 ## Current2D object and door names — RM-015BE
 
 20October window follow-up: the same opening-caption owner labels known placed windows Window, horizontal on top/bottom and sideways on side walls. Small openings retain a readable caption span. Prefer the inner window position; if furniture covers it, use the existing outer frame margin, separated from dimension text. Keep along-wall corner clamping, halo, original accessible/keyboard window owner and caption pointer selection. Displayed window previews carry their names; direct dragging disables caption interpolation. Unknown geometry stays unplaced. Include window labels in existing bounded caption/previous-position overlap preferences; no global collision-free claim for arbitrary opening combinations.

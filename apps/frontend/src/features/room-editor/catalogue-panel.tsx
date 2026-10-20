@@ -339,19 +339,21 @@ export function CataloguePanel({
                   draggable={false}
                 />
                 <strong>{entry.label}</strong>
-                <span>
-                  {entry.size.width.default} × {entry.size.depth.default} mm
-                </span>
-                {!replacement && (
-                  <span
-                    className={styles.dragGrip}
-                    data-placement-grip
-                    title="Drag into the room"
-                    aria-hidden="true"
-                  >
-                    ⠿
+                <span className={styles.catalogueMeta}>
+                  <span>
+                    {entry.size.width.default} × {entry.size.depth.default} mm
                   </span>
-                )}
+                  {!replacement && (
+                    <span
+                      className={styles.dragGrip}
+                      data-placement-grip
+                      title="Drag into the room"
+                      aria-hidden="true"
+                    >
+                      ⠿
+                    </span>
+                  )}
+                </span>
               </button>
             ))}
           </div>

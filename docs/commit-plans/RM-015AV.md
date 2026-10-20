@@ -1,5 +1,22 @@
 # RM-015AV — Expand bedroom furniture and bathroom doors
 
+## Card footer alignment follow-up allocation —20 October2026
+
+Clean parentcc595b2. Owner marks the catalogue drag grip and asks for alignment. Put the existing dimensions and44px grip in one vertically centered footer row, pinned to the card bottom so neighboring cards remain aligned with wrapping names. Retain full-size grip/touch behavior, pointer/keyboard Add and replacement cards without a grip. Reuse the owning catalogue card; no new control or placement authority. Exact current allocation before edits:
+
+1. `AGENTS.md`
+2. `docs/README.md`
+3. `docs/ROOMEDY.md`
+4. `docs/tickets/README.md`
+5. `docs/tickets/RM-015AV-expand-bedroom-furniture-and-bathroom-doors.md`
+6. `docs/commit-plans/RM-015AV.md`
+7. `docs/validation/RM-015AV.md`
+8. `docs/design/layout.md`
+9. `apps/frontend/src/features/room-editor/catalogue-panel.tsx`
+10. `apps/frontend/src/features/room-editor/editor.module.css`
+
+Scoped formatting/lint/frontend types, native catalogue footer alignment/44px geometry, desktop/phone fit and existing Add/drag behavior; read-only review then exact authorized local checkpoint. No static CSS mirror test or fresh full suite/build for this local layout correction. Prior full gates stay historical. Actual owner approval pending, Q held, guide paused, RM-016 Planned; no paid/live/config/delegation/new service/port/push/deploy.
+
 20 October 2026; clean parent7d7d1da. Human selects mirrors, drawer shelving, TV stands and adjustable tabletop/wall TVs, useful bedroom furniture and a bathroom door in the existing single rectangular room. No bathroom room/furniture.
 
 ## Exact allocation before source edits
