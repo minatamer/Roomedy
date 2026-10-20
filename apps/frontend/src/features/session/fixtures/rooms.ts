@@ -95,7 +95,7 @@ const base: RoomDocument = {
     piece('bed_1', 'procedural-bed', 1000, 1600, 0, true),
     piece('desk_1', 'procedural-desk', 3200, 1000, 0, true),
     piece('chair_1', 'chair-desk-fixed', 3200, 1700, 2, false),
-    piece('wardrobe_1', 'wardrobe-hinged', 3250, 3200, 0, true),
+    piece('wardrobe_1', 'wardrobe-hinged', 3850, 3200, 1, true),
     piece('storage_1', 'procedural-storage', 2200, 3900, 1, false),
   ],
   intent: {

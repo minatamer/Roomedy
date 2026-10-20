@@ -80,3 +80,10 @@ Latest executable gate: 602 tests in 46 files plus 7 boundary tests, formatting/
 - [ ] Owner approves consistent Explore/Arrange, zoom/Fit, two-way Rotate/Delete/Snap; camera viewpoints remain contextual.
 
 [Implementation and actual checks](../validation/RM-015AP.md); [18-path allocation](../commit-plans/RM-015AP.md). Actual visual approval pending; Q held, guide paused and RM-016 Planned.
+
+## RM-015AQ — Furniture front and initial placement
+
+- [ ] Owner approves fresh wardrobes backed near a wall with their doors/front arrow toward useful room space in2D/3D.
+- [ ] Owner approves new-piece facing suggestions, explicit rotation ownership and AI planning with functional access/backing preference.
+
+[Actual checks and limits](../validation/RM-015AQ.md); [22-path allocation](../commit-plans/RM-015AQ.md). Photo observations and existing saved room poses stay evidence, with no silent reorientation. Actual visual approval pending; Q held, guide paused, RM-016 Planned.

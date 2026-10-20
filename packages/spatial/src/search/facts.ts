@@ -6,6 +6,7 @@ import { footprint, intersection, area, localFront } from '../coordinates.js';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry } from '../catalogue.js';
 import { windowPoint } from './positions.js';
+import { backWallGap } from '../orientation.js';
 function unionArea(rectangles: Region[]) {
   const xs = [...new Set(rectangles.flatMap((r) => [r.minX, r.maxX]))].sort(
     (a, b) => a - b,
@@ -263,8 +264,23 @@ export function candidateRank(
   goal: SearchGoal,
   facts: SearchFacts,
   checks: CheckFacts,
+  room: RoomDocument,
 ): number[] {
   const hard = checks.issues.filter((i) => i.severity === 'hard');
+  const targets = new Set([
+    ...goal.targetIds,
+    ...goal.additions.map((p) => p.id),
+    ...goal.replacements.map((p) => p.id),
+  ]);
+  const access = checks.issues.filter(
+    (i) =>
+      i.rule === 'front-access' &&
+      i.severity === 'warning' &&
+      i.objectIds.some((id) => targets.has(id)),
+  );
+  const backing = room.furniture
+    .filter((p) => targets.has(p.id))
+    .reduce((sum, p) => sum + (backWallGap(room, p) ?? 0), 0);
   const primary = ['rearrange-owned', 'open-space'].includes(goal.kind)
     ? -(facts.centralFreeMm2.after ?? 0)
     : 0;
@@ -272,10 +288,13 @@ export function candidateRank(
     hard.length,
     hard.reduce((n, i) => n + (i.areaMm2 ?? 0), 0),
     -facts.requiredPiecesPlaced,
+    access.length,
+    access.reduce((sum, i) => sum + (i.areaMm2 ?? 0), 0),
     goal.windowId ? (facts.windowDistanceMm.after ?? Infinity) : 0,
-    primary,
     facts.deskChairAlignmentMm.after ?? 0,
     facts.chairFacesDesk.after === false ? 1 : 0,
+    backing,
+    primary,
     facts.changedIds.length,
     facts.displacementMm,
     -(facts.centralFreeMm2.after ?? 0),

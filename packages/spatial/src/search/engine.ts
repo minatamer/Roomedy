@@ -397,7 +397,10 @@ export class LayoutSearch {
     );
     if (!candidate) return;
     const { facts, checks } = candidate;
-    const rank = candidateRank(this.request.goal, facts, checks);
+    const rank = candidateRank(this.request.goal, facts, checks, {
+      ...this.request.room,
+      furniture: [...this.fixed, ...this.placed],
+    });
     if (!this.bestRank || rankLess(rank, this.bestRank)) {
       if (jsonBytes(candidate) > POLICY.searchMessageBytes) return;
       this.bestRank = rank;

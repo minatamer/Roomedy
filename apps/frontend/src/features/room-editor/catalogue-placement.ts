@@ -2,7 +2,7 @@ import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture } from '@roomedy/contracts/room';
 import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
-import { findCatalogueEntry } from '@roomedy/spatial';
+import { findCatalogueEntry, preferredFurnitureFacing } from '@roomedy/spatial';
 import type { CommandFailure } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { snapPosition } from '../plan-view/adapter';
@@ -59,6 +59,7 @@ export class CataloguePlacement {
   private failure: CommandFailure | null = null;
   private target: PlacementTarget | null = null;
   private lastPose = '';
+  private autoFacing = true;
   private readonly listeners = new Set<() => void>();
   constructor(
     readonly session: SessionController,
@@ -81,6 +82,7 @@ export class CataloguePlacement {
     this.edit = null;
     this.failure = null;
     this.lastPose = '';
+    this.autoFacing = true;
     this.publish(null);
   };
   cancel = () => {
@@ -181,13 +183,23 @@ export class CataloguePlacement {
       if (state.inside) this.publish({ ...state, inside: false });
       return;
     }
-    const snapped = snapPosition(edit.room, state.item, point, snap);
-    const key = `${snapped.x}:${snapped.z}:${state.item.pose.quarterTurns}:${inside}`;
+    const facing = this.autoFacing
+      ? preferredFurnitureFacing(edit.room, {
+          ...state.item,
+          pose: { ...state.item.pose, centerX: point.x, centerZ: point.z },
+        })
+      : state.item.pose.quarterTurns;
+    const oriented = {
+      ...state.item,
+      pose: { ...state.item.pose, quarterTurns: facing },
+    };
+    const snapped = snapPosition(edit.room, oriented, point, snap);
+    const key = `${snapped.x}:${snapped.z}:${facing}:${inside}`;
     if (key === this.lastPose) return;
     this.lastPose = key;
     const item = {
-      ...state.item,
-      pose: { ...state.item.pose, centerX: snapped.x, centerZ: snapped.z },
+      ...oriented,
+      pose: { ...oriented.pose, centerX: snapped.x, centerZ: snapped.z },
     };
     const result = this.session.previewVisitor([
       { type: 'add', furniture: item },
@@ -204,6 +216,7 @@ export class CataloguePlacement {
   rotate() {
     const state = this.state;
     if (!state) return;
+    this.autoFacing = false;
     this.publish({
       ...state,
       item: {

@@ -9,7 +9,7 @@ import Image from 'next/image';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
-import { CATALOGUE } from '@roomedy/spatial';
+import { CATALOGUE, preferredFurnitureFacing } from '@roomedy/spatial';
 import { thumbnailUrl } from '../catalogue/catalogue';
 import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
@@ -100,6 +100,11 @@ function PlacementForm({
           },
           replacement?.id,
         );
+        if (!replacement)
+          furniture.pose.quarterTurns = preferredFurnitureFacing(
+            room,
+            furniture,
+          );
         const result = controller.dispatch(
           [
             replacement

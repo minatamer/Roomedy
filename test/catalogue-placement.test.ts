@@ -39,6 +39,33 @@ afterEach(() => {
 
 describe('catalogue additions use the shared command authority', () => {
   it.each(['plan', 'cutaway'] as const)(
+    'suggests inward wardrobe facing in %s until explicit rotation, then preserves the visitor choice',
+    (view) => {
+      const { session, placement } = setup(view);
+      const wardrobe = CATALOGUE.find((p) => p.id === 'wardrobe-hinged')!;
+      const original = session.getSnapshot().workspace;
+      placement.start(wardrobe);
+      placement.move({ x: 3900, z: 3200 }, true, false);
+      expect(placement.getSnapshot()!.item.pose.quarterTurns).toBe(1);
+      expect(placement.getSnapshot()!.valid).toBe(true);
+      placement.rotate();
+      expect(placement.getSnapshot()!.item.pose.quarterTurns).toBe(2);
+      placement.move({ x: 3850, z: 3200 }, true, false);
+      expect(placement.getSnapshot()!.item.pose.quarterTurns).toBe(2);
+      expect(session.getSnapshot().workspace).toBe(original);
+      placement.cancel();
+      placement.start(wardrobe);
+      placement.move({ x: 350, z: 3200 }, true, false);
+      expect(placement.getSnapshot()!.item.pose.quarterTurns).toBe(3);
+      expect(placement.commit()).toMatchObject({ ok: true, changed: true });
+      expect(
+        session.getSnapshot().workspace!.current.furniture[0]!.pose
+          .quarterTurns,
+      ).toBe(3);
+      expect(session.undo().ok).toBe(true);
+    },
+  );
+  it.each(['plan', 'cutaway'] as const)(
     'previews without room/history changes, adds once in %s and enables the desk view',
     (view) => {
       const { session, placement } = setup(view);

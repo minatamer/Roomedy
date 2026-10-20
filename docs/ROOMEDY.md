@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Latest furniture facing — RM-015AQ:** Fresh starter wardrobes sit near the east wall with their front west into the room. New-piece previews/numeric Add share a bounded orientation suggestion until explicit visitor rotation; replacement and accepted/recovered poses stay authoritative. Shared AI search considers functional front access and back-wall placement inside the authorized scope. Recognition preserves observed facing and leaves hidden orientation unknown. [Ticket](tickets/RM-015AQ-place-furniture-with-usable-facing.md), [22-path plan](commit-plans/RM-015AQ.md), [evidence](validation/RM-015AQ.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Latest studio layout — RM-015AP:** Design Studio uses distinct serif typography at the left of Furniture/Room/Assistant. Add piece leaves only that row; catalogue entry remains in Furniture. Count and 2D/3D live inside the frame bottom right. Both views share the same actual-column rail and editing/navigation controls, with camera-specific views retained. [Ticket](tickets/RM-015AP-align-the-studio-and-share-view-controls.md), [exact plan](commit-plans/RM-015AP.md), [evidence](validation/RM-015AP.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Selected3D direction cue,20October — RM-015AO:** Only selected3D furniture shows a clear outward arrow from its local+Z front. The non-pickable indicator lives in the existing animated Piece group, following displayed movement/rotation/Undo without canonical or per-frame state. It clears with selection and is absent from exports; existing2D arrows remain. [Ticket](tickets/RM-015AO-show-selected-furniture-direction-in-3d.md), [nine-path plan](commit-plans/RM-015AO.md), [evidence](validation/RM-015AO.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -1349,8 +1351,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Owner reviews RM-015AP aligned Design Studio and shared2D/3D controls at existing4320/private4321. Exact18-path checkpoint under standing local authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
-Active ticket: RM-015AP
+Next action: Owner reviews RM-015AQ sensible fresh furniture facing and AI placement at existing4320/private4321. Exact22-path local checkpoint under standing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+Active ticket: RM-015AQ
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1375,7 +1377,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T09:26:30+00:00",
+  "updated_at": "2026-10-20T09:45:39+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1564,8 +1566,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AP",
-  "next_action": "Owner reviews RM-015AP aligned Design Studio and shared2D/3D controls at existing4320/private4321. Exact18-path checkpoint under standing local authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AQ",
+  "next_action": "Owner reviews RM-015AQ sensible fresh furniture facing and AI placement at existing4320/private4321. Exact22-path local checkpoint under standing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2029,14 +2031,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AM.md — photos Continue→designed processing→default3D studio directly; no separate review page or inferred confirmation. Native1280×720/390×844/1280×600 loading, Cancel/retry, actual3D, measurement/condition correction and Undo; browser errors empty. Final624tests/47files,7boundaries/root/both builds;226inputs/2154759bytes/BUILD_ID4022549203fefb78d703d3320f4b811df1e900fa03fc2c6f42b62f6b99e2dcb6. Clean24-path read-only pass2,620local links/missing0; exact local checkpoint prepared. Actual owner visual approval pending, Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015AN.md — basic selected preset/finish, numbers/details Advanced, room-side Delete beside Rotate and shared Snap switch in2D/3D. Narrow explicit visitor protected size/Delete with unchanged locks, strict assistant/final checks and one Undo. Native1440×900/1280×600/390×844 basic/Advanced/preset/error/finish/rotation/Delete/Undo/Snap/catalogue/recovery; errors empty. Initial test-JSX boundary corrected without compiler expansion; final630tests/47files,7boundaries/root/both builds and229inputs/2158848bytes/BUILD_ID4c291864c79665f2fca09aca28787e5c4f7431e6b3146544e0bd21235b3b41fe passed. Clean27-path read-only pass2,606local links/missing0; exact local checkpoint prepared. Actual visual approval pending, Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015AO.md — only selected3D furniture has a non-pickable front arrow attached to its displayed group; no new state/frame loop/export geometry. Native1440×900/1280×600/390×844 selection/rotation/Undo/cleared/bed-vs-wardrobe/Corner/view-switch/nudge checks, errors empty. Focused52tests; final630tests/47files,7boundaries/root/both builds and229inputs/2160618bytes/BUILD_ID3dae2a99e36f6caae562ca91611840994377cb1bbbf49fcb028e3effee21cb7b passed. Clean nine-path read-only pass1/588local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AP.md — Design Studio tool row, no top Add piece, live count/view switch in-frame bottom right and aligned shared2D/3D rail. Common Explore/Arrange/navigation/two-way Rotate/Delete/Snap, contextual camera controls, protected plan Explore and gesture cleanup retain commands/locks/motion/Undo. Native18 responsive geometry states, desktop/short/phone/tablet/edit/Undo/catalogue/recovery checks; errors empty. Focused53tests; final631tests/47files,7boundaries/root/both builds and231inputs/2160868bytes/BUILD_ID01f2d5a79a37d70b49aa2049f2e3886fc142a9865546fa19354a5b449a4671c0 pass. Full18-path read-only pass2 clean/603local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned."
+        "docs/validation/RM-015AP.md — Design Studio tool row, no top Add piece, live count/view switch in-frame bottom right and aligned shared2D/3D rail. Common Explore/Arrange/navigation/two-way Rotate/Delete/Snap, contextual camera controls, protected plan Explore and gesture cleanup retain commands/locks/motion/Undo. Native18 responsive geometry states, desktop/short/phone/tablet/edit/Undo/catalogue/recovery checks; errors empty. Focused53tests; final631tests/47files,7boundaries/root/both builds and231inputs/2160868bytes/BUILD_ID01f2d5a79a37d70b49aa2049f2e3886fc142a9865546fa19354a5b449a4671c0 pass. Full18-path read-only pass2 clean/603local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
+        "docs/validation/RM-015AQ.md — sensible fresh wardrobe facing/backing, bounded four-turn new-piece suggestion until explicit rotation, numeric Add and target-scoped AI access/back-wall preferences. Existing/recovered/replacement poses, locks, complete hard checks and unknown/photo evidence preserved; assistant/recognition prompt versions updated. Native fresh partial/furnished2D/3D, fake essentials Apply/Undo, keyboard/numeric/manual override/recovery, short/phone; errors empty. Focused97+40tests; final646tests/48files,7boundaries/root/both builds,232inputs/2167159bytes/BUILD_IDd3043747df39ced0246bce6e1aff6acd0e07400cfa67b5ec73f5aae07736b702 pass.22-path read-only pass2 clean/628local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "quote": "remove these 2 text on the left; add a text instead in the same row as furniture add piece etc on their left in a different typography Design Studio; remove add piece; put number of pieces and 2d 3d inside the studio frame bottom right; align frame and left CTAs with the right card; normalize both except camera angle",
-        "source": "human:current-chat/2026-10-20/studio-layout-and-controls",
-        "scope": "RM-015AP implementation only; no actual visual approval",
-        "recorded_at": "2026-10-20T09:15:22+00:00"
+        "quote": "the furnite should initaklly be placed where the arrow points make sense; why is my wardrobe by default pointing at the wall; thsi is something that the ai should take into account to",
+        "source": "human:current-chat/2026-10-20/furniture-initial-facing",
+        "scope": "RM-015AQ implementation: sensible starter and new-piece orientation, shared AI planning preference and evidence-honest recognition. No actual visual approval.",
+        "recorded_at": "2026-10-20T09:35:24+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2371,6 +2374,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/studio-layout-and-controls",
             "scope": "RM-015AP implementation only; no actual visual approval",
             "recorded_at": "2026-10-20T09:15:22+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "the furnite should initaklly be placed where the arrow points make sense; why is my wardrobe by default pointing at the wall; thsi is something that the ai should take into account to",
+            "source": "human:current-chat/2026-10-20/furniture-initial-facing",
+            "scope": "RM-015AQ implementation: sensible starter and new-piece orientation, shared AI planning preference and evidence-honest recognition. No actual visual approval.",
+            "recorded_at": "2026-10-20T09:35:24+00:00"
           }
         }
       ]

@@ -17,6 +17,7 @@ export {
   wallInterval,
 } from './coordinates.js';
 export { checkRoom } from './checks.js';
+export { backWallGap, preferredFurnitureFacing } from './orientation.js';
 export { evaluateBatch, validateRoom } from './commands.js';
 export {
   LayoutSearch,
