@@ -1459,7 +1459,12 @@ export function RoomScene(props: SceneProps) {
         );
       })}
       {checks.issues
-        .filter((i) => i.region && i.objectIds.includes(selectedId ?? ''))
+        .filter(
+          (i) =>
+            i.region &&
+            i.rule !== 'front-access' &&
+            i.objectIds.includes(selectedId ?? ''),
+        )
         .slice(0, 32)
         .map((i) => {
           const r = i.region!;

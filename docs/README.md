@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Furniture access toasts — RM-015AR:** Named, actionable notices replace unexplained access-region boxes in2D/3D. Selection and new/changed accepted access conflicts/Undo use existing facts and the shared4s notice owner; narrow toasts clear the view controls. [Ticket](tickets/RM-015AR-explain-furniture-clearance-with-toasts.md), [15-path plan](commit-plans/RM-015AR.md), [evidence](validation/RM-015AR.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Studio footer removed,20October:** The saved-time text, horizontal line and reserved footer row are gone.2D/3D frames and properties use the full viewport bottom; narrow layouts retain natural flow. [10-path AB follow-up](commit-plans/RM-015AB.md#remove-the-studio-footer-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AB.md#remove-the-studio-footer-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Rounded browser icon,20October:** The existing large cocoa mark now sits on a rounded beige tile across SVG/PNG/ICO browser variants, with revised asset URLs. [13-path AF follow-up](commit-plans/RM-015AF.md#rounded-browser-icon-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AF.md#rounded-browser-icon-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.

@@ -40,7 +40,7 @@ export interface SessionSnapshot {
   readonly pending: OperationIdentity | null;
   readonly candidate: CandidateProjection | null;
   readonly message: string;
-  readonly messageKind: 'notice' | 'confirmation';
+  readonly messageKind: 'notice' | 'confirmation' | 'clearance';
   readonly undoLabel: string | null;
   readonly comparison: 'current' | 'before';
   readonly persistence: 'checking' | 'saved' | 'memory-only';

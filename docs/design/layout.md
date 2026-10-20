@@ -1,5 +1,11 @@
 # Layout and useful space
 
+## Furniture access feedback — RM-015AR
+
+The bed's configured access space can overlap a nearby wardrobe without a solid-footprint collision. Show a named finite toast from actual front-access facts instead of the unexplained access-region rectangle. One shared session path handles selecting an affected Current piece, new/changed accepted conflicts and Undo; camera/panel changes do not repeatedly warn. Pending/proposal/read-only/load messages remain authoritative. Pair copy names both pieces without guessing the directional owner from sorted IDs; single-piece copy says access space around the piece, including chair pullout. Estimated/incomplete evidence stays explicit. Other check geometry/facts and strict validation remain.
+
+Reuse the existing4s timer/live region and normal room geometry. In narrow actual columns and stacked layouts, keep the notice above the in-frame view controls, accounting for the selected-piece return row. Wide rail placement remains. [Plan](../commit-plans/RM-015AR.md), [native and isolated evidence](../validation/RM-015AR.md); actual owner visual approval remains pending.
+
 ## Selected furniture — RM-015AN
 
 The basic properties card contains size preset and finish with a collapsed Advanced extension. Keep numeric dimension summaries, custom/confirmed measurements, position, independent locks and ownership/preferences there. Region names distinguish compact bed presets without numeric fields in Basic. Explicit preset Apply and selected Delete work through one deliberate visitor command/Undo while saved protection remains. Room-side rotation/Delete and the shared44px Snap switch align as ordinary controls in2D/3D; right properties has no duplicate rotation or Replace/Remove action row. Replace remains the catalogue's contextual task. Inspect desktop/short/narrow basic/Advanced, errors/focus, Undo and restored selection. [AN](../tickets/RM-015AN-simplify-selected-furniture-controls.md).

@@ -28,6 +28,7 @@ import type { Panel, PhotoNotes, SessionSnapshot } from './state';
 import { recoverySchema } from '@roomedy/contracts/project';
 import type { Project, Recovery } from '@roomedy/contracts/project';
 import { validateProject } from './project';
+import { clearanceNotice } from './clearance';
 
 interface Dependencies {
   now?: () => number;
@@ -429,12 +430,26 @@ export class SessionController {
       [...room.furniture, ...room.room.features].some((item) => item.id === id)
         ? id
         : null;
+    const canAnnounce =
+      this.state.comparison === 'current' &&
+      !this.state.candidate &&
+      !this.state.pending &&
+      !this.state.clientLoadFailure;
+    const notice =
+      canAnnounce && room && this.state.checks
+        ? clearanceNotice(room, this.state.checks, selectedId)
+        : null;
     this.publish({
       presentation: {
         ...this.state.presentation,
         selectedId,
         panel: selectedId ? 'inspector' : this.state.presentation.panel,
       },
+      ...(notice
+        ? { message: notice, messageKind: 'clearance' as const }
+        : canAnnounce && this.state.messageKind === 'clearance'
+          ? { message: '' }
+          : {}),
     });
   }
   setPanel(panel: Panel) {
@@ -564,17 +579,26 @@ export class SessionController {
       ...result.workspace.current.furniture,
       ...result.workspace.current.room.features,
     ].some((item) => item.id === selectedId);
+    const checks = result.evaluation?.ok
+      ? result.evaluation.checks
+      : checkRoom(result.workspace.current);
+    const notice = changed
+      ? clearanceNotice(
+          result.workspace.current,
+          checks,
+          selectedId,
+          this.state.checks,
+        )
+      : null;
     this.publish({
       workspace: result.workspace,
-      checks: result.evaluation?.ok
-        ? result.evaluation.checks
-        : checkRoom(result.workspace.current),
+      checks,
       presentation: {
         ...this.state.presentation,
         selectedId: remains ? selectedId : null,
       },
-      message: changed ? `${label}.` : 'No change needed.',
-      messageKind: 'confirmation',
+      message: notice ?? (changed ? `${label}.` : 'No change needed.'),
+      messageKind: notice ? 'clearance' : 'confirmation',
       undoLabel:
         this.labels.get(
           result.workspace.history.entries.at(-1)?.commandId ?? '',
@@ -659,6 +683,12 @@ export class SessionController {
     this.cancelWork();
     this.labels.delete(result.commandId);
     const selectedId = this.state.presentation.selectedId;
+    const notice = clearanceNotice(
+      result.workspace.current,
+      result.checks,
+      selectedId,
+      this.state.checks,
+    );
     this.publish({
       workspace: result.workspace,
       checks: result.checks,
@@ -675,8 +705,8 @@ export class SessionController {
         this.labels.get(
           result.workspace.history.entries.at(-1)?.commandId ?? '',
         ) ?? null,
-      message: 'Last change undone.',
-      messageKind: 'confirmation',
+      message: notice ?? 'Last change undone.',
+      messageKind: notice ? 'clearance' : 'confirmation',
     });
     return { ok: true };
   }

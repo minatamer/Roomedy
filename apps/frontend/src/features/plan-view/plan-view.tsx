@@ -463,6 +463,7 @@ export function PlanView({
     .filter(
       (issue) =>
         issue.region &&
+        issue.rule !== 'front-access' &&
         issue.severity !== 'unassessed' &&
         (!view.selectedId || issue.objectIds.includes(view.selectedId)),
     )

@@ -840,8 +840,16 @@
 }
 
 @media (max-width: 759px), (max-width: 899px) and (max-height: 800px) {
+  .canvasColumn > .roomNotice {
+    bottom: 80px;
+  }
   .canvasColumn:has(> .mobileReturn) > .roomNotice {
-    bottom: 76px;
+    bottom: 140px;
+  }
+}
+@container (width < 620px) {
+  .roomNotice {
+    bottom: 80px;
   }
 }
 
