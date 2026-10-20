@@ -66,3 +66,22 @@ Exact eight paths allocated before source edits:
 Use one shared responsive properties width for workspace and header column, removing the current20px capsule deduction/header-right inset. Capsule fills that column; narrow full-width capsule follows the existing full-width card while brand/actions retain their inset. Center every icon/label group explicitly inside equal44px targets, with consistent internal padding and matching selected-surface inset. No JS measuring, new state, extra controls, blur, dependencies or provider/config change.
 
 Check scoped formatting and native actual capsule/card left/right/width equality across wide/desktop/short/tablet/narrow states, all three selected positions, icon/label centering, focus and no horizontal overflow. Preserve existing Project/Undo, bounded/natural layout and2D/3D. No CSS mirror tests or repeated full builds for this reversible CSS correction. Read-only review, exact authorized local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
+## Mobile action padding follow-up allocation — 21 October2026
+
+Clean parent2ddea2d. Owner requests dynamic padding fixes for the top-right mobile Project/Undo buttons. Native390px baseline reproduces Project text5.5px above center and Undo arrow2.953125px left of center inside44px buttons. Both inherit mobile glass padding10px14px; native summary line formatting and left-start icon layout waste the available control height/width.
+
+Exact eight paths allocated before source edits:
+
+1. `docs/README.md`
+2. `docs/ROOMEDY.md`
+3. `docs/tickets/README.md`
+4. `docs/tickets/RM-015AZ-align-header-controls-and-animate-project.md`
+5. `docs/commit-plans/RM-015AZ.md`
+6. `docs/validation/RM-015AZ.md`
+7. `docs/design/layout.md`
+8. `apps/frontend/src/features/room-editor/editor.module.css`
+
+Scope the correction to the existing natural/narrow header breakpoint. Share a fluid12–20px inset between brand and actions, fluid6–10px action gap,44px Project height with centered line content and fluid horizontal padding, and a centered44px-square Undo icon. Keep native Project marker/details/motion, labels and actual command/focus authority. Full-width room-tool capsule/card alignment and desktop styling remain. No new wrapper/control/JS/state/assets/dependencies/config/provider changes.
+
+Scoped formatting and actual320/390/430px portrait,600×390 landscape,768×600 short layout and1280px desktop observations. Verify equal heights, centered contents, matching gutters, no overflow, clean capsule/card alignment and native Project/Escape/focus; actual Undo where a reversible edit supplies history. No CSS mirror tests or repeated full builds for this reversible CSS correction. Read-only review/exact authorized local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned.

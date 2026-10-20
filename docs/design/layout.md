@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Mobile header action padding — RM-015AZ follow-up
+
+Within the existing natural/narrow header breakpoint, share clamp12px/4vw/20px side gutters between brand and actions, and clamp6px/2vw/10px between Project and Undo. Keep the header’s existing126px two-row height and full-width capsule/card alignment. Project remains a native summary with its marker,44px height, vertically centered12px text,1.25 line height and fluid12–16px horizontal padding. Undo is a centered44px square with zero padding and14px icon. Scope direct Undo and Project summary styles so dropdown actions/desktop/shared glass controls stay independent. Preserve native menu motion, Escape/focus and actual Undo semantics.
+
 ## Landing chapter-title hierarchy — RM-015L follow-up
 
 The three numbered chapter titles share chapterLabel with a restrained16–18px scale, including16px in its phone rule, medium weight, ink colour,1.25 line height and restrained negative tracking. The21October owner correction replaces the earlier20–28px scale; do not add a Medy-only override. Retain larger established display headlines. Sentence case matches Meet Medy. Keep number text explicitly12px in40px circles, or11px in36px phone circles, with no flex shrinking. Allow a long title to wrap naturally beside its marker; preserve the normal flowing sections,26px title-to-headline gap/20px on phones, original semantic headings, photography and room/scroll motion. Unrelated taglines and editor text retain their own owners.
@@ -10,7 +14,7 @@ Use15px conversation/welcome paragraphs with1.65 line height,16px composer text 
 
 ## Room-tool navigation capsule — 20 October2026
 
-Use one shared responsive properties-column width for the header and workspace. The capsule fills that width with both outer edges aligned to the properties card; no independent20px deduction/right header inset. In natural narrow layout the capsule matches the full-width stacked card, while brand and Project/Undo retain16px insets. Center icon/label groups with flex alignment inside equal44px targets, rather than relying on inline baselines.
+Use one shared responsive properties-column width for the header and workspace. The capsule fills that width with both outer edges aligned to the properties card; no independent20px deduction/right header inset. In natural narrow layout the capsule matches the full-width stacked card, while brand and Project/Undo share fluid12–20px side gutters. Center icon/label groups with flex alignment inside equal44px targets, rather than relying on inline baselines.
 
 Group Furniture/Room/Medy above the right panel in one translucent oat capsule with a thin highlight and restrained shadow; no added backdrop blur. Three equal44px buttons use small decorative furniture/room outlines and the existing Medy sparkle. One cocoa pseudo-element slides between positions with cream selected labels; inactive text/hover and inset focus remain readable. Keep the bounded header68px by balancing its vertical padding. Existing narrow layout gives the capsule a full-width second row with readable labels; do not let hidden Checks/replay controls create a fourth slot.
 

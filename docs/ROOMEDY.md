@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Mobile Project/Undo padding —21October:** Natural/narrow headers now share fluid12–20px side gutters and6–10px action gaps. Project text is centered in a44px control with fluid horizontal padding; Undo is a centered44px square. [AZ allocation](commit-plans/RM-015AZ.md#mobile-action-padding-follow-up-allocation--21-october2026), [evidence](validation/RM-015AZ.md#mobile-action-padding-follow-up--21-october2026). Scoped formatting, six viewport geometries, Project/Escape and actual edit/Undo checks pass; actual owner approval pending.
+
 **Shared chapter-title size —21October:** All three numbered landing titles now share the smaller16–18px scale through chapterLabel, including16px on phones. No Medy-specific override; the two marketing taglines remain unchanged. [L allocation](commit-plans/RM-015L.md#shared-chapter-size-follow-up-allocation--21-october2026), [evidence](validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026). Scoped formatting/native shared-consumer checks pass; actual owner approval pending.
 
 **Landing chapter typography —20October:** Meet Medy and the other two chapter titles now use a readable20–28px scale, medium weight, clear ink and consistent sentence case. Smaller numbered markers preserve hierarchy; long titles wrap naturally. [L allocation](commit-plans/RM-015L.md#chapter-typography-follow-up-allocation--20-october2026), [evidence](validation/RM-015L.md#chapter-typography-follow-up--20-october2026). Scoped checks and native desktop/short/tablet/phone observations pass; actual owner approval pending.
@@ -1411,8 +1413,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Implement the newly requested mobile Project/Undo padding correction; shared chapter-size local checkpoint ready, actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
-Active ticket: RM-015L
+Next action: Await owner visual review of responsive mobile header actions and the shared chapter-size correction; exact validated local checkpoints authorized, Q held, guide paused and RM-016 Planned.
+Active ticket: RM-015AZ
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1437,7 +1439,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T21:20:29+00:00",
+  "updated_at": "2026-10-20T21:28:51+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1626,8 +1628,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015L",
-  "next_action": "Implement the newly requested mobile Project/Undo padding correction; shared chapter-size local checkpoint ready, actual owner visual approval pending; Q held, guide paused, RM-016 Planned.",
+  "active_ticket": "RM-015AZ",
+  "next_action": "Await owner visual review of responsive mobile header actions and the shared chapter-size correction; exact validated local checkpoints authorized, Q held, guide paused and RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -2126,14 +2128,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AZ.md#capsule-alignment-follow-up--20-october2026: exact8-path CSS padding/width correction, seven native viewport geometries, keyboard/Project checks and full screenshots; scoped formatting/read-only review clean; actual owner approval pending.",
         "docs/validation/RM-015L.md#chapter-typography-follow-up--20-october2026: exact9-path title hierarchy correction, scoped format/lint/frontend types, five native viewport metrics and complete screenshots, long-title wrapping/scroll/link observations; clean read-only review; owner visual approval pending.",
         "human:current-chat/2026-10-21/shared-chapter-title-size — Owner clarifies: make sure this is a shared class so it reflects on the others. Existing in-progress revision now applies the smaller size to all three numbered chapter labels; marketing taglines remain unchanged.",
-        "docs/validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026: final shared16–18px scale on all three numbered titles, exact8-path CSS checkpoint; scoped formatting and four native viewport shared-consumer observations pass; no actionable findings; actual owner approval pending."
+        "docs/validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026: final shared16–18px scale on all three numbered titles, exact8-path CSS checkpoint; scoped formatting and four native viewport shared-consumer observations pass; no actionable findings; actual owner approval pending.",
+        "docs/validation/RM-015AZ.md#mobile-action-padding-follow-up--21-october2026: exact8-path mobile Project/Undo padding correction, scoped formatting, six viewport geometries, native popup/Escape/focus and actual reversible Apply/Undo verified, complete screenshots; read-only review clean; owner visual approval pending."
       ],
       "blockers": [],
       "approval": {
-        "scope": "Reduce only the landing Meet Medy label; leave other chapter titles and both marketing taglines unchanged; actual visual approval pending",
-        "quote": "ok actually just only do the meet meedy edit, the rest are fine",
-        "source": "human:current-chat/2026-10-21/medy-title-size-only",
-        "recorded_at": "2026-10-20T21:15:17+00:00"
+        "quote": "fix top right buttons paddings in mobiel view dynamically",
+        "scope": "Correct mobile Project/Undo content alignment, responsive spacing and matching gutters; actual visual approval pending",
+        "source": "human:current-chat/2026-10-21/mobile-project-undo-padding",
+        "recorded_at": "2026-10-20T21:22:42+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2783,6 +2786,15 @@ This checklist records local work. Human approvals and unresolved external check
             "quote": "ok actually just only do the meet meedy edit, the rest are fine",
             "source": "human:current-chat/2026-10-21/medy-title-size-only",
             "recorded_at": "2026-10-20T21:15:17+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "fix top right buttons paddings in mobiel view dynamically",
+            "scope": "Correct mobile Project/Undo content alignment, responsive spacing and matching gutters; actual visual approval pending",
+            "source": "human:current-chat/2026-10-21/mobile-project-undo-padding",
+            "recorded_at": "2026-10-20T21:22:42+00:00"
           }
         }
       ]

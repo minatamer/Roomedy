@@ -89,3 +89,36 @@ Existing hot-reloaded4320, temporary tabs65/66, furnished manual room. Original 
 ### Read-only review and gate
 
 Scoped CSS and all eight allocated documentation paths reviewed against the latest owner request, actual geometry, mobile header insets, hidden controls, shared2D/3D layout, selected/focus styles and existing breakpoints. **Meets follow-up; no actionable findings.** Actual owner visual approval remains pending. No fresh production, hosted, live-provider, physical-device/GPU or security audit claim. Q held, guide paused, RM-016 Planned; exact authorized local checkpoint only, no paid/live/config/delegation/new ports/push/deploy.
+
+## Mobile action padding follow-up — 21 October2026
+
+Clean parent2ddea2d after the shared-title checkpoint. Owner requests dynamic mobile Project/Undo padding and explicitly authorizes staging/committing. [Exact eight-path scope](../commit-plans/RM-015AZ.md#mobile-action-padding-follow-up-allocation--21-october2026). Lessons L-02/03/04/06 and the feature checklist govern responsive spacing, useful targets and scope.
+
+### Diagnosis and correction
+
+At390px, both controls were44px high with10px14px padding/10px type, but Project text was5.5px above center and Undo’s arrow2.953125px left of center. Narrow header rules now give the native summary44px height, centered12px/1.25 line content and fluid12–16px inline padding; the14px Undo icon is grid-centered in a44px square with zero padding. Brand/action gutters share clamp12px/4vw/20px, action gap clamp6px/2vw/10px. No JS/markup change, native marker replacement, extra wrapper or command/state owner.
+
+At390px after correction, Project glyph center is only0.5px above box center from font metrics; Undo center error is−0.0078125px horizontal and0px vertical. Both stay44px high. Existing126px narrow header and capsule/card edge equality remain. Desktop rules stay unchanged.
+
+### Checks and actual native observations
+
+Scoped Prettier and git diff whitespace checks pass (`.release/AZ-mobile-pad-checks.log`). Final change is CSS-only; no CSS mirror unit tests or repeated full suite/build/types. Prior root/build identity is historical. Existing hot-reloaded4320, disposable tab70 with furnished manual room; original user tab untouched. Test tab closed and viewport reset.
+
+| Viewport | Matching side gutters | Action gap | Project width / height | Undo |
+| --- | --- | --- | --- | --- |
+|320×568|12.796875px|6.390625px|76.0625 /44px|44×44px|
+|390×844|15.59375px|7.796875px|76.0625 /44px|44×44px|
+|430×932|17.1875px|8.59375px|77.84375 /44px|44×44px|
+|600×390|20px|10px|84.0625 /44px|44×44px|
+|768×600|20px|10px|84.0625 /44px|44×44px|
+|1280×720|Desktop positions retained|8px|92.0625 /44px|90.6875×44px, full Undo label|
+
+All six measured document client/scroll widths match:305,375,415,585,753 and1280px respectively. Capsule/card bounds agree in each layout. Narrow header remains126px; desktop68px. Project popup at320px fits x4.203125–292.203125/y62–302.5625, and at600×390 fits x245–565/y62–302.5625. Native Escape closes the settled popup and restores Project focus; existing animated close was allowed to complete via visible-element hidden readiness, not an artificial delay. Tab/menu pointer closing/focus and visible focus ring observed. No Export/Import/reset action taken.
+
+Actual Room→Walls colour Clay→Apply wall finish enables Undo: Change walls finish. Header Undo restores Ivory/#f3eee2 and becomes unavailable again. Only the disposable test room was changed, then restored. Manual controls and menu remain real.
+
+Complete viewport screenshots under `C:/Users/minat/.codex/visualizations/2026/10/20/01a15835-0bd9-7d20-9601-faf2b8383623/`: `RM-015AZ-mobile-padding-phone.png`, `RM-015AZ-mobile-padding-320.png`, `RM-015AZ-mobile-padding-landscape.png`; contextual180px header capture `RM-015AZ-mobile-padding-header.png` makes the corrected spacing easy to inspect. Captures use explicit native clips, no image editing/compositing.
+
+### Read-only review and gate
+
+Final scoped styles and eight owned paths reviewed for mobile cascade, direct-child Undo scope, native summary marker, fluid gutters, menu bounds, matching capsule/card geometry and unchanged desktop/commands. **Meets follow-up; no actionable findings.** Actual owner visual approval pending, Q held, guide paused, RM-016 Planned. No fresh production/performance/security/physical/hosted/live-provider claim; no paid/live/config/delegation/new dependencies/services/ports/push/deploy. Exact local checkpoint authorized by standing instructions and current explicit owner message.

@@ -22,3 +22,11 @@ Owner requests corrected button padding and a capsule dynamically matching the c
 - [x] Shared responsive header/workspace properties-column width; remove the20px capsule deduction/right header inset. Full-width narrow row matches the full-width stacked card; brand/Project/Undo keep16px narrow insets.
 - [x] Equal44px buttons explicitly center each icon/label group with even padding; retain selected surface, finite motion, focus and existing panel/selection authority.
 - [x] Scoped format/diff checks, actual wide/desktop/short/tablet/390/320 geometry,2D/3D, all three selected states, keyboard focus and phone Project/Escape observations pass. No new JS, unit/CSS mirror test or full-build claim; read-only review is clean. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
+## Mobile action padding follow-up — 21 October2026
+
+Owner requests dynamic top-right Project/Undo padding in mobile view and explicitly authorizes staging/committing. [Eight-path allocation](../commit-plans/RM-015AZ.md#mobile-action-padding-follow-up-allocation--21-october2026), [actual evidence](../validation/RM-015AZ.md#mobile-action-padding-follow-up--21-october2026).
+
+- [x] Scoped natural/narrow header rules center Project’s native summary line and Undo icon inside44px controls; readable12px Project text and14px icon. Fluid12–20px shared side gutters,6–10px gap and12–16px Project horizontal padding adapt to actual viewport width.
+- [x] Desktop, capsule/card alignment, native Project marker/menu motion and command/focus authority retained. Actual six-size geometry, menu/Escape/focus and reversible wall-finish Apply/Undo observations pass without horizontal overflow.
+- [x] Scoped formatting/read-only review clean; exact authorized local checkpoint. Actual owner approval pending, Q held, guide paused, RM-016 Planned; no new full suite/build/provider/config/dependency/port/delegation/push/deploy.
