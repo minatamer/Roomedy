@@ -13,6 +13,7 @@ import {
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { projectOf } from '../apps/frontend/src/features/session/project.js';
 import {
+  activeRoomTool,
   arrangingSelection,
   deleteSelection,
 } from '../apps/frontend/src/features/room-editor/selection-actions.js';
@@ -874,6 +875,34 @@ describe('transient room notices', () => {
 });
 
 describe('selection determines room interaction', () => {
+  it.each(['plan', 'cutaway'] as const)(
+    'keeps the parent header tool selected for real %s inspector and catalogue context',
+    (view) => {
+      const s = session(commandRoom([piece('a')], [door(), windowFeature()]));
+      s.setRoomView(view);
+      expect(activeRoomTool(s.getSnapshot())).toBe('inventory');
+      s.setPanel('catalogue');
+      expect(activeRoomTool(s.getSnapshot())).toBe('inventory');
+      s.select('a');
+      expect(s.getSnapshot().presentation.panel).toBe('inspector');
+      expect(activeRoomTool(s.getSnapshot())).toBe('inventory');
+      s.select('door_1');
+      expect(activeRoomTool(s.getSnapshot())).toBe('room');
+      s.select('window_1');
+      expect(activeRoomTool(s.getSnapshot())).toBe('room');
+      s.setPanel('assistant');
+      expect(activeRoomTool(s.getSnapshot())).toBe('assistant');
+      s.setPanel('room');
+      expect(activeRoomTool(s.getSnapshot())).toBe('room');
+      s.setPanel('checks');
+      expect(activeRoomTool(s.getSnapshot())).toBeNull();
+      s.select('a');
+      s.select(null);
+      expect(activeRoomTool(s.getSnapshot())).toBeNull();
+      s.reset();
+      expect(activeRoomTool(s.getSnapshot())).toBeNull();
+    },
+  );
   it.each(['plan', 'cutaway'] as const)(
     'arranges the selected piece without an independent mode in %s',
     (view) => {

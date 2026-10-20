@@ -1,5 +1,11 @@
 # Layout and useful space
 
+## Room-tool navigation capsule — 20 October2026
+
+Group Furniture/Room/Medy above the right panel in one translucent oat capsule with a thin highlight and restrained shadow; no added backdrop blur. Three equal44px buttons use small decorative furniture/room outlines and the existing Medy sparkle. One cocoa pseudo-element slides between positions with cream selected labels; inactive text/hover and inset focus remain readable. Keep the bounded header68px by balancing its vertical padding. Existing narrow layout gives the capsule a full-width second row with readable labels; do not let hidden Checks/replay controls create a fourth slot.
+
+The highlighted parent follows actual visible content: inventory/catalogue/furniture inspector→Furniture; room/feature inspector→Room; conversation→Medy. Resolve selected IDs against displayed current/candidate/Before room facts; empty/unknown inspector or unrepresented Checks has no invented selected parent. Retain existing panel clicks, focus, accessible names/pressed states and all canonical command/history/room-finish authority. The highlight is presentation, not another state owner.
+
 ## Inspector opening-preview spacing — 20 October2026
 
 Use the shared preview section’s scoped grid gap of12px between heading and content-width Open/Close action, with20px after it before a following field. Reset only that heading margin; retain normal section divider/top padding and44px buttons. Adjacent section margins retain their existing spacing rather than adding together. Unsupported/2D previews stay absent and reserve no new space. Keep door, balcony/window and furniture inspector consumers consistent without changing unrelated forms or preview eligibility/state/motion.

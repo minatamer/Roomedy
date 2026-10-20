@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+Latest AZ design correction afterec6c287 gives Furniture/Room/Medy one warm capsule, small icons and a sliding selected surface. Furniture/feature inspectors retain their correct parent highlight. [Eleven-path allocation](../commit-plans/RM-015AZ.md#room-tool-design-follow-up-allocation--20-october2026), [scoped/native evidence](../validation/RM-015AZ.md#room-tool-design-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 Latest AU spacing correction after14a53da separates3D preview headings/actions from following inspector fields. [Nine-path allocation](../commit-plans/RM-015AU.md#preview-spacing-follow-up-allocation--20-october2026), [scoped/native evidence](../validation/RM-015AU.md#preview-spacing-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 Latest AP correction after0db0786 moves the shared animated2D/3D toggle into the actual frame’s top right in both views, including wrapped tools. [Nine-path allocation](../commit-plans/RM-015AP.md#top-right-view-toggle-follow-up-allocation--20-october2026), [native/scoped evidence](../validation/RM-015AP.md#top-right-view-toggle-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.

@@ -1,6 +1,26 @@
 import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 
+/** The header follows the visible inspector context, without owning panel state. */
+export function activeRoomTool(
+  state: SessionSnapshot,
+): 'inventory' | 'room' | 'assistant' | null {
+  if (state.phase !== 'editor') return null;
+  const { panel, selectedId } = state.presentation;
+  if (panel === 'inventory' || panel === 'catalogue') return 'inventory';
+  if (panel === 'room' || panel === 'assistant') return panel;
+  if (panel !== 'inspector' || !selectedId) return null;
+  const room =
+    state.comparison === 'before'
+      ? state.workspace?.baseline
+      : (state.candidate?.room ?? state.workspace?.current);
+  if (room?.furniture.some((item) => item.id === selectedId))
+    return 'inventory';
+  return room?.room.features.some((feature) => feature.id === selectedId)
+    ? 'room'
+    : null;
+}
+
 /** Selection is the interaction mode; locks/read-only still govern each edit. */
 export function arrangingSelection(state: SessionSnapshot): boolean {
   if (state.phase !== 'editor' || !state.presentation.selectedId) return false;

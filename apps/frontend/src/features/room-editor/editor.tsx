@@ -41,13 +41,38 @@ import { CataloguePlacement } from './catalogue-placement';
 import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
 import { FrameControls, ViewControls } from './view-controls';
-import { arrangingSelection } from './selection-actions';
+import { activeRoomTool, arrangingSelection } from './selection-actions';
 import { furnitureOpening, featureOpening } from '../room-view/articulation';
 import { OpeningPreview } from './opening-preview';
 import controlsStyles from './view-controls.module.css';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
 const Cutaway = lazy(() => import('../room-view/cutaway'));
+function RoomToolIcon({ panel }: { panel: Panel }) {
+  if (panel === 'assistant') return <MedyIcon />;
+  if (panel !== 'inventory' && panel !== 'room') return null;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {panel === 'inventory' ? (
+        <>
+          <path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4" />
+          <path d="M5 9a2 2 0 0 0-2 2v6h18v-6a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-2-2Z" />
+          <path d="M5 17v3m14-3v3" />
+        </>
+      ) : (
+        <path d="M4 4h16v16H4zM4 11h7V4m0 7h9m-9 0v9" />
+      )}
+    </svg>
+  );
+}
 class CutawayBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; onFailure: () => void },
   { failed: boolean }
@@ -482,6 +507,7 @@ export function Editor({
     { id: 'checks', label: `Checks${hard ? ` (${hard})` : ''}` },
     { id: 'assistant', label: 'Medy' },
   ];
+  const activeTool = activeRoomTool(state);
   const frameControls = (
     <FrameControls
       view={roomView}
@@ -535,22 +561,22 @@ export function Editor({
             ↶ <span className={styles.undoLabel}>Undo</span>
           </button>
         </div>
-        <nav className={styles.toolRail} aria-label="Room tools">
+        <nav
+          className={styles.toolRail}
+          aria-label="Room tools"
+          data-tool={activeTool ?? undefined}
+        >
           {panels.map((panel) => (
             <button
               key={panel.id}
               hidden={panel.id === 'checks'}
-              aria-pressed={view.panel === panel.id}
+              aria-pressed={activeTool === panel.id}
               onClick={() => open(panel.id)}
             >
-              {panel.id === 'assistant' ? (
-                <span className={styles.assistantLabel}>
-                  <MedyIcon />
-                  {panel.label}
-                </span>
-              ) : (
-                panel.label
-              )}
+              <span className={styles.toolLabel}>
+                <RoomToolIcon panel={panel.id} />
+                {panel.label}
+              </span>
             </button>
           ))}
           <AssistantTour
