@@ -26,6 +26,21 @@
 20. `docs/design/layout.md`
 21. `docs/design/room-view.md`
 
+## Panel-corner follow-up allocation — 20 October 2026
+
+Parent618add8, clean tree before this allocation. Latest screenshot asks the catalogue's outer panel to have rounded corners matching the2D/3D frame. This is a presentation-only follow-up, not result approval. Exact owners before editing:
+
+1. `apps/frontend/src/features/room-editor/editor.module.css`
+2. `docs/commit-plans/RM-015AK.md`
+3. `docs/tickets/RM-015AK-drag-furniture-from-the-catalogue.md`
+4. `docs/validation/RM-015AK.md`
+5. `docs/ROOMEDY.md`
+6. `docs/README.md`
+7. `docs/tickets/README.md`
+8. `docs/design/layout.md`
+
+Apply the existing18px room-frame radius to the shared outer properties panel, preserving its contents, dimensions, scroll ownership, focus, motion and narrow natural flow. Inspect actual catalogue/inspector/chat and scrolling desktop/short/phone states; scoped CSS formatting and a full eight-path read-only review suffice for this reversible radius correction. Do not add mirrored CSS tests or repeat599tests/backend/full builds without cause. Record current hot-reload source separately from the prior production artifact. Existing exact local commit authority applies; actual visual gate remains pending, Q held, guide paused, RM-016 Planned. No new service/port/dependency, paid/live/delegation/push/deploy.
+
 ## Precision design and implementation
 
 Read existing catalogue Add/Replace, S/AB/AA room-edit/height/size authority, room-view/layout/motion, and lessons L-02/L-03/L-06–L-08/L-15–L-20. One ephemeral catalogue-placement owner holds a new proposed piece/pose and validates through the existing shared visitor preview/dispatch authority. Reuse beginRoomEdit lifetime fencing (allow an unchanged null selected ID for adding), existing snap/clamp/physical dimensions, strict catalogue defaults/size evidence/locks and one Add/Undo. Pointer frames never mutate canonical room/history, persisted state or provider scope. Cancellation/revision/view/selection/reset/import/expiry/unmount fences invalid work. Invalid/overlapping/unassessed-hard placements never bypass final validation.

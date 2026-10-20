@@ -238,6 +238,7 @@
 }
 .panel {
   grid-area: panel;
+  border-radius: 18px;
   background: #fffaf1f0;
   color: var(--ink);
   font: inherit;

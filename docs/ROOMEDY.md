@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Current panel-corner follow-up:** [AK allocation](commit-plans/RM-015AK.md#panel-corner-follow-up-allocation--20-october-2026) and [evidence](validation/RM-015AK.md#panel-corner-follow-up--20-october-2026) follow committed618add8. The shared outer properties panel now matches the18px room-frame radius in catalogue, inspector and assistant states. Actual desktop/short/phone scrolling and scoped CSS formatting passed. This hot-reload candidate differs from the prior production artifact; no fresh full-root/build claim. Actual visual approval remains pending; Q held, guide paused, RM-016 Planned.
+
 **Current furniture-add correction:** [RM-015AK](tickets/RM-015AK-drag-furniture-from-the-catalogue.md), [21-path allocation](commit-plans/RM-015AK.md) and [actual evidence](validation/RM-015AK.md) follow committed25135b7. Drag catalogue furniture into2D or3D with validated previews and one Add/Undo. Select/click/keyboard alternatives use the same authority; exact fields remain Advanced. Work area opens desk choices until a desk exists. Actual desktop/short/phone observations, focused62tests and final599-test/root/both-build/current-source gates passed; final21-path read-only pass2 is clean and the exact local checkpoint is prepared. Actual owner visual approval remains pending; Q held, guide paused, RM-016 Planned.
 
 **Prior proposal/toast correction:** [RM-015AJ](tickets/RM-015AJ-keep-proposal-decisions-in-chat.md), [15-path allocation](commit-plans/RM-015AJ.md) and [actual evidence](validation/RM-015AJ.md) follow committed575d907. Proposal decisions now belong to their matching assistant message; old messages cannot resolve a replacement. Visitor palettes keep their existing controls. One owned4s notice timer clears presentation only and retires across lifecycle changes. Focused52tests and final586-test/root/both-build/current217-file source gates passed; native desktop/short/phone and Apply/Cancel/Undo inspected. Read-only pass1 is clean and exact local checkpoint prepared; actual visual approval pending, Q held, guide paused, RM-016 Planned.
@@ -1339,7 +1341,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Present the locally validated RM-015AK catalogue drag/Work area correction and exact local checkpoint. Await actual owner visual feedback without asking questions while the owner sleeps. Keep Q held, guide paused and RM-016 Planned; no later quality/security, paid/live, push/deploy or delegation.
+Next action: Present the matched rounded properties panel and exact local checkpoint. Await actual owner visual feedback without questions while the owner sleeps. Keep Q held, guide paused and RM-016 Planned; no later quality/security, paid/live, push/deploy or delegation.
 Active ticket: RM-015AK
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1365,7 +1367,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T00:36:41+00:00",
+  "updated_at": "2026-10-20T00:44:00+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1555,7 +1557,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-015AK",
-  "next_action": "Present the locally validated RM-015AK catalogue drag/Work area correction and exact local checkpoint. Await actual owner visual feedback without asking questions while the owner sleeps. Keep Q held, guide paused and RM-016 Planned; no later quality/security, paid/live, push/deploy or delegation.",
+  "next_action": "Present the matched rounded properties panel and exact local checkpoint. Await actual owner visual feedback without questions while the owner sleeps. Keep Q held, guide paused and RM-016 Planned; no later quality/security, paid/live, push/deploy or delegation.",
   "phases": [
     {
       "id": "01-docs",
@@ -2009,14 +2011,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AD-AI.md — settled AD–AI queue completed before578tests/45files +7boundaries/root/both builds; current216-file source/BUILD_ID0b9b5d4f8871d848efa21e195d3cf9afd171a48b8919e8ff94260aec02a2a88d; clean full-scope read-only pass1; actual native GLB/OBJ downloads and4PDF pages inspected; exact70-path authorized local checkpoint prepared. Actual owner visual acceptance and explicit external/device/full-matrix limits remain pending.",
         "docs/validation/RM-015AI.md — Undo/Project glass-control follow-up: actual enabled/disabled Undo, native disclosure/keyboard/focus,1280×720/390×844/320×640/1280×600 fit; scoped format/lint/frontend types passed; clean eight-path read-only pass1 and264local links. Current hot-reload source692380139950ee927d68d5b3450360f09d9d502bb8c44c7a0ccb40b1046340bb differs from prior production artifact; exact local checkpoint prepared.",
         "docs/validation/RM-015AJ.md — chat-owned proposal decisions and4s notices:52focused tests,586tests/45files +7boundaries/root/both builds passed;217inputs/1852400bytes/BUILD_ID6c06309495135fa86ab9afe0ab66370945057ca12afbd43ab8374b38538e6d0c; actual1280/390/320/short3D/chat Apply/Cancel/Undo, notice expiry and visitor palette observed; unchanged frame; clean15-path read-only pass1/425local links; exact local checkpoint prepared. Actual owner visual approval pending.",
-        "docs/validation/RM-015AK.md — primary catalogue drag in2D/3D and useful Work area:62focused tests; final599tests/46files +7boundaries/root/both builds passed;222inputs/1880272bytes/BUILD_IDe80a8f900a290a2fc3c82e3eeae7614c575ea63fd2c13295f00ced4dc4c85876. Actual native drags, invalid/retry/outside/Cancel/keyboard/Undo and1280/390/320/short states inspected; final source drags rechecked. Two input review findings fixed, clean21-path read-only pass2/449local links. Exact local checkpoint prepared; actual owner visual approval pending."
+        "docs/validation/RM-015AK.md — primary catalogue drag in2D/3D and useful Work area:62focused tests; final599tests/46files +7boundaries/root/both builds passed;222inputs/1880272bytes/BUILD_IDe80a8f900a290a2fc3c82e3eeae7614c575ea63fd2c13295f00ced4dc4c85876. Actual native drags, invalid/retry/outside/Cancel/keyboard/Undo and1280/390/320/short states inspected; final source drags rechecked. Two input review findings fixed, clean21-path read-only pass2/449local links. Exact local checkpoint prepared; actual owner visual approval pending.",
+        "docs/validation/RM-015AK.md#panel-corner-follow-up--20-october-2026 — shared panel18px corner follow-up on618add8: CSS format passed, actual catalogue scroll/3D/390phone/short Assistant corners and Send checked; no browser errors. Exact eight-path read-only pass1 clean/442local links, local checkpoint prepared. Current hot-reload inpute264681384caeaf4198bbefffab89b7db85d60eb030ca7233c141252df9d9cca differs from prior production build; no fresh root/build/device claim. Actual owner approval pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "i expect work area is related to adding a desk; adding furniture this way is almost impossible for most users, a drag and drop style has to be used here as the main way; should work for both 2d and 3d",
-        "scope": "RM-015AK implementation only; no result approval, delegation or external authority.",
-        "source": "human:current-chat/2026-10-20/catalogue-drag-and-work-area",
-        "recorded_at": "2026-10-20T00:22:27+00:00"
+        "scope": "RM-015AK eight-path presentation-only follow-up; no result approval.",
+        "quote": "this div needs to have rounded corners like the frame that views the 2d 3d plane for consistency, the hard corners are showing inconsistency in design",
+        "source": "human:current-chat/2026-10-20/panel-rounded-corners",
+        "recorded_at": "2026-10-20T00:39:57+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2270,6 +2273,15 @@ This checklist records local work. Human approvals and unresolved external check
             "scope": "RM-015AK implementation only; no result approval, delegation or external authority.",
             "source": "human:current-chat/2026-10-20/catalogue-drag-and-work-area",
             "recorded_at": "2026-10-20T00:22:27+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "scope": "RM-015AK eight-path presentation-only follow-up; no result approval.",
+            "quote": "this div needs to have rounded corners like the frame that views the 2d 3d plane for consistency, the hard corners are showing inconsistency in design",
+            "source": "human:current-chat/2026-10-20/panel-rounded-corners",
+            "recorded_at": "2026-10-20T00:39:57+00:00"
           }
         }
       ]

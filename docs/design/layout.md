@@ -2,6 +2,8 @@
 
 ## Catalogue placement — RM-015AK
 
+The outer properties panel uses the same18px radius as the room viewport, shared by catalogue, inspector and assistant. Preserve the existing bounded overflow:auto and narrow overflow:visible natural flow; no panel padding/frame-height/scroll ownership changes. [Corner follow-up evidence](../validation/RM-015AK.md#panel-corner-follow-up--20-october-2026).
+
 Add a piece keeps the useful catalogue visible. Drag a card into the actual2D drawing or3D floor; a translucent physical footprint/box previews the proposed location. Valid/blocked feedback and Rotate/Cancel are temporary overlays and do not consume frame height. A valid release creates one Add with one Undo; an invalid inside release stays available for repositioning, while an outside release cancels. Catalogue source drags never move existing furniture or orbit the camera.
 
 Selecting a card arms the same placement for a room click or Arrow/R/Enter/Escape input. On stacked layouts it smoothly brings the room into view; a dedicated44px touch grip leaves the rest of the card scrollable/tappable. Exact position and size fields remain in collapsed Advanced placement. Explicit replacement retains its existing size/coordinate review. Work area without a desk opens desk-filtered choices; once a desk exists it retains the safe desk view. [Actual feature checks and limits](../validation/RM-015AK.md) remain separate from owner approval and physical touch evidence.

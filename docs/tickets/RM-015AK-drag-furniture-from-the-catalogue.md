@@ -9,3 +9,7 @@ Status: **Locally verified599tests/root/build/current-source; read-only pass2 cl
 - [ ] Actual owner visual approval remains pending.
 
 No paid/live/delegation/new dependency/service/port/push/deploy. Q held, guide paused, RM-016 Planned. Both selected interaction corrections finish before final routine gates; observed errors are repaired autonomously.
+
+## Panel-corner follow-up — 20 October 2026
+
+Original interaction checkpoint committed618add8. Latest owner requests matching rounded outer panel/frame corners. The [exact eight-path follow-up allocation](../commit-plans/RM-015AK.md#panel-corner-follow-up-allocation--20-october-2026) applies18px to the shared properties container. Catalogue/inspector/assistant inherit it across bounded scrolling and narrow natural flow. Scoped formatting and actual desktop/short/phone checks passed; read-only closeout recorded in [evidence](../validation/RM-015AK.md#panel-corner-follow-up--20-october-2026). Prior599-test/build evidence remains historical, actual owner visual approval pending.
