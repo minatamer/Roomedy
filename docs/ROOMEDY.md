@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Shared chapter-title size —21October:** All three numbered landing titles now share the smaller16–18px scale through chapterLabel, including16px on phones. No Medy-specific override; the two marketing taglines remain unchanged. [L allocation](commit-plans/RM-015L.md#shared-chapter-size-follow-up-allocation--21-october2026), [evidence](validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026). Scoped formatting/native shared-consumer checks pass; actual owner approval pending.
+
 **Landing chapter typography —20October:** Meet Medy and the other two chapter titles now use a readable20–28px scale, medium weight, clear ink and consistent sentence case. Smaller numbered markers preserve hierarchy; long titles wrap naturally. [L allocation](commit-plans/RM-015L.md#chapter-typography-follow-up-allocation--20-october2026), [evidence](validation/RM-015L.md#chapter-typography-follow-up--20-october2026). Scoped checks and native desktop/short/tablet/phone observations pass; actual owner approval pending.
 
 **Room-tool padding and alignment —20October:** Furniture/Room/Medy now fill the same responsive width as the properties card, with centered icon/label groups and even padding. Shared column sizing keeps both edges aligned across desktop/tablet; the full-width narrow row matches the stacked card. [AZ allocation](commit-plans/RM-015AZ.md#capsule-alignment-follow-up-allocation--20-october2026), [evidence](validation/RM-015AZ.md#capsule-alignment-follow-up--20-october2026). Scoped formatting/native geometry and keyboard checks pass; actual owner approval pending.
@@ -1409,7 +1411,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await owner visual review of the larger landing chapter titles and completed revision round; Q held, guide paused and RM-016 Planned.
+Next action: Implement the newly requested mobile Project/Undo padding correction; shared chapter-size local checkpoint ready, actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 Active ticket: RM-015L
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1435,7 +1437,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T20:24:48+00:00",
+  "updated_at": "2026-10-20T21:20:29+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1625,7 +1627,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-015L",
-  "next_action": "Await owner visual review of the larger landing chapter titles and completed revision round; Q held, guide paused and RM-016 Planned.",
+  "next_action": "Implement the newly requested mobile Project/Undo padding correction; shared chapter-size local checkpoint ready, actual owner visual approval pending; Q held, guide paused, RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -2122,14 +2124,16 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AZ.md — room-tool design afterec6c287. One oat capsule/decorative icons/sliding cocoa surface,44px targets and preserved68px bounded header. Actual inspector/catalogue parent selection stays accurate without canonical state changes.47focused session/project-menu tests, scoped format/lint/frontend/test types, desktop/short/tablet/320/390 native context/keyboard/Project observations pass;11-path read-only revision clean. No new full-suite/build identity claim; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015AY.md#chat-typography-follow-up--20-october2026: scoped format/lint/frontend types; actual desktop/short/390/320 chat typography, scrolling, proposal Cancel and composer observations; exact9-path follow-up; owner visual approval pending.",
         "docs/validation/RM-015AZ.md#capsule-alignment-follow-up--20-october2026: exact8-path CSS padding/width correction, seven native viewport geometries, keyboard/Project checks and full screenshots; scoped formatting/read-only review clean; actual owner approval pending.",
-        "docs/validation/RM-015L.md#chapter-typography-follow-up--20-october2026: exact9-path title hierarchy correction, scoped format/lint/frontend types, five native viewport metrics and complete screenshots, long-title wrapping/scroll/link observations; clean read-only review; owner visual approval pending."
+        "docs/validation/RM-015L.md#chapter-typography-follow-up--20-october2026: exact9-path title hierarchy correction, scoped format/lint/frontend types, five native viewport metrics and complete screenshots, long-title wrapping/scroll/link observations; clean read-only review; owner visual approval pending.",
+        "human:current-chat/2026-10-21/shared-chapter-title-size — Owner clarifies: make sure this is a shared class so it reflects on the others. Existing in-progress revision now applies the smaller size to all three numbered chapter labels; marketing taglines remain unchanged.",
+        "docs/validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026: final shared16–18px scale on all three numbered titles, exact8-path CSS checkpoint; scoped formatting and four native viewport shared-consumer observations pass; no actionable findings; actual owner approval pending."
       ],
       "blockers": [],
       "approval": {
-        "source": "human:current-chat/2026-10-20/landing-chapter-typography",
-        "scope": "Rebalance landing chapter titles against their display headlines; actual visual approval pending",
-        "quote": "in landing the titles like \"meet medy\" is so small compared to title below it, fix that. it looks very wrong",
-        "recorded_at": "2026-10-20T20:20:07+00:00"
+        "scope": "Reduce only the landing Meet Medy label; leave other chapter titles and both marketing taglines unchanged; actual visual approval pending",
+        "quote": "ok actually just only do the meet meedy edit, the rest are fine",
+        "source": "human:current-chat/2026-10-21/medy-title-size-only",
+        "recorded_at": "2026-10-20T21:15:17+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2770,6 +2774,15 @@ This checklist records local work. Human approvals and unresolved external check
             "scope": "Rebalance landing chapter titles against their display headlines; actual visual approval pending",
             "quote": "in landing the titles like \"meet medy\" is so small compared to title below it, fix that. it looks very wrong",
             "recorded_at": "2026-10-20T20:20:07+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "scope": "Reduce only the landing Meet Medy label; leave other chapter titles and both marketing taglines unchanged; actual visual approval pending",
+            "quote": "ok actually just only do the meet meedy edit, the rest are fine",
+            "source": "human:current-chat/2026-10-21/medy-title-size-only",
+            "recorded_at": "2026-10-20T21:15:17+00:00"
           }
         }
       ]

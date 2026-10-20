@@ -2,7 +2,7 @@
 
 ## Landing chapter-title hierarchy — RM-015L follow-up
 
-The three numbered chapter titles are readable section names, not tiny tracked metadata. Use a fluid20–28px title scale, medium weight, ink colour,1.25 line height and restrained negative tracking; retain larger established display headlines. Sentence case matches Meet Medy. Keep number text explicitly12px in40px circles, or11px in36px phone circles, with no flex shrinking. Allow a long title to wrap naturally beside its marker; preserve the normal flowing sections,26px title-to-headline gap/20px on phones, original semantic headings, photography and room/scroll motion. Unrelated taglines and editor text retain their own owners.
+The three numbered chapter titles share chapterLabel with a restrained16–18px scale, including16px in its phone rule, medium weight, ink colour,1.25 line height and restrained negative tracking. The21October owner correction replaces the earlier20–28px scale; do not add a Medy-only override. Retain larger established display headlines. Sentence case matches Meet Medy. Keep number text explicitly12px in40px circles, or11px in36px phone circles, with no flex shrinking. Allow a long title to wrap naturally beside its marker; preserve the normal flowing sections,26px title-to-headline gap/20px on phones, original semantic headings, photography and room/scroll motion. Unrelated taglines and editor text retain their own owners.
 
 ## Medy chat reading size — RM-015AY follow-up
 

@@ -46,3 +46,11 @@ Owner says titles such as Meet Medy are too small compared with the display head
 - [x] Shared chapter titles grow from9px desktop/8px phone to a fluid20–28px scale with medium weight, tighter tracking and clear ink. Start with what’s yours/Give your ideas some space use sentence case like Meet Medy. Number circles keep subordinate12px/phone11px text and fixed non-shrinking geometry.
 - [x] Main headlines, meaning, semantic headings/order, photography/full-room scene, motion and links remain. Long320px title wraps to two lines without horizontal overflow; existing section flow and CTA remain reachable.
 - [x] Scoped formatting/lint/frontend types and native desktop/short/tablet/390/320 observations pass. Read-only review has no actionable findings; exact local checkpoint authorized. Actual owner approval pending, Q held, guide paused, RM-016 Planned; no fresh full-suite/build, paid/live, config, dependencies, new ports, delegation, push or deploy.
+
+## Shared chapter size follow-up — 21 October2026
+
+Owner finds Meet Medy too large, then clarifies: “make sure this is a shared class so it reflects on the others”. The existing three numbered chapter titles now use one smaller shared16–18px scale. Make a little room and Less guessing taglines remain unchanged under the preceding scope correction. [Eight-path allocation](../commit-plans/RM-015L.md#shared-chapter-size-follow-up-allocation--21-october2026), [actual evidence](../validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026).
+
+- [x] Existing chapterLabel owns the shared responsive size, including16px in its existing phone rule. No Medy-only selector, class, JSX/content change or duplicate style owner remains.
+- [x] Circles, gaps, weight/colour/tracking, display headlines, taglines and room/scroll authority retained. All three measure17.92px at1280px and16px at390/320px, with no measured horizontal overflow.
+- [x] Scoped formatting, native shared-consumer desktop/short/phone observations and clean read-only review recorded. Exact authorized local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned. No new full build/provider/config/dependency/service/port/delegation/push/deploy.
