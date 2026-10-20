@@ -5,7 +5,11 @@ import { assistantFakeResponse } from '../assistant/fake.js';
 export function createRoomedyFakeProvider() {
   const recognition = createRecognitionFakeProvider();
   return createFakeProvider((request, signal) =>
-    ['room_assistant_1', 'room_design_intent_1'].includes(request.format.name)
+    [
+      'room_assistant_1',
+      'room_design_intent_1',
+      'room_medy_conversation_1',
+    ].includes(request.format.name)
       ? assistantFakeResponse(request, signal)
       : recognition.start(request, signal).result,
   );

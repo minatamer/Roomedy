@@ -189,7 +189,25 @@ it.each(['empty', 'partial', 'furnished'] as const)(
         status: 'already-applied',
       });
       const calls = runtime.operations.calls();
-      expect(calls).toBe(5);
+      // Recognition dispatched once; explicit palette previews now share the local manual command path.
+      expect(calls).toBe(1);
+      expect(session.getSnapshot().workspace!.current.room).toMatchObject({
+        floorFinish: 'walnut',
+        wallFinish: 'ivory',
+      });
+      expect(session.getSnapshot().workspace!.current.intent.style).toBe(
+        'calm-focused',
+      );
+      for (const originalPiece of original.furniture.filter(
+        (piece) => piece.ownership === 'owned',
+      ))
+        expect(
+          session
+            .getSnapshot()
+            .workspace!.current.furniture.find(
+              (piece) => piece.id === originalPiece.id,
+            ),
+        ).toEqual(originalPiece);
       expect(session.setComparison('before')).toBe(true);
       expect(session.canEdit()).toBe(false);
       expect(session.setComparison('current')).toBe(true);

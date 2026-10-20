@@ -7,6 +7,8 @@ import { findCatalogueEntry, CATALOGUE } from './catalogue.js';
 import { checkRoom } from './checks.js';
 import { designerRequest, designPalette, designSuggestions } from './design.js';
 import type { DesignTurn } from './design.js';
+import { medyCommandWords } from './medy-language.js';
+import { requestedCatalogueSize } from './size-presets.js';
 
 const clarificationLabel =
   'Which change would help: move the work area by a window, rearrange owned pieces, choose furniture, or preview a finish?';
@@ -20,7 +22,8 @@ export interface AssistantTask {
     | 'clarify'
     | 'unsupported'
     | 'control'
-    | 'undo';
+    | 'undo'
+    | 'conversation';
   interpret?: boolean;
   label: string;
   scope: ActionScope;
@@ -93,7 +96,7 @@ export function assistantSearchFallback(
       task.objectIds.includes(p.id) && (p.locks.position || p.locks.rotation),
   );
   const palette =
-    room.room.floorFinish === 'walnut' && room.room.wallFinish === 'sage'
+    room.room.floorFinish === 'walnut' && room.room.wallFinish === 'ivory'
       ? 'light'
       : 'calm';
   const suggestions = designSuggestions(room, {
@@ -255,11 +258,13 @@ function resolveExplicitTask(
       t,
     ) &&
     /\b(make|feel|preview|palette|finish|warm|calm|airy|focused)\b/.test(t);
-  const preset = /\b(calm|focused|calm-focused)\b/.test(t)
-    ? { floorFinish: 'walnut' as const, wallFinish: 'sage' as const }
-    : /\b(warm|warmer|warm-simple)\b/.test(t)
-      ? { floorFinish: 'oak' as const, wallFinish: 'clay' as const }
-      : { floorFinish: 'oak' as const, wallFinish: 'ivory' as const };
+  const preset = designPalette(
+    /\b(calm|focused|calm-focused)\b/.test(t)
+      ? 'calm'
+      : /\b(warm|warmer|warm-simple)\b/.test(t)
+        ? 'warm'
+        : 'light',
+  );
   const adding = /\b(add|need|furnish)\b/.test(t);
   if (
     /\b(rotate|turn)\b/.test(t) &&
@@ -477,7 +482,7 @@ function resolveExplicitTask(
     const furnitureFinish = /\b(light|airy)\b/.test(t)
       ? ('ivory' as const)
       : /\b(calm|focused)\b/.test(t)
-        ? ('sage' as const)
+        ? ('walnut' as const)
         : ('oak' as const);
     goal.pieceFinishes = pieces
       .filter(
@@ -535,12 +540,32 @@ function resolveExplicitTask(
       };
     goal.kind = pieces.length ? 'add' : 'furnish';
     for (const [i, c] of additionTypes.entries()) {
-      const entry = CATALOGUE.find((e) => e.category === c)!;
+      const namedEntry = CATALOGUE.find(
+        (e) => e.category === c && t.includes(e.label.toLowerCase()),
+      );
+      const entry = namedEntry ?? CATALOGUE.find((e) => e.category === c)!;
+      const requested = requestedCatalogueSize(
+        entry,
+        medyCommandWords(room, t),
+      );
+      if (requested.error) return { ...task, label: requested.error };
+      if (additionTypes.length > 1 && requested.size)
+        return {
+          ...task,
+          label:
+            'Let’s add the piece with its exact size first, then the other essentials. Which one should use those dimensions?',
+        };
       const choice = {
         id: `added_${operationId}_${i}`,
         catalogueId: entry.id,
-        size: null,
-        finish: null,
+        size: requested.size,
+        finish:
+          entry.finishes.find((finish) =>
+            new RegExp(`\\b${finish}\\b`).test(t),
+          ) ??
+          (appearance && entry.finishes.includes(preset.floorFinish)
+            ? preset.floorFinish
+            : null),
       };
       goal.additions.push(choice);
       scope.additions.push({ id: choice.id, catalogueId: choice.catalogueId });
@@ -727,6 +752,16 @@ export function resolveAssistantTask(
   operationId: string,
   context: readonly DesignTurn[] = [],
 ): AssistantTask {
+  const advice =
+    /^(?:what|how|why|should|do|does|is|are|any|suggest|recommend|tell me|i feel|i'm|i am)\b|^(?:can|could) i\b|^(?:can|could|would) you (?:suggest|recommend|explain|tell)\b|^would (?:this|that|it|a|the|my|we|i)\b|\b(?:whether|confirm if|verify if)\b/i.test(
+      text.trim(),
+    ) && !/\b(ignore|price|budget|shopping)\b/i.test(text);
+  if (advice)
+    return {
+      ...resolveExplicitTask(room, '', null, operationId),
+      kind: 'conversation',
+      label: 'Talk through your room design',
+    };
   const design = designerRequest(room, text, selectedId, context.slice(-40));
   const empty = () => resolveExplicitTask(room, '', null, operationId);
   if (design.clarification) return { ...empty(), label: design.clarification };
@@ -767,7 +802,8 @@ export function resolveAssistantTask(
     if (design.mood && task.goal.kind !== 'appearance') {
       task.extraFinish = { type: 'room-finish', ...designPalette(design.mood) };
       task.scope.roomFinishes = true;
-      task.scope.actionKinds.push('room-finish');
+      if (!task.scope.actionKinds.includes('room-finish'))
+        task.scope.actionKinds.push('room-finish');
       task.label += ` with a ${design.mood} palette`;
     }
     if (

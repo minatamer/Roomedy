@@ -269,7 +269,7 @@ it('keeps explicit exclusions fixed and makes layout/palette one captured atomic
   expect(task.extraFinish).toEqual({
     type: 'room-finish',
     floorFinish: 'walnut',
-    wallFinish: 'sage',
+    wallFinish: 'ivory',
   });
   expect(task.scope.actionKinds).toEqual(['move', 'rotate', 'room-finish']);
   expect(task.scope.roomFinishes).toBe(true);
@@ -314,7 +314,7 @@ it('offers distinct supported palettes and does not let a general style request 
   const calm = run(room, 'Coordinate the room finishes so it feels serene');
   expect(calm.goal?.roomFinish).toEqual({
     floorFinish: 'walnut',
-    wallFinish: 'sage',
+    wallFinish: 'ivory',
   });
   expect(calm.goal?.pieceFinishes).toEqual([]);
 });

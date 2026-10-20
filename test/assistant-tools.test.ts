@@ -351,7 +351,7 @@ it('a selected finish cannot be replaced by a different model-chosen palette', a
             ...flat,
             type: 'room-finish',
             floorFinish: 'walnut',
-            wallFinish: 'sage',
+            wallFinish: 'ivory',
           },
         ],
       })
@@ -585,13 +585,13 @@ it('prepares a coordinated spatial/style batch with actual facts and rejects an 
   expect(reply.actions).toContainEqual({
     type: 'room-finish',
     floorFinish: 'walnut',
-    wallFinish: 'sage',
+    wallFinish: 'ivory',
   });
   expect(reply.facts!.windowDistanceMm.after!).toBeLessThan(
     reply.facts!.windowDistanceMm.before!,
   );
   expect(reply.summary).toContain('closer to daylight');
-  expect(reply.summary).toContain('Walnut and sage');
+  expect(reply.summary).toContain('Walnut and ivory');
   expect(reply.facts!.changedIds).toContain(input.room.roomId);
   expect(
     tools.prepare([

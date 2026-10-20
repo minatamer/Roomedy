@@ -21,3 +21,10 @@ Shared tokens, focus outlines, minimum action heights, bounded panels and respon
 ## RM-006 cutaway baseline
 
 The main editor now adds a warm stylized cutaway over the same room/selection. Its neutral paper chrome and compact camera actions preserve the earthy website direction while scene finishes remain canonical data. Inspect [room-view policy](room-view.md) and [actual RM-006 browser/frame evidence](../validation/RM-006.md). Phone/tablet/short-laptop layouts, selected pieces, palette candidates and a missing model fallback were inspected. Final owner visual acceptance remains RM-015.
+
+
+## MEDY introduction and conversation — RM-015AT
+
+MEDY is named from RooMEDY, following the owner’s M-E-D-Y spelling. The existing third landing chapter becomes Meet MEDY, with one concise role introduction, an illustrative visitor/MEDY exchange and a real studio CTA. Keep the established full-room scene/chapter count, warm feathered text composition, palette and smooth scroll choreography. Retailor’s Meet Tailor task examples and Retrosum’s Meet Retro workspace explanation informed the compact pattern; no sibling styling, claim, configuration or authority is copied.
+
+Chat uses the same warm task surfaces, a short personal welcome, an optional tour/direction starting point, reachable composer and visible Send action. Exact edits show the actual field/size/facing/finish/protection/feature differences before Apply; ordinary greetings/advice do not add unrelated issue cards. Proposed edits remain visually separate from accepted state. Natural narrow flow and bounded desktop/short working height remain. Native phone/short/tablet observations and the pending owner decision are recorded in [AT evidence](../validation/RM-015AT.md).

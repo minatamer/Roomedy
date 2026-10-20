@@ -30,11 +30,20 @@ export const designIntentSchema = z.strictObject({
     'explain',
     'clarify',
     'unsupported',
+    'manual-control',
   ]),
   targetIds: z.array(idSchema).max(5),
   categories: z.array(categorySchema).max(5),
   finish: finishSchema.nullable(),
   palette: z.enum(['warm', 'light', 'calm']).nullable(),
+  // A suggested request must be selected by the visitor and compiled again. It grants no execution authority.
+  manualRequest: z
+    .string()
+    .trim()
+    .min(1)
+    .max(POLICY.visitorTextChars)
+    .nullable()
+    .optional(),
 });
 export type DesignIntent = z.infer<typeof designIntentSchema>;
 export const designSuggestionSchema = z.strictObject({
@@ -126,7 +135,11 @@ export const assistantToolSchemas = {
   request_undo: z.strictObject({}),
 } as const;
 export type AssistantTool = keyof typeof assistantToolSchemas;
-export const assistantFinalSchema = z.strictObject({ kind: z.literal('done') });
+export const assistantFinalSchema = z.strictObject({
+  kind: z.literal('done'),
+  // Advice is displayed only on the no-tools, no-actions conversation path.
+  message: z.string().trim().min(1).max(1200).nullable().optional(),
+});
 export const assistantJsonSchema = (
   name: AssistantTool | 'final' | 'interpretation',
 ) =>

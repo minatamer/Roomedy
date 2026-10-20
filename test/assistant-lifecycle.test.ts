@@ -314,7 +314,7 @@ it.each(sampleAssistantStories)(
     if (story.kind === 'partial') expect(arranged.room.height.value).toBeNull();
     await s.assistant.submit('Coordinate the room finishes so it feels serene');
     expect(s.session.getSnapshot().candidate!.room.room.wallFinish).toBe(
-      'sage',
+      'ivory',
     );
     expect(s.assistant.apply().ok).toBe(true);
     expect(s.assistant.undo().ok).toBe(true);

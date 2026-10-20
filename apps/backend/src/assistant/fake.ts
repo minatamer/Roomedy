@@ -6,7 +6,7 @@ import { roomDocumentSchema } from '@roomedy/contracts/room';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { DesignIntent } from '@roomedy/contracts/assistant';
 import { POLICY } from '@roomedy/contracts/policy';
-import { findCatalogueEntry } from '@roomedy/spatial';
+import { findCatalogueEntry, medyAdvice } from '@roomedy/spatial';
 
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
@@ -25,8 +25,18 @@ function interpret(
       categories: [],
       finish: null,
       palette: null,
+      manualRequest: null,
     };
   if (/\b(ignore|unlock|confirm|buy|price|budget)\b/.test(t)) return empty;
+  const manual = /\b(walk me through|orient me|show me the ropes)\b/.test(t)
+    ? 'Start the quick tour'
+    : /\b(closer look|closer peek|magnify the view)\b/.test(t)
+      ? 'Zoom in'
+      : /\b(pull back a little|back the camera away)\b/.test(t)
+        ? 'Zoom out'
+        : null;
+  if (manual && !/\b(don't|do not|never|not)\b/.test(t))
+    return { ...empty, goal: 'manual-control', manualRequest: manual };
   const refs = (words: string) => {
     const names = room.furniture.filter(
       (p) =>
@@ -131,11 +141,19 @@ export async function assistantFakeResponse(
 ): Promise<ProviderOutcome> {
   if (signal.aborted) return { kind: 'cancelled' };
   if (
-    !['room_assistant_1', 'room_design_intent_1'].includes(request.format.name)
+    ![
+      'room_assistant_1',
+      'room_design_intent_1',
+      'room_medy_conversation_1',
+    ].includes(request.format.name)
   )
     return { kind: 'malformed' };
   if (request.input.at(-1)?.type === 'function_call_output')
-    return { kind: 'completed', data: { kind: 'done' }, calls: [] };
+    return {
+      kind: 'completed',
+      data: { kind: 'done', message: null },
+      calls: [],
+    };
   const content = request.input.at(-1)?.content;
   if (!Array.isArray(content) || typeof content[0]?.text !== 'string')
     return { kind: 'malformed' };
@@ -165,6 +183,22 @@ export async function assistantFakeResponse(
           ),
         }
       : { kind: 'malformed' };
+  }
+  if (request.format.name === 'room_medy_conversation_1') {
+    const room = roomDocumentSchema.safeParse(context.room);
+    if (!room.success || request.tools.length) return { kind: 'malformed' };
+    return {
+      kind: 'completed',
+      calls: [],
+      data: {
+        kind: 'done',
+        message: medyAdvice(
+          room.data,
+          context.request,
+          typeof context.selectedId === 'string' ? context.selectedId : null,
+        ),
+      },
+    };
   }
   if (
     !record(context.task) ||

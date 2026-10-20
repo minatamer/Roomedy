@@ -10,7 +10,7 @@ export const FINISH_PRESETS = Object.freeze([
     id: 'warm-simple',
     label: 'Warm & simple',
     floor: 'oak',
-    wall: 'ivory',
+    wall: 'clay',
     furniture: 'oak',
   },
   {
@@ -24,8 +24,8 @@ export const FINISH_PRESETS = Object.freeze([
     id: 'calm-focused',
     label: 'Calm & focused',
     floor: 'walnut',
-    wall: 'sage',
-    furniture: 'sage',
+    wall: 'ivory',
+    furniture: 'walnut',
   },
 ] as const);
 

@@ -52,16 +52,19 @@ export function ExportDialog({
   onClose,
   onProject,
   onDownload,
+  requestedFormat = null,
 }: {
   controller: SessionController;
   onClose: () => void;
   onProject: () => void;
   onDownload: (blob: Blob, name: string) => void;
+  requestedFormat?: DesignExportKind | 'project' | null;
 }) {
   const dialog = useRef<HTMLDialogElement>(null),
     job = useRef<ReturnType<typeof startDesignExport> | null>(null),
     live = useRef(false),
     closeRef = useRef(onClose);
+  const requestedButton = useRef<HTMLButtonElement | null>(null);
   const [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(''),
     [message, setMessage] = useState('');
@@ -124,6 +127,15 @@ export function ExportDialog({
       }
     }
   };
+  useEffect(() => {
+    let active = true;
+    queueMicrotask(() => {
+      if (active && requestedFormat) requestedButton.current?.click();
+    });
+    return () => {
+      active = false;
+    };
+  }, [requestedFormat]);
   if (typeof document === 'undefined') return null;
   return createPortal(
     <dialog
@@ -147,6 +159,7 @@ export function ExportDialog({
         {EXPORT_FORMATS.map((format) => (
           <button
             key={format.kind}
+            ref={format.kind === requestedFormat ? requestedButton : undefined}
             type="button"
             className={styles.format}
             disabled={busy}

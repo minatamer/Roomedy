@@ -174,31 +174,38 @@ export function Landing() {
             >
               <div className={styles.copy}>
                 <p className={styles.chapterLabel}>
-                  <span>03</span> SEE IT FROM A FRESH ANGLE
+                  <span>03</span> MEET MEDY
                 </p>
                 <h2 id="perspective-title">
-                  Your ideas.
+                  A little help.
                   <br />
-                  <em>A design partner.</em>
+                  <em>A room that’s you.</em>
                 </h2>
                 <p className={styles.description}>
-                  “Bring my work area closer to the window.” Start a
-                  conversation, explore a suggestion, and decide what feels
-                  right.
+                  Meet MEDY, your room design partner. Talk through an idea,
+                  find a calmer layout, or get the details just right — one
+                  conversation at a time.
                 </p>
-                <div className={styles.designerNote}>
-                  <span aria-hidden="true">✦</span>
+                <div
+                  className={styles.medyConversation}
+                  aria-label="An example conversation with MEDY"
+                >
+                  <p className={styles.medyVisitor}>
+                    “A tidy room, with a place to work by the window.”
+                  </p>
                   <p>
-                    More than a pretty picture. A room you can look around,
-                    measure, and keep making your own.
+                    <span aria-hidden="true">✦</span>
+                    <strong>MEDY</strong> Let’s keep the centre open and bring
+                    your desk closer to daylight. We can try it together.
                   </p>
                 </div>
                 <p className={styles.detail}>
-                  The assistant works with your room and the pieces you want to
-                  keep. Review its changes before they become yours.
+                  Ask for exact sizes, finishes, a different view or a quick
+                  tour. Review room changes, keep what you love, and Undo
+                  whenever you need.
                 </p>
                 <Link href="/demo" className={styles.chapterLink}>
-                  Step into your studio <span aria-hidden="true">↗</span>
+                  Design with MEDY <span aria-hidden="true">↗</span>
                 </Link>
               </div>
             </section>

@@ -23,7 +23,7 @@ function referenced(room: RoomDocument, text: string) {
 }
 export const designPalette = (mood: 'warm' | 'light' | 'calm') =>
   mood === 'calm'
-    ? { floorFinish: 'walnut' as const, wallFinish: 'sage' as const }
+    ? { floorFinish: 'walnut' as const, wallFinish: 'ivory' as const }
     : {
         floorFinish: 'oak' as const,
         wallFinish: mood === 'warm' ? ('clay' as const) : ('ivory' as const),
@@ -100,7 +100,7 @@ export function designerRequest(
       ? 'warm'
       : /\b(light|lighter|bright|brighter|airy|airier)\b/.test(t)
         ? 'light'
-        : /\b(calm|calmer|serene|cohesive|coordinat(?:e|ed)|minimal|focused)\b/.test(
+        : /\b(calm|calmer|serene|cohesive|coordinat(?:e|ed)|minimal|modern|aesthetic|japandi|scandinavian|tidy|tidier|neat|clean|focused)\b/.test(
               t,
             )
           ? 'calm'
@@ -261,6 +261,15 @@ export function designerRequest(
       return result(t.replace(/\b(it|that)\b/, 'this selected piece'));
     }
   }
+  if (adding && mood && /\b(style|palette|look)\b/.test(t))
+    return result(
+      t.replace(
+        /\b(modern|minimal|japandi|scandinavian|aesthetic|tidy|neat|clean)\b/g,
+        'calm',
+      ),
+      false,
+      mood,
+    );
   return result();
 }
 

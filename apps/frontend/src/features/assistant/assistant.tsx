@@ -137,10 +137,12 @@ export function Assistant({
     <section
       className={styles.assistant}
       data-room-target="assistant"
-      aria-label="Roomedy assistant"
+      aria-label="MEDY room assistant"
     >
       <div className={styles.heading}>
-        <h2 tabIndex={-1}>Roomedy assistant</h2>
+        <h2 tabIndex={-1}>
+          MEDY<span className={styles.identity}>Your room, together.</span>
+        </h2>
       </div>
       {state.mode !== 'fake' && (
         <p className={styles.mode}>
@@ -160,7 +162,26 @@ export function Assistant({
       >
         {state.messages.length > 0 && goalOptions}
         {!state.messages.length && (
-          <div className={styles.welcome}>{goalOptions}</div>
+          <div className={styles.welcome}>
+            <p>Hi, I’m MEDY. What would you like to make room for?</p>
+            <p>
+              We can try a layout, change an exact size, or explore the room
+              together.
+            </p>
+            <div className={styles.goals}>
+              <button onClick={() => send('Show me around')}>
+                Show me around
+              </button>
+              <button
+                onClick={() =>
+                  send('How can I make this room feel tidy and modern?')
+                }
+              >
+                Help me find a direction
+              </button>
+            </div>
+            {goalOptions}
+          </div>
         )}
         {state.messages.map((message) => {
           const reply = message.reply,
@@ -173,7 +194,7 @@ export function Assistant({
               key={message.id}
               className={message.role === 'user' ? styles.user : styles.reply}
               aria-label={
-                message.role === 'user' ? 'Your request' : 'Assistant response'
+                message.role === 'user' ? 'Your request' : 'MEDY response'
               }
             >
               <p>{message.text}</p>
@@ -339,6 +360,7 @@ export function Assistant({
                 </button>
               )}
               {reply &&
+                message.operationId !== null &&
                 reply.kind === 'explanation' &&
                 reply.checks.issues.slice(0, 3).map((issue) => (
                   <button
@@ -420,7 +442,7 @@ export function Assistant({
           submit();
         }}
       >
-        <label htmlFor="roomedy-message">Ask Roomedy</label>
+        <label htmlFor="roomedy-message">Ask MEDY</label>
         <textarea
           ref={composer}
           id="roomedy-message"

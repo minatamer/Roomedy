@@ -1,6 +1,41 @@
 import { catalogueSchema } from '@roomedy/contracts/catalogue';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import { VERSIONS } from '@roomedy/contracts/policy';
+import type { Furniture } from '@roomedy/contracts/room';
+import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
+
+/** Shared manual/MEDY catalogue estimates. A proposed size is never a measured fact. */
+export function visitorCatalogueFurniture(
+  entry: CatalogueEntry,
+  size: { width: number; depth: number; height?: number },
+  pose: Pick<Furniture['pose'], 'centerX' | 'centerZ' | 'quarterTurns'>,
+  id: string,
+): Furniture {
+  const estimate = (value: number) => ({
+    value,
+    status: 'estimated' as const,
+    sourceId: 'visitor-estimate',
+  });
+  return {
+    id,
+    label: entry.label,
+    catalogueId: entry.id,
+    catalogueVersion: entry.version,
+    dimensions: {
+      width: estimate(size.width),
+      depth: estimate(size.depth),
+      height: estimate(size.height ?? entry.size.height.default),
+    },
+    pose: {
+      ...pose,
+      provenance: { status: 'planned', sourceId: 'visitor-plan' },
+    },
+    ownership: 'proposed',
+    preference: 'flexible',
+    locks: { ...DEFAULT_FURNITURE_LOCKS },
+    finish: entry.finishes[0]!,
+  };
+}
 
 const range = (min: number, value: number, max: number) => ({
   min,

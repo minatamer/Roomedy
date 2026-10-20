@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { POLICY } from '@roomedy/contracts/policy';
 import type { Project } from '@roomedy/contracts/project';
+import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import {
   exportProject,
@@ -58,9 +59,17 @@ function readFile(file: File, signal: AbortSignal): Promise<string> {
 export function ProjectControls({
   controller,
   onNewRoom,
+  registerMedy,
 }: {
   controller: SessionController;
   onNewRoom: () => void;
+  registerMedy?: (
+    handler:
+      | ((
+          control: Extract<MedyControl, { type: 'project' }>,
+        ) => MedyControlResult)
+      | null,
+  ) => void;
 }) {
   const fileHintId = useId(),
     menu = useRef<HTMLDetailsElement>(null),
@@ -74,6 +83,8 @@ export function ProjectControls({
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState(''),
     [exporting, setExporting] = useState(false),
+    [requestedFormat, setRequestedFormat] =
+      useState<Extract<MedyControl, { type: 'project' }>['format']>(null),
     [decision, setDecision] = useState<Decision | null>(null);
   useEffect(() => {
     if (decision && dialog.current && !dialog.current.open)
@@ -252,6 +263,46 @@ export function ProjectControls({
       setMessage('The download could not start. Your room is unchanged.');
     }
   };
+  useEffect(() => {
+    registerMedy?.((control) => {
+      if (busy || exporting || decision)
+        return {
+          ok: false,
+          summary: 'Finish or cancel the open project action first.',
+        };
+      if (!controller.checkExpiry())
+        return {
+          ok: false,
+          summary: 'This room has expired. Open a new room to continue.',
+        };
+      if (control.action === 'new') {
+        reviewDecision('reset');
+        return {
+          ok: true,
+          summary:
+            'Review the new-room confirmation before replacing this room.',
+        };
+      }
+      if (control.action === 'import') {
+        if (menu.current) menu.current.open = true;
+        input.current?.click();
+        return {
+          ok: true,
+          summary:
+            'Choose your saved project. I’ll ask before replacing this room.',
+        };
+      }
+      setRequestedFormat(control.format);
+      setExporting(true);
+      return {
+        ok: true,
+        summary: control.format
+          ? `Preparing your ${control.format === 'project' ? 'editable project' : control.format.toUpperCase()} download.`
+          : 'Choose the format you’d like to take with you.',
+      };
+    });
+    return () => registerMedy?.(null);
+  });
   return (
     <>
       <details
@@ -270,7 +321,13 @@ export function ProjectControls({
             Take your Current design with you, or save a project to edit later.
           </p>
           <div className={styles.projectFileActions}>
-            <button disabled={busy} onClick={() => setExporting(true)}>
+            <button
+              disabled={busy}
+              onClick={() => {
+                setRequestedFormat(null);
+                setExporting(true);
+              }}
+            >
               Export
             </button>
             <label className={styles.projectImport}>
@@ -315,6 +372,7 @@ export function ProjectControls({
           }}
           onProject={download}
           onDownload={downloadBlob}
+          requestedFormat={requestedFormat}
         />
       )}
       {decision && (

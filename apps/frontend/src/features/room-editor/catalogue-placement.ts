@@ -1,9 +1,9 @@
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture } from '@roomedy/contracts/room';
-import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry, preferredFurnitureFacing } from '@roomedy/spatial';
 import type { CommandFailure } from '@roomedy/spatial';
+import { visitorCatalogueFurniture } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { snapPosition } from '../plan-view/adapter';
 import { beginRoomEdit } from '../room-view/manipulation';
@@ -16,30 +16,7 @@ export function catalogueFurniture(
   pose: Pick<Furniture['pose'], 'centerX' | 'centerZ' | 'quarterTurns'>,
   id: string = crypto.randomUUID(),
 ): Furniture {
-  const estimated = (value: number) => ({
-    value,
-    status: 'estimated' as const,
-    sourceId: 'visitor-estimate',
-  });
-  return {
-    id,
-    label: entry.label,
-    catalogueId: entry.id,
-    catalogueVersion: entry.version,
-    dimensions: {
-      width: estimated(size.width),
-      depth: estimated(size.depth),
-      height: estimated(size.height ?? entry.size.height.default),
-    },
-    pose: {
-      ...pose,
-      provenance: { status: 'planned', sourceId: 'visitor-plan' },
-    },
-    ownership: 'proposed',
-    preference: 'flexible',
-    locks: { ...DEFAULT_FURNITURE_LOCKS },
-    finish: entry.finishes[0]!,
-  };
+  return visitorCatalogueFurniture(entry, size, pose, id);
 }
 export interface CataloguePlacementSnapshot {
   entry: CatalogueEntry;

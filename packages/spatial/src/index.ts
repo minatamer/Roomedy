@@ -61,3 +61,16 @@ export {
 export type { AssistantTask } from './assistant.js';
 export { designSuggestions } from './design.js';
 export { searchFacts } from './search/facts.js';
+
+export {
+  BED_FRAME_ALLOWANCE_MM,
+  furnitureSizePresets,
+  sizeInputValues,
+  selectSizePreset,
+  parseSizeInput,
+} from './size-presets.js';
+export type { SizePreset, SizeInputValues } from './size-presets.js';
+
+export { resolveMedyRequest, medyAdvice } from './medy.js';
+export { visitorCatalogueFurniture } from './catalogue.js';
+export type { MedyRequest, MedyControl, MedyControlResult } from './medy.js';

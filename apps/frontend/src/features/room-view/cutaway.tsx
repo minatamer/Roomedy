@@ -22,6 +22,7 @@ import type { SessionController } from '../session/controller';
 import styles from './room-view.module.css';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 import { findCatalogueEntry } from '@roomedy/spatial';
+import type { MedyControl } from '@roomedy/spatial';
 import { ViewControls } from '../room-editor/view-controls';
 import controlsStyles from '../room-editor/view-controls.module.css';
 
@@ -55,6 +56,12 @@ export type CutawayProps = Pick<
   arranging: boolean;
   onArrange: (arranging: boolean) => void;
   frameControls: ReactNode;
+  medyCamera?:
+    (Extract<MedyControl, { type: 'camera' }> & { sequence: number }) | null;
+  onMedyCamera?: (sequence: number) => void;
+  onCameraAvailability?: (
+    availability: 'opening' | 'ready' | 'unavailable',
+  ) => void;
 };
 export default function Cutaway({
   controller,
@@ -65,6 +72,9 @@ export default function Cutaway({
   arranging,
   onArrange,
   frameControls,
+  medyCamera,
+  onMedyCamera,
+  onCameraAvailability,
   ...props
 }: CutawayProps) {
   const descriptionId = useId();
@@ -75,6 +85,10 @@ export default function Cutaway({
   const [cameraView, setCameraView] = useState<CameraView>(
     props.cameraStateRef.current?.view ?? 'overview',
   );
+  useEffect(() => {
+    onCameraAvailability?.(lost ? 'unavailable' : ready ? 'ready' : 'opening');
+    return () => onCameraAvailability?.('opening');
+  }, [lost, ready, onCameraAvailability]);
   const moving = arranging && !readOnly && !lost;
   const canvasRef = useRef<HTMLCanvasElement | null>(null),
     invalidateRef = useRef<() => void>(() => {});
@@ -181,6 +195,40 @@ export default function Cutaway({
       sequence: (previous?.sequence ?? 0) + 1,
     }));
   };
+  useEffect(() => {
+    if (!medyCamera || (!ready && !lost)) return;
+    let live = true;
+    queueMicrotask(() => {
+      if (!live) return;
+      if (lost) {
+        controller.notify(
+          'The 3D view is unavailable. Open the 2D plan to keep working.',
+        );
+        onMedyCamera?.(medyCamera.sequence);
+        return;
+      }
+      editing.cancel();
+      const kind: CameraAction['kind'] =
+        medyCamera.kind === 'zoom-in'
+          ? 'in'
+          : medyCamera.kind === 'zoom-out'
+            ? 'out'
+            : medyCamera.kind === 'fit'
+              ? 'reset'
+              : medyCamera.kind;
+      if (kind === 'reset') setCameraView('overview');
+      else if (views.some((view) => view.view === kind))
+        setCameraView(kind as CameraView);
+      setAction((previous) => ({
+        kind,
+        sequence: (previous?.sequence ?? 0) + 1,
+      }));
+      onMedyCamera?.(medyCamera.sequence);
+    });
+    return () => {
+      live = false;
+    };
+  }, [medyCamera, ready, lost, editing, views, onMedyCamera, controller]);
   return (
     <div className={`${styles.wrap} ${controlsStyles.stage}`}>
       <div ref={toolsMotion} className="motion-surface">

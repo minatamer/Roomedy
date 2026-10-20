@@ -13,12 +13,16 @@ import {
   resolveAssistantTask,
   jsonBytes,
   assistantSearchFallback,
+  resolveMedyRequest,
+  medyAdvice,
 } from '@roomedy/spatial';
+import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { FINISH_COLORS, roomSurface } from '@roomedy/contracts/surfaces';
 import { operationAvailability } from '../session/operation-client';
 import { releaseTransport } from '../session/release-client';
 import { askAssistant } from './client';
+import { failureMessage } from '../room-editor/messages';
 
 export interface AssistantMessage {
   id: number;
@@ -37,6 +41,9 @@ interface Snapshot {
 }
 interface Dependencies {
   transport?: typeof fetch;
+  control?: (
+    control: MedyControl,
+  ) => MedyControlResult | Promise<MedyControlResult>;
   search?: (
     token: OperationIdentity,
     goal: SearchGoal,
@@ -155,12 +162,129 @@ export class AssistantController {
     const workspace = this.session.getSnapshot().workspace;
     if (!workspace || this.session.getSnapshot().phase !== 'editor') return;
     const selectedId = this.session.getSnapshot().presentation.selectedId;
-    const token = this.session.beginOperation();
-    if (!token) return;
     const context = this.state.messages
       .map((m) => ({ role: m.role, text: m.text }))
       .slice(-POLICY.contextTurns);
     while (jsonBytes(context) > POLICY.contextBytes) context.shift();
+    const medy = resolveMedyRequest(
+      workspace.current,
+      text,
+      selectedId,
+      context,
+    );
+    if (medy) {
+      this.publish({ draft: '' });
+      this.append('user', text);
+      if (medy.kind === 'reply') {
+        const reply = {
+          ...emptyAssistantReply(
+            workspace.current,
+            medy.summary,
+            medy.suggestions?.length ? 'clarification' : 'explanation',
+          ),
+          objectIds: medy.objectIds,
+          ...(medy.suggestions ? { suggestions: medy.suggestions } : {}),
+        };
+        this.append(
+          'assistant',
+          reply.summary,
+          reply.objectIds.length || reply.suggestions?.length ? reply : null,
+        );
+      } else if (medy.kind === 'control') {
+        if (medy.control.type === 'apply') this.apply();
+        else if (medy.control.type === 'undo') this.undo();
+        else if (medy.control.type === 'cancel') {
+          const hadWork =
+            !!this.session.getSnapshot().candidate ||
+            !!this.session.getSnapshot().pending;
+          this.cancel();
+          this.append(
+            'assistant',
+            hadWork
+              ? 'Discarded that preview. Your current room stays as it was.'
+              : 'There isn’t a preview to discard. What would you like to try?',
+          );
+        } else {
+          const generation = this.session.getSnapshot().generation;
+          let result: MedyControlResult;
+          try {
+            result = this.deps.control
+              ? await this.deps.control(medy.control)
+              : {
+                  ok: false,
+                  summary:
+                    'The room controls are still opening. Try that once the room is ready.',
+                };
+          } catch {
+            result = {
+              ok: false,
+              summary:
+                'That control couldn’t open. Try it again, or use the room controls and Project menu.',
+            };
+          }
+          if (
+            this.live &&
+            this.session.getSnapshot().generation === generation &&
+            this.session.getSnapshot().workspace?.workspaceId ===
+              workspace.workspaceId
+          )
+            this.append('assistant', result.summary);
+        }
+      } else {
+        const manualToken = this.session.beginOperation();
+        if (!manualToken) return;
+        const prepared = this.session.prepareAssistantManual(
+          manualToken,
+          text,
+          selectedId,
+          context,
+        );
+        if (!prepared.ok) {
+          this.session.completeOperation(manualToken, () =>
+            this.append(
+              'assistant',
+              failureMessage(prepared, workspace.current),
+            ),
+          );
+        } else {
+          const summary = prepared.changed
+            ? `Here’s the preview: ${prepared.label}. Take a look, then Apply if it’s right.`
+            : 'That’s already how it’s set. What would you like to try next?';
+          this.append(
+            'assistant',
+            summary,
+            {
+              ...emptyAssistantReply(
+                workspace.current,
+                summary,
+                prepared.changed ? 'proposal' : 'explanation',
+              ),
+              objectIds: prepared.objectIds,
+            },
+            manualToken.operationId,
+          );
+        }
+      }
+      return;
+    }
+    const discussion = resolveAssistantTask(
+      workspace.current,
+      text,
+      selectedId,
+      'discussion',
+      context,
+    );
+    if (
+      discussion.kind === 'conversation' &&
+      this.session.getSnapshot().candidate
+    ) {
+      this.publish({ draft: '' });
+      this.append('user', text);
+      this.append('assistant', medyAdvice(workspace.current, text, selectedId));
+      return;
+    }
+    const token = this.session.beginOperation();
+    if (!token) return;
     const task = resolveAssistantTask(
       workspace.current,
       text,
@@ -235,7 +359,7 @@ export class AssistantController {
           this.append(
             'assistant',
             reply.summary,
-            reply,
+            task.kind === 'conversation' ? null : reply,
             token.operationId,
             simulation,
           ),
@@ -266,7 +390,9 @@ export class AssistantController {
         finish(
           emptyAssistantReply(
             workspace.current,
-            'The assistant is unavailable here. Your manual room controls remain available.',
+            task.kind === 'conversation'
+              ? medyAdvice(workspace.current, text, selectedId)
+              : 'I can still help with exact edits, room controls and the tour. Design search is unavailable at the moment.',
           ),
         );
         return;
@@ -377,6 +503,9 @@ export class AssistantController {
       (suggestion.selectedId !== null &&
         !workspace.current.furniture.some(
           (p) => p.id === suggestion.selectedId,
+        ) &&
+        !workspace.current.room.features.some(
+          (feature) => feature.id === suggestion.selectedId,
         ))
     )
       return;
@@ -393,9 +522,34 @@ export class AssistantController {
     )
       return { ok: false as const, code: 'stale' as const };
     const label = this.session.getSnapshot().candidate?.label ?? 'Room changes';
+    if (
+      candidate &&
+      candidate.source !== 'assistant' &&
+      operationId === undefined
+    ) {
+      const result = this.session.applyVisitorPreview();
+      this.append(
+        'assistant',
+        result.ok
+          ? 'Done — applied the room preview. You can Undo to bring it back.'
+          : 'That preview is no longer current. Review the room before trying again.',
+      );
+      return result.ok
+        ? {
+            ...result,
+            receipt: null,
+            status: result.changed
+              ? ('applied' as const)
+              : ('unchanged' as const),
+          }
+        : { ok: false as const, code: 'stale' as const };
+    }
     const result = this.session.applyAssistantPreview();
     if (result.ok && result.status === 'applied' && result.receipt)
-      this.append('assistant', `${label} applied.`);
+      this.append(
+        'assistant',
+        `Done — ${label.charAt(0).toLowerCase() + label.slice(1)}. You can Undo if you’d like to go back.`,
+      );
     else if (!result.ok)
       this.append(
         'assistant',

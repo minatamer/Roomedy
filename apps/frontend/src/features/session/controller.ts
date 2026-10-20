@@ -16,6 +16,7 @@ import {
   prepareCommand,
   undoCommand,
   emptySearchResult,
+  resolveMedyRequest,
 } from '@roomedy/spatial';
 import type {
   CommandResult,
@@ -34,6 +35,13 @@ interface Dependencies {
   now?: () => number;
   id?: () => string;
 }
+interface AssistantPreview {
+  token: OperationIdentity;
+  command: CommandEnvelope;
+  scope: ActionScope | undefined;
+  authority: 'assistant' | 'visitor';
+  label: string;
+}
 export class SessionController {
   private state: SessionSnapshot;
   private readonly now: () => number;
@@ -45,18 +53,8 @@ export class SessionController {
   private timer: ReturnType<typeof setTimeout> | undefined;
   private messageTimer: ReturnType<typeof setTimeout> | undefined;
   private cleaning = false;
-  private assistantPreview: {
-    token: OperationIdentity;
-    command: CommandEnvelope;
-    scope: ActionScope;
-    label: string;
-  } | null = null;
-  private lastAssistant: {
-    token: OperationIdentity;
-    command: CommandEnvelope;
-    scope: ActionScope;
-    label: string;
-  } | null = null;
+  private assistantPreview: AssistantPreview | null = null;
+  private lastAssistant: AssistantPreview | null = null;
   private visitorPreview: {
     token: OperationIdentity;
     actions: VisitorAction[];
@@ -632,6 +630,7 @@ export class SessionController {
       token: { ...token },
       command: structuredClone(command),
       scope: structuredClone(scope),
+      authority: 'assistant',
       label: label.slice(0, 120),
     };
     this.publish({
@@ -645,6 +644,64 @@ export class SessionController {
       message: 'Proposal ready. Review the changes before Apply.',
     });
     return { ok: true, changed: true };
+  }
+  /** Explicit chat instructions compile to the very same visitor command as a form.
+   * This accepts human text, never a provider-supplied visitor action batch. */
+  prepareAssistantManual(
+    token: OperationIdentity,
+    text: string,
+    selectedId: string | null,
+    context: readonly { role: 'user' | 'assistant'; text: string }[],
+  ):
+    | { ok: true; changed: boolean; label: string; objectIds: string[] }
+    | CommandFailure {
+    if (!this.canEdit() || !this.isCurrent(token) || !this.state.workspace)
+      return { ok: false, code: 'stale' };
+    const task = resolveMedyRequest(
+      this.state.workspace.current,
+      text,
+      selectedId,
+      context,
+      token.operationId,
+    );
+    if (task?.kind !== 'edits') return { ok: false, code: 'out-of-scope' };
+    const command = { ...this.envelope(task.actions), identity: { ...token } };
+    const evaluated = prepareCommand(this.state.workspace, command, 'visitor');
+    if (!evaluated.ok) return evaluated;
+    if (!evaluated.changed) {
+      this.completeOperation(token, () =>
+        this.publish({ message: 'No change needed.' }),
+      );
+      return {
+        ok: true,
+        changed: false,
+        label: task.label,
+        objectIds: task.objectIds,
+      };
+    }
+    this.assistantPreview = {
+      token: { ...token },
+      command: structuredClone(command),
+      scope: undefined,
+      authority: 'visitor',
+      label: task.label.slice(0, 120),
+    };
+    this.publish({
+      candidate: {
+        identity: { ...token },
+        source: 'assistant',
+        label: task.label.slice(0, 120),
+        room: evaluated.room,
+        checks: evaluated.checks,
+      },
+      message: 'Preview ready. Review your requested change before Apply.',
+    });
+    return {
+      ok: true,
+      changed: true,
+      label: task.label,
+      objectIds: evaluated.affectedIds,
+    };
   }
   applyAssistantPreview():
     | {
@@ -662,7 +719,7 @@ export class SessionController {
     const result = applyCommand(
       this.state.workspace,
       preview.command,
-      'assistant',
+      preview.authority,
       preview.scope,
     );
     const committed = this.commitCommand(

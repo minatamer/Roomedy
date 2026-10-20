@@ -111,8 +111,8 @@ export function createAssistantTools(
       return p ? [p.label.slice(0, 60)] : [];
     });
     const names =
-      changedPieces.slice(0, 3).join(', ') +
-      (changedPieces.length > 3 ? ' and other requested pieces' : '');
+      changedPieces.slice(0, 5).join(', ') +
+      (changedPieces.length > 5 ? ' and other requested pieces' : '');
     const window = facts?.windowDistanceMm,
       centre = facts?.centralFreeMm2;
     const tradeoff =
@@ -130,8 +130,8 @@ export function createAssistantTools(
     const style = palette
       ? palette.wallFinish === 'clay'
         ? 'Oak and clay bring warmth. '
-        : palette.wallFinish === 'sage'
-          ? 'Walnut and sage give the room a calmer, coordinated palette. '
+        : palette.floorFinish === 'walnut'
+          ? 'Walnut and ivory give the room a calm, coordinated palette. '
           : 'Oak and ivory keep the room light and airy. '
       : '';
     const invitation =
@@ -141,7 +141,9 @@ export function createAssistantTools(
           ? `I’d reposition ${names || 'the requested pieces'} for a clearer centre. `
           : task.goal?.kind === 'window'
             ? `I’d bring ${names || 'the work area'} nearer the window. `
-            : `${task.label}${names ? `: ${names}` : ''}. `;
+            : task.goal?.additions.length
+              ? `Let’s start with these essentials: ${names}. `
+              : `${task.label}${names ? `: ${names}` : ''}. `;
     reply = {
       ...emptyAssistantReply(
         room,

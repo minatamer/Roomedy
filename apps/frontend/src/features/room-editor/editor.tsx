@@ -31,6 +31,8 @@ import { ChecksPanel } from './checks-panel';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import { checkRoom } from '@roomedy/spatial';
+import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
+import { cameraViewPose } from '../room-view/camera';
 import { ProjectControls } from './project-controls';
 import { PreviewChangeList } from './preview-change-list';
 import { CataloguePlacement } from './catalogue-placement';
@@ -100,13 +102,64 @@ export function Editor({
   const setRoomView = (view: 'plan' | 'cutaway') =>
     controller.setRoomView(view);
   const workspaceId = state.workspace?.workspaceId;
+  const medyControl = useRef<(control: MedyControl) => MedyControlResult>(
+    () => ({
+      ok: false,
+      summary: 'The studio is still opening. Try that again in a moment.',
+    }),
+  );
+  const projectControl = useRef<
+    | ((
+        control: Extract<MedyControl, { type: 'project' }>,
+      ) => MedyControlResult)
+    | null
+  >(null);
+  const tourControl = useRef<(() => void) | null>(null);
+  const registerProject = useMemo(
+    () => (handler: typeof projectControl.current) => {
+      projectControl.current = handler;
+    },
+    [],
+  );
+  const registerTour = useMemo(
+    () => (handler: (() => void) | null) => {
+      tourControl.current = handler;
+    },
+    [],
+  );
+  const [medyCamera, setMedyCamera] = useState<
+    | (Extract<MedyControl, { type: 'camera' }> & {
+        sequence: number;
+        workspaceId: string;
+      })
+    | null
+  >(null);
+  const cameraSerial = useRef(0);
+  const cameraAvailability = useRef<'opening' | 'ready' | 'unavailable'>(
+    'opening',
+  );
+  const updateCameraAvailability = useMemo(
+    () => (availability: typeof cameraAvailability.current) => {
+      cameraAvailability.current = availability;
+    },
+    [],
+  );
+  const consumeCamera = useMemo(
+    () => (sequence: number) =>
+      setMedyCamera((current) =>
+        current?.sequence === sequence ? null : current,
+      ),
+    [],
+  );
   const [assistant, setAssistant] = useState<AssistantController | null>(null);
   useEffect(() => {
     let live = true,
       owned: AssistantController | null = null;
     queueMicrotask(() => {
       if (!live || !workspaceId) return;
-      owned = new AssistantController(controller);
+      owned = new AssistantController(controller, {
+        control: (control) => medyControl.current(control),
+      });
       setAssistant(owned);
     });
     return () => {
@@ -134,6 +187,170 @@ export function Editor({
     target?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [state.candidate]);
   const workspace = state.workspace;
+  useEffect(() => {
+    medyControl.current = (control) => {
+      const current = controller.getSnapshot(),
+        room = current.candidate?.room ?? current.workspace?.current;
+      if (!room || !controller.checkExpiry())
+        return {
+          ok: false,
+          summary: 'Open a room first, and we can work on it together.',
+        };
+      const done = (summary: string): MedyControlResult => ({
+        ok: true,
+        summary,
+      });
+      const openPanel = (panel: Panel) => {
+        placement.cancel();
+        setCatalogueCategory('all');
+        setReplacementId(null);
+        controller.setPanel(panel);
+      };
+      switch (control.type) {
+        case 'view':
+          if (control.view === 'cutaway') setCutawayOpenedAt(performance.now());
+          setMedyCamera(null);
+          controller.setRoomView(control.view);
+          return done(
+            control.view === 'plan'
+              ? 'Here’s your 2D plan.'
+              : 'Opening your room in 3D.',
+          );
+        case 'camera': {
+          const view = current.presentation;
+          if (
+            view.roomView === 'plan' &&
+            [
+              'zoom-in',
+              'zoom-out',
+              'fit',
+              'left',
+              'right',
+              'up',
+              'down',
+            ].includes(control.kind)
+          ) {
+            if (control.kind === 'fit')
+              controller.setView({ zoom: 1, panX: 0, panZ: 0 });
+            else if (control.kind === 'zoom-in' || control.kind === 'zoom-out')
+              controller.setView({
+                zoom: view.zoom + (control.kind === 'zoom-in' ? 0.2 : -0.2),
+              });
+            else
+              controller.setView({
+                panX:
+                  view.panX +
+                  (control.kind === 'left'
+                    ? -250
+                    : control.kind === 'right'
+                      ? 250
+                      : 0),
+                panZ:
+                  view.panZ +
+                  (control.kind === 'up'
+                    ? -250
+                    : control.kind === 'down'
+                      ? 250
+                      : 0),
+              });
+            return done(
+              control.kind === 'fit'
+                ? 'The whole plan is in view.'
+                : 'Adjusted your plan view.',
+            );
+          }
+          if (
+            current.clientLoadFailure ||
+            (view.roomView === 'cutaway' &&
+              cameraAvailability.current === 'unavailable')
+          )
+            return {
+              ok: false,
+              summary:
+                'The 3D view is unavailable here. Ask me to switch to 2D so we can keep working.',
+            };
+          if (
+            ['overview', 'doorway', 'work-area', 'corner'].includes(
+              control.kind,
+            ) &&
+            !cameraViewPose(
+              room,
+              control.kind as 'overview' | 'doorway' | 'work-area' | 'corner',
+            )
+          )
+            return {
+              ok: false,
+              summary:
+                control.kind === 'work-area'
+                  ? 'Add a desk first, then I can show its work-area view.'
+                  : 'That viewpoint needs a known room frame and doorway position. We can use Overview meanwhile.',
+            };
+          if (view.roomView !== 'cutaway') {
+            setCutawayOpenedAt(performance.now());
+            controller.setRoomView('cutaway');
+          }
+          setMedyCamera({
+            ...control,
+            sequence: ++cameraSerial.current,
+            workspaceId: current.workspace!.workspaceId,
+          });
+          return done('Moving the camera to your requested view.');
+        }
+        case 'arrange':
+          if (control.enabled && (!controller.canEdit() || current.candidate))
+            return {
+              ok: false,
+              summary:
+                'Apply or cancel the current preview before arranging the room.',
+            };
+          placement.cancel();
+          setArranging(control.enabled);
+          return done(
+            control.enabled
+              ? 'Arrange room is on. You can move pieces directly.'
+              : 'Explore view is on.',
+          );
+        case 'snap':
+          controller.setView({ snap: control.enabled });
+          return done(`Placement snap is ${control.enabled ? 'on' : 'off'}.`);
+        case 'select':
+          if (control.id === room.roomId) openPanel('room');
+          else controller.select(control.id);
+          return done(
+            control.id
+              ? 'Selected. Its details are ready to edit.'
+              : 'Selection cleared.',
+          );
+        case 'panel':
+          openPanel(control.panel);
+          return done(
+            `Opened ${control.panel === 'inventory' ? 'your furniture' : control.panel === 'checks' ? 'the room checks' : control.panel === 'assistant' ? 'MEDY' : `the ${control.panel} panel`}.`,
+          );
+        case 'tour':
+          if (!tourControl.current)
+            return {
+              ok: false,
+              summary:
+                'The tour is still getting ready. Try again in a moment.',
+            };
+          tourControl.current();
+          return done('Of course — let me show you around.');
+        case 'project':
+          return (
+            projectControl.current?.(control) ?? {
+              ok: false,
+              summary:
+                'Project controls are still opening. Try again in a moment.',
+            }
+          );
+        default:
+          return {
+            ok: false,
+            summary: 'Use Apply, Cancel or Undo beside this conversation.',
+          };
+      }
+    };
+  }, [controller, placement, workspaceId]);
   if (!workspace)
     return (
       <main id="main-content" className={styles.expired}>
@@ -221,7 +438,7 @@ export function Editor({
     { id: 'inventory', label: 'Furniture' },
     { id: 'room', label: 'Room' },
     { id: 'checks', label: `Checks${hard ? ` (${hard})` : ''}` },
-    { id: 'assistant', label: 'Assistant' },
+    { id: 'assistant', label: 'MEDY' },
   ];
   const frameControls = (
     <FrameControls
@@ -262,6 +479,7 @@ export function Editor({
             controller={controller}
             autoStart={automaticallyOfferTour(state)}
             hideReplay
+            registerMedy={registerTour}
           />
         </nav>
         <div className={styles.headerActions}>
@@ -292,6 +510,7 @@ export function Editor({
             key={workspace.workspaceId}
             controller={controller}
             onNewRoom={onBack}
+            registerMedy={registerProject}
           />
         </div>
       </header>
@@ -456,6 +675,11 @@ export function Editor({
                   arranging={arranging}
                   onArrange={setArranging}
                   frameControls={frameControls}
+                  medyCamera={
+                    medyCamera?.workspaceId === workspaceId ? medyCamera : null
+                  }
+                  onMedyCamera={consumeCamera}
+                  onCameraAvailability={updateCameraAvailability}
                 />
               </Suspense>
             </CutawayBoundary>

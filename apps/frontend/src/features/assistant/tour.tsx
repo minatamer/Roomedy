@@ -29,7 +29,7 @@ const steps = [
   {
     target: 'assistant',
     title: 'Design it together.',
-    text: 'Ask for a useful change, like moving your work area closer to the window. The assistant works with your room, furniture and preferences.',
+    text: 'Meet MEDY. Ask for a useful change, like moving your work area closer to the window, changing a size or finding a calmer palette.',
   },
   {
     target: 'history',
@@ -113,10 +113,12 @@ export function AssistantTour({
   controller,
   autoStart,
   hideReplay = false,
+  registerMedy,
 }: {
   controller: SessionController;
   autoStart: boolean;
   hideReplay?: boolean;
+  registerMedy?: (start: (() => void) | null) => void;
 }) {
   const [mounted, setMounted] = useState(false),
     [open, setOpen] = useState(autoStart),
@@ -138,6 +140,23 @@ export function AssistantTour({
     stopScroll = useRef(() => {}),
     opener = useRef<HTMLElement | null>(null),
     displayed = useRef<TourLayout | null>(null);
+  useEffect(() => {
+    registerMedy?.(() => {
+      opener.current =
+        document.querySelector<HTMLTextAreaElement>('#roomedy-message') ??
+        (document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null);
+      closing.current = false;
+      setIndex(null);
+      setPending(0);
+      setLayout(null);
+      setLeaving(false);
+      setView(viewport());
+      setOpen(true);
+    });
+    return () => registerMedy?.(null);
+  }, [registerMedy]);
   useLayoutEffect(() => {
     displayed.current = layout;
   }, [layout]);
