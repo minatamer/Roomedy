@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Selected deletion — RM-015AW
+
+The room-side Delete action follows selected furniture, windows or obstacles in Explore and Arrange, in2D/3D. Furniture ownership/preference/locks do not block explicit visitor deletion. Doors (including bathroom-purpose) stay protected; their properties omit Remove. Keep normal lifecycle/preview/scene-readiness fences and one Undo; no confirmation or minimum furniture count. Return feature deletion to Room and furniture deletion to inventory with useful focus.
+
 ## Single header and available working height — RM-015AP follow-up
 
 Furniture/Room/Assistant belong in the same header as the brand and Undo/Project. Remove the visible Design Studio title and separate navigation row. Use an auto-sized header grid above one flexible workspace row, not a CSS translation or an offset that leaves a blank row behind. Bounded2D/3D room frames, left controls and right card use the remaining viewport through existing flex/grid sizing. Keep the accessible clipped Room editor h1/focus target. Narrow navigation occupies a natural second header row with44px controls; short/narrow pages retain normal document flow.

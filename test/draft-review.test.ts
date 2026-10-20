@@ -133,10 +133,10 @@ describe('uncertain review and shared physical authority', () => {
       'unknown',
     );
   });
-  it('an explicitly removed feature cannot be restored by later matching observations', () => {
+  it('an explicitly removed window cannot be restored by later matching observations', () => {
     const raw = hypothesis();
     raw.observations = [
-      { ...raw.observations[0]!, kind: 'door', catalogueId: null },
+      { ...raw.observations[0]!, kind: 'window', catalogueId: null },
     ];
     raw.groups = [['desk_a']];
     let id = 0;
@@ -145,6 +145,22 @@ describe('uncertain review and shared physical authority', () => {
     d = take(adoptHypothesis(d, raw, () => `feature_${++id}`));
     expect(d.room.room.features).toHaveLength(0);
     expect(d.observations).toHaveLength(0);
+  });
+  it('keeps door observations intact when removal is rejected by the shared authority', () => {
+    const raw = hypothesis();
+    raw.observations = [
+      { ...raw.observations[0]!, kind: 'door', catalogueId: null },
+    ];
+    raw.groups = [['desk_a']];
+    let id = 0;
+    const draft = take(
+      adoptHypothesis(fixture(), raw, () => `feature_${++id}`),
+    );
+    const before = structuredClone(draft);
+    expect(
+      correctDraft(draft, [{ type: 'remove-feature', id: 'feature_1' }]).ok,
+    ).toBe(false);
+    expect(draft).toEqual(before);
   });
   it('refuses to silently discard conflicting visitor measurements during identity merge', () => {
     let id = 0;

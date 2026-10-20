@@ -22,6 +22,7 @@ export type CommandAuthority = 'visitor' | 'authored-sample' | 'assistant';
 export type FailureCode =
   | 'out-of-scope'
   | 'invalid-input'
+  | 'protected-door'
   | 'locked'
   | 'owned-dimensions'
   | 'retained'
@@ -231,6 +232,14 @@ export function evaluateBatch(
     if (action.type === 'update-feature' || action.type === 'remove-feature') {
       const index = room.room.features.findIndex((f) => f.id === action.id);
       if (index < 0) return { ok: false, code: 'invalid-input' };
+      if (
+        (room.room.features[index]!.kind === 'door' ||
+          before.room.features.some(
+            (f) => f.id === action.id && f.kind === 'door',
+          )) &&
+        (action.type === 'remove-feature' || action.feature.kind !== 'door')
+      )
+        return { ok: false, code: 'protected-door' };
       if (action.type === 'remove-feature') room.room.features.splice(index, 1);
       else {
         if (action.feature.id !== action.id)
@@ -475,6 +484,11 @@ export function evaluateBatch(
     authority !== 'assistant' &&
     actions.every((a) => measurementActions.has(a.type));
   const appearance = actions.every((a) => nonspatial.has(a.type));
+  // Removing an unrelated item need not repair a different existing conflict.
+  // Mixed edits and model proposals retain the ordinary improvement policy.
+  const removal =
+    authority === 'visitor' &&
+    actions.every((a) => a.type === 'remove' || a.type === 'remove-feature');
   let improved = nextHard.length < oldHard.size;
   if (!measurement)
     for (const current of nextHard) {
@@ -488,7 +502,14 @@ export function evaluateBatch(
         improved = true;
     }
   const changed = JSON.stringify(candidate) !== JSON.stringify(before);
-  if (changed && !measurement && !appearance && oldHard.size > 0 && !improved)
+  if (
+    changed &&
+    !measurement &&
+    !appearance &&
+    !removal &&
+    oldHard.size > 0 &&
+    !improved
+  )
     return { ok: false, code: 'no-improvement' };
   return {
     ok: true,

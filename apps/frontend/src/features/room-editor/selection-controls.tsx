@@ -2,9 +2,9 @@ import { useSyncExternalStore } from 'react';
 import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
 import styles from './selection-controls.module.css';
-import { deleteSelectedFurniture } from './selection-actions';
+import { deleteSelection } from './selection-actions';
 
-export function DeleteFurnitureButton({
+export function DeleteSelectionButton({
   controller,
   disabled = false,
   beforeDelete,
@@ -18,17 +18,20 @@ export function DeleteFurnitureButton({
     controller.getSnapshot,
     controller.getSnapshot,
   );
-  const selected = state.workspace?.current.furniture.find(
+  const piece = state.workspace?.current.furniture.find(
     (piece) => piece.id === state.presentation.selectedId,
+  );
+  const feature = state.workspace?.current.room.features.find(
+    (feature) => feature.id === state.presentation.selectedId,
   );
   return (
     <button
       type="button"
       className={styles.deleteButton}
-      aria-label="Delete selected piece"
+      aria-label={`Delete selected ${piece ? 'piece' : (feature?.kind ?? 'item')}`}
       disabled={
         disabled ||
-        !selected ||
+        (!piece && (!feature || feature.kind === 'door')) ||
         state.phase !== 'editor' ||
         state.comparison !== 'current' ||
         !!state.candidate ||
@@ -37,19 +40,19 @@ export function DeleteFurnitureButton({
       onClick={() => {
         beforeDelete?.();
         const current = controller.getSnapshot();
-        const result = deleteSelectedFurniture(controller);
+        const result = deleteSelection(controller);
         if (!result.ok) {
           controller.notify(failureMessage(result, current.workspace?.current));
           return;
         }
-        controller.setPanel('inventory');
+        controller.setPanel(piece ? 'inventory' : 'room');
         requestAnimationFrame(() => {
           const next = controller.getSnapshot();
           if (
             next.phase === 'editor' &&
             next.generation === current.generation &&
             next.workspace?.workspaceId === current.workspace?.workspaceId &&
-            next.presentation.panel === 'inventory' &&
+            next.presentation.panel === (piece ? 'inventory' : 'room') &&
             !next.presentation.selectedId
           )
             document

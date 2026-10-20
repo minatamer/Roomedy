@@ -22,6 +22,90 @@ import {
 } from './fixtures/command-room.js';
 
 describe('atomic final batches and trusted authority', () => {
+  it('allows pure visitor deletion with an unrelated overlap, without granting mixed or model edits the same exception', () => {
+    const keep = piece('delete-me', 7000, 7000);
+    keep.preference = 'keep';
+    keep.locks = { position: true, rotation: true, dimensions: true };
+    const room = commandRoom([keep, piece('a'), piece('b', 2100)]);
+    const removal = {
+      type: 'remove',
+      id: keep.id,
+      overrideLocks: true,
+    } as const;
+    const result = evaluateBatch(room, [removal], 'visitor');
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.room.furniture.map((f) => f.id)).toEqual(['a', 'b']);
+    expect(result.checks.issues.filter((i) => i.severity === 'hard')).toEqual(
+      checkRoom(room).issues.filter((i) => i.severity === 'hard'),
+    );
+    expect(
+      evaluateBatch(
+        room,
+        [removal, { type: 'finish', id: 'a', finish: 'walnut' }],
+        'visitor',
+      ),
+    ).toMatchObject({ ok: false, code: 'no-improvement' });
+    const modelRoom = structuredClone(room);
+    modelRoom.furniture[0]!.locks = {
+      position: false,
+      rotation: false,
+      dimensions: false,
+    };
+    modelRoom.furniture[0]!.preference = 'replace';
+    expect(
+      evaluateBatch(modelRoom, [{ type: 'remove', id: keep.id }], 'assistant'),
+    ).toMatchObject({ ok: false, code: 'no-improvement' });
+  });
+
+  it.each(['room', 'bathroom'] as const)(
+    'protects a %s door atomically while allowing window removal and normal door corrections',
+    (purpose) => {
+      const entry = { ...door(), purpose };
+      const room = commandRoom([], [entry, windowFeature()]);
+      const before = structuredClone(room);
+      expect(
+        evaluateBatch(
+          room,
+          [
+            { type: 'remove-feature', id: 'window_1' },
+            { type: 'remove-feature', id: entry.id },
+          ],
+          'visitor',
+        ),
+      ).toMatchObject({ ok: false, code: 'protected-door' });
+      expect(room).toEqual(before);
+      expect(
+        evaluateBatch(
+          room,
+          [
+            {
+              type: 'update-feature',
+              id: entry.id,
+              feature: { ...windowFeature(), id: entry.id },
+            },
+          ],
+          'visitor',
+        ),
+      ).toMatchObject({ ok: false, code: 'protected-door' });
+      const result = evaluateBatch(
+        room,
+        [
+          { type: 'remove-feature', id: 'window_1' },
+          {
+            type: 'update-feature',
+            id: entry.id,
+            feature: { ...entry, wall: 'west' },
+          },
+        ],
+        'visitor',
+      );
+      expect(result.ok).toBe(true);
+      if (result.ok)
+        expect(result.room.room.features).toEqual([{ ...entry, wall: 'west' }]);
+    },
+  );
+
   it('allows one deliberate visitor deletion of protected furniture without granting model or unrelated lock overrides', () => {
     const selected = piece('selected');
     selected.locks = { position: true, rotation: true, dimensions: true };

@@ -511,6 +511,10 @@ export function medyEdit(
       return ask(
         'To replace this room, ask me to start a new room. Your existing confirmation will appear first.',
       );
+    if (target.kind === 'feature' && target.feature.kind === 'door')
+      return ask(
+        'Doors stay in the room. I can help you move this door or change how it opens.',
+      );
     actions.push(
       target.kind === 'feature'
         ? { type: 'remove-feature', id: target.id }

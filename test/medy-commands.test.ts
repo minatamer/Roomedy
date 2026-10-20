@@ -30,6 +30,26 @@ const edits = (result: MedyRequest | null) => {
 };
 
 describe('MEDY explicit manual commands', () => {
+  it('deletes windows through the manual authority, while helping with doors without proposing removal', () => {
+    const r = room();
+    const actions = edits(resolveMedyRequest(r, 'delete the window', null));
+    expect(actions).toEqual([{ type: 'remove-feature', id: 'window_1' }]);
+    const result = evaluateBatch(r, actions, 'visitor');
+    expect(result.ok).toBe(true);
+    if (result.ok)
+      expect(result.room.room.features.map((f) => f.id)).toEqual(['door_1']);
+    const reply = resolveMedyRequest(r, 'delete the door', null);
+    expect(reply).toMatchObject({
+      kind: 'reply',
+      summary: expect.stringContaining('Doors stay in the room'),
+    });
+    const bathroom = { ...door('bathroom'), purpose: 'bathroom' as const };
+    r.room.features.push(bathroom);
+    expect(
+      resolveMedyRequest(r, 'delete bathroom door', bathroom.id)?.kind,
+    ).toBe('reply');
+  });
+
   it.each([
     'set bed width to 1,800 mm',
     'make bed 1,8 m wide',

@@ -591,21 +591,23 @@ export function FeatureInspector({
           />
         )}
       </div>
-      <button
-        onClick={() => {
-          const r = controller.dispatch(
-            [{ type: 'remove-feature', id: feature.id }],
-            'Remove opening',
-          );
-          if (!r.ok)
-            controller.notify(
-              failureMessage(r, controller.getSnapshot().workspace?.current),
+      {feature.kind !== 'door' && (
+        <button
+          onClick={() => {
+            const r = controller.dispatch(
+              [{ type: 'remove-feature', id: feature.id }],
+              'Remove opening',
             );
-          else focusProperties(controller);
-        }}
-      >
-        Remove {featureLabel(feature).toLowerCase()}
-      </button>
+            if (!r.ok)
+              controller.notify(
+                failureMessage(r, controller.getSnapshot().workspace?.current),
+              );
+            else focusProperties(controller);
+          }}
+        >
+          Remove {featureLabel(feature).toLowerCase()}
+        </button>
+      )}
       <p className={styles.hint}>
         Corrections describe your room; they do not claim a renovation is
         possible. Width: {measurementLabel(feature.width)}.

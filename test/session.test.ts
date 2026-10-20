@@ -4,10 +4,15 @@ import { SessionController } from '../apps/frontend/src/features/session/control
 import { ResourceRegistry } from '../apps/frontend/src/features/session/effects.js';
 import { failureMessage } from '../apps/frontend/src/features/room-editor/messages.js';
 import { hasBaselineChanges } from '../apps/frontend/src/features/session/state.js';
-import { commandRoom, piece } from './fixtures/command-room.js';
+import {
+  commandRoom,
+  piece,
+  door,
+  windowFeature,
+} from './fixtures/command-room.js';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { projectOf } from '../apps/frontend/src/features/session/project.js';
-import { deleteSelectedFurniture } from '../apps/frontend/src/features/room-editor/selection-actions.js';
+import { deleteSelection } from '../apps/frontend/src/features/room-editor/selection-actions.js';
 import {
   beginFloorEdit,
   rotateFloorSelection,
@@ -32,6 +37,47 @@ afterEach(() => {
 });
 
 describe('deliberate selected furniture actions', () => {
+  it.each(['plan', 'cutaway'] as const)(
+    'deletes the last owned Keep bed and windows, protects doors and restores each change in %s',
+    (view) => {
+      const bed = piece('bed', 4000, 4000, {
+        catalogueId: 'procedural-bed',
+        width: 1600,
+        depth: 2100,
+        height: 850,
+      });
+      bed.preference = 'keep';
+      bed.locks = { position: true, rotation: true, dimensions: true };
+      const original = commandRoom([bed], [door(), windowFeature()]);
+      const s = session(original);
+      s.setRoomView(view);
+      s.select(bed.id);
+      expect(deleteSelection(s).ok).toBe(true);
+      expect(s.getSnapshot().workspace!.current.furniture).toEqual([]);
+      expect(s.getSnapshot().workspace!.history.entries).toHaveLength(1);
+      expect(s.getSnapshot().workspace!.baseline).toEqual(original);
+      expect(s.undo().ok).toBe(true);
+      expect(s.getSnapshot().workspace!.current.furniture).toEqual([bed]);
+      s.select('window_1');
+      expect(deleteSelection(s).ok).toBe(true);
+      expect(s.getSnapshot().workspace!.current.room.features).toEqual([
+        door(),
+      ]);
+      expect(s.getSnapshot().presentation.selectedId).toBeNull();
+      expect(s.undo().ok).toBe(true);
+      expect(s.getSnapshot().workspace!.current.room.features).toEqual(
+        original.room.features,
+      );
+      s.select('door_1');
+      const before = s.getSnapshot().workspace;
+      expect(deleteSelection(s)).toMatchObject({
+        ok: false,
+        code: 'protected-door',
+      });
+      expect(s.getSnapshot().workspace).toBe(before);
+    },
+  );
+
   it.each(['plan', 'cutaway'] as const)(
     'keeps protected preset and Delete edits atomic and undoable in %s',
     (view) => {
@@ -68,7 +114,7 @@ describe('deliberate selected furniture actions', () => {
         original.current.furniture,
       );
       const gesture = view === 'cutaway' ? beginFloorEdit(s, first.id) : null;
-      expect(deleteSelectedFurniture(s).ok).toBe(true);
+      expect(deleteSelection(s).ok).toBe(true);
       expect(s.getSnapshot().workspace!.history.entries).toHaveLength(1);
       expect(s.getSnapshot().presentation.selectedId).toBeNull();
       expect(s.getSnapshot().workspace!.current.furniture).toEqual([other]);
@@ -101,7 +147,7 @@ describe('deliberate selected furniture actions', () => {
       depth: 600,
       overrideSizeLock: true,
     } as const;
-    expect(deleteSelectedFurniture(s).ok).toBe(false);
+    expect(deleteSelection(s).ok).toBe(false);
     expect(s.getSnapshot().workspace).toBe(original);
     s.cancelPreview();
     s.setComparison('before');

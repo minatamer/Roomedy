@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { SessionController } from '../session/controller';
-import { DeleteFurnitureButton, SnapToggle } from './selection-controls';
+import { DeleteSelectionButton, SnapToggle } from './selection-controls';
 import styles from './view-controls.module.css';
 
 export function ViewControls({
@@ -93,9 +93,9 @@ export function ViewControls({
             {direction === -1 ? '↶' : '↷'} 90°
           </button>
         ))}
-        <DeleteFurnitureButton
+        <DeleteSelectionButton
           controller={controller}
-          disabled={!ready || readOnly || !arranging}
+          disabled={!ready || readOnly}
           beforeDelete={() => beforeDelete?.()}
         />
         <SnapToggle checked={snap} onChange={onSnap} />
