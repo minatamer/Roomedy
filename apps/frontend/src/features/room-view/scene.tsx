@@ -1431,7 +1431,7 @@ export function RoomScene(props: SceneProps) {
     () =>
       new Map(
         desiredRoom.room.features
-          .filter((f) => f.kind === 'window' && f.offset.value !== null)
+          .filter((f) => f.kind !== 'obstacle' && f.offset.value !== null)
           .map((f) => [f.id, f.offset.value!]),
       ),
   );
@@ -1440,7 +1440,8 @@ export function RoomScene(props: SceneProps) {
     const next = new Map<string, number>();
     let changed = false;
     for (const feature of desiredRoom.room.features) {
-      if (feature.kind !== 'window' || feature.offset.value === null) continue;
+      if (feature.kind === 'obstacle' || feature.offset.value === null)
+        continue;
       const target = feature.offset.value,
         current = windowOffsets.get(feature.id) ?? target;
       const value =
@@ -1462,7 +1463,7 @@ export function RoomScene(props: SceneProps) {
       room: {
         ...desiredRoom.room,
         features: desiredRoom.room.features.map((feature) =>
-          feature.kind === 'window' &&
+          feature.kind !== 'obstacle' &&
           feature.offset.value !== null &&
           props.editing.windowPreview?.id !== feature.id
             ? {

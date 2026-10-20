@@ -893,7 +893,7 @@ describe('selection determines room interaction', () => {
       expect(s.getSnapshot().undoLabel).toBeNull();
     },
   );
-  it('preserves selected-window editing, while doors and invalid IDs allow exploration', () => {
+  it('arranges selected windows and doors, while invalid IDs allow exploration', () => {
     const a = piece('a', 4000, 4000);
     a.locks = { dimensions: true, position: true, rotation: true };
     const s = session(commandRoom([a], [door(), windowFeature()]));
@@ -903,7 +903,7 @@ describe('selection determines room interaction', () => {
     expect(arrangingSelection(s.getSnapshot())).toBe(true);
     s.select('door_1');
     expect(s.getSnapshot().presentation.selectedId).toBe('door_1');
-    expect(arrangingSelection(s.getSnapshot())).toBe(false);
+    expect(arrangingSelection(s.getSnapshot())).toBe(true);
     s.select('missing');
     expect(arrangingSelection(s.getSnapshot())).toBe(false);
   });

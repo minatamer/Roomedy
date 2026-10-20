@@ -13,7 +13,7 @@ export function arrangingSelection(state: SessionSnapshot): boolean {
     (room.furniture.some((item) => item.id === state.presentation.selectedId) ||
       room.room.features.some(
         (item) =>
-          item.id === state.presentation.selectedId && item.kind === 'window',
+          item.id === state.presentation.selectedId && item.kind !== 'obstacle',
       ))
   );
 }

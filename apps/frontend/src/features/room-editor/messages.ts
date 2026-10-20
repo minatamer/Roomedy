@@ -7,6 +7,8 @@ const failureCopy: Readonly<Record<string, string>> = Object.freeze({
   'invalid-input': 'Check the values and units before trying again.',
   'protected-door':
     'Doors stay in the room. You can still edit their position and opening.',
+  'blocked-door':
+    'That doorway needs a clear wall and space in front. Move it away from furniture, windows and other doors.',
   locked: 'Unlock the protected property before changing it.',
   'owned-dimensions':
     'Correct the measured size of your item, or explicitly replace it.',

@@ -30,6 +30,28 @@ const edits = (result: MedyRequest | null) => {
 };
 
 describe('MEDY explicit manual commands', () => {
+  it('shares the door offset guard with direct edits, without silently substituting another position', () => {
+    const d = door(),
+      w = windowFeature();
+    w.offset = known(4000);
+    const r = commandRoom([], [d, w]);
+    const blocked = edits(
+      resolveMedyRequest(r, 'set door offset to 4500 mm', d.id),
+    );
+    expect(blocked[0]).toMatchObject({
+      type: 'update-feature',
+      feature: { offset: { value: 4500 } },
+    });
+    expect(evaluateBatch(r, blocked, 'visitor')).toMatchObject({
+      ok: false,
+      code: 'blocked-door',
+    });
+    const clear = edits(
+      resolveMedyRequest(r, 'set door offset to 6000 mm', d.id),
+    );
+    expect(evaluateBatch(r, clear, 'visitor').ok).toBe(true);
+    expect(r.room.features[0]!.offset.value).toBe(1000);
+  });
   it('deletes windows through the manual authority, while helping with doors without proposing removal', () => {
     const r = room();
     const actions = edits(resolveMedyRequest(r, 'delete the window', null));

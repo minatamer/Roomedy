@@ -15,6 +15,8 @@ import {
   windowFeature,
   known,
   unknown,
+  door,
+  piece,
 } from './fixtures/command-room.js';
 import type { FloorRay } from '../apps/frontend/src/features/room-view/manipulation.js';
 const sessions: SessionController[] = [];
@@ -244,4 +246,80 @@ it('chooses the nearest exact end in a nearly full-width window and reads only r
   const origin = { x: 2, y: 1, z: 1, isVector3: true },
     direction = { x: 0, y: 0, z: -1, isVector3: true };
   expect(pointOnWindowWall(room, feature, { origin, direction })).toBe(2000);
+});
+
+describe('doors reuse wall gestures without weakening protected deletion', () => {
+  it.each(['view', 'preview', 'reset', 'revision', 'expiry'] as const)(
+    'retires a door gesture after %s',
+    (change) => {
+      let now = 0;
+      const d = door(),
+        s = session(commandRoom([], [d]), () => now);
+      s.select(d.id);
+      const retired = vi.fn(),
+        edit = beginWindowEdit(s, d.id, retired)!;
+      if (change === 'view') s.setRoomView('cutaway');
+      if (change === 'preview')
+        s.prepareVisitorPreview(
+          [{ type: 'room-finish', floorFinish: 'walnut', wallFinish: 'ivory' }],
+          'Preview',
+        );
+      if (change === 'reset') s.reset();
+      if (change === 'revision')
+        s.dispatch(
+          [{ type: 'room-finish', floorFinish: 'walnut', wallFinish: 'ivory' }],
+          'Finish',
+        );
+      if (change === 'expiry') {
+        now = 7200000;
+        s.checkExpiry();
+      }
+      expect(edit.current()).toBe(false);
+      expect(edit.commit(2000)).toMatchObject({ ok: false, code: 'stale' });
+      expect(retired).toHaveBeenCalledTimes(1);
+    },
+  );
+  for (const wall of ['north', 'south', 'east', 'west'] as const)
+    it(`moves a selected ${wall} door through the same preview/command/Undo owner`, () => {
+      const d = { ...door(), wall },
+        room = commandRoom([], [d]),
+        s = session(room);
+      s.select(d.id);
+      expect(windowDragTarget(room, d)?.feature).toBe(d);
+      expect(clampWindowOffset(room, d, -200, true)).toBe(0);
+      expect(
+        nudgeWindowOffset(
+          room,
+          d,
+          wall === 'north' || wall === 'south' ? 'ArrowRight' : 'ArrowDown',
+        ),
+      ).toBe(1010);
+      expect(
+        roomWithWindowPreview(room, { id: d.id, offset: 2000 }).room
+          .features[0]!.offset.value,
+      ).toBe(2000);
+      expect(beginWindowEdit(s, d.id)!.commit(2000).ok).toBe(true);
+      expect(
+        s.getSnapshot().workspace!.current.room.features[0]!.offset,
+      ).toMatchObject({ value: 2000, status: 'estimated' });
+      expect(s.undo().ok).toBe(true);
+      expect(s.getSnapshot().workspace!.current.room.features).toEqual([d]);
+      const edit = beginWindowEdit(s, d.id)!;
+      s.select(null);
+      expect(edit.commit(3000)).toMatchObject({ ok: false, code: 'stale' });
+    });
+  it('clamps a door preview outside blockers and rechecks a forged final offset', () => {
+    const d = door(),
+      room = commandRoom([piece('blocker', 3000, 300)], [d]),
+      s = session(room);
+    s.select(d.id);
+    expect(clampWindowOffset(room, d, 2800, false)).toBe(3600);
+    expect(beginWindowEdit(s, d.id)!.commit(2800)).toMatchObject({
+      ok: false,
+      code: 'blocked-door',
+    });
+    expect(s.getSnapshot().workspace!.current).toEqual(room);
+    const edit = beginWindowEdit(s, d.id)!;
+    expect(edit.commit(1000)).toEqual({ ok: true, changed: false });
+  });
 });

@@ -1,9 +1,11 @@
 import type { Feature, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
+import { nearestClearDoorOffset } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { beginRoomEdit } from './manipulation';
 import type { FloorRay, FloorResult } from './manipulation';
-export type WindowFeature = Extract<Feature, { kind: 'window' }>;
+// Historical adapter name: both doors and windows share one wall gesture owner.
+export type WindowFeature = Extract<Feature, { kind: 'window' | 'door' }>;
 export type WindowPosition = { id: string; offset: number };
 export function windowLimit(
   room: RoomDocument,
@@ -16,7 +18,7 @@ export function windowLimit(
         ? room.room.depth.value
         : null;
   if (
-    feature.kind !== 'window' ||
+    feature.kind === 'obstacle' ||
     edge === null ||
     feature.width.value === null ||
     feature.offset.value === null ||
@@ -40,7 +42,10 @@ export function clampWindowOffset(
       ? nearestEnd
       : Math.round(bounded / 50) * 50
     : Math.round(bounded);
-  return Math.max(0, Math.min(limit, value));
+  const offset = Math.max(0, Math.min(limit, value));
+  return feature.kind === 'door'
+    ? nearestClearDoorOffset(room, feature, offset)
+    : offset;
 }
 /** Intersect the existing vertical wall; only its horizontal coordinate is edited. */
 export function pointOnWindowWall(
@@ -120,7 +125,7 @@ export function roomWithWindowPreview(
     room: {
       ...room.room,
       features: room.room.features.map((feature) =>
-        feature.kind === 'window' && feature.id === preview.id
+        feature.kind !== 'obstacle' && feature.id === preview.id
           ? {
               ...feature,
               offset: {
@@ -151,7 +156,7 @@ export function beginWindowEdit(
   if (
     !room ||
     !feature ||
-    feature.kind !== 'window' ||
+    feature.kind === 'obstacle' ||
     windowLimit(room, feature) === null
   )
     return null;
@@ -188,7 +193,7 @@ export function beginWindowEdit(
             },
           },
         ],
-        'Move window',
+        feature.kind === 'door' ? 'Move door' : 'Move window',
       );
     },
   };
@@ -211,8 +216,9 @@ export function advanceWindowOffset(
 export function windowDragTarget(room: RoomDocument, displayed: Feature) {
   const feature = room.room.features.find((f) => f.id === displayed.id);
   if (
-    feature?.kind !== 'window' ||
-    displayed.kind !== 'window' ||
+    !feature ||
+    feature.kind === 'obstacle' ||
+    displayed.kind !== feature.kind ||
     displayed.offset.value === null
   )
     return null;

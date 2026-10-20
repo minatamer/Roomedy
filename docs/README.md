@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Clear door placement — RM-015BG:** Bathroom-door Add chooses the first clear wall position using actual furniture, obstacles and existing openings. Doors now slide on their current wall in2D/3D with keyboard alternatives, finite motion and Undo; final door pose commands recheck clearance. Medy uses the same placement and command authority. [Ticket](tickets/RM-015BG-place-and-move-doors.md), [exact24-path plan](commit-plans/RM-015BG.md), [evidence](validation/RM-015BG.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Window sizes and balcony doors — RM-015BF:** Window size presets and paired glass balcony-door openings reuse the current room, commands,2D/3D, opening previews and exports. Four editable planning sizes per type; no outside balcony. Medy uses the same registry. [Ticket](tickets/RM-015BF-window-size-presets-and-balcony-doors.md), [allocation](commit-plans/RM-015BF.md), [size decisions](references/window-balcony-sizes-2026-10-20.md), [evidence](validation/RM-015BF.md). Actual owner approval pending.
 
 **Catalogue card alignment —20October:** Dimensions and drag handles share one centered footer row; handles retain44×44px targets and neighboring card alignment. [AV allocation](commit-plans/RM-015AV.md#card-footer-alignment-follow-up-allocation--20-october2026), [current evidence](validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026). Scoped checks and native desktop/phone/drag/Undo pass; actual owner approval pending.

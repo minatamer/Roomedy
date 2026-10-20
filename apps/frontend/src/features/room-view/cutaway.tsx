@@ -392,7 +392,7 @@ export default function Cutaway({
       <div id={descriptionId} className={styles.description}>
         <p>
           {moving
-            ? 'Drag furniture or windows · Arrow keys nudge · R rotates furniture · Esc cancels'
+            ? 'Drag furniture, doors or windows · Arrow keys nudge · R rotates furniture · Esc cancels'
             : cameraView === 'overview'
               ? 'Drag to orbit'
               : 'Drag to look · W A S D to move'}{' '}

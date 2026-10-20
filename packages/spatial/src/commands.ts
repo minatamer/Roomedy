@@ -17,12 +17,14 @@ import type { SpatialIssue } from '@roomedy/contracts/issues';
 import { checkRoom } from './checks.js';
 import { CATALOGUE } from './catalogue.js';
 import { subsetRegion } from './coordinates.js';
+import { clearDoorIntervals } from './opening-placement.js';
 
 export type CommandAuthority = 'visitor' | 'authored-sample' | 'assistant';
 export type FailureCode =
   | 'out-of-scope'
   | 'invalid-input'
   | 'protected-door'
+  | 'blocked-door'
   | 'locked'
   | 'owned-dimensions'
   | 'retained'
@@ -474,6 +476,39 @@ export function evaluateBatch(
     return { ok: false, code: 'invalid-input' };
   const candidate = validateRoom(room, catalogue);
   if (!candidate) return { ok: false, code: 'unsupported-variant' };
+  // Check final atomic geometry, including manual/Medy measurement updates.
+  // Unchanged imperfect starting openings remain reviewable without relocating them.
+  for (const feature of candidate.room.features) {
+    if (feature.kind !== 'door' || !affected.has(feature.id)) continue;
+    const previous = before.room.features.find((f) => f.id === feature.id);
+    // A recorded existing doorway is a measurement-review fact, not a new plan.
+    // New manual/Medy placements remain estimated and never take this path.
+    if (
+      !previous &&
+      feature.wallProvenance.status === 'confirmed' &&
+      feature.offset.status === 'confirmed'
+    )
+      continue;
+    if (
+      previous &&
+      previous.wall === feature.wall &&
+      previous.offset.value === feature.offset.value
+    )
+      continue;
+    if (
+      feature.wall === 'unknown' ||
+      feature.offset.value === null ||
+      feature.width.value === null
+    )
+      continue;
+    if (
+      !clearDoorIntervals(candidate, feature)?.some(
+        ([lo, hi]) =>
+          feature.offset.value! >= lo && feature.offset.value! <= hi,
+      )
+    )
+      return { ok: false, code: 'blocked-door' };
+  }
   const oldChecks = checkRoom(before, catalogue),
     nextChecks = checkRoom(candidate, catalogue);
   const oldHard = new Map(

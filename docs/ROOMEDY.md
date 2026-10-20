@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Clear door placement — RM-015BG:** Bathroom-door Add chooses the first clear wall position using actual furniture, obstacles and existing openings. Doors now slide on their current wall in2D/3D with keyboard alternatives, finite motion and Undo; final door pose commands recheck clearance. Medy uses the same placement and command authority. [Ticket](tickets/RM-015BG-place-and-move-doors.md), [exact24-path plan](commit-plans/RM-015BG.md), [evidence](validation/RM-015BG.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Window sizes and balcony doors — RM-015BF:** Windows and paired balcony glass doors have useful editable width/height presets. A balcony door is an opening in the same rectangular room, with paired framed glazing and existing sliding/known-hinge previews; no exterior room. Presets change planning estimates through the shared command/Undo owner and preserve other facts. [Ticket](tickets/RM-015BF-window-size-presets-and-balcony-doors.md), [exact allocation](commit-plans/RM-015BF.md), [size decisions](references/window-balcony-sizes-2026-10-20.md), [evidence](validation/RM-015BF.md). Actual owner approval pending.
 
 **Adaptive2D names — RM-015BE:** Every placed door says Door or Bathroom Door from its own purpose. Furniture labels vary size, wrap whole words or turn sideways; thin/tiny pieces use nearby readable captions with front-arrow space. Previous-position overlays keep current names readable. [Ticket](tickets/RM-015BE-label-doors-and-adapt-plan-text.md), [allocation](commit-plans/RM-015BE.md), [evidence](validation/RM-015BE.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
@@ -1395,8 +1397,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of window size presets and paired glass balcony doors. Final pnpm check passes902tests/57files,7boundaries and both builds;271-input/BUILD_ID identity and native feature observations recorded. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
-Active ticket: RM-015BF
+Next action: Await actual owner review of the implemented door placement/movement and earlier visual changes. Exact local RM-015BG checkpoint;925tests/root/both builds and native observations pass. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new port/push/deploy.
+Active ticket: RM-015BG
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1421,7 +1423,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T18:38:02+00:00",
+  "updated_at": "2026-10-20T18:57:29+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1610,8 +1612,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015BF",
-  "next_action": "Await actual owner visual review of window size presets and paired glass balcony doors. Final pnpm check passes902tests/57files,7boundaries and both builds;271-input/BUILD_ID identity and native feature observations recorded. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
+  "active_ticket": "RM-015BG",
+  "next_action": "Await actual owner review of the implemented door placement/movement and earlier visual changes. Exact local RM-015BG checkpoint;925tests/root/both builds and native observations pass. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new port/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2101,14 +2103,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015BE.md#dimension-copy-follow-up--20october2026",
         "docs/validation/RM-015BE.md#window-labels-follow-up--20october2026",
         "docs/validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026",
-        "docs/validation/RM-015BF.md"
+        "docs/validation/RM-015BF.md",
+        "docs/validation/RM-015BG.md — exact24-path automatic clear bathroom-door placement and same-wall2D/3D door gestures, keyboard, finite aperture motion, final shared guard, Medy and Undo. Actual tab60 desktop/short/phone Add/drag/nudge/rejection/Medy Apply/Undo checked; closed/reset viewport. Final925tests/58files/root/7boundaries/both builds,272inputs/3408992bytes/BUILD_ID4dbab73f47bd3bab5a13488c4841ab12eea0ee032ba4a33e775f88d7e771fe33,16reviewed source/test hashes and read-only revision clean. Measured existing doorway review preserved. Exact local checkpoint authorized; actual owner visual approval pending, Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "source": "human:current-chat/2026-10-20/window-sizes-balcony-doors",
-        "scope": "RM-015BF window presets and paired glass balcony opening with size choices; no exterior/visual approval",
-        "quote": "for windows, i htink we should add sample sizes too OR OR balcones aswell, like not the outside of it, but just the 2 big doors yk what i mean? the 2 big window doors also in different sizes",
-        "recorded_at": "2026-10-20T18:11:08+00:00"
+        "scope": "RM-015BG automatic bathroom-door placement and same-wall door editing; no visual acceptance",
+        "quote": "when the user clicks on bathroom door, it should automatically be placed in the first place that makes sense aka no furnite blocking it and not ontop of a window or another door. doors should be moveable aswell just like windows",
+        "source": "human:current-chat/2026-10-20/bathroom-placement-door-movement",
+        "recorded_at": "2026-10-20T18:43:22+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2686,6 +2689,15 @@ This checklist records local work. Human approvals and unresolved external check
             "scope": "RM-015BF window presets and paired glass balcony opening with size choices; no exterior/visual approval",
             "quote": "for windows, i htink we should add sample sizes too OR OR balcones aswell, like not the outside of it, but just the 2 big doors yk what i mean? the 2 big window doors also in different sizes",
             "recorded_at": "2026-10-20T18:11:08+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "scope": "RM-015BG automatic bathroom-door placement and same-wall door editing; no visual acceptance",
+            "quote": "when the user clicks on bathroom door, it should automatically be placed in the first place that makes sense aka no furnite blocking it and not ontop of a window or another door. doors should be moveable aswell just like windows",
+            "source": "human:current-chat/2026-10-20/bathroom-placement-door-movement",
+            "recorded_at": "2026-10-20T18:43:22+00:00"
           }
         }
       ]

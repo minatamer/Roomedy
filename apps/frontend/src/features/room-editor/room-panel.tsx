@@ -1,4 +1,8 @@
-import { featureLabel, BALCONY_SIZE_PRESETS } from '@roomedy/spatial';
+import {
+  featureLabel,
+  BALCONY_SIZE_PRESETS,
+  placeDoor,
+} from '@roomedy/spatial';
 import type { Feature, RoomDocument } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
@@ -60,7 +64,7 @@ export function RoomPanel({
       ),
       sill: estimate(0),
     };
-    const feature: Feature =
+    let feature: Feature =
       kind === 'door'
         ? {
             ...base,
@@ -82,6 +86,16 @@ export function RoomPanel({
               mechanismProvenance: unknown,
             }
           : { ...base, kind, projection: estimate(300) };
+    if (feature.kind === 'door' && purpose === 'bathroom') {
+      const placed = placeDoor(room, feature);
+      if (!placed) {
+        controller.notify(
+          'There isn’t a clear spot for a bathroom door. Make space along a wall, or review missing room measurements.',
+        );
+        return;
+      }
+      feature = placed;
+    }
     const r = controller.dispatch(
       [{ type: 'add-feature', feature }],
       'Add room feature',

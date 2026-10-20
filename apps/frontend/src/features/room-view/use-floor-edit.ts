@@ -61,7 +61,7 @@ type Gesture = BaseGesture &
     | { kind: 'floor'; edit: FloorEdit; offset: FloorPoint }
     | { kind: 'window'; edit: WindowEdit; offset: number }
   );
-/** One pointer/cancellation owner for floor pieces and same-wall windows. */
+/** One pointer/cancellation owner for floor pieces and same-wall openings. */
 export function useFloorEdit(
   controller: SessionController,
   enabled: boolean,
@@ -164,7 +164,7 @@ export function useFloorEdit(
         const point = room && pointOnWindowWall(room, item, event.ray);
         if (point === undefined || point === null) {
           controller.notify(
-            'Review the window width, position and wall measurements before moving it.',
+            'Review the opening width, position and wall measurements before moving it.',
           );
           return;
         }
@@ -353,7 +353,7 @@ export function useFloorEdit(
     canvas.setAttribute(
       'aria-label',
       enabled
-        ? 'Room in 3D. Drag furniture on the floor or slide windows along their wall. Arrow keys nudge; R rotates furniture; Escape cancels.'
+        ? 'Room in 3D. Drag furniture on the floor or slide doors and windows along their wall. Arrow keys nudge; R rotates furniture; Escape cancels.'
         : 'Room in 3D. Arrow keys look around; plus and minus zoom. Inside the room, W A S D move. Select an item to inspect.',
     );
     const key = (event: KeyboardEvent) => {
@@ -379,7 +379,7 @@ export function useFloorEdit(
       const feature = room?.room.features.find(
         (f) => f.id === state.presentation.selectedId,
       );
-      if (feature?.kind === 'window' && room) {
+      if (feature && feature.kind !== 'obstacle' && room) {
         if (!arrow) return;
         const next = nudgeWindowOffset(
           room,
@@ -391,7 +391,7 @@ export function useFloorEdit(
         const edit = beginWindowEdit(controller, feature.id);
         if (!edit || next === null) {
           controller.notify(
-            'Review the window width, position and wall measurements before moving it.',
+            'Review the opening width, position and wall measurements before moving it.',
           );
           return;
         }

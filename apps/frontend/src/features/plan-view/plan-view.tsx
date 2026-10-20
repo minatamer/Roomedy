@@ -349,7 +349,7 @@ export function PlanView({
   }, [arranging]);
   const windowDown = (event: PointerEvent<SVGGElement>, feature: Feature) => {
     if (
-      feature.kind !== 'window' ||
+      feature.kind === 'obstacle' ||
       !arranging ||
       readOnly ||
       event.button !== 0 ||
@@ -370,7 +370,7 @@ export function PlanView({
     ) {
       edit?.cancel();
       controller.notify(
-        'Review the window width, position and wall measurements before moving it.',
+        'Review the opening width, position and wall measurements before moving it.',
       );
       return;
     }
@@ -666,7 +666,7 @@ export function PlanView({
         {room.room.features.map((feature) => {
           const r = wallBand(
             room,
-            feature.kind === 'window' && feature.offset.value !== null
+            feature.kind !== 'obstacle' && feature.offset.value !== null
               ? {
                   ...feature,
                   offset: {
@@ -689,7 +689,7 @@ export function PlanView({
               aria-pressed={selected}
               className={styles.feature}
               style={
-                feature.kind === 'window'
+                feature.kind !== 'obstacle'
                   ? {
                       transform: `translate(${feature.wall === 'north' || feature.wall === 'south' ? feature.offset.value : 0}px, ${feature.wall === 'east' || feature.wall === 'west' ? feature.offset.value : 0}px)`,
                       transition:
@@ -722,7 +722,7 @@ export function PlanView({
                   return;
                 }
                 if (
-                  feature.kind === 'window' &&
+                  feature.kind !== 'obstacle' &&
                   arranging &&
                   !readOnly &&
                   !e.nativeEvent.isComposing &&
@@ -747,7 +747,7 @@ export function PlanView({
                       controller.notify(failureMessage(result, canonicalRoom));
                   } else
                     controller.notify(
-                      'Review the window width, position and wall measurements before moving it.',
+                      'Review the opening width, position and wall measurements before moving it.',
                     );
                   return;
                 }
@@ -761,7 +761,18 @@ export function PlanView({
                 feature.mechanism === 'inward' &&
                 feature.width.value !== null &&
                 (() => {
-                  const band = wallBand(room, feature, feature.width.value!);
+                  const band = wallBand(
+                    room,
+                    {
+                      ...feature,
+                      offset: {
+                        value: 0,
+                        status: 'estimated',
+                        sourceId: 'display-origin',
+                      },
+                    },
+                    feature.width.value!,
+                  );
                   return (
                     band && (
                       <rect

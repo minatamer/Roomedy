@@ -30,6 +30,7 @@ import {
   openingSizePresets,
 } from './opening-sizes.js';
 import { designPalette } from './design.js';
+import { placeDoor } from './opening-placement.js';
 import {
   medyDimensions,
   medyMillimetres,
@@ -278,7 +279,7 @@ export function medyEdit(
       ),
       sill: estimate(0),
     };
-    const feature: Feature =
+    let feature: Feature =
       kind === 'door'
         ? {
             ...base,
@@ -335,9 +336,21 @@ export function medyEdit(
         feature.hingeProvenance = planned();
       }
     }
+    if (
+      feature.kind === 'door' &&
+      feature.purpose === 'bathroom' &&
+      fields.values.offset === undefined
+    ) {
+      const placed = placeDoor(room, feature);
+      if (!placed)
+        return ask(
+          'There isn’t a clear spot for a bathroom door. Make space along a wall, or review missing room measurements.',
+        );
+      feature = placed;
+    }
     actions.push({ type: 'add-feature', feature });
     return batch(
-      `Add ${featureLabel(feature).toLowerCase()}${wall ? ` on the ${wall[1]} wall` : ' with wall to review'}`,
+      `Add ${featureLabel(feature).toLowerCase()}${feature.wall !== 'unknown' ? ` on the ${feature.wall} wall` : ' with wall to review'}`,
     );
   }
   const hasDimensions = medyDimensions(words);
