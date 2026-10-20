@@ -1,5 +1,5 @@
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
-import { footprint } from '@roomedy/spatial';
+import { footprint, wallMountedPose } from '@roomedy/spatial';
 import type { Presentation, RoomFrame } from '../session/state';
 
 export interface PlanBox {
@@ -56,10 +56,14 @@ export function snapPosition(
     edge !== null && edge >= radius * 2
       ? Math.max(radius, Math.min(edge - radius, half(v)))
       : half(v);
-  const inside = (point: { x: number; z: number }) => ({
-    x: constrain(point.x, w, room.room.width.value),
-    z: constrain(point.z, d, room.room.depth.value),
-  });
+  const inside = (point: { x: number; z: number }) => {
+    const pose = wallMountedPose(room, item, {
+      ...item.pose,
+      centerX: constrain(point.x, w, room.room.width.value),
+      centerZ: constrain(point.z, d, room.room.depth.value),
+    });
+    return { x: pose.centerX, z: pose.centerZ };
+  };
   // Clamping is independent of optional grid/edge snapping, in actual physical mm.
   const requested = inside(raw);
   if (!enabled) return requested;

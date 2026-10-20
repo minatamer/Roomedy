@@ -104,11 +104,77 @@ const sizes: Partial<
     common('shelf-tall', 'Tall', 800, 280, 2020),
   ],
 };
+const entrySizes: Record<string, readonly SizePreset[]> = {
+  armchair: [
+    common('armchair-compact', 'Compact', 700, 700, 800),
+    common('armchair-standard', 'Standard', 800, 800, 850),
+    common('armchair-roomy', 'Roomy', 900, 900, 950),
+  ],
+  'bedroom-bench': [
+    common('bench-compact', 'Compact', 1000, 400, 450),
+    common('bench-standard', 'Standard', 1200, 450, 450),
+    common('bench-wide', 'Wide', 1500, 450, 450),
+  ],
+  'side-table': [
+    common('table-small', 'Small', 350, 350, 450),
+    common('table-standard', 'Standard', 450, 450, 550),
+    common('table-large', 'Large', 600, 600, 600),
+  ],
+  'floor-lamp': [
+    common('lamp-compact', 'Compact', 300, 300, 1400),
+    common('lamp-standard', 'Standard', 350, 350, 1550),
+    common('lamp-tall', 'Tall', 400, 400, 1800),
+  ],
+  'drawer-shelf': [
+    common('drawer-shelf-compact', 'Compact', 600, 350, 1400),
+    common('drawer-shelf-standard', 'Standard', 800, 400, 1600),
+    common('drawer-shelf-tall', 'Tall', 800, 400, 1800),
+  ],
+  'chest-drawers': [
+    common('chest-compact', 'Compact', 700, 470, 900),
+    common('chest-standard', 'Standard', 800, 470, 900),
+    common('chest-wide', 'Wide', 1000, 470, 900),
+  ],
+  'bedside-drawers': [
+    common('bedside-small', 'Small', 400, 350, 500),
+    common('bedside-standard', 'Standard', 450, 400, 550),
+    common('bedside-wide', 'Wide', 500, 400, 600),
+  ],
+  'tv-stand': [
+    common('media-compact', 'Compact', 1200, 350, 600),
+    common('media-standard', 'Standard', 1400, 400, 600),
+    common('media-wide', 'Wide', 1600, 400, 600),
+    common('media-extra-wide', 'Extra wide', 2000, 400, 600),
+  ],
+  'full-length-mirror': [
+    common('mirror-slim', 'Slim', 500, 60, 1500),
+    common('mirror-standard', 'Standard', 650, 60, 1500),
+    common('mirror-wide', 'Wide', 700, 60, 1700),
+  ],
+};
+const tvSizes = (entry: CatalogueEntry): SizePreset[] =>
+  [43, 50, 55, 65, 75].map((inches) => {
+    const diagonal = inches * 25.4;
+    return {
+      id: `tv-${inches}`,
+      group: 'Screen diagonal',
+      label: `${inches}-inch`,
+      width: Math.round((diagonal * 16) / Math.sqrt(337) + 20),
+      depth: entry.size.depth.default,
+      height:
+        Math.round((diagonal * 9) / Math.sqrt(337) + 20) +
+        (entry.placement === 'surface' ? 60 : 0),
+    };
+  });
 export function furnitureSizePresets(
   entry: CatalogueEntry,
 ): readonly SizePreset[] {
   if (!entry.adjustable) return [];
-  return (sizes[entry.category] ?? []).filter((p) =>
+  return (
+    entry.category === 'tv'
+      ? tvSizes(entry)
+      : (entrySizes[entry.id] ?? sizes[entry.category] ?? [])
+  ).filter((p) =>
     (['width', 'depth', 'height'] as const).every(
       (axis) =>
         p[axis] === undefined ||
@@ -126,6 +192,8 @@ export function matchingFurnitureSizePresets(
   entry: CatalogueEntry,
   words: string,
 ) {
+  if (entry.category === 'tv')
+    words = words.replace(/(\d+)\s*(?:inches|inch|in)(?![a-z])/g, '$1-inch');
   const region = /\b(uk|british)\b/.test(words)
     ? 'uk-'
     : /\b(us|american)\b/.test(words)

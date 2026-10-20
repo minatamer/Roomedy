@@ -1,3 +1,4 @@
+import { featureLabel } from '@roomedy/spatial';
 import type { SpatialIssue } from '@roomedy/contracts/issues';
 import type { RoomDocument } from '@roomedy/contracts/room';
 const failureCopy: Readonly<Record<string, string>> = Object.freeze({
@@ -32,7 +33,10 @@ export function failureMessage(
     const names = issue.objectIds.map((id) =>
       (
         room?.furniture.find((f) => f.id === id)?.label ??
-        room?.room.features.find((f) => f.id === id)?.kind ??
+        (() => {
+          const feature = room?.room.features.find((f) => f.id === id);
+          return feature ? featureLabel(feature) : undefined;
+        })() ??
         (id === room?.roomId ? 'Room' : 'New piece')
       ).slice(0, 60),
     );
@@ -45,6 +49,7 @@ export function failureMessage(
 export const issueText = (issue: SpatialIssue): string =>
   ({
     'outside-room': 'Outside the room boundary',
+    'wall-mount': 'Place the back of this piece against its mounting wall',
     overlap: 'Furniture footprints overlap',
     'door-swing': 'Door clearance needs space',
     access: 'Furniture access needs space',

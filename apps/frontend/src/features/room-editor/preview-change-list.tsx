@@ -1,3 +1,4 @@
+import { furnitureBottom, featureLabel } from '@roomedy/spatial';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { roomSurface } from '@roomedy/contracts/surfaces';
 
@@ -41,6 +42,13 @@ export function PreviewChangeList({
     )
       details.push(
         `position X ${piece.pose.centerX}, Z ${piece.pose.centerZ} mm`,
+      );
+    if (
+      (!before && furnitureBottom(piece) !== 0) ||
+      (before && furnitureBottom(before) !== furnitureBottom(piece))
+    )
+      details.push(
+        `bottom edge: ${before ? `${furnitureBottom(before) ?? 'unknown'} → ` : ''}${furnitureBottom(piece) ?? 'unknown'} mm above floor (planned)`,
       );
     if (!before || before.pose.quarterTurns !== piece.pose.quarterTurns)
       details.push(`front facing ${facing(piece.pose.quarterTurns)}`);
@@ -98,22 +106,32 @@ export function PreviewChangeList({
       'projection',
       'mechanism',
       'hinge',
+      'purpose',
     ] as const) {
       const after = (feature as unknown as Record<string, unknown>)[key],
         prior = before && (before as unknown as Record<string, unknown>)[key];
       if (after === undefined || same(prior, after)) continue;
+      if (key === 'purpose') {
+        details.push(
+          `leads to ${after === 'bathroom' ? 'bathroom' : 'hall / adjoining space'}`,
+        );
+        continue;
+      }
       details.push(
         `${key}: ${typeof after === 'object' && after !== null && 'value' in after ? measurement(after as { value: number | null; status: string }) : String(after)}`,
       );
     }
     rows.push({
       id: feature.id,
-      text: `${before ? 'Change' : 'Add'} ${feature.kind}: ${details.join(' · ')}`,
+      text: `${before ? 'Change' : 'Add'} ${featureLabel(feature).toLowerCase()}: ${details.join(' · ')}`,
     });
   }
   for (const feature of current.room.features)
     if (!proposed.room.features.some((item) => item.id === feature.id))
-      rows.push({ id: feature.id, text: `Remove ${feature.kind}` });
+      rows.push({
+        id: feature.id,
+        text: `Remove ${featureLabel(feature).toLowerCase()}`,
+      });
   return rows.length ? (
     <ul className={className}>
       {rows.map((row) => (

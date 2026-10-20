@@ -37,6 +37,7 @@ export function proceduralParts(
   category: CatalogueEntry['category'],
   size: PhysicalSize,
   mechanism: CatalogueEntry['accessMechanism'],
+  variant = '',
 ): BoxPart[] {
   const { width: w, depth: d, height: h } = size;
   const parts: BoxPart[] = [];
@@ -110,6 +111,86 @@ export function proceduralParts(
     box('seat', 0, seat, 0, w, 70, d, 'soft');
     legs(seat - 35, 30);
     box('back', 0, (h + seat) / 2, -d / 2 + 25, w, h - seat, 50, 'soft');
+  } else if (category === 'mirror') {
+    for (const side of [-1, 1])
+      box(`mirror-side-${side}`, side * (w / 2 - 10), h / 2, 0, 20, h, d);
+    box('mirror-bottom', 0, 10, 0, w - 40, 20, d);
+    box('mirror-top', 0, h - 10, 0, w - 40, 20, d);
+    box('mirror-back', 0, h / 2, -d / 2 + 4, w - 40, h - 40, 8);
+    box('mirror-glass', 0, h / 2, d / 2 - 4, w - 40, h - 40, 8, 'metal');
+  } else if (category === 'tv') {
+    const feet = variant === 'tv-tabletop' ? 60 : 0;
+    const screenDepth = Math.min(55, d);
+    box(
+      'tv-body',
+      0,
+      feet + (h - feet) / 2,
+      -d / 2 + screenDepth / 2,
+      w,
+      h - feet,
+      screenDepth,
+      'metal',
+    );
+    box(
+      'tv-screen',
+      0,
+      feet + (h - feet) / 2,
+      -d / 2 + screenDepth + 1,
+      w - 20,
+      h - feet - 20,
+      2,
+      'metal',
+    );
+    if (feet)
+      for (const side of [-1, 1]) {
+        box(
+          `tv-foot-${side}`,
+          side * w * 0.3,
+          8,
+          0,
+          Math.min(120, w * 0.1),
+          16,
+          d,
+          'metal',
+        );
+        box(
+          `tv-neck-${side}`,
+          side * w * 0.3,
+          feet / 2,
+          -d / 2 + screenDepth / 2,
+          20,
+          feet,
+          20,
+          'metal',
+        );
+      }
+  } else if (category === 'seating') {
+    const seat = variant === 'bench' ? h - 70 : Math.min(450, h * 0.52);
+    box('seat', 0, seat, 0, w, 100, d, 'soft');
+    legs(seat - 50, 40, 50);
+    if (variant !== 'bench') {
+      box('back', 0, (h + seat) / 2, -d / 2 + 70, w, h - seat, 140, 'soft');
+      const armHeight = Math.min(230, h - seat + 15);
+      for (const side of [-1, 1])
+        box(
+          `arm-${side}`,
+          side * (w / 2 - 60),
+          seat + armHeight / 2 - 15,
+          0,
+          120,
+          armHeight,
+          d,
+          'soft',
+        );
+    }
+  } else if (category === 'table') {
+    box('top', 0, h - 15, 0, w, 30, d);
+    legs(h - 30, 30, 30);
+    box('lower-shelf', 0, h * 0.25, 0, w - 40, 20, d - 40);
+  } else if (category === 'lighting') {
+    box('lamp-base', 0, 12, 0, w * 0.75, 24, d * 0.75, 'metal');
+    box('lamp-stem', 0, (h - 160) / 2, 0, 22, h - 160, 22, 'metal');
+    box('lamp-shade', 0, h - 130, 0, w, 260, d, 'soft');
   } else {
     const t = 22;
     box('left-side', -w / 2 + t / 2, h / 2, 0, t, h, d);
@@ -136,48 +217,63 @@ export function proceduralParts(
       if (mechanism === 'sliding')
         box('sliding-track', 0, h - 45, d / 2 - 20, w - 30, 8, 30, 'metal');
     } else if (mechanism === 'drawer') {
-      for (const level of [0, 1, 2]) {
-        const y = t + ((h - 2 * t) * (level + 0.5)) / 3;
-        const dh = (h - 2 * t) / 3 - 8;
-        box(`drawer-${level}-front`, 0, y, d / 2 - 12, w - 2 * t, dh, 24);
-        box(
-          `drawer-${level}-base`,
-          0,
-          y - dh / 2 + 8,
-          0,
-          w - 3 * t,
-          16,
-          d - 2 * t,
-        );
-        box(
-          `drawer-${level}-back`,
-          0,
-          y,
-          -d / 2 + 2 * t,
-          w - 3 * t,
-          dh - 12,
-          16,
-        );
-        for (const side of [-1, 1])
+      const drawerArea =
+        variant === 'drawer-shelf'
+          ? h * 0.42
+          : variant === 'tv-stand'
+            ? h * 0.6
+            : h;
+      const levels =
+        variant === 'tv-stand'
+          ? 1
+          : variant === 'bedside-drawers' || variant === 'drawer-shelf'
+            ? 2
+            : 3;
+      const lanes = variant === 'tv-stand' ? 2 : 1;
+      for (let level = 0; level < levels; level++)
+        for (let lane = 0; lane < lanes; lane++) {
+          const y = t + ((drawerArea - 2 * t) * (level + 0.5)) / levels;
+          const dh = (drawerArea - 2 * t) / levels - 8,
+            dw = (w - 2 * t) / lanes - 4;
+          const x = lanes === 1 ? 0 : ((lane === 0 ? -1 : 1) * (w - 2 * t)) / 4;
+          const name = `drawer-${level}-${lane}`;
+          box(`${name}-front`, x, y, d / 2 - 12, dw, dh, 24);
+          box(`${name}-base`, x, y - dh / 2 + 8, 0, dw - 20, 16, d - 2 * t);
+          box(`${name}-back`, x, y, -d / 2 + 2 * t, dw - 20, dh - 12, 16);
+          for (const side of [-1, 1])
+            box(
+              `${name}-side-${side}`,
+              x + side * (dw / 2 - 12),
+              y,
+              0,
+              16,
+              dh - 12,
+              d - 2 * t,
+            );
           box(
-            `drawer-${level}-side-${side}`,
-            side * (w / 2 - 2 * t),
+            `${name}-handle`,
+            x,
             y,
-            0,
-            16,
-            dh - 12,
-            d - 2 * t,
+            d / 2 - 4,
+            Math.min(120, dw / 3),
+            12,
+            8,
+            'metal',
           );
-        box(
-          `drawer-${level}-handle`,
-          0,
-          y,
-          d / 2 - 4,
-          Math.min(120, w / 3),
-          12,
-          8,
-          'metal',
-        );
+        }
+      if (drawerArea < h) {
+        box('case-divider', 0, drawerArea, 0, w - 2 * t, t, d - t);
+        if (variant === 'drawer-shelf')
+          for (const fraction of [0.63, 0.82])
+            box(
+              `upper-shelf-${fraction}`,
+              0,
+              h * fraction,
+              0,
+              w - 2 * t,
+              t,
+              d - t,
+            );
       }
     } else
       for (const level of [1, 2, 3])
@@ -248,7 +344,12 @@ export function resolveRepresentation(
     };
   return {
     kind: 'procedural',
-    parts: proceduralParts(entry.category, size, entry.accessMechanism),
+    parts: proceduralParts(
+      entry.category,
+      size,
+      entry.accessMechanism,
+      entry.assetId,
+    ),
     approximate: true,
     notice:
       entry.representation === 'prepared-mesh'

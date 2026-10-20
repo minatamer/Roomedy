@@ -1,3 +1,4 @@
+import { featureLabel } from '@roomedy/spatial';
 import Image from 'next/image';
 import { thumbnailUrl, findCatalogueEntry } from '../catalogue/catalogue';
 import { useSurfaceMotion } from './use-surface-motion';
@@ -773,7 +774,8 @@ export function Editor({
               className={styles.mobileReturn}
               onClick={() => open('inspector')}
             >
-              {item?.label ?? feature?.kind ?? 'Selection'} · Edit properties ↗
+              {item?.label ?? (feature ? featureLabel(feature) : 'Selection')} ·
+              Edit properties ↗
             </button>
           )}
           <p
@@ -901,9 +903,7 @@ export function Editor({
                   <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
                     {shownRoom.furniture.find((p) => p.id === view.selectedId)
                       ?.label ??
-                      shownRoom.room.features.find(
-                        (f) => f.id === view.selectedId,
-                      )?.kind ??
+                      (feature ? featureLabel(feature) : undefined) ??
                       'Room'}
                   </h2>
                   <p>{inspectionReason}</p>

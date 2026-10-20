@@ -1,3 +1,4 @@
+import { featureLabel } from '@roomedy/spatial';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import Image from 'next/image';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
@@ -252,7 +253,8 @@ export function Assistant({
                         )}
                         <span>
                           <strong>
-                            {piece?.label ?? feature?.kind ?? 'Room'}
+                            {piece?.label ??
+                              (feature ? featureLabel(feature) : 'Room')}
                           </strong>
                           {piece && (
                             <small>

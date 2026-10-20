@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Expanded bedroom catalogue — RM-015AV:** Eleven additions bring the catalogue to19: full-length mirror, drawer shelf/chest/bedside unit, TV stand, tabletop/wall TVs, armchair, bench, side table and floor lamp. Shared presets, real planned TV elevation/wall attachment, vertical checks, exact manual/MEDY edits and exports preserve the existing authority. A bathroom-purpose door remains a normal opening in the same rectangular room. Drawer previews reuse AU; no bathroom interior is created. [Ticket](tickets/RM-015AV-expand-bedroom-furniture-and-bathroom-doors.md), [allocation](commit-plans/RM-015AV.md), [size/asset decisions](references/bedroom-catalogue-2026-10-20.md), [evidence](validation/RM-015AV.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Opening previews — RM-015AU:** Latest owner selects right-card3D opening/closing/sliding previews. Supported wardrobe panels/handles, the prepared bedside cabinet's actual door, known room-door mechanisms/hinges and operable windows animate through the existing demand scene. Open shelves/fixed/unknown mechanisms/bounds-only furniture stay static. One transient selected target retires on context/lifecycle changes; canonical geometry/evidence/checks,2D, commands/Undo, recovery and exports remain unchanged. Generic drawer motion is tested without introducing a catalogue product. [Ticket](tickets/RM-015AU-preview-opening-parts-in-3d.md), [eighteen-path allocation](commit-plans/RM-015AU.md), [evidence](validation/RM-015AU.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Animated view toggle,20October:** Latest owner removes the piece count and selects one animated exclusive2D/3D pill. It remains inside the frame bottom right, mounted above the changing view/loading/graphics content so CSS motion and focus continue. Canonical view state also reflects MEDY. [Twelve-path AP allocation](commit-plans/RM-015AP.md#animated-view-toggle-follow-up-allocation--20-october2026), [evidence](validation/RM-015AP.md#animated-view-toggle-follow-up--20-october2026). This supersedes historical count/two-button presentation requirements. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
@@ -1373,8 +1375,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await the owner’s actual visual decision on RM-015AU opening previews on existing4320/private4321. Final807tests/54files, seven boundaries, both builds/current254inputs and full eighteen-path read-only pass2 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/key/config/delegation/new dependencies/services/ports/push/deploy.
-Active ticket: RM-015AU
+Next action: Await the owner actual visual decision on RM-015AV and the accumulated revision round. Q remains held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
+Active ticket: RM-015AV
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1399,7 +1401,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T14:12:13+00:00",
+  "updated_at": "2026-10-20T15:24:39+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1588,8 +1590,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AU",
-  "next_action": "Await the owner’s actual visual decision on RM-015AU opening previews on existing4320/private4321. Final807tests/54files, seven boundaries, both builds/current254inputs and full eighteen-path read-only pass2 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/key/config/delegation/new dependencies/services/ports/push/deploy.",
+  "active_ticket": "RM-015AV",
+  "next_action": "Await the owner actual visual decision on RM-015AV and the accumulated revision round. Q remains held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2065,14 +2067,15 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-015AS: docs/validation/RM-015AS.md; verified CC0 sources/eight local PNGs/912545bytes, stable bounded PBR material ownership/editor+landing+exports, actual before/after/responsive/finish+Undo/native downloads/all4PDF pages; final693tests/50files/seven boundaries/root/both builds/current245hashes/BUILD_ID 80a23557163f23aa8eeda19175aefb5a6b367ee280754a91dc7f69b5c43bbd44; clean34-path read-only pass1 and exact local checkpoint. Actual owner visual approval pending.",
         "docs/validation/RM-015AT.md",
         "docs/validation/RM-015AP.md:20October animated exclusive2D/3D shared pill and count removal; canonical/MEDY selection and focus retained across view/loading changes. Native phone/tablet/short/desktop, keyboard and hover observations; final798tests/53files, seven boundaries, both builds and current250input identity. Actual owner visual approval pending. Full twelve-path read-only pass1 clean; exact authorized local checkpoint prepared.",
-        "docs/validation/RM-015AU.md: right-card3D open/close/slide previews with transient context fencing, shared finite demand motion, cloned cabinet door and tested drawer support. Native hinged/sliding/cabinet/window/keyboard/Undo/loading and six-size observations; final807tests/54files/seven boundaries/both builds/current254input identity. Full eighteen-path read-only pass2 clean after independently verified visual backing and preserved selection-tint corrections; exact authorized local checkpoint prepared. Actual owner visual approval pending."
+        "docs/validation/RM-015AU.md: right-card3D open/close/slide previews with transient context fencing, shared finite demand motion, cloned cabinet door and tested drawer support. Native hinged/sliding/cabinet/window/keyboard/Undo/loading and six-size observations; final807tests/54files/seven boundaries/both builds/current254input identity. Full eighteen-path read-only pass2 clean after independently verified visual backing and preserved selection-tint corrections; exact authorized local checkpoint prepared. Actual owner visual approval pending.",
+        "RM-015AV: 19-entry catalogue/TV elevation/bathroom door implemented; 822 tests/55 files,7 boundaries,both builds; native six-size/manual/MEDY/export/import and4PDF-page observations;267 exact inputs BUILD_ID570ba31247edb3a7475e3b6b6504496402ba239ba5c7e5ec7dc870e6ae0d6a43; read-only pass3 clean. docs/validation/RM-015AV.md. Actual owner approval pending; Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "quote": "There should be, like, a way to trigger these animations in the right card, you know, so people can just have an idea what it looks like when the doors are open or, you know, when the thing is, like, in a different format.",
-        "source": "human:current-chat/2026-10-20/opening-parts-preview",
-        "scope": "RM-015AU3D selected opening/closing/sliding previews only; no result approval.",
-        "recorded_at": "2026-10-20T13:46:37+00:00"
+        "quote": "we need to add more furniture btw, mirror is important for example, a shelf wtih animated drawers; a tv stand and a tv; and add the posibibility of adding a bathrom door WITHOUT the addition of bathroom room",
+        "source": "human:current-chat/2026-10-20/expanded-bedroom-catalogue",
+        "scope": "RM-015AV catalogue, TV mounting and bathroom door only; no visual approval.",
+        "recorded_at": "2026-10-20T14:28:00+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2515,6 +2518,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/opening-parts-preview",
             "scope": "RM-015AU3D selected opening/closing/sliding previews only; no result approval.",
             "recorded_at": "2026-10-20T13:46:37+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "we need to add more furniture btw, mirror is important for example, a shelf wtih animated drawers; a tv stand and a tv; and add the posibibility of adding a bathrom door WITHOUT the addition of bathroom room",
+            "source": "human:current-chat/2026-10-20/expanded-bedroom-catalogue",
+            "scope": "RM-015AV catalogue, TV mounting and bathroom door only; no visual approval.",
+            "recorded_at": "2026-10-20T14:28:00+00:00"
           }
         }
       ]

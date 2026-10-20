@@ -103,17 +103,17 @@ def box_faces(parts, palette):
     for part in parts:
         x, y, z = part['center']; w, h, d = part['size']
         vertices = [(x+sx*w/2, y+sy*h/2, z+sz*d/2) for sx, sy, sz in [(-1,-1,-1),(1,-1,-1),(1,-1,1),(-1,-1,1),(-1,1,-1),(1,1,-1),(1,1,1),(-1,1,1)]]
-        material = {'frame': 0, 'soft': 1, 'metal': 2}[part['role']]
+        material = 3 if part['name'] == 'mirror-glass' else {'frame': 0, 'soft': 1, 'metal': 2}[part['role']]
         for indices in [(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7),(4,5,6,7),(0,3,2,1)]:
             faces.append(([vertices[i] for i in indices], material))
-    return faces, [palette['oak'], palette['ivory'], palette['charcoal']]
+    return faces, [palette['oak'], palette['ivory'], palette['charcoal'], '#b9c7c6']
 
 
 def main():
     archive = Path(sys.argv[1])
     assert archive.stat().st_size < 60*1024*1024
     assert digest(archive.read_bytes()) == ARCHIVE_SHA, 'Source archive differs from reviewed artifact'
-    query = "import { CATALOGUE } from '@roomedy/spatial'; import { FINISH_PALETTE } from './apps/frontend/src/features/catalogue/finishes.ts'; import { proceduralParts } from './apps/frontend/src/features/room-view/representations/definitions.ts'; console.log(JSON.stringify({catalogue:CATALOGUE,palette:FINISH_PALETTE,parts:Object.fromEntries(CATALOGUE.map(e=>[e.assetId,proceduralParts(e.category,Object.fromEntries(Object.entries(e.size).map(([k,a])=>[k,a.default])),e.accessMechanism)]))}));"
+    query = "import { CATALOGUE } from '@roomedy/spatial'; import { FINISH_PALETTE } from './apps/frontend/src/features/catalogue/finishes.ts'; import { proceduralParts } from './apps/frontend/src/features/room-view/representations/definitions.ts'; console.log(JSON.stringify({catalogue:CATALOGUE,palette:FINISH_PALETTE,parts:Object.fromEntries(CATALOGUE.map(e=>[e.assetId,proceduralParts(e.category,Object.fromEntries(Object.entries(e.size).map(([k,a])=>[k,a.default])),e.accessMechanism,e.assetId)]))}));"
     data = json.loads(subprocess.run(['node', '--import', 'tsx', '--input-type=module', '-e', query], cwd=ROOT, capture_output=True, text=True, check=True).stdout)
     OUT.mkdir(parents=True, exist_ok=True); (OUT/'thumbnails').mkdir(exist_ok=True)
     manifest = {'version': 1, 'source': {'url': SOURCE_URL, 'page': 'https://kenney.nl/assets/furniture-kit', 'author': 'Kenney', 'archiveFilename': archive.name, 'archiveSha256': ARCHIVE_SHA, 'archiveVersion': 'Furniture Kit 2.0 (included license)', 'license': 'CC0-1.0', 'licenseUrl': 'https://creativecommons.org/publicdomain/zero/1.0/', 'attributionRequired': False}, 'budgets': {'assetBytes': 262144, 'triangles': 10000, 'materials': 8, 'textures': 0}, 'assets': [], 'thumbnails': []}

@@ -1,3 +1,4 @@
+import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Feature, Furniture, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry } from './catalogue.js';
@@ -40,6 +41,31 @@ export function medyCommandWords(room: RoomDocument, text: string) {
     .replace(/\s+/g, ' ')
     .trim();
 }
+export function catalogueMention(
+  entry: CatalogueEntry,
+  words: string,
+): boolean {
+  const aliases: Record<string, string> = {
+    'full-length-mirror': '(?:full[- ]length )?mirror',
+    'drawer-shelf':
+      '(?:shelf|shelving) with (?:animated )?drawers|drawer shel(?:f|ving)',
+    'chest-drawers': 'chest of drawers|dresser',
+    'bedside-drawers': 'bedside drawers|nightstand with drawers',
+    'tv-stand': 'tv stand|media (?:console|unit)',
+    'tv-wall': 'wall[- ]mounted (?:tv|television)|wall (?:tv|television)',
+    'tv-tabletop':
+      'tabletop (?:tv|television)|(?:tv|television) on (?:a |the )?(?:stand|table)',
+    armchair: '(?:lounge )?armchair',
+    'bedroom-bench': '(?:bedroom )?bench',
+    'side-table': 'side table',
+    'floor-lamp': 'floor lamp',
+  };
+  return (
+    words.includes(entry.label.toLowerCase()) ||
+    (!!aliases[entry.id] &&
+      new RegExp(`\\b(?:${aliases[entry.id]})s?\\b`).test(words))
+  );
+}
 function references(room: RoomDocument, text: string): MedyTarget[] {
   const t = medyText(text);
   const mentions = room.furniture.map((piece) => ({
@@ -66,10 +92,9 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
   const pieces = names.length
     ? names
     : room.furniture.filter((p) => {
-        const category = findCatalogueEntry(
-          p.catalogueId,
-          p.catalogueVersion,
-        )?.category;
+        const entry = findCatalogueEntry(p.catalogueId, p.catalogueVersion);
+        if (entry && catalogueMention(entry, t)) return true;
+        const category = entry?.category;
         const aliases =
           category === 'storage'
             ? 'storage|shelf|shelves|cabinet|nightstand|bedside'
@@ -87,7 +112,11 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
   for (const piece of names)
     featureWords = featureWords.replace(namePattern(piece.label), 'item');
   for (const feature of room.room.features)
-    if (new RegExp(`\\b${feature.kind}s?\\b`).test(featureWords))
+    if (
+      new RegExp(`\\b${feature.kind}s?\\b`).test(featureWords) &&
+      (!/\bbathroom\b/.test(featureWords) ||
+        (feature.kind === 'door' && feature.purpose === 'bathroom'))
+    )
       targets.push({ kind: 'feature', id: feature.id, feature });
   if (/\b(room|bedroom)\b/.test(featureWords) && !targets.length)
     targets.push({ kind: 'room', id: room.roomId });

@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+Current owner correction: [RM-015AV — Expand bedroom furniture and bathroom doors](RM-015AV-expand-bedroom-furniture-and-bathroom-doors.md). Local implementation and validation are complete (822 tests/55 files,7 boundaries, both builds and native observations); actual owner visual approval remains pending. Q held, guide paused, RM-016 Planned.
+
 **Opening previews — RM-015AU:** Right-card actions animate supported selected3D door, wardrobe, cabinet and window mechanisms through transient presentation state. [Ticket](RM-015AU-preview-opening-parts-in-3d.md), [eighteen-path allocation](../commit-plans/RM-015AU.md), [evidence](../validation/RM-015AU.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned. Current catalogue has no drawer piece; generic mechanism support is tested without adding one.
 
 **Animated view toggle,20October:** The latest AP correction replaces separate view buttons/count with a single persistent animated2D/3D pill inside the frame. [Twelve-path allocation](../commit-plans/RM-015AP.md#animated-view-toggle-follow-up-allocation--20-october2026), [evidence](../validation/RM-015AP.md#animated-view-toggle-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.

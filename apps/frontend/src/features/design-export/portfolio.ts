@@ -3,7 +3,12 @@ import type { Project } from '@roomedy/contracts/project';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 import type { SurfaceTarget } from '@roomedy/contracts/surfaces';
-import { footprint } from '@roomedy/spatial';
+import {
+  footprint,
+  findCatalogueEntry,
+  furnitureByElevation,
+  projectedLabelVisible,
+} from '@roomedy/spatial';
 import { FINISH_PALETTE } from '../catalogue/finishes';
 import { featureBox, displayRoom } from '../room-view/adapter';
 import { DesignExportError, measurement, portfolioFacts } from './facts';
@@ -217,7 +222,8 @@ function plan(c: Context, project: Project) {
     c.lineWidth = 4;
     c.stroke();
   });
-  room.furniture.forEach((piece, i) => {
+  furnitureByElevation(room).forEach((piece) => {
+    const i = room.furniture.indexOf(piece);
     const b = boxes[i];
     if (!b) {
       const x = ox + piece.pose.centerX * scale,
@@ -229,7 +235,11 @@ function plan(c: Context, project: Project) {
       y = oy + b.minZ * scale,
       w = (b.maxX - b.minX) * scale,
       h = (b.maxZ - b.minZ) * scale;
-    c.fillStyle = FINISH_PALETTE[piece.finish];
+    c.fillStyle =
+      findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+        ?.category === 'tv'
+        ? '#282b2a'
+        : FINISH_PALETTE[piece.finish];
     c.fillRect(x, y, w, h);
     c.strokeStyle = '#77573f';
     c.lineWidth = 1.1;
@@ -240,14 +250,17 @@ function plan(c: Context, project: Project) {
         ? short(c, `${i + 1}. ${piece.label}`, w - 12)
         : `${i + 1}`;
     const measure = c.measureText(label);
+    const labelX = projectedLabelVisible(room, piece)
+      ? x + w / 2
+      : x + w + measure.width / 2 + 8;
     c.fillStyle = palette.paper;
     c.fillRect(
-      x + w / 2 - measure.width / 2 - 4,
+      labelX - measure.width / 2 - 4,
       y + h / 2 - 10,
       measure.width + 8,
       16,
     );
-    text(c, label, x + w / 2 - measure.width / 2, y + h / 2 + 2, 11);
+    text(c, label, labelX - measure.width / 2, y + h / 2 + 2, 11);
   });
 }
 async function encode(canvas: HTMLCanvasElement) {

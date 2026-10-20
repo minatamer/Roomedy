@@ -1,3 +1,4 @@
+import { wallMountedPose } from './elevation.js';
 import {
   proposalBatchSchema,
   visitorBatchSchema,
@@ -124,6 +125,11 @@ export function validateRoom(
       (e) => e.id === item.catalogueId && e.version === item.catalogueVersion,
     );
     if (!entry) return undefined;
+    if (
+      (!entry.placement || entry.placement === 'floor') &&
+      (item.pose.bottomY ?? 0) !== 0
+    )
+      return undefined;
     for (const axis of ['width', 'depth', 'height'] as const) {
       const value = item.dimensions[axis].value;
       if (
@@ -327,12 +333,15 @@ export function evaluateBatch(
       if (
         (start.locks.position &&
           (action.pose.centerX !== start.pose.centerX ||
-            action.pose.centerZ !== start.pose.centerZ)) ||
+            action.pose.centerZ !== start.pose.centerZ ||
+            (action.pose.bottomY !== undefined &&
+              action.pose.bottomY !== start.pose.bottomY))) ||
         (start.locks.rotation &&
           action.pose.quarterTurns !== start.pose.quarterTurns)
       )
         return { ok: false, code: 'locked' };
       item.pose = {
+        ...item.pose,
         ...action.pose,
         provenance: {
           status: 'planned',
@@ -355,6 +364,14 @@ export function evaluateBatch(
             authority === 'assistant' ? 'assistant-plan' : 'visitor-plan',
         },
       };
+      const mounted = wallMountedPose(room, item);
+      if (
+        start.locks.position &&
+        (mounted.centerX !== start.pose.centerX ||
+          mounted.centerZ !== start.pose.centerZ)
+      )
+        return { ok: false, code: 'locked' };
+      item.pose = mounted;
     } else if (action.type === 'resize') {
       if (start.ownership === 'owned')
         return { ok: false, code: 'owned-dimensions' };
@@ -373,6 +390,17 @@ export function evaluateBatch(
         const value = action[axis];
         if (value !== undefined && value !== item.dimensions[axis].value)
           item.dimensions[axis] = estimated(value, 'visitor-estimate');
+      }
+      const mounted = wallMountedPose(room, item);
+      if (
+        mounted.centerX !== item.pose.centerX ||
+        mounted.centerZ !== item.pose.centerZ
+      ) {
+        if (start.locks.position) return { ok: false, code: 'locked' };
+        item.pose = {
+          ...mounted,
+          provenance: { status: 'planned', sourceId: 'visitor-plan' },
+        };
       }
     } else if (action.type === 'remove' || action.type === 'replace') {
       const explicitRemoval =

@@ -1,3 +1,4 @@
+import { verticallySeparate } from './elevation.js';
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
 import { findCatalogueEntry } from './catalogue.js';
 import {
@@ -56,7 +57,9 @@ export function preferredFurnitureFacing(
     const inside = intersection(rect, bounds);
     return area(rect) - (inside ? area(inside) : 0);
   };
-  const others = room.furniture.filter((p) => p.id !== item.id);
+  const others = room.furniture.filter(
+    (p) => p.id !== item.id && verticallySeparate(item, p) !== true,
+  );
   const desks = others.filter(
     (p) =>
       entry.category === 'chair' &&

@@ -6,7 +6,18 @@ import type { RoomDocument, Furniture } from '@roomedy/contracts/room';
 import { findCatalogueEntry } from './catalogue.js';
 
 export type DesignTurn = { role: 'user' | 'assistant'; text: string };
-const categories = ['bed', 'desk', 'chair', 'wardrobe', 'storage'] as const;
+const categories = [
+  'bed',
+  'desk',
+  'chair',
+  'wardrobe',
+  'storage',
+  'mirror',
+  'tv',
+  'seating',
+  'table',
+  'lighting',
+] as const;
 const openWording =
   /\b(less cramped|less crowded|more breathing room|more open|open up|easier to (?:walk|move)|better (?:flow|circulation)|improve (?:the )?(?:flow|circulation)|free up (?:the )?(?:centre|center)|room to (?:walk|move))\b/;
 const category = (p: Furniture) =>

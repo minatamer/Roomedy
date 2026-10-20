@@ -16,7 +16,18 @@ const fieldSchema = z.enum([
   'hinge',
   'sill',
 ]);
-const categorySchema = z.enum(['bed', 'desk', 'chair', 'wardrobe', 'storage']);
+const categorySchema = z.enum([
+  'bed',
+  'desk',
+  'chair',
+  'wardrobe',
+  'storage',
+  'mirror',
+  'tv',
+  'seating',
+  'table',
+  'lighting',
+]);
 /** Interpretation has no edit coordinates or permissions. The application authors a clarification. */
 export const designIntentSchema = z.strictObject({
   goal: z.enum([

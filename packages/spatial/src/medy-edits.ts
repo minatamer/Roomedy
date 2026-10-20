@@ -1,3 +1,10 @@
+import {
+  featureLabel,
+  placementTarget,
+  wallMountedPose,
+  wallMounted,
+} from './elevation.js';
+import { catalogueMention } from './medy-language.js';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { visitorBatchSchema } from '@roomedy/contracts/commands';
 import type { Feature, RoomDocument } from '@roomedy/contracts/room';
@@ -54,7 +61,7 @@ const title = (target: MedyTarget) =>
     ? target.piece.label.slice(0, 80)
     : target.kind === 'room'
       ? 'the room'
-      : `the ${target.feature.kind}`;
+      : `the ${featureLabel(target.feature).toLowerCase()}`;
 
 /** Input is the current human request after names are masked; no model text enters here. */
 export function medyEdit(
@@ -87,7 +94,7 @@ export function medyEdit(
         );
   };
   const editing =
-    /\b(set|make|change|preview|resize|adjust|correct|confirm|measured|mark|move|place|put|rotate|turn|face|delete|remove|lock|unlock|protect|unprotect|own|owned|replace|add)\b/.test(
+    /\b(set|make|change|preview|resize|adjust|correct|confirm|measured|mark|move|place|put|rotate|turn|face|delete|remove|lock|unlock|protect|unprotect|own|owned|replace|add|mount|hang)\b/.test(
       words,
     );
   if (!editing && !/\bshould be\b/.test(words)) return null;
@@ -229,7 +236,7 @@ export function medyEdit(
   }
   // Feature additions use the same unknown/default measurements as the manual Add flow.
   const newFeature = words.match(
-    /\badd\s+(?:a |an |new )?(door|window|obstacle)\b/,
+    /\badd\s+(?:a |an |new )?(?:bathroom )?(door|window|obstacle)\b/,
   );
   if (newFeature) {
     if (room.room.features.length >= POLICY.features)
@@ -251,6 +258,9 @@ export function medyEdit(
         ? {
             ...base,
             kind,
+            ...(/\bbathroom\b/.test(words)
+              ? { purpose: 'bathroom' as const }
+              : {}),
             mechanism: 'unknown',
             mechanismProvenance: unknown(),
             hinge: 'unknown',
@@ -300,7 +310,7 @@ export function medyEdit(
     }
     actions.push({ type: 'add-feature', feature });
     return batch(
-      `Add ${kind}${wall ? ` on the ${wall[1]} wall` : ' with wall to review'}`,
+      `Add ${featureLabel(feature).toLowerCase()}${wall ? ` on the ${wall[1]} wall` : ' with wall to review'}`,
     );
   }
   const hasDimensions = medyDimensions(words);
@@ -320,9 +330,7 @@ export function medyEdit(
     );
   if (replacement || explicitAddition) {
     const clause = replacement ?? words;
-    const named = CATALOGUE.filter((entry) =>
-      clause.includes(entry.label.toLowerCase()),
-    );
+    const named = CATALOGUE.filter((entry) => catalogueMention(entry, clause));
     const matches = named.length
       ? named
       : CATALOGUE.filter((entry) =>
@@ -339,7 +347,7 @@ export function medyEdit(
         );
     if (!entries.length)
       return ask(
-        'Which catalogue piece should I use: bed, desk, chair, wardrobe or storage?',
+        'Which catalogue piece should I use? You can name a bed, desk, wardrobe, mirror, drawer shelf, TV stand or wall-mounted TV.',
       );
     // Categories with multiple representations require the actual catalogue name.
     if (entries.length !== 1)
@@ -361,7 +369,11 @@ export function medyEdit(
         'Which existing piece should I replace? Select it or use its full name.',
       );
     const pose = target
-      ? { ...target.pose }
+      ? {
+          centerX: target.pose.centerX,
+          centerZ: target.pose.centerZ,
+          quarterTurns: target.pose.quarterTurns,
+        }
       : {
           centerX: hasDimensions.values.x ?? NaN,
           centerZ: hasDimensions.values.z ?? NaN,
@@ -385,6 +397,7 @@ export function medyEdit(
       target?.id ?? `medy-piece-${operationId}`.slice(0, 80),
     );
     if (!target) item.pose.quarterTurns = preferredFurnitureFacing(room, item);
+    item.pose = wallMountedPose(room, item);
     const finishes = entry.finishes.filter((f) =>
       new RegExp(`\\b${f}\\b`).test(clause),
     );
@@ -400,7 +413,7 @@ export function medyEdit(
     );
   }
   const sizeWords =
-    /\b(width|wide|depth|deep|height|high|tall|length|long|size|resize|offset|sill|projection|x|z|queen|king|twin|double|compact|standard|narrow)\b/.test(
+    /\b(width|wide|depth|deep|height|high|tall|length|long|size|resize|offset|sill|projection|x|z|queen|king|twin|double|compact|standard|narrow|inch|inches)\b/.test(
       words,
     ) || /\d\s*x\s*\d/.test(words);
   const metadata =
@@ -547,6 +560,53 @@ export function medyEdit(
     return ask(
       'I found conflicting values. Give me one value per dimension, with units.',
     );
+  if (
+    target.kind === 'furniture' &&
+    findCatalogueEntry(target.piece.catalogueId, target.piece.catalogueVersion)
+      ?.category === 'tv'
+  ) {
+    const elevation =
+      words.match(
+        new RegExp(
+          `(?:bottom(?: edge)?(?: height)?|mounting height|height above (?:the )?floor)\\s*(?:to|at|is|of)?\\s*${MEDY_QUANTITY}`,
+        ),
+      ) ?? words.match(new RegExp(`${MEDY_QUANTITY}\\s*above (?:the )?floor`));
+    const wall = words.match(
+      /\b(?:on|to|against) (?:the )?(north|east|south|west) wall\b/,
+    );
+    if (elevation || wall) {
+      if (target.piece.locks.position)
+        return ask(`${label} has position locked. Unlock its position first.`);
+      if (wall && !wallMounted(target.piece))
+        return ask(
+          'Choose the Wall-mounted TV representation to mount it on a wall.',
+        );
+      const pose = { ...target.piece.pose };
+      if (elevation) {
+        const mm = medyMillimetres(elevation[1]!, elevation[2], true);
+        if (mm === null || mm < 0)
+          return ask(
+            'Give me a positive mounting height above the floor, with units.',
+          );
+        pose.bottomY = mm;
+      }
+      if (wall) {
+        if (target.piece.locks.rotation)
+          return ask('Unlock rotation before changing the mounting wall.');
+        pose.quarterTurns = ({ north: 0, east: 1, south: 2, west: 3 } as const)[
+          wall[1] as 'north' | 'east' | 'south' | 'west'
+        ];
+      }
+      actions.push({
+        type: 'move',
+        id: target.id,
+        pose: placementTarget(wallMountedPose(room, target.piece, pose)),
+      });
+      return batch(
+        `Change ${label} mounting${elevation ? ` to ${pose.bottomY} mm above the floor` : ''}`,
+      );
+    }
+  }
   if (target.kind === 'furniture' && moving) {
     const piece = target.piece,
       pose = {
@@ -595,7 +655,13 @@ export function medyEdit(
       return ask(
         `${label} has position locked. Ask me to unlock its position first.`,
       );
-    actions.push({ type: 'move', id: piece.id, pose });
+    actions.push({
+      type: 'move',
+      id: piece.id,
+      pose: placementTarget(
+        wallMountedPose(room, piece, { ...piece.pose, ...pose }),
+      ),
+    });
     return batch(`Move ${label} to X ${pose.centerX} mm, Z ${pose.centerZ} mm`);
   }
   if (target.kind === 'feature') {
@@ -604,6 +670,10 @@ export function medyEdit(
         /\b(north|south|east|west|unknown)\s+wall\b|\bwall\s+(?:to )?(north|south|east|west|unknown)\b/,
       );
     let changed = false;
+    if (next.kind === 'door' && /\b(bathroom|hallway|hall)\b/.test(words)) {
+      next.purpose = /\bbathroom\b/.test(words) ? 'bathroom' : 'room';
+      changed = true;
+    }
     for (const axis of [
       'width',
       'height',
@@ -668,7 +738,7 @@ export function medyEdit(
     sizeWords &&
     (Object.keys(hasDimensions.values).length ||
       markUnknown ||
-      /\b(size|resize|queen|king|twin|double|compact|standard|narrow)\b/.test(
+      /\b(size|resize|queen|king|twin|double|compact|standard|narrow|inch|inches)\b/.test(
         words,
       ))
   ) {

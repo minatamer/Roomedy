@@ -1,3 +1,4 @@
+import { wallMountedPose } from '../elevation.js';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import {
   actionScopeSchema,
@@ -70,6 +71,9 @@ export function proposedSearchPiece(choice: SearchChoice): Furniture | null {
       height: dimension('height'),
     },
     pose: {
+      ...(entry.placement && entry.placement !== 'floor'
+        ? { bottomY: entry.defaultElevationMm ?? 0 }
+        : {}),
       centerX: 0,
       centerZ: 0,
       quarterTurns: 0,
@@ -286,8 +290,16 @@ export class LayoutSearch {
         p.catalogueVersion,
       )!.category;
       return goal.windowId
-        ? { desk: 0, chair: 1, wardrobe: 2, bed: 3, storage: 4 }[category]
-        : { wardrobe: 0, bed: 1, desk: 2, chair: 3, storage: 4 }[category];
+        ? ((
+            { desk: 0, chair: 1, wardrobe: 2, bed: 3, storage: 4 } as Partial<
+              Record<typeof category, number>
+            >
+          )[category] ?? 5)
+        : ((
+            { wardrobe: 0, bed: 1, desk: 2, chair: 3, storage: 4 } as Partial<
+              Record<typeof category, number>
+            >
+          )[category] ?? 5);
     };
     this.actors.sort(
       (a, b) =>
@@ -445,10 +457,11 @@ export class LayoutSearch {
       this.result.visitedNodes++;
       this.placed[depth] = {
         ...actor.piece,
-        pose: {
+        pose: wallMountedPose(this.request.room, actor.piece, {
+          ...actor.piece.pose,
           ...pose,
           provenance: { status: 'planned', sourceId: 'assistant-plan' },
-        },
+        }),
       };
       const partial = {
         ...this.request.room,

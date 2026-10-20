@@ -10,7 +10,18 @@ import { findCatalogueEntry, medyAdvice } from '@roomedy/spatial';
 
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
-const categories = ['bed', 'desk', 'chair', 'wardrobe', 'storage'] as const;
+const categories = [
+  'bed',
+  'desk',
+  'chair',
+  'wardrobe',
+  'storage',
+  'mirror',
+  'tv',
+  'seating',
+  'table',
+  'lighting',
+] as const;
 /** Authored sample vocabulary, bound to current objects/finishes. It never returns edit actions. */
 function interpret(
   room: RoomDocument,

@@ -19,6 +19,7 @@ export const issueSchema = z.strictObject({
     .regex(/^[a-zA-Z0-9_:/-]+$/),
   code: z.enum([
     'outside-room',
+    'wall-mount',
     'overlap',
     'door-swing',
     'access',

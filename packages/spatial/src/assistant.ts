@@ -200,7 +200,18 @@ function resolveExplicitTask(
       : undefined;
   };
   const named = pieces.filter((p) => t.includes(p.label.toLowerCase()));
-  const types = ['bed', 'desk', 'chair', 'wardrobe', 'storage'] as const;
+  const types = [
+    'bed',
+    'desk',
+    'chair',
+    'wardrobe',
+    'storage',
+    'mirror',
+    'tv',
+    'seating',
+    'table',
+    'lighting',
+  ] as const;
   const mentioned = types.filter((c) =>
     new RegExp('\\b' + c + 's?\\b').test(t),
   );
@@ -393,7 +404,7 @@ function resolveExplicitTask(
       return {
         ...task,
         label:
-          'Choose one supported replacement: bed, desk, chair, wardrobe or storage.',
+          'Choose a supported piece, such as a bed, desk, wardrobe, mirror, drawer shelf or TV.',
         objectIds: [target.id],
       };
     const entry = CATALOGUE.find((e) => e.category === replacementTypes[0])!;
@@ -530,7 +541,7 @@ function resolveExplicitTask(
       return {
         ...task,
         label:
-          'Which essentials do you want to add: a bed, desk, chair, wardrobe or storage?',
+          'What would you like to add: a bed, desk, wardrobe, mirror, drawer storage or TV?',
       };
     if (/\b(replace|remove|move)\b/.test(t))
       return {

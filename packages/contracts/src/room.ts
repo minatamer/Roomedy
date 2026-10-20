@@ -38,6 +38,7 @@ export const poseTargetSchema = z.strictObject({
     .min(-POLICY.coordinateAbsMm)
     .max(POLICY.coordinateAbsMm),
   quarterTurns: quarterTurnsSchema,
+  bottomY: z.number().multipleOf(0.5).min(0).max(POLICY.roomEdgeMm).optional(),
 });
 export const poseSchema = poseTargetSchema.extend({
   provenance: poseProvenanceSchema,
@@ -73,6 +74,7 @@ export const featureSchema = z
     z.strictObject({
       ...featureBase,
       kind: z.literal('door'),
+      purpose: z.enum(['room', 'bathroom']).optional(),
       mechanism: z.enum(['inward', 'outward', 'sliding', 'unknown']),
       mechanismProvenance: factProvenanceSchema,
       hinge: z.enum(['left', 'right', 'unknown']),

@@ -1,9 +1,16 @@
+import { MountControls } from './mount-controls';
 import { useId, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Feature, Furniture } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
-import { findCatalogueEntry, supportsDimensions } from '@roomedy/spatial';
+import {
+  findCatalogueEntry,
+  supportsDimensions,
+  placementTarget,
+  featureLabel,
+  wallMountedPose,
+} from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { MeasurementField, measurementLabel } from './measurements';
 import { failureMessage } from './messages';
@@ -65,11 +72,17 @@ function PositionForm({
             {
               type: 'move',
               id: item.id,
-              pose: {
-                centerX: Number(form.x),
-                centerZ: Number(form.z),
-                quarterTurns: item.pose.quarterTurns,
-              },
+              pose: placementTarget(
+                wallMountedPose(
+                  controller.getSnapshot().workspace!.current,
+                  item,
+                  {
+                    ...item.pose,
+                    centerX: Number(form.x),
+                    centerZ: Number(form.z),
+                  },
+                ),
+              ),
             },
           ],
           'Move piece',
@@ -188,6 +201,11 @@ export function FurnitureInspector({
         </h2>
       </div>
       {openingPreview}
+      <MountControls
+        key={`${item.id}/${item.pose.bottomY}`}
+        controller={controller}
+        item={item}
+      />
       <FurnitureSizeForm
         key={`${controller.getSnapshot().generation}/${item.id}/${item.catalogueId}`}
         item={item}
@@ -328,6 +346,12 @@ export function FurnitureInspector({
                 </p>
               </div>
               <PositionForm controller={controller} item={item} />
+              <MountControls
+                key={`${item.id}/${item.pose.bottomY}`}
+                advanced
+                controller={controller}
+                item={item}
+              />
               <div className={styles.section}>
                 <h3>Measured dimensions</h3>
                 <p className={styles.hint}>
@@ -397,14 +421,27 @@ export function FeatureInspector({
       <div className={styles.panelTitle}>
         <p className={styles.eyebrow}>Physical correction</p>
         <h2 id={`properties-${feature.id}`} tabIndex={-1}>
-          {feature.kind === 'obstacle'
-            ? 'Fixed obstacle'
-            : feature.kind === 'door'
-              ? 'Door'
-              : 'Window'}
+          {featureLabel(feature)}
         </h2>
       </div>
       {openingPreview}
+      {feature.kind === 'door' && (
+        <label>
+          Door leads to
+          <select
+            value={feature.purpose ?? 'room'}
+            onChange={(e) =>
+              update({
+                ...feature,
+                purpose: e.target.value as 'room' | 'bathroom',
+              })
+            }
+          >
+            <option value="room">Hall / adjoining space</option>
+            <option value="bathroom">Bathroom</option>
+          </select>
+        </label>
+      )}
       <div className={styles.section}>
         <label>
           Wall (your correction)
@@ -567,7 +604,7 @@ export function FeatureInspector({
           else focusProperties(controller);
         }}
       >
-        Remove {feature.kind}
+        Remove {featureLabel(feature).toLowerCase()}
       </button>
       <p className={styles.hint}>
         Corrections describe your room; they do not claim a renovation is

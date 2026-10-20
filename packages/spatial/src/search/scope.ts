@@ -6,6 +6,7 @@ import type { ActionScope, ProposalAction } from '@roomedy/contracts/commands';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { evaluateBatch } from '../commands.js';
 import type { CommandResult } from '../commands.js';
+import { wallMountedPose } from '../elevation.js';
 /** Scope is supplied by the application separately from untrusted tool/goal arguments. */
 export function scopeAllows(
   room: RoomDocument,
@@ -32,6 +33,20 @@ export function scopeAllows(
           p.catalogueId === action.furniture.catalogueId,
       );
     if (!permission.targetIds.includes(action.id)) return false;
+    if (action.type === 'rotate' && !permission.actionKinds.includes('move')) {
+      const item = room.furniture.find((p) => p.id === action.id);
+      if (item) {
+        const pose = wallMountedPose(room, item, {
+          ...item.pose,
+          quarterTurns: action.quarterTurns,
+        });
+        if (
+          pose.centerX !== item.pose.centerX ||
+          pose.centerZ !== item.pose.centerZ
+        )
+          return false;
+      }
+    }
     if (
       action.type === 'move' &&
       room.furniture.find((p) => p.id === action.id)?.pose.quarterTurns !==

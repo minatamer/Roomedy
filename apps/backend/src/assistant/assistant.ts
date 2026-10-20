@@ -254,13 +254,29 @@ export function createAssistantHandler(
       selectedId: input.selectedId,
       request: input.text,
       recentTurns: input.context,
-      catalogue: CATALOGUE.map(({ id, label, category, size, finishes }) => ({
-        id,
-        label,
-        category,
-        size,
-        finishes,
-      })),
+      catalogue: CATALOGUE.map(
+        ({
+          id,
+          label,
+          category,
+          size,
+          finishes,
+          placement,
+          defaultElevationMm,
+          accessMechanism,
+          accessMm,
+        }) => ({
+          id,
+          label,
+          category,
+          size,
+          finishes,
+          placement: placement ?? 'floor',
+          defaultElevationMm: defaultElevationMm ?? 0,
+          accessMechanism,
+          accessMm,
+        }),
+      ),
     };
     const items: Record<string, unknown>[] = [
       {

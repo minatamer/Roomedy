@@ -1116,7 +1116,9 @@ function Piece({
   surfaces,
   editing,
   open,
+  windowGlass,
 }: {
+  windowGlass: ReturnType<typeof createWindowGlass> | null;
   open: boolean;
   piece: Furniture;
   selected: boolean;
@@ -1134,6 +1136,11 @@ function Piece({
   const representation = pieceRepresentation(piece, asset?.kind === 'ready');
   const materials = useMemo(
     () => ({
+      screen: new MeshStandardMaterial({
+        color: '#101820',
+        roughness: 0.19,
+        metalness: 0.35,
+      }),
       frame: new MeshStandardMaterial({
         roughness: 0.67,
         ...surfaceProperties(surfaces.wood),
@@ -1179,8 +1186,10 @@ function Piece({
   const upholsteryColor = useMemo(
     () =>
       new Color(
-        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
-          ?.category === 'chair'
+        findCatalogueEntry(
+          piece.catalogueId,
+          piece.catalogueVersion,
+        )?.category.match(/^(chair|seating)$/)
           ? FINISH_PALETTE[piece.finish]
           : '#eee5d5',
       ),
@@ -1193,7 +1202,11 @@ function Piece({
       projected =
         editing.pose.current?.id === piece.id ? editing.pose.current : null,
       target = projected
-        ? new Vector3(metres(projected.x), 0, metres(projected.z))
+        ? new Vector3(
+            metres(projected.x),
+            pose.position[1],
+            metres(projected.z),
+          )
         : new Vector3(...pose.position);
     const rotation = Math.atan2(
       Math.sin(pose.rotationY - g.rotation.y),
@@ -1279,7 +1292,15 @@ function Piece({
                     : surfaces.hard
               }
               material={
-                materials[part.name === 'blanket' ? 'blanket' : part.role]
+                part.name === 'mirror-glass' && windowGlass
+                  ? windowGlass.mirror
+                  : materials[
+                      part.name === 'tv-screen'
+                        ? 'screen'
+                        : part.name === 'blanket'
+                          ? 'blanket'
+                          : part.role
+                    ]
               }
               position={
                 part.center.map(
@@ -1404,9 +1425,16 @@ export function RoomScene(props: SceneProps) {
   useEffect(() => () => geometry.dispose(), [geometry]);
   const surfaces = useMemo(() => createSurfaces(), []);
   useEffect(() => () => surfaces.dispose(), [surfaces]);
-  const hasWindows = desiredRoom.room.features.some(
-    (feature) => feature.kind === 'window' && featureBox(desiredRoom, feature),
-  );
+  const hasWindows =
+    desiredRoom.furniture.some(
+      (p) =>
+        findCatalogueEntry(p.catalogueId, p.catalogueVersion)?.category ===
+        'mirror',
+    ) ||
+    desiredRoom.room.features.some(
+      (feature) =>
+        feature.kind === 'window' && featureBox(desiredRoom, feature),
+    );
   const windowGlass = useMemo(
     () => (hasWindows ? createWindowGlass() : null),
     [hasWindows],
@@ -1547,6 +1575,7 @@ export function RoomScene(props: SceneProps) {
           <Piece
             key={p.id}
             piece={p}
+            windowGlass={windowGlass}
             selected={selectedId === p.id}
             open={props.openingId === p.id && !!furnitureOpening(p)}
             proposed={

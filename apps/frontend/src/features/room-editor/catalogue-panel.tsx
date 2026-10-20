@@ -9,7 +9,11 @@ import Image from 'next/image';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
-import { CATALOGUE, preferredFurnitureFacing } from '@roomedy/spatial';
+import {
+  CATALOGUE,
+  preferredFurnitureFacing,
+  wallMountedPose,
+} from '@roomedy/spatial';
 import { thumbnailUrl } from '../catalogue/catalogue';
 import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
@@ -105,6 +109,7 @@ function PlacementForm({
             room,
             furniture,
           );
+        furniture.pose = wallMountedPose(room, furniture);
         const result = controller.dispatch(
           [
             replacement
@@ -280,13 +285,23 @@ export function CataloguePanel({
                 setCategory(e.target.value);
               }}
             >
-              {['all', 'bed', 'desk', 'chair', 'wardrobe', 'storage'].map(
-                (c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ),
-              )}
+              {[
+                'all',
+                'bed',
+                'desk',
+                'chair',
+                'wardrobe',
+                'storage',
+                'mirror',
+                'tv',
+                'seating',
+                'table',
+                'lighting',
+              ].map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </label>
           <div className={styles.catalogue}>

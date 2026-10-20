@@ -1,3 +1,4 @@
+import { featureLabel } from '@roomedy/spatial';
 import type { Feature, RoomDocument } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
@@ -28,7 +29,10 @@ export function RoomPanel({
         failureMessage(r, controller.getSnapshot().workspace?.current),
       );
   };
-  const addFeature = (kind: Feature['kind']) => {
+  const addFeature = (
+    kind: Feature['kind'],
+    purpose: 'room' | 'bathroom' = 'room',
+  ) => {
     const unknown = { status: 'unknown' as const, sourceId: null },
       estimate = (value: number) => ({
         status: 'estimated' as const,
@@ -49,6 +53,7 @@ export function RoomPanel({
         ? {
             ...base,
             kind,
+            purpose,
             mechanism: 'unknown',
             mechanismProvenance: unknown,
             hinge: 'unknown',
@@ -286,7 +291,7 @@ export function RoomPanel({
                   focusProperties(controller, feature.id);
                 }}
               >
-                {feature.kind} · {feature.wall}
+                {featureLabel(feature)} · {feature.wall}
                 <span>
                   {feature.width.value ?? '?'} mm ·{' '}
                   {feature.wallProvenance.status} wall
@@ -297,6 +302,9 @@ export function RoomPanel({
         </ul>
         <div className={styles.actionRow}>
           <button onClick={() => addFeature('door')}>Add door</button>
+          <button onClick={() => addFeature('door', 'bathroom')}>
+            Add bathroom door
+          </button>
           <button onClick={() => addFeature('window')}>Add window</button>
           <button onClick={() => addFeature('obstacle')}>Add obstacle</button>
         </div>

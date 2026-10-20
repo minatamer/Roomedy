@@ -2,6 +2,7 @@ import {
   CanvasTexture,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
+  MeshStandardMaterial,
   PMREMGenerator,
   SRGBColorSpace,
 } from 'three';
@@ -45,10 +46,17 @@ export function createWindowGlass() {
     attenuationDistance: 3.5,
     envMapIntensity: 1.15,
   });
+  const mirror = new MeshStandardMaterial({
+    color: '#f1eee7',
+    metalness: 1,
+    roughness: 0.065,
+    envMapIntensity: 1.1,
+  });
   let environment: WebGLRenderTarget | undefined;
   let disposed = false;
   return {
     material,
+    mirror,
     daylight,
     prepare(renderer?: WebGLRenderer) {
       if (disposed) return;
@@ -63,6 +71,8 @@ export function createWindowGlass() {
       try {
         environment = generator.fromScene(room, 0.04, 0.1, 100, { size: 128 });
         material.envMap = environment.texture;
+        mirror.envMap = environment.texture;
+        mirror.needsUpdate = true;
         renderer.initTexture(texture!);
       } finally {
         room.dispose();
@@ -73,6 +83,7 @@ export function createWindowGlass() {
       if (disposed) return;
       disposed = true;
       material.dispose();
+      mirror.dispose();
       daylight.dispose();
       texture?.dispose();
       environment?.dispose();

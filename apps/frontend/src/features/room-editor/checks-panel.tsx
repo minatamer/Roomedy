@@ -1,3 +1,4 @@
+import { featureLabel } from '@roomedy/spatial';
 import { useState } from 'react';
 import type { CheckFacts, RoomDocument } from '@roomedy/contracts/room';
 import type { SessionController } from '../session/controller';
@@ -18,7 +19,10 @@ export function ChecksPanel({
   const current = Math.min(page, pages - 1);
   const name = (id: string) =>
     room.furniture.find((f) => f.id === id)?.label ??
-    room.room.features.find((f) => f.id === id)?.kind ??
+    (() => {
+      const feature = room.room.features.find((f) => f.id === id);
+      return feature ? featureLabel(feature) : undefined;
+    })() ??
     'Room';
   return (
     <>

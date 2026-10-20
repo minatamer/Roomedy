@@ -1,3 +1,4 @@
+import { furnitureBottom } from '@roomedy/spatial';
 import type { Project } from '@roomedy/contracts/project';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
@@ -64,6 +65,7 @@ export function portfolioFacts(project: Project) {
       old &&
       (old.pose.centerX !== p.pose.centerX ||
         old.pose.centerZ !== p.pose.centerZ ||
+        furnitureBottom(old) !== furnitureBottom(p) ||
         old.pose.quarterTurns !== p.pose.quarterTurns)
     );
   }).length;
@@ -103,8 +105,10 @@ export function portfolioFacts(project: Project) {
     uncertain: [room.room.width, room.room.depth, room.room.height].some(
       (v) => v.status !== 'confirmed',
     ),
-    missingSize: room.furniture.filter((p) =>
-      Object.values(p.dimensions).some((v) => v.value === null),
+    missingSize: room.furniture.filter(
+      (p) =>
+        furnitureBottom(p) === null ||
+        Object.values(p.dimensions).some((v) => v.value === null),
     ).length,
   };
 }

@@ -1,5 +1,5 @@
 import type { Furniture, RoomDocument, Feature } from '@roomedy/contracts/room';
-import { findCatalogueEntry } from '@roomedy/spatial';
+import { findCatalogueEntry, furnitureBottom } from '@roomedy/spatial';
 import { resolveRepresentation } from './representations/definitions';
 import type { RoomFrame } from '../session/state';
 
@@ -27,7 +27,7 @@ export function piecePose(piece: Furniture) {
   return {
     position: [
       metres(piece.pose.centerX),
-      0,
+      metres(furnitureBottom(piece) ?? 0),
       metres(piece.pose.centerZ),
     ] as Triple,
     // Canonical quarter-turns rotate +X towards +Z; Three's positive Y rotates the other way.
@@ -35,6 +35,11 @@ export function piecePose(piece: Furniture) {
   };
 }
 export function pieceRepresentation(piece: Furniture, assetAvailable = true) {
+  if (furnitureBottom(piece) === null)
+    return {
+      kind: 'unavailable' as const,
+      notice: 'Choose a height above the floor to show this piece in 3D.',
+    };
   const { width, depth, height } = piece.dimensions;
   if (width.value === null || depth.value === null || height.value === null)
     return {

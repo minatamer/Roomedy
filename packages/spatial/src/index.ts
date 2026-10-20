@@ -17,6 +17,17 @@ export {
   wallInterval,
 } from './coordinates.js';
 export { checkRoom } from './checks.js';
+export {
+  furnitureByElevation,
+  projectedLabelVisible,
+  placementTarget,
+  furnitureBottom,
+  verticalSpan,
+  verticallySeparate,
+  wallMounted,
+  wallMountedPose,
+  featureLabel,
+} from './elevation.js';
 export { backWallGap, preferredFurnitureFacing } from './orientation.js';
 export { evaluateBatch, validateRoom } from './commands.js';
 export {

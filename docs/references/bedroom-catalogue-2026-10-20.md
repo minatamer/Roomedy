@@ -1,0 +1,13 @@
+# Bedroom catalogue decisions — 20 October 2026
+
+The eleven additions are project-authored procedural parts: full-length mirror, shelf with drawers, chest of drawers, bedside drawers, TV stand, tabletop TV, wall TV, lounge armchair, bedroom bench, side table and floor lamp. Existing wood/fabric/metal surfaces are reused; mirrors borrow the scene-owned bounded RoomEnvironment reflection map already used by window glass. They are stylized representations, not manufacturer models or a real-time room reflection. No new downloaded mesh, photograph, dependency or license is introduced. Existing Kenney GLBs and their license stay unchanged. New SVGs are generated from their actual default geometry and hash-pinned in the existing manifest.
+
+## Primary size references and disposition
+
+- [IKEA LACK TV bench](https://www.ikea.com/gb/en/p/lack-tv-bench-white-30498890/): 120 ×35 ×36 cm provides a compact footprint reference. Roomedy's compact media preset uses1200 ×350 mm; a deliberate600 mm planning height matches the separate tabletop TV default. It is not a claim to reproduce that product.
+- [IKEA VIHALS drawers](https://www.ikea.com/gb/en/p/vihals-chest-of-4-drawers-white-anchor-unlock-function-00483239/):70 ×47 ×90 cm informs the compact chest preset. Other dimensions/ranges are editable generic planning choices.
+- [Samsung QN85C dimension sheet](https://image-us.samsung.com/SamsungUS/samsungbusiness/tv-ci-resources/Dimensions_QN85C.pdf) distinguishes screen/stand dimensions. Roomedy uses generic16:9 screen geometry: diagonal inches ×25.4, width = diagonal ×16/√337 +20 mm frame allowance; height = diagonal ×9/√337 +20 mm. Tabletop variants add60 mm for feet.43/50/55/65/75-inch choices remain approximate; measure a specific product separately. Wall depth is60 mm; tabletop depth is an editable250–400 mm support footprint.
+
+Size defaults are estimates. Pose/elevation corrections are planned placement, never confirmed measurements. Wall TV bottoms use800/1000/1200 mm presets with precise half-mm Advanced editing; tabletop supporting heights450/600/750 mm are generic choices. A wall TV's back stays at its selected wall. A bigger manual preset can clamp its unlocked along-wall position in the same command; position locks prevent that move. A missing elevated pose stays unknown in old/inferred data; floor poses without bottomY retain zero.
+
+Bathroom purpose is a label on the same door feature, with the ordinary wall/hinge/mechanism/clearance authority. There is one rectangular room, no bathroom interior, second-room geometry or bathroom furniture. Drawer previews remain transient; exports capture the closed semantic geometry.

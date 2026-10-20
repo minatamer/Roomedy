@@ -192,6 +192,127 @@
         "depth": 440,
         "height": 470
       }
+    },
+    {
+      "catalogueId": "full-length-mirror",
+      "filename": "thumbnails/mirror.svg",
+      "bytes": 6126,
+      "sha256": "ab0143cdba26ac61cbe401e2b16651bec1357dadea879c2abcfbb727ac334d37",
+      "semanticMm": {
+        "width": 650,
+        "depth": 60,
+        "height": 1500
+      }
+    },
+    {
+      "catalogueId": "drawer-shelf",
+      "filename": "thumbnails/drawer-shelf.svg",
+      "bytes": 19828,
+      "sha256": "2f0f9cbe9e4c9ba389055db6671e84657962f43e2b40c58cd1e9f4b6d14c62bf",
+      "semanticMm": {
+        "width": 800,
+        "depth": 400,
+        "height": 1600
+      }
+    },
+    {
+      "catalogueId": "chest-drawers",
+      "filename": "thumbnails/chest-drawers.svg",
+      "bytes": 22762,
+      "sha256": "5b0f06205d85b2795aaf78feae37b4a80302b73430a8cd39e54e5b24bd39e02e",
+      "semanticMm": {
+        "width": 800,
+        "depth": 470,
+        "height": 900
+      }
+    },
+    {
+      "catalogueId": "bedside-drawers",
+      "filename": "thumbnails/bedside-drawers.svg",
+      "bytes": 16896,
+      "sha256": "2a1f5dd59e49825b516c0571d5a8a7c22d1e2a5397d3430d423e5b7eca54834c",
+      "semanticMm": {
+        "width": 450,
+        "depth": 400,
+        "height": 550
+      }
+    },
+    {
+      "catalogueId": "tv-stand",
+      "filename": "thumbnails/tv-stand.svg",
+      "bytes": 17937,
+      "sha256": "d75111201b9fdbd42511f18712b8d694a642c9346c1275fa184e20b4050d4243",
+      "semanticMm": {
+        "width": 1400,
+        "depth": 400,
+        "height": 600
+      }
+    },
+    {
+      "catalogueId": "tv-tabletop",
+      "filename": "thumbnails/tv-tabletop.svg",
+      "bytes": 6141,
+      "sha256": "3e5fb0421896e497d83a02ed989f17f0cb7a32546d34222ee3f5f4d457ea6728",
+      "semanticMm": {
+        "width": 1238,
+        "depth": 300,
+        "height": 765
+      }
+    },
+    {
+      "catalogueId": "tv-wall",
+      "filename": "thumbnails/tv-wall.svg",
+      "bytes": 2232,
+      "sha256": "640fceac220ad9d56ca12c0ccf4248965033c6d88059f8e1fffe48466fb5898f",
+      "semanticMm": {
+        "width": 1238,
+        "depth": 60,
+        "height": 705
+      }
+    },
+    {
+      "catalogueId": "armchair",
+      "filename": "thumbnails/armchair.svg",
+      "bytes": 8103,
+      "sha256": "1ec4939863caf5b4de8b747a120062ec5ce401cfa1f5c744c356084c35eed4f0",
+      "semanticMm": {
+        "width": 800,
+        "depth": 800,
+        "height": 850
+      }
+    },
+    {
+      "catalogueId": "bedroom-bench",
+      "filename": "thumbnails/bench.svg",
+      "bytes": 5198,
+      "sha256": "9a598bfb820d1a56e7dd7454f29cca2c823c789b3c3518a2b36d05bc4e5f0e6f",
+      "semanticMm": {
+        "width": 1200,
+        "depth": 450,
+        "height": 450
+      }
+    },
+    {
+      "catalogueId": "side-table",
+      "filename": "thumbnails/side-table.svg",
+      "bytes": 6142,
+      "sha256": "abe82e5ec111a2e2e2aa5132f448b3e2b8554e951c6492bd3af42ffd10287610",
+      "semanticMm": {
+        "width": 450,
+        "depth": 450,
+        "height": 550
+      }
+    },
+    {
+      "catalogueId": "floor-lamp",
+      "filename": "thumbnails/floor-lamp.svg",
+      "bytes": 3209,
+      "sha256": "e73e14e642fe28724336f739079f6c433e772b1cb617502c9521683b1869a53d",
+      "semanticMm": {
+        "width": 350,
+        "depth": 350,
+        "height": 1550
+      }
     }
   ]
 }

@@ -48,7 +48,7 @@ export function CatalogueGhost({
     <group
       position={[
         item.pose.centerX / 1000,
-        h / 2 + 0.01,
+        h / 2 + 0.01 + (item.pose.bottomY ?? 0) / 1000,
         item.pose.centerZ / 1000,
       ]}
       rotation={[0, (-item.pose.quarterTurns * Math.PI) / 2, 0]}

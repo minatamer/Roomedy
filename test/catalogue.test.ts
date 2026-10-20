@@ -21,7 +21,18 @@ import { SAMPLE_EXPECTATIONS } from './fixtures/spatial-expectations.js';
 describe('dimensioned catalogue and representations', () => {
   it('resolves versioned essentials and rejects invented commerce fields', () => {
     expect(new Set(CATALOGUE.map((e) => e.category))).toEqual(
-      new Set(['bed', 'desk', 'chair', 'wardrobe', 'storage']),
+      new Set([
+        'bed',
+        'desk',
+        'chair',
+        'wardrobe',
+        'storage',
+        'mirror',
+        'tv',
+        'seating',
+        'table',
+        'lighting',
+      ]),
     );
     for (const entry of CATALOGUE) {
       expect(catalogueEntrySchema.safeParse(entry).success).toBe(true);
@@ -44,6 +55,7 @@ describe('dimensioned catalogue and representations', () => {
           entry.category,
           size,
           entry.accessMechanism,
+          entry.assetId,
         );
         const lows = [Infinity, Infinity, Infinity],
           highs = [-Infinity, -Infinity, -Infinity];

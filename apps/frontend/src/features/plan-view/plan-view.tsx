@@ -1,4 +1,11 @@
 import {
+  featureLabel,
+  furnitureByElevation,
+  projectedLabelVisible,
+  wallMounted,
+  localFront,
+} from '@roomedy/spatial';
+import {
   useEffect,
   useId,
   useLayoutEffect,
@@ -79,12 +86,21 @@ function OrientedFootprint({
         width={w}
         height={d}
         rx="35"
-        fill={FINISH_PALETTE[item.finish]}
+        fill={
+          findCatalogueEntry(item.catalogueId, item.catalogueVersion)
+            ?.category === 'tv'
+            ? '#282b2a'
+            : FINISH_PALETTE[item.finish]
+        }
         stroke={selected ? '#332b25' : '#5d5147'}
         strokeWidth={selected ? 35 : 14}
       />
       <path
-        d={`M-90 ${d / 2 - 90}L0 ${d / 2 - 25}L90 ${d / 2 - 90}`}
+        d={
+          d < 250
+            ? `M-90 ${d / 2 + 40}L0 ${d / 2 + 110}L90 ${d / 2 + 40}`
+            : `M-90 ${d / 2 - 90}L0 ${d / 2 - 25}L90 ${d / 2 - 90}`
+        }
         fill="none"
         stroke="#fffaf2"
         strokeWidth="25"
@@ -556,7 +572,7 @@ export function PlanView({
               key={feature.id}
               role="button"
               tabIndex={0}
-              aria-label={`${feature.kind}, ${feature.wall} wall, ${feature.width.value ?? 'unknown'} mm wide`}
+              aria-label={`${featureLabel(feature).toLowerCase()}, ${feature.wall} wall, ${feature.width.value ?? 'unknown'} mm wide`}
               aria-pressed={selected}
               className={styles.feature}
               style={
@@ -680,13 +696,28 @@ export function PlanView({
             </g>
           );
         })}
-        {room.furniture.map((item) => {
+        {furnitureByElevation(room).map((item) => {
           const w = item.dimensions.width.value,
             d = item.dimensions.depth.value;
           const selected = view.selectedId === item.id;
           const category =
             findCatalogueEntry(item.catalogueId, item.catalogueVersion)
               ?.category ?? 'piece';
+          const mounted = wallMounted(item),
+            front = localFront(item.pose.quarterTurns);
+          const label = (
+            {
+              'tv-stand': 'TV stand',
+              'chest-drawers': 'Drawers',
+              'bedside-drawers': 'Drawers',
+              'bedroom-bench': 'Bench',
+              armchair: 'Chair',
+              'floor-lamp': 'Lamp',
+              'side-table': 'Table',
+              'drawer-shelf': 'Shelf',
+              'full-length-mirror': 'Mirror',
+            } as Record<string, string>
+          )[item.catalogueId];
           return (
             <g
               key={item.id}
@@ -740,27 +771,46 @@ export function PlanView({
               ) : (
                 <OrientedFootprint item={item} selected={selected} />
               )}
-              <text
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="185"
-                fontWeight="600"
-                fill={
-                  w !== null &&
-                  d !== null &&
-                  ['charcoal', 'walnut'].includes(item.finish)
-                    ? '#fffaf2'
-                    : '#302b25'
-                }
-                pointerEvents="none"
-              >
-                {category === 'storage'
-                  ? item.catalogueId === 'bedside-storage-fixed'
-                    ? 'Cabinet'
-                    : 'Shelf'
-                  : category[0]!.toUpperCase() + category.slice(1)}
-                {w === null || d === null ? ' ?' : ''}
-              </text>
+              {projectedLabelVisible(room, item) && (
+                <text
+                  x={mounted ? front[0] * ((d ?? 0) / 2 + 300) : 0}
+                  y={mounted ? front[1] * ((d ?? 0) / 2 + 300) : 0}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  transform={
+                    label && item.pose.quarterTurns % 2
+                      ? 'rotate(-90)'
+                      : undefined
+                  }
+                  fontSize={
+                    category === 'tv'
+                      ? 135
+                      : label
+                        ? Math.min(185, (w ?? 520) / (label.length * 0.6))
+                        : 185
+                  }
+                  fontWeight="600"
+                  fill={
+                    !mounted &&
+                    w !== null &&
+                    d !== null &&
+                    ['charcoal', 'walnut'].includes(item.finish)
+                      ? '#fffaf2'
+                      : '#302b25'
+                  }
+                  pointerEvents="none"
+                >
+                  {label ??
+                    (category === 'tv'
+                      ? 'TV'
+                      : category === 'storage'
+                        ? item.catalogueId === 'bedside-storage-fixed'
+                          ? 'Cabinet'
+                          : 'Shelf'
+                        : category[0]!.toUpperCase() + category.slice(1))}
+                  {w === null || d === null ? ' ?' : ''}
+                </text>
+              )}
             </g>
           );
         })}

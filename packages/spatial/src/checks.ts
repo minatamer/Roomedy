@@ -20,6 +20,13 @@ import {
   wallBand,
 } from './coordinates.js';
 import { CATALOGUE } from './catalogue.js';
+import {
+  furnitureBottom,
+  verticalSpan,
+  verticallySeparate,
+  wallMounted,
+  wallMountedPose,
+} from './elevation.js';
 
 type Evidence = { status: string; value?: number | null };
 type Rule = SpatialIssue['rule'];
@@ -178,13 +185,49 @@ export function checkRoom(
       if (state === 'unassessed' && !outside.length)
         unknown('containment', [f.id], inputs);
     }
+    if (wallMounted(f) && rect && w !== null && d !== null) {
+      const mounted = wallMountedPose(room, f);
+      if (
+        mounted.centerX !== f.pose.centerX ||
+        mounted.centerZ !== f.pose.centerZ
+      ) {
+        const issue = fact(
+          'containment',
+          'wall-mount',
+          [f.id],
+          null,
+          'hard',
+          values,
+          inputs,
+          null,
+          'wall',
+        );
+        issue.deficitMm = Math.max(
+          Math.abs(mounted.centerX - f.pose.centerX),
+          Math.abs(mounted.centerZ - f.pose.centerZ),
+        );
+        add(issue);
+      }
+    }
+    const bottom = furnitureBottom(f);
     const height = f.dimensions.height.value,
       ceiling = room.room.height.value,
-      hValues = [f.dimensions.height, room.room.height],
-      hInputs = [`${f.id}:height`, 'room:height'];
+      hValues = [
+        f.dimensions.height,
+        room.room.height,
+        ...(bottom === 0
+          ? []
+          : [bottom === null ? UNKNOWN : f.pose.provenance]),
+      ],
+      hInputs = [
+        `${f.id}:height`,
+        'room:height',
+        ...(bottom === 0 ? [] : [`${f.id}:pose`]),
+      ];
     record('height', hValues);
-    if (height === null || ceiling === null) unknown('height', [f.id], hInputs);
-    else if (height > ceiling) {
+    if (height === null || ceiling === null || bottom === null)
+      unknown('height', [f.id], hInputs);
+    else if (height + bottom > ceiling) {
       const value = fact(
         'height',
         'height',
@@ -194,7 +237,7 @@ export function checkRoom(
         hValues,
         hInputs,
       );
-      value.deficitMm = height - ceiling;
+      value.deficitMm = height + bottom - ceiling;
       add(value);
     }
     const entry = records.get(f.catalogueId);
@@ -242,7 +285,28 @@ export function checkRoom(
         pairInputs = [...sizeInputs(f), ...sizeInputs(other)],
         otherRect = boxes.get(other.id),
         otherEntry = records.get(other.catalogueId);
+      const vertical =
+        otherRect && intersection(access, otherRect)
+          ? verticallySeparate(f, other)
+          : false;
+      if (
+        otherRect &&
+        intersection(access, otherRect) &&
+        (furnitureBottom(f) !== 0 || furnitureBottom(other) !== 0)
+      ) {
+        pairValues.push(
+          f.dimensions.height,
+          other.dimensions.height,
+          ...(vertical === null ? [UNKNOWN] : []),
+        );
+        pairInputs.push(`${f.id}:height`, `${other.id}:height`);
+      }
       const state = record('front-access', pairValues);
+      if (vertical === true) continue;
+      if (vertical === null) {
+        unknown('front-access', [f.id, other.id], pairInputs, f.id);
+        continue;
+      }
       if (!otherRect) {
         unknown('front-access', [f.id, other.id], pairInputs, f.id);
         continue;
@@ -282,7 +346,27 @@ export function checkRoom(
         rb = boxes.get(b.id),
         values = [...sizeValues(a), ...sizeValues(b)],
         inputs = [...sizeInputs(a), ...sizeInputs(b)];
+      const vertical =
+        ra && rb && intersection(ra, rb) ? verticallySeparate(a, b) : false;
+      if (
+        ra &&
+        rb &&
+        intersection(ra, rb) &&
+        (furnitureBottom(a) !== 0 || furnitureBottom(b) !== 0)
+      ) {
+        values.push(
+          a.dimensions.height,
+          b.dimensions.height,
+          ...(vertical === null ? [UNKNOWN] : []),
+        );
+        inputs.push(`${a.id}:height`, `${b.id}:height`);
+      }
       const state = record('solid', values);
+      if (vertical === true) continue;
+      if (vertical === null) {
+        unknown('solid', [a.id, b.id], inputs);
+        continue;
+      }
       if (!ra || !rb) {
         unknown('solid', [a.id, b.id], inputs);
         continue;
@@ -449,6 +533,26 @@ export function checkRoom(
         continue;
       }
       const overlap = intersection(band, rect);
+      if (overlap && furnitureBottom(f) !== 0) {
+        const span = verticalSpan(f),
+          sill = feature.sill.value,
+          height = feature.height.value;
+        values.push(f.dimensions.height, feature.sill, feature.height);
+        inputs.push(
+          `${f.id}:height`,
+          `${feature.id}:sill`,
+          `${feature.id}:height`,
+        );
+        if (!span || sill === null || height === null) {
+          record(rule, [...values, UNKNOWN]);
+          unknown(rule, [feature.id, f.id], inputs);
+          continue;
+        }
+        if (span[1] <= sill || span[0] >= sill + height) {
+          record(rule, values);
+          continue;
+        }
+      }
       if (feature.kind === 'door') {
         const state = record(rule, values);
         if (overlap)
@@ -475,7 +579,7 @@ export function checkRoom(
         const state = record(rule, overlap ? vertical : values);
         if (overlap && (height === null || sill === null))
           unknown(rule, [feature.id, f.id], dependent);
-        else if (overlap && height! > sill!)
+        else if (overlap && height! + (furnitureBottom(f) ?? 0) > sill!)
           add(
             fact(
               rule,

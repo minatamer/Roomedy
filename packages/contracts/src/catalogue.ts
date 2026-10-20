@@ -14,7 +14,25 @@ export const catalogueEntrySchema = z
     id: idSchema,
     version: z.literal(VERSIONS.catalogue),
     label: labelSchema,
-    category: z.enum(['bed', 'desk', 'chair', 'wardrobe', 'storage']),
+    category: z.enum([
+      'bed',
+      'desk',
+      'chair',
+      'wardrobe',
+      'storage',
+      'mirror',
+      'tv',
+      'seating',
+      'table',
+      'lighting',
+    ]),
+    placement: z.enum(['floor', 'surface', 'wall']).optional(),
+    defaultElevationMm: z
+      .number()
+      .int()
+      .min(0)
+      .max(POLICY.roomEdgeMm)
+      .optional(),
     size: z.strictObject({
       width: axisSchema,
       depth: axisSchema,

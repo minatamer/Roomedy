@@ -12,7 +12,7 @@ import type { BufferGeometry, Material, Object3D, WebGLRenderer } from 'three';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
-import { findCatalogueEntry } from '@roomedy/spatial';
+import { findCatalogueEntry, featureLabel } from '@roomedy/spatial';
 import { FINISH_PALETTE } from '../catalogue/finishes';
 import { roomSurface } from '@roomedy/contracts/surfaces';
 import {
@@ -205,7 +205,7 @@ export function buildDesignScene(
     const b = featureBox(room, feature);
     if (!b) continue;
     const group = new Group();
-    group.name = feature.kind;
+    group.name = featureLabel(feature);
     group.userData = { roomedy: { id: feature.id, wall: feature.wall } };
     group.position.fromArray(b.center);
     group.rotation.y =
@@ -321,9 +321,10 @@ export function buildDesignScene(
       group.add(instance.object);
       instances.push(instance.dispose);
     } else if (representation.kind === 'procedural') {
-      const chair =
-        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
-          ?.category === 'chair';
+      const chair = findCatalogueEntry(
+        piece.catalogueId,
+        piece.catalogueVersion,
+      )?.category.match(/^(chair|seating)$/);
       const frame = material(
           FINISH_PALETTE[piece.finish],
           piece.finish === 'oak' || piece.finish === 'walnut' ? 'wood' : 'wall',
@@ -334,6 +335,14 @@ export function buildDesignScene(
         ),
         blanket = material('#bc9475', 'soft'),
         metal = material('#514a40', 'metal');
+      const screen = material('#101820', 'metal');
+      screen.roughness = 0.19;
+      screen.metalness = 0.35;
+      if (
+        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+          ?.category === 'mirror'
+      )
+        windowGlass ??= createWindowGlass();
       for (const part of detailedParts(
         representation.parts,
         representation.footprint,
@@ -343,13 +352,17 @@ export function buildDesignScene(
           part.name,
           part.center.map(metres),
           part.size.map(metres),
-          part.name === 'blanket'
-            ? blanket
-            : part.role === 'soft'
-              ? soft
-              : part.role === 'metal'
-                ? metal
-                : frame,
+          part.name === 'mirror-glass' && windowGlass
+            ? windowGlass.mirror
+            : part.name === 'tv-screen'
+              ? screen
+              : part.name === 'blanket'
+                ? blanket
+                : part.role === 'soft'
+                  ? soft
+                  : part.role === 'metal'
+                    ? metal
+                    : frame,
           part.name === 'physical-bounds'
             ? unit
             : part.role === 'soft'

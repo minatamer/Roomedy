@@ -433,7 +433,11 @@ export function createAssistantTools(
         type: item.type,
         furniture: {
           ...furniture,
-          pose: { ...pose, provenance: furniture.pose.provenance },
+          pose: {
+            ...furniture.pose,
+            ...pose,
+            provenance: furniture.pose.provenance,
+          },
         },
         ...(item.type === 'replace' ? { id: item.id } : {}),
       } as ProposalAction);
