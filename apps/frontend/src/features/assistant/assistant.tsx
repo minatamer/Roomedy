@@ -450,10 +450,10 @@ export function Assistant({
           submit();
         }}
       >
-        <label htmlFor="roomedy-message">Ask Medy</label>
         <textarea
           ref={composer}
           id="roomedy-message"
+          aria-label="Ask Medy"
           rows={3}
           value={state.draft}
           maxLength={POLICY.visitorTextChars}

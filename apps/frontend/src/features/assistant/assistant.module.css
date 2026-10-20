@@ -169,13 +169,8 @@
 .composer {
   background: #fffdf9;
   padding-top: 8px;
-  border-top: 1px solid #ded4c6;
   display: grid;
   gap: 6px;
-}
-.composer label {
-  font-size: 11px;
-  font-weight: 600;
 }
 .composer textarea {
   box-sizing: border-box;
