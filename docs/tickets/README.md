@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+[Consolidated visual-feedback review](../reviews/2026-10-20-visual-feedback-checklist.md) and [file-level checkpoint](../commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md): implementation through65048e2 already committed; final consolidation is documentation only. Owner review comes later, with actual visual approval pending and no later phase resumed.
+
 Planning date: **17 October 2026**  
 Plan status: **Approved by owner on 17 October 2026; ordered fake-mode execution authorized**  
 Authority: [Roomedy blueprint](../ROOMEDY.md), especially [selected decisions](../ROOMEDY.md#26-decision-register)  
@@ -68,15 +70,15 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-015AA](RM-015AA-add-useful-furniture-size-presets.md) | Popular bed and useful furniture size presets, shared estimate authority | RM-015Z | Committed a8f1c02;555tests/root/builds/read-only pass1 clean; owner approval pending |
 | [RM-015AB](RM-015AB-fill-the-editor-working-height.md) | Full editor working height, remove obstructive bottom copy | RM-015AA | Committed6db513e;555tests/root/builds/read-only pass1 clean; visual approval pending |
 | [RM-015AC](RM-015AC-temporarily-hide-room-comparison.md) | Temporarily hide Before/Current, retain full feature and coherent tour | RM-015AB | Committed42b400a;555tests/root/builds/read-only pass1 clean; visual approval pending |
-| [RM-015AD](RM-015AD-pick-and-infer-wall-and-floor-surfaces.md) | Wall/floor colour and texture choices with photo-estimated appearance | RM-015AC | Locally validated578tests/root/builds/read-only; exact checkpoint prepared, owner visual approval pending |
-| [RM-015AE](RM-015AE-match-editor-window-glass-to-landing.md) | Shared landing/editor window glass and consistent export appearance | RM-015AD | Locally validated578tests/root/builds/read-only; exact checkpoint prepared, owner visual approval pending |
-| [RM-015AF](RM-015AF-enlarge-and-simplify-browser-icon.md) | Larger room-shaped browser icon without dot on solid beige | RM-015AE | Locally validated578tests/root/builds/read-only; exact checkpoint prepared, owner visual approval pending |
-| [RM-015AG](RM-015AG-clarify-plan-direction-and-add-rotation.md) | Clear plan arrows and clockwise/counterclockwise2D rotation | RM-015AF | Locally validated578tests/root/builds/read-only; exact checkpoint prepared, owner visual approval pending |
-| [RM-015AH](RM-015AH-correct-interior-horizontal-camera-drag.md) | Interior horizontal camera dragging follows the grab | RM-015AG | Locally validated578tests/root/builds/read-only; exact checkpoint prepared, owner visual approval pending |
-| [RM-015AI](RM-015AI-simplify-editor-tool-navigation.md) | Four uncluttered tools without divider lines; hide Checks/tour replay entry | RM-015AH | Committed133e154; Undo/Project shared-glass follow-up locally checked, owner visual approval pending |
+| [RM-015AD](RM-015AD-pick-and-infer-wall-and-floor-surfaces.md) | Wall/floor colour and texture choices with photo-estimated appearance | RM-015AC | Committed133e154;578tests/root/builds/read-only passed; owner visual approval pending |
+| [RM-015AE](RM-015AE-match-editor-window-glass-to-landing.md) | Shared landing/editor window glass and consistent export appearance | RM-015AD | Committed133e154;578tests/root/builds/read-only passed; owner visual approval pending |
+| [RM-015AF](RM-015AF-enlarge-and-simplify-browser-icon.md) | Larger room-shaped browser icon without dot on solid beige | RM-015AE | Committed133e154;578tests/root/builds/read-only passed; owner visual approval pending |
+| [RM-015AG](RM-015AG-clarify-plan-direction-and-add-rotation.md) | Clear plan arrows and clockwise/counterclockwise2D rotation | RM-015AF | Committed133e154;578tests/root/builds/read-only passed; owner visual approval pending |
+| [RM-015AH](RM-015AH-correct-interior-horizontal-camera-drag.md) | Interior horizontal camera dragging follows the grab | RM-015AG | Committed133e154;578tests/root/builds/read-only passed; owner visual approval pending |
+| [RM-015AI](RM-015AI-simplify-editor-tool-navigation.md) | Four uncluttered tools without divider lines; hide Checks/tour replay entry | RM-015AH | Committed133e154; Undo/Project shared-glass follow-up committed575d907, owner visual approval pending |
 | [RM-015AJ](RM-015AJ-keep-proposal-decisions-in-chat.md) | AI proposal decisions inside chat and four-second transient notices | RM-015AI | Committed25135b7; locally validated586tests/root/build/source/native, read-only clean; owner approval pending |
-| [RM-015AK](RM-015AK-drag-furniture-from-the-catalogue.md) | Primary catalogue drag placement in2D/3D and useful desk Work area | RM-015AJ | Committed618add8;599-test/root/build/source gates and21-path review passed.18px outer-panel follow-up locally checked; owner approval pending |
-| [RM-015AL](RM-015AL-open-editor-in-3d.md) | Fresh main-editor rooms default to3D while explicit saved choices remain | RM-015AK | Locally verified602tests/root/build/source/native; 12-path read-only pass1 clean, exact checkpoint prepared; owner approval pending |
+| [RM-015AK](RM-015AK-drag-furniture-from-the-catalogue.md) | Primary catalogue drag placement in2D/3D and useful desk Work area | RM-015AJ | Committed618add8;599-test/root/build/source and21-path review passed.18px panel follow-up committedb14a407; owner approval pending |
+| [RM-015AL](RM-015AL-open-editor-in-3d.md) | Fresh main-editor rooms default to3D while explicit saved choices remain | RM-015AK | Committed65048e2;602tests/root/build/source/native and12-path review passed; owner approval pending |
 | [RM-015Q](RM-015Q-add-restrained-warm-room-lighting.md) | Restrained warm dynamic interior light and shadows | RM-015AL | Planned; held behind actual owner feedback |
 | [RM-016](RM-016-audit-and-improve-code-quality.md) | Documented and executed functionality-preserving quality pass | RM-015 | Requires visual approval or explicit waiver/defer |
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |

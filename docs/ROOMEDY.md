@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Consolidated owner review:** The implementation is already committed through `65048e2` and Git was clean when the owner approved a final checkpoint. [File-level consolidation](commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md) records the exact five-file documentation commit and 211 already-committed feedback paths. [Visual-feedback checklist](reviews/2026-10-20-visual-feedback-checklist.md) gathers the review items. The owner will review later; actual visual approval remains pending, Q held, guide paused and RM-016 Planned. No new application changes or fresh executable verification are claimed.
+
 **Current main-editor default:** [RM-015AL](tickets/RM-015AL-open-editor-in-3d.md), [12-path plan](commit-plans/RM-015AL.md) and [evidence](validation/RM-015AL.md) follow committedb14a407. Fresh/reset/accepted main-editor rooms open in3D through one presentation factory. Explicit recovered views/current import view, manual2D switching and rough2D photo review remain. Focused125tests, final602-test/root/both-build/current-source gates and actual fresh3D/2D recovery/photo-review→accepted3D checks passed; full12-path read-only pass1 is clean and the exact local checkpoint is prepared. Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Current panel-corner follow-up:** [AK allocation](commit-plans/RM-015AK.md#panel-corner-follow-up-allocation--20-october-2026) and [evidence](validation/RM-015AK.md#panel-corner-follow-up--20-october-2026) follow committed618add8. The shared outer properties panel now matches the18px room-frame radius in catalogue, inspector and assistant states. Actual desktop/short/phone scrolling and scoped CSS formatting passed. This hot-reload candidate differs from the prior production artifact; no fresh full-root/build claim. Actual visual approval remains pending; Q held, guide paused, RM-016 Planned.
@@ -1343,8 +1345,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Present the locally verified3D main-editor default and exact local checkpoint. Await actual owner visual feedback without questions while the owner sleeps. Keep Q held, guide paused and RM-016 Planned; no later quality/security, paid/live, push/deploy or delegation.
-Active ticket: RM-015AL
+Next action: Await later owner review of the consolidated visual-feedback checklist. Implementation through65048e2 is already committed; save only the exact documentation consolidation under current explicit stage/commit approval. Keep actual visual approval pending, Q held, guide paused and RM-016 Planned. No later quality/security, paid/live, push/deploy or delegation.
+Active ticket: RM-015
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1369,7 +1371,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T00:55:48+00:00",
+  "updated_at": "2026-10-20T01:04:34+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1558,8 +1560,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AL",
-  "next_action": "Present the locally verified3D main-editor default and exact local checkpoint. Await actual owner visual feedback without questions while the owner sleeps. Keep Q held, guide paused and RM-016 Planned; no later quality/security, paid/live, push/deploy or delegation.",
+  "active_ticket": "RM-015",
+  "next_action": "Await later owner review of the consolidated visual-feedback checklist. Implementation through65048e2 is already committed; save only the exact documentation consolidation under current explicit stage/commit approval. Keep actual visual approval pending, Q held, guide paused and RM-016 Planned. No later quality/security, paid/live, push/deploy or delegation.",
   "phases": [
     {
       "id": "01-docs",
@@ -2015,7 +2017,8 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AJ.md — chat-owned proposal decisions and4s notices:52focused tests,586tests/45files +7boundaries/root/both builds passed;217inputs/1852400bytes/BUILD_ID6c06309495135fa86ab9afe0ab66370945057ca12afbd43ab8374b38538e6d0c; actual1280/390/320/short3D/chat Apply/Cancel/Undo, notice expiry and visitor palette observed; unchanged frame; clean15-path read-only pass1/425local links; exact local checkpoint prepared. Actual owner visual approval pending.",
         "docs/validation/RM-015AK.md — primary catalogue drag in2D/3D and useful Work area:62focused tests; final599tests/46files +7boundaries/root/both builds passed;222inputs/1880272bytes/BUILD_IDe80a8f900a290a2fc3c82e3eeae7614c575ea63fd2c13295f00ced4dc4c85876. Actual native drags, invalid/retry/outside/Cancel/keyboard/Undo and1280/390/320/short states inspected; final source drags rechecked. Two input review findings fixed, clean21-path read-only pass2/449local links. Exact local checkpoint prepared; actual owner visual approval pending.",
         "docs/validation/RM-015AK.md#panel-corner-follow-up--20-october-2026 — shared panel18px corner follow-up on618add8: CSS format passed, actual catalogue scroll/3D/390phone/short Assistant corners and Send checked; no browser errors. Exact eight-path read-only pass1 clean/442local links, local checkpoint prepared. Current hot-reload inpute264681384caeaf4198bbefffab89b7db85d60eb030ca7233c141252df9d9cca differs from prior production build; no fresh root/build/device claim. Actual owner approval pending.",
-        "docs/validation/RM-015AL.md — new-room main-editor3D default:125focused tests; final602tests/46files +7boundaries/root/both builds passed;222inputs/1880286bytes/BUILD_ID1e94dc09455fba3db4489bc72dce787acb551c3e8ebc959ca00b8102cd1b7a58. Actual fresh3D entry, native2D switch/refresh recovery, fake photos→rough2D review→accepted3D observed; error logs empty. Clean12-path read-only pass1/459local links; exact local checkpoint prepared. Actual owner visual approval pending."
+        "docs/validation/RM-015AL.md — new-room main-editor3D default:125focused tests; final602tests/46files +7boundaries/root/both builds passed;222inputs/1880286bytes/BUILD_ID1e94dc09455fba3db4489bc72dce787acb551c3e8ebc959ca00b8102cd1b7a58. Actual fresh3D entry, native2D switch/refresh recovery, fake photos→rough2D review→accepted3D observed; error logs empty. Clean12-path read-only pass1/459local links; exact local checkpoint prepared. Actual owner visual approval pending.",
+        "docs/commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md and docs/reviews/2026-10-20-visual-feedback-checklist.md — owner explicitly approved staging/committing and will review all feedback later. Git was already clean at65048e2; 19 existing commits/211 historical paths inventoried. Exact five-file documentation-only checkpoint, clean read-only pass1/480local links/fragments; executable input/production identity unchanged from passed602-test gate. This is no actual visual approval or waiver; Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
