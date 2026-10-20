@@ -1,5 +1,26 @@
 # RM-015AP — Align the studio and share view controls
 
+## Animated view toggle follow-up allocation — 20 October2026
+
+Clean parent `c284266`. Latest owner selects one animated exclusive2D/3D control and removes the piece count. This supersedes AP's earlier count/two-button presentation. Preserve the existing bottom-right frame position and canonical room-view owner, including MEDY changes, loading and unavailable graphics.
+
+Exact twelve paths allocated before source edits:
+
+1. `AGENTS.md`
+2. `docs/README.md`
+3. `docs/ROOMEDY.md`
+4. `docs/tickets/README.md`
+5. `docs/tickets/RM-015AP-align-the-studio-and-share-view-controls.md`
+6. `docs/commit-plans/RM-015AP.md`
+7. `docs/validation/RM-015AP.md`
+8. `apps/frontend/src/features/room-editor/editor.tsx`
+9. `apps/frontend/src/features/room-editor/view-controls.tsx`
+10. `apps/frontend/src/features/room-editor/view-controls.module.css`
+11. `apps/frontend/src/features/plan-view/plan-view.tsx`
+12. `apps/frontend/src/features/room-view/cutaway.tsx`
+
+Use one warm rounded track with a sliding selected thumb and two labelled exclusive buttons,44px targets and visible keyboard focus. Keep the control mounted in the shared stage while the underlying view/loading/graphics content changes, allowing continuous reversible CSS motion and retained focus. Remove the count and obsolete per-view control props. No duplicate view state, new timer, command, dependency or service. Verify both directions, quick reversal, keyboard, MEDY-driven view changes, desktop/short/tablet/phone bounds and absence of count. Use existing checks plus one settled root gate; no static CSS/label tests. Review the complete settled diff read-only, fix/revalidate any findings, and save the exact authorized local checkpoint. Actual owner approval pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/new ports/push/deploy.
+
 20 October 2026. Parent `58cbc18`, clean worktree/index. Owner requests Design Studio at the left of the Furniture/Room/Assistant row, removal of Add piece from that row and the old canvas headings, an in-frame bottom-right count/view switch, aligned frame/left controls/right card, and consistent 2D/3D controls except camera angles.
 
 ## Exact allocation before source edits

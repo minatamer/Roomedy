@@ -105,20 +105,21 @@ export function ViewControls({
 }
 
 export function FrameControls({
-  count,
   view,
   onView,
 }: {
-  count: number;
   view: 'plan' | 'cutaway';
   onView: (view: 'plan' | 'cutaway') => void;
 }) {
   return (
     <div className={styles.frameControls}>
-      <span>
-        {count} {count === 1 ? 'piece' : 'pieces'}
-      </span>
-      <div role="group" aria-label="Room view" className={styles.viewSwitch}>
+      <div
+        role="group"
+        aria-label="Room view"
+        className={styles.viewSwitch}
+        data-view={view}
+      >
+        <span className={styles.viewThumb} aria-hidden="true" />
         <button aria-pressed={view === 'plan'} onClick={() => onView('plan')}>
           2D
         </button>

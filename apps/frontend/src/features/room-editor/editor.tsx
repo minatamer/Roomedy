@@ -442,7 +442,6 @@ export function Editor({
   ];
   const frameControls = (
     <FrameControls
-      count={shownRoom.furniture.length}
       view={roomView}
       onView={(next) => {
         if (next === 'cutaway') setCutawayOpenedAt(performance.now());
@@ -568,122 +567,123 @@ export function Editor({
             </div>
           )}
 
-          {roomView === 'plan' ? (
-            <div className={controlsStyles.stage}>
-              <div ref={planToolsMotion} className="motion-surface">
-                <ViewControls
-                  controller={controller}
-                  arranging={arranging}
-                  onArrange={setArranging}
-                  readOnly={readOnly || !!adding}
-                  rotationLocked={!item || item.locks.rotation}
-                  onRotate={rotatePlanSelection}
-                  snap={view.snap}
-                  onSnap={(snap) => controller.setView({ snap })}
-                  onZoom={(direction) =>
-                    controller.setView({ zoom: view.zoom + direction * 0.2 })
-                  }
-                  zoomOutDisabled={view.zoom <= 0.6}
-                  zoomInDisabled={view.zoom >= 3}
-                  onFit={() =>
-                    controller.setView({ zoom: 1, panX: 0, panZ: 0 })
-                  }
-                >
-                  <div
-                    className={`${controlsStyles.tools} ${controlsStyles.directions}`}
-                    role="group"
-                    aria-label="Pan plan"
-                  >
-                    {(
-                      [
-                        ['left', '←', -250, 0],
-                        ['right', '→', 250, 0],
-                        ['up', '↑', 0, -250],
-                        ['down', '↓', 0, 250],
-                      ] as const
-                    ).map(([label, text, x, z]) => (
-                      <button
-                        key={label}
-                        aria-label={`Pan ${label}`}
-                        onClick={() =>
-                          controller.setView({
-                            panX: view.panX + x,
-                            panZ: view.panZ + z,
-                          })
-                        }
-                      >
-                        {text}
-                      </button>
-                    ))}
-                  </div>
-                </ViewControls>
-              </div>
-              <PlanView
-                controller={controller}
-                state={state}
-                placement={placement}
-                arranging={arranging}
-                frameControls={frameControls}
-              />
-            </div>
-          ) : (
-            <CutawayBoundary
-              onFailure={() => controller.clientPartFailed()}
-              fallback={
-                <>
-                  <p role="status">
-                    The cutaway could not load. Continue editing in the plan.
-                  </p>
-                  <PlanView
+          <div className={controlsStyles.viewStage}>
+            {roomView === 'plan' ? (
+              <div className={controlsStyles.stage}>
+                <div ref={planToolsMotion} className="motion-surface">
+                  <ViewControls
                     controller={controller}
-                    state={state}
-                    frameControls={frameControls}
                     arranging={arranging}
-                  />
-                </>
-              }
-            >
-              <Suspense
+                    onArrange={setArranging}
+                    readOnly={readOnly || !!adding}
+                    rotationLocked={!item || item.locks.rotation}
+                    onRotate={rotatePlanSelection}
+                    snap={view.snap}
+                    onSnap={(snap) => controller.setView({ snap })}
+                    onZoom={(direction) =>
+                      controller.setView({ zoom: view.zoom + direction * 0.2 })
+                    }
+                    zoomOutDisabled={view.zoom <= 0.6}
+                    zoomInDisabled={view.zoom >= 3}
+                    onFit={() =>
+                      controller.setView({ zoom: 1, panX: 0, panZ: 0 })
+                    }
+                  >
+                    <div
+                      className={`${controlsStyles.tools} ${controlsStyles.directions}`}
+                      role="group"
+                      aria-label="Pan plan"
+                    >
+                      {(
+                        [
+                          ['left', '←', -250, 0],
+                          ['right', '→', 250, 0],
+                          ['up', '↑', 0, -250],
+                          ['down', '↓', 0, 250],
+                        ] as const
+                      ).map(([label, text, x, z]) => (
+                        <button
+                          key={label}
+                          aria-label={`Pan ${label}`}
+                          onClick={() =>
+                            controller.setView({
+                              panX: view.panX + x,
+                              panZ: view.panZ + z,
+                            })
+                          }
+                        >
+                          {text}
+                        </button>
+                      ))}
+                    </div>
+                  </ViewControls>
+                </div>
+                <PlanView
+                  controller={controller}
+                  state={state}
+                  placement={placement}
+                  arranging={arranging}
+                />
+              </div>
+            ) : (
+              <CutawayBoundary
+                onFailure={() => controller.clientPartFailed()}
                 fallback={
                   <>
-                    <p role="status">Opening the cutaway…</p>
+                    <p role="status">
+                      The cutaway could not load. Continue editing in the plan.
+                    </p>
                     <PlanView
                       controller={controller}
                       state={state}
-                      frameControls={frameControls}
                       arranging={arranging}
                     />
                   </>
                 }
               >
-                <Cutaway
-                  key={workspace.workspaceId}
-                  room={before ? workspace.baseline : room}
-                  cameraFrame={comparisonFrame(workspace)}
-                  candidate={state.candidate?.room}
-                  checks={shownChecks}
-                  selectedId={view.selectedId}
-                  onSelect={(id) => controller.select(id)}
-                  cameraStateRef={cameraStateRef}
-                  openedAt={cutawayOpenedAt}
-                  onPlan={() => setRoomView('plan')}
-                  controller={controller}
-                  readOnly={readOnly || !!adding}
-                  placement={placement}
-                  onAddDesk={() => open('catalogue', 'desk')}
-                  snap={view.snap}
-                  arranging={arranging}
-                  onArrange={setArranging}
-                  frameControls={frameControls}
-                  medyCamera={
-                    medyCamera?.workspaceId === workspaceId ? medyCamera : null
+                <Suspense
+                  fallback={
+                    <>
+                      <p role="status">Opening the cutaway…</p>
+                      <PlanView
+                        controller={controller}
+                        state={state}
+                        arranging={arranging}
+                      />
+                    </>
                   }
-                  onMedyCamera={consumeCamera}
-                  onCameraAvailability={updateCameraAvailability}
-                />
-              </Suspense>
-            </CutawayBoundary>
-          )}
+                >
+                  <Cutaway
+                    key={workspace.workspaceId}
+                    room={before ? workspace.baseline : room}
+                    cameraFrame={comparisonFrame(workspace)}
+                    candidate={state.candidate?.room}
+                    checks={shownChecks}
+                    selectedId={view.selectedId}
+                    onSelect={(id) => controller.select(id)}
+                    cameraStateRef={cameraStateRef}
+                    openedAt={cutawayOpenedAt}
+                    onPlan={() => setRoomView('plan')}
+                    controller={controller}
+                    readOnly={readOnly || !!adding}
+                    placement={placement}
+                    onAddDesk={() => open('catalogue', 'desk')}
+                    snap={view.snap}
+                    arranging={arranging}
+                    onArrange={setArranging}
+                    medyCamera={
+                      medyCamera?.workspaceId === workspaceId
+                        ? medyCamera
+                        : null
+                    }
+                    onMedyCamera={consumeCamera}
+                    onCameraAvailability={updateCameraAvailability}
+                  />
+                </Suspense>
+              </CutawayBoundary>
+            )}
+            {frameControls}
+          </div>
           <CataloguePlacementHint placement={placement} />
           {state.candidate && state.candidate.source !== 'assistant' && (
             <div

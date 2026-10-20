@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import {
   useEffect,
   useId,
@@ -98,13 +97,11 @@ export function PlanView({
   state,
   placement,
   arranging = true,
-  frameControls,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
   placement?: CataloguePlacement;
   arranging?: boolean;
-  frameControls?: ReactNode;
 }) {
   const adding = useSyncExternalStore(
     placement?.subscribe ?? noSubscribe,
@@ -888,7 +885,6 @@ export function PlanView({
         </text>
         {placement && <CataloguePlanGhost placement={placement} />}
       </svg>
-      {frameControls}
       <div id={descriptionId} className={styles.announcement}>
         <p>
           {ghost

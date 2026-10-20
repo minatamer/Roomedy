@@ -1,6 +1,6 @@
 # RM-015AP — Align the studio and share view controls
 
-Status: **Locally implemented and validated through the single-header correction; actual owner visual approval pending**. Original parent `58cbc18`; the latest owner removes the previously requested visible Design Studio title and raises navigation into the top bar. Original checks below retain their historical scope; the single-header acceptance below supersedes the title/separate row. [Exact plan](../commit-plans/RM-015AP.md), [blueprint](../ROOMEDY.md#7-workspace-and-manual-editing), [layout](../design/layout.md), [motion](../design/motion.md), [review checklist](../design/REVIEW_CHECKLIST.md), [feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md).
+Status: **Locally implemented through the animated view-toggle correction; actual owner visual approval pending**. Original parent `58cbc18`; latest owner feedback supersedes the original count/two-button presentation, following the earlier title/header correction. Original checks below retain their historical scope. [Exact plan](../commit-plans/RM-015AP.md), [blueprint](../ROOMEDY.md#7-workspace-and-manual-editing), [layout](../design/layout.md), [motion](../design/motion.md), [review checklist](../design/REVIEW_CHECKLIST.md), [feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md).
 
 - [x] One focused Design Studio h1 in the tool row; Furniture/Room/Assistant retained and Add piece removed only from this row. Catalogue/Add/Replace remains reachable.
 - [x] Count and 2D/3D switch are inside each frame bottom right; frame and left controls align with the adjacent card at useful desktop widths. Both views share the same layout and bounded height; natural narrow/short flow remains reachable.
@@ -23,3 +23,12 @@ Owner removes Design Studio and asks to raise everything into the top bar, with 
 - [x] Assistant uses its actual bounded panel content height independently of the animated shell, retaining finite narrow conversation/composer behavior and real scrolling. Existing focus ref and clipped Room editor h1 keep tour/Delete/Back-to-room focus meaningful without visible filler.
 - [x] Actual2D/3D responsive/short/boundary layouts, catalogue/Room/selected properties, Project/Escape, editing/Delete/Undo, tour targets/focus and phone chat reachability inspected. Command/lifecycle/motion, hidden Checks/comparison and previous entrance correction remain.
 - [x] Settled674-test/root/both-build/current233-file identity, full eleven-path read-only review and exact authorized local checkpoint recorded in the receipt. Actual owner approval remains pending; Q held, guide paused, RM-016 Planned.
+
+
+## Animated view toggle follow-up — 20 October2026
+
+Owner requests one animated exclusive2D/3D slot and removes the piece count. This supersedes the original count/two-button presentation above. [Twelve-path allocation](../commit-plans/RM-015AP.md#animated-view-toggle-follow-up-allocation--20-october2026), [evidence](../validation/RM-015AP.md#animated-view-toggle-follow-up--20-october2026).
+
+- [x] One warm rounded track with a cocoa thumb sliding between2D/3D; two exclusive labelled44px buttons preserve pressed states and visible keyboard focus. Remove the count entirely.
+- [x] Keep the control mounted in one shared stage above changing2D/3D/loading/failure content. Canonical view state, including MEDY, remains the only selection owner. Preserve room geometry, existing tools and motion.
+- [x] Actual desktop/short/tablet/phone, pointer/Enter/Space/focus, loading and MEDY view-command observations recorded. Hover contrast corrected and re-observed. Final root/build/source and complete twelve-path read-only review results belong to the receipt. Actual owner approval pending; Q held, guide paused, RM-016 Planned.

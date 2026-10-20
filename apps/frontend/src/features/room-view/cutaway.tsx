@@ -55,7 +55,6 @@ export type CutawayProps = Pick<
   onAddDesk: () => void;
   arranging: boolean;
   onArrange: (arranging: boolean) => void;
-  frameControls: ReactNode;
   medyCamera?:
     (Extract<MedyControl, { type: 'camera' }> & { sequence: number }) | null;
   onMedyCamera?: (sequence: number) => void;
@@ -71,7 +70,6 @@ export default function Cutaway({
   onAddDesk,
   arranging,
   onArrange,
-  frameControls,
   medyCamera,
   onMedyCamera,
   onCameraAvailability,
@@ -389,7 +387,6 @@ export default function Cutaway({
               : ''}
           </p>
         )}
-        {frameControls}
       </div>
       <div id={descriptionId} className={styles.description}>
         <p>

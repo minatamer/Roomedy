@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Animated view toggle,20October:** Latest owner removes the piece count and selects one animated exclusive2D/3D pill. It remains inside the frame bottom right, mounted above the changing view/loading/graphics content so CSS motion and focus continue. Canonical view state also reflects MEDY. [Twelve-path AP allocation](commit-plans/RM-015AP.md#animated-view-toggle-follow-up-allocation--20-october2026), [evidence](validation/RM-015AP.md#animated-view-toggle-follow-up--20-october2026). This supersedes historical count/two-button presentation requirements. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **MEDY assistant revision — RM-015AT:** Exact furniture/room/opening edits, shared size presets, protected Delete/size parity, metadata/locks, selection/views/camera/Snap/tour and existing project flows now run through the same manual owners from chat. MEDY has friendly bounded advice, a Meet MEDY landing chapter and coordinated neutral design defaults. Explicit human edits compile locally; model interpretation can offer a validated request for a new visitor selection, and model prose never grants commands. [Ticket](tickets/RM-015AT-make-medy-a-complete-room-assistant.md), [allocation](commit-plans/RM-015AT.md), [capability audit](references/medy-capabilities-2026-10-20.md), [evidence](validation/RM-015AT.md). Fake and injected real-protocol checks remain distinct from funded live-model quality. Actual owner visual approval pending; Q held, guide paused, RM-016 Planned. No key/config/mode, paid/live, delegation, new dependency/service/port, push or deployment.
 
 **Free material detail — RM-015AS:** Photographed CC0 oak planks/veneer, linen and restrained plaster now enrich the existing shapes and finish colours. Four bounded local sets/eight PNGs total912,545bytes. Shared editor/landing/export ownership preserves final-size GPU storage, data colour spaces and procedural fallbacks. [Ticket](tickets/RM-015AS-add-free-photographic-material-detail.md), [34-path plan](commit-plans/RM-015AS.md), [research/provenance](references/material-research-2026-10-20.md), [actual evidence](validation/RM-015AS.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -1369,8 +1371,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await the owner’s actual visual decision on RM-015AT MEDY (798 tests/53 files, both builds/current250 inputs, clean read-only pass2 and native editor/landing/design checks). Exact46-path local checkpoint prepared under standing authority. Funded real-provider/model-quality validation remains separate; no key or paid call used. Q held, guide goal paused, RM-016 Planned; no delegation/new ports/push/deploy.
-Active ticket: RM-015AT
+Next action: Await the owner’s actual visual decision on the animated2D/3D toggle and removed count on existing4320/private4321. Final798tests/53files, seven boundaries, both builds/current250input identity and full twelve-path read-only pass1 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+Active ticket: RM-015AP
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1395,7 +1397,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T13:26:32+00:00",
+  "updated_at": "2026-10-20T13:41:25+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1584,8 +1586,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AT",
-  "next_action": "Await the owner’s actual visual decision on RM-015AT MEDY (798 tests/53 files, both builds/current250 inputs, clean read-only pass2 and native editor/landing/design checks). Exact46-path local checkpoint prepared under standing authority. Funded real-provider/model-quality validation remains separate; no key or paid call used. Q held, guide goal paused, RM-016 Planned; no delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AP",
+  "next_action": "Await the owner’s actual visual decision on the animated2D/3D toggle and removed count on existing4320/private4321. Final798tests/53files, seven boundaries, both builds/current250input identity and full twelve-path read-only pass1 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2059,14 +2061,15 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-015AP scrollbar follow-up: docs/validation/RM-015AP.md; native5px transient overflow reproduced, same entrance retained inside stable clipped frame; five-size active switch samples without false overflow, actual properties scrolling/edit/Undo/rejection; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID c43cc5cb207d00e65dd270dd4f394d6a2e33735928076f4e27d7715822d6f262. Exact nine-path local review/checkpoint; actual owner visual approval pending.",
         "RM-015AP single-header follow-up: docs/validation/RM-015AP.md; visible title/separate row removed, actual auto header/remaining room and card height/independent assistant panel sizing; native28 settled responsive states/tour/focus/menu/edit/Delete/Undo/chat/3D overflow checks; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 703a59bebb5cb4ed26f538f1c0dd4a773e0d2f701466f7ac911ec6deb8402c2e. Exact eleven-path local review/checkpoint; actual owner approval pending.",
         "RM-015AS: docs/validation/RM-015AS.md; verified CC0 sources/eight local PNGs/912545bytes, stable bounded PBR material ownership/editor+landing+exports, actual before/after/responsive/finish+Undo/native downloads/all4PDF pages; final693tests/50files/seven boundaries/root/both builds/current245hashes/BUILD_ID 80a23557163f23aa8eeda19175aefb5a6b367ee280754a91dc7f69b5c43bbd44; clean34-path read-only pass1 and exact local checkpoint. Actual owner visual approval pending.",
-        "docs/validation/RM-015AT.md"
+        "docs/validation/RM-015AT.md",
+        "docs/validation/RM-015AP.md:20October animated exclusive2D/3D shared pill and count removal; canonical/MEDY selection and focus retained across view/loading changes. Native phone/tablet/short/desktop, keyboard and hover observations; final798tests/53files, seven boundaries, both builds and current250input identity. Actual owner visual approval pending. Full twelve-path read-only pass1 clean; exact authorized local checkpoint prepared."
       ],
       "blockers": [],
       "approval": {
-        "quote": "Like revise it thoroughly, make sure that it can do everything that we do manually. It can do it through the chatbot, including asking for the tour, including changing specific dimensions of something, or rotating it, deleting it, anything, literally anything, zooming. Like the assistant should be able to do anything.",
-        "source": "human:current-chat/2026-10-20/complete-medy-revision",
-        "scope": "RM-015AT: full manual-editor chat parity, explicit MEDY naming/friendly useful conversation, coherent modern tidy design defaults, Meet MEDY landing/reference comparison, then realistic fake-mode parity. Offline real-path implementation/injected tests only; no key setup or paid/live dispatch/visual approval.",
-        "recorded_at": "2026-10-20T11:57:59+00:00"
+        "quote": "2D 3D should be like a toggle ... a cool animated thing ... remove the pieces count.",
+        "source": "human:current-chat/2026-10-20/animated-view-toggle",
+        "scope": "RM-015AP animated exclusive view toggle and count removal only; actual visual approval remains pending.",
+        "recorded_at": "2026-10-20T13:31:43+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2491,6 +2494,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/complete-medy-revision",
             "scope": "RM-015AT: full manual-editor chat parity, explicit MEDY naming/friendly useful conversation, coherent modern tidy design defaults, Meet MEDY landing/reference comparison, then realistic fake-mode parity. Offline real-path implementation/injected tests only; no key setup or paid/live dispatch/visual approval.",
             "recorded_at": "2026-10-20T11:57:59+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "2D 3D should be like a toggle ... a cool animated thing ... remove the pieces count.",
+            "source": "human:current-chat/2026-10-20/animated-view-toggle",
+            "scope": "RM-015AP animated exclusive view toggle and count removal only; actual visual approval remains pending.",
+            "recorded_at": "2026-10-20T13:31:43+00:00"
           }
         }
       ]
