@@ -61,6 +61,8 @@ import {
 } from './window-manipulation';
 import type { FloorEditing } from './use-floor-edit';
 import { createWindowGlass } from './window-glass';
+import { CatalogueGhost } from './catalogue-ghost';
+import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 
 export type CameraAction = {
   kind:
@@ -79,6 +81,7 @@ export type CameraAction = {
   sequence: number;
 };
 export interface SceneProps {
+  placement?: CataloguePlacement | undefined;
   room: RoomDocument;
   candidate: RoomDocument | undefined;
   checks: CheckFacts;
@@ -1417,6 +1420,7 @@ export function RoomScene(props: SceneProps) {
             </mesh>
           );
         })}
+      <CatalogueGhost placement={props.placement} />
       <CameraRig
         room={candidate ?? room}
         cameraFrame={props.cameraFrame}

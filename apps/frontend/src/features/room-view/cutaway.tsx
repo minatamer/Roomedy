@@ -2,6 +2,7 @@
 import {
   Component,
   useCallback,
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -19,6 +20,8 @@ import { useSurfaceMotion } from '../room-editor/use-surface-motion';
 import { useFloorEdit } from './use-floor-edit';
 import type { SessionController } from '../session/controller';
 import styles from './room-view.module.css';
+import type { CataloguePlacement } from '../room-editor/catalogue-placement';
+import { findCatalogueEntry } from '@roomedy/spatial';
 
 class GraphicsBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; onFailure: () => void },
@@ -45,11 +48,15 @@ export type CutawayProps = Pick<
   controller: SessionController;
   readOnly: boolean;
   snap: boolean;
+  placement: CataloguePlacement;
+  onAddDesk: () => void;
 };
 export default function Cutaway({
   controller,
   readOnly,
   snap,
+  placement,
+  onAddDesk,
   ...props
 }: CutawayProps) {
   const descriptionId = useId();
@@ -87,6 +94,43 @@ export default function Cutaway({
     [setAssets],
   );
   const rendered = props.candidate ?? props.room;
+  const hasDesk = rendered.furniture.some(
+    (piece) =>
+      findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+        ?.category === 'desk',
+  );
+  useEffect(() => {
+    let live = true;
+    const sync = () => {
+      if (!live) return;
+      const state = controller.getSnapshot();
+      const current = state.candidate?.room ?? state.workspace?.current;
+      const desk = current?.furniture.some(
+        (piece) =>
+          findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+            ?.category === 'desk',
+      );
+      if (
+        (placement.getEntry() && cameraView !== 'overview') ||
+        (!desk && cameraView === 'work-area')
+      ) {
+        editing.cancel();
+        setCameraView('overview');
+        setAction((previous) => ({
+          kind: 'overview',
+          sequence: (previous?.sequence ?? 0) + 1,
+        }));
+      }
+    };
+    const stopPlacement = placement.subscribe(sync),
+      stopSession = controller.subscribe(sync);
+    queueMicrotask(sync);
+    return () => {
+      live = false;
+      stopPlacement();
+      stopSession();
+    };
+  }, [placement, controller, cameraView, editing]);
   const views = useMemo(
     () =>
       (
@@ -143,17 +187,26 @@ export default function Cutaway({
               <button
                 key={view}
                 aria-pressed={cameraView === view}
-                disabled={!ready || lost || !available}
-                title={
-                  available
-                    ? label
-                    : view === 'corner'
-                      ? 'Corner needs a positioned doorway and clear space in the opposite corner'
-                      : view === 'doorway'
-                        ? 'Doorway needs a positioned doorway and a clear view'
-                        : `${label} needs a clear position in this room`
+                disabled={
+                  !ready ||
+                  lost ||
+                  (!available &&
+                    !(view === 'work-area' && !hasDesk && !readOnly))
                 }
-                onClick={() => command(view)}
+                title={
+                  view === 'work-area' && !hasDesk && !readOnly
+                    ? 'Add a desk to create a work area'
+                    : available
+                      ? label
+                      : view === 'corner'
+                        ? 'Corner needs a positioned doorway and clear space in the opposite corner'
+                        : view === 'doorway'
+                          ? 'Doorway needs a positioned doorway and a clear view'
+                          : `${label} needs a clear position in this room`
+                }
+                onClick={() =>
+                  view === 'work-area' && !hasDesk ? onAddDesk() : command(view)
+                }
               >
                 {label}
               </button>
@@ -298,6 +351,7 @@ export default function Cutaway({
             >
               <RoomScene
                 {...props}
+                placement={ready && !lost ? placement : undefined}
                 cameraAction={action}
                 cameraView={cameraView}
                 editing={editing}

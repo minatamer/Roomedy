@@ -1,5 +1,13 @@
 # Main-editor cutaway
 
+## Adding from the catalogue — RM-015AK
+
+Catalogue additions have one transient placement owner, independent of canonical accepted/current/history.2D maps through the actual rendered SVG viewBox;3D uses the actual ready camera ray onto floor Y0. The ghost keeps physical dimensions/quarter-turns and reuses shared half-mm footprint snapping/clamping. It is a local subscriber: pointer frames do not rerender the room tree or dispatch commands. The3D preview uses two small box meshes, without asset downloads, textures or shadows; the owning Fiber tree disposes them. Loading/context failure does not silently substitute a2D map for a requested3D drop.
+
+The existing room-edit transaction fences selection/view/comparison/revision/preview/reset/import/expiry/unmount. Capture loss, another pointer, Escape and resize cancel. One coalesced pointer frame validates through shared visitor preview; final Add revalidates through the command authority. Overlaps never bypass spatial rules. New pieces retain proposed ownership, estimated size, planned pose, unlocked position/rotation and locked dimensions; exact fields/replacement and saved locks preserve their current semantics.
+
+Work area without a desk opens the desk catalogue. Starting a3D addition returns smoothly to Overview, making the floor useful for placement. A real desk restores the existing desk view; removing its last desk returns to Overview. Available blocked-camera guards remain authoritative. Initial photo review remains rough2D only. [Native drag, keyboard, narrow-screen and lifecycle evidence](../validation/RM-015AK.md) distinguishes local observations from owner/physical/GPU/production performance acceptance.
+
 ## Interior horizontal grab — RM-015AH
 
 The owner explicitly identifies left/right dragging in Corner as inverted. Interior pointer yaw now adds horizontal delta×0.004 so room content follows the grabbed pointer; vertical drag already uses the matching grab convention. Corner/Doorway/Work area share this owner. Look buttons/Arrow keys retain camera-direction semantics, A/D retains camera-relative strafe, and overview retains OrbitControls. Sensitivity,160ms retarget from displayed pose, pinch, pitch clamps, capture/cleanup/editing guards and safe eye position remain unchanged. No canonical room/history/provider action. [Actual old/fixed native observations and settled evidence](../validation/RM-015AH.md).

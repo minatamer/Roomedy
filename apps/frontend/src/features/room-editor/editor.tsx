@@ -33,6 +33,8 @@ import { focusProperties } from './focus';
 import { checkRoom } from '@roomedy/spatial';
 import { ProjectControls } from './project-controls';
 import { PreviewChangeList } from './preview-change-list';
+import { CataloguePlacement } from './catalogue-placement';
+import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
@@ -69,6 +71,17 @@ export function Editor({
     controller.getSnapshot,
     controller.getSnapshot,
   );
+  const placement = useMemo(
+    () => new CataloguePlacement(controller),
+    [controller],
+  );
+  useEffect(() => () => placement.dispose(), [placement]);
+  const adding = useSyncExternalStore(
+    placement.subscribe,
+    placement.getEntry,
+    placement.getEntry,
+  );
+  const [catalogueCategory, setCatalogueCategory] = useState('all');
   const [cutawayOpenedAt, setCutawayOpenedAt] = useState(() =>
     performance.now(),
   );
@@ -188,7 +201,9 @@ export function Editor({
       controller.notify(failureMessage(result, current.workspace?.current));
   };
   const hard = shownChecks.issues.filter((i) => i.severity === 'hard').length;
-  const open = (panel: Panel) => {
+  const open = (panel: Panel, category = 'all') => {
+    placement.cancel();
+    setCatalogueCategory(category);
     setReplacementId(null);
     controller.setPanel(panel);
     focusProperties(controller);
@@ -456,7 +471,11 @@ export function Editor({
                   Snap
                 </label>
               </div>
-              <PlanView controller={controller} state={state} />
+              <PlanView
+                controller={controller}
+                state={state}
+                placement={placement}
+              />
             </div>
           ) : (
             <CutawayBoundary
@@ -490,12 +509,15 @@ export function Editor({
                   openedAt={cutawayOpenedAt}
                   onPlan={() => setRoomView('plan')}
                   controller={controller}
-                  readOnly={readOnly}
+                  readOnly={readOnly || !!adding}
+                  placement={placement}
+                  onAddDesk={() => open('catalogue', 'desk')}
                   snap={view.snap}
                 />
               </Suspense>
             </CutawayBoundary>
           )}
+          <CataloguePlacementHint placement={placement} />
           {state.candidate && state.candidate.source !== 'assistant' && (
             <div
               className={styles.previewActions}
@@ -744,7 +766,9 @@ export function Editor({
                   </section>
                 ) : (
                   <CataloguePanel
-                    key={replacementId ?? 'add'}
+                    key={replacementId ?? `add-${catalogueCategory}`}
+                    placement={placement}
+                    initialCategory={catalogueCategory}
                     controller={controller}
                     room={room}
                     replacement={

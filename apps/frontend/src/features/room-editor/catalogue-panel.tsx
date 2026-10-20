@@ -1,8 +1,13 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import Image from 'next/image';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
-import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { CATALOGUE } from '@roomedy/spatial';
 import { thumbnailUrl } from '../catalogue/catalogue';
@@ -13,6 +18,9 @@ import styles from './editor.module.css';
 import { FurnitureSizeFields } from './furniture-size-form';
 import { furnitureSizePresets, parseSizeInput } from './size-presets';
 import type { SizeInputValues } from './size-presets';
+import { catalogueFurniture } from './catalogue-placement';
+import type { CataloguePlacement } from './catalogue-placement';
+import { useCataloguePlacementInput } from './catalogue-placement-input';
 
 function PlacementForm({
   entry,
@@ -82,34 +90,16 @@ function PlacementForm({
             return;
           }
         }
-        const estimated = (value: number) => ({
-          value,
-          status: 'estimated' as const,
-          sourceId: 'visitor-estimate',
-        });
-        const furniture: Furniture = {
-          id: replacement?.id ?? crypto.randomUUID(),
-          label: entry.label,
-          catalogueId: entry.id,
-          catalogueVersion: entry.version,
-          dimensions: {
-            width: estimated(chosenSize.size.width),
-            depth: estimated(chosenSize.size.depth),
-            height: estimated(
-              chosenSize.size.height ?? entry.size.height.default,
-            ),
-          },
-          pose: {
+        const furniture = catalogueFurniture(
+          entry,
+          chosenSize.size,
+          {
             centerX: Number(values.x),
             centerZ: Number(values.z),
             quarterTurns: replacement?.pose.quarterTurns ?? 0,
-            provenance: { status: 'planned', sourceId: 'visitor-plan' },
           },
-          ownership: 'proposed',
-          preference: 'flexible',
-          locks: { ...DEFAULT_FURNITURE_LOCKS },
-          finish: entry.finishes[0]!,
-        };
+          replacement?.id,
+        );
         const result = controller.dispatch(
           [
             replacement
@@ -201,14 +191,25 @@ export function CataloguePanel({
   room,
   replacement,
   onDone,
+  placement,
+  initialCategory = 'all',
 }: {
   controller: SessionController;
   room: RoomDocument;
   replacement: Furniture | null;
   onDone: () => void;
+  placement: CataloguePlacement;
+  initialCategory?: string;
 }) {
   const [chosen, setChosen] = useState<CatalogueEntry | null>(null);
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState(initialCategory);
+  const [advanced, setAdvanced] = useState(false);
+  const active = useSyncExternalStore(
+    placement.subscribe,
+    placement.getEntry,
+    placement.getEntry,
+  );
+  const input = useCataloguePlacementInput(placement);
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     if (!chosen) heading.current?.focus();
@@ -223,7 +224,7 @@ export function CataloguePanel({
           {replacement ? 'Choose a replacement' : 'Add a piece'}
         </h2>
       </div>
-      {chosen ? (
+      {chosen && replacement ? (
         <PlacementForm
           key={`${chosen.id}-${replacement?.id ?? 'add'}`}
           entry={chosen}
@@ -237,11 +238,21 @@ export function CataloguePanel({
         />
       ) : (
         <>
+          {!replacement && (
+            <p className={styles.catalogueHelp}>
+              Drag into the room, or select a piece to place.
+            </p>
+          )}
           <label>
             Category
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {
+                placement.cancel();
+                setChosen(null);
+                setAdvanced(false);
+                setCategory(e.target.value);
+              }}
             >
               {['all', 'bed', 'desk', 'chair', 'wardrobe', 'storage'].map(
                 (c) => (
@@ -259,7 +270,24 @@ export function CataloguePanel({
               <button
                 className={styles.catalogueCard}
                 key={entry.id}
-                onClick={() => setChosen(entry)}
+                data-active={active?.id === entry.id}
+                onPointerDown={(event) => {
+                  if (replacement) return;
+                  if (input.beginDrag(event, entry)) {
+                    setChosen(entry);
+                    setAdvanced(false);
+                  }
+                }}
+                onClick={(event) => {
+                  setChosen(entry);
+                  if (
+                    !replacement &&
+                    (event.detail === 0 || !input.consumeClick())
+                  ) {
+                    setAdvanced(false);
+                    input.choose(entry);
+                  }
+                }}
               >
                 <Image
                   src={thumbnailUrl(entry)}
@@ -267,14 +295,52 @@ export function CataloguePanel({
                   height={90}
                   unoptimized
                   alt=""
+                  draggable={false}
                 />
                 <strong>{entry.label}</strong>
                 <span>
                   {entry.size.width.default} × {entry.size.depth.default} mm
                 </span>
+                {!replacement && (
+                  <span
+                    className={styles.dragGrip}
+                    data-placement-grip
+                    title="Drag into the room"
+                    aria-hidden="true"
+                  >
+                    ⠿
+                  </span>
+                )}
               </button>
             ))}
           </div>
+          {chosen && !replacement && (
+            <details
+              className={styles.advancedPlacement}
+              open={advanced}
+              onToggle={(event) => {
+                const open = event.currentTarget.open;
+                if (open) placement.cancel();
+                setAdvanced(open);
+              }}
+            >
+              <summary>Advanced placement · {chosen.label}</summary>
+              {advanced && (
+                <PlacementForm
+                  key={chosen.id}
+                  entry={chosen}
+                  room={room}
+                  controller={controller}
+                  replacement={null}
+                  onDone={() => {
+                    setChosen(null);
+                    setAdvanced(false);
+                    onDone();
+                  }}
+                />
+              )}
+            </details>
+          )}
         </>
       )}
     </>

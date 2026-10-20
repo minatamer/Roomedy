@@ -425,6 +425,9 @@
   gap: 10px;
 }
 .studio .catalogueCard {
+  position: relative;
+  touch-action: pan-y;
+  cursor: grab;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -445,6 +448,36 @@
 .catalogueCard span {
   font-size: 10px;
   color: #6e5e4d;
+}
+.studio .catalogueCard[data-active='true'] {
+  border-color: #94623e;
+  background: #eee3d2;
+  box-shadow: inset 0 0 0 1px #94623e;
+}
+.catalogueCard .dragGrip {
+  align-self: flex-end;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -6px -6px -6px 0;
+  font-size: 24px;
+  touch-action: none;
+  cursor: grab;
+}
+.catalogueHelp {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #75614c;
+}
+.advancedPlacement {
+  margin-top: 18px;
+}
+.advancedPlacement > summary {
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+  font-size: 12px;
 }
 .coverage {
   list-style: none;

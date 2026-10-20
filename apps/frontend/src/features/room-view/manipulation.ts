@@ -67,7 +67,7 @@ function editable(state: SessionSnapshot) {
 /** Shared gesture lifetime only; callers still select their target and command kind. */
 export function beginRoomEdit(
   controller: SessionController,
-  id: string,
+  id: string | null,
   onRetire: () => void = () => {},
 ) {
   if (!controller.canEdit()) return null;

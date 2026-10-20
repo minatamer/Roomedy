@@ -1,5 +1,11 @@
 # Layout and useful space
 
+## Catalogue placement — RM-015AK
+
+Add a piece keeps the useful catalogue visible. Drag a card into the actual2D drawing or3D floor; a translucent physical footprint/box previews the proposed location. Valid/blocked feedback and Rotate/Cancel are temporary overlays and do not consume frame height. A valid release creates one Add with one Undo; an invalid inside release stays available for repositioning, while an outside release cancels. Catalogue source drags never move existing furniture or orbit the camera.
+
+Selecting a card arms the same placement for a room click or Arrow/R/Enter/Escape input. On stacked layouts it smoothly brings the room into view; a dedicated44px touch grip leaves the rest of the card scrollable/tappable. Exact position and size fields remain in collapsed Advanced placement. Explicit replacement retains its existing size/coordinate review. Work area without a desk opens desk-filtered choices; once a desk exists it retains the safe desk view. [Actual feature checks and limits](../validation/RM-015AK.md) remain separate from owner approval and physical touch evidence.
+
 ## Proposal decisions in chat — RM-015AJ
 
 Keep AI Apply/Cancel in the matching active assistant response with its actual affected objects and bounded change list. Old messages have no live decision controls; operation-bound handlers cannot resolve a newer candidate. The room keeps its full frame height. Manual palette previews retain their separate room-side controls. Read-only inspection points to Assistant, and the existing task tab restores the pending chat rather than forcing it open. Arrival focuses the decision row; successful resolution returns to the composer. Use wrapping44px targets and preserve the ordinary chat/preview motion and Send/keyboard behavior.

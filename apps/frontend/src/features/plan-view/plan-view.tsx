@@ -1,4 +1,11 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import type { PointerEvent, KeyboardEvent } from 'react';
 import type { Feature, Furniture } from '@roomedy/contracts/room';
 import {
@@ -15,6 +22,8 @@ import { roomSurface } from '@roomedy/contracts/surfaces';
 import { failureMessage } from '../room-editor/messages';
 import { nudgePosition, planBox, pointInPlan, snapPosition } from './adapter';
 import styles from '../room-editor/editor.module.css';
+import type { CataloguePlacement } from '../room-editor/catalogue-placement';
+import { CataloguePlanGhost } from '../room-editor/catalogue-placement-ui';
 import {
   beginWindowEdit,
   clampWindowOffset,
@@ -43,6 +52,8 @@ type WindowGesture = Pick<
   'pointerId' | 'clientX' | 'clientY' | 'target' | 'viewport' | 'viewBox'
 > & { edit: WindowEdit; grab: number };
 type Ghost = { id: string; x: number; z: number };
+const noSubscribe = () => () => {};
+const noEntry = () => null;
 function OrientedFootprint({
   item,
   selected,
@@ -84,10 +95,17 @@ function OrientedFootprint({
 export function PlanView({
   controller,
   state,
+  placement,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
+  placement?: CataloguePlacement;
 }) {
+  const adding = useSyncExternalStore(
+    placement?.subscribe ?? noSubscribe,
+    placement?.getEntry ?? noEntry,
+    noEntry,
+  );
   const svg = useRef<SVGSVGElement>(null),
     gesture = useRef<Gesture | null>(null),
     windowGesture = useRef<WindowGesture | null>(null);
@@ -95,7 +113,8 @@ export function PlanView({
   const [movementGhost, setGhost] = useState<Ghost | null>(null);
   const [windowGhost, setWindowGhost] = useState<WindowPosition | null>(null);
   const before = state.comparison === 'before',
-    readOnly = before || !!state.candidate || state.clientLoadFailure;
+    readOnly =
+      before || !!state.candidate || state.clientLoadFailure || !!adding;
   const ghost = readOnly ? null : movementGhost;
   const canonicalRoom = before
     ? state.workspace!.baseline
@@ -111,6 +130,19 @@ export function PlanView({
   const targetBox = planBox(room, view, comparisonFrame(state.workspace!));
   const [box, setBox] = useState(targetBox);
   const renderedBox = useRef(targetBox);
+  useEffect(() => {
+    const element = svg.current;
+    if (!placement || !element) return;
+    return placement.registerTarget({
+      element,
+      point: (client) =>
+        pointInPlan(
+          client,
+          element.getBoundingClientRect(),
+          renderedBox.current,
+        ),
+    });
+  }, [placement]);
   useEffect(() => {
     const from = renderedBox.current;
     const to = {
@@ -417,6 +449,7 @@ export function PlanView({
     <div className={styles.planWrap}>
       <svg
         ref={svg}
+        tabIndex={adding ? 0 : undefined}
         className={styles.plan}
         viewBox={`${box.x} ${box.z} ${box.width} ${box.depth}`}
         role="group"
@@ -805,6 +838,7 @@ export function PlanView({
             ? 'Depth unknown'
             : `${depth} mm · ${room.room.depth.status}`}
         </text>
+        {placement && <CataloguePlanGhost placement={placement} />}
       </svg>
       <div id={descriptionId} className={styles.announcement}>
         <p>
