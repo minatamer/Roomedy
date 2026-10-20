@@ -44,3 +44,23 @@ Owner removes the word confirmed from the two2D room dimension labels after74764
 8. `apps/frontend/src/features/plan-view/plan-view.tsx`
 
 Use scoped format/lint/frontend types and actual desktop/phone text inspection. No static-copy mirror test or repeated full suite/build for two presentation-only suffixes; previous root/build identity remains historical. Read-only review then exact local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned. No paid/live/config/delegation/new services/ports/push/deploy.
+
+## Window labels follow-up allocation —20 October2026
+
+Clean parent1e9176d. Owner extends2D opening names to windows. Share the opening-caption owner with doors, use Window parallel to its wall, preserve readable small-window captions within the room, missing geometry and all selection/drag/Undo authority. Caption follows the displayed window preview; disable caption interpolation during direct dragging. Include window names in existing bounded caption/previous-position overlap preferences. No canonical facts,3D/export, extra controls or services. Exact allocation before source edits:
+
+1. `AGENTS.md`
+2. `docs/README.md`
+3. `docs/ROOMEDY.md`
+4. `docs/tickets/README.md`
+5. `docs/tickets/RM-015BE-label-doors-and-adapt-plan-text.md`
+6. `docs/commit-plans/RM-015BE.md`
+7. `docs/validation/RM-015BE.md`
+8. `docs/design/layout.md`
+9. `apps/frontend/src/features/plan-view/plan-view.tsx`
+10. `apps/frontend/src/features/plan-view/adapter.ts`
+11. `test/plan.test.ts`
+
+Verify meaningful four-wall/small-window/unknown/nonmutation regressions; scoped format/lint/frontend/test types, actual2D label selection/window move/Undo and narrow fit. Read-only review then exact local checkpoint. Prior full-root/build evidence stays historical; no unnecessary whole-stack restart/build. Actual visual approval pending, Q held, guide paused, RM-016 Planned; no paid/live/config/delegation/new dependency/service/port/push/deploy.
+
+Native review reproduced a side-wall Window caption crossing Wardrobe. Correct within this allocation: preserve the inner position when clear; if any physical furniture footprint covers the caption, put it in the existing outer frame margin instead, away from dimension annotations. Keep its along-wall clamp and orientation, without moving room facts or adding a control. Four-wall regressions cover the fallback. This refines the earlier within-room preference after actual evidence.

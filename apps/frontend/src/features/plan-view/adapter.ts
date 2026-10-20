@@ -94,10 +94,10 @@ const within = (value: number, radius: number, edge: number) =>
   edge < radius * 2
     ? edge / 2
     : Math.max(radius, Math.min(edge - radius, value));
-/** Display-only door caption. Unknown pose/size never invents an opening. */
-export function planDoorLabel(
+/** Display-only opening caption. Unknown pose/size never invents an opening. */
+export function planOpeningLabel(
   room: RoomDocument,
-  feature: Extract<Feature, { kind: 'door' }>,
+  feature: Extract<Feature, { kind: 'door' | 'window' }>,
 ): PlanLabelLayout | null {
   const across =
     feature.wall === 'north' || feature.wall === 'south'
@@ -106,18 +106,33 @@ export function planDoorLabel(
   const band = wallBand(
     room,
     feature,
-    Math.min(feature.width.value ?? 700, 700, across ?? 700),
+    Math.min(
+      feature.kind === 'window' ? 400 : (feature.width.value ?? 700),
+      700,
+      across ?? 700,
+    ),
   );
   if (!band) return null;
-  const text = feature.purpose === 'bathroom' ? 'Bathroom Door' : 'Door',
-    layout = fitPlanText(
-      text,
-      band.maxX - band.minX,
-      band.maxZ - band.minZ,
-      160,
-    ),
+  const layout: PlanTextLayout =
+      feature.kind === 'window'
+        ? {
+            rotation:
+              feature.wall === 'east' || feature.wall === 'west' ? -90 : 0,
+            fontSize: Math.min(
+              160,
+              inset(Math.max(feature.width.value ?? 700, 700)) / 3.6,
+              inset(Math.min(400, across ?? 400)) / 1.15,
+            ),
+            lines: ['Window'],
+          }
+        : fitPlanText(
+            feature.purpose === 'bathroom' ? 'Bathroom Door' : 'Door',
+            band.maxX - band.minX,
+            band.maxZ - band.minZ,
+            160,
+          ),
     size = textSize(layout);
-  return {
+  const label: PlanLabelLayout = {
     ...layout,
     outside: false,
     x: within(
@@ -131,6 +146,36 @@ export function planDoorLabel(
       room.room.depth.value ?? 4800,
     ),
   };
+  if (
+    feature.kind === 'window' &&
+    room.furniture.some((item) => {
+      const r = footprint(item);
+      return (
+        r &&
+        label.x - size.width / 2 < r.maxX &&
+        label.x + size.width / 2 > r.minX &&
+        label.y - size.depth / 2 < r.maxZ &&
+        label.y + size.depth / 2 > r.minZ
+      );
+    })
+  )
+    return {
+      ...label,
+      outside: true,
+      x:
+        feature.wall === 'west'
+          ? -380
+          : feature.wall === 'east'
+            ? (room.room.width.value ?? 4200) + 200
+            : label.x,
+      y:
+        feature.wall === 'north'
+          ? -380
+          : feature.wall === 'south'
+            ? (room.room.depth.value ?? 4800) + 200
+            : label.y,
+    };
+  return label;
 }
 /** Fit inside the usable footprint, or choose one of four bounded nearby captions. */
 export function planLabelLayout(
@@ -186,18 +231,18 @@ export function planLabelLayout(
         .filter((other) => other.id !== item.id)
         .map(footprint)
         .filter((r) => !!r) ?? [],
-    doors =
+    openings =
       room?.room.features.flatMap((feature) => {
-        const door =
-          feature.kind === 'door' ? planDoorLabel(room, feature) : null;
-        if (!door) return [];
-        const extent = textSize(door);
+        const label =
+          feature.kind !== 'obstacle' ? planOpeningLabel(room, feature) : null;
+        if (!label) return [];
+        const extent = textSize(label);
         return [
           {
-            minX: door.x - extent.width / 2,
-            maxX: door.x + extent.width / 2,
-            minZ: door.y - extent.depth / 2,
-            maxZ: door.y + extent.depth / 2,
+            minX: label.x - extent.width / 2,
+            maxX: label.x + extent.width / 2,
+            minZ: label.y - extent.depth / 2,
+            maxZ: label.y + extent.depth / 2,
           },
         ];
       }) ?? [];
@@ -228,7 +273,7 @@ export function planLabelLayout(
     }
     const score =
       overlap(x, y, bounds) * 4 +
-      [...others, ...doors].reduce((sum, r) => sum + overlap(x, y, r), 0);
+      [...others, ...openings].reduce((sum, r) => sum + overlap(x, y, r), 0);
     if (score < best.score) best = { x, y, score };
     if (score === 0) break;
   }
@@ -268,7 +313,8 @@ export function planPreviousLabelVisible(
   )
     return false;
   return !room.room.features.some((feature) => {
-    const label = feature.kind === 'door' ? planDoorLabel(room, feature) : null;
+    const label =
+      feature.kind !== 'obstacle' ? planOpeningLabel(room, feature) : null;
     if (!label) return false;
     const size = textSize(label);
     return overlaps({

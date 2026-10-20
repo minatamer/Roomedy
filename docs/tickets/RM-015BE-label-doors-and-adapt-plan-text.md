@@ -10,3 +10,7 @@ Status: **Locally implemented and validated; actual owner visual approval pendin
 ## Dimension copy follow-up —20October2026
 
 - [x] Owner removes confirmed from both2D room dimensions after74764b4. Show value/mm for confirmed measurements, retain unknown/other uncertainty wording and semantic provenance. Shared renderer covers accepted/preview/restored views. Scoped format/lint/frontend types and actual desktop/phone pass; [current receipt](../validation/RM-015BE.md#dimension-copy-follow-up--20october2026). No fresh full-root/build claim; actual visual approval pending.
+
+## Window labels follow-up —20October2026
+
+- [x] Placed windows say Window parallel to their wall; small widths retain readable captions. Unknown geometry stays unplaced. Furniture overlap uses an outer frame-margin caption, with shared opening selection, displayed drag tracking and Undo retained. Scoped checks,67 focused tests and actual desktop/phone observations pass; [current receipt](../validation/RM-015BE.md#window-labels-follow-up--20october2026). No fresh root/build claim; actual visual approval pending.

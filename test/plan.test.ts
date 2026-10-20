@@ -4,7 +4,7 @@ import {
   nudgePosition,
   planBox,
   planLabelLayout,
-  planDoorLabel,
+  planOpeningLabel,
   fitPlanText,
   planFurnitureName,
   planPreviousLabelVisible,
@@ -15,6 +15,7 @@ import {
   commandRoom,
   piece,
   door,
+  windowFeature,
   known,
   unknown,
 } from './fixtures/command-room.js';
@@ -317,6 +318,82 @@ describe('adaptive whole-word plan labels', () => {
   );
 });
 
+describe('wall-aligned window captions', () => {
+  it.each(['north', 'east', 'south', 'west'] as const)(
+    'keeps small and ordinary windows readable at both ends of the %s wall',
+    (wall) => {
+      for (const width of [300, 1200])
+        for (const offset of [0, 10000 - width]) {
+          const feature = {
+              ...windowFeature(),
+              wall,
+              width: known(width),
+              offset: known(offset),
+            },
+            room = commandRoom([], [feature]),
+            before = structuredClone(room),
+            layout = planOpeningLabel(room, feature)!;
+          expect(layout.lines).toEqual(['Window']);
+          expect(layout.fontSize).toBe(160);
+          expect(layout.rotation).toBe(
+            wall === 'east' || wall === 'west' ? -90 : 0,
+          );
+          const halfAlong = (160 * 6 * 0.6) / 2,
+            halfAcross = (160 * 1.15) / 2,
+            xRadius = layout.rotation ? halfAcross : halfAlong,
+            yRadius = layout.rotation ? halfAlong : halfAcross;
+          expect(layout.x - xRadius).toBeGreaterThanOrEqual(0);
+          expect(layout.x + xRadius).toBeLessThanOrEqual(10000);
+          expect(layout.y - yRadius).toBeGreaterThanOrEqual(0);
+          expect(layout.y + yRadius).toBeLessThanOrEqual(10000);
+          expect(room).toEqual(before);
+        }
+    },
+  );
+  it('keeps windows with unknown opening geometry unplaced', () => {
+    const feature = windowFeature(),
+      room = commandRoom([], [feature]);
+    feature.offset = unknown();
+    expect(planOpeningLabel(room, feature)).toBeNull();
+    feature.offset = known(1000);
+    feature.width = unknown();
+    expect(planOpeningLabel(room, feature)).toBeNull();
+    feature.width = known(1000);
+    feature.wall = 'unknown';
+    expect(planOpeningLabel(room, feature)).toBeNull();
+  });
+  it.each(['north', 'east', 'south', 'west'] as const)(
+    'uses the clear frame margin when furniture covers the %s window caption',
+    (wall) => {
+      const feature = { ...windowFeature(), wall },
+        item = piece(
+          'near-window',
+          wall === 'west' ? 500 : wall === 'east' ? 9500 : 1500,
+          wall === 'north' ? 500 : wall === 'south' ? 9500 : 1500,
+          { width: 1000, depth: 1000 },
+        ),
+        room = commandRoom([item], [feature]),
+        before = structuredClone(room),
+        label = planOpeningLabel(room, feature)!;
+      expect(label.outside).toBe(true);
+      expect(label.x).toBeGreaterThan(-500);
+      expect(label.y).toBeGreaterThan(-500);
+      expect(label.x).toBeLessThan(10500);
+      expect(label.y).toBeLessThan(10500);
+      expect(
+        wall === 'west'
+          ? label.x < -180
+          : wall === 'east'
+            ? label.x > 10000
+            : wall === 'north'
+              ? label.y < -170
+              : label.y > 10000,
+      ).toBe(true);
+      expect(room).toEqual(before);
+    },
+  );
+});
+
 describe('purpose-aware door captions', () => {
   it.each(['north', 'east', 'south', 'west'] as const)(
     'names only the actual door on the %s wall for every mechanism/purpose',
@@ -336,7 +413,7 @@ describe('purpose-aware door captions', () => {
             },
             room = commandRoom([], [feature]),
             before = structuredClone(room),
-            layout = planDoorLabel(room, feature)!;
+            layout = planOpeningLabel(room, feature)!;
           expect(layout.lines.join(' ')).toBe(
             purpose === 'bathroom' ? 'Bathroom Door' : 'Door',
           );
@@ -353,15 +430,18 @@ describe('purpose-aware door captions', () => {
   it('wraps Bathroom Door and preserves unknown geometry instead of inventing a position', () => {
     const feature = { ...door(), purpose: 'bathroom' as const },
       room = commandRoom([], [feature]);
-    expect(planDoorLabel(room, feature)?.lines).toEqual(['Bathroom', 'Door']);
+    expect(planOpeningLabel(room, feature)?.lines).toEqual([
+      'Bathroom',
+      'Door',
+    ]);
     feature.offset = unknown();
-    expect(planDoorLabel(room, feature)).toBeNull();
+    expect(planOpeningLabel(room, feature)).toBeNull();
     feature.offset = structuredClone(door().offset);
     feature.width = unknown();
-    expect(planDoorLabel(room, feature)).toBeNull();
+    expect(planOpeningLabel(room, feature)).toBeNull();
     feature.width = structuredClone(door().width);
     feature.wall = 'unknown';
-    expect(planDoorLabel(room, feature)).toBeNull();
+    expect(planOpeningLabel(room, feature)).toBeNull();
   });
 });
 

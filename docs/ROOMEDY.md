@@ -1393,7 +1393,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of2D labels and the confirmed-dimension suffix removal. Follow-up scoped format/lint/frontend types and native desktop/phone checks pass; prior full-root/build proof stays historical. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
+Next action: Await actual owner visual review of2D window labels and earlier BE revisions. Window follow-up scoped format/lint/frontend/test types,67tests/2files and native desktop/phone selection/drag/Undo checks pass. Prior full-root/build proof stays historical. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
 Active ticket: RM-015BE
 Phase prompts: manual approval before each phase
 Local commits approved: yes
@@ -1419,7 +1419,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T17:51:22+00:00",
+  "updated_at": "2026-10-20T17:59:27+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1609,7 +1609,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
   "active_ticket": "RM-015BE",
-  "next_action": "Await actual owner visual review of2D labels and the confirmed-dimension suffix removal. Follow-up scoped format/lint/frontend types and native desktop/phone checks pass; prior full-root/build proof stays historical. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
+  "next_action": "Await actual owner visual review of2D window labels and earlier BE revisions. Window follow-up scoped format/lint/frontend/test types,67tests/2files and native desktop/phone selection/drag/Undo checks pass. Prior full-root/build proof stays historical. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2096,14 +2096,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015BC.md",
         "docs/validation/RM-015BD.md",
         "docs/validation/RM-015BE.md",
-        "docs/validation/RM-015BE.md#dimension-copy-follow-up--20october2026"
+        "docs/validation/RM-015BE.md#dimension-copy-follow-up--20october2026",
+        "docs/validation/RM-015BE.md#window-labels-follow-up--20october2026"
       ],
       "blockers": [],
       "approval": {
-        "quote": "you dont have to add the word confirmed to the dimensions, remove that",
-        "source": "human:current-chat/2026-10-20/remove-confirmed-dimension-copy",
-        "scope": "RM-015BE dimension copy follow-up only; no visual approval",
-        "recorded_at": "2026-10-20T17:49:04+00:00"
+        "quote": "windows aswell try to label them",
+        "source": "human:current-chat/2026-10-20/window-plan-labels",
+        "scope": "RM-015BE2D window captions follow-up only; no visual approval",
+        "recorded_at": "2026-10-20T17:53:41+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2654,6 +2655,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/remove-confirmed-dimension-copy",
             "scope": "RM-015BE dimension copy follow-up only; no visual approval",
             "recorded_at": "2026-10-20T17:49:04+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "windows aswell try to label them",
+            "source": "human:current-chat/2026-10-20/window-plan-labels",
+            "scope": "RM-015BE2D window captions follow-up only; no visual approval",
+            "recorded_at": "2026-10-20T17:53:41+00:00"
           }
         }
       ]

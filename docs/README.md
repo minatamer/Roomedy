@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Window labels —20October:** Placed2D windows now say Window parallel to their wall, using the frame margin if furniture covers the inner caption. Existing selection/drag/Undo remain. [BE allocation](commit-plans/RM-015BE.md#window-labels-follow-up-allocation--20-october2026), [evidence](validation/RM-015BE.md#window-labels-follow-up--20october2026). Actual owner approval pending.
+
 **Dimension copy follow-up —20October:** Confirmed2D room dimensions show only their value and mm; unknown/other uncertainty wording remains. [BE allocation](commit-plans/RM-015BE.md#dimension-copy-follow-up-allocation--20-october2026), [evidence](validation/RM-015BE.md#dimension-copy-follow-up--20october2026). Scoped checks/native desktop and phone pass; no new root/build claim. Actual owner approval pending.
 
 **Adaptive2D names — RM-015BE:** Every placed door says Door or Bathroom Door from its own purpose. Furniture labels vary size, wrap whole words or turn sideways; thin/tiny pieces use nearby readable captions with front-arrow space. Previous-position overlays keep current names readable. [Ticket](tickets/RM-015BE-label-doors-and-adapt-plan-text.md), [allocation](commit-plans/RM-015BE.md), [evidence](validation/RM-015BE.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.

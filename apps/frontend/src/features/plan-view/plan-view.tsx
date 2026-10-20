@@ -29,7 +29,7 @@ import {
   nudgePosition,
   planBox,
   planLabelLayout,
-  planDoorLabel,
+  planOpeningLabel,
   planFurnitureName,
   planPreviousLabelVisible,
   pointInPlan,
@@ -120,11 +120,13 @@ function PlanLabel({
   layout,
   fill = '#302b25',
   halo = false,
+  moving = false,
   onSelect,
 }: {
   layout: PlanLabelLayout;
   fill?: string;
   halo?: boolean;
+  moving?: boolean;
   onSelect?: (() => void) | undefined;
 }) {
   return (
@@ -132,6 +134,7 @@ function PlanLabel({
       className={styles.pieceLabel}
       transform={`translate(${layout.x} ${layout.y}) rotate(${layout.rotation})`}
       fontSize={layout.fontSize}
+      style={moving ? { transition: 'none' } : undefined}
       aria-hidden="true"
       pointerEvents={onSelect ? 'visiblePainted' : 'none'}
       onPointerDown={
@@ -977,12 +980,15 @@ export function PlanView({
         {/* Keep opening names above preview and drag overlays. */}
         {room.room.features.map((feature) => {
           const layout =
-            feature.kind === 'door' ? planDoorLabel(room, feature) : null;
+            feature.kind !== 'obstacle'
+              ? planOpeningLabel(room, feature)
+              : null;
           return layout ? (
             <PlanLabel
               key={`label-${feature.id}`}
               layout={layout}
               halo
+              moving={!readOnly && arranging && windowGhost?.id === feature.id}
               onSelect={
                 !adding ? () => controller.select(feature.id) : undefined
               }
