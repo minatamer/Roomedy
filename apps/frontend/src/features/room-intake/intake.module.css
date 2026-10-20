@@ -676,22 +676,9 @@
 .photoOpen:hover img {
   transform: scale(1.025);
 }
-.photoOpen > span {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  display: block;
-  padding: 5px 8px;
-  border-radius: 20px;
-  background: #fff8e5e6;
-  color: #5d432d;
-  font-size: 10px;
-  box-shadow: 0 2px 8px #49321b12;
-}
 .photos .actions {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 34px 34px;
-  gap: 4px;
+  grid-template-columns: minmax(0, 1fr);
 }
 .photos .actions button {
   padding: 6px 3px;

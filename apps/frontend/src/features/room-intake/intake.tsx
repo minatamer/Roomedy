@@ -84,9 +84,7 @@ export function Intake({
     try {
       const photos = await loadExamplePhotos(abort.signal);
       if (abort.signal.aborted) return;
-      photos.forEach((photo, i) =>
-        controller.addPhotos([photo], EXAMPLE_PHOTOS[i]!.purpose),
-      );
+      controller.addPhotos(photos, 'auto');
     } catch {
       if (!abort.signal.aborted)
         controller.notify(
@@ -263,7 +261,6 @@ export function Intake({
                                       alt={`Local preview of photo ${index + 1}`}
                                       unoptimized
                                     />
-                                    <span aria-hidden="true">View ↗</span>
                                   </button>
                                 ) : (
                                   <p
@@ -294,24 +291,6 @@ export function Intake({
                                   }
                                 >
                                   Remove photo {index + 1}
-                                </button>
-                                <button
-                                  disabled={index === 0}
-                                  aria-label={`Move photo ${index + 1} earlier`}
-                                  onClick={() =>
-                                    controller.photos.reorder(photo.id, -1)
-                                  }
-                                >
-                                  ↑
-                                </button>
-                                <button
-                                  disabled={index === state.photos.length - 1}
-                                  aria-label={`Move photo ${index + 1} later`}
-                                  onClick={() =>
-                                    controller.photos.reorder(photo.id, 1)
-                                  }
-                                >
-                                  ↓
                                 </button>
                               </div>
                             </li>
@@ -431,7 +410,6 @@ export function Intake({
                                 alt={example.label}
                                 unoptimized
                               />
-                              <span aria-hidden="true">View ↗</span>
                             </button>
                             <figcaption>{example.label}</figcaption>
                           </figure>
@@ -441,7 +419,8 @@ export function Intake({
                         disabled={
                           examplesBusy ||
                           state.recognition !== 'idle' ||
-                          state.photos.length > 4
+                          state.photos.length + EXAMPLE_PHOTOS.length >
+                            availability.limits.photos
                         }
                         aria-busy={examplesBusy}
                         onClick={() => void addExamples()}
