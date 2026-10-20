@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Chat hint removed — RM-015BC:** Removed the composer keyboard-help line and its unused style; Send stays right aligned. Enter/Shift+Enter/composition and chat behavior remain. [Ticket](tickets/RM-015BC-remove-chat-keyboard-hint.md), [allocation](commit-plans/RM-015BC.md), [evidence](validation/RM-015BC.md). Scoped format/lint/frontend types and actual desktop/phone checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Selection-driven arranging — RM-015BB:** Explore view/Arrange room buttons and independent mode state are removed. Selecting furniture enables direct editing; clearing selection restores navigation. Selected windows retain wall editing. Empty floor/background or scoped Escape clears selection safely; Medy follows the same selection behavior. [Ticket](tickets/RM-015BB-use-selection-to-arrange.md), [allocation](commit-plans/RM-015BB.md), [evidence](validation/RM-015BB.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Fitting2D furniture labels — RM-015BA:** Whole names turn sideways when a tall narrow footprint lacks horizontal space; names that fit stay horizontal. Shared bounded type fitting preserves TV captions, unknown fallback, front/selection/physical geometry and commands. [Ticket](tickets/RM-015BA-fit-plan-labels-to-furniture.md), [allocation](commit-plans/RM-015BA.md), [evidence](validation/RM-015BA.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.

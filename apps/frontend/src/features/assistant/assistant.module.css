@@ -200,13 +200,8 @@
 .composer > div {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
-}
-.composer small {
-  font-size: 9px;
-  line-height: 1.4;
-  color: #746654;
 }
 .composer button {
   background: #70523b;

@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Chat hint removed — RM-015BC:** Removed the composer keyboard-help line and its unused style; Send stays right aligned. Enter/Shift+Enter/composition and chat behavior remain. [Ticket](tickets/RM-015BC-remove-chat-keyboard-hint.md), [allocation](commit-plans/RM-015BC.md), [evidence](validation/RM-015BC.md). Scoped format/lint/frontend types and actual desktop/phone checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Selection-driven arranging — RM-015BB:** Explore view/Arrange room buttons and independent mode state are removed. Selecting furniture enables direct editing; clearing selection restores navigation. Selected windows retain wall editing. Empty floor/background or scoped Escape clears selection safely; Medy follows the same selection behavior. [Ticket](tickets/RM-015BB-use-selection-to-arrange.md), [allocation](commit-plans/RM-015BB.md), [evidence](validation/RM-015BB.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Fitting2D furniture labels — RM-015BA:** Whole names turn sideways when a tall narrow footprint lacks horizontal space; names that fit stay horizontal. Shared bounded type fitting preserves TV captions, unknown fallback, front/selection/physical geometry and commands. [Ticket](tickets/RM-015BA-fit-plan-labels-to-furniture.md), [allocation](commit-plans/RM-015BA.md), [evidence](validation/RM-015BA.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
@@ -1387,8 +1389,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of validated selection-driven editing and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
-Active ticket: RM-015BB
+Next action: Await actual owner visual feedback on validated composer hint removal and earlier corrections; Q held, guide goal paused, RM-016 Planned. No paid/live/delegation/push/deploy.
+Active ticket: RM-015BC
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1413,7 +1415,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T16:56:53+00:00",
+  "updated_at": "2026-10-20T16:59:33+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1602,8 +1604,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015BB",
-  "next_action": "Await actual owner visual review of validated selection-driven editing and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
+  "active_ticket": "RM-015BC",
+  "next_action": "Await actual owner visual feedback on validated composer hint removal and earlier corrections; Q held, guide goal paused, RM-016 Planned. No paid/live/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2086,14 +2088,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AY.md",
         "docs/validation/RM-015AZ.md",
         "docs/validation/RM-015BA.md",
-        "docs/validation/RM-015BB.md"
+        "docs/validation/RM-015BB.md",
+        "docs/validation/RM-015BC.md"
       ],
       "blockers": [],
       "approval": {
-        "quote": "explore view and arrange room is not intuitive; if a furnite is selected that means we are in arrange room mode, if no furniture is slected we are in explore view mode; remove the cta's for thos",
-        "source": "human:current-chat/2026-10-20/selection-arrange",
-        "scope": "RM-015BB selection-driven interaction only; no visual approval",
-        "recorded_at": "2026-10-20T16:46:39+00:00"
+        "quote": "remove this text [attached Enter to send · Shift+Enter for a new line composer hint]",
+        "source": "human:current-chat/2026-10-20/remove-chat-hint",
+        "scope": "RM-015BC composer hint only; no visual approval",
+        "recorded_at": "2026-10-20T16:57:59+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2599,6 +2602,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/selection-arrange",
             "scope": "RM-015BB selection-driven interaction only; no visual approval",
             "recorded_at": "2026-10-20T16:46:39+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "remove this text [attached Enter to send · Shift+Enter for a new line composer hint]",
+            "source": "human:current-chat/2026-10-20/remove-chat-hint",
+            "scope": "RM-015BC composer hint only; no visual approval",
+            "recorded_at": "2026-10-20T16:57:59+00:00"
           }
         }
       ]

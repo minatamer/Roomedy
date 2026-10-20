@@ -472,7 +472,6 @@ export function Assistant({
           }}
         />
         <div>
-          <small>Enter to send · Shift+Enter for a new line</small>
           <button
             type="submit"
             disabled={!state.draft.trim()}

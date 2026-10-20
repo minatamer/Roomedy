@@ -1,6 +1,8 @@
 # Roomedy ticket plan
 
-Current owner correction: [RM-015BB — Use selection to arrange](RM-015BB-use-selection-to-arrange.md). Remove Explore/Arrange CTAs/state; select to edit, clear to navigate, with selected-window and Medy parity. Locally validated:847tests/56files,7 boundaries, both builds and actual2D/3D/drag/Undo/Escape/Medy/phone observations; actual owner approval pending, Q held, guide paused, RM-016 Planned.
+Current owner correction: [RM-015BC — Remove chat keyboard hint](RM-015BC-remove-chat-keyboard-hint.md). Shared composer hint removed, Send right aligned, keyboard behavior retained. Scoped format/lint/frontend types and actual desktop/phone checks pass; prior BB full gate stays historical. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
+Previous owner correction: [RM-015BB — Use selection to arrange](RM-015BB-use-selection-to-arrange.md). Remove Explore/Arrange CTAs/state; select to edit, clear to navigate, with selected-window and Medy parity. Locally validated:847tests/56files,7 boundaries, both builds and actual2D/3D/drag/Undo/Escape/Medy/phone observations; actual owner approval pending, Q held, guide paused, RM-016 Planned.
 
 Previous owner correction: [RM-015BA — Fit plan labels to furniture](RM-015BA-fit-plan-labels-to-furniture.md). Whole words rotate along tall narrow footprints when needed; short names and TV captions remain horizontal. Locally validated:843 tests/56files,7 boundaries, both builds and actual rotation/Undo/zoom/short/phone observations; owner approval pending; Q held, guide paused, RM-016 Planned.
 
