@@ -33,7 +33,8 @@ export function Assistant({
     room = roomState.workspace!.current,
     preview = roomState.candidate;
   useEffect(() => {
-    end.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (state.messages.length > 0)
+      end.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [state.messages.length, state.busy]);
   const previewOperation =
     preview?.source === 'assistant' ? preview.identity.operationId : null;

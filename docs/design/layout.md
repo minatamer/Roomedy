@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Medy chat reading size — RM-015AY follow-up
+
+Use15px conversation/welcome paragraphs with1.65 line height,16px composer text and13px supporting goals/suggestions/proposal/card controls. Subordinate identity/status/card metadata stays12px. Scope paragraph and card selectors above generic inspector styles; never enlarge unrelated inspector text to repair the chat. Keep existing right visitor/plain left assistant alignment and typeface. Empty welcome starts at the top; smooth end scrolling begins only with actual conversation messages. Preserve finite scrollable history, natural empty-phone flow and reachable44px Send/proposal targets.
+
 ## Room-tool navigation capsule — 20 October2026
 
 Group Furniture/Room/Medy above the right panel in one translucent oat capsule with a thin highlight and restrained shadow; no added backdrop blur. Three equal44px buttons use small decorative furniture/room outlines and the existing Medy sparkle. One cocoa pseudo-element slides between positions with cream selected labels; inactive text/hover and inset focus remain readable. Keep the bounded header68px by balancing its vertical padding. Existing narrow layout gives the capsule a full-width second row with readable labels; do not let hidden Checks/replay controls create a fourth slot.

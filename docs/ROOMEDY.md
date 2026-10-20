@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Medy chat typography —20October:** Conversation and welcome text use15px/24.75px line spacing, supporting controls13px and composer16px. Scoped rules prevent the surrounding inspector from shrinking chat paragraphs/cards. Empty chat starts at its greeting; real conversations retain smooth latest-message scrolling. [AY allocation](commit-plans/RM-015AY.md#chat-typography-follow-up-allocation--20-october2026), [evidence](validation/RM-015AY.md#chat-typography-follow-up--20-october2026). Scoped checks and native desktop/short/phone observations pass; actual owner visual approval pending.
+
 **Room-tool navigation —20October:** Furniture/Room/Medy share one oat capsule with decorative icons and a sliding cocoa selection. Parent tools stay active in furniture/catalogue or opening inspectors; actual panel/selection authority is unchanged. [AZ allocation](commit-plans/RM-015AZ.md#room-tool-design-follow-up-allocation--20-october2026), [evidence](validation/RM-015AZ.md#room-tool-design-follow-up--20-october2026).47focused tests, scoped checks and native desktop/short/tablet/phone observations pass; actual owner approval pending.
 
 **Inspector preview spacing —20October:** The shared3D preview section now uses12px between its heading/action and20px before the following field, keeping44px controls. Doors and furniture agree without extra empty2D space. [AU allocation](commit-plans/RM-015AU.md#preview-spacing-follow-up-allocation--20-october2026), [evidence](validation/RM-015AU.md#preview-spacing-follow-up--20-october2026). Scoped checks/native desktop/short/phone observations pass; actual owner approval pending.
@@ -1403,8 +1405,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner review of the redesigned Furniture/Room/Medy capsule and earlier visual changes. Scoped checks/native responsive/context observations pass; exact11-path local checkpoint authorized. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
-Active ticket: RM-015AZ
+Next action: Await owner visual review of Medy chat typography and the completed revision round; Q held, guide paused and RM-016 Planned.
+Active ticket: RM-015AY
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1429,7 +1431,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T19:25:24+00:00",
+  "updated_at": "2026-10-20T20:10:25+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1618,8 +1620,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AZ",
-  "next_action": "Await actual owner review of the redesigned Furniture/Room/Medy capsule and earlier visual changes. Scoped checks/native responsive/context observations pass; exact11-path local checkpoint authorized. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AY",
+  "next_action": "Await owner visual review of Medy chat typography and the completed revision round; Q held, guide paused and RM-016 Planned.",
   "phases": [
     {
       "id": "01-docs",
@@ -2113,14 +2115,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015BG.md — exact24-path automatic clear bathroom-door placement and same-wall2D/3D door gestures, keyboard, finite aperture motion, final shared guard, Medy and Undo. Actual tab60 desktop/short/phone Add/drag/nudge/rejection/Medy Apply/Undo checked; closed/reset viewport. Final925tests/58files/root/7boundaries/both builds,272inputs/3408992bytes/BUILD_ID4dbab73f47bd3bab5a13488c4841ab12eea0ee032ba4a33e775f88d7e771fe33,16reviewed source/test hashes and read-only revision clean. Measured existing doorway review preserved. Exact local checkpoint authorized; actual owner visual approval pending, Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015AP.md — top-right view-toggle follow-up after0db0786. Shared frame grid/subgrid keeps the single mounted animated2D/3D switch12px inside actual top/right at desktop/short/tablet/phone;44px targets, pointer/Enter/Space/focus and loading observations pass. Tablet anchor independently fixed; CSS/JSX format, scoped lint and frontend types pass. Full root/build/source proof is historical925-test parent, not newly claimed. Exact nine paths; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015AU.md — preview spacing follow-up after14a53da. Actual baseline14px heading/action and0px action/field; scoped shared group now12px/20px with44px button in desktop/short/phone door cards. Wardrobe next section retains24px, Open/Close and2D omission pass. CSS/component format, scoped lint/frontend types and nine-path read-only revision clean; no new full-suite/build identity claim. Exact local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AZ.md — room-tool design afterec6c287. One oat capsule/decorative icons/sliding cocoa surface,44px targets and preserved68px bounded header. Actual inspector/catalogue parent selection stays accurate without canonical state changes.47focused session/project-menu tests, scoped format/lint/frontend/test types, desktop/short/tablet/320/390 native context/keyboard/Project observations pass;11-path read-only revision clean. No new full-suite/build identity claim; actual owner approval pending, Q held, guide paused, RM-016 Planned."
+        "docs/validation/RM-015AZ.md — room-tool design afterec6c287. One oat capsule/decorative icons/sliding cocoa surface,44px targets and preserved68px bounded header. Actual inspector/catalogue parent selection stays accurate without canonical state changes.47focused session/project-menu tests, scoped format/lint/frontend/test types, desktop/short/tablet/320/390 native context/keyboard/Project observations pass;11-path read-only revision clean. No new full-suite/build identity claim; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
+        "docs/validation/RM-015AY.md#chat-typography-follow-up--20-october2026: scoped format/lint/frontend types; actual desktop/short/390/320 chat typography, scrolling, proposal Cancel and composer observations; exact9-path follow-up; owner visual approval pending."
       ],
       "blockers": [],
       "approval": {
-        "scope": "Restyle Furniture/Room/Medy navigation consistently with Roomedy and reflect its active inspector context; no actual visual approval",
-        "quote": "feels like these designs can be better to fit our page, figure something for them and do it",
-        "source": "human:current-chat/2026-10-20/room-tool-design",
-        "recorded_at": "2026-10-20T19:16:28+00:00"
+        "scope": "Improve Medy chat readability; actual visual approval remains pending",
+        "source": "human:current-chat/2026-10-20/medy-chat-typography",
+        "quote": "improve typography here, the text is a bit too small i bleive",
+        "recorded_at": "2026-10-20T20:05:17+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2734,6 +2737,15 @@ This checklist records local work. Human approvals and unresolved external check
             "quote": "feels like these designs can be better to fit our page, figure something for them and do it",
             "source": "human:current-chat/2026-10-20/room-tool-design",
             "recorded_at": "2026-10-20T19:16:28+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "scope": "Improve Medy chat readability; actual visual approval remains pending",
+            "source": "human:current-chat/2026-10-20/medy-chat-typography",
+            "quote": "improve typography here, the text is a bit too small i bleive",
+            "recorded_at": "2026-10-20T20:05:17+00:00"
           }
         }
       ]

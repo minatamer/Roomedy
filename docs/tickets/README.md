@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+**Medy chat typography —20October:** Conversation and welcome text use15px/24.75px line spacing, supporting controls13px and composer16px. Scoped rules prevent the surrounding inspector from shrinking chat paragraphs/cards. Empty chat starts at its greeting; real conversations retain smooth latest-message scrolling. [AY allocation](../commit-plans/RM-015AY.md#chat-typography-follow-up-allocation--20-october2026), [evidence](../validation/RM-015AY.md#chat-typography-follow-up--20-october2026). Scoped checks and native desktop/short/phone observations pass; actual owner visual approval pending.
+
 Latest AZ design correction afterec6c287 gives Furniture/Room/Medy one warm capsule, small icons and a sliding selected surface. Furniture/feature inspectors retain their correct parent highlight. [Eleven-path allocation](../commit-plans/RM-015AZ.md#room-tool-design-follow-up-allocation--20-october2026), [scoped/native evidence](../validation/RM-015AZ.md#room-tool-design-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 Latest AU spacing correction after14a53da separates3D preview headings/actions from following inspector fields. [Nine-path allocation](../commit-plans/RM-015AU.md#preview-spacing-follow-up-allocation--20-october2026), [scoped/native evidence](../validation/RM-015AU.md#preview-spacing-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.

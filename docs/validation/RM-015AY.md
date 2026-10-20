@@ -39,3 +39,30 @@ Initial root run passed format/lint/types,7 boundaries and827/829 tests, then st
 Repeated telemetry-disabled pnpm check passes format, lint, all types,7 executable boundaries, exact catalogue/material assets,829 tests/55 files and both builds, with unchanged tests/config/timeouts/source bytes. Final log .release/local-apps/run-20261020-ab0cdbf3/AY-check-complete.log.268 runtime inputs/3,371,633bytes; before/after inventories identical and production BUILD_ID equals4a116cbbfd6943ec50c505f03cf70d47e4ab84793d7c5a9a8f3c5034cfadcfa9. All10 executable/style hashes match the reviewed snapshot after the gate. Production artifact remains distinct from the hot-reloaded development app.
 
 Final read-only19-path closeout: **Meets ticket; no actionable findings**. Initial timeout disposition is confirmed by unchanged focused and complete reruns, without speculative performance/test changes. All allocated paths/current documentation, empty index and local targets checked before exact local checkpoint. Build-state helper returns visual review to awaiting_owner; no owner approval inferred. Q held, guide paused and RM-016 Planned. No key/config/mode, paid/live, delegation, new dependencies/services/ports, push or deploy. Temporary test tabs closed and viewport reset.
+
+## Chat typography follow-up — 20 October2026
+
+Clean parent e887867. Owner requests larger, improved typography in the supplied Medy greeting. Exact9 paths are allocated in the [follow-up plan](../commit-plans/RM-015AY.md#chat-typography-follow-up-allocation--20-october2026). This is a scoped chat correction after the earlier identity checkpoint, not a new assistant authority or provider revision.
+
+### Implementation and checks
+
+- Conversation/welcome15px with1.65 line height, composer16px/1.5, supporting goals/suggestions/actions/cards/change lists13px and subordinate copy12px. Explicit descendant paragraph/card selectors win over the outer12px inspector style. Other inspector typography remains unchanged.
+- Native inspection exposed an empty-chat mount scrolling125px beyond its greeting once larger content overflowed. The existing end-scroll effect now requires at least one message. Reopening empty Medy at desktop gave scrollTop0; a reloaded320px empty history also stayed0 with736px natural content height. Real new messages/proposals retain the same smooth scrolling/focus owner.
+- Prettier on the two allocated source files, ESLint on assistant.tsx and frontend `next typegen && tsc --noEmit` passed; log `.release/AY-type-checks.log`. Final CSS selector refinement passed Prettier again. No CSS mirror tests, full unit suite or production rebuild were run for this reversible presentation change. Prior925-test/two-build proof is historical, and its production input identity is no longer the current source.
+
+### Actual native observations
+
+Disposable in-app browser tab64, existing hot-reloaded4320, furnished manual room; configured fake assistant observed without provider-transfer copy and left unchanged. No key/config/provider dispatch, alternate server or paid action. Original user tab untouched; test tab closed and viewport reset.
+
+| Viewport | Actual observed behavior |
+| --- | --- |
+|1280×720| Empty greeting first after reopening, expanded goals, Enter greeting,15px/24.75px computed visitor and assistant paragraphs with right/left alignment,16px/24px composer; final panel client/scroll both652px, top0; full final screenshot inspected. |
+|1280×600| Expanded goals and Light & airy preview, readable changes and Apply/Cancel13px/44px targets; actual Cancel restores room and composer. History281px with635px proposal content, top354; after Cancel older/latest positions0/212. Object cards initially exposed a12px specificity override; independently confirmed and fixed, then measured13px on the same cards. |
+|390×844| Longer visitor request wraps inside its right bubble; plain response and real object cards retain readable text. History517px/content1071px, keyboard Home/End gives0/554. Root client/scroll widths both375px, no horizontal overflow; composer and inset Send remain reachable. |
+|320×568| History265px/content1195px, root client/scroll widths both305px. Shift+Enter retains `hello\nMedy`; visible Send posts it and yields real suggestions at13px/44px. Reload then empty Medy shows its greeting at top and natural-flow goal controls; focusing composer reaches it below the content. |
+
+Full final screenshot files (all under `C:/Users/minat/.codex/visualizations/2026/10/20/01a15835-0bd9-7d20-9601-faf2b8383623/`): `RM-015AY-chat-type-desktop.png`, `RM-015AY-chat-type-phone.png`, `RM-015AY-chat-type-320.png`. The short-height screenshot is an intermediate observation before the card specificity correction, not final candidate proof. Final desktop capture uses the complete tab screenshot, not a delta strip.
+
+### Read-only review and remaining gate
+
+Reviewed settled allocated source/docs against this follow-up, actual selector specificity, empty/latest scrolling and native evidence. No actionable findings remain; scoped typography and preserved interaction are covered. CSS cannot change canonical room, transport, history retention, storage or provider authority. IME/physical keyboard, physical-device touch/GPU, hosted/live behavior and a fresh full production build were not re-tested. Actual owner visual approval remains pending, Q held, guide paused, RM-016 Planned. Exact authorized local checkpoint only; no push/deploy/delegation/new dependencies/services/ports.
