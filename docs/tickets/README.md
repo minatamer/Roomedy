@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+Latest AP correction after0db0786 moves the shared animated2D/3D toggle into the actual frame’s top right in both views, including wrapped tools. [Nine-path allocation](../commit-plans/RM-015AP.md#top-right-view-toggle-follow-up-allocation--20-october2026), [native/scoped evidence](../validation/RM-015AP.md#top-right-view-toggle-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 Current owner correction: [RM-015BG — Place and move doors](RM-015BG-place-and-move-doors.md). Automatic clear bathroom-door Add and same-wall2D/3D door gestures/keyboard/Undo share final placement checks and Medy authority. [Allocation](../commit-plans/RM-015BG.md), [receipt](../validation/RM-015BG.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 
 Previous checkpoint: [RM-015BF — Window sizes and paired balcony doors](RM-015BF-window-size-presets-and-balcony-doors.md). Shared editable opening presets, paired glass doors at the room boundary, preserved evidence/commands/Undo and Medy/2D/3D/export parity. Focused168tests/5files, native feature observations and final pnpm check pass902tests/57files,7boundaries and both builds; exact271-input/BUILD_ID identity. Actual owner approval pending, Q held, guide paused, RM-016 Planned.

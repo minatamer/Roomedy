@@ -677,7 +677,7 @@ export function Editor({
               <CutawayBoundary
                 onFailure={() => controller.clientPartFailed()}
                 fallback={
-                  <>
+                  <div className={controlsStyles.stage}>
                     <p role="status">
                       The cutaway could not load. Continue editing in the plan.
                     </p>
@@ -686,19 +686,19 @@ export function Editor({
                       state={state}
                       arranging={arranging}
                     />
-                  </>
+                  </div>
                 }
               >
                 <Suspense
                   fallback={
-                    <>
+                    <div className={controlsStyles.stage}>
                       <p role="status">Opening the cutaway…</p>
                       <PlanView
                         controller={controller}
                         state={state}
                         arranging={arranging}
                       />
-                    </>
+                    </div>
                   }
                 >
                   <Cutaway

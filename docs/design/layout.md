@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Top-right room view control —20October2026
+
+Latest owner feedback moves the single mounted animated2D/3D toggle from bottom right to12px inside the actual frame’s top and right edges. Use shared view-stage grid/subgrid rows for toolbar/frame and the existing actual-column rail breakpoint, so wrapped navigation does not become its anchor. The toggle overlays the frame cell and keeps its44px buttons, visible focus and canonical view owner across plan/cutaway/lazy/error content. Keep existing natural phone flow and physical room geometry; no count or extra control returns.
+
 ## Opening size presets — RM-015BF
 
 Place Size preset near the selected window/balcony-door title, using one shared width/height registry and the existing native select style. Show current matching size or Custom/current size; existing numeric fields remain the custom editor. Applying a preset uses one command, estimates only changed axes and preserves sill/offset/wall/mechanism and unchanged evidence. Balcony doors are paired glazing in the existing wall, not a new room/exterior. Room offers Add balcony doors beside existing opening actions. Keep door protection, removable windows and reachable narrow/short inspector controls. Sliding mechanisms omit their irrelevant hinge form.

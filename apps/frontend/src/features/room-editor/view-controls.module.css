@@ -29,16 +29,27 @@
 }
 .viewStage {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
   flex: 1;
   min-width: 0;
   min-height: 0;
 }
+.viewStage > .stage {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+  grid-area: 1 / 1 / -1 / -1;
+  gap: inherit;
+}
 .frameControls {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
+  position: relative;
+  grid-area: 2 / 1;
+  align-self: start;
+  justify-self: end;
+  margin: 12px;
   z-index: 2;
   padding: 4px;
   border: 1px solid #ddd0bd;
@@ -90,6 +101,14 @@
 @media (min-width: 900px) and (min-height: 600px),
   (min-width: 760px) and (min-height: 801px) {
   @container (min-width: 620px) {
+    .viewStage {
+      grid-template-columns: 190px minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr);
+      gap: 20px;
+    }
+    .frameControls {
+      grid-area: 1 / 2;
+    }
     .stage {
       display: grid;
       grid-template-columns: 190px minmax(0, 1fr);

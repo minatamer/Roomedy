@@ -32,3 +32,10 @@ Owner requests one animated exclusive2D/3D slot and removes the piece count. Thi
 - [x] One warm rounded track with a cocoa thumb sliding between2D/3D; two exclusive labelled44px buttons preserve pressed states and visible keyboard focus. Remove the count entirely.
 - [x] Keep the control mounted in one shared stage above changing2D/3D/loading/failure content. Canonical view state, including MEDY, remains the only selection owner. Preserve room geometry, existing tools and motion.
 - [x] Actual desktop/short/tablet/phone, pointer/Enter/Space/focus, loading and MEDY view-command observations recorded. Hover contrast corrected and re-observed. Final root/build/source and complete twelve-path read-only review results belong to the receipt. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
+## Top-right view toggle follow-up — 20 October2026
+
+Owner points to the2D/3D toggle and requests “top right corner for this is more intuittive”. This supersedes the historical bottom-right placement above. [Nine-path allocation](../commit-plans/RM-015AP.md#top-right-view-toggle-follow-up-allocation--20-october2026), [evidence](../validation/RM-015AP.md#top-right-view-toggle-follow-up--20-october2026).
+
+- [x] One mounted animated control sits12px inside the actual frame’s top/right edges in2D/3D. Shared grid rows and existing rail columns keep it out of wrapped tools; lazy/error plans retain the same anchor.
+- [x] Native desktop/short/tablet/phone2D/3D, Enter/Space/focus and44px targets inspected. Scoped format/lint/frontend types pass, with clean read-only revision and exact local checkpoint. Previous925-test/build gate remains historical; no new full-build/source identity claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.

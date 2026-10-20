@@ -91,3 +91,26 @@ Exact paths allocated before source edits:
 Retain an accessible visually hidden Room editor h1 and the existing focus ref for welcome/Undo/Delete/palette/Back-to-room focus returns. Preserve hidden Checks/comparison, tour targets/lifecycle, menu positioning, panel state and semantics. The studio grid measures the header's actual auto height and gives the remaining bounded viewport to the workspace; natural phone/short flow remains. Both2D/3D frames and right cards stretch together. Bounded Assistant uses its actual panel content height via a size container, independent of the animated motion shell, replacing the effective fixed viewport subtraction without creating observer feedback. Existing finite narrow chat and composer behavior remain. Preserve the preceding3D entrance overflow fix and active motion.
 
 Inspect actual before/after1280×720 geometry;2D/3D, inventory/catalogue/selected/Advanced/Room/Assistant, Project open/close, selection/edit/Undo, hidden-heading focus, fresh tour Skip/target travel and narrow return/composer. Check responsive viewport/actual-column boundaries and short-height/narrow scrolling, no overlaps or horizontal overflow, frames/card alignment and fit after resize. Use no static label/CSS mirror tests. Run one settled telemetry-disabled root/both-build/current-input gate, full eleven-path read-only validation, independent correction/revalidation as needed and exact authorized local checkpoint. Actual owner approval pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/dependency/service/port/push/deploy.
+
+## Top-right view toggle follow-up allocation — 20 October2026
+
+Clean parent0db0786. Latest owner screenshot/request: “top right corner for this is more intuittive”, pointing from the2D/3D toggle to the top right of the room frame. This explicitly supersedes the earlier bottom-right placement. Reuse the one shared mounted frame control in both views/loading/failure states; preserve the animated thumb, labels,44px targets, focus and canonical view selection.
+
+Exact initial eight paths allocated before the CSS edit:
+
+1. `docs/README.md`
+2. `docs/ROOMEDY.md`
+3. `docs/tickets/README.md`
+4. `docs/tickets/RM-015AP-align-the-studio-and-share-view-controls.md`
+5. `docs/commit-plans/RM-015AP.md`
+6. `docs/validation/RM-015AP.md`
+7. `docs/design/layout.md`
+8. `apps/frontend/src/features/room-editor/view-controls.module.css`
+
+Change only the shared frameControls vertical anchor from bottom12px to top12px, retaining right12px. Check actual desktop/short/tablet/phone2D/3D, switch/keyboard/focus and top/right bounds; no new per-view CSS, control, state or tests mirroring CSS. Scoped CSS formatting and native observations are appropriate to this reversible positioning correction; previous925-test/build proof remains historical, with no fresh full-suite/build identity claim. Review all eight paths read-only, fix/revalidate any findings and save the exact authorized local checkpoint. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+
+Before the responsive correction, allocate one additional path to this follow-up:
+
+9. `apps/frontend/src/features/room-editor/editor.tsx`
+
+Actual768px tablet inspection finds the shared viewStage includes the wrapped toolbar above the frame, so top12px on that outer stage overlaps tools. Replace the loose overlay anchor with shared CSS grid/subgrid rows: toolbar then frame, with the single mounted toggle over the frame cell; at the existing rail breakpoint it overlays the right frame column. Keep frame geometry, no JS measurements/timers, and preserve44px targets and animation. Wrap the two existing lazy/error plan fallbacks in the same stage owner so their status/plan use the same rows. This supersedes the initial one-line-only implementation plan. Add scoped frontend lint/type checks for the fallback markup; no full-suite/build claim for this reversible layout correction.
