@@ -246,6 +246,24 @@ export function Editor({
         >
           <Brand />
         </div>
+        <nav className={styles.toolRail} aria-label="Room tools">
+          {panels.map((panel) => (
+            <button
+              key={panel.id}
+              hidden={panel.id === 'checks'}
+              aria-pressed={view.panel === panel.id}
+              onClick={() => open(panel.id)}
+            >
+              {panel.label}
+            </button>
+          ))}
+          <AssistantTour
+            key={workspace.workspaceId}
+            controller={controller}
+            autoStart={automaticallyOfferTour(state)}
+            hideReplay
+          />
+        </nav>
         <div className={styles.headerActions}>
           <button
             className="glass-control"
@@ -278,27 +296,9 @@ export function Editor({
         </div>
       </header>
       <main id="main-content" className={styles.workspace}>
-        <nav className={styles.toolRail} aria-label="Room tools">
-          <h1 ref={headingRef} tabIndex={-1} className={styles.studioTitle}>
-            Design Studio
-          </h1>
-          {panels.map((panel) => (
-            <button
-              key={panel.id}
-              hidden={panel.id === 'checks'}
-              aria-pressed={view.panel === panel.id}
-              onClick={() => open(panel.id)}
-            >
-              {panel.label}
-            </button>
-          ))}
-          <AssistantTour
-            key={workspace.workspaceId}
-            controller={controller}
-            autoStart={automaticallyOfferTour(state)}
-            hideReplay
-          />
-        </nav>
+        <h1 ref={headingRef} tabIndex={-1} className={styles.announcement}>
+          Room editor
+        </h1>
         <section
           className={styles.canvasColumn}
           aria-label={before ? 'Before room' : 'Current room'}
