@@ -301,6 +301,15 @@
 .section:first-child {
   border: 0;
 }
+.openingPreview {
+  display: grid;
+  justify-items: start;
+  row-gap: 12px;
+  margin-bottom: 20px;
+}
+.panel .openingPreview h3 {
+  margin: 0;
+}
 .panel .quiet {
   border: 0;
   background: transparent;

@@ -6,3 +6,10 @@ Status: **Locally implemented and validated; actual owner visual approval pendin
 - [x] Hinged leaves pivot with handles, sliding leaves reveal an interior without crossing each other, cabinet animation uses the actual separate cloned door mesh, and procedural drawer parts extend/retract together. Current catalogue contains no drawer variant; support the existing drawer mechanism without inventing a new catalogue product.
 - [x] Finite interruptible motion runs from the visible position in the existing demand-rendered scene. Switching selection/panel/view, accepted edits, proposals and lifecycle changes retires the transient preview.2D, canonical dimensions/pose/evidence/checks, Undo, recovery and exports remain unchanged. No recurring warning/filler or new renderer/service/dependency.
 - [x] Actual desktop/short/narrow open/close/reversal/selection/view/loading observations, relevant deterministic motion/hinge/slide/rig/capability checks, one settled root/both-build/current-input gate and complete read-only review. Stage/commit exact owned paths under standing authority. Actual owner visual approval remains pending; Q held, guide paused, RM-016 Planned. No paid/live/key/config/delegation/new ports/push/deploy.
+
+## Preview spacing follow-up — 20 October2026
+
+Owner requests “fix the gaps here” in the3D preview/Open door/Door leads to area. [Nine-path allocation](../commit-plans/RM-015AU.md#preview-spacing-follow-up-allocation--20-october2026), [evidence](../validation/RM-015AU.md#preview-spacing-follow-up--20-october2026).
+
+- [x] Shared preview group has12px heading/action gap and20px separation before the next field; preserve44px content-width action and existing section dividers. Furniture’s adjacent section margin remains24px, without stacking an extra20px.
+- [x] Native desktop/short/phone door spacing, Open/Close, wardrobe preview and2D omission checked; scoped format/lint/frontend types and read-only revision pass. Exact local checkpoint; no new full-suite/build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.

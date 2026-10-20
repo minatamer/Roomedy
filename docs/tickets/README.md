@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+Latest AU spacing correction after14a53da separates3D preview headings/actions from following inspector fields. [Nine-path allocation](../commit-plans/RM-015AU.md#preview-spacing-follow-up-allocation--20-october2026), [scoped/native evidence](../validation/RM-015AU.md#preview-spacing-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 Latest AP correction after0db0786 moves the shared animated2D/3D toggle into the actual frame’s top right in both views, including wrapped tools. [Nine-path allocation](../commit-plans/RM-015AP.md#top-right-view-toggle-follow-up-allocation--20-october2026), [native/scoped evidence](../validation/RM-015AP.md#top-right-view-toggle-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 Current owner correction: [RM-015BG — Place and move doors](RM-015BG-place-and-move-doors.md). Automatic clear bathroom-door Add and same-wall2D/3D door gestures/keyboard/Undo share final placement checks and Medy authority. [Allocation](../commit-plans/RM-015BG.md), [receipt](../validation/RM-015BG.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.

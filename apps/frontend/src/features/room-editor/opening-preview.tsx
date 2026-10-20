@@ -11,7 +11,7 @@ export function OpeningPreview({
   onChange: (open: boolean) => void;
 }) {
   return (
-    <div className={styles.section}>
+    <div className={`${styles.section} ${styles.openingPreview}`}>
       <h3>3D preview</h3>
       <button aria-pressed={open} onClick={() => onChange(!open)}>
         {open ? capability.closeLabel : capability.openLabel}

@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Inspector opening-preview spacing — 20 October2026
+
+Use the shared preview section’s scoped grid gap of12px between heading and content-width Open/Close action, with20px after it before a following field. Reset only that heading margin; retain normal section divider/top padding and44px buttons. Adjacent section margins retain their existing spacing rather than adding together. Unsupported/2D previews stay absent and reserve no new space. Keep door, balcony/window and furniture inspector consumers consistent without changing unrelated forms or preview eligibility/state/motion.
+
 ## Top-right room view control —20October2026
 
 Latest owner feedback moves the single mounted animated2D/3D toggle from bottom right to12px inside the actual frame’s top and right edges. Use shared view-stage grid/subgrid rows for toolbar/frame and the existing actual-column rail breakpoint, so wrapped navigation does not become its anchor. The toggle overlays the frame cell and keeps its44px buttons, visible focus and canonical view owner across plan/cutaway/lazy/error content. Keep existing natural phone flow and physical room geometry; no count or extra control returns.

@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Inspector preview spacing —20October:** The shared3D preview section now uses12px between its heading/action and20px before the following field, keeping44px controls. Doors and furniture agree without extra empty2D space. [AU allocation](commit-plans/RM-015AU.md#preview-spacing-follow-up-allocation--20-october2026), [evidence](validation/RM-015AU.md#preview-spacing-follow-up--20-october2026). Scoped checks/native desktop/short/phone observations pass; actual owner approval pending.
+
 **Top-right view toggle —20October:** The shared animated2D/3D switch now sits12px inside the actual room frame’s top-right corner. Shared grid rows/rail columns keep it inside the frame when tools wrap above the room; existing lazy/error plans use the same layout. [AP allocation](commit-plans/RM-015AP.md#top-right-view-toggle-follow-up-allocation--20-october2026), [evidence](validation/RM-015AP.md#top-right-view-toggle-follow-up--20-october2026). Scoped checks and native desktop/short/tablet/phone observations pass; actual owner approval pending.
 
 **Clear door placement — RM-015BG:** Bathroom-door Add chooses the first clear wall position using actual furniture, obstacles and existing openings. Doors now slide on their current wall in2D/3D with keyboard alternatives, finite motion and Undo; final door pose commands recheck clearance. Medy uses the same placement and command authority. [Ticket](tickets/RM-015BG-place-and-move-doors.md), [exact24-path plan](commit-plans/RM-015BG.md), [evidence](validation/RM-015BG.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
@@ -1399,8 +1401,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner review of the top-right view toggle and earlier visual changes. Scoped checks/native responsive observations pass; exact local checkpoint authorized. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
-Active ticket: RM-015AP
+Next action: Await actual owner review of the preview spacing and earlier visual changes. Scoped checks/native observations pass; exact local AU follow-up checkpoint. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+Active ticket: RM-015AU
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1425,7 +1427,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T19:06:53+00:00",
+  "updated_at": "2026-10-20T19:12:05+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1614,8 +1616,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AP",
-  "next_action": "Await actual owner review of the top-right view toggle and earlier visual changes. Scoped checks/native responsive observations pass; exact local checkpoint authorized. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AU",
+  "next_action": "Await actual owner review of the preview spacing and earlier visual changes. Scoped checks/native observations pass; exact local AU follow-up checkpoint. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2107,14 +2109,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026",
         "docs/validation/RM-015BF.md",
         "docs/validation/RM-015BG.md — exact24-path automatic clear bathroom-door placement and same-wall2D/3D door gestures, keyboard, finite aperture motion, final shared guard, Medy and Undo. Actual tab60 desktop/short/phone Add/drag/nudge/rejection/Medy Apply/Undo checked; closed/reset viewport. Final925tests/58files/root/7boundaries/both builds,272inputs/3408992bytes/BUILD_ID4dbab73f47bd3bab5a13488c4841ab12eea0ee032ba4a33e775f88d7e771fe33,16reviewed source/test hashes and read-only revision clean. Measured existing doorway review preserved. Exact local checkpoint authorized; actual owner visual approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AP.md — top-right view-toggle follow-up after0db0786. Shared frame grid/subgrid keeps the single mounted animated2D/3D switch12px inside actual top/right at desktop/short/tablet/phone;44px targets, pointer/Enter/Space/focus and loading observations pass. Tablet anchor independently fixed; CSS/JSX format, scoped lint and frontend types pass. Full root/build/source proof is historical925-test parent, not newly claimed. Exact nine paths; actual owner approval pending, Q held, guide paused, RM-016 Planned."
+        "docs/validation/RM-015AP.md — top-right view-toggle follow-up after0db0786. Shared frame grid/subgrid keeps the single mounted animated2D/3D switch12px inside actual top/right at desktop/short/tablet/phone;44px targets, pointer/Enter/Space/focus and loading observations pass. Tablet anchor independently fixed; CSS/JSX format, scoped lint and frontend types pass. Full root/build/source proof is historical925-test parent, not newly claimed. Exact nine paths; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
+        "docs/validation/RM-015AU.md — preview spacing follow-up after14a53da. Actual baseline14px heading/action and0px action/field; scoped shared group now12px/20px with44px button in desktop/short/phone door cards. Wardrobe next section retains24px, Open/Close and2D omission pass. CSS/component format, scoped lint/frontend types and nine-path read-only revision clean; no new full-suite/build identity claim. Exact local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "scope": "Move the existing 2D/3D switch to the top right inside the room frame; no actual visual approval",
-        "source": "human:current-chat/2026-10-20/top-right-view-toggle",
-        "quote": "top right corner for this is more intuittive",
-        "recorded_at": "2026-10-20T18:59:41+00:00"
+        "quote": "fix the gaps here",
+        "scope": "Tidy spacing around the 3D preview action and following inspector fields; no visual approval",
+        "source": "human:current-chat/2026-10-20/preview-spacing",
+        "recorded_at": "2026-10-20T19:08:53+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2710,6 +2713,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/top-right-view-toggle",
             "quote": "top right corner for this is more intuittive",
             "recorded_at": "2026-10-20T18:59:41+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "fix the gaps here",
+            "scope": "Tidy spacing around the 3D preview action and following inspector fields; no visual approval",
+            "source": "human:current-chat/2026-10-20/preview-spacing",
+            "recorded_at": "2026-10-20T19:08:53+00:00"
           }
         }
       ]
