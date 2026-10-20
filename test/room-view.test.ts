@@ -33,6 +33,7 @@ import {
   createSurfaces,
   detailedParts,
   surfaceModel,
+  surfaceProperties,
 } from '../apps/frontend/src/features/room-view/surfaces.js';
 import {
   floorPlacement,
@@ -177,7 +178,7 @@ describe('finite close-up surface ownership and physical envelopes', () => {
       map.addEventListener('dispose', () => disposed++);
       other.addEventListener('dispose', () => otherDisposed++);
     }
-    expect(bytes).toBeLessThanOrEqual(2 * 1024 * 1024);
+    expect(bytes).toBeLessThanOrEqual(3 * 1024 * 1024);
     for (const key of ['hard', 'soft'] as const) {
       const g = a[key];
       g.computeBoundingBox();
@@ -269,6 +270,22 @@ describe('finite close-up surface ownership and physical envelopes', () => {
     });
     surfaces.fabric.addEventListener('dispose', () => texturesDisposed++);
     const instance = surfaceModel(source, surfaces);
+    let detailed = 0;
+    instance.object.traverse((node) => {
+      const mesh = node as unknown as {
+        material?: { name: string; normalMap: unknown; roughnessMap: unknown };
+      };
+      if (mesh.material?.name.toLowerCase().includes('carpet')) {
+        expect(mesh.material.normalMap).toBe(
+          surfaceProperties(surfaces.fabric).normalMap,
+        );
+        expect(mesh.material.roughnessMap).toBe(
+          surfaceProperties(surfaces.fabric).roughnessMap,
+        );
+        detailed++;
+      }
+    });
+    expect(detailed).toBeGreaterThan(0);
     expect(instance.object).not.toBe(source);
     expect(JSON.stringify(source.toJSON())).toBe(before);
     instance.dispose();

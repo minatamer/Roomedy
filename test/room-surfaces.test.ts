@@ -35,6 +35,7 @@ import {
   createSurfaces,
   roomSurfaceMap,
   createSurfaceBlend,
+  surfaceProperties,
 } from '../apps/frontend/src/features/room-view/surfaces.js';
 
 const take = (result: ReviewResult) => {
@@ -355,6 +356,8 @@ describe('owned textures, finite blending and export appearance', () => {
     blend.choose(roomSurfaceMap(maps, 'tile'));
     blend.advance(0.02);
     expect(mat.map).toBe(maps.tile);
+    expect(mat.normalMap).toBeNull();
+    expect(mat.roughnessMap).toBeNull();
     const first = shader.uniforms.roomedySurfaceMix!.value as number;
     expect(first).toBeGreaterThan(0);
     expect(first).toBeLessThan(1);
@@ -362,6 +365,8 @@ describe('owned textures, finite blending and export appearance', () => {
     blend.choose(maps.plaster);
     for (let i = 0; i < 40; i++) blend.advance(0.02);
     expect(mat.map).toBe(maps.plaster);
+    expect(mat.normalMap).toBe(surfaceProperties(maps.plaster).normalMap);
+    expect(mat.roughnessMap).toBe(surfaceProperties(maps.plaster).roughnessMap);
     expect(blend.advance(0.02)).toBe(false);
     expect(shader.uniforms.roomedySurfaceMix!.value).toBe(1);
     mat.dispose();

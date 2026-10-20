@@ -12,7 +12,12 @@ import {
 } from 'three';
 import type { Group } from 'three';
 import { proceduralParts } from '../room-view/representations/definitions';
-import { createSurfaces, detailedParts } from '../room-view/surfaces';
+import {
+  createSurfaces,
+  detailedParts,
+  surfaceProperties,
+  setSurfaceRepeat,
+} from '../room-view/surfaces';
 import type { Surfaces } from '../room-view/surfaces';
 import {
   advanceScroll,
@@ -115,19 +120,18 @@ function Choreography({
       const materials = {
           floor: new MeshStandardMaterial({
             color: '#d0af80',
-            map: surfaces.floor,
-            bumpMap: surfaces.floor,
+            ...surfaceProperties(surfaces.floor),
             bumpScale: 0.009,
             roughness: 0.82,
           }),
           north: new MeshStandardMaterial({
             color: '#e4d8c3',
-            map: surfaces.plaster,
+            ...surfaceProperties(surfaces.plaster),
             roughness: 0.9,
           }),
           west: new MeshStandardMaterial({
             color: '#ded0b9',
-            map: surfaces.plaster,
+            ...surfaceProperties(surfaces.plaster),
             roughness: 0.9,
           }),
           frame: new MeshStandardMaterial({ color: '#fff7e9' }),
@@ -138,27 +142,25 @@ function Choreography({
           }),
           pillow: new MeshStandardMaterial({
             color: '#efe5d4',
-            map: surfaces.fabric,
+            ...surfaceProperties(surfaces.fabric),
             roughness: 0.95,
           }),
           rug: new MeshStandardMaterial({
             color: '#dfcdb1',
-            map: surfaces.fabric,
+            ...surfaceProperties(surfaces.fabric),
             roughness: 1,
           }),
         },
         pieces = landingFurniture.map(({ color }) => ({
           wood: new MeshStandardMaterial({
             color,
-            map: surfaces.wood,
-            bumpMap: surfaces.wood,
+            ...surfaceProperties(surfaces.wood),
             bumpScale: 0.003,
             roughness: 0.65,
           }),
           fabric: new MeshStandardMaterial({
             color,
-            map: surfaces.fabric,
-            bumpMap: surfaces.fabric,
+            ...surfaceProperties(surfaces.fabric),
             bumpScale: 0.008,
             roughness: 0.95,
           }),
@@ -167,6 +169,7 @@ function Choreography({
         rug = new PlaneGeometry(2, 2.65),
         ground = new PlaneGeometry(100, 100),
         shadow = new ShadowMaterial({ transparent: true, opacity: 0.14 });
+      setSurfaceRepeat(surfaces.floor, 4.45 / 1.2, 5.05 / 1.2);
       return {
         surfaces,
         materials,
@@ -223,41 +226,37 @@ function Choreography({
       preparationStarted = performance.now();
     control.wake = invalidate;
     canvas.addEventListener('webglcontextlost', onLost);
-    void prepareLandingScene({
-      current: () => current,
-      upload: () => {
-        resources.windowGlass.prepare(gl);
-        for (const map of [
-          resources.surfaces.floor,
-          resources.surfaces.wood,
-          resources.surfaces.fabric,
-          resources.surfaces.plaster,
-        ])
-          gl.initTexture(map);
-      },
-      compile: () => gl.compileAsync(scene, camera),
-      warm: () => {
-        displayed.current = targetRef.current.progress;
-        present(displayed.current, 0, aspect.current);
-        gl.render(scene, camera);
-      },
-      ready: () => {
-        prepared.current = true;
-        entrance.current = 0;
-        const now = performance.now();
-        probe.current = {
-          previous: now,
-          moving: false,
-          intervals: [],
-          startup: [],
-          startupPrevious: now,
-          preparationMs: now - preparationStarted,
-        };
-        onReady();
-        invalidate();
-      },
-      failed: onLost,
-    });
+    void resources.surfaces.load().then(() =>
+      prepareLandingScene({
+        current: () => current,
+        upload: () => {
+          resources.windowGlass.prepare(gl);
+          for (const map of resources.surfaces.textures) gl.initTexture(map);
+        },
+        compile: () => gl.compileAsync(scene, camera),
+        warm: () => {
+          displayed.current = targetRef.current.progress;
+          present(displayed.current, 0, aspect.current);
+          gl.render(scene, camera);
+        },
+        ready: () => {
+          prepared.current = true;
+          entrance.current = 0;
+          const now = performance.now();
+          probe.current = {
+            previous: now,
+            moving: false,
+            intervals: [],
+            startup: [],
+            startupPrevious: now,
+            preparationMs: now - preparationStarted,
+          };
+          onReady();
+          invalidate();
+        },
+        failed: onLost,
+      }),
+    );
     return () => {
       current = false;
       prepared.current = false;

@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Free material detail — RM-015AS:** Photographed CC0 oak planks/veneer, linen and restrained plaster now enrich the existing shapes and finish colours. Four bounded local sets/eight PNGs total912,545bytes. Shared editor/landing/export ownership preserves final-size GPU storage, data colour spaces and procedural fallbacks. [Ticket](tickets/RM-015AS-add-free-photographic-material-detail.md), [34-path plan](commit-plans/RM-015AS.md), [research/provenance](references/material-research-2026-10-20.md), [actual evidence](validation/RM-015AS.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Single editor header,20October:** Removed the visible Design Studio title and raised Furniture/Room/Assistant into the brand/Undo/Project bar. Room and right cards use the released height; Assistant follows its actual panel. Narrow headers wrap naturally. [Eleven-path AP follow-up](commit-plans/RM-015AP.md#single-header-and-dynamic-working-height-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AP.md#single-header-and-dynamic-working-height-follow-up--20-october2026). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **3D entrance scrollbar correction,20October:** The room frame stays fixed while the existing entrance animates its inner Canvas host, eliminating transient room-column overflow. [Nine-path AP follow-up](commit-plans/RM-015AP.md#3d-entrance-scrollbar-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AP.md#3d-entrance-scrollbar-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -1365,8 +1367,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Owner reviews the consolidated editor header and dynamically filled room/right cards on existing4320/private4321. Exact eleven-path local checkpoint; actual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.
-Active ticket: RM-015AP
+Next action: Owner reviews the free oak/linen/plaster material detail on existing4320/private4321. Exact34-path local checkpoint; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/delegation/new dependencies/services/app ports/push/deploy.
+Active ticket: RM-015AS
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1391,7 +1393,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T11:05:30+00:00",
+  "updated_at": "2026-10-20T11:48:35+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1580,8 +1582,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AP",
-  "next_action": "Owner reviews the consolidated editor header and dynamically filled room/right cards on existing4320/private4321. Exact eleven-path local checkpoint; actual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.",
+  "active_ticket": "RM-015AS",
+  "next_action": "Owner reviews the free oak/linen/plaster material detail on existing4320/private4321. Exact34-path local checkpoint; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/delegation/new dependencies/services/app ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2053,14 +2055,15 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-015AB footer follow-up: docs/validation/RM-015AB.md; actual37px reclaimed/18settled responsive2D+3D observations/edit+Undo/reload/short+phone composer; final651tests/48files/seven boundaries/root/both builds/current232hashes/BUILD_ID e026073238defa4eabebf43ccc1e26f3b03375006537a68bb7ea6154431b0317; exact10-path local review/checkpoint; actual owner visual approval pending.",
         "RM-015AR: docs/validation/RM-015AR.md; fact-owned named access toasts/removed access regions/shared4s timer, native import/selection/resolution/Undo/2D+3D/five-size no-overlap checks, final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 07d5abf467318520133c68b62cee6c66e21e44e75ae4129d3309d9bb791f782c; exact15-path local review/checkpoint. Actual owner visual approval pending.",
         "RM-015AP scrollbar follow-up: docs/validation/RM-015AP.md; native5px transient overflow reproduced, same entrance retained inside stable clipped frame; five-size active switch samples without false overflow, actual properties scrolling/edit/Undo/rejection; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID c43cc5cb207d00e65dd270dd4f394d6a2e33735928076f4e27d7715822d6f262. Exact nine-path local review/checkpoint; actual owner visual approval pending.",
-        "RM-015AP single-header follow-up: docs/validation/RM-015AP.md; visible title/separate row removed, actual auto header/remaining room and card height/independent assistant panel sizing; native28 settled responsive states/tour/focus/menu/edit/Delete/Undo/chat/3D overflow checks; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 703a59bebb5cb4ed26f538f1c0dd4a773e0d2f701466f7ac911ec6deb8402c2e. Exact eleven-path local review/checkpoint; actual owner approval pending."
+        "RM-015AP single-header follow-up: docs/validation/RM-015AP.md; visible title/separate row removed, actual auto header/remaining room and card height/independent assistant panel sizing; native28 settled responsive states/tour/focus/menu/edit/Delete/Undo/chat/3D overflow checks; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 703a59bebb5cb4ed26f538f1c0dd4a773e0d2f701466f7ac911ec6deb8402c2e. Exact eleven-path local review/checkpoint; actual owner approval pending.",
+        "RM-015AS: docs/validation/RM-015AS.md; verified CC0 sources/eight local PNGs/912545bytes, stable bounded PBR material ownership/editor+landing+exports, actual before/after/responsive/finish+Undo/native downloads/all4PDF pages; final693tests/50files/seven boundaries/root/both builds/current245hashes/BUILD_ID 80a23557163f23aa8eeda19175aefb5a6b367ee280754a91dc7f69b5c43bbd44; clean34-path read-only pass1 and exact local checkpoint. Actual owner visual approval pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "Let's actually, like, not have design studio and push everything up so it matches with, like, the top bar. I know I marked as this, like you put them down, but it's more like raising everything up, right? And then obviously make the height of the cards, like, automatically, dynamically translate to fit the part that it's, you know, after, like, translation. You know what I mean?",
-        "source": "human:current-chat/2026-10-20/single-editor-header",
-        "scope": "RM-015AP follow-up: remove visible Design Studio, raise tabs to the header and dynamically fill the released working height. No overall visual approval.",
-        "recorded_at": "2026-10-20T10:56:38+00:00"
+        "quote": "Is there something that we could do to the textures of the furniture and the ground and the walls to make it better? It feels way too plain ... try to research if there are free assets that we can use ... improve the textures, go for it. Research, plan it thoroughly, and go for it.",
+        "source": "human:current-chat/2026-10-20/free-material-detail",
+        "scope": "RM-015AS: research, plan and implement free local material-detail improvements; no overall visual approval or new lighting feature.",
+        "recorded_at": "2026-10-20T11:16:06+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2467,6 +2470,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/single-editor-header",
             "scope": "RM-015AP follow-up: remove visible Design Studio, raise tabs to the header and dynamically fill the released working height. No overall visual approval.",
             "recorded_at": "2026-10-20T10:56:38+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "Is there something that we could do to the textures of the furniture and the ground and the walls to make it better? It feels way too plain ... try to research if there are free assets that we can use ... improve the textures, go for it. Research, plan it thoroughly, and go for it.",
+            "source": "human:current-chat/2026-10-20/free-material-detail",
+            "scope": "RM-015AS: research, plan and implement free local material-detail improvements; no overall visual approval or new lighting feature.",
+            "recorded_at": "2026-10-20T11:16:06+00:00"
           }
         }
       ]

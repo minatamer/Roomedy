@@ -5,8 +5,10 @@ import { createRequire } from 'node:module';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { CATALOGUE } from '@roomedy/spatial';
+import { checkSurfaceAssets } from './check-surface-assets.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+checkSurfaceAssets(root);
 const directory = path.join(root, 'apps/frontend/public/catalogue');
 const requireFrontend = createRequire(
   new URL('../apps/frontend/package.json', import.meta.url),

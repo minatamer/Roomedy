@@ -5,6 +5,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   Matrix3,
+  NoColorSpace,
   RepeatWrapping,
   RGBAFormat,
   SRGBColorSpace,
@@ -13,6 +14,29 @@ import type { Color, Material, Object3D } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import type { BoxPart, PhysicalSize } from './representations/definitions';
 import type { SurfaceTexture } from '@roomedy/contracts/surfaces';
+import { SurfaceAssets, SURFACE_ASSETS } from './surface-assets';
+import type { SurfaceIO } from './surface-assets';
+
+type DetailedMap = DataTexture & {
+  detail?: { normal: DataTexture; roughness: DataTexture };
+};
+
+export function surfaceProperties(map: DataTexture) {
+  const detail = (map as DetailedMap).detail;
+  return {
+    map,
+    bumpMap: detail ? null : map,
+    normalMap: detail?.normal ?? null,
+    roughnessMap: detail?.roughness ?? null,
+  };
+}
+
+/** Borrowed colour/data samplers share the same physical tile coordinates. */
+export function setSurfaceRepeat(map: DataTexture, x: number, y: number) {
+  const detail = (map as DetailedMap).detail;
+  for (const sampler of detail ? [map, detail.normal, detail.roughness] : [map])
+    sampler.repeat.set(x, y);
+}
 
 type Surface =
   'floor' | 'wood' | 'fabric' | 'plaster' | 'smooth' | 'tile' | 'concrete';
@@ -74,7 +98,23 @@ function texture(kind: Surface) {
           Math.round(Math.max(0, Math.min(255, value)));
       data[at + 3] = 255;
     }
-  const map = new DataTexture(data, edge, edge, RGBAFormat);
+  // WebGL storage dimensions are immutable after the first upload. Reserve the
+  // final local-asset size even while showing a procedural fallback.
+  const targetEdge =
+    SURFACE_ASSETS.find((asset) => asset.kind === kind)?.edge ?? edge;
+  let pixels = data;
+  if (targetEdge !== edge) {
+    pixels = new Uint8Array(targetEdge * targetEdge * 4);
+    for (let y = 0; y < targetEdge; y++)
+      for (let x = 0; x < targetEdge; x++) {
+        const source =
+          (Math.floor((y * edge) / targetEdge) * edge +
+            Math.floor((x * edge) / targetEdge)) *
+          4;
+        pixels.set(data.subarray(source, source + 4), (y * targetEdge + x) * 4);
+      }
+  }
+  const map = new DataTexture(pixels, targetEdge, targetEdge, RGBAFormat);
   map.name = `roomedy-${kind}`;
   map.wrapS = map.wrapT = RepeatWrapping;
   map.magFilter = LinearFilter;
@@ -88,8 +128,8 @@ function texture(kind: Surface) {
   return map;
 }
 
-/** Finite canvas-owned detail; no network, DOM canvas, randomness or global GPU cache. */
-export function createSurfaces() {
+/** Synchronous fallbacks, optional bounded local preparation, one scene-owned lifetime. */
+export function createSurfaces(io: SurfaceIO = {}) {
   const maps = {
     floor: texture('floor'),
     wood: texture('wood'),
@@ -99,14 +139,56 @@ export function createSurfaces() {
     tile: texture('tile'),
     concrete: texture('concrete'),
   };
+  maps.fabric.repeat.set(3, 3);
+  const companions: DataTexture[] = [];
+  for (const { kind, edge } of SURFACE_ASSETS) {
+    const neutral = (pixels: number[]) => {
+      const data = new Uint8Array(edge * edge * 4);
+      for (let at = 0; at < data.length; at += 4) data.set(pixels, at);
+      const map = new DataTexture(data, edge, edge, RGBAFormat);
+      map.wrapS = map.wrapT = RepeatWrapping;
+      map.magFilter = LinearFilter;
+      map.minFilter = LinearMipmapLinearFilter;
+      map.generateMipmaps = true;
+      map.anisotropy = 4;
+      map.colorSpace = NoColorSpace;
+      map.repeat.copy(maps[kind].repeat);
+      map.needsUpdate = true;
+      companions.push(map);
+      return map;
+    };
+    (maps[kind] as DetailedMap).detail = {
+      normal: neutral([128, 128, 255, 255]),
+      roughness: neutral([255, 255, 255, 255]),
+    };
+  }
+  let live = true;
+  const assets = new SurfaceAssets((kind, pixels) => {
+    if (!live) return;
+    const map = maps[kind],
+      detail = (map as DetailedMap).detail!;
+    for (const [target, data] of [
+      [map, pixels.color],
+      [detail.normal, pixels.normal],
+      [detail.roughness, pixels.roughness],
+    ] as const) {
+      target.image = { data, width: pixels.edge, height: pixels.edge };
+      target.needsUpdate = true;
+    }
+  }, io);
   const hard = new RoundedBoxGeometry(1, 1, 1, 1, 0.012);
   const soft = new RoundedBoxGeometry(1, 1, 1, 1, 0.1);
   return {
     ...maps,
     hard,
     soft,
+    textures: [...Object.values(maps), ...companions],
+    load: (signal?: AbortSignal) => assets.load(signal),
     dispose() {
-      for (const map of Object.values(maps)) map.dispose();
+      if (!live) return;
+      live = false;
+      assets.dispose();
+      for (const map of [...Object.values(maps), ...companions]) map.dispose();
       hard.dispose();
       soft.dispose();
     },
@@ -162,7 +244,7 @@ export function createSurfaceBlend(material: MeshStandardMaterial) {
           material.map.updateMatrix();
           previousTransform.value.copy(material.map.matrix);
         }
-        material.map = material.bumpMap = pending;
+        setSurfaceMap(material, pending);
         pending = null;
         material.needsUpdate = true;
         progress.value = 0;
@@ -180,7 +262,7 @@ export function setSurfaceMap(
   material: MeshStandardMaterial,
   map: DataTexture,
 ) {
-  material.map = material.bumpMap = map;
+  Object.assign(material, surfaceProperties(map));
   material.needsUpdate = true;
 }
 
@@ -239,8 +321,7 @@ export function surfaceModel(source: Object3D, surfaces: Surfaces) {
         material.roughness = 0.38;
       } else if (uv && (name.includes('wood') || name.includes('carpet'))) {
         const cloth = name.includes('carpet');
-        material.map = cloth ? surfaces.fabric : surfaces.wood;
-        material.bumpMap = material.map;
+        setSurfaceMap(material, cloth ? surfaces.fabric : surfaces.wood);
         material.bumpScale = cloth ? 0.0012 : 0.0004;
         material.roughness = cloth ? 0.95 : 0.65;
       }

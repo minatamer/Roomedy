@@ -218,6 +218,8 @@ export async function exportObj(
   try {
     check();
     projection = buildDesignScene(room, assets.ready);
+    await projection.prepareSurfaces(signal);
+    check();
     projection.prepareGlass();
     const files = await objFiles(projection.root, signal, check);
     const { zipSync } = await import('three/addons/libs/fflate.module.js');

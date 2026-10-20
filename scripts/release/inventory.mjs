@@ -17,6 +17,7 @@ const rootFiles = [
   'scripts/check-boundaries.mjs',
   'scripts/check-boundaries.test.mjs',
   'scripts/check-catalogue-assets.mjs',
+  'scripts/check-surface-assets.mjs',
   'scripts/run-tests.mjs',
   'scripts/isolated-mode.ts',
 ];

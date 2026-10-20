@@ -13,6 +13,7 @@ import { OrbitControls } from '@react-three/drei/core/OrbitControls';
 import {
   BoxGeometry,
   Color,
+  DataTexture,
   Group,
   Matrix4,
   MeshStandardMaterial,
@@ -50,10 +51,11 @@ import {
   detailedParts,
   setSurfaceMap,
   surfaceModel,
+  surfaceProperties,
+  setSurfaceRepeat,
 } from './surfaces';
 import type { Surfaces } from './surfaces';
 import { roomSurface } from '@roomedy/contracts/surfaces';
-import type { DataTexture } from 'three';
 import {
   advanceWindowOffset,
   roomWithWindowPreview,
@@ -102,11 +104,34 @@ function GraphicsLifecycle({
   onLost,
   onReady,
   openedAt,
-}: Pick<SceneProps, 'onLost' | 'onReady' | 'openedAt'>) {
+  surfaces,
+}: Pick<SceneProps, 'onLost' | 'onReady' | 'openedAt'> & {
+  surfaces: Surfaces;
+}) {
   const { gl, invalidate } = useThree();
   const frames = useRef(0);
+  const prepared = useRef(false);
+  useEffect(() => {
+    let live = true;
+    void surfaces
+      .load()
+      .then((result) => {
+        if (!live) return;
+        if (process.env.NODE_ENV === 'development')
+          gl.domElement.dataset.roomedyMaterials = JSON.stringify(result);
+        for (const map of surfaces.textures) gl.initTexture(map);
+        prepared.current = true;
+        invalidate();
+      })
+      .catch(() => {
+        if (live) onLost();
+      });
+    return () => {
+      live = false;
+    };
+  }, [surfaces, gl, invalidate, onLost]);
   useFrame(() => {
-    if (frames.current > 1) return;
+    if (!prepared.current || frames.current > 1) return;
     frames.current++;
     if (frames.current === 1) invalidate();
     else {
@@ -220,7 +245,11 @@ function OwnedStandard({
   return (
     <meshStandardMaterial
       {...props}
-      {...(initialMap ? { map: initialMap, bumpMap: initialMap } : {})}
+      {...(initialMap
+        ? surfaceProperties(initialMap)
+        : props.map instanceof DataTexture
+          ? surfaceProperties(props.map)
+          : {})}
       color={initialColor}
       ref={ref}
     />
@@ -692,8 +721,7 @@ function Walls({
     () =>
       new MeshStandardMaterial({
         color: initialColor,
-        map: initialMap,
-        bumpMap: initialMap,
+        ...surfaceProperties(initialMap),
         bumpScale: 0.0015,
         roughness: 0.94,
         transparent: true,
@@ -1027,22 +1055,19 @@ function Piece({
     () => ({
       frame: new MeshStandardMaterial({
         roughness: 0.67,
-        map: surfaces.wood,
-        bumpMap: surfaces.wood,
+        ...surfaceProperties(surfaces.wood),
         bumpScale: 0.0004,
       }),
       soft: new MeshStandardMaterial({
         color: '#eee5d5',
         roughness: 0.97,
-        map: surfaces.fabric,
-        bumpMap: surfaces.fabric,
+        ...surfaceProperties(surfaces.fabric),
         bumpScale: 0.0012,
       }),
       blanket: new MeshStandardMaterial({
         color: '#bc9475',
         roughness: 0.98,
-        map: surfaces.fabric,
-        bumpMap: surfaces.fabric,
+        ...surfaceProperties(surfaces.fabric),
         bumpScale: 0.0012,
       }),
       metal: new MeshStandardMaterial({
@@ -1319,7 +1344,7 @@ export function RoomScene(props: SceneProps) {
     return target;
   }, [bounds.width, bounds.depth]);
   useLayoutEffect(() => {
-    surfaces.floor.repeat.set(bounds.width / 1.12, bounds.depth / 2.8);
+    setSurfaceRepeat(surfaces.floor, bounds.width / 1.2, bounds.depth / 1.2);
   }, [surfaces, bounds.width, bounds.depth]);
   const shadowSpan = Math.max(bounds.width, bounds.depth) * 0.8 + 0.5;
   const walls = useMemo(
@@ -1338,6 +1363,7 @@ export function RoomScene(props: SceneProps) {
         onLost={props.onLost}
         onReady={onReady}
         openedAt={props.openedAt}
+        surfaces={surfaces}
       />
       {process.env.NODE_ENV === 'development' && (
         <DevelopmentProbe

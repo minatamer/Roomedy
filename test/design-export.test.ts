@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 const requireFrontend = createRequire(
@@ -39,7 +40,10 @@ import {
   portfolioFacts,
   measurement,
 } from '../apps/frontend/src/features/design-export/facts.js';
-import { buildDesignScene } from '../apps/frontend/src/features/design-export/scene.js';
+import {
+  buildDesignScene,
+  prepareGlbTextures,
+} from '../apps/frontend/src/features/design-export/scene.js';
 import { objFiles } from '../apps/frontend/src/features/design-export/obj.js';
 import { portfolioPdf } from '../apps/frontend/src/features/design-export/pdf.js';
 import { coverCrop } from '../apps/frontend/src/features/design-export/capture.js';
@@ -211,6 +215,116 @@ describe('canonical3D export projection', () => {
     expect(retired).toBe(1);
   });
 });
+describe('shared local export materials', () => {
+  it('retires partial GLB canvas copies on graphics failure and restores borrowed samplers', () => {
+    const scene = buildDesignScene(commandRoom([piece('desk')]));
+    const before = scene.root.toJSON();
+    const canvases: { width: number; height: number }[] = [];
+    let calls = 0;
+    try {
+      expect(() =>
+        prepareGlbTextures(scene.root, () => {
+          const target = {
+            width: 0,
+            height: 0,
+            getContext: () =>
+              ++calls === 2
+                ? null
+                : {
+                    createImageData: (w: number, h: number) => ({
+                      data: new Uint8ClampedArray(w * h * 4),
+                    }),
+                    putImageData: () => undefined,
+                  },
+          };
+          canvases.push(target);
+          return target as unknown as HTMLCanvasElement;
+        }),
+      ).toThrow('graphics');
+      expect(canvases.length).toBe(2);
+      expect(canvases.every((c) => c.width === 1 && c.height === 1)).toBe(true);
+      expect(scene.root.toJSON()).toEqual(before);
+    } finally {
+      scene.dispose();
+    }
+  });
+  it('prepares the same stable normal/roughness/albedo maps without altering room facts or geometry', async () => {
+    const room = commandRoom([piece('desk')]),
+      before = JSON.stringify(room);
+    const scene = buildDesignScene(room, new Map(), {
+      fetch: async (url) =>
+        new Response(
+          Uint8Array.from(readFileSync('apps/frontend/public' + String(url))),
+        ),
+      decode: async (_bytes, edge) => {
+        const data = new Uint8Array(edge * edge * 4);
+        for (let at = 0; at < data.length; at += 4)
+          data.set([201, 216, 255, 255], at);
+        return data;
+      },
+    });
+    const floor = scene.root.getObjectByName('Floor') as unknown as {
+      material: {
+        map: { image: { data: Uint8Array } };
+        normalMap: { colorSpace: string };
+        roughnessMap: { colorSpace: string };
+        metalness: number;
+        metalnessMap: unknown;
+      };
+    };
+    const original = floor.material.map,
+      extent = new Box3()
+        .setFromObject(scene.root)
+        .getSize(new Vector3())
+        .toArray();
+    try {
+      expect(await scene.prepareSurfaces(new AbortController().signal)).toEqual(
+        { loaded: 4, failed: 0 },
+      );
+      expect(floor.material.map).toBe(original);
+      expect([...original.image.data.slice(0, 4)]).toEqual([
+        201, 201, 201, 255,
+      ]);
+      expect(floor.material.normalMap.colorSpace).toBe('');
+      expect(floor.material.roughnessMap.colorSpace).toBe('');
+      expect(floor.material.metalnessMap).toBeNull();
+      const canvases: { width: number; height: number }[] = [];
+      const originalNormal = floor.material.normalMap,
+        originalRoughness = floor.material.roughnessMap;
+      const retire = prepareGlbTextures(scene.root, () => {
+        const canvas = {
+          width: 0,
+          height: 0,
+          getContext: () => ({
+            createImageData: (w: number, h: number) => ({
+              data: new Uint8ClampedArray(w * h * 4),
+            }),
+            putImageData: () => undefined,
+          }),
+        };
+        canvases.push(canvas);
+        return canvas as unknown as HTMLCanvasElement;
+      });
+      expect(floor.material.normalMap).not.toBe(originalNormal);
+      expect(floor.material.roughnessMap).not.toBe(originalRoughness);
+      expect(floor.material.metalnessMap).toBeNull();
+      expect(floor.material.metalness).toBe(0);
+      expect(canvases.length).toBeLessThanOrEqual(8);
+      retire();
+      retire();
+      expect(floor.material.normalMap).toBe(originalNormal);
+      expect(floor.material.roughnessMap).toBe(originalRoughness);
+      expect(canvases.every((c) => c.width === 1 && c.height === 1)).toBe(true);
+      expect(
+        new Box3().setFromObject(scene.root).getSize(new Vector3()).toArray(),
+      ).toEqual(extent);
+      expect(JSON.stringify(room)).toBe(before);
+    } finally {
+      scene.dispose();
+    }
+  });
+});
+
 describe('cover room framing', () => {
   it.each([
     ['empty', 10000, 10000, 2800, 0],

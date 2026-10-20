@@ -91,6 +91,8 @@ export async function captureRoomPictures(
   try {
     check();
     projection = buildDesignScene(room, assets.ready);
+    await projection.prepareSurfaces(signal);
+    check();
     const scene = new Scene();
     scene.background = new Color('#f4efe5');
     scene.add(

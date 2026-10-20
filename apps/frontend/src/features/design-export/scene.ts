@@ -1,5 +1,8 @@
 import {
   BoxGeometry,
+  DataTexture,
+  Source,
+  Texture,
   Group,
   Mesh,
   MeshStandardMaterial,
@@ -28,9 +31,12 @@ import {
   roomSurfaceMap,
   detailedParts,
   surfaceModel,
+  surfaceProperties,
+  setSurfaceRepeat,
 } from '../room-view/surfaces';
 import { DesignExportError } from './facts';
 import { createWindowGlass } from '../room-view/window-glass';
+import type { SurfaceIO } from '../room-view/surface-assets';
 
 export async function loadDesignAssets(
   room: RoomDocument,
@@ -94,9 +100,10 @@ export async function loadDesignAssets(
 export function buildDesignScene(
   room: RoomDocument,
   assets: ReadonlyMap<string, GLTF> = new Map(),
+  surfaceIO: SurfaceIO = {},
 ) {
   const root = new Group(),
-    surfaces = createSurfaces(),
+    surfaces = createSurfaces(surfaceIO),
     unit = new BoxGeometry(1, 1, 1),
     marker = new OctahedronGeometry(0.12),
     materials = new Set<Material>(),
@@ -129,7 +136,7 @@ export function buildDesignScene(
       displayBounds: bounds,
     },
   };
-  surfaces.floor.repeat.set(bounds.width / 1.12, bounds.depth / 2.8);
+  setSurfaceRepeat(surfaces.floor, bounds.width / 1.2, bounds.depth / 1.2);
   const material = (
     color: string,
     role: 'wood' | 'soft' | 'metal' | 'wall' | 'floor' = 'wood',
@@ -146,8 +153,7 @@ export function buildDesignScene(
               : surfaces.wood;
     const m = new MeshStandardMaterial({
       color,
-      map,
-      bumpMap: map,
+      ...(map ? surfaceProperties(map) : {}),
       bumpScale: role === 'floor' ? 0.001 : role === 'soft' ? 0.0012 : 0.0004,
       roughness:
         role === 'metal'
@@ -391,6 +397,7 @@ export function buildDesignScene(
     nodes,
     triangles,
     dispose,
+    prepareSurfaces: (signal: AbortSignal) => surfaces.load(signal),
     prepareGlass(renderer?: WebGLRenderer) {
       if (!disposed) windowGlass?.prepare(renderer);
     },
@@ -411,6 +418,76 @@ export function buildDesignScene(
     },
   };
 }
+/** Native canvas inputs let the exporter merge PBR channels and flip normal-map
+ * conventions correctly. Borrowed scene samplers remain unchanged. */
+export function prepareGlbTextures(
+  root: Object3D,
+  canvas = () => document.createElement('canvas'),
+) {
+  const copies = new Map<
+    DataTexture,
+    { map: Texture; canvas: HTMLCanvasElement }
+  >();
+  const restore: (() => void)[] = [];
+  const dispose = () => {
+    restore.splice(0).forEach((fn) => fn());
+    for (const copy of copies.values()) {
+      copy.map.dispose();
+      copy.canvas.width = copy.canvas.height = 1;
+    }
+    copies.clear();
+  };
+  try {
+    root.traverse((node) => {
+      if (!(node instanceof Mesh)) return;
+      for (const material of Array.isArray(node.material)
+        ? node.material
+        : [node.material]) {
+        if (!(material instanceof MeshStandardMaterial)) continue;
+        for (const slot of ['normalMap', 'roughnessMap'] as const) {
+          const original = material[slot];
+          if (!(original instanceof DataTexture)) continue;
+          let copy = copies.get(original);
+          if (!copy) {
+            const image = original.image;
+            if (
+              copies.size >= 8 ||
+              !Number.isInteger(image.width) ||
+              !Number.isInteger(image.height) ||
+              image.width < 1 ||
+              image.height < 1 ||
+              image.width > 512 ||
+              image.height > 512 ||
+              !(image.data instanceof Uint8Array) ||
+              image.data.length !== image.width * image.height * 4
+            )
+              throw new DesignExportError('too-large');
+            const target = canvas();
+            const map = new Texture().copy(original);
+            copy = { map, canvas: target };
+            copies.set(original, copy);
+            target.width = image.width;
+            target.height = image.height;
+            const context = target.getContext('2d');
+            if (!context) throw new DesignExportError('graphics');
+            const pixels = context.createImageData(image.width, image.height);
+            pixels.data.set(image.data);
+            context.putImageData(pixels, 0, 0);
+            map.source = new Source(target);
+          }
+          material[slot] = copy.map;
+          restore.push(() => {
+            material[slot] = original;
+          });
+        }
+      }
+    });
+    return dispose;
+  } catch (error) {
+    dispose();
+    throw error;
+  }
+}
 export async function exportGlb(
   room: RoomDocument,
   signal: AbortSignal,
@@ -418,10 +495,14 @@ export async function exportGlb(
 ) {
   const assets = await loadDesignAssets(room, signal);
   let projection: ReturnType<typeof buildDesignScene> | undefined;
+  let retireTextures: (() => void) | undefined;
   try {
     check();
     projection = buildDesignScene(room, assets.ready);
+    await projection.prepareSurfaces(signal);
+    check();
     projection.prepareGlass();
+    retireTextures = prepareGlbTextures(projection.root);
     check();
     const { GLTFExporter } =
       await import('three/addons/exporters/GLTFExporter.js');
@@ -439,6 +520,7 @@ export async function exportGlb(
       throw new DesignExportError('too-large');
     return new Blob([bytes], { type: 'model/gltf-binary' });
   } finally {
+    retireTextures?.();
     projection?.dispose();
     assets.dispose();
   }
