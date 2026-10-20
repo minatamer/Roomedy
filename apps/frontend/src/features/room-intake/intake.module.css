@@ -3,12 +3,12 @@
   background: transparent;
   color: #3e3126;
 }
-.intake button:not(:global(.glass-control), .photoOpen),
+.intake button:not(:global(.glass-control), :global(.button), .photoOpen),
 .intake select,
 .intake input {
   font: inherit;
 }
-.intake button:not(:global(.glass-control), .photoOpen),
+.intake button:not(:global(.glass-control), :global(.button), .photoOpen),
 .intake .fileButton {
   min-height: 44px;
   border: 1px solid #d4c6b5;
@@ -23,7 +23,10 @@
     border-color 0.2s,
     box-shadow 0.2s;
 }
-.intake button:not(:global(.glass-control), .photoOpen):hover:not(:disabled),
+.intake
+  button:not(:global(.glass-control), :global(.button), .photoOpen):hover:not(
+    :disabled
+  ),
 .fileButton:hover {
   background: #eae0ce;
   border-color: #a38764;
@@ -33,7 +36,7 @@
   opacity: 0.45;
   cursor: default;
 }
-.intake button:not(:global(.glass-control)):focus-visible,
+.intake button:not(:global(.glass-control), :global(.button)):focus-visible,
 .intake input:focus-visible,
 .intake select:focus-visible,
 .fileButton:focus-within {

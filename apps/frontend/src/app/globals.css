@@ -141,7 +141,7 @@ h1:focus {
     transform 0.2s,
     box-shadow 0.2s;
 }
-.button:hover {
+.button:hover:not(:disabled) {
   transform: translateY(-2px);
 }
 .primary {
@@ -149,7 +149,7 @@ h1:focus {
   color: white;
   box-shadow: 0 7px 18px #50392918;
 }
-.primary:hover {
+.primary:hover:not(:disabled) {
   background: var(--teal-dark);
   box-shadow: 0 9px 20px #50392925;
 }
@@ -280,7 +280,7 @@ select {
   transition-timing-function: cubic-bezier(0.2, 0.75, 0.2, 1);
 }
 button:active:not(:disabled),
-.button:active {
+.button:active:not(:disabled) {
   transform: translateY(1px) scale(0.98);
 }
 

@@ -342,7 +342,7 @@ export function Intake({
                       </label>
                       {state.photos.length > 0 && (
                         <button
-                          className={styles.primary}
+                          className="button primary"
                           disabled={
                             !availability?.capabilities.recognition ||
                             state.recognition !== 'idle' ||
@@ -356,7 +356,7 @@ export function Intake({
                           aria-busy={state.recognition !== 'idle'}
                           onClick={() => void draftFromPhotos(controller)}
                         >
-                          Draft my room
+                          Continue <span aria-hidden="true">↗</span>
                         </button>
                       )}
                     </div>

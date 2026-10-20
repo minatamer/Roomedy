@@ -23,7 +23,7 @@ Every checkbox below is for the owner's visual review. Leaving it unchecked does
 - [ ] Supply coherent fake-mode example photos showing the same room from opposite corners. Clicking photos opens a full-image viewer with arrows/Escape and focus return. [Y](../validation/RM-015Y.md).
 - [ ] Show the animated room/person/phone guide for taking two wide corner photos, with Replay and concise guidance. [Y](../validation/RM-015Y.md), [Z](../validation/RM-015Z.md).
 - [ ] Match the two photo cards' height on desktop, use natural stacked height on narrow screens, and scroll image galleries horizontally so extra images do not stretch the cards. [Y](../validation/RM-015Y.md).
-- [ ] Simplify both cards: remove redundant written steps, photo-kind selectors, duplicated explanation and the empty second Draft action. Keep Choose photos, conditional Draft my room and Use example photos in coherent positions. [Z](../validation/RM-015Z.md).
+- [ ] Simplify both cards: remove redundant written steps, photo-kind selectors, duplicated explanation and the empty second Draft action. Keep Choose photos, conditional Continue and Use example photos in coherent positions. Continue reuses the landing's solid walnut pill/white label/arrow through shared global button classes. [Z](../validation/RM-015Z.md#continue-cta-follow-up--20-october-2026).
 - [ ] Infer room-view versus furniture-detail roles automatically. Preserve useful details and uncertain estimates; fake examples remain authored examples, and live photo-recognition quality is separate evidence. [Z](../validation/RM-015Z.md).
 - [ ] Keep the initial photo correction stage as rough 2D only; open the accepted room in the main editor's default 3D. [AL](../validation/RM-015AL.md).
 
