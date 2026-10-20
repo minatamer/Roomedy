@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { POLICY } from '@roomedy/contracts/policy';
 import type { Project } from '@roomedy/contracts/project';
 import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
@@ -9,6 +9,7 @@ import {
   projectMessages,
 } from '../session/project';
 import { ExportDialog } from './export-dialog';
+import { createProjectMenuMotion } from './project-menu-motion';
 import styles from './editor.module.css';
 type Decision = {
   kind: 'import' | 'reset';
@@ -73,6 +74,10 @@ export function ProjectControls({
 }) {
   const fileHintId = useId(),
     menu = useRef<HTMLDetailsElement>(null),
+    menuPanel = useRef<HTMLDivElement>(null),
+    menuMotion = useRef<ReturnType<typeof createProjectMenuMotion> | null>(
+      null,
+    ),
     input = useRef<HTMLInputElement>(null),
     readRelease = useRef<(() => void) | null>(null),
     downloadRelease = useRef<(() => void) | null>(null),
@@ -86,26 +91,37 @@ export function ProjectControls({
     [requestedFormat, setRequestedFormat] =
       useState<Extract<MedyControl, { type: 'project' }>['format']>(null),
     [decision, setDecision] = useState<Decision | null>(null);
+  const setMenuOpen = useCallback((open: boolean) => {
+    if (menuMotion.current) menuMotion.current.setOpen(open);
+    else if (menu.current) menu.current.open = open;
+  }, []);
   useEffect(() => {
     if (decision && dialog.current && !dialog.current.open)
       dialog.current.showModal();
   }, [decision]);
   useEffect(() => {
     mounted.current = true;
+    const motion =
+      menu.current && menuPanel.current
+        ? createProjectMenuMotion(menu.current, menuPanel.current)
+        : null;
+    menuMotion.current = motion;
     const outside = (e: PointerEvent) => {
       if (dialog.current?.open) return;
       if (e.target instanceof Node && !menu.current?.contains(e.target))
-        menu.current?.removeAttribute('open');
+        setMenuOpen(false);
     };
     document.addEventListener('pointerdown', outside);
     return () => {
       mounted.current = false;
+      motion?.dispose();
+      if (menuMotion.current === motion) menuMotion.current = null;
       document.removeEventListener('pointerdown', outside);
       readRelease.current?.();
       downloadRelease.current?.();
       decisionRelease.current?.();
     };
-  }, []);
+  }, [setMenuOpen]);
   const decline = () => {
     decisionRelease.current?.();
     decisionRelease.current = null;
@@ -120,7 +136,12 @@ export function ProjectControls({
       dialog.current?.close();
       if (mounted.current) {
         setDecision(null);
-        if (kind === 'import' && menu.current?.open) input.current?.focus();
+        if (
+          kind === 'import' &&
+          menu.current?.open &&
+          menuPanel.current?.inert === false
+        )
+          input.current?.focus();
         else menu.current?.querySelector('summary')?.focus();
       }
     });
@@ -284,7 +305,7 @@ export function ProjectControls({
         };
       }
       if (control.action === 'import') {
-        if (menu.current) menu.current.open = true;
+        setMenuOpen(true);
         input.current?.click();
         return {
           ok: true,
@@ -309,14 +330,25 @@ export function ProjectControls({
         ref={menu}
         className={styles.projectMenu}
         onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            menu.current?.removeAttribute('open');
+          if (e.key === 'Escape' && menu.current?.open) {
+            e.preventDefault();
+            e.stopPropagation();
+            setMenuOpen(false);
             menu.current?.querySelector('summary')?.focus();
           }
         }}
       >
-        <summary className="glass-control">Project</summary>
-        <div className={styles.projectOptions}>
+        <summary
+          className="glass-control"
+          onClick={(event) => {
+            event.preventDefault();
+            if (menuMotion.current) menuMotion.current.toggle();
+            else if (menu.current) menu.current.open = !menu.current.open;
+          }}
+        >
+          Project
+        </summary>
+        <div ref={menuPanel} className={styles.projectOptions}>
           <p>
             Take your Current design with you, or save a project to edit later.
           </p>

@@ -4,6 +4,9 @@ Read [the documentation map](docs/README.md), [current blueprint](docs/ROOMEDY.m
 
 ## Current scope and checkpoint
 
+- Current RM-015AZ follows df3fd48: owner swaps header groups, placing Project before Undo after the brand and Furniture/Room/Medy at the right. Keep natural narrow tabs/auto working height. Project uses one finite interruptible open/close motion owner, immediate inert/expansion/focus handling, left desktop/right narrow group anchoring and teardown fencing. Existing file/Undo/tour/command authority remains. Read [ticket](docs/tickets/RM-015AZ-align-header-controls-and-animate-project.md), [allocation](docs/commit-plans/RM-015AZ.md) and [receipt](docs/validation/RM-015AZ.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+
+
 - Current RM-015AY follows db4348b: latest owner selects Medy (normal case) with a shared AI sparkle, right-aligned visitor text/bubble and plain left-aligned assistant replies. Keep bounded scrollable older history, keyboard focus, stable composer, actual object/proposal actions and motion. Landing/tour/fake/live instruction casing follows; technical API/command scope stays. Read [ticket](docs/tickets/RM-015AY-refine-medy-identity-and-chat.md), [allocation](docs/commit-plans/RM-015AY.md) and [receipt](docs/validation/RM-015AY.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
 
 

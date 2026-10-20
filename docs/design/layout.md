@@ -1,5 +1,11 @@
 # Layout and useful space
 
+## Header groups and Project motion — RM-015AZ
+
+DOM/keyboard/visual order is brand, Project then Undo, then right-aligned Furniture/Room/Medy controlling the properties column. Header uses its existing auto grid; narrow header retains brand/actions first and full-width tabs on the next row. Undo label hides through its own class, not a first-child assumption. Project aligns its dropdown left on desktop; narrow dropdown uses the actions group's right edge to stay in the viewport.
+
+One finite WAAPI owner animates the Project panel's opacity,10px vertical travel and small scale over300ms open/220ms close. Reverse from computed visible state; keep details open only for exit paint, make closing content inert immediately and report destination expansion. Focus returns before controls become inert; import confirmation must check panel activity as well as native details.open. Dispose/cancel old animations and callbacks; settled native/no-JS behavior stays. Retain modal motion, current beige Export/neutral Import/brown New room,44px targets and all project/data authority. No timer, permanent frame loop, global suppression or new setting.
+
 ## Medy identity and chat — RM-015AY
 
 Use Medy with the shared decorative four-point sparkle for studio heading/navigation and landing example. Visitor text aligns right in content-fitting warm bubbles (max88% history width); assistant replies are plain and left-aligned with useful full-width cards/actions. Keep one finite scrollable log, non-shrinking message children, visible keyboard focus and the separate reachable composer. Preserve existing new-message motion, actual proposal/selection actions, live announcements and finite80-message/256KiB ceiling. Phone/short layouts follow existing working-height and natural-flow ownership.

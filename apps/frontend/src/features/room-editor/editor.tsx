@@ -501,6 +501,37 @@ export function Editor({
         >
           <Brand />
         </div>
+        <div className={styles.headerActions}>
+          <ProjectControls
+            key={workspace.workspaceId}
+            controller={controller}
+            onNewRoom={onBack}
+            registerMedy={registerProject}
+          />
+          <button
+            className="glass-control"
+            data-room-target="history"
+            aria-disabled={
+              !state.undoLabel || before || state.clientLoadFailure
+            }
+            onClick={() => {
+              if (!state.undoLabel || before || state.clientLoadFailure) return;
+              const r = assistant ? assistant.undo() : controller.undo();
+              if (!r.ok)
+                controller.notify(
+                  failureMessage(
+                    r,
+                    controller.getSnapshot().workspace?.current,
+                  ),
+                );
+            }}
+            aria-label={
+              state.undoLabel ? `Undo: ${state.undoLabel}` : 'Undo last change'
+            }
+          >
+            ↶ <span className={styles.undoLabel}>Undo</span>
+          </button>
+        </div>
         <nav className={styles.toolRail} aria-label="Room tools">
           {panels.map((panel) => (
             <button
@@ -527,37 +558,6 @@ export function Editor({
             registerMedy={registerTour}
           />
         </nav>
-        <div className={styles.headerActions}>
-          <button
-            className="glass-control"
-            data-room-target="history"
-            aria-disabled={
-              !state.undoLabel || before || state.clientLoadFailure
-            }
-            onClick={() => {
-              if (!state.undoLabel || before || state.clientLoadFailure) return;
-              const r = assistant ? assistant.undo() : controller.undo();
-              if (!r.ok)
-                controller.notify(
-                  failureMessage(
-                    r,
-                    controller.getSnapshot().workspace?.current,
-                  ),
-                );
-            }}
-            aria-label={
-              state.undoLabel ? `Undo: ${state.undoLabel}` : 'Undo last change'
-            }
-          >
-            ↶ <span>Undo</span>
-          </button>
-          <ProjectControls
-            key={workspace.workspaceId}
-            controller={controller}
-            onNewRoom={onBack}
-            registerMedy={registerProject}
-          />
-        </div>
       </header>
       <main id="main-content" className={styles.workspace}>
         <h1 ref={headingRef} tabIndex={-1} className={styles.announcement}>
