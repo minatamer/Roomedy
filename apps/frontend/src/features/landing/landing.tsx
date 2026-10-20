@@ -66,7 +66,7 @@ export function Landing() {
             >
               <div className={styles.copy}>
                 <p className={styles.chapterLabel}>
-                  <span>01</span> START WITH WHAT’S YOURS
+                  <span>01</span> Start with what’s yours
                 </p>
                 <h2 id="how-title">
                   Every room has
@@ -138,7 +138,7 @@ export function Landing() {
             >
               <div className={styles.copy}>
                 <p className={styles.chapterLabel}>
-                  <span>02</span> GIVE YOUR IDEAS SOME SPACE
+                  <span>02</span> Give your ideas some space
                 </p>
                 <h2 id="arrange-title">
                   A place to work.

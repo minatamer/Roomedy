@@ -38,3 +38,11 @@ The owner rejected the small/boring landing, the Sample room/Preview/Apply/Undo 
 ## Local result
 
 [Current receipt](../validation/RM-015L.md) records the plan/execution, independently reproduced navigation finding/fix, corrected documentation and clean read-only pass3. Final182-input/BUILD_ID `7fbe666c7fefbfc1a0698def8e8e3eb4108e0158d66fc93e153ca7933480e248`,404tests/34files/root/both builds, exact Windows production review and nine-size/short checks. The exact31-path checkpoint is prepared under existing local commit authority; Git history/final verification supplies its eventual commit identity. Checked local acceptance does not approve visuals or external evidence. No RM-016, paid/live, deploy/push/reset or delegation.
+
+## Chapter typography follow-up — 20 October2026
+
+Owner says titles such as Meet Medy are too small compared with the display headline below. [Nine-path follow-up](../commit-plans/RM-015L.md#chapter-typography-follow-up-allocation--20-october2026), [actual evidence](../validation/RM-015L.md#chapter-typography-follow-up--20-october2026). Latest M–P full-room/photo/motion composition remains authoritative.
+
+- [x] Shared chapter titles grow from9px desktop/8px phone to a fluid20–28px scale with medium weight, tighter tracking and clear ink. Start with what’s yours/Give your ideas some space use sentence case like Meet Medy. Number circles keep subordinate12px/phone11px text and fixed non-shrinking geometry.
+- [x] Main headlines, meaning, semantic headings/order, photography/full-room scene, motion and links remain. Long320px title wraps to two lines without horizontal overflow; existing section flow and CTA remain reachable.
+- [x] Scoped formatting/lint/frontend types and native desktop/short/tablet/390/320 observations pass. Read-only review has no actionable findings; exact local checkpoint authorized. Actual owner approval pending, Q held, guide paused, RM-016 Planned; no fresh full-suite/build, paid/live, config, dependencies, new ports, delegation, push or deploy.
