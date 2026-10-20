@@ -9,27 +9,27 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/favicon.ico?v=room-mark-2',
+        url: '/favicon.ico?v=room-mark-3-rounded',
         sizes: '16x16 32x32 48x48',
         type: 'image/x-icon',
       },
       {
-        url: '/brand/roomedy-icon-96.png?v=room-mark-2',
+        url: '/brand/roomedy-icon-96.png?v=room-mark-3-rounded',
         sizes: '96x96',
         type: 'image/png',
       },
       {
-        url: '/brand/roomedy-icon.svg?v=room-mark-2',
+        url: '/brand/roomedy-icon.svg?v=room-mark-3-rounded',
         sizes: 'any',
         type: 'image/svg+xml',
       },
       {
-        url: '/brand/roomedy-icon-192.png?v=room-mark-2',
+        url: '/brand/roomedy-icon-192.png?v=room-mark-3-rounded',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        url: '/brand/roomedy-icon-512.png?v=room-mark-2',
+        url: '/brand/roomedy-icon-512.png?v=room-mark-3-rounded',
         sizes: '512x512',
         type: 'image/png',
       },

@@ -1,6 +1,6 @@
 # Roomedy visual direction
 
-**Current icon refinement — RM-015AF,20 October2026:** Latest owner supplies a browser-tab crop and selects a larger room shape without the icon dot, on Roomedy's beige. Preserve the existing mark paths/cocoa#43352a; stroked width now occupies about90% of the square. Solid existing soft beige#e7ddcc replaces near-white#f4efe5 for the favicon family only. The96px SVG generates all PNG/Apple/ICO variants; no transparent/white background. Site wordmark remains governed by its earlier explicit selection. [Actual evidence](../validation/RM-015AF.md); owner visual acceptance and Google indexing remain separate.
+**Current rounded browser icon — RM-015AF,20 October2026:** Latest owner compares Roomedy with Instagram's tab icon and selects rounded edges. The96px beige#e7ddcc tile now uses18px corners and transparent exterior pixels; the exact large dot-free cocoa#43352a mark paths/transform stay. SVG,96/192/512px browser PNGs and16/32/48px ICO entries share this shape and stable `room-mark-3-rounded` URLs. This supersedes the earlier opaque browser corners. Apple180 retains its opaque tile for platform masking, and the website wordmark retains its selected treatment. [Follow-up evidence](../validation/RM-015AF.md#rounded-browser-icon-follow-up--20-october2026); actual owner visual approval/Chrome cache/Google display remain distinct.
 
 RM-004 source baseline, 17 October 2026. Actual screenshots, browser behavior and viewport evidence are recorded separately in RM-004 validation; this document is not a visual pass.
 

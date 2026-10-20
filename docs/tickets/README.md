@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+**Rounded browser icon,20October:** The existing large cocoa mark now sits on a rounded beige tile across SVG/PNG/ICO browser variants, with revised asset URLs. [13-path AF follow-up](../commit-plans/RM-015AF.md#rounded-browser-icon-follow-up-allocation--20-october2026), [actual evidence](../validation/RM-015AF.md#rounded-browser-icon-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **PDF cover correction,20October:** The first-page room now fills its own right-hand area using a padded crop of the actual3D render. Its opaque background no longer obscures the italic “life.” [Nine-path X follow-up](../commit-plans/RM-015X.md#cover-framing-follow-up-allocation--20-october2026), [current evidence](../validation/RM-015X.md#cover-framing-follow-up--20-october2026). Overall owner visual approval remains pending; Q held, guide paused, RM-016 Planned.
 
 **Project primary CTA follow-up:** Start a new room now reuses the editor's brown primary class. [Six-path allocation](../commit-plans/RM-015AI.md#project-primary-action-follow-up-allocation-20-october2026), [scoped actual checks](../validation/RM-015AI.md#project-primary-action-follow-up-20-october2026). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
