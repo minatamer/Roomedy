@@ -12,7 +12,10 @@ import {
 } from './fixtures/command-room.js';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { projectOf } from '../apps/frontend/src/features/session/project.js';
-import { deleteSelection } from '../apps/frontend/src/features/room-editor/selection-actions.js';
+import {
+  arrangingSelection,
+  deleteSelection,
+} from '../apps/frontend/src/features/room-editor/selection-actions.js';
 import {
   beginFloorEdit,
   rotateFloorSelection,
@@ -868,4 +871,57 @@ describe('transient room notices', () => {
       if (phase === 'expired') expect(retired.message).toContain('expired');
     },
   );
+});
+
+describe('selection determines room interaction', () => {
+  it.each(['plan', 'cutaway'] as const)(
+    'arranges the selected piece without an independent mode in %s',
+    (view) => {
+      const s = session();
+      s.setRoomView(view);
+      const before = s.getSnapshot().workspace;
+      expect(arrangingSelection(s.getSnapshot())).toBe(false);
+      s.select('a');
+      expect(arrangingSelection(s.getSnapshot())).toBe(true);
+      s.setPanel('assistant');
+      expect(arrangingSelection(s.getSnapshot())).toBe(true);
+      s.setRoomView(view === 'plan' ? 'cutaway' : 'plan');
+      expect(arrangingSelection(s.getSnapshot())).toBe(true);
+      s.select(null);
+      expect(arrangingSelection(s.getSnapshot())).toBe(false);
+      expect(s.getSnapshot().workspace).toBe(before);
+      expect(s.getSnapshot().undoLabel).toBeNull();
+    },
+  );
+  it('preserves selected-window editing, while doors and invalid IDs allow exploration', () => {
+    const a = piece('a', 4000, 4000);
+    a.locks = { dimensions: true, position: true, rotation: true };
+    const s = session(commandRoom([a], [door(), windowFeature()]));
+    s.select('a');
+    expect(arrangingSelection(s.getSnapshot())).toBe(true);
+    s.select('window_1');
+    expect(arrangingSelection(s.getSnapshot())).toBe(true);
+    s.select('door_1');
+    expect(s.getSnapshot().presentation.selectedId).toBe('door_1');
+    expect(arrangingSelection(s.getSnapshot())).toBe(false);
+    s.select('missing');
+    expect(arrangingSelection(s.getSnapshot())).toBe(false);
+  });
+  it('cannot leave an arrangement mode behind after deletion, Undo, reset or disposal', () => {
+    const s = session();
+    s.select('a');
+    expect(arrangingSelection(s.getSnapshot())).toBe(true);
+    expect(deleteSelection(s).ok).toBe(true);
+    expect(arrangingSelection(s.getSnapshot())).toBe(false);
+    expect(s.undo().ok).toBe(true);
+    expect(arrangingSelection(s.getSnapshot())).toBe(false);
+    s.select('a');
+    expect(arrangingSelection(s.getSnapshot())).toBe(true);
+    s.reset(commandRoom([piece('b')]));
+    expect(arrangingSelection(s.getSnapshot())).toBe(false);
+    s.select('b');
+    expect(arrangingSelection(s.getSnapshot())).toBe(true);
+    s.dispose();
+    expect(arrangingSelection(s.getSnapshot())).toBe(false);
+  });
 });

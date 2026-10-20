@@ -97,7 +97,7 @@ export interface SceneProps {
   checks: CheckFacts;
   selectedId: string | null;
   openingId?: string | null;
-  onSelect: (id: string) => void;
+  onSelect: (id: string | null) => void;
   cameraStateRef: MutableRefObject<CameraPose | null>;
   cameraFrame: RoomFrame | undefined;
   cameraAction: CameraAction | null;
@@ -1528,6 +1528,10 @@ export function RoomScene(props: SceneProps) {
       />
       <mesh
         geometry={geometry}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (event.delta <= 4) onSelect(null);
+        }}
         position={[bounds.width / 2, -0.07, bounds.depth / 2]}
         scale={[bounds.width + 0.24, 0.14, bounds.depth + 0.24]}
         receiveShadow

@@ -357,13 +357,14 @@ export function useFloorEdit(
         : 'Room in 3D. Arrow keys look around; plus and minus zoom. Inside the room, W A S D move. Select an item to inspect.',
     );
     const key = (event: KeyboardEvent) => {
-      if (!enabled || event.isComposing || event.ctrlKey || event.metaKey)
-        return;
+      if (event.isComposing || event.ctrlKey || event.metaKey) return;
       if (event.key === 'Escape') {
         event.preventDefault();
-        cancel(true);
+        if (gesture.current) cancel(true);
+        else controller.select(null);
         return;
       }
+      if (!enabled) return;
       const arrow = [
         'ArrowLeft',
         'ArrowRight',

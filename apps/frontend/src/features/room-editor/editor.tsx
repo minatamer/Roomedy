@@ -41,6 +41,7 @@ import { CataloguePlacement } from './catalogue-placement';
 import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
 import { FrameControls, ViewControls } from './view-controls';
+import { arrangingSelection } from './selection-actions';
 import { furnitureOpening, featureOpening } from '../room-view/articulation';
 import { OpeningPreview } from './opening-preview';
 import controlsStyles from './view-controls.module.css';
@@ -97,7 +98,7 @@ export function Editor({
     `${state.workspace?.workspaceId ?? 'opening'}:${state.presentation.panel}:${state.presentation.panel === 'inspector' ? state.presentation.selectedId : ''}:${state.comparison}`,
   );
   const roomView = state.presentation.roomView;
-  const [arranging, setArranging] = useState(false);
+  const arranging = arrangingSelection(state);
   const [opening, setOpening] = useState({ context: '', open: false });
   const planToolsMotion = useSurfaceMotion(`${roomView}:${arranging}`);
   // RM-015AC: comparison is temporarily hidden; retain its implementation.
@@ -309,11 +310,13 @@ export function Editor({
                 'Apply or cancel the current preview before arranging the room.',
             };
           placement.cancel();
-          setArranging(control.enabled);
+          if (!control.enabled) controller.select(null);
           return done(
             control.enabled
-              ? 'Arrange room is on. You can move pieces directly.'
-              : 'Explore view is on.',
+              ? arrangingSelection(current)
+                ? 'You can drag the selected piece or use the placement controls.'
+                : 'Select a piece in the room or furniture list, then drag it to arrange it.'
+              : 'Selection cleared. You can look around the room.',
           );
         case 'snap':
           controller.setView({ snap: control.enabled });
@@ -620,7 +623,6 @@ export function Editor({
                   <ViewControls
                     controller={controller}
                     arranging={arranging}
-                    onArrange={setArranging}
                     readOnly={readOnly || !!adding}
                     rotationLocked={!item || item.locks.rotation}
                     onRotate={rotatePlanSelection}
@@ -717,7 +719,6 @@ export function Editor({
                     onAddDesk={() => open('catalogue', 'desk')}
                     snap={view.snap}
                     arranging={arranging}
-                    onArrange={setArranging}
                     medyCamera={
                       medyCamera?.workspaceId === workspaceId
                         ? medyCamera

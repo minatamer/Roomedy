@@ -1,4 +1,22 @@
 import type { SessionController } from '../session/controller';
+import type { SessionSnapshot } from '../session/state';
+
+/** Selection is the interaction mode; locks/read-only still govern each edit. */
+export function arrangingSelection(state: SessionSnapshot): boolean {
+  if (state.phase !== 'editor' || !state.presentation.selectedId) return false;
+  const room =
+    state.comparison === 'before'
+      ? state.workspace?.baseline
+      : (state.candidate?.room ?? state.workspace?.current);
+  return (
+    !!room &&
+    (room.furniture.some((item) => item.id === state.presentation.selectedId) ||
+      room.room.features.some(
+        (item) =>
+          item.id === state.presentation.selectedId && item.kind === 'window',
+      ))
+  );
+}
 
 export function deleteSelection(
   controller: SessionController,

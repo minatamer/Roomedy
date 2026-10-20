@@ -230,6 +230,11 @@ export function PlanView({
       controller.notify('Move cancelled. The room is unchanged.');
     }
   };
+  const escapeSelection = () => {
+    if (windowGesture.current) windowGesture.current.edit.cancel();
+    else if (gesture.current) cancel();
+    else controller.select(null);
+  };
   const sameViewport = (drag: Pick<Gesture, 'viewport' | 'viewBox'>) => {
     const rect = svg.current?.getBoundingClientRect();
     return (
@@ -449,7 +454,8 @@ export function PlanView({
     }
     if (event.key === 'Escape') {
       event.preventDefault();
-      cancel();
+      event.stopPropagation();
+      escapeSelection();
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
@@ -506,6 +512,11 @@ export function PlanView({
                 : 'Precision 2D room plan. Explore view. Select a piece to inspect it. Arrow keys pan.'
         }
         onKeyDown={(event) => {
+          if (event.key === 'Escape' && !event.nativeEvent.isComposing) {
+            event.preventDefault();
+            escapeSelection();
+            return;
+          }
           if (
             arranging ||
             event.nativeEvent.isComposing ||
@@ -527,7 +538,8 @@ export function PlanView({
           });
         }}
         onPointerDown={(event) => {
-          if (event.target === event.currentTarget) controller.select(null);
+          if (!(event.target as Element).closest('[role="button"]'))
+            controller.select(null);
         }}
       >
         <rect
@@ -608,8 +620,10 @@ export function PlanView({
                   controller.select(feature.id);
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  windowGesture.current?.edit.cancel();
+                if (e.key === 'Escape' && !e.nativeEvent.isComposing) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  escapeSelection();
                   return;
                 }
                 if (

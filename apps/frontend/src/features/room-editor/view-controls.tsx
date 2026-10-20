@@ -6,7 +6,6 @@ import styles from './view-controls.module.css';
 export function ViewControls({
   controller,
   arranging,
-  onArrange,
   ready = true,
   readOnly,
   rotationLocked,
@@ -22,7 +21,6 @@ export function ViewControls({
 }: {
   controller: SessionController;
   arranging: boolean;
-  onArrange: (arranging: boolean) => void;
   ready?: boolean;
   readOnly: boolean;
   rotationLocked: boolean;
@@ -38,22 +36,6 @@ export function ViewControls({
 }) {
   return (
     <div className={styles.toolbar}>
-      <div role="group" aria-label="Room interaction" className={styles.tools}>
-        <button
-          aria-pressed={!arranging}
-          disabled={!ready}
-          onClick={() => onArrange(false)}
-        >
-          Explore view
-        </button>
-        <button
-          aria-pressed={arranging}
-          disabled={!ready || readOnly}
-          onClick={() => onArrange(true)}
-        >
-          Arrange room
-        </button>
-      </div>
       <div
         role="group"
         aria-label="View navigation"

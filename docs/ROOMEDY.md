@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Selection-driven arranging — RM-015BB:** Explore view/Arrange room buttons and independent mode state are removed. Selecting furniture enables direct editing; clearing selection restores navigation. Selected windows retain wall editing. Empty floor/background or scoped Escape clears selection safely; Medy follows the same selection behavior. [Ticket](tickets/RM-015BB-use-selection-to-arrange.md), [allocation](commit-plans/RM-015BB.md), [evidence](validation/RM-015BB.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Fitting2D furniture labels — RM-015BA:** Whole names turn sideways when a tall narrow footprint lacks horizontal space; names that fit stay horizontal. Shared bounded type fitting preserves TV captions, unknown fallback, front/selection/physical geometry and commands. [Ticket](tickets/RM-015BA-fit-plan-labels-to-furniture.md), [allocation](commit-plans/RM-015BA.md), [evidence](validation/RM-015BA.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Header groups and Project motion — RM-015AZ:** Project then Undo follows the brand; Furniture/Room/Medy moves to the right to match the properties column. The Project dropdown fades/slides/scales open and closed through one interruptible finite owner, with immediate closing focus exclusion and responsive anchoring. [Ticket](tickets/RM-015AZ-align-header-controls-and-animate-project.md), [allocation](commit-plans/RM-015AZ.md), [evidence](validation/RM-015AZ.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -1385,8 +1387,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of the locally validated sideways2D labels and earlier corrections; Q held, guide goal paused, RM-016 Planned. No live/paid/delegation/push/deploy.
-Active ticket: RM-015BA
+Next action: Await actual owner visual review of validated selection-driven editing and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
+Active ticket: RM-015BB
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1411,7 +1413,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T16:44:00+00:00",
+  "updated_at": "2026-10-20T16:56:53+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1600,8 +1602,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015BA",
-  "next_action": "Await actual owner visual review of the locally validated sideways2D labels and earlier corrections; Q held, guide goal paused, RM-016 Planned. No live/paid/delegation/push/deploy.",
+  "active_ticket": "RM-015BB",
+  "next_action": "Await actual owner visual review of validated selection-driven editing and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2083,14 +2085,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AX.md",
         "docs/validation/RM-015AY.md",
         "docs/validation/RM-015AZ.md",
-        "docs/validation/RM-015BA.md"
+        "docs/validation/RM-015BA.md",
+        "docs/validation/RM-015BB.md"
       ],
       "blockers": [],
       "approval": {
-        "quote": "i think in this case the text can be vertical rather than horziontal (obv the letters will not be above each other i think u know what i mean here)",
-        "source": "human:current-chat/2026-10-20/sideways-furniture-label",
-        "scope": "RM-015BA precision2D label fitting only; no visual approval",
-        "recorded_at": "2026-10-20T16:35:57+00:00"
+        "quote": "explore view and arrange room is not intuitive; if a furnite is selected that means we are in arrange room mode, if no furniture is slected we are in explore view mode; remove the cta's for thos",
+        "source": "human:current-chat/2026-10-20/selection-arrange",
+        "scope": "RM-015BB selection-driven interaction only; no visual approval",
+        "recorded_at": "2026-10-20T16:46:39+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2587,6 +2590,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/sideways-furniture-label",
             "scope": "RM-015BA precision2D label fitting only; no visual approval",
             "recorded_at": "2026-10-20T16:35:57+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "explore view and arrange room is not intuitive; if a furnite is selected that means we are in arrange room mode, if no furniture is slected we are in explore view mode; remove the cta's for thos",
+            "source": "human:current-chat/2026-10-20/selection-arrange",
+            "scope": "RM-015BB selection-driven interaction only; no visual approval",
+            "recorded_at": "2026-10-20T16:46:39+00:00"
           }
         }
       ]

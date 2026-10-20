@@ -1,6 +1,8 @@
 # Roomedy ticket plan
 
-Current owner correction: [RM-015BA — Fit plan labels to furniture](RM-015BA-fit-plan-labels-to-furniture.md). Whole words rotate along tall narrow footprints when needed; short names and TV captions remain horizontal. Locally validated:843 tests/56files,7 boundaries, both builds and actual rotation/Undo/zoom/short/phone observations; owner approval pending; Q held, guide paused, RM-016 Planned.
+Current owner correction: [RM-015BB — Use selection to arrange](RM-015BB-use-selection-to-arrange.md). Remove Explore/Arrange CTAs/state; select to edit, clear to navigate, with selected-window and Medy parity. Locally validated:847tests/56files,7 boundaries, both builds and actual2D/3D/drag/Undo/Escape/Medy/phone observations; actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
+Previous owner correction: [RM-015BA — Fit plan labels to furniture](RM-015BA-fit-plan-labels-to-furniture.md). Whole words rotate along tall narrow footprints when needed; short names and TV captions remain horizontal. Locally validated:843 tests/56files,7 boundaries, both builds and actual rotation/Undo/zoom/short/phone observations; owner approval pending; Q held, guide paused, RM-016 Planned.
 
 Previous owner correction: [RM-015AZ — Align header controls and animate Project](RM-015AZ-align-header-controls-and-animate-project.md). Project→Undo follows brand; panel tabs move right; Project gets reversible open/close motion. Locally validated:836 tests/56 files,7 boundaries, both builds and actual header/menu/keyboard observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
 

@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Current selection-driven interaction — RM-015BB
+
+The room-side toolbar starts with navigation; there is no Explore view/Arrange room row or independently saved mode. Selected furniture enables direct placement/rotation and selected windows retain same-wall dragging; doors/obstacles remain inspectable while navigation stays available. Empty plan floor/background,3D floor/empty clicks or scoped Escape clear selection and restore exploration. A live move consumes the first Escape to cancel; the next clears selection. Keep read-only/lock/geometry/lifecycle guards and current selection through panel/view changes. Medy Explore clears selection; Arrange works with the selection or gives concise selection guidance. No replacement toggle, badge or mode copy row.
+
 ## Header groups and Project motion — RM-015AZ
 
 DOM/keyboard/visual order is brand, Project then Undo, then right-aligned Furniture/Room/Medy controlling the properties column. Header uses its existing auto grid; narrow header retains brand/actions first and full-width tabs on the next row. Undo label hides through its own class, not a first-child assumption. Project aligns its dropdown left on desktop; narrow dropdown uses the actions group's right edge to stay in the viewport.

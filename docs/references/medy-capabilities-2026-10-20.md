@@ -18,7 +18,7 @@ Assistant tools cover room read/catalogue/search/scoped move/rotate/add/replace/
 | Surfaces | Walls/floor colour/hex/texture and palettes | Existing supported surfaces and coherent requested palette; preserve layout/owned finish unless explicitly requested |
 | Features | Add/remove doors/windows/obstacles, wall/offset/size/sill/projection/mechanism/hinge | Same feature commands, unknowns/provenance and actual validation; exact ambiguous-feature clarification |
 | Preview/history | Apply/Cancel/latest Undo | Resolve only the current correlated candidate; actual accepted receipt/whole-change Undo; no Redo |
-| Navigation |2D/3D, Explore/Arrange, zoom/fit/pan/orbit/look/walk, viewpoints, Snap | Invoke current real presentation owners without mutating room/history or cancelling a preview |
+| Navigation |2D/3D, selection-driven arranging/exploration, zoom/fit/pan/orbit/look/walk, viewpoints, Snap | Invoke current presentation owners without room/history mutation. RM-015BB: Explore clears selection; Arrange uses selected furniture/window or offers selection guidance, with no independent mode. Preserve preview/lock/lifecycle fences |
 | Inspection | Furniture/Room/Assistant panels and selected feature/issue | Focus actual canonical data/current controls; no provider cost for focus |
 | Guide | Tour/welcome/replay, native Next/Back/Skip/Escape | Chat request starts the existing tour with real target/readiness/cleanup; guide owns its focus-isolated controls |
 | Project | Export formats, import chooser, Start a new room | Existing native downloads/chooser/replacement confirmation; visitor supplies local file and confirms replacement |

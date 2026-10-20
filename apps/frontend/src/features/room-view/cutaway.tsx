@@ -60,7 +60,6 @@ export type CutawayProps = Pick<
   placement: CataloguePlacement;
   onAddDesk: () => void;
   arranging: boolean;
-  onArrange: (arranging: boolean) => void;
   medyCamera?:
     (Extract<MedyControl, { type: 'camera' }> & { sequence: number }) | null;
   onMedyCamera?: (sequence: number) => void;
@@ -75,7 +74,6 @@ export default function Cutaway({
   placement,
   onAddDesk,
   arranging,
-  onArrange,
   medyCamera,
   onMedyCamera,
   onCameraAvailability,
@@ -239,10 +237,6 @@ export default function Cutaway({
         <ViewControls
           controller={controller}
           arranging={arranging}
-          onArrange={(next) => {
-            editing.cancel();
-            onArrange(next);
-          }}
           ready={ready && !lost}
           readOnly={readOnly}
           rotationLocked={!selectedPiece || selectedPiece.locks.rotation}
@@ -353,6 +347,7 @@ export default function Cutaway({
               camera={{ position: [7, 7, 9], near: 0.05, far: 200, fov: 50 }}
               gl={{ antialias: true, alpha: true, powerPreference: 'default' }}
               fallback={fallback}
+              onPointerMissed={() => props.onSelect(null)}
               onCreated={({ gl, invalidate }) => {
                 gl.setClearColor('#f7f5f0', 0);
                 const canvas = gl.domElement;
