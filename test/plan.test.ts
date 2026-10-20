@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   nudgePosition,
   planBox,
+  planLabelLayout,
   pointInPlan,
   snapPosition,
 } from '../apps/frontend/src/features/plan-view/adapter.js';
@@ -127,5 +128,63 @@ describe('dragged furniture stays against the intended physical room edge', () =
       z: 300,
     });
     expect(item.dimensions.width.value).toBe(12000);
+  });
+});
+
+describe('whole-word plan label fitting', () => {
+  it.each([0, 1, 2, 3] as const)(
+    'fits a wardrobe along its displayed long axis at quarter-turn %s',
+    (quarterTurns) => {
+      const item = piece('wardrobe', 2000, 2000, {
+        width: 1200,
+        depth: 600,
+        quarterTurns,
+      });
+      const before = structuredClone(item);
+      expect(planLabelLayout(item, 'Wardrobe')).toEqual({
+        rotation: quarterTurns % 2 ? -90 : 0,
+        fontSize: 185,
+      });
+      expect(item).toEqual(before);
+    },
+  );
+  it('keeps short names horizontal even on tall or rotated footprints', () => {
+    const bed = piece('bed', 2000, 2000, { width: 1600, depth: 2100 });
+    expect(planLabelLayout(bed, 'Bed')).toEqual({ rotation: 0, fontSize: 185 });
+    bed.pose.quarterTurns = 1;
+    expect(planLabelLayout(bed, 'Bed').rotation).toBe(0);
+    const shelf = piece('shelf', 2000, 2000, { width: 300, depth: 1000 });
+    expect(planLabelLayout(shelf, 'Shelf').rotation).toBe(-90);
+  });
+  it('fits compact square and shallow footprints without rotating a square', () => {
+    const cabinet = piece('cabinet', 2000, 2000, { width: 450, depth: 450 });
+    const layout = planLabelLayout(cabinet, 'Cabinet');
+    expect(layout.rotation).toBe(0);
+    expect(layout.fontSize * 'Cabinet'.length * 0.6).toBeLessThanOrEqual(360);
+    cabinet.dimensions.width.value = 1200;
+    cabinet.dimensions.depth.value = 150;
+    expect(planLabelLayout(cabinet, 'Shelf').fontSize).toBeLessThanOrEqual(
+      97.5,
+    );
+  });
+  it('keeps thin TV captions and unknown-size markers horizontal', () => {
+    const tv = piece('tv', 2000, 2000, {
+      catalogueId: 'tv-wall',
+      width: 1200,
+      depth: 80,
+      quarterTurns: 1,
+    });
+    expect(planLabelLayout(tv, 'TV', 135)).toEqual({
+      rotation: 0,
+      fontSize: 135,
+    });
+    tv.catalogueId = 'tv-tabletop';
+    expect(planLabelLayout(tv, 'TV', 135)).toEqual({
+      rotation: 0,
+      fontSize: 135,
+    });
+    tv.catalogueId = 'procedural-desk';
+    tv.dimensions.width = { value: null, status: 'unknown', sourceId: null };
+    expect(planLabelLayout(tv, 'Desk')).toEqual({ rotation: 0, fontSize: 185 });
   });
 });

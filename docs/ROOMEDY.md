@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Fitting2D furniture labels — RM-015BA:** Whole names turn sideways when a tall narrow footprint lacks horizontal space; names that fit stay horizontal. Shared bounded type fitting preserves TV captions, unknown fallback, front/selection/physical geometry and commands. [Ticket](tickets/RM-015BA-fit-plan-labels-to-furniture.md), [allocation](commit-plans/RM-015BA.md), [evidence](validation/RM-015BA.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Header groups and Project motion — RM-015AZ:** Project then Undo follows the brand; Furniture/Room/Medy moves to the right to match the properties column. The Project dropdown fades/slides/scales open and closed through one interruptible finite owner, with immediate closing focus exclusion and responsive anchoring. [Ticket](tickets/RM-015AZ-align-header-controls-and-animate-project.md), [allocation](commit-plans/RM-015AZ.md), [evidence](validation/RM-015AZ.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Medy identity and chat — RM-015AY:** The assistant is displayed as Medy with one shared decorative sparkle in studio/navigation/landing. Visitor messages and text align right in warm bubbles; assistant replies are plain on the left. A keyboard-focusable bounded history keeps older messages scrollable and the composer/actions reachable. Fake greetings, tour and real instruction use the same name. [Ticket](tickets/RM-015AY-refine-medy-identity-and-chat.md), [allocation](commit-plans/RM-015AY.md), [evidence](validation/RM-015AY.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -1383,8 +1385,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of Project→Undo beside brand, right-side panel tabs and smooth reversible Project menu. Q held, guide paused, RM-016 Planned.
-Active ticket: RM-015AZ
+Next action: Await actual owner visual review of the locally validated sideways2D labels and earlier corrections; Q held, guide goal paused, RM-016 Planned. No live/paid/delegation/push/deploy.
+Active ticket: RM-015BA
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1409,7 +1411,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T16:31:56+00:00",
+  "updated_at": "2026-10-20T16:44:00+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1598,8 +1600,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AZ",
-  "next_action": "Await actual owner visual review of Project→Undo beside brand, right-side panel tabs and smooth reversible Project menu. Q held, guide paused, RM-016 Planned.",
+  "active_ticket": "RM-015BA",
+  "next_action": "Await actual owner visual review of the locally validated sideways2D labels and earlier corrections; Q held, guide goal paused, RM-016 Planned. No live/paid/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2080,14 +2082,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AW.md",
         "docs/validation/RM-015AX.md",
         "docs/validation/RM-015AY.md",
-        "docs/validation/RM-015AZ.md"
+        "docs/validation/RM-015AZ.md",
+        "docs/validation/RM-015BA.md"
       ],
       "blockers": [],
       "approval": {
-        "quote": "since furunite room and Medy controls what the right column does, lets switch the position of the cta's of those with the Undo and project buttons; but make it so that Project appears first; and also add a smooth animation for the project dropdown its too static",
-        "source": "human:current-chat/2026-10-20/header-order-project-motion",
-        "scope": "RM-015AZ header group order and Project menu motion only; no visual approval",
-        "recorded_at": "2026-10-20T16:11:39+00:00"
+        "quote": "i think in this case the text can be vertical rather than horziontal (obv the letters will not be above each other i think u know what i mean here)",
+        "source": "human:current-chat/2026-10-20/sideways-furniture-label",
+        "scope": "RM-015BA precision2D label fitting only; no visual approval",
+        "recorded_at": "2026-10-20T16:35:57+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2575,6 +2578,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/header-order-project-motion",
             "scope": "RM-015AZ header group order and Project menu motion only; no visual approval",
             "recorded_at": "2026-10-20T16:11:39+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "i think in this case the text can be vertical rather than horziontal (obv the letters will not be above each other i think u know what i mean here)",
+            "source": "human:current-chat/2026-10-20/sideways-furniture-label",
+            "scope": "RM-015BA precision2D label fitting only; no visual approval",
+            "recorded_at": "2026-10-20T16:35:57+00:00"
           }
         }
       ]

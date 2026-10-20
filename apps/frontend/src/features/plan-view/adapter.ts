@@ -1,5 +1,9 @@
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
-import { footprint, wallMountedPose } from '@roomedy/spatial';
+import {
+  findCatalogueEntry,
+  footprint,
+  wallMountedPose,
+} from '@roomedy/spatial';
 import type { Presentation, RoomFrame } from '../session/state';
 
 export interface PlanBox {
@@ -7,6 +11,30 @@ export interface PlanBox {
   z: number;
   width: number;
   depth: number;
+}
+/** Fit a whole word to the displayed footprint, independently of its front. */
+export function planLabelLayout(item: Furniture, text: string, fontSize = 185) {
+  const bounds = footprint(item);
+  // TV names are captions: their intentionally thin footprint cannot hold text.
+  if (
+    !bounds ||
+    findCatalogueEntry(item.catalogueId, item.catalogueVersion)?.category ===
+      'tv'
+  )
+    return { rotation: 0, fontSize };
+  const width = bounds.maxX - bounds.minX,
+    depth = bounds.maxZ - bounds.minZ;
+  const inset = (span: number) => span - Math.min(120, span * 0.2);
+  const textUnits = Math.max(1, text.length) * 0.6;
+  const vertical = depth > width && textUnits * fontSize > inset(width);
+  return {
+    rotation: vertical ? -90 : 0,
+    fontSize: Math.min(
+      fontSize,
+      inset(vertical ? depth : width) / textUnits,
+      (vertical ? width : depth) * 0.65,
+    ),
+  };
 }
 /** SVG +x right/east, +y down/south; SVG y is semantic Z, all units are mm. */
 export function planBox(

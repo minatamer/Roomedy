@@ -4,6 +4,8 @@ Read [the documentation map](docs/README.md), [current blueprint](docs/ROOMEDY.m
 
 ## Current scope and checkpoint
 
+- Current RM-015BA follows bc8cef3: whole2D furniture names turn sideways when a tall narrow projected footprint needs its long axis. Keep short names horizontal, bounded type size, unchanged TV captions/unknown fallback/selection/front geometry and commands. Shared finite180ms text transition remains presentation only. Read [ticket](docs/tickets/RM-015BA-fit-plan-labels-to-furniture.md), [allocation](docs/commit-plans/RM-015BA.md) and [receipt](docs/validation/RM-015BA.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+
 - Current RM-015AZ follows df3fd48: owner swaps header groups, placing Project before Undo after the brand and Furniture/Room/Medy at the right. Keep natural narrow tabs/auto working height. Project uses one finite interruptible open/close motion owner, immediate inert/expansion/focus handling, left desktop/right narrow group anchoring and teardown fencing. Existing file/Undo/tour/command authority remains. Read [ticket](docs/tickets/RM-015AZ-align-header-controls-and-animate-project.md), [allocation](docs/commit-plans/RM-015AZ.md) and [receipt](docs/validation/RM-015AZ.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
 
 

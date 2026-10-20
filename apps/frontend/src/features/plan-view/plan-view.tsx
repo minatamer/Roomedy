@@ -27,7 +27,13 @@ import { comparisonFrame } from '../session/state';
 import { FINISH_PALETTE } from '../catalogue/finishes';
 import { roomSurface } from '@roomedy/contracts/surfaces';
 import { failureMessage } from '../room-editor/messages';
-import { nudgePosition, planBox, pointInPlan, snapPosition } from './adapter';
+import {
+  nudgePosition,
+  planBox,
+  planLabelLayout,
+  pointInPlan,
+  snapPosition,
+} from './adapter';
 import styles from '../room-editor/editor.module.css';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 import { CataloguePlanGhost } from '../room-editor/catalogue-placement-ui';
@@ -705,19 +711,32 @@ export function PlanView({
               ?.category ?? 'piece';
           const mounted = wallMounted(item),
             front = localFront(item.pose.quarterTurns);
-          const label = (
-            {
-              'tv-stand': 'TV stand',
-              'chest-drawers': 'Drawers',
-              'bedside-drawers': 'Drawers',
-              'bedroom-bench': 'Bench',
-              armchair: 'Chair',
-              'floor-lamp': 'Lamp',
-              'side-table': 'Table',
-              'drawer-shelf': 'Shelf',
-              'full-length-mirror': 'Mirror',
-            } as Record<string, string>
-          )[item.catalogueId];
+          const label =
+            (
+              {
+                'tv-stand': 'TV stand',
+                'chest-drawers': 'Drawers',
+                'bedside-drawers': 'Drawers',
+                'bedroom-bench': 'Bench',
+                armchair: 'Chair',
+                'floor-lamp': 'Lamp',
+                'side-table': 'Table',
+                'drawer-shelf': 'Shelf',
+                'full-length-mirror': 'Mirror',
+              } as Record<string, string>
+            )[item.catalogueId] ??
+            (category === 'tv'
+              ? 'TV'
+              : category === 'storage'
+                ? item.catalogueId === 'bedside-storage-fixed'
+                  ? 'Cabinet'
+                  : 'Shelf'
+                : category[0]!.toUpperCase() + category.slice(1));
+          const labelLayout = planLabelLayout(
+            item,
+            label,
+            category === 'tv' ? 135 : 185,
+          );
           return (
             <g
               key={item.id}
@@ -777,18 +796,9 @@ export function PlanView({
                   y={mounted ? front[1] * ((d ?? 0) / 2 + 300) : 0}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  transform={
-                    label && item.pose.quarterTurns % 2
-                      ? 'rotate(-90)'
-                      : undefined
-                  }
-                  fontSize={
-                    category === 'tv'
-                      ? 135
-                      : label
-                        ? Math.min(185, (w ?? 520) / (label.length * 0.6))
-                        : 185
-                  }
+                  className={styles.pieceLabel}
+                  transform={`rotate(${labelLayout.rotation})`}
+                  fontSize={labelLayout.fontSize}
                   fontWeight="600"
                   fill={
                     !mounted &&
@@ -800,14 +810,7 @@ export function PlanView({
                   }
                   pointerEvents="none"
                 >
-                  {label ??
-                    (category === 'tv'
-                      ? 'TV'
-                      : category === 'storage'
-                        ? item.catalogueId === 'bedside-storage-fixed'
-                          ? 'Cabinet'
-                          : 'Shelf'
-                        : category[0]!.toUpperCase() + category.slice(1))}
+                  {label}
                   {w === null || d === null ? ' ?' : ''}
                 </text>
               )}
