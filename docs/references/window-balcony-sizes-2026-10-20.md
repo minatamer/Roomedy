@@ -1,0 +1,7 @@
+# Window and balcony opening size decisions —20October2026
+
+Owner wants sample sizes and paired large glass balcony doors, confined to the room opening. Primary source checked20October: [Stegbar manufacturer standard-size catalogue](https://www.stegbar.com.au/globalassets/brochure/8306_standard-size-and-range-catalogue.pdf), window charts and sliding patio-door chart. It distinguishes frame dimensions from larger structural openings and offers multiple glazing configurations. These are manufacturer/region-specific; Roomedy is not a construction sizing or safety specification.
+
+Select rounded planning presets in mm: windows Small600×900, Medium1200×1200, Wide1800×1200, Large2400×1500; paired balcony doors Compact1800×2100, Standard2400×2100, Wide3000×2100, Tall2400×2400. These illustrative choices are authored for quick room planning, not exact copied product combinations or claims of a worldwide standard. They describe overall modeled opening width/height; no rough-opening allowance, sill inference, price, shop, outside balcony or claimed measured confirmation. Existing manual numeric fields remain for the visitor's actual room.
+
+Default new balcony representation is two framed glass sliding panels, one moving and one stationary; known hinge alternatives retain the existing explicit mechanism/hinge readiness and conservative spatial rules. Pure closed panel geometry is shared with local exports. Existing local glass/wood resources supply materials; no external asset, dependency or runtime image service is added.

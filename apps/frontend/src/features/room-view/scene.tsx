@@ -72,6 +72,7 @@ import {
 } from './articulation';
 import { OpeningMotion, useOpeningMotion } from './opening-motion';
 import { cabinetDoorRig } from './articulation-model';
+import { balconyDoorPanels, balconyPanelMotion } from './opening-parts';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 
 export type CameraAction = {
@@ -863,14 +864,15 @@ function Opening({
           : 0;
   const t = Math.min(0.035, w / 6, h / 6),
     window = feature.kind === 'window',
-    door = feature.kind === 'door';
+    door = feature.kind === 'door',
+    balcony = door && feature.purpose === 'balcony';
   const capability = featureOpening(feature);
   const motion =
     feature.kind !== 'obstacle' ? openingLeafMotion(feature, w, depth) : null;
-  const moving = (children: ReactNode) =>
-    capability && motion ? (
-      <OpeningMotion open={open} motion={motion}>
-        <group position={motion.pivot.map((v) => -v) as Triple}>
+  const moving = (children: ReactNode, leafMotion = motion) =>
+    capability && leafMotion ? (
+      <OpeningMotion open={open} motion={leafMotion}>
+        <group position={leafMotion.pivot.map((v) => -v) as Triple}>
           {children}
         </group>
       </OpeningMotion>
@@ -906,7 +908,7 @@ function Opening({
     [-w / 2 + t / 2, 0, t, h],
     [w / 2 - t / 2, 0, t, h],
     [0, h / 2 - t / 2, w - t * 2, t],
-    ...(window ? [[0, -h / 2 + t / 2, w - t * 2, t]] : []),
+    ...(window || balcony ? [[0, -h / 2 + t / 2, w - t * 2, t]] : []),
   ];
   return (
     <group
@@ -929,7 +931,62 @@ function Opening({
         if (e.delta <= 4) onSelect(feature.id);
       }}
     >
-      {window && windowGlass ? (
+      {balcony && windowGlass && feature.kind === 'door' ? (
+        <>
+          <mesh
+            geometry={geometry}
+            material={windowGlass.daylight}
+            visible={feature.mechanism !== 'outward'}
+            position={[0, 0, -depth - 0.035]}
+            scale={[w - t * 2, h - t * 2, 0.008]}
+            dispose={null}
+          />
+          {balconyDoorPanels(w, h, depth, feature.mechanism === 'sliding').map(
+            (panel) => (
+              <group key={panel.index}>
+                {moving(
+                  <group>
+                    {panel.parts.map((part) =>
+                      part.kind === 'glass' ? (
+                        <mesh
+                          key={part.name}
+                          geometry={geometry}
+                          material={windowGlass.material}
+                          position={part.center}
+                          scale={part.size}
+                          dispose={null}
+                        />
+                      ) : (
+                        <mesh
+                          key={part.name}
+                          geometry={surfaces.hard}
+                          position={part.center}
+                          scale={part.size}
+                          dispose={null}
+                          castShadow
+                          receiveShadow
+                        >
+                          <OwnedStandard
+                            color={
+                              part.kind === 'handle'
+                                ? '#574b3e'
+                                : selected
+                                  ? '#a77342'
+                                  : '#e8e0d3'
+                            }
+                            roughness={part.kind === 'handle' ? 0.35 : 0.7}
+                          />
+                        </mesh>
+                      ),
+                    )}
+                  </group>,
+                  balconyPanelMotion(feature, w, depth, panel.index),
+                )}
+              </group>
+            ),
+          )}
+        </>
+      ) : window && windowGlass ? (
         <>
           <mesh
             geometry={geometry}
@@ -1433,7 +1490,9 @@ export function RoomScene(props: SceneProps) {
     ) ||
     desiredRoom.room.features.some(
       (feature) =>
-        feature.kind === 'window' && featureBox(desiredRoom, feature),
+        (feature.kind === 'window' ||
+          (feature.kind === 'door' && feature.purpose === 'balcony')) &&
+        featureBox(desiredRoom, feature),
     );
   const windowGlass = useMemo(
     () => (hasWindows ? createWindowGlass() : null),

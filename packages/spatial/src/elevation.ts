@@ -3,13 +3,15 @@ import { findCatalogueEntry } from './catalogue.js';
 import { footprint } from './coordinates.js';
 
 export const featureLabel = (feature: Feature) =>
-  feature.kind === 'door' && feature.purpose === 'bathroom'
-    ? 'Bathroom door'
-    : feature.kind === 'door'
-      ? 'Door'
-      : feature.kind === 'window'
-        ? 'Window'
-        : 'Fixed obstacle';
+  feature.kind === 'door' && feature.purpose === 'balcony'
+    ? 'Balcony doors'
+    : feature.kind === 'door' && feature.purpose === 'bathroom'
+      ? 'Bathroom door'
+      : feature.kind === 'door'
+        ? 'Door'
+        : feature.kind === 'window'
+          ? 'Window'
+          : 'Fixed obstacle';
 export const wallMounted = (item: Furniture) =>
   findCatalogueEntry(item.catalogueId, item.catalogueVersion)?.placement ===
   'wall';

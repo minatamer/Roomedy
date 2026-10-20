@@ -65,6 +65,48 @@ const project = (count = 1) => {
   return p;
 };
 describe('editable projects and bounded portfolio facts', () => {
+  it('exports paired balcony glass and frame geometry with one shared material lifetime', () => {
+    const feature = {
+        ...door('balcony'),
+        purpose: 'balcony' as const,
+        mechanism: 'sliding' as const,
+        wall: 'north' as const,
+        width: known(2400),
+        height: known(2100),
+      },
+      room = commandRoom([], [feature]),
+      before = structuredClone(room),
+      scene = buildDesignScene(room);
+    let disposed = 0;
+    try {
+      const opening = scene.root.getObjectByName('Balcony doors')!;
+      expect(opening).toBeDefined();
+      const first = opening.getObjectByName('Balcony glass 1')!,
+        second = opening.getObjectByName('Balcony glass 2')!;
+      expect(first).toBeDefined();
+      expect(second).toBeDefined();
+      expect(opening.getObjectByName('Balcony handle 1')).toBeDefined();
+      expect(opening.getObjectByName('Balcony handle 2')).toBeDefined();
+      expect(opening.getObjectByName('Door panel')).toBeUndefined();
+      const size = new Box3().setFromObject(opening).getSize(new Vector3());
+      expect(size.x).toBeCloseTo(2.4, 4);
+      expect(size.y).toBeCloseTo(2.1, 4);
+      if (!('material' in first) || !('material' in second))
+        throw new Error('fixture');
+      const glass = first.material as {
+        transmission: number;
+        addEventListener(type: string, callback: () => void): void;
+      };
+      expect(second.material).toBe(glass);
+      expect(glass.transmission).toBeGreaterThan(0);
+      glass.addEventListener('dispose', () => disposed++);
+      expect(room).toEqual(before);
+    } finally {
+      scene.dispose();
+      scene.dispose();
+    }
+    expect(disposed).toBe(1);
+  });
   it('round-trips the same closed editable data while excluding transient room state', () => {
     const c = new SessionController(commandRoom([piece('desk')]));
     try {

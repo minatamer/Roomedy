@@ -1,4 +1,4 @@
-import { featureLabel } from '@roomedy/spatial';
+import { featureLabel, BALCONY_SIZE_PRESETS } from '@roomedy/spatial';
 import type { Feature, RoomDocument } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
@@ -31,7 +31,7 @@ export function RoomPanel({
   };
   const addFeature = (
     kind: Feature['kind'],
-    purpose: 'room' | 'bathroom' = 'room',
+    purpose: 'room' | 'bathroom' | 'balcony' = 'room',
   ) => {
     const unknown = { status: 'unknown' as const, sourceId: null },
       estimate = (value: number) => ({
@@ -44,8 +44,20 @@ export function RoomPanel({
       wall: 'unknown' as const,
       wallProvenance: unknown,
       offset: estimate(200),
-      width: estimate(kind === 'door' ? 900 : 1000),
-      height: estimate(kind === 'door' ? 2100 : 1000),
+      width: estimate(
+        purpose === 'balcony'
+          ? BALCONY_SIZE_PRESETS[0]!.width
+          : kind === 'door'
+            ? 900
+            : 1000,
+      ),
+      height: estimate(
+        purpose === 'balcony'
+          ? BALCONY_SIZE_PRESETS[0]!.height
+          : kind === 'door'
+            ? 2100
+            : 1000,
+      ),
       sill: estimate(0),
     };
     const feature: Feature =
@@ -54,8 +66,11 @@ export function RoomPanel({
             ...base,
             kind,
             purpose,
-            mechanism: 'unknown',
-            mechanismProvenance: unknown,
+            mechanism: purpose === 'balcony' ? 'sliding' : 'unknown',
+            mechanismProvenance:
+              purpose === 'balcony'
+                ? { status: 'estimated', sourceId: 'visitor-estimate' }
+                : unknown,
             hinge: 'unknown',
             hingeProvenance: unknown,
           }
@@ -306,6 +321,9 @@ export function RoomPanel({
             Add bathroom door
           </button>
           <button onClick={() => addFeature('window')}>Add window</button>
+          <button onClick={() => addFeature('door', 'balcony')}>
+            Add balcony doors
+          </button>
           <button onClick={() => addFeature('obstacle')}>Add obstacle</button>
         </div>
         <p className={styles.hint}>

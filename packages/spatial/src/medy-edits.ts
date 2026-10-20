@@ -24,6 +24,11 @@ import {
   requestedCatalogueSize,
 } from './size-presets.js';
 import { preferredFurnitureFacing } from './orientation.js';
+import {
+  BALCONY_SIZE_PRESETS,
+  applyOpeningSizePreset,
+  openingSizePresets,
+} from './opening-sizes.js';
 import { designPalette } from './design.js';
 import {
   medyDimensions,
@@ -97,7 +102,14 @@ export function medyEdit(
     /\b(set|make|change|preview|resize|adjust|correct|confirm|measured|mark|move|place|put|rotate|turn|face|delete|remove|lock|unlock|protect|unprotect|own|owned|replace|add|mount|hang)\b/.test(
       words,
     );
-  if (!editing && !/\bshould be\b/.test(words)) return null;
+  const openingPresetRequest =
+    /\buse\b/.test(words) &&
+    /\b(size|preset)\b/.test(words) &&
+    targets.length === 1 &&
+    targets[0]!.kind === 'feature' &&
+    openingSizePresets(targets[0]!.feature).length > 0;
+  if (!editing && !openingPresetRequest && !/\bshould be\b/.test(words))
+    return null;
   if (/\d,\d|\d\s*[-–—/*]\s*\d/.test(words))
     return ask(
       'Give me one exact value per dimension, using a dot for decimals and no thousands separator — for example, 1800 mm or 1.8 m.',
@@ -236,7 +248,7 @@ export function medyEdit(
   }
   // Feature additions use the same unknown/default measurements as the manual Add flow.
   const newFeature = words.match(
-    /\badd\s+(?:a |an |new )?(?:bathroom )?(door|window|obstacle)\b/,
+    /\badd\s+(?:a |an |new )?(?:(?:bathroom|balcony|patio|french|double glass|window) )?(door|window|obstacle)s?\b/,
   );
   if (newFeature) {
     if (room.room.features.length >= POLICY.features)
@@ -244,13 +256,26 @@ export function medyEdit(
         'This room is at its feature limit. Remove an unused opening or obstacle first.',
       );
     const kind = newFeature[1] as Feature['kind'];
+    const balcony =
+      kind === 'door' &&
+      /\b(balcony|patio|french)\b|\b(?:double glass|window) doors?\b/.test(
+        words,
+      );
     const base = {
       id: `medy-feature-${operationId}`.slice(0, 80),
       wall: 'unknown' as const,
       wallProvenance: unknown(),
       offset: estimate(200),
-      width: estimate(kind === 'door' ? 900 : 1000),
-      height: estimate(kind === 'door' ? 2100 : 1000),
+      width: estimate(
+        balcony ? BALCONY_SIZE_PRESETS[0]!.width : kind === 'door' ? 900 : 1000,
+      ),
+      height: estimate(
+        balcony
+          ? BALCONY_SIZE_PRESETS[0]!.height
+          : kind === 'door'
+            ? 2100
+            : 1000,
+      ),
       sill: estimate(0),
     };
     const feature: Feature =
@@ -258,11 +283,13 @@ export function medyEdit(
         ? {
             ...base,
             kind,
-            ...(/\bbathroom\b/.test(words)
-              ? { purpose: 'bathroom' as const }
-              : {}),
-            mechanism: 'unknown',
-            mechanismProvenance: unknown(),
+            ...(balcony
+              ? { purpose: 'balcony' as const }
+              : /\bbathroom\b/.test(words)
+                ? { purpose: 'bathroom' as const }
+                : {}),
+            mechanism: balcony ? 'sliding' : 'unknown',
+            mechanismProvenance: balcony ? planned() : unknown(),
             hinge: 'unknown',
             hingeProvenance: unknown(),
           }
@@ -674,9 +701,58 @@ export function medyEdit(
         /\b(north|south|east|west|unknown)\s+wall\b|\bwall\s+(?:to )?(north|south|east|west|unknown)\b/,
       );
     let changed = false;
-    if (next.kind === 'door' && /\b(bathroom|hallway|hall)\b/.test(words)) {
-      next.purpose = /\bbathroom\b/.test(words) ? 'bathroom' : 'room';
+    if (
+      next.kind === 'door' &&
+      /\b(bathroom|balcony|patio|hallway|hall)\b/.test(words)
+    ) {
+      next.purpose = /\b(balcony|patio)\b/.test(words)
+        ? 'balcony'
+        : /\bbathroom\b/.test(words)
+          ? 'bathroom'
+          : 'room';
       changed = true;
+    }
+    const sizeNames = [
+        ...new Set(
+          [
+            ...words.matchAll(
+              /\b(small|medium|wide|large|compact|standard|tall)\b/g,
+            ),
+          ].map((match) => match[1]!),
+        ),
+      ],
+      sizeName = sizeNames[0];
+    const numericAdjectives =
+      !/\bpreset\b/.test(words) &&
+      sizeNames.length > 0 &&
+      sizeNames.every(
+        (name) =>
+          (name === 'wide' && hasDimensions.values.width !== undefined) ||
+          (name === 'tall' && hasDimensions.values.height !== undefined),
+      );
+    if (
+      sizeName &&
+      !numericAdjectives &&
+      /\b(size|preset|resize|make|set|change|use)\b/.test(words) &&
+      openingSizePresets(next).length
+    ) {
+      if (sizeNames.length > 1)
+        return ask('Choose one opening size preset for this change.');
+      if (Object.keys(hasDimensions.values).length || markUnknown)
+        return ask(
+          'Choose a size preset, or give me exact dimensions as a separate request.',
+        );
+      const resized = applyOpeningSizePreset(next, sizeName);
+      if (!resized)
+        return ask(
+          `Choose ${openingSizePresets(next)
+            .map((p) => p.label.toLowerCase())
+            .join(', ')} for ${label}.`,
+        );
+      actions.push({ type: 'update-feature', id: next.id, feature: resized });
+      return batch(
+        `Resize ${label} to ${sizeName} · ${resized.width.value} × ${resized.height.value} mm`,
+      );
     }
     for (const axis of [
       'width',

@@ -64,8 +64,18 @@ export function featureOpening(feature: Feature): OpeningCapability | null {
     return null;
   return {
     kind: feature.mechanism === 'sliding' ? 'sliding' : 'hinged',
-    openLabel: feature.kind === 'door' ? 'Open door' : 'Open window',
-    closeLabel: feature.kind === 'door' ? 'Close door' : 'Close window',
+    openLabel:
+      feature.kind === 'door'
+        ? feature.purpose === 'balcony'
+          ? 'Open doors'
+          : 'Open door'
+        : 'Open window',
+    closeLabel:
+      feature.kind === 'door'
+        ? feature.purpose === 'balcony'
+          ? 'Close doors'
+          : 'Close door'
+        : 'Close window',
   };
 }
 /** Seconds are clamped after background suspension. Endpoints settle exactly. */

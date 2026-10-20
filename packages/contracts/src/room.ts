@@ -74,7 +74,7 @@ export const featureSchema = z
     z.strictObject({
       ...featureBase,
       kind: z.literal('door'),
-      purpose: z.enum(['room', 'bathroom']).optional(),
+      purpose: z.enum(['room', 'bathroom', 'balcony']).optional(),
       mechanism: z.enum(['inward', 'outward', 'sliding', 'unknown']),
       mechanismProvenance: factProvenanceSchema,
       hinge: z.enum(['left', 'right', 'unknown']),

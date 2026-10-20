@@ -111,11 +111,16 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
   let featureWords = t;
   for (const piece of names)
     featureWords = featureWords.replace(namePattern(piece.label), 'item');
+  const balcony =
+    /\b(?:balcony|patio|french|double glass|window) doors?\b/.test(
+      featureWords,
+    );
   for (const feature of room.room.features)
     if (
       new RegExp(`\\b${feature.kind}s?\\b`).test(featureWords) &&
-      (!/\bbathroom\b/.test(featureWords) ||
-        (feature.kind === 'door' && feature.purpose === 'bathroom'))
+      (!/\bbathroom doors?\b/.test(featureWords) ||
+        (feature.kind === 'door' && feature.purpose === 'bathroom')) &&
+      (!balcony || (feature.kind === 'door' && feature.purpose === 'balcony'))
     )
       targets.push({ kind: 'feature', id: feature.id, feature });
   if (/\b(room|bedroom)\b/.test(featureWords) && !targets.length)

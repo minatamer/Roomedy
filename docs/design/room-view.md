@@ -1,5 +1,9 @@
 # Main-editor cutaway
 
+## Paired balcony glazing — RM-015BF
+
+The optional balcony door purpose represents two framed glass panels in the existing room-wall aperture, without exterior geometry. A pure closed panel description serves editor and exports; share current glass/daylight resources, outer trim and disposal. Default sliding moves one framed pane/handle behind the stationary pane within the aperture. Known hinged mechanisms pivot opposite leaves with attached handles through the existing finite preview owner. Preserve original hinge readiness and conservative inward-envelope checks; opening previews remain illustrative, not a clearance certificate. Canonical data,2D, history and closed exports never store transient open amounts.2D labels say Balcony Doors, with a paired seam and normal selection owner.
+
 ## Adding from the catalogue — RM-015AK
 
 Catalogue additions have one transient placement owner, independent of canonical accepted/current/history.2D maps through the actual rendered SVG viewBox;3D uses the actual ready camera ray onto floor Y0. The ghost keeps physical dimensions/quarter-turns and reuses shared half-mm footprint snapping/clamping. It is a local subscriber: pointer frames do not rerender the room tree or dispatch commands. The3D preview uses two small box meshes, without asset downloads, textures or shadows; the owning Fiber tree disposes them. Loading/context failure does not silently substitute a2D map for a requested3D drop.

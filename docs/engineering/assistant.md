@@ -1,5 +1,9 @@
 # Grounded assistant policy — RM-011
 
+## Opening presets and balcony doors — RM-015BF
+
+Medy resolves balcony/patio/double-glass/window-door additions into the selected paired balcony type. It shares the manual opening preset registry and estimated width/height changes, preserving omitted and unchanged facts. Explicit numeric wide/tall phrases remain exact supplied-dimension corrections through the existing measurement semantics. Multiple/ambiguous preset names and conflicting explicit quantities produce no partial edit. Distinguish naming a balcony door from explicitly changing a current door destination; multiple doors still need an unambiguous target. Existing visitor compilation, correlated preview/Apply/Undo and protected door scope remain authoritative; no model argument/history/config grants edits. The medy-room-6 capability examples change no provider/model/key/runtime mode or paid authority.
+
 **Current presentation — RM-015AY:** Medy casing and one shared aria-hidden SVG sparkle identify studio/navigation/landing. Right-aligned visitor text/bubble and plain left assistant replies share a keyboard-focusable bounded history; cards, proposal Apply/Cancel, composer and motion stay real. Prompt revision medy-room-5 changes only identity casing; exact visitor/model authority, strict transport/configuration, limits and fake/live separation stay unchanged. [Evidence](../validation/RM-015AY.md).
 
 ## Current Medy policy — RM-015AT (20 October2026)

@@ -10,6 +10,8 @@ import {
   placementTarget,
   featureLabel,
   wallMountedPose,
+  openingSizePresets,
+  applyOpeningSizePreset,
 } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { MeasurementField, measurementLabel } from './measurements';
@@ -402,10 +404,10 @@ export function FeatureInspector({
   feature: Feature;
   openingPreview?: ReactNode;
 }) {
-  const update = (next: Feature) => {
+  const update = (next: Feature, label = 'Correct opening') => {
     const r = controller.dispatch(
       [{ type: 'update-feature', id: feature.id, feature: next }],
-      'Correct opening',
+      label,
     );
     if (!r.ok)
       controller.notify(
@@ -416,6 +418,12 @@ export function FeatureInspector({
     value === 'unknown'
       ? { status: 'unknown' as const, sourceId: null }
       : { status: 'confirmed' as const, sourceId: 'visitor-confirmed' };
+  const presets = openingSizePresets(feature),
+    currentPreset = presets.find(
+      (preset) =>
+        preset.width === feature.width.value &&
+        preset.height === feature.height.value,
+    );
   return (
     <>
       <div className={styles.panelTitle}>
@@ -425,6 +433,28 @@ export function FeatureInspector({
         </h2>
       </div>
       {openingPreview}
+      {presets.length > 0 && (
+        <label>
+          Size preset
+          <select
+            value={currentPreset?.id ?? 'custom'}
+            onChange={(event) => {
+              const next = applyOpeningSizePreset(feature, event.target.value);
+              if (next)
+                update(next, `Resize ${featureLabel(feature).toLowerCase()}`);
+            }}
+          >
+            <option value="custom" disabled>
+              Custom / current size
+            </option>
+            {presets.map((preset) => (
+              <option key={preset.id} value={preset.id}>
+                {preset.label} · {preset.width} × {preset.height} mm
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       {feature.kind === 'door' && (
         <label>
           Door leads to
@@ -433,12 +463,13 @@ export function FeatureInspector({
             onChange={(e) =>
               update({
                 ...feature,
-                purpose: e.target.value as 'room' | 'bathroom',
+                purpose: e.target.value as 'room' | 'bathroom' | 'balcony',
               })
             }
           >
             <option value="room">Hall / adjoining space</option>
             <option value="bathroom">Bathroom</option>
+            <option value="balcony">Balcony · double glass doors</option>
           </select>
         </label>
       )}
@@ -530,7 +561,7 @@ export function FeatureInspector({
               )}
           </>
         )}
-        {feature.kind === 'door' && (
+        {feature.kind === 'door' && feature.mechanism !== 'sliding' && (
           <>
             <label>
               Hinge (your correction)

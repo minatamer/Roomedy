@@ -785,12 +785,45 @@ export function PlanView({
                 stroke={
                   selected
                     ? '#704830'
-                    : feature.kind === 'window'
+                    : feature.kind === 'window' ||
+                        (feature.kind === 'door' &&
+                          feature.purpose === 'balcony')
                       ? '#f7f5ef'
                       : '#77634c'
                 }
                 strokeWidth={selected ? 140 : 100}
               />
+              {feature.kind === 'door' && feature.purpose === 'balcony' && (
+                <line
+                  x1={
+                    (r.minX + r.maxX) / 2 -
+                    (feature.wall === 'east' || feature.wall === 'west'
+                      ? 70
+                      : 0)
+                  }
+                  y1={
+                    (r.minZ + r.maxZ) / 2 -
+                    (feature.wall === 'north' || feature.wall === 'south'
+                      ? 70
+                      : 0)
+                  }
+                  x2={
+                    (r.minX + r.maxX) / 2 +
+                    (feature.wall === 'east' || feature.wall === 'west'
+                      ? 70
+                      : 0)
+                  }
+                  y2={
+                    (r.minZ + r.maxZ) / 2 +
+                    (feature.wall === 'north' || feature.wall === 'south'
+                      ? 70
+                      : 0)
+                  }
+                  stroke="#77634c"
+                  strokeWidth="20"
+                  pointerEvents="none"
+                />
+              )}
               <line
                 x1={r.minX}
                 y1={r.minZ}

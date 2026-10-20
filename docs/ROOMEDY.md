@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Window sizes and balcony doors — RM-015BF:** Windows and paired balcony glass doors have useful editable width/height presets. A balcony door is an opening in the same rectangular room, with paired framed glazing and existing sliding/known-hinge previews; no exterior room. Presets change planning estimates through the shared command/Undo owner and preserve other facts. [Ticket](tickets/RM-015BF-window-size-presets-and-balcony-doors.md), [exact allocation](commit-plans/RM-015BF.md), [size decisions](references/window-balcony-sizes-2026-10-20.md), [evidence](validation/RM-015BF.md). Actual owner approval pending.
+
 **Adaptive2D names — RM-015BE:** Every placed door says Door or Bathroom Door from its own purpose. Furniture labels vary size, wrap whole words or turn sideways; thin/tiny pieces use nearby readable captions with front-arrow space. Previous-position overlays keep current names readable. [Ticket](tickets/RM-015BE-label-doors-and-adapt-plan-text.md), [allocation](commit-plans/RM-015BE.md), [evidence](validation/RM-015BE.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Inset chat Send — RM-015BD:** Medy uses Retailor’s single rounded composer with a bottom-right arrow inside the field, a44px target and reserved text space, adapted to Roomedy cocoa/oat colours. Keyboard/accessibility/Send/history remain. [Ticket](tickets/RM-015BD-inset-the-chat-send-button.md), [allocation](commit-plans/RM-015BD.md), [evidence](validation/RM-015BD.md). Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
@@ -1393,8 +1395,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of aligned catalogue footer dimensions/drag handles and prior revisions. Scoped formatting/lint/frontend types and actual19-card desktop/phone geometry plus drag/Add/Undo pass. Prior full-root/build proof stays historical. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
-Active ticket: RM-015AV
+Next action: Await actual owner visual review of window size presets and paired glass balcony doors. Final pnpm check passes902tests/57files,7boundaries and both builds;271-input/BUILD_ID identity and native feature observations recorded. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
+Active ticket: RM-015BF
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1419,7 +1421,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T18:06:08+00:00",
+  "updated_at": "2026-10-20T18:38:02+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1608,8 +1610,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AV",
-  "next_action": "Await actual owner visual review of aligned catalogue footer dimensions/drag handles and prior revisions. Scoped formatting/lint/frontend types and actual19-card desktop/phone geometry plus drag/Add/Undo pass. Prior full-root/build proof stays historical. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
+  "active_ticket": "RM-015BF",
+  "next_action": "Await actual owner visual review of window size presets and paired glass balcony doors. Final pnpm check passes902tests/57files,7boundaries and both builds;271-input/BUILD_ID identity and native feature observations recorded. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2098,14 +2100,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015BE.md",
         "docs/validation/RM-015BE.md#dimension-copy-follow-up--20october2026",
         "docs/validation/RM-015BE.md#window-labels-follow-up--20october2026",
-        "docs/validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026"
+        "docs/validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026",
+        "docs/validation/RM-015BF.md"
       ],
       "blockers": [],
       "approval": {
-        "source": "human:current-chat/2026-10-20/catalogue-grip-alignment",
-        "scope": "RM-015AV align catalogue dimensions/drag grip from attached screenshot; no visual approval",
-        "quote": "cant this be alligned?",
-        "recorded_at": "2026-10-20T18:01:38+00:00"
+        "source": "human:current-chat/2026-10-20/window-sizes-balcony-doors",
+        "scope": "RM-015BF window presets and paired glass balcony opening with size choices; no exterior/visual approval",
+        "quote": "for windows, i htink we should add sample sizes too OR OR balcones aswell, like not the outside of it, but just the 2 big doors yk what i mean? the 2 big window doors also in different sizes",
+        "recorded_at": "2026-10-20T18:11:08+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2674,6 +2677,15 @@ This checklist records local work. Human approvals and unresolved external check
             "scope": "RM-015AV align catalogue dimensions/drag grip from attached screenshot; no visual approval",
             "quote": "cant this be alligned?",
             "recorded_at": "2026-10-20T18:01:38+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "source": "human:current-chat/2026-10-20/window-sizes-balcony-doors",
+            "scope": "RM-015BF window presets and paired glass balcony opening with size choices; no exterior/visual approval",
+            "quote": "for windows, i htink we should add sample sizes too OR OR balcones aswell, like not the outside of it, but just the 2 big doors yk what i mean? the 2 big window doors also in different sizes",
+            "recorded_at": "2026-10-20T18:11:08+00:00"
           }
         }
       ]

@@ -29,6 +29,13 @@ export {
   featureLabel,
 } from './elevation.js';
 export { backWallGap, preferredFurnitureFacing } from './orientation.js';
+export {
+  WINDOW_SIZE_PRESETS,
+  BALCONY_SIZE_PRESETS,
+  openingSizePresets,
+  applyOpeningSizePreset,
+} from './opening-sizes.js';
+export type { OpeningSizePreset } from './opening-sizes.js';
 export { evaluateBatch, validateRoom } from './commands.js';
 export {
   LayoutSearch,

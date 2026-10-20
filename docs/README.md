@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Window sizes and balcony doors — RM-015BF:** Window size presets and paired glass balcony-door openings reuse the current room, commands,2D/3D, opening previews and exports. Four editable planning sizes per type; no outside balcony. Medy uses the same registry. [Ticket](tickets/RM-015BF-window-size-presets-and-balcony-doors.md), [allocation](commit-plans/RM-015BF.md), [size decisions](references/window-balcony-sizes-2026-10-20.md), [evidence](validation/RM-015BF.md). Actual owner approval pending.
+
 **Catalogue card alignment —20October:** Dimensions and drag handles share one centered footer row; handles retain44×44px targets and neighboring card alignment. [AV allocation](commit-plans/RM-015AV.md#card-footer-alignment-follow-up-allocation--20-october2026), [current evidence](validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026). Scoped checks and native desktop/phone/drag/Undo pass; actual owner approval pending.
 
 **Window labels —20October:** Placed2D windows now say Window parallel to their wall, using the frame margin if furniture covers the inner caption. Existing selection/drag/Undo remain. [BE allocation](commit-plans/RM-015BE.md#window-labels-follow-up-allocation--20-october2026), [evidence](validation/RM-015BE.md#window-labels-follow-up--20october2026). Actual owner approval pending.

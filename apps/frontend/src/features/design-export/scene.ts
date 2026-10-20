@@ -36,6 +36,7 @@ import {
 } from '../room-view/surfaces';
 import { DesignExportError } from './facts';
 import { createWindowGlass } from '../room-view/window-glass';
+import { balconyDoorPanels } from '../room-view/opening-parts';
 import type { SurfaceIO } from '../room-view/surface-assets';
 
 export async function loadDesignAssets(
@@ -222,7 +223,40 @@ export function buildDesignScene(
       h = b.size[1],
       d = along ? b.size[2] : b.size[0],
       t = Math.min(0.035, w / 6, h / 6);
-    if (feature.kind === 'window') {
+    const balcony = feature.kind === 'door' && feature.purpose === 'balcony';
+    if (balcony) {
+      windowGlass ??= createWindowGlass();
+      const daylight = box(
+        group,
+        'Balcony daylight',
+        [0, 0, -d - 0.035],
+        [w - t * 2, h - t * 2, 0.008],
+        windowGlass.daylight,
+      );
+      daylight.castShadow = daylight.receiveShadow = false;
+      for (const panel of balconyDoorPanels(
+        w,
+        h,
+        d,
+        feature.mechanism === 'sliding',
+      ))
+        for (const part of panel.parts) {
+          const node = box(
+            group,
+            part.name,
+            part.center,
+            part.size,
+            part.kind === 'glass'
+              ? windowGlass.material
+              : material(
+                  part.kind === 'handle' ? '#574b3e' : '#e8e0d3',
+                  part.kind === 'handle' ? 'metal' : undefined,
+                ),
+          );
+          if (part.kind === 'glass')
+            node.castShadow = node.receiveShadow = false;
+        }
+    } else if (feature.kind === 'window') {
       windowGlass ??= createWindowGlass();
       const daylight = box(
         group,
@@ -262,7 +296,9 @@ export function buildDesignScene(
             [0, -h / 2 + t / 2, w - t * 2, t],
             [0, 0, t * 0.65, h - t * 2],
           ]
-        : []),
+        : balcony
+          ? [[0, -h / 2 + t / 2, w - t * 2, t]]
+          : []),
     ])
       box(
         group,
@@ -272,7 +308,7 @@ export function buildDesignScene(
         trim,
         surfaces.hard,
       );
-    if (feature.kind === 'door') {
+    if (feature.kind === 'door' && !balcony) {
       box(
         group,
         'Door panel',

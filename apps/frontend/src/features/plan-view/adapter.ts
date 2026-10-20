@@ -126,7 +126,11 @@ export function planOpeningLabel(
             lines: ['Window'],
           }
         : fitPlanText(
-            feature.purpose === 'bathroom' ? 'Bathroom Door' : 'Door',
+            feature.purpose === 'balcony'
+              ? 'Balcony Doors'
+              : feature.purpose === 'bathroom'
+                ? 'Bathroom Door'
+                : 'Door',
             band.maxX - band.minX,
             band.maxZ - band.minZ,
             160,

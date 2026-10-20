@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Opening size presets — RM-015BF
+
+Place Size preset near the selected window/balcony-door title, using one shared width/height registry and the existing native select style. Show current matching size or Custom/current size; existing numeric fields remain the custom editor. Applying a preset uses one command, estimates only changed axes and preserves sill/offset/wall/mechanism and unchanged evidence. Balcony doors are paired glazing in the existing wall, not a new room/exterior. Room offers Add balcony doors beside existing opening actions. Keep door protection, removable windows and reachable narrow/short inspector controls. Sliding mechanisms omit their irrelevant hinge form.
+
 ## Catalogue card footer alignment — RM-015AV
 
 Keep dimensions and the existing44×44px drag grip in one vertically centered footer row. Pin that row to the card bottom so neighboring cards align despite wrapped names. Keep the thumbnail/name rhythm, responsive grid, readable wrapping and full grip target; replacement cards keep dimensions without a grip. The existing button/keyboard/placement owner and data-placement-grip touch distinction remain authoritative.
