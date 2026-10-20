@@ -43,7 +43,13 @@ class GraphicsBoundary extends Component<
 }
 export type CutawayProps = Pick<
   SceneProps,
-  'room' | 'candidate' | 'checks' | 'selectedId' | 'onSelect' | 'cameraFrame'
+  | 'room'
+  | 'candidate'
+  | 'checks'
+  | 'selectedId'
+  | 'onSelect'
+  | 'cameraFrame'
+  | 'openingId'
 > & {
   cameraStateRef: MutableRefObject<CameraPose | null>;
   onPlan: () => void;

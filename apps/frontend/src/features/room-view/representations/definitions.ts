@@ -117,19 +117,68 @@ export function proceduralParts(
     box('bottom', 0, t / 2, 0, w, t, d);
     box('top', 0, h - t / 2, 0, w, t, d);
     box('back', 0, h / 2, -d / 2 + t / 2, w - 2 * t, h - 2 * t, t);
-    if (category === 'wardrobe' || mechanism === 'hinged') {
+    if (category === 'storage' && mechanism === 'hinged') {
+      box('door--1', 0, h / 2, d / 2 - 12, w - 2 * t, h - 2 * t, 24);
+    } else if (
+      mechanism !== 'drawer' &&
+      (category === 'wardrobe' || mechanism === 'hinged')
+    ) {
       for (const side of [-1, 1])
         box(
           `door-${side}`,
           (side * w) / 4,
           h / 2,
-          d / 2 - 12,
+          d / 2 - 12 - (mechanism === 'sliding' && side === 1 ? 30 : 0),
           w / 2 - 4,
           h - 2 * t,
           24,
         );
       if (mechanism === 'sliding')
         box('sliding-track', 0, h - 45, d / 2 - 20, w - 30, 8, 30, 'metal');
+    } else if (mechanism === 'drawer') {
+      for (const level of [0, 1, 2]) {
+        const y = t + ((h - 2 * t) * (level + 0.5)) / 3;
+        const dh = (h - 2 * t) / 3 - 8;
+        box(`drawer-${level}-front`, 0, y, d / 2 - 12, w - 2 * t, dh, 24);
+        box(
+          `drawer-${level}-base`,
+          0,
+          y - dh / 2 + 8,
+          0,
+          w - 3 * t,
+          16,
+          d - 2 * t,
+        );
+        box(
+          `drawer-${level}-back`,
+          0,
+          y,
+          -d / 2 + 2 * t,
+          w - 3 * t,
+          dh - 12,
+          16,
+        );
+        for (const side of [-1, 1])
+          box(
+            `drawer-${level}-side-${side}`,
+            side * (w / 2 - 2 * t),
+            y,
+            0,
+            16,
+            dh - 12,
+            d - 2 * t,
+          );
+        box(
+          `drawer-${level}-handle`,
+          0,
+          y,
+          d / 2 - 4,
+          Math.min(120, w / 3),
+          12,
+          8,
+          'metal',
+        );
+      }
     } else
       for (const level of [1, 2, 3])
         box(`shelf-${level}`, 0, (h * level) / 4, 0, w - 2 * t, t, d - t);

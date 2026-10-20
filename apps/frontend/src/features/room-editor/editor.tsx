@@ -39,6 +39,8 @@ import { CataloguePlacement } from './catalogue-placement';
 import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
 import { FrameControls, ViewControls } from './view-controls';
+import { furnitureOpening, featureOpening } from '../room-view/articulation';
+import { OpeningPreview } from './opening-preview';
 import controlsStyles from './view-controls.module.css';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
@@ -94,6 +96,7 @@ export function Editor({
   );
   const roomView = state.presentation.roomView;
   const [arranging, setArranging] = useState(false);
+  const [opening, setOpening] = useState({ context: '', open: false });
   const planToolsMotion = useSurfaceMotion(`${roomView}:${arranging}`);
   // RM-015AC: comparison is temporarily hidden; retain its implementation.
   useEffect(() => {
@@ -395,6 +398,40 @@ export function Editor({
           : 'Current is unchanged. Apply or Cancel beside the room before editing these preview values.';
   const item = shownRoom.furniture.find((f) => f.id === view.selectedId),
     feature = shownRoom.room.features.find((f) => f.id === view.selectedId);
+  const openingContext = JSON.stringify([
+    state.generation,
+    workspace.workspaceId,
+    workspace.lastCommandSequence,
+    room.roomRevision,
+    roomView,
+    view.panel,
+    view.selectedId,
+    state.comparison,
+    state.pending,
+    state.candidate?.identity,
+  ]);
+  if (opening.context !== openingContext)
+    setOpening({ context: openingContext, open: false });
+  const openingCapability = item
+    ? furnitureOpening(item)
+    : feature
+      ? featureOpening(feature)
+      : null;
+  const canPreviewOpening =
+    roomView === 'cutaway' &&
+    view.panel === 'inspector' &&
+    !readOnly &&
+    !!openingCapability;
+  const openingIsOpen =
+    canPreviewOpening && opening.context === openingContext && opening.open;
+  const openingPreview =
+    canPreviewOpening && openingCapability ? (
+      <OpeningPreview
+        capability={openingCapability}
+        open={openingIsOpen}
+        onChange={(open) => setOpening({ context: openingContext, open })}
+      />
+    ) : undefined;
   const rotatePlanSelection = (direction: -1 | 1) => {
     const current = controller.getSnapshot();
     if (
@@ -660,6 +697,7 @@ export function Editor({
                     candidate={state.candidate?.room}
                     checks={shownChecks}
                     selectedId={view.selectedId}
+                    openingId={openingIsOpen ? view.selectedId : null}
                     onSelect={(id) => controller.select(id)}
                     cameraStateRef={cameraStateRef}
                     openedAt={cutawayOpenedAt}
@@ -892,9 +930,17 @@ export function Editor({
               ) : (
                 view.panel === 'inspector' &&
                 (item ? (
-                  <FurnitureInspector controller={controller} item={item} />
+                  <FurnitureInspector
+                    controller={controller}
+                    item={item}
+                    openingPreview={openingPreview}
+                  />
                 ) : feature ? (
-                  <FeatureInspector controller={controller} feature={feature} />
+                  <FeatureInspector
+                    controller={controller}
+                    feature={feature}
+                    openingPreview={openingPreview}
+                  />
                 ) : (
                   <>
                     <h2 tabIndex={-1}>Select a piece</h2>

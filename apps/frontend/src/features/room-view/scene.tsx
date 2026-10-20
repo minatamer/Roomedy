@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { ComponentRef, MutableRefObject } from 'react';
+import type { ComponentRef, MutableRefObject, ReactNode } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import type { ThreeElements, ThreeEvent } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei/core/OrbitControls';
@@ -64,6 +64,14 @@ import {
 import type { FloorEditing } from './use-floor-edit';
 import { createWindowGlass } from './window-glass';
 import { CatalogueGhost } from './catalogue-ghost';
+import {
+  furnitureOpening,
+  featureOpening,
+  furniturePartMotion,
+  openingLeafMotion,
+} from './articulation';
+import { OpeningMotion, useOpeningMotion } from './opening-motion';
+import { cabinetDoorRig } from './articulation-model';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 
 export type CameraAction = {
@@ -88,6 +96,7 @@ export interface SceneProps {
   candidate: RoomDocument | undefined;
   checks: CheckFacts;
   selectedId: string | null;
+  openingId?: string | null;
   onSelect: (id: string) => void;
   cameraStateRef: MutableRefObject<CameraPose | null>;
   cameraFrame: RoomFrame | undefined;
@@ -799,15 +808,19 @@ function Walls({
 function BorrowedModel({
   asset,
   surfaces,
+  open,
 }: {
   asset: GLTF;
   surfaces: Surfaces;
+  open: boolean;
 }) {
   const instance = useMemo(
     () => surfaceModel(asset.scene, surfaces),
     [asset, surfaces],
   );
   useEffect(() => () => instance.dispose(), [instance]);
+  const rig = useMemo(() => cabinetDoorRig(instance.object), [instance]);
+  useOpeningMotion(open && !!rig, (amount) => rig?.apply(amount));
   return <primitive object={instance.object} dispose={null} />;
 }
 
@@ -821,6 +834,7 @@ function Opening({
   onSelect,
   editing,
   dragTarget,
+  open,
 }: {
   dragTarget: ReturnType<typeof windowDragTarget>;
   editing: FloorEditing;
@@ -831,6 +845,7 @@ function Opening({
   windowGlass: ReturnType<typeof createWindowGlass> | null;
   selected: boolean;
   onSelect: SceneProps['onSelect'];
+  open: boolean;
 }) {
   const box = featureBox(room, feature);
   if (!box) return null;
@@ -849,16 +864,49 @@ function Opening({
   const t = Math.min(0.035, w / 6, h / 6),
     window = feature.kind === 'window',
     door = feature.kind === 'door';
+  const capability = featureOpening(feature);
+  const motion =
+    feature.kind !== 'obstacle' ? openingLeafMotion(feature, w, depth) : null;
+  const moving = (children: ReactNode) =>
+    capability && motion ? (
+      <OpeningMotion open={open} motion={motion}>
+        <group position={motion.pivot.map((v) => -v) as Triple}>
+          {children}
+        </group>
+      </OpeningMotion>
+    ) : (
+      children
+    );
+  const glass = (width: number, x: number, z: number) =>
+    windowGlass && (
+      <mesh
+        geometry={geometry}
+        material={windowGlass.material}
+        position={[x, 0, z]}
+        scale={[width, h - t * 2, 0.012]}
+        dispose={null}
+      />
+    );
+  const mullion = (
+    <mesh
+      geometry={surfaces.hard}
+      position={[0, 0, 0]}
+      scale={[t * 0.65, h - t * 2, depth]}
+      dispose={null}
+      receiveShadow
+    >
+      <OwnedStandard
+        color={selected ? '#a77342' : '#e8e0d3'}
+        map={surfaces.wood}
+        roughness={0.7}
+      />
+    </mesh>
+  );
   const trim = [
     [-w / 2 + t / 2, 0, t, h],
     [w / 2 - t / 2, 0, t, h],
     [0, h / 2 - t / 2, w - t * 2, t],
-    ...(window
-      ? [
-          [0, -h / 2 + t / 2, w - t * 2, t],
-          [0, 0, t * 0.65, h - t * 2],
-        ]
-      : []),
+    ...(window ? [[0, -h / 2 + t / 2, w - t * 2, t]] : []),
   ];
   return (
     <group
@@ -886,31 +934,91 @@ function Opening({
           <mesh
             geometry={geometry}
             material={windowGlass.daylight}
+            visible={
+              feature.kind !== 'window' || feature.mechanism !== 'outward'
+            }
             position={[0, 0, -depth - 0.035]}
             scale={[w - t * 2, h - t * 2, 0.008]}
             dispose={null}
           />
+          {capability?.kind === 'sliding' ? (
+            <>
+              {glass((w - t * 2) / 2, (w - t * 2) / 4, depth * 0.5 - 0.018)}
+              {moving(
+                <>
+                  {glass((w - t * 2) / 2, -(w - t * 2) / 4, depth * 0.5)}
+                  {mullion}
+                </>,
+              )}
+            </>
+          ) : (
+            moving(
+              <>
+                {glass(w - t * 2, 0, depth * 0.5)}
+                {mullion}
+              </>,
+            )
+          )}
+        </>
+      ) : door ? (
+        moving(
+          <>
+            <mesh
+              geometry={geometry}
+              scale={[w, h, depth * 0.6]}
+              dispose={null}
+              castShadow
+              receiveShadow
+            >
+              <OwnedStandard
+                color={selected ? '#a77342' : '#765238'}
+                map={surfaces.wood}
+                roughness={0.7}
+              />
+            </mesh>
+            <mesh
+              geometry={surfaces.hard}
+              position={[0, 0, depth * 0.32]}
+              scale={[w - t * 4, h - t * 4, depth * 0.2]}
+              dispose={null}
+              castShadow
+              receiveShadow
+            >
+              <OwnedStandard
+                color={selected ? '#a77342' : '#806046'}
+                map={surfaces.wood}
+                roughness={0.7}
+              />
+            </mesh>
+            <mesh
+              geometry={surfaces.hard}
+              position={[
+                (feature.hinge === 'right' ? -1 : 1) * w * 0.32,
+                -h * 0.06,
+                depth * 0.43,
+              ]}
+              scale={[Math.min(0.1, w * 0.2), t * 0.5, depth * 0.12]}
+              dispose={null}
+            >
+              <OwnedStandard color="#574b3e" roughness={0.35} metalness={0.6} />
+            </mesh>
+          </>,
+        )
+      ) : (
+        moving(
           <mesh
             geometry={geometry}
-            material={windowGlass.material}
-            position={[0, 0, depth * 0.5]}
-            scale={[w - t * 2, h - t * 2, 0.012]}
+            scale={[w, h, depth]}
             dispose={null}
-          />
-        </>
-      ) : (
-        <mesh
-          geometry={geometry}
-          scale={[w, h, door ? depth * 0.6 : depth]}
-          dispose={null}
-          receiveShadow
-        >
-          <OwnedStandard
-            color={selected ? '#a77342' : door ? '#765238' : '#9a8870'}
-            map={door ? surfaces.wood : surfaces.plaster}
-            roughness={0.7}
-          />
-        </mesh>
+            receiveShadow
+          >
+            <OwnedStandard
+              color={selected ? '#a77342' : '#9a8870'}
+              map={surfaces.plaster}
+              roughness={0.7}
+            />
+          </mesh>,
+        )
       )}
       {(window || door) &&
         trim.map(([x, y, width, height], i) => (
@@ -929,35 +1037,6 @@ function Opening({
             />
           </mesh>
         ))}
-      {door && (
-        <>
-          <mesh
-            geometry={surfaces.hard}
-            position={[0, 0, depth * 0.32]}
-            scale={[w - t * 4, h - t * 4, depth * 0.2]}
-            dispose={null}
-            receiveShadow
-          >
-            <OwnedStandard
-              color={selected ? '#a77342' : '#806046'}
-              map={surfaces.wood}
-              roughness={0.7}
-            />
-          </mesh>
-          <mesh
-            geometry={surfaces.hard}
-            position={[
-              (feature.hinge === 'right' ? -1 : 1) * w * 0.32,
-              -h * 0.06,
-              depth * 0.43,
-            ]}
-            scale={[Math.min(0.1, w * 0.2), t * 0.5, depth * 0.12]}
-            dispose={null}
-          >
-            <OwnedStandard color="#574b3e" roughness={0.35} metalness={0.6} />
-          </mesh>
-        </>
-      )}
     </group>
   );
 }
@@ -1036,7 +1115,9 @@ function Piece({
   onSelect,
   surfaces,
   editing,
+  open,
 }: {
+  open: boolean;
   piece: Furniture;
   selected: boolean;
   proposed: boolean;
@@ -1144,6 +1225,11 @@ function Piece({
   const w = metres(piece.dimensions.width.value ?? 250),
     d = metres(piece.dimensions.depth.value ?? 250),
     h = metres(piece.dimensions.height.value ?? 250);
+  const parts =
+    representation.kind === 'procedural'
+      ? detailedParts(representation.parts, representation.footprint)
+      : [];
+  const opening = furnitureOpening(piece);
   return (
     <group
       ref={group}
@@ -1171,10 +1257,18 @@ function Piece({
         : {})}
     >
       {representation.kind === 'mesh' && asset?.kind === 'ready' ? (
-        <BorrowedModel asset={asset.asset} surfaces={surfaces} />
+        <BorrowedModel asset={asset.asset} surfaces={surfaces} open={open} />
       ) : representation.kind === 'procedural' ? (
-        detailedParts(representation.parts, representation.footprint).map(
-          (part) => (
+        parts.map((part) => {
+          const motion = opening
+            ? furniturePartMotion(
+                part,
+                parts,
+                opening.kind,
+                representation.footprint.depth,
+              )
+            : null;
+          const mesh = (
             <mesh
               key={part.name}
               geometry={
@@ -1187,14 +1281,25 @@ function Piece({
               material={
                 materials[part.name === 'blanket' ? 'blanket' : part.role]
               }
-              position={part.center.map(metres) as [number, number, number]}
+              position={
+                part.center.map(
+                  (v, i) => metres(v) - (motion?.pivot[i] ?? 0),
+                ) as [number, number, number]
+              }
               scale={part.size.map(metres) as [number, number, number]}
               dispose={null}
               castShadow
               receiveShadow
             />
-          ),
-        )
+          );
+          return motion ? (
+            <OpeningMotion key={part.name} open={open} motion={motion}>
+              {mesh}
+            </OpeningMotion>
+          ) : (
+            mesh
+          );
+        })
       ) : (
         <mesh position={[0, 0.15, 0]}>
           <octahedronGeometry args={[0.12]} />
@@ -1431,6 +1536,7 @@ export function RoomScene(props: SceneProps) {
           surfaces={surfaces}
           windowGlass={windowGlass}
           selected={selectedId === feature.id}
+          open={props.openingId === feature.id && !!featureOpening(feature)}
           editing={props.editing}
           onSelect={onSelect}
         />
@@ -1442,6 +1548,7 @@ export function RoomScene(props: SceneProps) {
             key={p.id}
             piece={p}
             selected={selectedId === p.id}
+            open={props.openingId === p.id && !!furnitureOpening(p)}
             proposed={
               !!candidate &&
               JSON.stringify(p) !==

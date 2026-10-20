@@ -293,9 +293,11 @@ export function detailedParts(parts: BoxPart[], size: PhysicalSize): BoxPart[] {
         {
           name: `handle-${part.name}`,
           center: [
-            Math.sign(part.center[0]) * 34,
+            part.center[0] === 0
+              ? size.width / 2 - 40
+              : Math.sign(part.center[0]) * 34,
             size.height * 0.5,
-            size.depth / 2 - 10,
+            part.center[2] + 2,
           ] as const,
           size: [12, 110, 12] as const,
           role: 'metal' as const,

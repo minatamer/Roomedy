@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Opening previews — RM-015AU:** Latest owner selects right-card3D opening/closing/sliding previews. Supported wardrobe panels/handles, the prepared bedside cabinet's actual door, known room-door mechanisms/hinges and operable windows animate through the existing demand scene. Open shelves/fixed/unknown mechanisms/bounds-only furniture stay static. One transient selected target retires on context/lifecycle changes; canonical geometry/evidence/checks,2D, commands/Undo, recovery and exports remain unchanged. Generic drawer motion is tested without introducing a catalogue product. [Ticket](tickets/RM-015AU-preview-opening-parts-in-3d.md), [eighteen-path allocation](commit-plans/RM-015AU.md), [evidence](validation/RM-015AU.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Animated view toggle,20October:** Latest owner removes the piece count and selects one animated exclusive2D/3D pill. It remains inside the frame bottom right, mounted above the changing view/loading/graphics content so CSS motion and focus continue. Canonical view state also reflects MEDY. [Twelve-path AP allocation](commit-plans/RM-015AP.md#animated-view-toggle-follow-up-allocation--20-october2026), [evidence](validation/RM-015AP.md#animated-view-toggle-follow-up--20-october2026). This supersedes historical count/two-button presentation requirements. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **MEDY assistant revision — RM-015AT:** Exact furniture/room/opening edits, shared size presets, protected Delete/size parity, metadata/locks, selection/views/camera/Snap/tour and existing project flows now run through the same manual owners from chat. MEDY has friendly bounded advice, a Meet MEDY landing chapter and coordinated neutral design defaults. Explicit human edits compile locally; model interpretation can offer a validated request for a new visitor selection, and model prose never grants commands. [Ticket](tickets/RM-015AT-make-medy-a-complete-room-assistant.md), [allocation](commit-plans/RM-015AT.md), [capability audit](references/medy-capabilities-2026-10-20.md), [evidence](validation/RM-015AT.md). Fake and injected real-protocol checks remain distinct from funded live-model quality. Actual owner visual approval pending; Q held, guide paused, RM-016 Planned. No key/config/mode, paid/live, delegation, new dependency/service/port, push or deployment.
@@ -1371,8 +1373,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await the owner’s actual visual decision on the animated2D/3D toggle and removed count on existing4320/private4321. Final798tests/53files, seven boundaries, both builds/current250input identity and full twelve-path read-only pass1 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
-Active ticket: RM-015AP
+Next action: Await the owner’s actual visual decision on RM-015AU opening previews on existing4320/private4321. Final807tests/54files, seven boundaries, both builds/current254inputs and full eighteen-path read-only pass2 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/key/config/delegation/new dependencies/services/ports/push/deploy.
+Active ticket: RM-015AU
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1397,7 +1399,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T13:41:25+00:00",
+  "updated_at": "2026-10-20T14:12:13+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1586,8 +1588,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AP",
-  "next_action": "Await the owner’s actual visual decision on the animated2D/3D toggle and removed count on existing4320/private4321. Final798tests/53files, seven boundaries, both builds/current250input identity and full twelve-path read-only pass1 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AU",
+  "next_action": "Await the owner’s actual visual decision on RM-015AU opening previews on existing4320/private4321. Final807tests/54files, seven boundaries, both builds/current254inputs and full eighteen-path read-only pass2 are clean; exact local checkpoint prepared under standing authority. Q held, guide paused, RM-016 Planned; no paid/live/key/config/delegation/new dependencies/services/ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2062,14 +2064,15 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-015AP single-header follow-up: docs/validation/RM-015AP.md; visible title/separate row removed, actual auto header/remaining room and card height/independent assistant panel sizing; native28 settled responsive states/tour/focus/menu/edit/Delete/Undo/chat/3D overflow checks; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 703a59bebb5cb4ed26f538f1c0dd4a773e0d2f701466f7ac911ec6deb8402c2e. Exact eleven-path local review/checkpoint; actual owner approval pending.",
         "RM-015AS: docs/validation/RM-015AS.md; verified CC0 sources/eight local PNGs/912545bytes, stable bounded PBR material ownership/editor+landing+exports, actual before/after/responsive/finish+Undo/native downloads/all4PDF pages; final693tests/50files/seven boundaries/root/both builds/current245hashes/BUILD_ID 80a23557163f23aa8eeda19175aefb5a6b367ee280754a91dc7f69b5c43bbd44; clean34-path read-only pass1 and exact local checkpoint. Actual owner visual approval pending.",
         "docs/validation/RM-015AT.md",
-        "docs/validation/RM-015AP.md:20October animated exclusive2D/3D shared pill and count removal; canonical/MEDY selection and focus retained across view/loading changes. Native phone/tablet/short/desktop, keyboard and hover observations; final798tests/53files, seven boundaries, both builds and current250input identity. Actual owner visual approval pending. Full twelve-path read-only pass1 clean; exact authorized local checkpoint prepared."
+        "docs/validation/RM-015AP.md:20October animated exclusive2D/3D shared pill and count removal; canonical/MEDY selection and focus retained across view/loading changes. Native phone/tablet/short/desktop, keyboard and hover observations; final798tests/53files, seven boundaries, both builds and current250input identity. Actual owner visual approval pending. Full twelve-path read-only pass1 clean; exact authorized local checkpoint prepared.",
+        "docs/validation/RM-015AU.md: right-card3D open/close/slide previews with transient context fencing, shared finite demand motion, cloned cabinet door and tested drawer support. Native hinged/sliding/cabinet/window/keyboard/Undo/loading and six-size observations; final807tests/54files/seven boundaries/both builds/current254input identity. Full eighteen-path read-only pass2 clean after independently verified visual backing and preserved selection-tint corrections; exact authorized local checkpoint prepared. Actual owner visual approval pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "2D 3D should be like a toggle ... a cool animated thing ... remove the pieces count.",
-        "source": "human:current-chat/2026-10-20/animated-view-toggle",
-        "scope": "RM-015AP animated exclusive view toggle and count removal only; actual visual approval remains pending.",
-        "recorded_at": "2026-10-20T13:31:43+00:00"
+        "quote": "There should be, like, a way to trigger these animations in the right card, you know, so people can just have an idea what it looks like when the doors are open or, you know, when the thing is, like, in a different format.",
+        "source": "human:current-chat/2026-10-20/opening-parts-preview",
+        "scope": "RM-015AU3D selected opening/closing/sliding previews only; no result approval.",
+        "recorded_at": "2026-10-20T13:46:37+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2503,6 +2506,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/animated-view-toggle",
             "scope": "RM-015AP animated exclusive view toggle and count removal only; actual visual approval remains pending.",
             "recorded_at": "2026-10-20T13:31:43+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "There should be, like, a way to trigger these animations in the right card, you know, so people can just have an idea what it looks like when the doors are open or, you know, when the thing is, like, in a different format.",
+            "source": "human:current-chat/2026-10-20/opening-parts-preview",
+            "scope": "RM-015AU3D selected opening/closing/sliding previews only; no result approval.",
+            "recorded_at": "2026-10-20T13:46:37+00:00"
           }
         }
       ]

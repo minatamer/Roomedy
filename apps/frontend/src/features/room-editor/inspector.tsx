@@ -1,4 +1,5 @@
 import { useId, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { Feature, Furniture } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
@@ -158,9 +159,11 @@ function PositionForm({
 export function FurnitureInspector({
   controller,
   item,
+  openingPreview,
 }: {
   controller: SessionController;
   item: Furniture;
+  openingPreview?: ReactNode;
 }) {
   const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion)!;
   const run = (actions: VisitorAction[], label: string) => {
@@ -184,6 +187,7 @@ export function FurnitureInspector({
           {item.label}
         </h2>
       </div>
+      {openingPreview}
       <FurnitureSizeForm
         key={`${controller.getSnapshot().generation}/${item.id}/${item.catalogueId}`}
         item={item}
@@ -368,9 +372,11 @@ export function FurnitureInspector({
 export function FeatureInspector({
   controller,
   feature,
+  openingPreview,
 }: {
   controller: SessionController;
   feature: Feature;
+  openingPreview?: ReactNode;
 }) {
   const update = (next: Feature) => {
     const r = controller.dispatch(
@@ -398,6 +404,7 @@ export function FeatureInspector({
               : 'Window'}
         </h2>
       </div>
+      {openingPreview}
       <div className={styles.section}>
         <label>
           Wall (your correction)
