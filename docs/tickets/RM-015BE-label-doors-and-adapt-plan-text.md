@@ -6,3 +6,7 @@ Status: **Locally implemented and validated; actual owner visual approval pendin
 - [x] Font size/whole-word lines/orientation adapt to usable object space; thin/tiny pieces/TVs get readable bounded captions, front arrows/contrast remain clear.
 - [x] Preserve shared selection, elevated coverage, canonical geometry/provenance/checks/Undo,3D/export and accessible object names; no new controls.
 - [x] Meaningful regressions/native edge cases, clean read-only review, settled check components/both builds/exact identity and exact local checkpoint; actual visual approval pending.
+
+## Dimension copy follow-up —20October2026
+
+- [x] Owner removes confirmed from both2D room dimensions after74764b4. Show value/mm for confirmed measurements, retain unknown/other uncertainty wording and semantic provenance. Shared renderer covers accepted/preview/restored views. Scoped format/lint/frontend types and actual desktop/phone pass; [current receipt](../validation/RM-015BE.md#dimension-copy-follow-up--20october2026). No fresh full-root/build claim; actual visual approval pending.

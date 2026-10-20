@@ -29,3 +29,18 @@
 ## Settled review correction
 
 Read-only/native preview review found old-position text/outlines crossing the proposed wardrobe name and a potential new door caption. Keep previous outlines behind current room geometry, omit their annotation when it crosses a proposed footprint/door name, and paint door captions after preview/check/drag layers. New door-caption pointer forwarding is disabled during catalogue placement. Add a meaningful annotation-overlap regression; retain ghost outlines and preview semantics. Initial settled run was interrupted before edits, with no orphan test worker found; final source gets a fresh full gate.
+
+## Dimension copy follow-up allocation —20 October2026
+
+Owner removes the word confirmed from the two2D room dimension labels after74764b4. Suppress only the confirmed suffix; retain numeric values/mm, unknown wording and other uncertainty statuses. Shared renderer covers accepted/preview/restored views. No measurement state, provenance, controls, commands,3D or export change. Exact current follow-up allocation before source edits:
+
+1. `AGENTS.md`
+2. `docs/README.md`
+3. `docs/ROOMEDY.md`
+4. `docs/tickets/README.md`
+5. `docs/tickets/RM-015BE-label-doors-and-adapt-plan-text.md`
+6. `docs/commit-plans/RM-015BE.md`
+7. `docs/validation/RM-015BE.md`
+8. `apps/frontend/src/features/plan-view/plan-view.tsx`
+
+Use scoped format/lint/frontend types and actual desktop/phone text inspection. No static-copy mirror test or repeated full suite/build for two presentation-only suffixes; previous root/build identity remains historical. Read-only review then exact local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned. No paid/live/config/delegation/new services/ports/push/deploy.

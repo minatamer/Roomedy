@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Dimension copy follow-up —20October:** Confirmed2D room dimensions show only their value and mm; unknown/other uncertainty wording remains. [BE allocation](commit-plans/RM-015BE.md#dimension-copy-follow-up-allocation--20-october2026), [evidence](validation/RM-015BE.md#dimension-copy-follow-up--20october2026). Scoped checks/native desktop and phone pass; no new root/build claim. Actual owner approval pending.
+
 **Adaptive2D names — RM-015BE:** Every placed door says Door or Bathroom Door from its own purpose. Furniture labels vary size, wrap whole words or turn sideways; thin/tiny pieces use nearby readable captions with front-arrow space. Previous-position overlays keep current names readable. [Ticket](tickets/RM-015BE-label-doors-and-adapt-plan-text.md), [allocation](commit-plans/RM-015BE.md), [evidence](validation/RM-015BE.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Inset chat Send — RM-015BD:** Medy uses Retailor’s single rounded composer with a bottom-right arrow inside the field, a44px target and reserved text space, adapted to Roomedy cocoa/oat colours. Keyboard/accessibility/Send/history remain. [Ticket](tickets/RM-015BD-inset-the-chat-send-button.md), [allocation](commit-plans/RM-015BD.md), [evidence](validation/RM-015BD.md). Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.

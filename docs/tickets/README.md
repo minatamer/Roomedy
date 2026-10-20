@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+Latest BE follow-up after74764b4 removes the confirmed suffix from2D dimensions. Scoped format/lint/frontend types and native desktop/phone inspection pass; prior862-test/build proof remains historical. [Current evidence](../validation/RM-015BE.md#dimension-copy-follow-up--20october2026). Actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
 Current owner correction: [RM-015BE — Label doors and adapt plan text](RM-015BE-label-doors-and-adapt-plan-text.md). Door/Bathroom Door names, fitted/wrapped/sideways object labels, readable tiny-piece captions and clear preview markers. Focused/native observations, final check components,862tests/56files,7boundaries and both builds pass; exact269-input/BUILD_ID match. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
 
 Previous owner correction: [RM-015BD — Inset the chat Send button](RM-015BD-inset-the-chat-send-button.md). Actual Retailor source informs the rounded composer/inset arrow; Roomedy styling and chat behavior remain. Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-root/build claim. Actual owner approval pending, Q held, guide paused, RM-016 Planned.

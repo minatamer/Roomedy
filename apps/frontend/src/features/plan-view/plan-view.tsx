@@ -955,7 +955,7 @@ export function PlanView({
         >
           {room.room.width.value === null
             ? 'Width unknown'
-            : `${width} mm · ${room.room.width.status}`}
+            : `${width} mm${room.room.width.status === 'confirmed' ? '' : ` · ${room.room.width.status}`}`}
         </text>
         <text
           x={-180}
@@ -971,7 +971,7 @@ export function PlanView({
         >
           {room.room.depth.value === null
             ? 'Depth unknown'
-            : `${depth} mm · ${room.room.depth.status}`}
+            : `${depth} mm${room.room.depth.status === 'confirmed' ? '' : ` · ${room.room.depth.status}`}`}
         </text>
         {placement && <CataloguePlanGhost placement={placement} />}
         {/* Keep opening names above preview and drag overlays. */}
