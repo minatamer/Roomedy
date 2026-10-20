@@ -294,6 +294,7 @@ export default function Cutaway({
         ) : (
           <GraphicsBoundary fallback={fallback} onFailure={onLost}>
             <Canvas
+              className={styles.scene}
               frameloop="demand"
               shadows={{ type: PCFShadowMap }}
               dpr={[1, 1.5]}

@@ -6,3 +6,11 @@ Status: **Locally implemented and validated; actual owner visual approval pendin
 - [x] Count and 2D/3D switch are inside each frame bottom right; frame and left controls align with the adjacent card at useful desktop widths. Both views share the same layout and bounded height; natural narrow/short flow remains reachable.
 - [x] Shared Explore/Arrange, zoom/Fit, clockwise/counterclockwise rotation, Delete and styled Snap controls, with consistent availability/order/style. Camera angles remain contextual. Explore permits inspection/navigation without plan edits; switching modes retires gestures.
 - [x] Preserve shared command/lifecycle/lock/spatial/Undo/motion authority and selected direction arrow. Actual responsive/keyboard/editing evidence, focused checks, settled root/build/current identity, read-only review and exact local checkpoint recorded. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
+## 3D entrance scrollbar follow-up — 20 October2026
+
+Owner reports a vertical scrollbar that appears and disappears when switching to3D. The existing viewport entrance moves its full-height frame5px beyond the room column. [Nine-path allocation](../commit-plans/RM-015AP.md#3d-entrance-scrollbar-follow-up-allocation--20-october2026), [current evidence](../validation/RM-015AP.md#3d-entrance-scrollbar-follow-up--20-october2026).
+
+- [x] Keep frame and view controls fixed; move the same300ms fade/5px entrance inside the clipped frame onto the Canvas host. No global scrollbar hiding, animation suppression or semantic change.
+- [x] Actual during-transition desktop/short/tablet/phone samples show no false overflow while inner motion remains active. Genuine properties scrolling, keyboard editing/Undo and strict rejection remain usable. Lazy loading, spinner and graphics failure retain their existing owners.
+- [x] Settled root gate passed674tests/49files,7boundaries and both builds with current233-file input identity. Full nine-path read-only review and the exact authorized local checkpoint are recorded in the receipt. Actual owner visual approval remains pending; Q held, guide paused, RM-016 Planned.

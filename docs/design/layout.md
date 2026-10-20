@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Stable 3D entrance frame — RM-015AP follow-up
+
+Keep the full-height room viewport stationary during entry. Its existing300ms fade/5px translation belongs on the Canvas host inside that viewport's clipping boundary; otherwise the outer room-column scroller briefly gains5px of overflow and flashes a scrollbar. In-frame view controls stay stationary. Preserve genuine rail/properties/lifecycle scrolling, lazy/graphics fallback and loading spinner. [Allocation](../commit-plans/RM-015AP.md#3d-entrance-scrollbar-follow-up-allocation--20-october2026), [actual transient observations](../validation/RM-015AP.md#3d-entrance-scrollbar-follow-up--20-october2026); actual owner visual approval pending.
+
 ## Furniture access feedback — RM-015AR
 
 The bed's configured access space can overlap a nearby wardrobe without a solid-footprint collision. Show a named finite toast from actual front-access facts instead of the unexplained access-region rectangle. One shared session path handles selecting an affected Current piece, new/changed accepted conflicts and Undo; camera/panel changes do not repeatedly warn. Pending/proposal/read-only/load messages remain authoritative. Pair copy names both pieces without guessing the directional owner from sorted IDs; single-piece copy says access space around the piece, including chair pullout. Estimated/incomplete evidence stays explicit. Other check geometry/facts and strict validation remain.

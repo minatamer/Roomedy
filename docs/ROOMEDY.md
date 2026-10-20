@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**3D entrance scrollbar correction,20October:** The room frame stays fixed while the existing entrance animates its inner Canvas host, eliminating transient room-column overflow. [Nine-path AP follow-up](commit-plans/RM-015AP.md#3d-entrance-scrollbar-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AP.md#3d-entrance-scrollbar-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Furniture access toasts — RM-015AR:** Named, actionable notices replace unexplained access-region boxes in2D/3D. Selection and new/changed accepted access conflicts/Undo use existing facts and the shared4s notice owner; narrow toasts clear the view controls. [Ticket](tickets/RM-015AR-explain-furniture-clearance-with-toasts.md), [15-path plan](commit-plans/RM-015AR.md), [evidence](validation/RM-015AR.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Studio footer removed,20October:** The saved-time text, horizontal line and reserved footer row are gone.2D/3D frames and properties use the full viewport bottom; narrow layouts retain natural flow. [10-path AB follow-up](commit-plans/RM-015AB.md#remove-the-studio-footer-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AB.md#remove-the-studio-footer-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -1361,8 +1363,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Owner reviews named access toasts in place of the unexplained wardrobe box on existing4320/private4321. Exact15-path RM-015AR local checkpoint; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.
-Active ticket: RM-015AR
+Next action: Owner reviews the stable 3D entrance without transient scrollbar on existing4320/private4321. Exact nine-path local checkpoint; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.
+Active ticket: RM-015AP
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1387,7 +1389,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T10:43:23+00:00",
+  "updated_at": "2026-10-20T10:52:38+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1576,8 +1578,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AR",
-  "next_action": "Owner reviews named access toasts in place of the unexplained wardrobe box on existing4320/private4321. Exact15-path RM-015AR local checkpoint; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.",
+  "active_ticket": "RM-015AP",
+  "next_action": "Owner reviews the stable 3D entrance without transient scrollbar on existing4320/private4321. Exact nine-path local checkpoint; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2047,14 +2049,15 @@ This checklist records local work. Human approvals and unresolved external check
         "RM-015X cover follow-up: docs/validation/RM-015X.md; native furnished4/empty3 pages rendered and inspected; final651tests/48files/seven boundaries/root/both builds; current232hashes/BUILD_ID aa72fff1d6053151ce32de3abb24c6197581057b6a6e5ecdff2ca46ff22288fa; final exact nine-path read-only review and local checkpoint. Actual visual approval pending.",
         "RM-015AF rounded icon follow-up: docs/validation/RM-015AF.md; exact SVG mark/Apple bytes, six decoded PNG/ICO frames, actual five served-asset bytes/head links, final651tests/48files/seven boundaries/root/both builds/current232hashes/BUILD_ID 2c85881e9b23195521d009a5c8f2daec5ab85092509499d8a062e5df69ca8a96; exact13-path local checkpoint, actual owner visual approval pending.",
         "RM-015AB footer follow-up: docs/validation/RM-015AB.md; actual37px reclaimed/18settled responsive2D+3D observations/edit+Undo/reload/short+phone composer; final651tests/48files/seven boundaries/root/both builds/current232hashes/BUILD_ID e026073238defa4eabebf43ccc1e26f3b03375006537a68bb7ea6154431b0317; exact10-path local review/checkpoint; actual owner visual approval pending.",
-        "RM-015AR: docs/validation/RM-015AR.md; fact-owned named access toasts/removed access regions/shared4s timer, native import/selection/resolution/Undo/2D+3D/five-size no-overlap checks, final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 07d5abf467318520133c68b62cee6c66e21e44e75ae4129d3309d9bb791f782c; exact15-path local review/checkpoint. Actual owner visual approval pending."
+        "RM-015AR: docs/validation/RM-015AR.md; fact-owned named access toasts/removed access regions/shared4s timer, native import/selection/resolution/Undo/2D+3D/five-size no-overlap checks, final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 07d5abf467318520133c68b62cee6c66e21e44e75ae4129d3309d9bb791f782c; exact15-path local review/checkpoint. Actual owner visual approval pending.",
+        "RM-015AP scrollbar follow-up: docs/validation/RM-015AP.md; native5px transient overflow reproduced, same entrance retained inside stable clipped frame; five-size active switch samples without false overflow, actual properties scrolling/edit/Undo/rejection; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID c43cc5cb207d00e65dd270dd4f394d6a2e33735928076f4e27d7715822d6f262. Exact nine-path local review/checkpoint; actual owner visual approval pending."
       ],
       "blockers": [],
       "approval": {
-        "quote": "what does the box on the wardrobe mean? if its related to the bed being too close o wardrobe then show a toast",
-        "source": "human:current-chat/2026-10-20/furniture-access-toast",
-        "scope": "RM-015AR: replace unexplained access-conflict regions with named transient toasts from existing spatial facts; no overall visual approval.",
-        "recorded_at": "2026-10-20T10:26:30+00:00"
+        "quote": "when i swithc to 3d a weird vertical scroll bar appears then disppears, fix that",
+        "source": "human:current-chat/2026-10-20/3d-entrance-scrollbar",
+        "scope": "RM-015AP follow-up: eliminate transient overflow during the 3D entrance while preserving motion; no overall visual approval.",
+        "recorded_at": "2026-10-20T10:49:16+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2443,6 +2446,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/furniture-access-toast",
             "scope": "RM-015AR: replace unexplained access-conflict regions with named transient toasts from existing spatial facts; no overall visual approval.",
             "recorded_at": "2026-10-20T10:26:30+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "when i swithc to 3d a weird vertical scroll bar appears then disppears, fix that",
+            "source": "human:current-chat/2026-10-20/3d-entrance-scrollbar",
+            "scope": "RM-015AP follow-up: eliminate transient overflow during the 3D entrance while preserving motion; no overall visual approval.",
+            "recorded_at": "2026-10-20T10:49:16+00:00"
           }
         }
       ]

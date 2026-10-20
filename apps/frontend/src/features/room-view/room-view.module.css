@@ -10,6 +10,8 @@
   border-radius: 18px;
   overflow: hidden;
   background: radial-gradient(ellipse at 50% 65%, #eee4d5, #f7f5f0 70%);
+}
+.scene {
   animation: arrive 0.3s ease-out;
 }
 .viewport canvas {
