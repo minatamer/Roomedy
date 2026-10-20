@@ -4,6 +4,9 @@ Read [the documentation map](docs/README.md), [current blueprint](docs/ROOMEDY.m
 
 ## Current scope and checkpoint
 
+- Current RM-015AX follows6d8a471: owner distinguishes Project Export with a reusable beige class; neutral Import and brown Start a new room stay. No behavior/layout/state changes. Read [ticket](docs/tickets/RM-015AX-distinguish-export-with-beige.md), [allocation](docs/commit-plans/RM-015AX.md) and [receipt](docs/validation/RM-015AX.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+
+
 - Current RM-015AW follows db878bd: latest owner explicitly allows all furniture (including beds, owned/Keep and locked pieces) plus windows to be deleted; only doors stay protected. Shared room-side Delete is independent of Explore/Arrange in both views. Pure visitor removal need not fix unrelated pre-existing issues; other commands/model/new-conflict/lifecycle rules remain. Door deletion/type-conversion is rejected atomically, with no door Remove CTA and a helpful MEDY reply. Read [ticket](docs/tickets/RM-015AW-enable-selected-deletion-and-protect-doors.md), [allocation](docs/commit-plans/RM-015AW.md) and [receipt](docs/validation/RM-015AW.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/new ports/push/deploy.
 
 

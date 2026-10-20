@@ -44,6 +44,15 @@
 .studio .primary:hover:not(:disabled) {
   background: #513d2d;
 }
+.studio .beige {
+  background: var(--sage);
+  color: var(--ink);
+  border-color: #c6b394;
+}
+.studio .beige:hover:not(:disabled) {
+  background: #ddcfb8;
+  border-color: #a18b72;
+}
 .header {
   min-height: 68px;
   padding: 12px 20px;

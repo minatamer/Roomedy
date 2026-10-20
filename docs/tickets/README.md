@@ -1,6 +1,8 @@
 # Roomedy ticket plan
 
-Current owner correction: [RM-015AW — Enable selected deletion and protect doors](RM-015AW-enable-selected-deletion-and-protect-doors.md). Selected furniture/windows can be deleted in Explore or Arrange; only doors stay protected. Locally validated:829 tests/55 files,7 boundaries, both builds and actual feature observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
+Current owner correction: [RM-015AX — Distinguish Export with beige](RM-015AX-distinguish-export-with-beige.md). Reusable beige Export beside neutral Import; brown New room stays. Locally validated:829 tests/55 files,7 boundaries, both builds and actual menu observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
+
+Previous owner correction: [RM-015AW — Enable selected deletion and protect doors](RM-015AW-enable-selected-deletion-and-protect-doors.md). Selected furniture/windows can be deleted in Explore or Arrange; only doors stay protected. Locally validated:829 tests/55 files,7 boundaries, both builds and actual feature observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
 
 Previous owner correction: [RM-015AV — Expand bedroom furniture and bathroom doors](RM-015AV-expand-bedroom-furniture-and-bathroom-doors.md). Local implementation and validation are complete (822 tests/55 files,7 boundaries, both builds and native observations); actual owner visual approval remains pending. Q held, guide paused, RM-016 Planned.
 

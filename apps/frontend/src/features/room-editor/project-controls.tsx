@@ -322,6 +322,7 @@ export function ProjectControls({
           </p>
           <div className={styles.projectFileActions}>
             <button
+              className={styles.beige}
               disabled={busy}
               onClick={() => {
                 setRequestedFormat(null);
