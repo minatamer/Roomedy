@@ -321,7 +321,7 @@ export async function createPortfolioPages(
         );
         wrap(c, facts.summary, 55, 322, 290, 13, 21, 4);
         text(c, facts.style.toUpperCase(), 55, 430, 10, palette.clay);
-        photo(c, pictures[0]!, 364, 105, 700, 500);
+        photo(c, pictures[0]!, 430, 105, 618, 500);
         rule(c, 617);
         text(c, facts.area, 52, 665, facts.area.length > 18 ? 19 : 31);
         text(c, 'ROOM AREA', 54, 687, 9, palette.muted);

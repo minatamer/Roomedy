@@ -2,6 +2,8 @@
 
 Status: **Local checkpoint83f3716; actual owner visual approval pending.** Depends on W/9a6c6d2. Q held, guide paused and RM-016 Planned. Owner requests useful3D object export and a beautiful PDF with multiple3D views, one2D view, explanation and landing typography/palette. No actual result approval or external/delegation authority.
 
+**20 October cover follow-up:** The owner likes the PDF and requests a larger first-page room plus the complete unclipped italic “life”. [Nine-path allocation](../commit-plans/RM-015X.md#cover-framing-follow-up-allocation--20-october2026) owns this correction, native rendered-page verification and local checkpoint. [Fresh evidence](../validation/RM-015X.md#cover-framing-follow-up--20-october2026) records both corrected covers, all seven native rendered pages, final651-test/root/both-build gates and current232-input identity. Actual owner visual approval remains pending.
+
 ## Acceptance and precision
 
 - [x] Preserve semantic reopenable project/import, clear editable JSON presentation and legacy JSON compatibility; distinct useful3D/PDF choices with responsive accessible progress/cancel/error paths.

@@ -4,15 +4,22 @@ import { pathToFileURL } from 'node:url';
 const requireFrontend = createRequire(
   new URL('../apps/frontend/package.json', import.meta.url),
 );
-type XYZ = { x: number; y: number; z: number };
-type Bounds = {
-  setFromObject(node: unknown): Bounds;
-  getSize(vector: XYZ): XYZ;
-  getCenter(vector: XYZ): XYZ;
-};
-const { Box3, Vector3 } = (await import(
+const { Box3, Vector3, PerspectiveCamera } = (await import(
   pathToFileURL(requireFrontend.resolve('three/src/Three.js')).href
-)) as { Box3: new () => Bounds; Vector3: new () => XYZ };
+)) as {
+  Box3: new () => Parameters<typeof coverCrop>[0];
+  Vector3: new (
+    x?: number,
+    y?: number,
+    z?: number,
+  ) => Parameters<typeof coverCrop>[0]['min'];
+  PerspectiveCamera: new (
+    fov: number,
+    aspect: number,
+    near: number,
+    far: number,
+  ) => Parameters<typeof coverCrop>[1];
+};
 import { POLICY } from '@roomedy/contracts/policy';
 import {
   commandRoom,
@@ -35,6 +42,7 @@ import {
 import { buildDesignScene } from '../apps/frontend/src/features/design-export/scene.js';
 import { objFiles } from '../apps/frontend/src/features/design-export/obj.js';
 import { portfolioPdf } from '../apps/frontend/src/features/design-export/pdf.js';
+import { coverCrop } from '../apps/frontend/src/features/design-export/capture.js';
 import { wallBoxes } from '../apps/frontend/src/features/room-view/adapter.js';
 const project = (count = 1) => {
   const c = new SessionController(
@@ -201,6 +209,77 @@ describe('canonical3D export projection', () => {
     scene.dispose();
     scene.dispose();
     expect(retired).toBe(1);
+  });
+});
+describe('cover room framing', () => {
+  it.each([
+    ['empty', 10000, 10000, 2800, 0],
+    ['wide', 12000, 2000, 2800, 0],
+    ['tall', 2200, 2200, 6000, 0],
+    ['translated furniture', 4200, 4800, 2800, 10000],
+  ] as const)(
+    'removes unused overview background without clipping %s geometry',
+    (_label, width, depth, height, offset) => {
+      const room = commandRoom(
+        offset ? [piece('outside', offset, offset)] : [],
+      );
+      room.room.width = known(width);
+      room.room.depth = known(depth);
+      room.room.height = known(height);
+      const before = JSON.stringify(room),
+        scene = buildDesignScene(room);
+      try {
+        const bounds = new Box3().setFromObject(scene.root),
+          center = bounds.getCenter(new Vector3()),
+          radius = bounds.getSize(new Vector3()).length() / 2,
+          camera = new PerspectiveCamera(50, 1.6, 0.04, 200);
+        camera.position
+          .copy(center)
+          .add(
+            new Vector3(0.55, 0.75, 0.8)
+              .normalize()
+              .multiplyScalar((radius / Math.sin((25 * Math.PI) / 180)) * 1.15),
+          );
+        camera.lookAt(center);
+        camera.updateMatrixWorld();
+        const crop = coverCrop(bounds, camera);
+        expect(crop.width * crop.height).toBeLessThan(1600 * 1000 * 0.9);
+        expect(crop.x).toBeGreaterThanOrEqual(0);
+        expect(crop.y).toBeGreaterThanOrEqual(0);
+        expect(crop.x + crop.width).toBeLessThanOrEqual(1600);
+        expect(crop.y + crop.height).toBeLessThanOrEqual(1000);
+        for (const x of [bounds.min.x, bounds.max.x])
+          for (const y of [bounds.min.y, bounds.max.y])
+            for (const z of [bounds.min.z, bounds.max.z]) {
+              const p = new Vector3(x, y, z).project(camera),
+                px = ((p.x + 1) * 1600) / 2,
+                py = ((1 - p.y) * 1000) / 2;
+              expect(px).toBeGreaterThan(crop.x);
+              expect(px).toBeLessThan(crop.x + crop.width);
+              expect(py).toBeGreaterThan(crop.y);
+              expect(py).toBeLessThan(crop.y + crop.height);
+            }
+        expect(JSON.stringify(room)).toBe(before);
+      } finally {
+        scene.dispose();
+      }
+    },
+  );
+  it('clamps a partially off-image projection to the finite render', () => {
+    const bounds = new Box3().set(
+        new Vector3(-10, -10, -10),
+        new Vector3(10, 10, 10),
+      ),
+      camera = new PerspectiveCamera(50, 1.6, 0.04, 200);
+    camera.position.set(0, 0, 15);
+    camera.lookAt(0, 0, 0);
+    camera.updateMatrixWorld();
+    expect(coverCrop(bounds, camera)).toEqual({
+      x: 0,
+      y: 0,
+      width: 1600,
+      height: 1000,
+    });
   });
 });
 const jpeg = Uint8Array.from(

@@ -21,6 +21,35 @@ export interface RoomPicture {
   image: HTMLCanvasElement;
   label: string;
 }
+/** Tight, padded overview bounds in the existing render, without reading pixels. */
+export function coverCrop(bounds: Box3, camera: PerspectiveCamera) {
+  const width = POLICY.designExportViewWidth,
+    height = POLICY.designExportViewHeight;
+  let left: number = width,
+    top: number = height,
+    right = 0,
+    bottom = 0;
+  for (const x of [bounds.min.x, bounds.max.x])
+    for (const y of [bounds.min.y, bounds.max.y])
+      for (const z of [bounds.min.z, bounds.max.z]) {
+        const p = new Vector3(x, y, z).project(camera),
+          px = ((p.x + 1) * width) / 2,
+          py = ((1 - p.y) * height) / 2;
+        left = Math.min(left, px);
+        top = Math.min(top, py);
+        right = Math.max(right, px);
+        bottom = Math.max(bottom, py);
+      }
+  const padding = Math.max(right - left, bottom - top) * 0.025,
+    x = Math.max(0, Math.min(width - 1, Math.floor(left - padding))),
+    y = Math.max(0, Math.min(height - 1, Math.floor(top - padding)));
+  return {
+    x,
+    y,
+    width: Math.max(1, Math.min(width, Math.ceil(right + padding)) - x),
+    height: Math.max(1, Math.min(height, Math.ceil(bottom + padding)) - y),
+  };
+}
 export async function captureRoomPictures(
   room: RoomDocument,
   signal: AbortSignal,
@@ -139,7 +168,7 @@ export async function captureRoomPictures(
       },
     ];
     const pictures: RoomPicture[] = [];
-    for (const view of views) {
+    for (const [index, view] of views.entries()) {
       check();
       progress('Creating room views…');
       projection.setCutaway(view.position, view.inside);
@@ -160,12 +189,31 @@ export async function captureRoomPictures(
       check();
       if (!renderer) throw new DesignExportError('cancelled');
       renderer.render(scene, camera);
+      const crop =
+        index === 0
+          ? coverCrop(new Box3().setFromObject(projection.root), camera)
+          : {
+              x: 0,
+              y: 0,
+              width: POLICY.designExportViewWidth,
+              height: POLICY.designExportViewHeight,
+            };
       const canvas = document.createElement('canvas');
-      canvas.width = POLICY.designExportViewWidth;
-      canvas.height = POLICY.designExportViewHeight;
+      canvas.width = crop.width;
+      canvas.height = crop.height;
       const context = canvas.getContext('2d');
       if (!context) throw new DesignExportError('graphics');
-      context.drawImage(renderer.domElement, 0, 0);
+      context.drawImage(
+        renderer.domElement,
+        crop.x,
+        crop.y,
+        crop.width,
+        crop.height,
+        0,
+        0,
+        crop.width,
+        crop.height,
+      );
       images.push(canvas);
       pictures.push({ image: canvas, label: view.label });
       await new Promise<void>((resolve) => setTimeout(resolve, 0));

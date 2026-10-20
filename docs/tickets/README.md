@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+**PDF cover correction,20October:** The first-page room now fills its own right-hand area using a padded crop of the actual3D render. Its opaque background no longer obscures the italic “life.” [Nine-path X follow-up](../commit-plans/RM-015X.md#cover-framing-follow-up-allocation--20-october2026), [current evidence](../validation/RM-015X.md#cover-framing-follow-up--20-october2026). Overall owner visual approval remains pending; Q held, guide paused, RM-016 Planned.
+
 **Project primary CTA follow-up:** Start a new room now reuses the editor's brown primary class. [Six-path allocation](../commit-plans/RM-015AI.md#project-primary-action-follow-up-allocation-20-october2026), [scoped actual checks](../validation/RM-015AI.md#project-primary-action-follow-up-20-october2026). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Latest furniture facing — RM-015AQ:** Fresh starter wardrobes sit near the east wall with their front west into the room. New-piece previews/numeric Add share a bounded orientation suggestion until explicit visitor rotation; replacement and accepted/recovered poses stay authoritative. Shared AI search considers functional front access and back-wall placement inside the authorized scope. Recognition preserves observed facing and leaves hidden orientation unknown. [Ticket](RM-015AQ-place-furniture-with-usable-facing.md), [22-path plan](../commit-plans/RM-015AQ.md), [evidence](../validation/RM-015AQ.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
