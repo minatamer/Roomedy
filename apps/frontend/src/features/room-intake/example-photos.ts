@@ -9,8 +9,18 @@ export const EXAMPLE_PHOTOS = [
     label: 'From the opposite corner',
     purpose: 'auto' as const,
   },
+  {
+    path: '/examples/bedroom-bed-detail.webp',
+    label: 'Bed detail',
+    purpose: 'auto' as const,
+  },
+  {
+    path: '/examples/bedroom-cabinet-detail.webp',
+    label: 'Bedside cabinet detail',
+    purpose: 'auto' as const,
+  },
 ] as const;
-/** Fixed local authored room views, bounded before joining chunks; ordinary decoder still validates pixels. */
+/** Fixed local authored room/detail views, bounded before joining chunks; ordinary decoder still validates pixels. */
 export async function loadExamplePhotos(
   signal: AbortSignal,
   transport: typeof fetch = fetch,

@@ -215,7 +215,6 @@ export function Intake({
                           {guideOpen ? 'Show photos' : 'Photo guide'}
                         </button>
                       )}
-                      <p>Include the floor, walls, doors and windows.</p>
                     </div>
                     <div className={styles.captureArea}>
                       {!state.photos.length || guideOpen ? (

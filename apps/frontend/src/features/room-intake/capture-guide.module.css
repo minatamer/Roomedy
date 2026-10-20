@@ -6,20 +6,16 @@
 .top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
 }
-.guide .top p {
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  margin: 0;
-}
 .guide .top button.replay {
+  min-width: 44px;
   min-height: 44px;
   padding: 8px;
   border: 0;
   background: transparent;
-  font-size: 11px;
+  font-size: 20px;
   white-space: nowrap;
   color: #78553d;
 }
@@ -34,11 +30,44 @@
 }
 .body {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
   place-items: center;
 }
 .person {
   transform: translate(192px, 54px);
   animation: walk 4.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.furniturePerson {
+  transform: translate(264px, 124px);
+  animation: furniture-walk 4.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.furniturePose {
+  transform: scaleX(-1);
+  animation: furniture-turn 4.6s ease both;
+}
+@keyframes furniture-walk {
+  0%,
+  27% {
+    transform: translate(118px, 162px);
+  }
+  59% {
+    transform: translate(280px, 145px);
+  }
+  78%,
+  100% {
+    transform: translate(264px, 124px);
+  }
+}
+@keyframes furniture-turn {
+  0%,
+  35% {
+    transform: scaleX(1);
+  }
+  60%,
+  100% {
+    transform: scaleX(-1);
+  }
 }
 .first {
   animation: first 4.6s ease both;
@@ -84,12 +113,12 @@
   }
 }
 @media (max-width: 480px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
   .guide svg {
     height: 190px;
-  }
-  .guide .top p {
-    max-width: 20ch;
-    font-size: 8px;
   }
 }
 

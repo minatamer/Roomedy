@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Furniture capture follow-up, 20 October:** Two matching room/furniture photo animations replace the captioned single guide, with no visible explanation and one icon-only Replay action. The original opposite-corner samples now have companion bed/cabinet detail photographs, all four entering the existing preparation/viewer/explicit Continue flow. [Y allocation](commit-plans/RM-015Y.md#furniture-capture-follow-up-allocation--20-october-2026), [asset provenance](references/photo-capture-assets-2026-10-19.md#furniture-detail-additions--20-october-2026) and [actual evidence](validation/RM-015Y.md) preserve fake estimates and pending owner visual approval. Q held, guide paused, RM-016 Planned.
+
 **Photo Continue CTA follow-up, 20 October:** The selected-photo action now says Continue and reuses the solid walnut landing CTA's global `button primary` classes and decorative arrow. Actual desktop/phone/short-laptop focus and fake drafting checks, scoped format/lint/frontend types and current limits are recorded in [Z follow-up evidence](validation/RM-015Z.md#continue-cta-follow-up--20-october-2026). Existing explicit recognition/availability/lifecycle behavior remains. Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Consolidated owner review:** The implementation is already committed through `65048e2` and Git was clean when the owner approved a final checkpoint. [File-level consolidation](commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md) records the exact five-file documentation commit and 211 already-committed feedback paths. [Visual-feedback checklist](reviews/2026-10-20-visual-feedback-checklist.md) gathers the review items. The owner will review later; actual visual approval remains pending, Q held, guide paused and RM-016 Planned. No new application changes or fresh executable verification are claimed.
@@ -1347,8 +1349,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Continue actual owner visual review on sole hot-reloaded4320/private4321. Continue CTA follow-up locally checked; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.
-Active ticket: RM-015Z
+Next action: Continue actual owner visual review on sole hot-reloaded4320/private4321. Paired capture drawings/detail sample photos locally verified; actual visual approval pending, Q held, guide paused, RM-016 Planned. No app paid/live/new ports/delegation/push/deploy.
+Active ticket: RM-015Y
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1373,7 +1375,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T07:36:50+00:00",
+  "updated_at": "2026-10-20T07:49:07+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1562,8 +1564,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015Z",
-  "next_action": "Continue actual owner visual review on sole hot-reloaded4320/private4321. Continue CTA follow-up locally checked; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.",
+  "active_ticket": "RM-015Y",
+  "next_action": "Continue actual owner visual review on sole hot-reloaded4320/private4321. Paired capture drawings/detail sample photos locally verified; actual visual approval pending, Q held, guide paused, RM-016 Planned. No app paid/live/new ports/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2021,14 +2023,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AK.md#panel-corner-follow-up--20-october-2026 — shared panel18px corner follow-up on618add8: CSS format passed, actual catalogue scroll/3D/390phone/short Assistant corners and Send checked; no browser errors. Exact eight-path read-only pass1 clean/442local links, local checkpoint prepared. Current hot-reload inpute264681384caeaf4198bbefffab89b7db85d60eb030ca7233c141252df9d9cca differs from prior production build; no fresh root/build/device claim. Actual owner approval pending.",
         "docs/validation/RM-015AL.md — new-room main-editor3D default:125focused tests; final602tests/46files +7boundaries/root/both builds passed;222inputs/1880286bytes/BUILD_ID1e94dc09455fba3db4489bc72dce787acb551c3e8ebc959ca00b8102cd1b7a58. Actual fresh3D entry, native2D switch/refresh recovery, fake photos→rough2D review→accepted3D observed; error logs empty. Clean12-path read-only pass1/459local links; exact local checkpoint prepared. Actual owner visual approval pending.",
         "docs/commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md and docs/reviews/2026-10-20-visual-feedback-checklist.md — owner explicitly approved staging/committing and will review all feedback later. Git was already clean at65048e2; 19 existing commits/211 historical paths inventoried. Exact five-file documentation-only checkpoint, clean read-only pass1/480local links/fragments; executable input/production identity unchanged from passed602-test gate. This is no actual visual approval or waiver; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015Z.md#continue-cta-follow-up--20-october-2026: eight-path presentation follow-up reuses landing global button primary for Continue; scoped format/lint/frontend types passed; actual desktop390px/short/focus/Enter-to-rough2D and identical landing style observed on4320. Historical production gate remains distinct; owner visual approval pending."
+        "docs/validation/RM-015Z.md#continue-cta-follow-up--20-october-2026: eight-path presentation follow-up reuses landing global button primary for Continue; scoped format/lint/frontend types passed; actual desktop390px/short/focus/Enter-to-rough2D and identical landing style observed on4320. Historical production gate remains distinct; owner visual approval pending.",
+        "docs/validation/RM-015Y.md#furniture-capture-follow-up--20-october-2026: 13-path paired room/furniture SVG guide and four-image sample set; actual desktop/390px/short/replay/viewer/fake Continue-to-rough2D observations, all602tests/46files,7boundaries and pnpm check/both builds passed. Built-in imagegen prompts/asset hashes recorded. Default production build identity and current inventory recorded separately; no Linux/live/owner approval claim."
       ],
       "blockers": [],
       "approval": {
-        "quote": "instead of draft my room, lets make it use continue and the design of the cta in 2nd screnshot, make sure thats a sharebale class",
-        "source": "human:current-chat/2026-10-20/photo-continue-shared-cta",
-        "scope": "RM-015Z photo CTA presentation follow-up only; no actual result approval.",
-        "recorded_at": "2026-10-20T07:36:50+00:00"
+        "quote": "remove this text, and put another animation next to this animation same size same style, but of someone taking pics of the furniture, u dont have to explain anything the drawings are enough\n\nand thats where i need u to put 2-3 more photos of the furniture in this photo in the sample",
+        "source": "human:current-chat/2026-10-20/furniture-capture-guide-and-detail-photos",
+        "scope": "RM-015Y paired caption-free SVG guides and two additional furniture-detail sample photographs only; no result approval.",
+        "recorded_at": "2026-10-20T07:49:07+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2309,6 +2312,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/photo-continue-shared-cta",
             "scope": "RM-015Z photo CTA presentation follow-up only; no actual result approval.",
             "recorded_at": "2026-10-20T07:36:50+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "remove this text, and put another animation next to this animation same size same style, but of someone taking pics of the furniture, u dont have to explain anything the drawings are enough\n\nand thats where i need u to put 2-3 more photos of the furniture in this photo in the sample",
+            "source": "human:current-chat/2026-10-20/furniture-capture-guide-and-detail-photos",
+            "scope": "RM-015Y paired caption-free SVG guides and two additional furniture-detail sample photographs only; no result approval.",
+            "recorded_at": "2026-10-20T07:49:07+00:00"
           }
         }
       ]
