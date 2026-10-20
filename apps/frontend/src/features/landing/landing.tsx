@@ -117,9 +117,9 @@ export function Landing() {
                   </svg>
                 </div>
                 <p className={styles.detail}>
-                  Build manually, or start with photos. Photos become a rough 2D
-                  sketch: review the pieces and measurements, then open your
-                  studio.
+                  Build manually, or start with photos. We’ll prepare your room,
+                  then open the studio so you can arrange the pieces and adjust
+                  the measurements.
                 </p>
                 <SectionScroll
                   className={styles.chapterLink}

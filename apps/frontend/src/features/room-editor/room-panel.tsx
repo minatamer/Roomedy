@@ -20,6 +20,7 @@ export function RoomPanel({
   controller: SessionController;
   room: RoomDocument;
 }) {
+  const photoNotes = controller.getSnapshot().photoNotes;
   const run = (actions: VisitorAction[], label: string) => {
     const r = controller.dispatch(actions, label);
     if (!r.ok)
@@ -76,9 +77,47 @@ export function RoomPanel({
   return (
     <>
       <div className={styles.panelTitle}>
-        <p className={styles.eyebrow}>Your starting point</p>
+        <p className={styles.eyebrow}>
+          {photoNotes?.simulated ? 'Example room' : 'Your starting point'}
+        </p>
         <h2 tabIndex={-1}>Room & intention</h2>
       </div>
+      {photoNotes &&
+        (photoNotes.outline !== 'rectangle' ||
+          photoNotes.unplaced.length > 0) && (
+          <section
+            className={styles.section}
+            aria-label="Photo details to check"
+          >
+            <h3>Photo details to check</h3>
+            {photoNotes.outline !== 'rectangle' && (
+              <p className={styles.hint}>
+                {photoNotes.outline === 'unsupported'
+                  ? 'The photos suggest extra corners. This studio uses a rectangular planning frame; adjust it to the area you want to arrange.'
+                  : 'The room outline was unclear. Adjust the rectangular planning frame using the measurements below.'}
+              </p>
+            )}
+            {photoNotes.unplaced.length > 0 && (
+              <>
+                <p className={styles.hint}>
+                  These photo observations need a furniture or room-feature
+                  choice:
+                </p>
+                <ul>
+                  {photoNotes.unplaced.map((label, index) => (
+                    <li key={index}>{label}</li>
+                  ))}
+                </ul>
+                <button onClick={() => controller.setPanel('catalogue')}>
+                  Choose furniture
+                </button>
+              </>
+            )}
+            <button onClick={() => controller.dismissPhotoNotes()}>
+              Dismiss notes
+            </button>
+          </section>
+        )}
       <SurfaceControls
         key={controller.getSnapshot().generation}
         room={room}
@@ -92,6 +131,35 @@ export function RoomPanel({
               );
         }}
       />
+      <div className={styles.section}>
+        <label>
+          Starting condition
+          <select
+            value={room.intent.condition}
+            onChange={(event) => {
+              const condition = event.target.value;
+              if (
+                condition === 'empty' ||
+                condition === 'partial' ||
+                condition === 'furnished'
+              )
+                run(
+                  [
+                    {
+                      type: 'set-intent',
+                      intent: { ...room.intent, condition },
+                    },
+                  ],
+                  'Update starting condition',
+                );
+            }}
+          >
+            <option value="empty">Empty room</option>
+            <option value="partial">Partly furnished</option>
+            <option value="furnished">Furnished</option>
+          </select>
+        </label>
+      </div>
       <div className={styles.section}>
         <h3>Room measurements</h3>
         <div className={styles.measurementGrid}>

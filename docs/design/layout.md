@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Direct photo processing — RM-015AM
+
+Photo Continue replaces the upload surface with one centered processing composition, selected-photo strip, honest stage/status and reachable Cancel inside the same static warm background/header. On success the existing studio opens in3D; precision2D, room/furniture/feature measurements, starting condition, finishes and Undo remain there. Unknown outlines and unplaced observations have contextual transient notes in Room, without confirming any fact. Fake preview is explicitly finite/cancellable; live follows actual work. [Packet](../tickets/RM-015AM-process-photos-directly-into-the-studio.md).
+
 ## Main-editor default — RM-015AL
 
 New main-editor rooms, explicit new-room resets and accepted photo rooms open in3D. Keep the visitor's explicit recovered view and current import view. The2D control remains available; photo review stays rough2D and loading/graphics failure keeps its existing usable plan fallback. No new setting, camera journey or semantic command. [Evidence](../validation/RM-015AL.md).

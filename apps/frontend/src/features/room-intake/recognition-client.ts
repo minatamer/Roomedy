@@ -12,6 +12,24 @@ import { releaseTransport } from '../session/release-client';
 import type { ReviewController } from './review-controller';
 
 type Transport = typeof fetch;
+export const FAKE_PROCESSING_PREVIEW_MS = 2800;
+interface ProcessingOptions {
+  openStudio?: boolean;
+  previewProcessing?: boolean;
+}
+async function previewProcessing(ms: number, signal: AbortSignal) {
+  if (ms <= 0 || signal.aborted) return;
+  await new Promise<void>((resolve) => {
+    const done = () => {
+      clearTimeout(timer);
+      signal.removeEventListener('abort', done);
+      resolve();
+    };
+    const timer = setTimeout(done, ms);
+    signal.addEventListener('abort', done, { once: true });
+    if (signal.aborted) done();
+  });
+}
 const base = '/api/roomedy/v1/';
 const outcomes: Record<
   Exclude<OperationResult['kind'], 'completed'>,
@@ -20,17 +38,16 @@ const outcomes: Record<
   refused:
     'These photos could not be interpreted. Change photos or continue manually.',
   incomplete:
-    'The photo response was incomplete. Your photos and current sketch are preserved.',
+    'The photo response was incomplete. Your photos are still here; try again.',
   malformed:
-    'The photo response could not be used. Your photos and current sketch are preserved.',
-  cancelled:
-    'Photo drafting cancelled. Your photos and current sketch are preserved.',
-  timeout: 'Photo drafting took too long. Retry or continue manually.',
+    'The photo response could not be used. Your photos are still here; try again.',
+  cancelled: 'Processing cancelled. Your photos are still here.',
+  timeout: 'Photo processing took too long. Try again or build manually.',
   'too-large':
     'The photo response was too large. Try fewer photos or continue manually.',
-  unavailable: 'Photo drafting is unavailable. Continue with manual setup.',
+  unavailable: 'Photo processing is unavailable. Continue with manual setup.',
   failed:
-    'Photo drafting could not finish. Your photos and current sketch are preserved.',
+    'Photo processing could not finish. Your photos are still here; try again.',
   'invalid-image':
     'These prepared photos could not be decoded. Try another photo or continue manually.',
 };
@@ -38,7 +55,9 @@ const outcomes: Record<
 export async function draftFromPhotos(
   controller: ReviewController,
   transport: Transport = fetch,
+  options: ProcessingOptions = {},
 ) {
+  const startedAt = Date.now();
   const prepared = controller.photos.preparedRequest();
   if (!prepared) {
     controller.notify(
@@ -69,7 +88,7 @@ export async function draftFromPhotos(
   };
   transport = releaseTransport(transport, () =>
     finish(
-      'This version changed. Your sketch and photos are still here. Continue manually, or reload when ready; photos and drafts cannot recover.',
+      'This version changed. Your photos are still here. Return to Room choices to build manually, or reload when ready; selected photos cannot recover.',
     ),
   );
   try {
@@ -127,7 +146,7 @@ export async function draftFromPhotos(
     const grant = admissionResultSchema.safeParse(admitted);
     if (!grant.success || grant.data.kind !== 'granted') {
       finish(
-        'Photo drafting needs verification that is unavailable here. Continue manually.',
+        'Photo processing needs verification that is unavailable here. Continue manually.',
       );
       return;
     }
@@ -150,15 +169,28 @@ export async function draftFromPhotos(
       return;
     }
     const result = parsed.data;
-    if (result.kind === 'completed' && result.draft)
-      controller.applyHypothesis(token, result.draft, result.simulation);
-    else
+    if (result.kind === 'completed' && result.draft) {
+      if (options.openStudio) {
+        controller.draftProgress(token, 'opening');
+        if (options.previewProcessing && result.simulation)
+          await previewProcessing(
+            FAKE_PROCESSING_PREVIEW_MS - (Date.now() - startedAt),
+            signal,
+          );
+        if (current())
+          controller.openStudioFromPhotos(
+            token,
+            result.draft,
+            result.simulation,
+          );
+      } else controller.applyHypothesis(token, result.draft, result.simulation);
+    } else
       finish(outcomes[result.kind === 'completed' ? 'malformed' : result.kind]);
   } catch {
     finish(
       signal.aborted
         ? outcomes.timeout
-        : 'Photo drafting could not connect. Your photos and current sketch are preserved.',
+        : 'Photo processing could not connect. Your photos are still here; try again.',
     );
   }
 }

@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Latest owner flow,20October — RM-015AM:** Choose photos → explicit Continue → designed processing → main studio, with all room/furniture corrections in the studio. The separate rough2D review page and pre-studio shape acknowledgement are superseded. Preserve estimates/unknowns, strict reconciliation/validation, one baseline/fixed expiry, transient photo cleanup and default3D with2D available. Fake-only preview is finite and cancellable; live follows actual work without an artificial minimum. [Ticket](tickets/RM-015AM-process-photos-directly-into-the-studio.md), [24-path plan](commit-plans/RM-015AM.md), [evidence](validation/RM-015AM.md). Historical review-first decisions retain their date/evidence; actual visual approval pending, Q held, guide paused, RM-016 Planned.
+
 **Photo control cleanup, 20 October:** Uploaded/sample thumbnails open directly without View badges; selected-photo ordering arrows are removed and Remove fills the existing row. Recognition already derives photo roles from visual evidence rather than upload order, with stable source IDs. The four-photo example batch respects the actual registry/public limit and existing atomic admission. [Y allocation](commit-plans/RM-015Y.md#photo-control-cleanup-allocation--20-october-2026) and [scoped evidence](validation/RM-015Y.md#photo-control-cleanup--20-october-2026) keep actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Furniture capture follow-up, 20 October:** Two matching room/furniture photo animations replace the captioned single guide, with no visible explanation and one icon-only Replay action. The original opposite-corner samples now have companion bed/cabinet detail photographs, all four entering the existing preparation/viewer/explicit Continue flow. [Y allocation](commit-plans/RM-015Y.md#furniture-capture-follow-up-allocation--20-october-2026), [asset provenance](references/photo-capture-assets-2026-10-19.md#furniture-detail-additions--20-october-2026) and [actual evidence](validation/RM-015Y.md) preserve fake estimates and pending owner visual approval. Q held, guide paused, RM-016 Planned.
@@ -196,7 +198,7 @@ Roomedy requires no renderer service: its interactive 3D is browser-side. It req
 
 Current19October owner revision [RM-015M](tickets/RM-015M-integrate-landing-content-into-the-room.md) asks the room to cover the entire landing, with text smoothly integrated into it, and fixes initial-load stutter. It supersedes L's adjacent desktop/compact narrow scene layout while retaining camera/wall animation and adding purposeful furniture slides/turns from an awkward grounded layout into a window-side workspace and open center. Preserve the liked warm translucent text-card backgrounds and internal decorative rules; feather only their outer seams. Keep the selected earthy palette, exact Roomedy mark/wordmark and brown dot. The former Sample/Preview/Apply/Undo marketing card stays retired; real editing controls remain in the studio.
 
-Use one full-viewport scene behind hero, workflow, motivation, closing CTA and centered footer, with readable semantic copy/actions composed inside that shared space. Camera/room framing and restrained text drift follow normal reversible scrolling. No separate miniature strip, opaque dashboard cards, hijacked scroll or motion-off controls. Preserve the first-fold Start designing action on phone/short layouts. Marketing art never becomes a personal-photo reconstruction or editor/session initialization; photos still start with rough2D correction before accepted main-editor3D.
+Use one full-viewport scene behind hero, workflow, motivation, closing CTA and centered footer, with readable semantic copy/actions composed inside that shared space. Camera/room framing and restrained text drift follow normal reversible scrolling. No separate miniature strip, opaque dashboard cards, hijacked scroll or motion-off controls. Preserve the first-fold Start designing action on phone/short layouts. Marketing art never becomes a personal-photo reconstruction or editor/session initialization; photos continue through processing into the editable studio under RM-015AM.
 
 Research uses official examples/sources in [the landing register](references/landing-research-2026-10-19.md). Any motivating statistic needs correct population/context and direct attribution; no invented3D-designer adoption, visitor totals, savings, endorsements or feature equivalence. Professional tools and free competitor tiers do not establish Roomedy pricing. Use actual browser/no-account/use-owned-pieces value instead. Center the footer logo and remove the domain text. Matching browser/search/Apple icons use the existing vector mark on solid token beige, never white/transparent. Local metadata/assets prepare eligibility; Google crawl/display is external, not guaranteed.
 
@@ -212,7 +214,7 @@ Latest [P](tickets/RM-015P-restore-smooth-landing-scrolling.md) supersedes O's t
 
 `/` is the landing and `/demo` is the recommended guest workspace route. Inside entry, first choose **Use a sample room** or **Add my room**. Then establish whether it is empty, partly furnished or already furnished. These are separate decisions; six competing hero CTAs would make the first step harder.
 
-The sample route opens the main editor immediately with authored dimensions and a purposeful arrangement. Adding a room uses a guided intake panel beside a rough, editable 2D sketch of walls, openings and labelled furniture footprints. Keep initial review in 2D while the visitor corrects the draft and measurements; introduce 3D only after they continue to the main editor. Preserve progress when switching relevant panels.
+Manual room setup opens the main editor with authored dimensions and a purposeful starting arrangement. Photo entry prepares selected photos locally, then explicit Continue opens the processing page and a validated result enters the same studio directly. Correct measurements, walls/openings and furniture in its synchronized3D/2D views. Preserve progress when switching relevant panels.
 
 If live AI is unavailable, the supplied sample and manual editor should still be useful. The assistant can explain its current availability. A public failure must not quietly replace the provider response with a scripted success. Development fixtures use an explicit simulation label.
 
@@ -245,57 +247,43 @@ Samples are authored fictional room records, available for manual use before any
 
 ### 5.2 Empty room from photos
 
-1. Explain that photos help draft the room; ask for multiple corners, doors, windows and fixed features within the chosen upload bounds.
-2. Show the selected originals locally before an explicit **Draft my room** action and disclose provider transfer.
-3. Show visible features and approximate relationships as a rough 2D sketch. Keep uncertain or missed features easy to correct; no 3D view is offered during this initial review.
-4. Confirm room width/depth and the fit-critical openings, then accept the reviewed draft. Ask about height only when relevant to the current checks.
-5. Ask what the room needs to do. Do not infer that an empty room is a bedroom.
-6. Choose essential furniture visually: supported bed, desk, chair and storage variants, with their footprints and dimensions visible.
-7. Continue to the main editor, where 2D and 3D become available. Generate a bounded arrangement proposal around the reviewed constraints; explain compromises or unknowns.
-8. Explore in both editor views, refine directly or through chat, apply, compare Before/Current, undo and export.
+1. Select bounded room/furniture photos with local previews and the illustrated capture guide. Selection prepares inputs only; no provider dispatch.
+2. Explicit **Continue** discloses the actual live transfer and opens a dedicated processing page with selected thumbnails, truthful stages and Cancel.
+3. One strict admitted operation prepares a validated planning room, then opens the main studio directly in3D. There is no separate rough-draft page or shape-acknowledgement gate.
+4. Correct room measurements, openings, inventory and starting condition in the studio. Unknown and estimated values remain so until each explicit confirmation; graphics fallback dimensions are never physical measurements.
+5. Choose essential furniture and goals, edit in2D/3D or ask for a bounded reviewed assistant proposal, then Apply/Cancel/Undo/export through the shared authority.
 
-If geometry is still approximate, allow exploration with an approximation notice. Never imply the layout is fully checked while key dimensions or opening positions remain uncertain.
+A finite2800ms simulated preview makes the processing design reviewable only when the app selects fake mode and the response is simulated. Live work has no artificial minimum or fabricated percentage. Cancel/failure returns to the selected photos, while expiry/reset/unmount fence late requests and the owned preview wait.
 
 ### 5.3 Partly furnished room
 
-Begin with the photographed or manually added pieces in the rough 2D review sketch. Confirm which furniture stays, and its actual outer dimensions. Lock its size separately from its position. After review, continue to the main editor, ask what is missing and propose additions around what the visitor owns. A bed to keep is not an adjustable template the solver may shrink to fit a new desk.
-
-The visitor should see retained and proposed furniture distinguished in the inventory and preview. Replacing an item requires a visible replacement choice; adding a smaller generic mesh is not a size correction to their real furniture.
+Photo processing opens the same studio with supported observed pieces at honest per-value estimates/unknowns, existing ownership and independent locks. Confirm real outer sizes and correct missing/extra pieces, room features, condition and finishes there. The solver cannot shrink owned furniture to make a proposal fit. Retained/proposed identity and explicit replacement remain distinct.
 
 ### 5.4 Existing furnished room
 
-Review the rough 2D sketch and inventory, marking items **Keep**, **May replace** or **Remove from this plan**. Offer **Rearrange what I own** as an explicit goal. It must not introduce purchases or replacement variants. Confirm relevant dimensions and opening mechanisms, lock any fixed positions, then enter the main editor to propose moves and rotations.
+Use the studio inventory/properties to keep, replace or remove pieces from the plan, correct poses/measurements and choose the rearrangement goal. Existing baseline collisions and uncertain checks survive admission; they are useful facts to resolve, not transport failures or permission for a worse proposal. Manual and assistant changes share final validation and whole-change Undo. Removing a piece is a planning choice, not a disposal instruction.
 
-An uploaded room may already contain collisions or access issues. Preserve that baseline as a description of the current room, show the issues and help resolve them. A documented existing conflict is not evidence that a new proposal is valid. Removing an object from the plan is a planning choice, not a disposal instruction.
+### 5.5 Direct editing without successful photo processing
 
-### 5.5 Direct editing without a successful photo draft
-
-If recognition is unsupported, unavailable or wrong, keep the selected files visible locally where available and offer manual room dimensions, doors/windows and catalogue pieces. The visitor can also open a supplied sample. The fallback must be a usable editor path, with no claim that AI interpreted the room.
+If recognition is unavailable or fails, keep selected photos and useful preparation in the current tab, with concise retry information. Room choices retains the manual empty/partial/furnished path into the same studio. Do not claim manual work was inferred, dispatch automatically or silently fall back from unavailable live mode to fake results.
 
 ### 5.6 How photos become an editable room
 
-The proposed transformation is **photos → rough 2D sketch → visitor corrections and measurements → one accepted room document → main editor with synchronized 2D and 3D views**. Initial review is a sketch-like top-down view with walls, opening markers, labelled furniture footprints and uncertainty indicators. It has no 3D preview or 3D view switch. Photos guide an approximate semantic reconstruction: room features, furniture categories, appearance and relationships. Measurements and supported geometry turn that draft into an editable planning scene. This is the planned workflow; no photo-to-room implementation or accuracy result exists yet.
+Current selected transformation is **photos → explicit Continue → processing → one validated planning room → studio with synchronized3D/2D and in-studio correction**. This20October AM direction supersedes the dated review-first decisions. The loading artwork illustrates processing; it is neither a reconstructed preview nor a second3D renderer.
 
-| Step | What happens behind the interface | What the visitor sees or decides |
+| Step | Application authority | Visitor experience |
 | --- | --- | --- |
-| 1. Bring the room | Select bounded room photos; validate eligible images and prepare them for an explicit recognition request | Local image previews, room condition and the provider-transfer explanation |
-| 2. Draft the visible structure | AI proposes visible wall/features and inventory, approximate relationships and uncertain values as structured data | A rough 2D sketch, editable feature/object cards and uncertainty markers; no 3D preview |
-| 3. Reconcile the draft | Review whether two photos show the same desk, add missed objects/openings and correct category/wall associations | One room inventory with stable object identities rather than one new object per photo |
-| 4. Establish physical scale | Confirm width/depth and relevant furniture footprints, opening positions, mechanisms and heights; preserve per-value provenance | Short contextual measurement prompts with the affected wall/object highlighted |
-| 5. Accept a room document | Validate supported room shape, IDs, catalogue references, dimensions, poses, ownership and locks; keep unknowns explicit | Accept the reviewed 2D draft and continue to the main editor with remaining warnings/unassessed checks visible |
-| 6. Render the editor plan | Draw the room outline, footprints, openings, measurements and check overlays from that document | The main editor's precision 2D plan, with drag/rotate/numeric editing |
-| 7. Render the editor cutaway | Only after entry to the main editor, build floor/wall geometry and place prepared furniture representations using the same dimensions, IDs and poses | The main editor's 3D view, supporting orbit, selection and inspection, synchronized with the plan |
-| 8. Refine and retain | Manual commands or reviewed assistant batches update the shared document; Apply, Cancel, Undo and export follow the normal lifecycle | One coherent room that stays editable throughout the session |
+| Select | Existing bounded PhotoStore/decode/transient URL owner | Local previews, Remove/direct viewer and capture drawings; no request |
+| Process | One existing strict/stateless admitted recognition request; identity/revision/deadline fences | Dedicated warm loading composition, actual thumbnails/stage and Cancel |
+| Prepare | Existing pure role/evidence reconciliation and structural/catalogue validation; no confirmed inference | A valid supported planning projection; unresolved observations stay contextual |
+| Open studio | SessionController accepts once, captures baseline, preserves fixed expiry and releases photos | Default3D with2D available, no separate review/acceptance page |
+| Correct and refine | Existing room/furniture/feature/intent/finish commands, locks, checks and whole Undo | Editable dimensions, condition, inventory, openings and layout in the studio |
 
-A photographed desk becomes an object record: category, confirmed or estimated width/depth/height, position, rotation, appearance reference and locks. The plan draws its footprint. The cutaway places a supported desk representation at the corresponding location and size. If a detailed asset cannot represent the known dimensions appropriately, use an eligible procedural representation or explain the approximation; decorative mesh bounds never redefine the physical desk.
+The canonical rectangle is the supported planning frame, not proof that a photographed shape was rectangular. Unknown/unsupported outlines and unmapped observation labels remain bounded transient Room-panel notes. Dismissing notes does not confirm measurements. Notes clear on reset/import/recovery/expiry/disposal and do not enter project/recovery schemas; raw photos remain transient. Per-value provenance, estimated pose and unresolved checks remain in the accepted semantic document and its exports.
 
-Unknown/occluded walls, hidden furniture and unreliable depth cannot become confirmed simply because the photos look convincing. Approximate display geometry can support exploration while its dependent checks remain unassessed. For an empty room, the accepted inventory starts empty; furnishing is a later explicit goal and proposal. Existing/partly furnished rooms retain the pieces the visitor marks to keep.
+A photographed piece becomes an app-owned identity with supported catalogue representation, independent true dimensions, pose, ownership and locks. No mesh size or inferred perspective becomes confirmed measurement. The same canonical room drives both views and assistant snapshots. Room corrections do not silently rescale deliberately placed pieces; new changes use the shared command authority and preserve the baseline.
 
-After a manual move, the room document changes once and both views reflect it. An assistant request uses a snapshot of that current document, prepares supported actions, validates the whole candidate and presents a preview. Apply commits that batch once; Undo restores the previous semantic arrangement as a new revision. Failed recognition can fall back to manual setup, and a sample room skips photo drafting/measurement entry using its authored data. Guest recovery/export follow the owner-selected two-hour semantic-room policy in section 17.
-
-**Approved uncertain-draft contract (PR-06):** separate bounded per-photo observations from candidate physical entities, with allow-listed source IDs, finite associations and application-owned stable identities. A cross-photo match remains reviewable: one desk in two photos and two identical desks are different cases. Resolve one rectangle frame, wall associations and scale explicitly. An unresolved fact may have an estimated sketch display value, never an invented confirmed millimetre value. Merge/split/add/remove review preserves visitor corrections and available source references. A later wall/width/depth correction preserves confirmed values and deliberate placements, recomputes only dependent draft estimates and highlights contradictions; never silently rescale the whole inventory.
-
-Prepare a small independent rights-safe corpus/rubric skeleton in the intake/recognition work before tuning. RM-013 owns its complete executable evaluation. O-01 keeps only this observation-adapter boundary; reconstruction model downloads, GPU services, benchmark execution and deployment remain deferred.
+The bounded observation/group/role adapter and its correction/merge/split algorithms remain internally tested for reconciliation, including repeated views versus similar distinct pieces. They no longer require a visitor-facing draft page. Unsupported/incomplete but useful observations stay usable through contextual studio notes and manual correction; invalid structured responses remain safe failures. O-01 stays an adapter seam without model/GPU downloads or benchmarking. Actual real-provider quality/device/Linux/hosted evidence remains separate from authored fake examples and local checks.
 
 ## 6. Intake and measurement confidence
 
@@ -347,7 +335,7 @@ Apple RoomPlan and Android depth were research directions in the original draft,
 
 ### 7.1 One room, two views
 
-The main editor's 2D SVG plan and 3D React Three Fiber cutaway read the same room document and object IDs. These two views become available in the main editor after initial review; the earlier photo-review stage uses a rough 2D sketch only. Selection, inventory and properties refer to those IDs. Switching editor views changes presentation only. Camera orbit, zoom and reset must not mutate physical geometry or create Undo entries.
+The main editor's 2D SVG plan and 3D React Three Fiber cutaway read the same room document and object IDs. Photo processing hands off directly to this editor, defaulting to3D; its loading artwork is illustrative SVG without editable geometry. Selection, inventory and properties refer to those IDs. Switching editor views changes presentation only. Camera orbit, zoom and reset must not mutate physical geometry or create Undo entries.
 
 | 2D plan | 3D cutaway |
 | --- | --- |
@@ -707,7 +695,7 @@ Use public package exports, with no relative cross-app source imports. Keep Next
 
 ### 14.4 Rendering and work ownership
 
-Drag, camera movement, selection and animation run locally. Do not send model requests per frame. Keep transient pointer state out of persisted room history until a validated drop. Load the heavy 3D editor only when the visitor reaches the main editor after draft review, and reuse prepared assets/materials. Initial review remains a lightweight rough 2D sketch. Avoid React state updates for every internal animation frame when local renderer state suffices.
+Drag, camera movement, selection and animation run locally. Do not send model requests per frame. Keep transient pointer state out of persisted room history until a validated drop. Load the heavy3D editor when the visitor reaches the studio, and reuse prepared assets/materials. Photo processing uses lightweight illustrative SVG, with no second editor or renderer. Avoid React state updates for every internal animation frame when local renderer state suffices.
 
 On-demand rendering is a possible idle optimization, provided controls and active animations invalidate frames until they finish. It must not become an animation-off/render-off setting or suppress intended movement. The R3F performance guide explains invalidation, resource reuse and idle rendering; actual Roomedy device behavior still requires measurement. [R3F performance guidance](https://r3f.docs.pmnd.rs/advanced/scaling-performance).
 
@@ -921,19 +909,19 @@ The fixed two-hour destructive active expiry is not covered by WCAG's over-twent
 
 ### 19.4 Selected product and design refinements
 
-The owner accepted the step-three recommendations on 17 October 2026, explicitly deferring furniture prices and visitor budget planning. The refinements below are selected product requirements. They are not evidence of implementation or actual visual acceptance. Initial review remains a rough 2D sketch; 3D appears only in the main editor.
+The owner accepted the step-three recommendations on17October2026, explicitly deferring furniture prices and visitor budget planning. These are selected product requirements, not evidence of implementation or actual visual acceptance. Latest20October RM-015AM supersedes the earlier initial-review requirement; P-01/P-07 below now place correction in the studio after processing.
 
 The signature moment is **ask for a useful room change → inspect the coordinated proposal and its reasons → Apply → see the room respond → Undo the whole change if desired**. The photo draft earns trust through correction and honest dimensions. It does not promise automatic exact reconstruction.
 
 | Refinement | Selected experience | Boundary |
 | --- | --- | --- |
-| P-01. Guided sketch corrections | A clean 2D sketch shows labelled footprints, door/window markers and approximate dimension badges. Selecting a feature focuses its measurement question and an available source photo. Ask one essential question at a time and offer an explicit unknown/estimate path. | Reference a source only while available; no invented detection boxes or confirmation. No 3D during initial review. |
+| P-01. Studio corrections | Studio properties and synchronized3D/2D expose labelled pieces, room features and per-value estimates. Selecting a piece opens its properties; Room owns measurements, condition and openings. | No invented detection boxes or confirmation. Source photos are transient and released at studio handoff; unplaced observations remain contextual notes. |
 | P-02. Visual ownership cards | Pair an available source thumbnail with a similar supported furniture representation, dimensions and **Keep / May replace / Remove from plan** choices. | Position and dimension locks are independent. Source photos stay transient; their loss on refresh does not erase accepted room data. |
 | P-03. Visual goals and finish directions | Offer relevant goals such as **More desk space**, **Clear the entrance** and **More storage**. Preview the coherent **Warm & simple**, **Light & airy** and **Calm & focused** directions in the main editor. | Establish supported room purpose first. Changes affect supported finishes and eligible proposed pieces while preserving retained furniture/locks. Exact swatches and assets are design implementation work within the selected direction. |
 | P-04. Contextual assistant actions | Selecting a desk offers **Move near the window** or **Check chair space**; selecting an issue offers **Explain this** or **Find another arrangement**. Include useful object cards, suggestions and a short skippable tour, with automatic fresh-room welcome under RM-015W. | Selection itself never dispatches a metered request. Deliberate supported actions use the same proposal/command authority. |
 | P-05. Explanatory previews | Show affected footprints/ghost positions, a short change list, what stays protected, computed checks and remaining unknowns. Keep Apply/Cancel beside the room. | No invented improvement percentages or quality scores; preserve atomic validation and revision fencing. |
 | P-06. Before/Current peek | Include one read-only accepted starting layout and compare it with the committed current room from the same editor view/camera. | This selected refinement uses a bounded baseline, not multiple generated alternatives or a second editable state authority. Undo is separate. See section 9.6. |
-| P-07. Sketch-to-studio transition | Keep one coherent workspace: correct the rough 2D sketch, review dimensions, then continue into the main editor where the 3D cutaway becomes available. Panels adapt around the canvas; mobile uses focused sheets. | No 3D during initial review. Keep the transition explicit without a technical settings/loading screen. |
+| P-07. Photo-to-studio transition | Choose photos, Continue through designed processing, then enter the editable default3D studio directly. Panels adapt around the canvas and corrections use existing commands/Undo. | No redundant draft page, invented progress percentage or inferred confirmation. Fake preview is finite/cancellable; live timing follows actual work. |
 | P-08. Lively room demonstration | A lightweight scripted main-editor cutaway on the landing demonstrates desk/chair coordination, a clear access overlay and Undo. Use the selected beige/brown/earth/wood website direction with polished stylized furniture and deliberate motion; studio tools may use black/white neutrals. | Label scripted behavior; load the real 3D editor only at its owning stage. No animation-off/render-off controls or OS suppression. |
 
 Retrosum's coherent workspace/controller and useful assistant are the main interaction reference; Retailor contributes visual choices and reviewed action cards. Roomedy keeps its own visual identity. Section 27.5 records the official product/principle research that informed these ideas; owner selection does not turn that desk research into measured usability evidence.
@@ -1128,7 +1116,7 @@ Keep a known compatible frontend/backend image pair and rollback instructions. I
 | Partly furnished | Retained dimensions/locks survive additions and styling |
 | Rearrange existing | No new purchases; preserve retained pieces and protected poses |
 | Photo correction | Missed/misidentified features can be corrected without fabricated confirmation |
-| Initial review sequence | Uploaded rooms are reviewed in a rough 2D sketch; 3D becomes available only after entering the main editor |
+| Photo processing sequence | Explicit Continue opens processing, then directly opens the editable default3D studio with2D available; uncertainty and correction authority remain |
 | Provenance | Estimated/extracted/unknown values never become confirmed silently |
 | View synchronization | Manual and applied AI changes update plan, cutaway, inventory and properties consistently |
 | Coordinates | Rotation/center conventions agree in plan, renderer and geometry at boundaries |
@@ -1351,8 +1339,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Continue actual owner visual review on sole hot-reloaded4320/private4321. Photo-control cleanup locally verified; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.
-Active ticket: RM-015Y
+Next action: Owner reviews RM-015AM processing design and direct editable studio on existing4320/private4321. Actual result approval remains pending; Q held, guide paused, RM-016 Planned. Exact24-path local ticket checkpoint under existing authority; no paid/live/delegation/new ports/push/deploy.
+Active ticket: RM-015AM
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1377,7 +1365,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T07:54:35+00:00",
+  "updated_at": "2026-10-20T08:28:27+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1566,8 +1554,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015Y",
-  "next_action": "Continue actual owner visual review on sole hot-reloaded4320/private4321. Photo-control cleanup locally verified; actual visual approval pending, Q held, guide paused, RM-016 Planned. No paid/live/new ports/delegation/push/deploy.",
+  "active_ticket": "RM-015AM",
+  "next_action": "Owner reviews RM-015AM processing design and direct editable studio on existing4320/private4321. Actual result approval remains pending; Q held, guide paused, RM-016 Planned. Exact24-path local ticket checkpoint under existing authority; no paid/live/delegation/new ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2027,14 +2015,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md and docs/reviews/2026-10-20-visual-feedback-checklist.md — owner explicitly approved staging/committing and will review all feedback later. Git was already clean at65048e2; 19 existing commits/211 historical paths inventoried. Exact five-file documentation-only checkpoint, clean read-only pass1/480local links/fragments; executable input/production identity unchanged from passed602-test gate. This is no actual visual approval or waiver; Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015Z.md#continue-cta-follow-up--20-october-2026: eight-path presentation follow-up reuses landing global button primary for Continue; scoped format/lint/frontend types passed; actual desktop390px/short/focus/Enter-to-rough2D and identical landing style observed on4320. Historical production gate remains distinct; owner visual approval pending.",
         "docs/validation/RM-015Y.md#furniture-capture-follow-up--20-october-2026: 13-path paired room/furniture SVG guide and four-image sample set; actual desktop/390px/short/replay/viewer/fake Continue-to-rough2D observations, all602tests/46files,7boundaries and pnpm check/both builds passed. Built-in imagegen prompts/asset hashes recorded. Default production build identity and current inventory recorded separately; no Linux/live/owner approval claim.",
-        "docs/validation/RM-015Y.md#photo-control-cleanup--20-october-2026: seven-path thumbnail View/order cleanup, full-width Remove, four-example public capacity and atomic admission. Scoped format/lint/frontend types and24photo tests passed; actual desktop/390px/short viewer click+Enter/Escape/focus/removal/two+four=six checks passed, console empty, viewport reset/tab closed. Existing recognition prompt forbids role inference from upload order; no live quality/current production-build claim."
+        "docs/validation/RM-015Y.md#photo-control-cleanup--20-october-2026: seven-path thumbnail View/order cleanup, full-width Remove, four-example public capacity and atomic admission. Scoped format/lint/frontend types and24photo tests passed; actual desktop/390px/short viewer click+Enter/Escape/focus/removal/two+four=six checks passed, console empty, viewport reset/tab closed. Existing recognition prompt forbids role inference from upload order; no live quality/current production-build claim.",
+        "docs/validation/RM-015AM.md — photos Continue→designed processing→default3D studio directly; no separate review page or inferred confirmation. Native1280×720/390×844/1280×600 loading, Cancel/retry, actual3D, measurement/condition correction and Undo; browser errors empty. Final624tests/47files,7boundaries/root/both builds;226inputs/2154759bytes/BUILD_ID4022549203fefb78d703d3320f4b811df1e900fa03fc2c6f42b62f6b99e2dcb6. Clean24-path read-only pass2,620local links/missing0; exact local checkpoint prepared. Actual owner visual approval pending, Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "quote": "remove the \"view\" cta cuz we dont need it clicking on the photo views it anyway, and remove the arrows, the like order of pics should not matter to the ai anyyway when we do it in real mode in the future",
-        "source": "human:current-chat/2026-10-20/photo-view-badges-and-order-arrows",
-        "scope": "RM-015Y thumbnail control cleanup; retain direct photo viewer and identity-based recognition. No live quality or result approval.",
-        "recorded_at": "2026-10-20T07:54:35+00:00"
+        "quote": "this page doesnt make sense, its the same page as the studio with same controls and everything but its called a \"draft\"\n\nits an unnecessary step, i say we put the user after they choose photos into a processing loading page first, design that even in fake mdoe so i approve of design cuz surely in real mode ai will take time, and then straight into studio where the user can still edit everything just like this useless draft page",
+        "source": "human:current-chat/2026-10-20/direct-photo-processing-to-studio",
+        "scope": "RM-015AM implementation: remove separate rough review, show processing including finite fake preview and open editable studio. Not actual visual-result approval or live-provider authority.",
+        "recorded_at": "2026-10-20T08:23:54+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2333,6 +2322,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/photo-view-badges-and-order-arrows",
             "scope": "RM-015Y thumbnail control cleanup; retain direct photo viewer and identity-based recognition. No live quality or result approval.",
             "recorded_at": "2026-10-20T07:54:35+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "this page doesnt make sense, its the same page as the studio with same controls and everything but its called a \"draft\"\n\nits an unnecessary step, i say we put the user after they choose photos into a processing loading page first, design that even in fake mdoe so i approve of design cuz surely in real mode ai will take time, and then straight into studio where the user can still edit everything just like this useless draft page",
+            "source": "human:current-chat/2026-10-20/direct-photo-processing-to-studio",
+            "scope": "RM-015AM implementation: remove separate rough review, show processing including finite fake preview and open editable studio. Not actual visual-result approval or live-provider authority.",
+            "recorded_at": "2026-10-20T08:23:54+00:00"
           }
         }
       ]

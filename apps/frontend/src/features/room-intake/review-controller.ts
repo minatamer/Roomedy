@@ -39,7 +39,7 @@ export interface ReviewSnapshot {
   readonly selectedId: string;
   readonly message: string;
   readonly undo: boolean;
-  readonly recognition: 'idle' | 'preparing' | 'drafting';
+  readonly recognition: 'idle' | 'preparing' | 'drafting' | 'opening';
   readonly simulated: boolean;
 }
 /** Provisional evidence review only. SessionController alone accepts the canonical room/baseline. */
@@ -407,7 +407,10 @@ export class ReviewController {
     }
     return this.resources.own(cleanup);
   }
-  draftProgress(token: ReviewToken, recognition: 'preparing' | 'drafting') {
+  draftProgress(
+    token: ReviewToken,
+    recognition: 'preparing' | 'drafting' | 'opening',
+  ) {
     if (this.isCurrent(token)) this.publish({ recognition });
   }
   endDraftOperation(token: ReviewToken, message: string) {
@@ -418,10 +421,7 @@ export class ReviewController {
   cancelDraft() {
     if (!this.active()) return;
     this.invalidate();
-    this.publish({
-      message:
-        'Photo drafting cancelled. Your photos and current sketch are preserved.',
-    });
+    this.publish({ message: '' });
   }
   applyHypothesis(token: ReviewToken, raw: unknown, simulated = false) {
     if (!this.isCurrent(token)) return false;
@@ -430,6 +430,33 @@ export class ReviewController {
     const ok = this.commit(result, '');
     if (ok) this.publish({ stage: 'review', simulated });
     return ok;
+  }
+  openStudioFromPhotos(token: ReviewToken, raw: unknown, simulated = false) {
+    if (!this.isCurrent(token)) return false;
+    const result = adoptHypothesis(this.state.draft, raw, this.id);
+    if (!result.ok) {
+      this.endDraftOperation(
+        token,
+        'These photo details could not be used. Try again or choose different photos.',
+      );
+      return false;
+    }
+    const draft = result.draft;
+    const assigned = new Set(draft.links.flatMap((link) => link.observations));
+    const notes = {
+      outline: draft.shape,
+      simulated,
+      unplaced: draft.observations
+        .filter((item) => !assigned.has(item.ref))
+        .map((item) => item.label),
+    };
+    this.invalidate();
+    if (!this.session.acceptRoom(draft.room, notes)) return false;
+    this.photos.dispose();
+    this.dispose();
+    if (notes.outline !== 'rectangle' || notes.unplaced.length || simulated)
+      this.session.setPanel('room');
+    return true;
   }
   accept() {
     if (!this.active()) return false;

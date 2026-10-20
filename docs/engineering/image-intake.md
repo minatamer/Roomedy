@@ -1,5 +1,9 @@
 # Photo intake and uncertain 2D review
 
+## Current AM flow —20October2026
+
+Latest owner direction replaces the rendered review page: photos → explicit Continue → processing → main studio. Selection still prepares locally without dispatch. One admitted operation and existing strict provisional adapter produce the valid planning projection; SessionController acceptance creates one baseline without frameReviewed/measurement confirmation or expiry renewal. Studio owns default3D/precision2D and room/furniture/feature/condition/finish corrections with Undo. Unknown/unsupported outlines are disclosed as rectangular planning-frame notes; unmapped observations remain listed in Room. Notes are bounded/transient, dismissible without confirming values, and cleared by reset/import/recovery/expiry/disposal. Neither notes nor photos enter project/recovery schemas. Pure reviewed-draft APIs/tests remain an internal reconciliation seam, not a visitor page. Fake app mode plus simulated response selects a cancellable2800ms preview owned by the same operation signal; live adds no minimum. Failure/Cancel returns to preserved photos. [AM](../tickets/RM-015AM-process-photos-directly-into-the-studio.md) supersedes historical review-first paragraphs below.
+
 RM-007, 18 October 2026. [Ticket](../tickets/RM-007-build-photo-intake-and-rough-2d-review.md), [checks](../validation/RM-007.md), [evaluation skeleton](../evaluation/recognition-rubric.md). This is local/manual review before RM-010 provider interpretation; no image understanding or accuracy result is claimed.
 
 ## Media policy and ownership

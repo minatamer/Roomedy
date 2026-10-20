@@ -23,6 +23,12 @@ export interface CandidateProjection {
   readonly room: RoomDocument;
   readonly checks: CheckFacts;
 }
+/** Transient photo interpretation context; never project/recovery data or geometry evidence. */
+export interface PhotoNotes {
+  readonly outline: 'rectangle' | 'unknown' | 'unsupported';
+  readonly unplaced: readonly string[];
+  readonly simulated: boolean;
+}
 export interface SessionSnapshot {
   readonly phase: SessionPhase;
   readonly generation: number;
@@ -42,6 +48,7 @@ export interface SessionSnapshot {
   readonly imported: boolean;
   readonly expiresSoon: boolean;
   readonly clientLoadFailure: boolean;
+  readonly photoNotes: PhotoNotes | null;
 }
 export const initialPresentation = (
   roomView: Presentation['roomView'] = 'cutaway',

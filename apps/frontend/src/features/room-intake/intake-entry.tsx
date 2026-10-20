@@ -43,8 +43,8 @@ function Workspace({
     <>
       {state.expiresSoon && (
         <p role="status" className={styles.message}>
-          This room expires in under five minutes. Finish reviewing to export
-          it, or start a new room.
+          This room expires in under five minutes. Open the studio to export it,
+          or start a new room.
         </p>
       )}
       <Intake controller={review} onBack={onBack} />

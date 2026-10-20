@@ -29,10 +29,10 @@ Before edits, identify the requested task, affected component/states, existing a
 | --- | --- |
 | Landing and entry | First viewport CTA; owner-selected authored furniture3D scrolling journey/full-size meaningful chapters, without faux editor controls; sample versus own-room entry choice is obvious; no unsolicited settings, recurring demo commentary or price/budget claims |
 | Authored sample | Immediate useful manual room without recognition or hidden provider request; coherent supported furniture/locks |
-| Personal photo selection | Previews/file checks only; concise guidance inside upload; add/remove; explicit **Draft my room** or honest **Open sample sketch** action with actual transfer beside it |
-| Draft review | Rough **2D only**, per-value uncertainty, source photo when available, targeted measurements and duplicate/missed-feature correction |
+| Personal photo selection | Previews/file checks only; concise drawings/limits, add/remove/direct viewer; explicit **Continue** with actual transfer beside it |
+| Photo processing and studio handoff | Accessible animated loading, selected thumbnails/Cancel; finite fake-only preview, actual-work live timing, no fabricated percentage; direct studio entry with uncertainty, one baseline/fixed expiry |
 | Partial inference | Usable output retained for review; no restart just for a missed match; malformed/refused/timeout cases remain distinct |
-| Main editor | Precision plan and synchronized cutaway use same room/selection; room remains usable beside inspector/chat |
+| Main editor | Default3D/precision2D share room/selection; room/furniture/feature/condition correction is here, with Undo, preserved estimates/unknowns and contextual unplaced-photo notes |
 | Ownership and checks | Independent locks, retained dimensions, unknown mechanism/height and baseline problems are visible and honest |
 | Assistant | Friendly useful request → one grounded preview → Apply/Cancel → actual receipt/Undo; no raw diagnostics or fake live success |
 | Comparison | Before is read-only and baseline stays fixed; active proposal resolved; same view/camera; no provider/history effect |

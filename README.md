@@ -1,8 +1,8 @@
 # Roomedy
 
-Roomedy turns a reviewed rough 2D room sketch into an editable room with precision 2D and stylized 3D views. Start with a sample or room photos, review measurements, then arrange supported furniture manually or through reviewable assistant proposals. Furniture prices and budget planning are deferred.
+Roomedy turns room photos into an editable studio with precision2D and stylized3D views. Choose photos, continue through processing, then correct measurements and arrange supported furniture in the studio manually or through reviewable assistant proposals. Manual room setup is also available. Furniture prices and budget planning are deferred.
 
-**Stage:** the room editor, photo-to-rough-2D review, grounded assistant and semantic project/recovery flows are implemented locally. RM-001–RM-013 are committed; RM-014 prepares local packaging and release evidence. The guide goal remains active. Fake/paid-off only; actual owner visual/security decisions, Linux/hosted proof and funded real-provider evaluation remain distinct pending gates. No paid call, push or deployment has occurred.
+**Stage:** the editor, photo processing, grounded assistant and semantic project/recovery flows are implemented locally. [RM-015AM](docs/tickets/RM-015AM-process-photos-directly-into-the-studio.md) replaces the separate draft page with processing then direct studio entry. Guide paused, RM-016 Planned and actual owner visual approval pending. Fake/paid-off only; security decisions, Linux/hosted proof and funded real-provider evaluation remain distinct gates. No paid call, push or deployment has occurred.
 
 Use Node **24.19.0** and pnpm **11.25.0**. From the root:
 

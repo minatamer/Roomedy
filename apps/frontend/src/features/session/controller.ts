@@ -24,7 +24,7 @@ import type {
 } from '@roomedy/spatial';
 import { ResourceRegistry } from './effects';
 import { initialPresentation } from './state';
-import type { Panel, SessionSnapshot } from './state';
+import type { Panel, PhotoNotes, SessionSnapshot } from './state';
 import { recoverySchema } from '@roomedy/contracts/project';
 import type { Project, Recovery } from '@roomedy/contracts/project';
 import { validateProject } from './project';
@@ -90,6 +90,7 @@ export class SessionController {
       imported: false,
       expiresSoon: false,
       clientLoadFailure: false,
+      photoNotes: null,
     });
   }
   getSnapshot = (): SessionSnapshot => this.state;
@@ -173,6 +174,7 @@ export class SessionController {
       phase,
       generation: this.state.generation + 1,
       workspace: null,
+      photoNotes: null,
       checks: null,
       pending: null,
       candidate: null,
@@ -235,7 +237,7 @@ export class SessionController {
       this.state.generation === generation
     );
   }
-  acceptRoom(room: RoomDocument): boolean {
+  acceptRoom(room: RoomDocument, photoNotes?: PhotoNotes): boolean {
     if (
       !this.active() ||
       this.state.clientLoadFailure ||
@@ -256,8 +258,20 @@ export class SessionController {
       presentation: initialPresentation(),
       message: '',
       undoLabel: null,
+      photoNotes: photoNotes
+        ? {
+            outline: photoNotes.outline,
+            simulated: photoNotes.simulated,
+            unplaced: photoNotes.unplaced
+              .slice(0, POLICY.draftObservations)
+              .map((label) => label.slice(0, 120)),
+          }
+        : null,
     });
     return true;
+  }
+  dismissPhotoNotes() {
+    if (this.active()) this.publish({ photoNotes: null });
   }
   reset(room?: RoomDocument): boolean {
     return this.replaceRoom(room);
@@ -303,6 +317,7 @@ export class SessionController {
       imported: options?.imported ?? false,
       expiresSoon: false,
       clientLoadFailure: false,
+      photoNotes: null,
     });
     this.clearMessageTimer();
     this.cleaning = true;

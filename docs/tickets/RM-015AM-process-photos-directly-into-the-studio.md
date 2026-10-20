@@ -1,0 +1,12 @@
+# RM-015AM — Process photos directly into the studio
+
+Status: **Locally implemented and validated; actual owner visual approval pending**, follows committed `e3d9d8c`. Direct owner feedback on20October2026 removes the separate rough-draft review page and selects photos → designed processing page → main studio, with correction in the studio. Fake mode exposes the loading design for owner review. This supersedes earlier requirements for a mandatory rough2D review/shape acknowledgement before studio entry; it does not confirm inferred measurements or approve the resulting visual design. [Actual evidence](../validation/RM-015AM.md).
+
+Read the full [24-path implementation plan](../commit-plans/RM-015AM.md), [blueprint](../ROOMEDY.md), [image intake](../engineering/image-intake.md), [recognition authority](../engineering/room-recognition.md), [layout](../design/layout.md), [feature checklist](../design/REVIEW_CHECKLIST.md) and [feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md). Existing manual entry, backend strict/fake/paid-off policy and lifecycle gates remain.
+
+- [x] Continue opens a responsive warm processing page with selected photos, purposeful animated artwork, truthful task stages, accessible focus/status and Cancel; no fabricated percentages.
+- [x] A finite explicitly selected fake-mode preview makes the design observable, while live mode follows actual work without an artificial minimum. Failure/cancel/expiry/reset/unmount fence all requests and presentation waits, preserving usable inputs.
+- [x] One successful structurally validated hypothesis opens the existing studio in default3D, with one baseline, unchanged expiry, all per-value uncertainty/locks/checks and studio correction/Undo authority.
+- [x] Unknown outlines and unplaced observations remain contextual, bounded transient notes in the studio Room panel. No shape or measurement is silently confirmed, no unsupported geometry is invented, no raw photos or notes enter project/recovery schemas.
+- [x] Actual fake processing/Cancel/retry/direct studio/edit/Undo and desktop/phone/short observations; meaningful lifecycle/partial-result tests, final root/both builds and allocated read-only review.
+- [x] Exact local ticket checkpoint under existing authority; actual owner visual approval stays pending. Q held, guide paused, RM-016 Planned; no paid/live/new ports/dependencies/delegation/push/deploy.
