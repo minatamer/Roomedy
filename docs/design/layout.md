@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Current chat composer — RM-015BD
+
+Use one rounded border around Medy’s textarea and inset bottom-right up-arrow Send action. Retailor’s actual composerBox/sendButton layout is the reference, with Roomedy cocoa/oat colours. Reserve44px below the text area, so long-message text and scrollbars never pass under the button. Keep the44px interactive target,32px inset visual, shared focus-within field ring and visible button keyboard focus. Retain accessible Ask Medy/Send message names and existing Enter/Shift+Enter/composition handlers; no visible label, divider or help line returns. Busy cancellation remains in its current owner.
+
 ## Current selection-driven interaction — RM-015BB
 
 The room-side toolbar starts with navigation; there is no Explore view/Arrange room row or independently saved mode. Selected furniture enables direct placement/rotation and selected windows retain same-wall dragging; doors/obstacles remain inspectable while navigation stays available. Empty plan floor/background,3D floor/empty clicks or scoped Escape clear selection and restore exploration. A live move consumes the first Escape to cancel; the next clears selection. Keep read-only/lock/geometry/lifecycle guards and current selection through panel/view changes. Medy Explore clears selection; Arrange works with the selection or gives concise selection guidance. No replacement toggle, badge or mode copy row.

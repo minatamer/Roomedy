@@ -172,36 +172,70 @@
   display: grid;
   gap: 6px;
 }
+.composerBox {
+  position: relative;
+  min-width: 0;
+  padding-bottom: 44px;
+  border: 1px solid #cbbda9;
+  border-radius: 14px;
+  background: #fffdf9;
+}
+.composerBox:focus-within {
+  outline: 3px solid #956444;
+  outline-offset: 2px;
+}
 .composer textarea {
+  display: block;
+  min-width: 0;
   box-sizing: border-box;
   width: 100%;
   min-height: 76px;
   max-height: 132px;
   resize: none;
-  border: 1px solid #cbbda9;
-  border-radius: 9px;
+  border: 0;
+  border-radius: 13px 13px 0 0;
   padding: 10px;
   font: inherit;
   font-size: 13px;
   line-height: 1.5;
   color: #342c24;
-  background: #fffdf9;
+  background: transparent;
   overflow-y: auto;
 }
-.composer textarea:focus-visible {
-  outline: 3px solid #956444;
-  outline-offset: 2px;
+.composer textarea:focus {
+  outline: none;
 }
-.composer > div {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-.composer button {
-  background: #70523b;
+.composer .sendButton {
+  position: absolute;
+  right: 2px;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
   color: #fffdf8;
-  min-width: 64px;
+}
+.sendButton::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 10px;
+  background: #70523b;
+  transition: background 180ms ease;
+}
+.sendButton svg {
+  position: relative;
+}
+.composer .sendButton:hover:not(:disabled) {
+  background: transparent;
+}
+.sendButton:hover:not(:disabled)::before {
+  background: #5b3e2c;
 }
 .progress {
   display: flex;

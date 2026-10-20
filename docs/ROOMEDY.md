@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Inset chat Send — RM-015BD:** Medy uses Retailor’s single rounded composer with a bottom-right arrow inside the field, a44px target and reserved text space, adapted to Roomedy cocoa/oat colours. Keyboard/accessibility/Send/history remain. [Ticket](tickets/RM-015BD-inset-the-chat-send-button.md), [allocation](commit-plans/RM-015BD.md), [evidence](validation/RM-015BD.md). Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Chat composer simplified — RM-015BC:** Removed the keyboard-help line, composer divider and visible Ask Medy label. The textarea retains its accessible name, and Send stays right aligned. Keyboard/composition/chat behavior remain. [Ticket](tickets/RM-015BC-remove-chat-keyboard-hint.md), [allocation](commit-plans/RM-015BC.md), [evidence](validation/RM-015BC.md). Scoped format/lint/frontend types and actual desktop/phone checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Selection-driven arranging — RM-015BB:** Explore view/Arrange room buttons and independent mode state are removed. Selecting furniture enables direct editing; clearing selection restores navigation. Selected windows retain wall editing. Empty floor/background or scoped Escape clears selection safely; Medy follows the same selection behavior. [Ticket](tickets/RM-015BB-use-selection-to-arrange.md), [allocation](commit-plans/RM-015BB.md), [evidence](validation/RM-015BB.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
@@ -1389,8 +1391,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of validated composer divider/visible-label removal and earlier corrections; Q held, guide goal paused, RM-016 Planned. No paid/live/delegation/push/deploy.
-Active ticket: RM-015BC
+Next action: Await actual owner visual review of validated Retailor-inspired inset Send composer and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
+Active ticket: RM-015BD
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1415,7 +1417,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T17:01:53+00:00",
+  "updated_at": "2026-10-20T17:07:49+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1604,8 +1606,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015BC",
-  "next_action": "Await actual owner visual review of validated composer divider/visible-label removal and earlier corrections; Q held, guide goal paused, RM-016 Planned. No paid/live/delegation/push/deploy.",
+  "active_ticket": "RM-015BD",
+  "next_action": "Await actual owner visual review of validated Retailor-inspired inset Send composer and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2089,14 +2091,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AZ.md",
         "docs/validation/RM-015BA.md",
         "docs/validation/RM-015BB.md",
-        "docs/validation/RM-015BC.md"
+        "docs/validation/RM-015BC.md",
+        "docs/validation/RM-015BD.md"
       ],
       "blockers": [],
       "approval": {
-        "quote": "remove the line and ask medy text",
-        "source": "human:current-chat/2026-10-20/remove-composer-divider-label",
-        "scope": "RM-015BC composer divider/visible-label follow-up only; no visual approval",
-        "recorded_at": "2026-10-20T17:00:20+00:00"
+        "quote": "in retailor we did this thing i liked where we included the send button inside the chatbox, go check the repo on how we designed it and try to mimic it",
+        "source": "human:current-chat/2026-10-20/inset-send",
+        "scope": "RM-015BD composer presentation from read-only Retailor reference only; no visual approval",
+        "recorded_at": "2026-10-20T17:03:33+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2620,6 +2623,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/remove-composer-divider-label",
             "scope": "RM-015BC composer divider/visible-label follow-up only; no visual approval",
             "recorded_at": "2026-10-20T17:00:20+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "in retailor we did this thing i liked where we included the send button inside the chatbox, go check the repo on how we designed it and try to mimic it",
+            "source": "human:current-chat/2026-10-20/inset-send",
+            "scope": "RM-015BD composer presentation from read-only Retailor reference only; no visual approval",
+            "recorded_at": "2026-10-20T17:03:33+00:00"
           }
         }
       ]

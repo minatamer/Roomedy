@@ -450,34 +450,49 @@ export function Assistant({
           submit();
         }}
       >
-        <textarea
-          ref={composer}
-          id="roomedy-message"
-          aria-label="Ask Medy"
-          rows={3}
-          value={state.draft}
-          maxLength={POLICY.visitorTextChars}
-          placeholder="Move my desk near the window…"
-          onChange={(e) => controller.draft(e.target.value)}
-          onKeyDown={(e) => {
-            if (
-              e.key === 'Enter' &&
-              !e.shiftKey &&
-              !e.nativeEvent.isComposing &&
-              e.keyCode !== 229
-            ) {
-              e.preventDefault();
-              submit();
-            }
-          }}
-        />
-        <div>
+        <div className={styles.composerBox}>
+          <textarea
+            ref={composer}
+            id="roomedy-message"
+            aria-label="Ask Medy"
+            rows={3}
+            value={state.draft}
+            maxLength={POLICY.visitorTextChars}
+            placeholder="Move my desk near the window…"
+            onChange={(e) => controller.draft(e.target.value)}
+            onKeyDown={(e) => {
+              if (
+                e.key === 'Enter' &&
+                !e.shiftKey &&
+                !e.nativeEvent.isComposing &&
+                e.keyCode !== 229
+              ) {
+                e.preventDefault();
+                submit();
+              }
+            }}
+          />
           <button
+            className={styles.sendButton}
             type="submit"
             disabled={!state.draft.trim()}
             aria-label="Send message"
+            title="Send message"
           >
-            Send ↗
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.65"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M12 19V5m-5 5 5-5 5 5" />
+            </svg>
           </button>
         </div>
       </form>

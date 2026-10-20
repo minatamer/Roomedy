@@ -1,6 +1,8 @@
 # Roomedy ticket plan
 
-Current owner correction: [RM-015BC — Remove chat keyboard hint](RM-015BC-remove-chat-keyboard-hint.md). Shared composer hint/divider/visible Ask Medy label removed; accessible textbox name, right-aligned Send and keyboard behavior retained. Scoped format/lint/frontend types and actual desktop/phone checks pass; prior BB full gate stays historical. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
+Current owner correction: [RM-015BD — Inset the chat Send button](RM-015BD-inset-the-chat-send-button.md). Actual Retailor source informs the rounded composer/inset arrow; Roomedy styling and chat behavior remain. Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-root/build claim. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
+Previous owner correction: [RM-015BC — Remove chat keyboard hint](RM-015BC-remove-chat-keyboard-hint.md). Shared composer hint/divider/visible Ask Medy label removed; accessible textbox name, right-aligned Send and keyboard behavior retained. Scoped format/lint/frontend types and actual desktop/phone checks pass; prior BB full gate stays historical. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
 
 Previous owner correction: [RM-015BB — Use selection to arrange](RM-015BB-use-selection-to-arrange.md). Remove Explore/Arrange CTAs/state; select to edit, clear to navigate, with selected-window and Medy parity. Locally validated:847tests/56files,7 boundaries, both builds and actual2D/3D/drag/Undo/Escape/Medy/phone observations; actual owner approval pending, Q held, guide paused, RM-016 Planned.
 
