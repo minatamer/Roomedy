@@ -120,7 +120,7 @@ export function resolveMedyRequest(
     return {
       kind: 'reply',
       summary:
-        'Hi, I’m MEDY. Tell me what you’d like to change, or ask me for a quick tour. We can work on the layout, exact sizes or the view together.',
+        'Hi, I’m Medy. Tell me what you’d like to change, or ask me for a quick tour. We can work on the layout, exact sizes or the view together.',
       objectIds: [],
     };
   if (/^(?:thanks?|thank you|cheers)(?: medy)?[!. ]*$/.test(plain))
@@ -137,7 +137,7 @@ export function resolveMedyRequest(
     return {
       kind: 'reply',
       summary:
-        'I’m MEDY, your room design partner. I can preview layout and furniture edits, set exact sizes, change finishes, handle openings, zoom and switch views, start the tour, or help export your design. Try “set the bed width to 180 cm” or “show the doorway view”. You review room changes before Apply, and Undo brings them back.',
+        'I’m Medy, your room design partner. I can preview layout and furniture edits, set exact sizes, change finishes, handle openings, zoom and switch views, start the tour, or help export your design. Try “set the bed width to 180 cm” or “show the doorway view”. You review room changes before Apply, and Undo brings them back.',
       objectIds: [],
     };
   if (

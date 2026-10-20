@@ -4,6 +4,9 @@ Read [the documentation map](docs/README.md), [current blueprint](docs/ROOMEDY.m
 
 ## Current scope and checkpoint
 
+- Current RM-015AY follows db4348b: latest owner selects Medy (normal case) with a shared AI sparkle, right-aligned visitor text/bubble and plain left-aligned assistant replies. Keep bounded scrollable older history, keyboard focus, stable composer, actual object/proposal actions and motion. Landing/tour/fake/live instruction casing follows; technical API/command scope stays. Read [ticket](docs/tickets/RM-015AY-refine-medy-identity-and-chat.md), [allocation](docs/commit-plans/RM-015AY.md) and [receipt](docs/validation/RM-015AY.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
+
+
 - Current RM-015AX follows6d8a471: owner distinguishes Project Export with a reusable beige class; neutral Import and brown Start a new room stay. No behavior/layout/state changes. Read [ticket](docs/tickets/RM-015AX-distinguish-export-with-beige.md), [allocation](docs/commit-plans/RM-015AX.md) and [receipt](docs/validation/RM-015AX.md). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
 
 

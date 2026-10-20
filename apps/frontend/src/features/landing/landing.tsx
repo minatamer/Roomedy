@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Brand } from './brand';
 import { ScrollRoom } from './scroll-room';
+import { MedyIcon } from '../assistant/medy-icon';
 import {
   CleanLandingFragment,
   SectionScroll,
@@ -174,7 +175,7 @@ export function Landing() {
             >
               <div className={styles.copy}>
                 <p className={styles.chapterLabel}>
-                  <span>03</span> MEET MEDY
+                  <span>03</span> Meet Medy
                 </p>
                 <h2 id="perspective-title">
                   A little help.
@@ -182,20 +183,20 @@ export function Landing() {
                   <em>A room that’s you.</em>
                 </h2>
                 <p className={styles.description}>
-                  Meet MEDY, your room design partner. Talk through an idea,
+                  Meet Medy, your room design partner. Talk through an idea,
                   find a calmer layout, or get the details just right — one
                   conversation at a time.
                 </p>
                 <div
                   className={styles.medyConversation}
-                  aria-label="An example conversation with MEDY"
+                  aria-label="An example conversation with Medy"
                 >
                   <p className={styles.medyVisitor}>
                     “A tidy room, with a place to work by the window.”
                   </p>
                   <p>
-                    <span aria-hidden="true">✦</span>
-                    <strong>MEDY</strong> Let’s keep the centre open and bring
+                    <MedyIcon />
+                    <strong>Medy</strong> Let’s keep the centre open and bring
                     your desk closer to daylight. We can try it together.
                   </p>
                 </div>
@@ -205,7 +206,7 @@ export function Landing() {
                   whenever you need.
                 </p>
                 <Link href="/demo" className={styles.chapterLink}>
-                  Design with MEDY <span aria-hidden="true">↗</span>
+                  Design with Medy <span aria-hidden="true">↗</span>
                 </Link>
               </div>
             </section>

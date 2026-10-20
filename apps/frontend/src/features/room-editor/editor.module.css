@@ -106,6 +106,15 @@
   background: #e7ddcc;
   border-color: #c8b9a4;
 }
+.assistantLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.assistantLabel svg {
+  width: 14px;
+  height: 14px;
+}
 .canvasColumn {
   position: relative;
   grid-area: room;

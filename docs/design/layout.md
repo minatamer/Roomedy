@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Medy identity and chat — RM-015AY
+
+Use Medy with the shared decorative four-point sparkle for studio heading/navigation and landing example. Visitor text aligns right in content-fitting warm bubbles (max88% history width); assistant replies are plain and left-aligned with useful full-width cards/actions. Keep one finite scrollable log, non-shrinking message children, visible keyboard focus and the separate reachable composer. Preserve existing new-message motion, actual proposal/selection actions, live announcements and finite80-message/256KiB ceiling. Phone/short layouts follow existing working-height and natural-flow ownership.
+
 ## Selected deletion — RM-015AW
 
 The room-side Delete action follows selected furniture, windows or obstacles in Explore and Arrange, in2D/3D. Furniture ownership/preference/locks do not block explicit visitor deletion. Doors (including bathroom-purpose) stay protected; their properties omit Remove. Keep normal lifecycle/preview/scene-readiness fences and one Undo; no confirmation or minimum furniture count. Return feature deletion to Room and furniture deletion to inventory with useful focus.

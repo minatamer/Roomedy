@@ -33,6 +33,7 @@ import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import { checkRoom } from '@roomedy/spatial';
 import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
+import { MedyIcon } from '../assistant/medy-icon';
 import { cameraViewPose } from '../room-view/camera';
 import { ProjectControls } from './project-controls';
 import { PreviewChangeList } from './preview-change-list';
@@ -328,7 +329,7 @@ export function Editor({
         case 'panel':
           openPanel(control.panel);
           return done(
-            `Opened ${control.panel === 'inventory' ? 'your furniture' : control.panel === 'checks' ? 'the room checks' : control.panel === 'assistant' ? 'MEDY' : `the ${control.panel} panel`}.`,
+            `Opened ${control.panel === 'inventory' ? 'your furniture' : control.panel === 'checks' ? 'the room checks' : control.panel === 'assistant' ? 'Medy' : `the ${control.panel} panel`}.`,
           );
         case 'tour':
           if (!tourControl.current)
@@ -476,7 +477,7 @@ export function Editor({
     { id: 'inventory', label: 'Furniture' },
     { id: 'room', label: 'Room' },
     { id: 'checks', label: `Checks${hard ? ` (${hard})` : ''}` },
-    { id: 'assistant', label: 'MEDY' },
+    { id: 'assistant', label: 'Medy' },
   ];
   const frameControls = (
     <FrameControls
@@ -508,7 +509,14 @@ export function Editor({
               aria-pressed={view.panel === panel.id}
               onClick={() => open(panel.id)}
             >
-              {panel.label}
+              {panel.id === 'assistant' ? (
+                <span className={styles.assistantLabel}>
+                  <MedyIcon />
+                  {panel.label}
+                </span>
+              ) : (
+                panel.label
+              )}
             </button>
           ))}
           <AssistantTour

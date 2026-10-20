@@ -698,19 +698,20 @@
 }
 .medyConversation p {
   margin: 0;
-  padding: 13px 17px;
-  border: 1px solid rgb(125 91 61 / 15%);
-  border-radius: 16px 16px 16px 4px;
-  background: rgb(255 251 242 / 78%);
 }
 .medyConversation .medyVisitor {
-  margin-left: 28px;
+  justify-self: end;
+  max-width: calc(100% - 28px);
+  padding: 13px 17px;
   border-radius: 16px 16px 4px 16px;
   background: rgb(226 210 183 / 78%);
+  text-align: right;
+}
+.medyConversation svg {
+  vertical-align: -3px;
+  margin-right: 6px;
 }
 .medyConversation strong {
-  font-size: 11px;
-  letter-spacing: 0.09em;
-  margin-inline: 7px 10px;
+  margin-right: 8px;
   color: #79543c;
 }

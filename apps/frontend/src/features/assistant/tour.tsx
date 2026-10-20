@@ -29,7 +29,7 @@ const steps = [
   {
     target: 'assistant',
     title: 'Design it together.',
-    text: 'Meet MEDY. Ask for a useful change, like moving your work area closer to the window, changing a size or finding a calmer palette.',
+    text: 'Meet Medy. Ask for a useful change, like moving your work area closer to the window, changing a size or finding a calmer palette.',
   },
   {
     target: 'history',

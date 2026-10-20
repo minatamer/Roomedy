@@ -1,6 +1,8 @@
 # Roomedy ticket plan
 
-Current owner correction: [RM-015AX — Distinguish Export with beige](RM-015AX-distinguish-export-with-beige.md). Reusable beige Export beside neutral Import; brown New room stays. Locally validated:829 tests/55 files,7 boundaries, both builds and actual menu observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
+Current owner correction: [RM-015AY — Refine Medy identity and chat](RM-015AY-refine-medy-identity-and-chat.md). Medy/sparkle, right visitor text and plain left assistant replies, with accessible scrolling history. Locally validated:829 tests/55 files,7 boundaries, both builds and actual history/phone/landing observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
+
+Previous owner correction: [RM-015AX — Distinguish Export with beige](RM-015AX-distinguish-export-with-beige.md). Reusable beige Export beside neutral Import; brown New room stays. Locally validated:829 tests/55 files,7 boundaries, both builds and actual menu observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
 
 Previous owner correction: [RM-015AW — Enable selected deletion and protect doors](RM-015AW-enable-selected-deletion-and-protect-doors.md). Selected furniture/windows can be deleted in Explore or Arrange; only doors stay protected. Locally validated:829 tests/55 files,7 boundaries, both builds and actual feature observations; actual owner approval pending. Q held, guide paused, RM-016 Planned.
 

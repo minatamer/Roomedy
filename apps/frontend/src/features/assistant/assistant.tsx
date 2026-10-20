@@ -10,6 +10,7 @@ import { focusProperties } from '../room-editor/focus';
 import { failureMessage, issueText } from '../room-editor/messages';
 import { PreviewChangeList } from '../room-editor/preview-change-list';
 import type { AssistantController } from './controller';
+import { MedyIcon } from './medy-icon';
 import styles from './assistant.module.css';
 
 export function Assistant({
@@ -138,11 +139,15 @@ export function Assistant({
     <section
       className={styles.assistant}
       data-room-target="assistant"
-      aria-label="MEDY room assistant"
+      aria-label="Medy room assistant"
     >
       <div className={styles.heading}>
         <h2 tabIndex={-1}>
-          MEDY<span className={styles.identity}>Your room, together.</span>
+          <span className={styles.name}>
+            <MedyIcon />
+            Medy
+          </span>
+          <span className={styles.identity}>Your room, together.</span>
         </h2>
       </div>
       {state.mode !== 'fake' && (
@@ -157,6 +162,7 @@ export function Assistant({
       <div
         className={styles.messages}
         role="log"
+        tabIndex={0}
         aria-label="Room conversation"
         aria-live="polite"
         aria-relevant="additions text"
@@ -164,7 +170,7 @@ export function Assistant({
         {state.messages.length > 0 && goalOptions}
         {!state.messages.length && (
           <div className={styles.welcome}>
-            <p>Hi, I’m MEDY. What would you like to make room for?</p>
+            <p>Hi, I’m Medy. What would you like to make room for?</p>
             <p>
               We can try a layout, change an exact size, or explore the room
               together.
@@ -195,7 +201,7 @@ export function Assistant({
               key={message.id}
               className={message.role === 'user' ? styles.user : styles.reply}
               aria-label={
-                message.role === 'user' ? 'Your request' : 'MEDY response'
+                message.role === 'user' ? 'Your request' : 'Medy response'
               }
             >
               <p>{message.text}</p>
@@ -444,7 +450,7 @@ export function Assistant({
           submit();
         }}
       >
-        <label htmlFor="roomedy-message">Ask MEDY</label>
+        <label htmlFor="roomedy-message">Ask Medy</label>
         <textarea
           ref={composer}
           id="roomedy-message"

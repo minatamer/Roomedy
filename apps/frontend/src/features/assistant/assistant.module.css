@@ -31,6 +31,14 @@
   letter-spacing: 0;
   color: #746654;
 }
+.name {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.name svg {
+  flex-shrink: 0;
+}
 .mode,
 .note {
   font-size: 11px;
@@ -61,6 +69,14 @@
   padding: 2px 5px 8px 1px;
   scrollbar-gutter: stable;
 }
+.messages > * {
+  flex-shrink: 0;
+}
+.messages:focus-visible {
+  outline: 3px solid #956444;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 .welcome {
   font-size: 13px;
   line-height: 1.6;
@@ -68,16 +84,22 @@
 }
 .user,
 .reply {
-  padding: 12px;
-  border-radius: 12px;
-  background: #eee6d8;
   font-size: 13px;
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
 .user {
+  align-self: flex-end;
+  max-width: 88%;
+  padding: 10px 12px;
+  border-radius: 12px;
   background: #e1d2bd;
-  margin-left: 20px;
+  text-align: right;
+}
+.reply {
+  align-self: stretch;
+  padding: 2px 0;
+  text-align: left;
 }
 .user > p,
 .reply > p {
