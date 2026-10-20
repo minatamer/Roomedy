@@ -38,6 +38,37 @@ afterEach(() => {
   sessions.splice(0).forEach((s) => s.dispose());
   vi.useRealTimers();
 });
+it('opens fresh, reset and accepted rooms in 3D while import keeps the chosen view', () => {
+  const s = session();
+  expect(s.getSnapshot().presentation.roomView).toBe('cutaway');
+  s.setRoomView('plan');
+  const project = projectOf(s.getSnapshot())!;
+  expect(s.importProject(project)).toBe(true);
+  expect(s.getSnapshot().presentation.roomView).toBe('plan');
+  expect(s.reset(commandRoom())).toBe(true);
+  expect(s.getSnapshot().presentation.roomView).toBe('cutaway');
+  s.setRoomView('plan');
+  expect(s.reset()).toBe(true);
+  expect(s.beginIntake()).toBe(true);
+  expect(s.getSnapshot().phase).toBe('intake');
+  expect(s.acceptRoom(commandRoom())).toBe(true);
+  expect(s.getSnapshot().presentation.roomView).toBe('cutaway');
+});
+it.each(['plan', 'cutaway'] as const)(
+  'restores an explicit %s choice instead of replacing it with the new-room default',
+  (view) => {
+    const original = session();
+    original.setRoomView(view);
+    const saved = recoveryOf(original.getSnapshot())!;
+    const restored = session();
+    expect(restored.restore(saved)).toBe(true);
+    expect(restored.getSnapshot().presentation.roomView).toBe(view);
+    expect(restored.getSnapshot().recovered).toBe(true);
+    expect(restored.getSnapshot().workspace!.current).toEqual(
+      original.getSnapshot().workspace!.current,
+    );
+  },
+);
 it('Before blocks semantic edits/Undo/assistant work while retaining the same view and immutable baseline', () => {
   const s = session(),
     baseline = s.getSnapshot().workspace!.baseline;

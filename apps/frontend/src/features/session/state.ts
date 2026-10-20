@@ -43,14 +43,16 @@ export interface SessionSnapshot {
   readonly expiresSoon: boolean;
   readonly clientLoadFailure: boolean;
 }
-export const initialPresentation = (): Presentation => ({
+export const initialPresentation = (
+  roomView: Presentation['roomView'] = 'cutaway',
+): Presentation => ({
   selectedId: null,
   panel: 'inventory',
   zoom: 1,
   panX: 0,
   panZ: 0,
   snap: true,
-  roomView: 'plan',
+  roomView,
 });
 /** Display-only framing; these bounds never become room measurements or check evidence. */
 export interface RoomFrame {

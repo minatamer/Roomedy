@@ -21,6 +21,7 @@ const sessions: SessionController[] = [];
 const session = (room = commandRoom([], [windowFeature()]), now = () => 0) => {
   const s = new SessionController(room, { now });
   sessions.push(s);
+  s.setRoomView('plan');
   s.select('window_1');
   return s;
 };

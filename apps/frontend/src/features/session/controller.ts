@@ -294,10 +294,7 @@ export class SessionController {
       createdAt,
       expiresAt: options?.expiresAt ?? createdAt + POLICY.guestLifetimeMs,
       checks: room ? checkRoom(room) : null,
-      presentation: {
-        ...initialPresentation(),
-        roomView: options?.roomView ?? 'plan',
-      },
+      presentation: initialPresentation(options?.roomView),
       message: '',
       undoLabel: null,
       comparison: 'current',

@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Main-editor default — RM-015AL
+
+New main-editor rooms, explicit new-room resets and accepted photo rooms open in3D. Keep the visitor's explicit recovered view and current import view. The2D control remains available; photo review stays rough2D and loading/graphics failure keeps its existing usable plan fallback. No new setting, camera journey or semantic command. [Evidence](../validation/RM-015AL.md).
+
 ## Catalogue placement — RM-015AK
 
 The outer properties panel uses the same18px radius as the room viewport, shared by catalogue, inspector and assistant. Preserve the existing bounded overflow:auto and narrow overflow:visible natural flow; no panel padding/frame-height/scroll ownership changes. [Corner follow-up evidence](../validation/RM-015AK.md#panel-corner-follow-up--20-october-2026).
