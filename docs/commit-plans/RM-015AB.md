@@ -28,3 +28,22 @@
 3. Actual asset loading/failure notices remain visible inside the3D frame, without a layout row. Preserve spinning initial loading, graphics/chunk failure fallback, lifecycle expiry/load warning, actual command rejection overlay, accessible routine announcements and preview Apply/Cancel. No renderer/command/provider/state change or motion suppression.
 4. Verify actual1280×720 before/after geometry; native2D/3D/camera/selection/move/Undo/Before/Checks, reachable controls and actionable rejection. Relevant nine-size plus short/breakpoint matrix, no horizontal overflow or overlap; record actual screenshots. No CSS/label mirror tests. Run established settled root gate and current exact-input/build identity once source settles, then whole16-path read-only validation, independently fix/revalidate until no actionable findings.
 5. Update AA to actual a8f1c02 commit, policies/receipt/current docs; canonical phase only through build-state helper. Stage/commit exact owned paths after clean pass under existing local authority. Actual owner/physical/GPU/Linux/hosted/live evidence remains separate.
+
+## Remove the studio footer follow-up allocation — 20 October2026
+
+Clean parent763b9c1. Owner: “also remove the horziontal line in the footer and this text, not needed, extend everything to bottom”, with the studio's Saved in this tab until… footer crop. This supersedes AB's earlier saved-footer boundary: both frames/left controls/properties should reach the viewport bottom in bounded layouts. Existing ordered implementation/validation/exact local checkpoint authority applies. Actual visual approval pending; Q held, guide paused, RM-016 Planned. No paid/live/dependency/service/port/delegation/push/deploy.
+
+Exact paths allocated before source edits:
+
+1. `docs/README.md`
+2. `docs/ROOMEDY.md`
+3. `docs/tickets/README.md`
+4. `docs/tickets/RM-015AB-fill-the-editor-working-height.md`
+5. `docs/commit-plans/RM-015AB.md`
+6. `docs/validation/RM-015AB.md`
+7. `docs/design/layout.md`
+8. `apps/frontend/src/features/room-editor/editor.tsx`
+9. `apps/frontend/src/features/room-editor/editor.module.css`
+10. `docs/design/room-view.md`
+
+Remove the complete footer markup, normal saved/saving text, border and now-unused responsive/footer CSS. Change the studio's grid to header+workspace only and replace the base workspace's footer-reserving height calculation with header-only subtraction; keep the matching70px stacked header and natural narrow/short flow. Reuse existing frame/rail/panel fill and scroll ownership, with no new row or forced phone viewport fit. Preserve actual recovery failure by moving its conditional export notice into the existing lifecycle-notice area; five-minute expiry/load warnings remain. Do not change timers/storage/lifetime/controllers, geometry/camera/commands or active motion. Inspect actual desktop/short/tablet/narrow2D/3D boundaries, reachable panel/composer/actions, selection/rotation/Undo and normal no-footer state. No CSS/static-label mirror tests; use existing lifecycle/persistence checks, one settled root/both-build/current-inventory gate, whole ten-path read-only review and independently fixed revalidation, then exact authorized local checkpoint. Progress through the main build-state helper only; owner/physical/external evidence stays separate. The room-view policy is allocated before edits as path10 because it repeats the earlier saved-footer boundary.

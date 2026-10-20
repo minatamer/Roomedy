@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Studio footer removed,20October:** The saved-time text, horizontal line and reserved footer row are gone.2D/3D frames and properties use the full viewport bottom; narrow layouts retain natural flow. [10-path AB follow-up](commit-plans/RM-015AB.md#remove-the-studio-footer-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AB.md#remove-the-studio-footer-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Rounded browser icon,20October:** The existing large cocoa mark now sits on a rounded beige tile across SVG/PNG/ICO browser variants, with revised asset URLs. [13-path AF follow-up](commit-plans/RM-015AF.md#rounded-browser-icon-follow-up-allocation--20-october2026), [actual evidence](validation/RM-015AF.md#rounded-browser-icon-follow-up--20-october2026). Actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **PDF cover correction,20October:** The first-page room now fills its own right-hand area using a padded crop of the actual3D render. Its opaque background no longer obscures the italic “life.” [Nine-path X follow-up](commit-plans/RM-015X.md#cover-framing-follow-up-allocation--20-october2026), [current evidence](validation/RM-015X.md#cover-framing-follow-up--20-october2026). Overall owner visual approval remains pending; Q held, guide paused, RM-016 Planned.

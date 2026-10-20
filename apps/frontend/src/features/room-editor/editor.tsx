@@ -343,6 +343,11 @@ export function Editor({
               layout.
             </div>
           )}
+          {state.persistence === 'memory-only' && (
+            <div className={styles.lifecycleNotice} role="status">
+              Recovery is unavailable. Export to keep this layout.
+            </div>
+          )}
 
           {roomView === 'plan' ? (
             <div className={controlsStyles.stage}>
@@ -767,15 +772,6 @@ export function Editor({
           </div>
         </aside>
       </main>
-      <footer className={styles.footer}>
-        <span>
-          {state.persistence === 'memory-only'
-            ? 'Recovery is unavailable. Export to keep this layout.'
-            : state.persistence === 'saved'
-              ? `Saved in this tab until ${new Date(state.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`
-              : 'Saving layout…'}
-        </span>
-      </footer>
     </div>
   );
 }
