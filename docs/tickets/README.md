@@ -1,6 +1,8 @@
 # Roomedy ticket plan
 
-Current owner correction: [RM-015BD — Inset the chat Send button](RM-015BD-inset-the-chat-send-button.md). Actual Retailor source informs the rounded composer/inset arrow; Roomedy styling and chat behavior remain. Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-root/build claim. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
+Current owner correction: [RM-015BE — Label doors and adapt plan text](RM-015BE-label-doors-and-adapt-plan-text.md). Door/Bathroom Door names, fitted/wrapped/sideways object labels, readable tiny-piece captions and clear preview markers. Focused/native observations, final check components,862tests/56files,7boundaries and both builds pass; exact269-input/BUILD_ID match. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
+Previous owner correction: [RM-015BD — Inset the chat Send button](RM-015BD-inset-the-chat-send-button.md). Actual Retailor source informs the rounded composer/inset arrow; Roomedy styling and chat behavior remain. Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-root/build claim. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
 
 Previous owner correction: [RM-015BC — Remove chat keyboard hint](RM-015BC-remove-chat-keyboard-hint.md). Shared composer hint/divider/visible Ask Medy label removed; accessible textbox name, right-aligned Send and keyboard behavior retained. Scoped format/lint/frontend types and actual desktop/phone checks pass; prior BB full gate stays historical. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
 

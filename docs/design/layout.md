@@ -1,5 +1,11 @@
 # Layout and useful space
 
+## Current2D object and door names — RM-015BE
+
+Known placed doors always have Door or Bathroom Door from their own purpose; missing purpose is Door, regardless of other doors. Fit/wrap the name inside the room near its actual opening, all walls/mechanisms; never invent a missing wall/offset/width. Door names paint last and forward ordinary pointer selection through the existing owner, with original keyboard/accessible controls retained. During catalogue placement their visual caption does not intercept placement input.
+
+Furniture uses compact known names, one/two whole-word lines, variable type and horizontal/sideways orientation as space allows. Reserve front-chevron space instead of letting text cover it. A thin/tiny object or TV gets a readable horizontal halo caption near its body, with extra space beyond protruding arrows. Four fixed candidates prefer clear nearby space and clamp to the displayed room; crowded plans may require the least-overlapping candidate, not a claim of global collision-free text. Keep body finish contrast and higher-object label coverage; no per-frame semantic or geometry writes. Unknown markers keep their question mark. Previous-position outlines sit behind current geometry, and their annotation is omitted when it crosses proposed furniture/door names; retain the ghost and accessible preview explanation.
+
 ## Current chat composer — RM-015BD
 
 Use one rounded border around Medy’s textarea and inset bottom-right up-arrow Send action. Retailor’s actual composerBox/sendButton layout is the reference, with Roomedy cocoa/oat colours. Reserve44px below the text area, so long-message text and scrollbars never pass under the button. Keep the44px interactive target,32px inset visual, shared focus-within field ring and visible button keyboard focus. Retain accessible Ask Medy/Send message names and existing Enter/Shift+Enter/composition handlers; no visible label, divider or help line returns. Busy cancellation remains in its current owner.

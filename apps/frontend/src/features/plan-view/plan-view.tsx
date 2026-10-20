@@ -2,8 +2,6 @@ import {
   featureLabel,
   furnitureByElevation,
   projectedLabelVisible,
-  wallMounted,
-  localFront,
 } from '@roomedy/spatial';
 import {
   useEffect,
@@ -31,9 +29,13 @@ import {
   nudgePosition,
   planBox,
   planLabelLayout,
+  planDoorLabel,
+  planFurnitureName,
+  planPreviousLabelVisible,
   pointInPlan,
   snapPosition,
 } from './adapter';
+import type { PlanLabelLayout } from './adapter';
 import styles from '../room-editor/editor.module.css';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 import { CataloguePlanGhost } from '../room-editor/catalogue-placement-ui';
@@ -111,6 +113,56 @@ function OrientedFootprint({
         stroke="#fffaf2"
         strokeWidth="25"
       />
+    </g>
+  );
+}
+function PlanLabel({
+  layout,
+  fill = '#302b25',
+  halo = false,
+  onSelect,
+}: {
+  layout: PlanLabelLayout;
+  fill?: string;
+  halo?: boolean;
+  onSelect?: (() => void) | undefined;
+}) {
+  return (
+    <g
+      className={styles.pieceLabel}
+      transform={`translate(${layout.x} ${layout.y}) rotate(${layout.rotation})`}
+      fontSize={layout.fontSize}
+      aria-hidden="true"
+      pointerEvents={onSelect ? 'visiblePainted' : 'none'}
+      onPointerDown={
+        onSelect
+          ? (event) => {
+              event.stopPropagation();
+              if (event.button === 0) onSelect();
+            }
+          : undefined
+      }
+    >
+      <text
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontWeight="600"
+        fill={layout.outside ? '#302b25' : fill}
+        stroke={halo || layout.outside ? '#fff8ee' : undefined}
+        strokeWidth={halo || layout.outside ? 35 : undefined}
+        strokeLinejoin="round"
+        paintOrder="stroke"
+      >
+        {layout.lines.map((line, index) => (
+          <tspan
+            key={index}
+            x={0}
+            y={(index - (layout.lines.length - 1) / 2) * layout.fontSize * 1.15}
+          >
+            {line}
+          </tspan>
+        ))}
+      </text>
     </g>
   );
 }
@@ -568,6 +620,46 @@ export function PlanView({
           stroke={roomSurface(room.room, 'walls').color}
           strokeWidth="35"
         />
+        {/* Previous positions stay behind the current room and its names. */}
+        {state.candidate &&
+          state
+            .workspace!.current.furniture.filter((before) => {
+              const after = state.candidate!.room.furniture.find(
+                (p) => p.id === before.id,
+              );
+              return (
+                !after ||
+                after.pose.centerX !== before.pose.centerX ||
+                after.pose.centerZ !== before.pose.centerZ ||
+                after.pose.quarterTurns !== before.pose.quarterTurns
+              );
+            })
+            .map((before) => {
+              const box = footprint(before);
+              if (!box) return null;
+              return (
+                <g key={`previous-${before.id}`} pointerEvents="none">
+                  <rect
+                    x={box.minX}
+                    y={box.minZ}
+                    width={box.maxX - box.minX}
+                    height={box.maxZ - box.minZ}
+                    className={styles.previousPiece}
+                  />
+                  {planPreviousLabelVisible(room, before) && (
+                    <text
+                      x={before.pose.centerX}
+                      y={before.pose.centerZ}
+                      textAnchor="middle"
+                      fontSize="110"
+                      fill="#775b43"
+                    >
+                      Previous position
+                    </text>
+                  )}
+                </g>
+              );
+            })}
         {room.room.features.map((feature) => {
           const r = wallBand(
             room,
@@ -723,33 +815,12 @@ export function PlanView({
           const category =
             findCatalogueEntry(item.catalogueId, item.catalogueVersion)
               ?.category ?? 'piece';
-          const mounted = wallMounted(item),
-            front = localFront(item.pose.quarterTurns);
-          const label =
-            (
-              {
-                'tv-stand': 'TV stand',
-                'chest-drawers': 'Drawers',
-                'bedside-drawers': 'Drawers',
-                'bedroom-bench': 'Bench',
-                armchair: 'Chair',
-                'floor-lamp': 'Lamp',
-                'side-table': 'Table',
-                'drawer-shelf': 'Shelf',
-                'full-length-mirror': 'Mirror',
-              } as Record<string, string>
-            )[item.catalogueId] ??
-            (category === 'tv'
-              ? 'TV'
-              : category === 'storage'
-                ? item.catalogueId === 'bedside-storage-fixed'
-                  ? 'Cabinet'
-                  : 'Shelf'
-                : category[0]!.toUpperCase() + category.slice(1));
+          const label = planFurnitureName(item);
           const labelLayout = planLabelLayout(
             item,
-            label,
+            label + (w === null || d === null ? ' ?' : ''),
             category === 'tv' ? 135 : 185,
+            room,
           );
           return (
             <g
@@ -805,69 +876,21 @@ export function PlanView({
                 <OrientedFootprint item={item} selected={selected} />
               )}
               {projectedLabelVisible(room, item) && (
-                <text
-                  x={mounted ? front[0] * ((d ?? 0) / 2 + 300) : 0}
-                  y={mounted ? front[1] * ((d ?? 0) / 2 + 300) : 0}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  className={styles.pieceLabel}
-                  transform={`rotate(${labelLayout.rotation})`}
-                  fontSize={labelLayout.fontSize}
-                  fontWeight="600"
+                <PlanLabel
+                  layout={labelLayout}
                   fill={
-                    !mounted &&
                     w !== null &&
                     d !== null &&
                     ['charcoal', 'walnut'].includes(item.finish)
                       ? '#fffaf2'
                       : '#302b25'
                   }
-                  pointerEvents="none"
-                >
-                  {label}
-                  {w === null || d === null ? ' ?' : ''}
-                </text>
+                />
               )}
             </g>
           );
         })}
-        {state.candidate &&
-          state
-            .workspace!.current.furniture.filter((before) => {
-              const after = state.candidate!.room.furniture.find(
-                (p) => p.id === before.id,
-              );
-              return (
-                !after ||
-                after.pose.centerX !== before.pose.centerX ||
-                after.pose.centerZ !== before.pose.centerZ ||
-                after.pose.quarterTurns !== before.pose.quarterTurns
-              );
-            })
-            .map((before) => {
-              const box = footprint(before);
-              if (!box) return null;
-              return (
-                <g key={`previous-${before.id}`} pointerEvents="none">
-                  <rect
-                    x={box.minX}
-                    y={box.minZ}
-                    width={box.maxX - box.minX}
-                    height={box.maxZ - box.minZ}
-                    className={styles.previousPiece}
-                  />
-                  <text
-                    x={before.pose.centerX}
-                    y={before.pose.centerZ}
-                    textAnchor="middle"
-                    fontSize="110"
-                    fill="#775b43"
-                  >
-                    Previous position
-                  </text>
-                </g>
-              );
-            })}
+
         {regions.map((issue) => {
           const r = issue.region!;
           return (
@@ -951,6 +974,21 @@ export function PlanView({
             : `${depth} mm · ${room.room.depth.status}`}
         </text>
         {placement && <CataloguePlanGhost placement={placement} />}
+        {/* Keep opening names above preview and drag overlays. */}
+        {room.room.features.map((feature) => {
+          const layout =
+            feature.kind === 'door' ? planDoorLabel(room, feature) : null;
+          return layout ? (
+            <PlanLabel
+              key={`label-${feature.id}`}
+              layout={layout}
+              halo
+              onSelect={
+                !adding ? () => controller.select(feature.id) : undefined
+              }
+            />
+          ) : null;
+        })}
       </svg>
       <div id={descriptionId} className={styles.announcement}>
         <p>

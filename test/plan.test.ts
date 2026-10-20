@@ -1,12 +1,23 @@
+import { CATALOGUE, furnitureSizePresets, footprint } from '@roomedy/spatial';
 import { describe, expect, it } from 'vitest';
 import {
   nudgePosition,
   planBox,
   planLabelLayout,
+  planDoorLabel,
+  fitPlanText,
+  planFurnitureName,
+  planPreviousLabelVisible,
   pointInPlan,
   snapPosition,
 } from '../apps/frontend/src/features/plan-view/adapter.js';
-import { commandRoom, piece } from './fixtures/command-room.js';
+import {
+  commandRoom,
+  piece,
+  door,
+  known,
+  unknown,
+} from './fixtures/command-room.js';
 import { comparisonFrame } from '../apps/frontend/src/features/session/state.js';
 describe('precision plan display adapter', () => {
   it('compares different recorded room sizes at one world scale and centre', () => {
@@ -131,9 +142,9 @@ describe('dragged furniture stays against the intended physical room edge', () =
   });
 });
 
-describe('whole-word plan label fitting', () => {
+describe('adaptive whole-word plan labels', () => {
   it.each([0, 1, 2, 3] as const)(
-    'fits a wardrobe along its displayed long axis at quarter-turn %s',
+    'keeps wardrobe words whole at turn %s',
     (quarterTurns) => {
       const item = piece('wardrobe', 2000, 2000, {
         width: 1200,
@@ -141,50 +152,235 @@ describe('whole-word plan label fitting', () => {
         quarterTurns,
       });
       const before = structuredClone(item);
-      expect(planLabelLayout(item, 'Wardrobe')).toEqual({
+      expect(planLabelLayout(item, 'Wardrobe')).toMatchObject({
         rotation: quarterTurns % 2 ? -90 : 0,
         fontSize: 185,
+        lines: ['Wardrobe'],
+        outside: false,
       });
       expect(item).toEqual(before);
     },
   );
-  it('keeps short names horizontal even on tall or rotated footprints', () => {
+  it('keeps short names horizontal and wraps whole words to use square space', () => {
     const bed = piece('bed', 2000, 2000, { width: 1600, depth: 2100 });
-    expect(planLabelLayout(bed, 'Bed')).toEqual({ rotation: 0, fontSize: 185 });
+    expect(planLabelLayout(bed, 'Bed')).toMatchObject({
+      rotation: 0,
+      fontSize: 185,
+    });
     bed.pose.quarterTurns = 1;
     expect(planLabelLayout(bed, 'Bed').rotation).toBe(0);
+    const label = fitPlanText('TV stand', 600, 600);
+    expect(label.lines).toEqual(['TV', 'stand']);
+    expect(label.fontSize).toBeGreaterThan(150);
+    expect(label.rotation).toBe(0);
     const shelf = piece('shelf', 2000, 2000, { width: 300, depth: 1000 });
     expect(planLabelLayout(shelf, 'Shelf').rotation).toBe(-90);
   });
-  it('fits compact square and shallow footprints without rotating a square', () => {
-    const cabinet = piece('cabinet', 2000, 2000, { width: 450, depth: 450 });
-    const layout = planLabelLayout(cabinet, 'Cabinet');
-    expect(layout.rotation).toBe(0);
-    expect(layout.fontSize * 'Cabinet'.length * 0.6).toBeLessThanOrEqual(360);
-    cabinet.dimensions.width.value = 1200;
-    cabinet.dimensions.depth.value = 150;
-    expect(planLabelLayout(cabinet, 'Shelf').fontSize).toBeLessThanOrEqual(
-      97.5,
-    );
+  it.each([
+    ['Cabinet', 'bedside-storage-fixed', 450, 450],
+    ['Mirror', 'full-length-mirror', 650, 60],
+    ['TV', 'tv-wall', 1200, 80],
+    ['TV', 'tv-tabletop', 1200, 80],
+  ])(
+    'uses a readable caption for %s (%s), rather than microscopic or overlapping text',
+    (name, catalogueId, width, depth) => {
+      const item = piece('small', 2000, 2000, {
+        catalogueId: String(catalogueId),
+        width: Number(width),
+        depth: Number(depth),
+        quarterTurns: 1,
+      });
+      const layout = planLabelLayout(item, String(name));
+      expect(layout).toMatchObject({
+        outside: true,
+        rotation: 0,
+        fontSize: 135,
+        lines: [name],
+      });
+      expect(Math.abs(layout.x) + Math.abs(layout.y)).toBeGreaterThan(0);
+    },
+  );
+  it('keeps a thin-piece caption beyond its protruding front arrow', () => {
+    const mirror = piece('mirror', 2000, 2000, {
+      catalogueId: 'full-length-mirror',
+      width: 650,
+      depth: 60,
+    });
+    const layout = planLabelLayout(mirror, 'Mirror');
+    expect(layout.outside).toBe(true);
+    expect(layout.y - (layout.fontSize * 1.15) / 2).toBeGreaterThan(160);
   });
-  it('keeps thin TV captions and unknown-size markers horizontal', () => {
-    const tv = piece('tv', 2000, 2000, {
-      catalogueId: 'tv-wall',
-      width: 1200,
-      depth: 80,
-      quarterTurns: 1,
+  it('chooses a nearby clear side and never mutates room facts', () => {
+    const mirror = piece('mirror', 2000, 2000, {
+      catalogueId: 'full-length-mirror',
+      width: 650,
+      depth: 60,
     });
-    expect(planLabelLayout(tv, 'TV', 135)).toEqual({
-      rotation: 0,
-      fontSize: 135,
-    });
-    tv.catalogueId = 'tv-tabletop';
-    expect(planLabelLayout(tv, 'TV', 135)).toEqual({
-      rotation: 0,
-      fontSize: 135,
-    });
-    tv.catalogueId = 'procedural-desk';
-    tv.dimensions.width = { value: null, status: 'unknown', sourceId: null };
-    expect(planLabelLayout(tv, 'Desk')).toEqual({ rotation: 0, fontSize: 185 });
+    const block = piece('block', 2000, 2300, { width: 1200, depth: 500 });
+    const room = commandRoom([mirror, block]),
+      before = structuredClone(room);
+    const layout = planLabelLayout(mirror, 'Mirror', 185, room);
+    expect(layout.outside).toBe(true);
+    expect(layout.y).toBeLessThan(0);
+    expect(planLabelLayout(mirror, 'Mirror', 185, room)).toEqual(layout);
+    expect(room).toEqual(before);
+    mirror.dimensions.width = unknown();
+    const missing = planLabelLayout(mirror, 'Mirror ?', 185, room);
+    expect(missing.lines.join(' ')).toContain('?');
+    expect(Number.isFinite(missing.x) && Number.isFinite(missing.y)).toBe(true);
+    expect(mirror.dimensions.width.value).toBeNull();
   });
+  it('keeps catalogue extrema/presets finite, inside the frame and clear of their own footprint', () => {
+    let cases = 0;
+    for (const entry of CATALOGUE) {
+      const sizes = [
+        ...(['min', 'default', 'max'] as const).map((key) => ({
+          width: entry.size.width[key],
+          depth: entry.size.depth[key],
+        })),
+        ...furnitureSizePresets(entry),
+      ];
+      for (const size of sizes)
+        for (const quarterTurns of [0, 1, 2, 3] as const) {
+          const item = piece('item', 5000, 5000, {
+            catalogueId: entry.id,
+            width: size.width,
+            depth: size.depth,
+            quarterTurns,
+          });
+          const room = commandRoom([item]),
+            before = structuredClone(room);
+          const layout = planLabelLayout(
+            item,
+            planFurnitureName(item),
+            185,
+            room,
+          );
+          const along =
+              Math.max(...layout.lines.map((line) => line.length)) *
+              layout.fontSize *
+              0.6,
+            across = layout.lines.length * layout.fontSize * 1.15,
+            w = layout.rotation ? across : along,
+            d = layout.rotation ? along : across,
+            x = item.pose.centerX + layout.x,
+            z = item.pose.centerZ + layout.y,
+            r = footprint(item)!;
+          expect(layout.fontSize).toBeGreaterThanOrEqual(110);
+          expect(layout.fontSize).toBeLessThanOrEqual(185);
+          expect(x - w / 2).toBeGreaterThanOrEqual(0);
+          expect(x + w / 2).toBeLessThanOrEqual(10000);
+          expect(z - d / 2).toBeGreaterThanOrEqual(0);
+          expect(z + d / 2).toBeLessThanOrEqual(10000);
+          if (layout.outside)
+            expect(
+              x + w / 2 <= r.minX ||
+                x - w / 2 >= r.maxX ||
+                z + d / 2 <= r.minZ ||
+                z - d / 2 >= r.maxZ,
+            ).toBe(true);
+          else {
+            expect(x - w / 2).toBeGreaterThanOrEqual(r.minX);
+            expect(x + w / 2).toBeLessThanOrEqual(r.maxX);
+            expect(z - d / 2).toBeGreaterThanOrEqual(r.minZ);
+            expect(z + d / 2).toBeLessThanOrEqual(r.maxZ);
+          }
+          expect(room).toEqual(before);
+          cases++;
+        }
+    }
+    expect(cases).toBeGreaterThan(300);
+  });
+  it.each([0, 1, 2, 3] as const)(
+    'clamps captions at room corners at turn %s',
+    (quarterTurns) => {
+      const item = piece('mirror', 5000, 5000, {
+        catalogueId: 'full-length-mirror',
+        width: 650,
+        depth: 60,
+        quarterTurns,
+      });
+      const r = footprint(item)!;
+      item.pose.centerX = (r.maxX - r.minX) / 2;
+      item.pose.centerZ = (r.maxZ - r.minZ) / 2;
+      const room = commandRoom([item]),
+        layout = planLabelLayout(item, 'Mirror', 185, room);
+      const width = 6 * 135 * 0.6,
+        depth = 135 * 1.15;
+      expect(item.pose.centerX + layout.x - width / 2).toBeGreaterThanOrEqual(
+        0,
+      );
+      expect(item.pose.centerZ + layout.y - depth / 2).toBeGreaterThanOrEqual(
+        0,
+      );
+    },
+  );
+});
+
+describe('purpose-aware door captions', () => {
+  it.each(['north', 'east', 'south', 'west'] as const)(
+    'names only the actual door on the %s wall for every mechanism/purpose',
+    (wall) => {
+      for (const mechanism of [
+        'inward',
+        'outward',
+        'sliding',
+        'unknown',
+      ] as const)
+        for (const purpose of [undefined, 'room', 'bathroom'] as const) {
+          const feature = {
+              ...door(),
+              wall,
+              mechanism,
+              ...(purpose ? { purpose } : {}),
+            },
+            room = commandRoom([], [feature]),
+            before = structuredClone(room),
+            layout = planDoorLabel(room, feature)!;
+          expect(layout.lines.join(' ')).toBe(
+            purpose === 'bathroom' ? 'Bathroom Door' : 'Door',
+          );
+          expect(layout.fontSize).toBeGreaterThan(100);
+          expect(layout.fontSize).toBeLessThanOrEqual(160);
+          expect(layout.x).toBeGreaterThan(0);
+          expect(layout.x).toBeLessThan(10000);
+          expect(layout.y).toBeGreaterThan(0);
+          expect(layout.y).toBeLessThan(10000);
+          expect(room).toEqual(before);
+        }
+    },
+  );
+  it('wraps Bathroom Door and preserves unknown geometry instead of inventing a position', () => {
+    const feature = { ...door(), purpose: 'bathroom' as const },
+      room = commandRoom([], [feature]);
+    expect(planDoorLabel(room, feature)?.lines).toEqual(['Bathroom', 'Door']);
+    feature.offset = unknown();
+    expect(planDoorLabel(room, feature)).toBeNull();
+    feature.offset = structuredClone(door().offset);
+    feature.width = unknown();
+    expect(planDoorLabel(room, feature)).toBeNull();
+    feature.width = structuredClone(door().width);
+    feature.wall = 'unknown';
+    expect(planDoorLabel(room, feature)).toBeNull();
+  });
+});
+
+it('keeps previous-position text from crossing proposed furniture or door names', () => {
+  const previous = piece('old', 9650, 650),
+    moved = piece('old', 4000, 4000);
+  expect(planPreviousLabelVisible(commandRoom([moved]), previous)).toBe(true);
+  const overlapping = piece('new', 9650, 650);
+  expect(
+    planPreviousLabelVisible(commandRoom([moved, overlapping]), previous),
+  ).toBe(false);
+  const opening = {
+    ...door(),
+    wall: 'east' as const,
+    offset: known(200),
+    purpose: 'bathroom' as const,
+  };
+  expect(
+    planPreviousLabelVisible(commandRoom([moved], [opening]), previous),
+  ).toBe(false);
+  expect(previous.pose.centerX).toBe(9650);
 });

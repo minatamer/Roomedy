@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Adaptive2D names — RM-015BE:** Every placed door says Door or Bathroom Door from its own purpose. Furniture labels vary size, wrap whole words or turn sideways; thin/tiny pieces use nearby readable captions with front-arrow space. Previous-position overlays keep current names readable. [Ticket](tickets/RM-015BE-label-doors-and-adapt-plan-text.md), [allocation](commit-plans/RM-015BE.md), [evidence](validation/RM-015BE.md). Actual owner approval pending; Q held, guide paused, RM-016 Planned.
+
 **Inset chat Send — RM-015BD:** Medy uses Retailor’s single rounded composer with a bottom-right arrow inside the field, a44px target and reserved text space, adapted to Roomedy cocoa/oat colours. Keyboard/accessibility/Send/history remain. [Ticket](tickets/RM-015BD-inset-the-chat-send-button.md), [allocation](commit-plans/RM-015BD.md), [evidence](validation/RM-015BD.md). Scoped format/lint/frontend types and actual desktop/short/phone/long-text checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
 
 **Chat composer simplified — RM-015BC:** Removed the keyboard-help line, composer divider and visible Ask Medy label. The textarea retains its accessible name, and Send stays right aligned. Keyboard/composition/chat behavior remain. [Ticket](tickets/RM-015BC-remove-chat-keyboard-hint.md), [allocation](commit-plans/RM-015BC.md), [evidence](validation/RM-015BC.md). Scoped format/lint/frontend types and actual desktop/phone checks pass; no fresh full-build claim. Actual owner approval pending; Q held, guide paused, RM-016 Planned.
@@ -1391,8 +1393,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await actual owner visual review of validated Retailor-inspired inset Send composer and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
-Active ticket: RM-015BD
+Next action: Await actual owner visual review of purpose-aware2D door names and adaptive object typography. Settled check components pass862tests/56files,7boundaries and both builds with exact269-input/BUILD_ID identity. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.
+Active ticket: RM-015BE
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1417,7 +1419,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T17:07:49+00:00",
+  "updated_at": "2026-10-20T17:47:31+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1606,8 +1608,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015BD",
-  "next_action": "Await actual owner visual review of validated Retailor-inspired inset Send composer and earlier corrections. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
+  "active_ticket": "RM-015BE",
+  "next_action": "Await actual owner visual review of purpose-aware2D door names and adaptive object typography. Settled check components pass862tests/56files,7boundaries and both builds with exact269-input/BUILD_ID identity. Q held, guide goal paused, RM-016 Planned; no paid/live/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2092,14 +2094,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015BA.md",
         "docs/validation/RM-015BB.md",
         "docs/validation/RM-015BC.md",
-        "docs/validation/RM-015BD.md"
+        "docs/validation/RM-015BD.md",
+        "docs/validation/RM-015BE.md"
       ],
       "blockers": [],
       "approval": {
-        "quote": "in retailor we did this thing i liked where we included the send button inside the chatbox, go check the repo on how we designed it and try to mimic it",
-        "source": "human:current-chat/2026-10-20/inset-send",
-        "scope": "RM-015BD composer presentation from read-only Retailor reference only; no visual approval",
-        "recorded_at": "2026-10-20T17:03:33+00:00"
+        "quote": "we need the doors in 2d to be labeled as Door or Bathroom Door incase its a bathroo mdoor ofc; even if there is no bathroom door just name it door; also the text of the objects in 2d doesnt have to be all same typogrpahy size, it can differ dynamically or the text can be above each other or whatever looks best find the edge cases",
+        "source": "human:current-chat/2026-10-20/door-adaptive-labels",
+        "scope": "RM-015BE2D labels/presentation only; no visual approval",
+        "recorded_at": "2026-10-20T17:13:32+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2632,6 +2635,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/inset-send",
             "scope": "RM-015BD composer presentation from read-only Retailor reference only; no visual approval",
             "recorded_at": "2026-10-20T17:03:33+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "we need the doors in 2d to be labeled as Door or Bathroom Door incase its a bathroo mdoor ofc; even if there is no bathroom door just name it door; also the text of the objects in 2d doesnt have to be all same typogrpahy size, it can differ dynamically or the text can be above each other or whatever looks best find the edge cases",
+            "source": "human:current-chat/2026-10-20/door-adaptive-labels",
+            "scope": "RM-015BE2D labels/presentation only; no visual approval",
+            "recorded_at": "2026-10-20T17:13:32+00:00"
           }
         }
       ]

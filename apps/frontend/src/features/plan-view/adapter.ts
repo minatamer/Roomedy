@@ -1,7 +1,9 @@
-import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
+import type { Feature, Furniture, RoomDocument } from '@roomedy/contracts/room';
 import {
   findCatalogueEntry,
   footprint,
+  localFront,
+  wallBand,
   wallMountedPose,
 } from '@roomedy/spatial';
 import type { Presentation, RoomFrame } from '../session/state';
@@ -12,29 +14,270 @@ export interface PlanBox {
   width: number;
   depth: number;
 }
-/** Fit a whole word to the displayed footprint, independently of its front. */
-export function planLabelLayout(item: Furniture, text: string, fontSize = 185) {
-  const bounds = footprint(item);
-  // TV names are captions: their intentionally thin footprint cannot hold text.
-  if (
-    !bounds ||
-    findCatalogueEntry(item.catalogueId, item.catalogueVersion)?.category ===
-      'tv'
-  )
-    return { rotation: 0, fontSize };
-  const width = bounds.maxX - bounds.minX,
-    depth = bounds.maxZ - bounds.minZ;
-  const inset = (span: number) => span - Math.min(120, span * 0.2);
-  const textUnits = Math.max(1, text.length) * 0.6;
-  const vertical = depth > width && textUnits * fontSize > inset(width);
+/** Compact known names, independent of user-authored labels and model prose. */
+export function planFurnitureName(item: Furniture): string {
+  const category =
+    findCatalogueEntry(item.catalogueId, item.catalogueVersion)?.category ??
+    'piece';
+  return (
+    (
+      {
+        'tv-stand': 'TV stand',
+        'chest-drawers': 'Drawers',
+        'bedside-drawers': 'Drawers',
+        'bedroom-bench': 'Bench',
+        armchair: 'Chair',
+        'floor-lamp': 'Lamp',
+        'side-table': 'Table',
+        'drawer-shelf': 'Shelf',
+        'full-length-mirror': 'Mirror',
+      } as Record<string, string>
+    )[item.catalogueId] ??
+    (category === 'tv'
+      ? 'TV'
+      : category === 'storage'
+        ? item.catalogueId === 'bedside-storage-fixed'
+          ? 'Cabinet'
+          : 'Shelf'
+        : category[0]!.toUpperCase() + category.slice(1))
+  );
+}
+export interface PlanTextLayout {
+  rotation: 0 | -90;
+  fontSize: number;
+  lines: string[];
+}
+export interface PlanLabelLayout extends PlanTextLayout {
+  x: number;
+  y: number;
+  outside: boolean;
+}
+const inset = (span: number) => span - Math.min(120, span * 0.2);
+/** Fixed-work whole-word fitting; prefer horizontal unless sideways helps materially. */
+export function fitPlanText(
+  text: string,
+  width: number,
+  depth: number,
+  cap = 185,
+): PlanTextLayout {
+  const words = text.trim().split(/\s+/),
+    lineSets = [words.join(' ')].map((line) => [line]);
+  for (let i = 1; i < Math.min(words.length, 4); i++)
+    lineSets.push([words.slice(0, i).join(' '), words.slice(i).join(' ')]);
+  let best: PlanTextLayout | null = null;
+  for (const rotation of [0, -90] as const) {
+    for (const lines of lineSets) {
+      const fontSize = Math.min(
+        cap,
+        inset(rotation ? depth : width) /
+          (Math.max(1, ...lines.map((line) => line.length)) * 0.6),
+        inset(rotation ? width : depth) / (lines.length * 1.15),
+      );
+      if (
+        !best ||
+        fontSize > best.fontSize * (rotation !== best.rotation ? 1.12 : 1.08)
+      )
+        best = { rotation, fontSize, lines };
+    }
+  }
+  return best!;
+}
+function textSize(layout: PlanTextLayout) {
+  const width =
+      Math.max(1, ...layout.lines.map((line) => line.length)) *
+      layout.fontSize *
+      0.6,
+    depth = layout.lines.length * layout.fontSize * 1.15;
+  return layout.rotation ? { width: depth, depth: width } : { width, depth };
+}
+const within = (value: number, radius: number, edge: number) =>
+  edge < radius * 2
+    ? edge / 2
+    : Math.max(radius, Math.min(edge - radius, value));
+/** Display-only door caption. Unknown pose/size never invents an opening. */
+export function planDoorLabel(
+  room: RoomDocument,
+  feature: Extract<Feature, { kind: 'door' }>,
+): PlanLabelLayout | null {
+  const across =
+    feature.wall === 'north' || feature.wall === 'south'
+      ? room.room.depth.value
+      : room.room.width.value;
+  const band = wallBand(
+    room,
+    feature,
+    Math.min(feature.width.value ?? 700, 700, across ?? 700),
+  );
+  if (!band) return null;
+  const text = feature.purpose === 'bathroom' ? 'Bathroom Door' : 'Door',
+    layout = fitPlanText(
+      text,
+      band.maxX - band.minX,
+      band.maxZ - band.minZ,
+      160,
+    ),
+    size = textSize(layout);
   return {
-    rotation: vertical ? -90 : 0,
-    fontSize: Math.min(
-      fontSize,
-      inset(vertical ? depth : width) / textUnits,
-      (vertical ? width : depth) * 0.65,
+    ...layout,
+    outside: false,
+    x: within(
+      (band.minX + band.maxX) / 2,
+      size.width / 2,
+      room.room.width.value ?? 4200,
+    ),
+    y: within(
+      (band.minZ + band.maxZ) / 2,
+      size.depth / 2,
+      room.room.depth.value ?? 4800,
     ),
   };
+}
+/** Fit inside the usable footprint, or choose one of four bounded nearby captions. */
+export function planLabelLayout(
+  item: Furniture,
+  text: string,
+  fontSize = 185,
+  room?: RoomDocument,
+): PlanLabelLayout {
+  const physical = footprint(item),
+    bounds = physical ?? {
+      minX: item.pose.centerX - 260,
+      maxX: item.pose.centerX + 260,
+      minZ: item.pose.centerZ - 260,
+      maxZ: item.pose.centerZ + 260,
+    },
+    front = localFront(item.pose.quarterTurns),
+    reserve = physical ? Math.min(160, item.dimensions.depth.value! * 0.3) : 0,
+    layout = fitPlanText(
+      text,
+      bounds.maxX - bounds.minX - Math.abs(front[0]) * reserve,
+      bounds.maxZ - bounds.minZ - Math.abs(front[1]) * reserve,
+      fontSize,
+    ),
+    tv =
+      findCatalogueEntry(item.catalogueId, item.catalogueVersion)?.category ===
+      'tv';
+  if (!tv && layout.fontSize >= 110)
+    return {
+      ...layout,
+      x: (-front[0] * reserve) / 2,
+      y: (-front[1] * reserve) / 2,
+      outside: false,
+    };
+  const caption: PlanTextLayout = {
+      rotation: 0,
+      fontSize: Math.min(fontSize, 135),
+      lines: [text],
+    },
+    size = textSize(caption),
+    overlap = (x: number, y: number, r: typeof bounds) =>
+      Math.max(
+        0,
+        Math.min(x + size.width / 2, r.maxX) -
+          Math.max(x - size.width / 2, r.minX),
+      ) *
+      Math.max(
+        0,
+        Math.min(y + size.depth / 2, r.maxZ) -
+          Math.max(y - size.depth / 2, r.minZ),
+      ),
+    others =
+      room?.furniture
+        .filter((other) => other.id !== item.id)
+        .map(footprint)
+        .filter((r) => !!r) ?? [],
+    doors =
+      room?.room.features.flatMap((feature) => {
+        const door =
+          feature.kind === 'door' ? planDoorLabel(room, feature) : null;
+        if (!door) return [];
+        const extent = textSize(door);
+        return [
+          {
+            minX: door.x - extent.width / 2,
+            maxX: door.x + extent.width / 2,
+            minZ: door.y - extent.depth / 2,
+            maxZ: door.y + extent.depth / 2,
+          },
+        ];
+      }) ?? [];
+  // Thin footprints draw their front chevron beyond the body (up to110mm).
+  const gap = physical && item.dimensions.depth.value! < 250 ? 150 : 80;
+  let best = { x: item.pose.centerX, y: item.pose.centerZ, score: Infinity };
+  for (const [dx, dz] of [
+    front,
+    [-front[0], -front[1]],
+    [front[1], -front[0]],
+    [-front[1], front[0]],
+  ]) {
+    let x =
+        dx! > 0
+          ? bounds.maxX + gap + size.width / 2
+          : dx! < 0
+            ? bounds.minX - gap - size.width / 2
+            : item.pose.centerX,
+      y =
+        dz! > 0
+          ? bounds.maxZ + gap + size.depth / 2
+          : dz! < 0
+            ? bounds.minZ - gap - size.depth / 2
+            : item.pose.centerZ;
+    if (room) {
+      x = within(x, size.width / 2, room.room.width.value ?? 4200);
+      y = within(y, size.depth / 2, room.room.depth.value ?? 4800);
+    }
+    const score =
+      overlap(x, y, bounds) * 4 +
+      [...others, ...doors].reduce((sum, r) => sum + overlap(x, y, r), 0);
+    if (score < best.score) best = { x, y, score };
+    if (score === 0) break;
+  }
+  return {
+    ...caption,
+    outside: true,
+    x: best.x - item.pose.centerX,
+    y: best.y - item.pose.centerZ,
+  };
+}
+/** Keep the old-position outline; omit its annotation when it crosses the proposal. */
+export function planPreviousLabelVisible(
+  room: RoomDocument,
+  previous: Furniture,
+): boolean {
+  const annotation = {
+    minX: previous.pose.centerX - 570,
+    maxX: previous.pose.centerX + 570,
+    minZ: previous.pose.centerZ - 130,
+    maxZ: previous.pose.centerZ + 30,
+  };
+  const overlaps = (r: {
+    minX: number;
+    maxX: number;
+    minZ: number;
+    maxZ: number;
+  }) =>
+    annotation.minX < r.maxX &&
+    annotation.maxX > r.minX &&
+    annotation.minZ < r.maxZ &&
+    annotation.maxZ > r.minZ;
+  if (
+    room.furniture.some((item) => {
+      const r = footprint(item);
+      return r && overlaps(r);
+    })
+  )
+    return false;
+  return !room.room.features.some((feature) => {
+    const label = feature.kind === 'door' ? planDoorLabel(room, feature) : null;
+    if (!label) return false;
+    const size = textSize(label);
+    return overlaps({
+      minX: label.x - size.width / 2,
+      maxX: label.x + size.width / 2,
+      minZ: label.y - size.depth / 2,
+      maxZ: label.y + size.depth / 2,
+    });
+  });
 }
 /** SVG +x right/east, +y down/south; SVG y is semantic Z, all units are mm. */
 export function planBox(
