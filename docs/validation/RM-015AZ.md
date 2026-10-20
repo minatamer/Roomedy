@@ -55,3 +55,37 @@ Actual native IAB tab63 on sole4320/private4321:1280×720 and1280×600 headers r
 Actual Furniture→bed inspector remains Furniture; Furniture→Add a piece remains Furniture; Room→Door inspector remains Room; Enter opens Medy, Space opens Room and keyboard Tab shows the inset focus ring. Changes slide the selected surface and preserve the right panel. Existing Project expands with visible Export/Import/Start a new room inside tablet bounds, Escape closes/returns to Project, and Project/Undo remain reachable. No actual file/reset/export operation was performed. Short Medy keeps its composer reachable; phone flow remains natural. Native screenshots inspected inline and saved as RM-015AZ-room-tools-final.png, RM-015AZ-room-tools-tablet.png, RM-015AZ-room-tools-320.png and RM-015AZ-room-tools-390.png in this task’s visualization folder. Tab63 closed and viewport reset. These emulated views do not establish physical-device/assistive/production-frame evidence.
 
 Read-only review covers all11allocated paths, shared selection/panel ownership, decorative icon/hidden-control semantics, CSS width/translation/focus, responsive geometry and regressions; no actionable findings. Exact local checkpoint under standing authority. Actual owner visual approval pending, Q held, guide goal paused, RM-016 Planned; no paid/live/key/config/delegation/new dependency/service/port/push/deploy.
+
+## Capsule alignment follow-up — 20 October2026
+
+Clean parent28ee89f. Owner requests corrected padding and dynamic width alignment with the properties card. [Exact eight paths](../commit-plans/RM-015AZ.md#capsule-alignment-follow-up-allocation--20-october2026). Lessons L-02/03/04/06 and the feature review checklist govern this scoped existing-control correction.
+
+### Diagnosis, correction and checks
+
+At1280×720, capsule bounds934.40625–1260px/325.59375px width differed from card934.40625–1280px/345.59375px width. Labels were2.296875px above the center of their44px buttons. The existing independent width deduction and inline-flex label baseline caused the reported mismatch.
+
+The studio now owns one responsive `--properties-width` used by both header and workspace columns. Header removes its trailing inset; capsule fills that column. Tablet retains its existing left inset without reintroducing a trailing one. Natural narrow header puts the capsule in the full-width second row, with brand/actions retaining16px insets. Buttons use explicit flex centering; existing8px/phone9px6px padding,44px targets, equal slots,4px selected-surface inset and260ms sliding motion remain.
+
+Prettier on the one allocated CSS file and `git diff --check` pass. No JavaScript, commands, selection state, provider/configuration, dependencies or services changed; no new unit/CSS mirror tests or repeated full suite/build/type generation for CSS-only work. Previous root/build identities remain historical.
+
+### Actual native geometry and interaction
+
+Existing hot-reloaded4320, temporary tabs65/66, furnished manual room. Original user tab untouched; both temporary tabs closed and viewport reset. Measurements below are actual rendered DOM bounds, not stylesheet expectations. Every measured button stays44px high; icon/label center error is0px vertically and at most0.0078125px horizontally from pixel rounding.
+
+| Viewport | Capsule/card left–right and width | Header | Root client/scroll width |
+| --- | --- | --- | --- |
+|1920×1080|1500–1920; both420px|68px|1920/1920|
+|1280×720|934.40625–1280; both345.59375px|68px|1280/1280|
+|1280×600|934.40625–1280; both345.59375px|68px|1280/1280|
+|1024×768|724–1024; both300px|68px|1024/1024|
+|768×1024|468–768; both300px|68px|768/768|
+|390×844|0–375; both375px|126px|375/375|
+|320×568|0–305; both305px|126px|305/305|
+
+- Actual Furniture→Room→Medy switching works, including Enter/Space; selected capsule surface follows the same existing panel owner. At1280 its settled selected-surface width109.188px matches its button, with4px top/bottom inset. Native Tab shows the existing inset focus ring.
+- Desktop/short/wide3D and tablet/phone2D observed; source/layout sizing is shared across both. Phone Project popup opens visibly inside the viewport, and Escape closes it with focus returned to Project. No file/reset/export action taken.
+- Complete final preview files under `C:/Users/minat/.codex/visualizations/2026/10/20/01a15835-0bd9-7d20-9601-faf2b8383623/`: `RM-015AZ-capsule-align-desktop.png`, `RM-015AZ-capsule-align-tablet.png`, `RM-015AZ-capsule-align-phone.png`, `RM-015AZ-capsule-align-320.png`. Desktop uses full-page capture; the other final artifacts use explicit full-viewport clips to avoid delta strips. Final phone proof also shows3D. No screenshot-editing/compositing used.
+
+### Read-only review and gate
+
+Scoped CSS and all eight allocated documentation paths reviewed against the latest owner request, actual geometry, mobile header insets, hidden controls, shared2D/3D layout, selected/focus styles and existing breakpoints. **Meets follow-up; no actionable findings.** Actual owner visual approval remains pending. No fresh production, hosted, live-provider, physical-device/GPU or security audit claim. Q held, guide paused, RM-016 Planned; exact authorized local checkpoint only, no paid/live/config/delegation/new ports/push/deploy.

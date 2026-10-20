@@ -6,6 +6,8 @@ Use15px conversation/welcome paragraphs with1.65 line height,16px composer text 
 
 ## Room-tool navigation capsule — 20 October2026
 
+Use one shared responsive properties-column width for the header and workspace. The capsule fills that width with both outer edges aligned to the properties card; no independent20px deduction/right header inset. In natural narrow layout the capsule matches the full-width stacked card, while brand and Project/Undo retain16px insets. Center icon/label groups with flex alignment inside equal44px targets, rather than relying on inline baselines.
+
 Group Furniture/Room/Medy above the right panel in one translucent oat capsule with a thin highlight and restrained shadow; no added backdrop blur. Three equal44px buttons use small decorative furniture/room outlines and the existing Medy sparkle. One cocoa pseudo-element slides between positions with cream selected labels; inactive text/hover and inset focus remain readable. Keep the bounded header68px by balancing its vertical padding. Existing narrow layout gives the capsule a full-width second row with readable labels; do not let hidden Checks/replay controls create a fourth slot.
 
 The highlighted parent follows actual visible content: inventory/catalogue/furniture inspector→Furniture; room/feature inspector→Room; conversation→Medy. Resolve selected IDs against displayed current/candidate/Before room facts; empty/unknown inspector or unrepresented Checks has no invented selected parent. Retain existing panel clicks, focus, accessible names/pressed states and all canonical command/history/room-finish authority. The highlight is presentation, not another state owner.

@@ -47,3 +47,22 @@ Exact eleven paths allocated before source edits:
 1. Group existing buttons in one oat translucent capsule, thin highlight/border and restrained shadow; no extra backdrop blur. Three equal44px buttons, legible ink/cream labels, unobstructed focus and modest hover. One CSS pseudo-element slides/reverses between selected positions; no new state, timer, frame loop, dependency or network. Small original inline furniture/room outlines and existing Medy sparkle are decorative. Match panel-side width and retain a full-width narrow second row. Adjust desktop padding so the bounded header remains68px and preserves workspace height.
 2. Derive the active parent tool from actual panel context. Inventory/catalogue/furniture inspector belong to Furniture; room/feature inspector belong to Room; the conversation belongs to Medy. Hidden Checks or empty/unknown inspector does not invent a selected tool. Use displayed current/candidate/Before facts to classify actual selected objects; this changes presentation only. Button clicks retain existing open/focus behavior and labels/pressed semantics.
 3. Meaningful session tests cover real selection/panel context in2D/3D, catalogue and unavailable selection without mirroring CSS. Scoped format/lint/frontend/test types plus focused session/project-menu regressions. Native desktop/short/tablet/320px phone and390px phone contexts, keyboard/focus, inspector/catalogue parent state, all visible panels and Project/Undo reachability. Inspect actual geometry/readability/motion; no full-suite/build claim for the scoped presentation revision. Review/fix/revalidate all11paths and save exact authorized local checkpoint. Actual owner visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new services/ports/dependencies/push/deploy.
+
+## Capsule alignment follow-up allocation — 20 October2026
+
+Clean parent28ee89f. Owner: “padding is off in these buttons and make it so that it allings with the width of the card bellow it dynamically”, with the Furniture/Room/Medy capsule screenshot. Scope is this existing header group and its owning responsive grid; preserve selected styling, sliding animation, real tab/selection authority, header/workspace height and Project/Undo.
+
+Exact eight paths allocated before source edits:
+
+1. `docs/README.md`
+2. `docs/ROOMEDY.md`
+3. `docs/tickets/README.md`
+4. `docs/tickets/RM-015AZ-align-header-controls-and-animate-project.md`
+5. `docs/commit-plans/RM-015AZ.md`
+6. `docs/validation/RM-015AZ.md`
+7. `docs/design/layout.md`
+8. `apps/frontend/src/features/room-editor/editor.module.css`
+
+Use one shared responsive properties width for workspace and header column, removing the current20px capsule deduction/header-right inset. Capsule fills that column; narrow full-width capsule follows the existing full-width card while brand/actions retain their inset. Center every icon/label group explicitly inside equal44px targets, with consistent internal padding and matching selected-surface inset. No JS measuring, new state, extra controls, blur, dependencies or provider/config change.
+
+Check scoped formatting and native actual capsule/card left/right/width equality across wide/desktop/short/tablet/narrow states, all three selected positions, icon/label centering, focus and no horizontal overflow. Preserve existing Project/Undo, bounded/natural layout and2D/3D. No CSS mirror tests or repeated full builds for this reversible CSS correction. Read-only review, exact authorized local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned.

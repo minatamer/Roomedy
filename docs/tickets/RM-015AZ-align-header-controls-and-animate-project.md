@@ -14,3 +14,11 @@ Owner asks to improve Furniture/Room/Medy so the controls fit the page. [Eleven-
 - [x] One oat capsule, small decorative icons and finite sliding cocoa selected surface. Equal44px targets, clear labels/keyboard focus, responsive full-width phone row and preserved68px bounded header. Keep the existing Medy sparkle/name; no additional blur or settings.
 - [x] Actual visible inspector/catalogue context keeps its Furniture/Room parent selected; Medy follows the conversation. Displayed-room facts and existing panel/selection/focus owners remain authoritative; no command/room/history mutation.
 - [x]47focused session/project-menu tests, scoped format/lint/frontend/test types, actual desktop/short/tablet/320px/390px views and keyboard/context/Project checks pass. Read-only revision has no findings; exact local checkpoint. No new full-suite/build identity claim; actual owner approval pending, Q held, guide paused, RM-016 Planned.
+
+## Capsule alignment follow-up — 20 October2026
+
+Owner requests corrected button padding and a capsule dynamically matching the card below. [Eight-path allocation](../commit-plans/RM-015AZ.md#capsule-alignment-follow-up-allocation--20-october2026), [actual evidence](../validation/RM-015AZ.md#capsule-alignment-follow-up--20-october2026).
+
+- [x] Shared responsive header/workspace properties-column width; remove the20px capsule deduction/right header inset. Full-width narrow row matches the full-width stacked card; brand/Project/Undo keep16px narrow insets.
+- [x] Equal44px buttons explicitly center each icon/label group with even padding; retain selected surface, finite motion, focus and existing panel/selection authority.
+- [x] Scoped format/diff checks, actual wide/desktop/short/tablet/390/320 geometry,2D/3D, all three selected states, keyboard focus and phone Project/Escape observations pass. No new JS, unit/CSS mirror test or full-build claim; read-only review is clean. Actual owner approval pending, Q held, guide paused, RM-016 Planned.
