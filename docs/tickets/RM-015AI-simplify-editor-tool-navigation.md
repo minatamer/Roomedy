@@ -19,3 +19,11 @@ AD–AI is committed133e154. Latest owner screenshot asks Undo/Project to use th
 - [x] Undo and Project reuse glass-control without competing studio visual rules, preserving disabled/hover/focus/disclosure behavior and44px narrow targets.
 - [x] Actual header states/phone/short fit and scoped formatting/lint/frontend types recorded. Read-only eight-path review is clean; exact local checkpoint prepared.
 - [ ] Owner visual acceptance remains pending.
+
+## Project primary-action follow-up —20 October2026
+
+Owner selects the brown class for Project → Start a new room after committed AQ/b684854. The [six-path allocation](../commit-plans/RM-015AI.md#project-primary-action-follow-up-allocation-20-october2026) owns this single-class correction.
+
+- [x] Menu action reuses existing styles.primary, like the confirmation action; no copied CSS or behavior change.
+- [x] Actual desktop/phone/short/focus/confirmation/Cancel observations and scoped format/lint/frontend types pass; six-path read-only review clean.
+- [ ] Owner visual approval remains pending; Q held, guide paused, RM-016 Planned.

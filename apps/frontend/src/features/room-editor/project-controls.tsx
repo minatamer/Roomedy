@@ -294,7 +294,10 @@ export function ProjectControls({
           {busy && <p role="status">Reading project…</p>}
           {message && <p role="alert">{message}</p>}
           <hr />
-          <button onClick={() => reviewDecision('reset')}>
+          <button
+            className={styles.primary}
+            onClick={() => reviewDecision('reset')}
+          >
             Start a new room
           </button>
         </div>

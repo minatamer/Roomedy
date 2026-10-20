@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Project primary CTA,20October:** Start a new room uses the existing shared brown editor primary class, matching its confirmation action. [Six-path AI follow-up](commit-plans/RM-015AI.md#project-primary-action-follow-up-allocation-20-october2026), [actual scoped evidence](validation/RM-015AI.md#project-primary-action-follow-up-20-october2026). This is a single-class hot-reload correction; AQ's prior production artifact remains distinct. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Latest furniture facing — RM-015AQ:** Fresh starter wardrobes sit near the east wall with their front west into the room. New-piece previews/numeric Add share a bounded orientation suggestion until explicit visitor rotation; replacement and accepted/recovered poses stay authoritative. Shared AI search considers functional front access and back-wall placement inside the authorized scope. Recognition preserves observed facing and leaves hidden orientation unknown. [Ticket](tickets/RM-015AQ-place-furniture-with-usable-facing.md), [22-path plan](commit-plans/RM-015AQ.md), [evidence](validation/RM-015AQ.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Latest studio layout — RM-015AP:** Design Studio uses distinct serif typography at the left of Furniture/Room/Assistant. Add piece leaves only that row; catalogue entry remains in Furniture. Count and 2D/3D live inside the frame bottom right. Both views share the same actual-column rail and editing/navigation controls, with camera-specific views retained. [Ticket](tickets/RM-015AP-align-the-studio-and-share-view-controls.md), [exact plan](commit-plans/RM-015AP.md), [evidence](validation/RM-015AP.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -1351,8 +1353,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Owner reviews RM-015AQ sensible fresh furniture facing and AI placement at existing4320/private4321. Exact22-path local checkpoint under standing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.
-Active ticket: RM-015AQ
+Next action: Owner reviews brown Project Start a new room CTA on existing4320/private4321. Exact six-path local follow-up checkpoint. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/new ports/delegation/push/deploy.
+Active ticket: RM-015AI
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1377,7 +1379,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T09:45:39+00:00",
+  "updated_at": "2026-10-20T09:49:43+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1566,8 +1568,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AQ",
-  "next_action": "Owner reviews RM-015AQ sensible fresh furniture facing and AI placement at existing4320/private4321. Exact22-path local checkpoint under standing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AI",
+  "next_action": "Owner reviews brown Project Start a new room CTA on existing4320/private4321. Exact six-path local follow-up checkpoint. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/new ports/delegation/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2032,14 +2034,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015AN.md — basic selected preset/finish, numbers/details Advanced, room-side Delete beside Rotate and shared Snap switch in2D/3D. Narrow explicit visitor protected size/Delete with unchanged locks, strict assistant/final checks and one Undo. Native1440×900/1280×600/390×844 basic/Advanced/preset/error/finish/rotation/Delete/Undo/Snap/catalogue/recovery; errors empty. Initial test-JSX boundary corrected without compiler expansion; final630tests/47files,7boundaries/root/both builds and229inputs/2158848bytes/BUILD_ID4c291864c79665f2fca09aca28787e5c4f7431e6b3146544e0bd21235b3b41fe passed. Clean27-path read-only pass2,606local links/missing0; exact local checkpoint prepared. Actual visual approval pending, Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015AO.md — only selected3D furniture has a non-pickable front arrow attached to its displayed group; no new state/frame loop/export geometry. Native1440×900/1280×600/390×844 selection/rotation/Undo/cleared/bed-vs-wardrobe/Corner/view-switch/nudge checks, errors empty. Focused52tests; final630tests/47files,7boundaries/root/both builds and229inputs/2160618bytes/BUILD_ID3dae2a99e36f6caae562ca91611840994377cb1bbbf49fcb028e3effee21cb7b passed. Clean nine-path read-only pass1/588local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
         "docs/validation/RM-015AP.md — Design Studio tool row, no top Add piece, live count/view switch in-frame bottom right and aligned shared2D/3D rail. Common Explore/Arrange/navigation/two-way Rotate/Delete/Snap, contextual camera controls, protected plan Explore and gesture cleanup retain commands/locks/motion/Undo. Native18 responsive geometry states, desktop/short/phone/tablet/edit/Undo/catalogue/recovery checks; errors empty. Focused53tests; final631tests/47files,7boundaries/root/both builds and231inputs/2160868bytes/BUILD_ID01f2d5a79a37d70b49aa2049f2e3886fc142a9865546fa19354a5b449a4671c0 pass. Full18-path read-only pass2 clean/603local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AQ.md — sensible fresh wardrobe facing/backing, bounded four-turn new-piece suggestion until explicit rotation, numeric Add and target-scoped AI access/back-wall preferences. Existing/recovered/replacement poses, locks, complete hard checks and unknown/photo evidence preserved; assistant/recognition prompt versions updated. Native fresh partial/furnished2D/3D, fake essentials Apply/Undo, keyboard/numeric/manual override/recovery, short/phone; errors empty. Focused97+40tests; final646tests/48files,7boundaries/root/both builds,232inputs/2167159bytes/BUILD_IDd3043747df39ced0246bce6e1aff6acd0e07400cfa67b5ec73f5aae07736b702 pass.22-path read-only pass2 clean/628local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned."
+        "docs/validation/RM-015AQ.md — sensible fresh wardrobe facing/backing, bounded four-turn new-piece suggestion until explicit rotation, numeric Add and target-scoped AI access/back-wall preferences. Existing/recovered/replacement poses, locks, complete hard checks and unknown/photo evidence preserved; assistant/recognition prompt versions updated. Native fresh partial/furnished2D/3D, fake essentials Apply/Undo, keyboard/numeric/manual override/recovery, short/phone; errors empty. Focused97+40tests; final646tests/48files,7boundaries/root/both builds,232inputs/2167159bytes/BUILD_IDd3043747df39ced0246bce6e1aff6acd0e07400cfa67b5ec73f5aae07736b702 pass.22-path read-only pass2 clean/628local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
+        "docs/validation/RM-015AI.md — single-class Project Start a new room now uses shared brown styles.primary; native1280x720/1280x600/390x844,44px/focus/confirmation/Cancel/error checks and scoped format/lint/frontend types pass. Six-path read-only pass1 clean; exact local checkpoint prepared. No fresh full-root/build claim; prior AQ646 tests/artifact historical. Actual visual approval pending; Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "quote": "the furnite should initaklly be placed where the arrow points make sense; why is my wardrobe by default pointing at the wall; thsi is something that the ai should take into account to",
-        "source": "human:current-chat/2026-10-20/furniture-initial-facing",
-        "scope": "RM-015AQ implementation: sensible starter and new-piece orientation, shared AI planning preference and evidence-honest recognition. No actual visual approval.",
-        "recorded_at": "2026-10-20T09:35:24+00:00"
+        "quote": "start new room should be in the brown class",
+        "source": "human:current-chat/2026-10-20/project-primary-class",
+        "scope": "RM-015AI Project-menu primary-class follow-up only; no actual visual approval.",
+        "recorded_at": "2026-10-20T09:49:43+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2383,6 +2386,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/furniture-initial-facing",
             "scope": "RM-015AQ implementation: sensible starter and new-piece orientation, shared AI planning preference and evidence-honest recognition. No actual visual approval.",
             "recorded_at": "2026-10-20T09:35:24+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "start new room should be in the brown class",
+            "source": "human:current-chat/2026-10-20/project-primary-class",
+            "scope": "RM-015AI Project-menu primary-class follow-up only; no actual visual approval.",
+            "recorded_at": "2026-10-20T09:49:43+00:00"
           }
         }
       ]

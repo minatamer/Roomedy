@@ -42,3 +42,16 @@ Parent133e154 is committed and the worktree is clean. Latest owner screenshot se
 8. `docs/tickets/README.md`
 
 Apply the actual shared class to Undo and Project summary; exclude glass controls from studio base/hover/focus and narrow header visual overrides instead of copying the glass declarations. Preserve Undo authority/unavailable presentation and its narrow label, native Project disclosure marker/keyboard/menu/export/import/reset behavior,44px targets and existing header dimensions. Keep blur limited to these two small targets. Shared glass itself and other editor controls stay unchanged. Inspect actual disabled/enabled Undo, Project closed/open/keyboard focus, phone/short fit and browser errors via the existing hot-reloaded app. Use scoped format/lint/frontend types and a read-only eight-path review; this reversible class/cascade correction needs no mirrored CSS test or repeated full578-test/backend/build run. Record current native/source evidence honestly; prior production BUILD_ID belongs to the earlier batch and does not validate new class bytes. After local validation the existing ticket-prefixed exact local commit authority applies. Actual visual approval pending; Q held, guide paused, RM-016 Planned. No new services/ports/dependencies, paid/live, delegation, push or deploy.
+
+## Project primary-action follow-up allocation —20 October2026
+
+Parent b684854, clean worktree/index. Owner screenshot requests “start new room should be in the brown class”. Reuse the existing editor primary class already used by the confirmation action; no new CSS, behavior or control. Exact allocation before source edit:
+
+1. `apps/frontend/src/features/room-editor/project-controls.tsx`
+2. `docs/tickets/RM-015AI-simplify-editor-tool-navigation.md`
+3. `docs/commit-plans/RM-015AI.md`
+4. `docs/validation/RM-015AI.md`
+5. `docs/ROOMEDY.md`
+6. `docs/tickets/README.md`
+
+Add styles.primary to the Project-menu Start a new room button. Preserve its existing reviewDecision/reset confirmation, focus/lifecycle and Export/Import. Inspect actual desktop/phone/short menu, keyboard focus and confirmation/Cancel on hot reload4320. Scoped format/lint/frontend types and six-path read-only review suffice for this single-class presentation continuation, following the existing header-class gate above; no static class test or fresh full-root/build claim. Save exact local ticket checkpoint under standing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned; no paid/live/delegation/new services/ports/push/deploy.
