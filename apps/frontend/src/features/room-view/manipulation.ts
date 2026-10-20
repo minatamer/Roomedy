@@ -165,6 +165,7 @@ export function beginFloorEdit(
 }
 export function rotateFloorSelection(
   controller: SessionController,
+  direction: -1 | 1 = 1,
 ): FloorResult {
   if (!controller.canEdit()) return { ok: false, code: 'stale' };
   const state = controller.getSnapshot();
@@ -179,7 +180,8 @@ export function rotateFloorSelection(
       {
         type: 'rotate',
         id: item.id,
-        quarterTurns: ((item.pose.quarterTurns + 1) % 4) as 0 | 1 | 2 | 3,
+        quarterTurns: ((item.pose.quarterTurns + direction + 4) % 4) as
+          0 | 1 | 2 | 3,
       },
     ],
     'Rotate piece',

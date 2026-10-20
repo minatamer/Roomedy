@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+**Latest studio layout — RM-015AP:** Design Studio uses distinct serif typography at the left of Furniture/Room/Assistant. Add piece leaves only that row; catalogue entry remains in Furniture. Count and 2D/3D live inside the frame bottom right. Both views share the same actual-column rail and editing/navigation controls, with camera-specific views retained. [Ticket](RM-015AP-align-the-studio-and-share-view-controls.md), [exact plan](../commit-plans/RM-015AP.md), [evidence](../validation/RM-015AP.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 [Consolidated visual-feedback review](../reviews/2026-10-20-visual-feedback-checklist.md) and [file-level checkpoint](../commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md): implementation through65048e2 already committed; final consolidation is documentation only. Owner review comes later, with actual visual approval pending and no later phase resumed.
 
 Planning date: **17 October 2026**  

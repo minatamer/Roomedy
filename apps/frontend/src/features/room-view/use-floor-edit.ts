@@ -332,14 +332,17 @@ export function useFloorEdit(
     },
     [canvasRef, controller, snap, cancel],
   );
-  const rotate = useCallback(() => {
-    cancel();
-    const result = rotateFloorSelection(controller);
-    if (!result.ok)
-      controller.notify(
-        failureMessage(result, controller.getSnapshot().workspace?.current),
-      );
-  }, [cancel, controller]);
+  const rotate = useCallback(
+    (direction: -1 | 1 = 1) => {
+      cancel();
+      const result = rotateFloorSelection(controller, direction);
+      if (!result.ok)
+        controller.notify(
+          failureMessage(result, controller.getSnapshot().workspace?.current),
+        );
+    },
+    [cancel, controller],
+  );
   useEffect(() => {
     if (!enabled) cancel();
     return () => cancel();

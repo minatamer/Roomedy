@@ -36,7 +36,8 @@ import { PreviewChangeList } from './preview-change-list';
 import { CataloguePlacement } from './catalogue-placement';
 import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
-import { DeleteFurnitureButton, SnapToggle } from './selection-controls';
+import { FrameControls, ViewControls } from './view-controls';
+import controlsStyles from './view-controls.module.css';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
 const Cutaway = lazy(() => import('../room-view/cutaway'));
@@ -90,6 +91,8 @@ export function Editor({
     `${state.workspace?.workspaceId ?? 'opening'}:${state.presentation.panel}:${state.presentation.panel === 'inspector' ? state.presentation.selectedId : ''}:${state.comparison}`,
   );
   const roomView = state.presentation.roomView;
+  const [arranging, setArranging] = useState(false);
+  const planToolsMotion = useSurfaceMotion(`${roomView}:${arranging}`);
   // RM-015AC: comparison is temporarily hidden; retain its implementation.
   useEffect(() => {
     if (state.comparison === 'before') controller.setComparison('current');
@@ -216,11 +219,20 @@ export function Editor({
     );
   const panels: { id: Panel; label: string }[] = [
     { id: 'inventory', label: 'Furniture' },
-    { id: 'catalogue', label: 'Add piece' },
     { id: 'room', label: 'Room' },
     { id: 'checks', label: `Checks${hard ? ` (${hard})` : ''}` },
     { id: 'assistant', label: 'Assistant' },
   ];
+  const frameControls = (
+    <FrameControls
+      count={shownRoom.furniture.length}
+      view={roomView}
+      onView={(next) => {
+        if (next === 'cutaway') setCutawayOpenedAt(performance.now());
+        setRoomView(next);
+      }}
+    />
+  );
   return (
     <div className={styles.studio} data-room-tour-root>
       <header className={styles.header}>
@@ -267,6 +279,9 @@ export function Editor({
       </header>
       <main id="main-content" className={styles.workspace}>
         <nav className={styles.toolRail} aria-label="Room tools">
+          <h1 ref={headingRef} tabIndex={-1} className={styles.studioTitle}>
+            Design Studio
+          </h1>
           {panels.map((panel) => (
             <button
               key={panel.id}
@@ -289,73 +304,27 @@ export function Editor({
           aria-label={before ? 'Before room' : 'Current room'}
           data-room-target="canvas"
         >
-          <div className={styles.roomToolbar}>
-            <div className={styles.canvasHeading}>
-              <div>
-                <p className={styles.eyebrow}>
-                  {before
-                    ? 'Before · read-only'
-                    : state.candidate
-                      ? state.candidate.source === 'assistant'
-                        ? 'Proposal preview'
-                        : 'Palette preview'
-                      : 'Current arrangement'}
-                </p>
-                <h1 ref={headingRef} tabIndex={-1}>
-                  {shownRoom.intent.condition === 'empty'
-                    ? 'A little room to begin.'
-                    : 'Make this space yours.'}
-                </h1>
-              </div>
-              <span>
-                {shownRoom.furniture.length}{' '}
-                {shownRoom.furniture.length === 1 ? 'piece' : 'pieces'}
-              </span>
-            </div>
-
-            <div
-              hidden
-              className={styles.comparison}
-              role="group"
-              aria-label="Compare arrangement"
-              data-room-target="comparison"
+          <div
+            hidden
+            className={styles.comparison}
+            role="group"
+            aria-label="Compare arrangement"
+            data-room-target="comparison"
+          >
+            <button
+              aria-pressed={before}
+              aria-disabled={!!state.candidate}
+              onClick={() => controller.setComparison('before')}
             >
-              <button
-                aria-pressed={before}
-                aria-disabled={!!state.candidate}
-                onClick={() => controller.setComparison('before')}
-              >
-                Before
-              </button>
-              <button
-                aria-pressed={!before}
-                aria-disabled={!!state.candidate}
-                onClick={() => controller.setComparison('current')}
-              >
-                Current
-              </button>
-            </div>
-            <div
-              className={styles.viewSwitch}
-              role="group"
-              aria-label="Room view"
+              Before
+            </button>
+            <button
+              aria-pressed={!before}
+              aria-disabled={!!state.candidate}
+              onClick={() => controller.setComparison('current')}
             >
-              <button
-                aria-pressed={roomView === 'plan'}
-                onClick={() => setRoomView('plan')}
-              >
-                2D
-              </button>
-              <button
-                aria-pressed={roomView === 'cutaway'}
-                onClick={() => {
-                  setCutawayOpenedAt(performance.now());
-                  setRoomView('cutaway');
-                }}
-              >
-                3D
-              </button>
-            </div>
+              Current
+            </button>
           </div>
           {state.clientLoadFailure && (
             <div className={styles.lifecycleNotice} role="alert">
@@ -376,104 +345,61 @@ export function Editor({
           )}
 
           {roomView === 'plan' ? (
-            <div className={styles.planStage}>
-              <div className={styles.viewTools} aria-label="Plan view controls">
-                <button
-                  aria-label="Zoom out"
-                  disabled={view.zoom <= 0.6}
-                  onClick={() => controller.setView({ zoom: view.zoom - 0.2 })}
-                >
-                  −
-                </button>
-                <span>{Math.round(view.zoom * 100)}%</span>
-                <button
-                  aria-label="Zoom in"
-                  disabled={view.zoom >= 3}
-                  onClick={() => controller.setView({ zoom: view.zoom + 0.2 })}
-                >
-                  +
-                </button>
-                <button
-                  onClick={() =>
+            <div className={controlsStyles.stage}>
+              <div ref={planToolsMotion} className="motion-surface">
+                <ViewControls
+                  controller={controller}
+                  arranging={arranging}
+                  onArrange={setArranging}
+                  readOnly={readOnly || !!adding}
+                  rotationLocked={!item || item.locks.rotation}
+                  onRotate={rotatePlanSelection}
+                  snap={view.snap}
+                  onSnap={(snap) => controller.setView({ snap })}
+                  onZoom={(direction) =>
+                    controller.setView({ zoom: view.zoom + direction * 0.2 })
+                  }
+                  zoomOutDisabled={view.zoom <= 0.6}
+                  zoomInDisabled={view.zoom >= 3}
+                  onFit={() =>
                     controller.setView({ zoom: 1, panX: 0, panZ: 0 })
                   }
                 >
-                  Fit room
-                </button>
-                <div
-                  className={styles.panButtons}
-                  role="group"
-                  aria-label="Pan plan"
-                >
-                  <button
-                    aria-label="Pan left"
-                    onClick={() =>
-                      controller.setView({ panX: view.panX - 250 })
-                    }
+                  <div
+                    className={`${controlsStyles.tools} ${controlsStyles.directions}`}
+                    role="group"
+                    aria-label="Pan plan"
                   >
-                    ←
-                  </button>
-                  <button
-                    aria-label="Pan up"
-                    onClick={() =>
-                      controller.setView({ panZ: view.panZ - 250 })
-                    }
-                  >
-                    ↑
-                  </button>
-                  <button
-                    aria-label="Pan down"
-                    onClick={() =>
-                      controller.setView({ panZ: view.panZ + 250 })
-                    }
-                  >
-                    ↓
-                  </button>
-                  <button
-                    aria-label="Pan right"
-                    onClick={() =>
-                      controller.setView({ panX: view.panX + 250 })
-                    }
-                  >
-                    →
-                  </button>
-                </div>
-                <div
-                  className={styles.rotationButtons}
-                  role="group"
-                  aria-label="Rotate selected furniture"
-                >
-                  {([-1, 1] as const).map((direction) => (
-                    <button
-                      key={direction}
-                      aria-label={`Rotate selected piece 90 degrees ${direction === -1 ? 'counterclockwise' : 'clockwise'}`}
-                      title={
-                        !item
-                          ? 'Select a piece to rotate'
-                          : item.locks.rotation
-                            ? 'Unlock rotation in Advanced settings'
-                            : `Rotate 90° ${direction === -1 ? 'counterclockwise' : 'clockwise'}`
-                      }
-                      disabled={readOnly || !item || item.locks.rotation}
-                      onClick={() => rotatePlanSelection(direction)}
-                    >
-                      {direction === -1 ? '↶' : '↷'} 90°
-                    </button>
-                  ))}
-                  <DeleteFurnitureButton
-                    controller={controller}
-                    disabled={readOnly}
-                  />
-                </div>
-                <SnapToggle
-                  checked={view.snap}
-                  onChange={(snap) => controller.setView({ snap })}
-                />
+                    {(
+                      [
+                        ['left', '←', -250, 0],
+                        ['right', '→', 250, 0],
+                        ['up', '↑', 0, -250],
+                        ['down', '↓', 0, 250],
+                      ] as const
+                    ).map(([label, text, x, z]) => (
+                      <button
+                        key={label}
+                        aria-label={`Pan ${label}`}
+                        onClick={() =>
+                          controller.setView({
+                            panX: view.panX + x,
+                            panZ: view.panZ + z,
+                          })
+                        }
+                      >
+                        {text}
+                      </button>
+                    ))}
+                  </div>
+                </ViewControls>
               </div>
               <PlanView
                 controller={controller}
                 state={state}
                 placement={placement}
+                arranging={arranging}
+                frameControls={frameControls}
               />
             </div>
           ) : (
@@ -484,7 +410,12 @@ export function Editor({
                   <p role="status">
                     The cutaway could not load. Continue editing in the plan.
                   </p>
-                  <PlanView controller={controller} state={state} />
+                  <PlanView
+                    controller={controller}
+                    state={state}
+                    frameControls={frameControls}
+                    arranging={arranging}
+                  />
                 </>
               }
             >
@@ -492,7 +423,12 @@ export function Editor({
                 fallback={
                   <>
                     <p role="status">Opening the cutaway…</p>
-                    <PlanView controller={controller} state={state} />
+                    <PlanView
+                      controller={controller}
+                      state={state}
+                      frameControls={frameControls}
+                      arranging={arranging}
+                    />
                   </>
                 }
               >
@@ -512,6 +448,9 @@ export function Editor({
                   placement={placement}
                   onAddDesk={() => open('catalogue', 'desk')}
                   snap={view.snap}
+                  arranging={arranging}
+                  onArrange={setArranging}
+                  frameControls={frameControls}
                 />
               </Suspense>
             </CutawayBoundary>

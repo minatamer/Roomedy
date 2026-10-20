@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Latest studio layout — RM-015AP:** Design Studio uses distinct serif typography at the left of Furniture/Room/Assistant. Add piece leaves only that row; catalogue entry remains in Furniture. Count and 2D/3D live inside the frame bottom right. Both views share the same actual-column rail and editing/navigation controls, with camera-specific views retained. [Ticket](tickets/RM-015AP-align-the-studio-and-share-view-controls.md), [exact plan](commit-plans/RM-015AP.md), [evidence](validation/RM-015AP.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Latest selected3D cue:** [RM-015AO](tickets/RM-015AO-show-selected-furniture-direction-in-3d.md) adds a front arrow only on selected furniture, following its displayed translation/rotation. [Nine-path plan](commit-plans/RM-015AO.md), [evidence](validation/RM-015AO.md). No new command, setting, export geometry or light. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
 
 **Latest selected controls:** [RM-015AN](tickets/RM-015AN-simplify-selected-furniture-controls.md) keeps preset/finish basic and exact dimensions/details Advanced, puts Delete beside room-side Rotate, and shares a styled Snap switch across views. Explicit visitor size/Delete actions preserve locks and one Undo without granting assistant overrides. [27-path plan](commit-plans/RM-015AN.md), [evidence](validation/RM-015AN.md). Actual visual approval pending; Q held, guide paused, RM-016 Planned.

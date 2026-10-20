@@ -192,6 +192,36 @@ describe('3D gestures use the canonical session command and lifecycle', () => {
       beginFloorEdit(rotationLocked, 'a')!.commit({ x: 2500, z: 2000 }),
     ).toEqual({ ok: true, changed: true });
   });
+  it('rotates counterclockwise with one Undo, wraps zero, and preserves current-view and lock fences', () => {
+    const s = floorSession(),
+      original = s.getSnapshot().workspace!.current;
+    expect(rotateFloorSelection(s, -1)).toEqual({ ok: true, changed: true });
+    expect(
+      s.getSnapshot().workspace!.current.furniture[0]!.pose.quarterTurns,
+    ).toBe(3);
+    expect(s.getSnapshot().workspace!.history.entries).toHaveLength(1);
+    expect(s.undo().ok).toBe(true);
+    expect(s.getSnapshot().workspace!.current.furniture[0]!.pose).toEqual(
+      original.furniture[0]!.pose,
+    );
+    expect(rotateFloorSelection(s, 1)).toEqual({ ok: true, changed: true });
+    expect(rotateFloorSelection(s, -1)).toEqual({ ok: true, changed: true });
+    expect(
+      s.getSnapshot().workspace!.current.furniture[0]!.pose.quarterTurns,
+    ).toBe(0);
+    s.setRoomView('plan');
+    expect(rotateFloorSelection(s, -1)).toEqual({ ok: false, code: 'stale' });
+    const room = commandRoom([piece('a')]);
+    room.furniture[0]!.locks.rotation = true;
+    const locked = floorSession(room);
+    expect(rotateFloorSelection(locked, -1)).toMatchObject({
+      ok: false,
+      code: 'locked',
+    });
+    expect(locked.getSnapshot().workspace!.history.entries).toHaveLength(0);
+    s.dispose();
+    locked.dispose();
+  });
   it('cannot revive a gesture through Before/Current, preview cancellation, view switching, reselection or replacement', () => {
     const changes = [
       (s: SessionController) => {

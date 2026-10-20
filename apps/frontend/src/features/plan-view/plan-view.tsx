@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import {
   useEffect,
   useId,
@@ -96,10 +97,14 @@ export function PlanView({
   controller,
   state,
   placement,
+  arranging = true,
+  frameControls,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
   placement?: CataloguePlacement;
+  arranging?: boolean;
+  frameControls?: ReactNode;
 }) {
   const adding = useSyncExternalStore(
     placement?.subscribe ?? noSubscribe,
@@ -115,13 +120,13 @@ export function PlanView({
   const before = state.comparison === 'before',
     readOnly =
       before || !!state.candidate || state.clientLoadFailure || !!adding;
-  const ghost = readOnly ? null : movementGhost;
+  const ghost = readOnly || !arranging ? null : movementGhost;
   const canonicalRoom = before
     ? state.workspace!.baseline
     : (state.candidate?.room ?? state.workspace!.current);
   const room = roomWithWindowPreview(
     canonicalRoom,
-    readOnly ? null : windowGhost,
+    readOnly || !arranging ? null : windowGhost,
   );
   const checks = before
     ? checkRoom(room)
@@ -247,9 +252,26 @@ export function PlanView({
       window.removeEventListener('pointerdown', second, true);
     };
   }, [controller]);
+  useEffect(() => {
+    if (!arranging) {
+      const current = gesture.current;
+      gesture.current = null;
+      if (current?.target.hasPointerCapture(current.pointerId))
+        current.target.releasePointerCapture(current.pointerId);
+      windowGesture.current?.edit.cancel();
+      let live = true;
+      queueMicrotask(() => {
+        if (live) setGhost(null);
+      });
+      return () => {
+        live = false;
+      };
+    }
+  }, [arranging]);
   const windowDown = (event: PointerEvent<SVGGElement>, feature: Feature) => {
     if (
       feature.kind !== 'window' ||
+      !arranging ||
       readOnly ||
       event.button !== 0 ||
       !event.isPrimary ||
@@ -336,7 +358,7 @@ export function PlanView({
     } else setWindowGhost({ id: feature.id, offset });
   };
   const move = (event: PointerEvent<SVGGElement>, item: Furniture) => {
-    if (readOnly) return;
+    if (readOnly || !arranging) return;
     const drag = gesture.current;
     if (!drag || event.pointerId !== drag.pointerId) return;
     if (!sameViewport(drag)) {
@@ -354,7 +376,7 @@ export function PlanView({
     setGhost({ id: item.id, ...position });
   };
   const drop = (event: PointerEvent<SVGGElement>, item: Furniture) => {
-    if (!controller.canEdit()) {
+    if (!controller.canEdit() || !arranging) {
       finishGesture();
       return;
     }
@@ -399,7 +421,7 @@ export function PlanView({
     if (!result.ok) controller.notify(failureMessage(result, room));
   };
   const key = (event: KeyboardEvent<SVGGElement>, item: Furniture) => {
-    if (readOnly) {
+    if (readOnly || !arranging) {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         controller.select(item.id);
@@ -449,7 +471,7 @@ export function PlanView({
     <div className={styles.planWrap}>
       <svg
         ref={svg}
-        tabIndex={adding ? 0 : undefined}
+        tabIndex={adding || !arranging ? 0 : undefined}
         className={styles.plan}
         viewBox={`${box.x} ${box.z} ${box.width} ${box.depth}`}
         role="group"
@@ -459,8 +481,31 @@ export function PlanView({
             ? 'Before room plan. Read-only. Select a piece to inspect it.'
             : state.candidate
               ? 'Proposed 2D room plan. Select a piece to inspect the preview. Current is unchanged.'
-              : 'Precision 2D room plan. Select a piece to inspect it. Arrow keys move the focused piece.'
+              : arranging
+                ? 'Precision 2D room plan. Select a piece to inspect it. Arrow keys move the focused piece.'
+                : 'Precision 2D room plan. Explore view. Select a piece to inspect it. Arrow keys pan.'
         }
+        onKeyDown={(event) => {
+          if (
+            arranging ||
+            event.nativeEvent.isComposing ||
+            event.ctrlKey ||
+            event.metaKey
+          )
+            return;
+          const delta = {
+            ArrowLeft: [-250, 0],
+            ArrowRight: [250, 0],
+            ArrowUp: [0, -250],
+            ArrowDown: [0, 250],
+          }[event.key];
+          if (!delta) return;
+          event.preventDefault();
+          controller.setView({
+            panX: view.panX + delta[0]!,
+            panZ: view.panZ + delta[1]!,
+          });
+        }}
         onPointerDown={(event) => {
           if (event.target === event.currentTarget) controller.select(null);
         }}
@@ -524,11 +569,12 @@ export function PlanView({
                         windowGhost?.id === feature.id
                           ? 'none'
                           : 'transform 180ms cubic-bezier(.2,.75,.2,1)',
-                      cursor: readOnly
-                        ? 'pointer'
-                        : feature.wall === 'north' || feature.wall === 'south'
-                          ? 'ew-resize'
-                          : 'ns-resize',
+                      cursor:
+                        readOnly || !arranging
+                          ? 'pointer'
+                          : feature.wall === 'north' || feature.wall === 'south'
+                            ? 'ew-resize'
+                            : 'ns-resize',
                     }
                   : undefined
               }
@@ -548,6 +594,7 @@ export function PlanView({
                 }
                 if (
                   feature.kind === 'window' &&
+                  arranging &&
                   !readOnly &&
                   !e.nativeEvent.isComposing &&
                   !e.ctrlKey &&
@@ -649,14 +696,14 @@ export function PlanView({
               tabIndex={0}
               aria-pressed={selected}
               aria-label={`${item.label}, ${w ?? 'unknown'} by ${d ?? 'unknown'} mm, ${before ? 'Before, read-only' : state.candidate ? 'proposal preview' : state.clientLoadFailure ? 'read-only' : item.locks.position ? 'position locked' : 'movable'}`}
-              className={`${styles.piece} ${readOnly ? styles.piecePreview : ''}`}
+              className={`${styles.piece} ${readOnly || !arranging ? styles.piecePreview : ''}`}
               transform={`translate(${item.pose.centerX} ${item.pose.centerZ})`}
               onKeyDown={(e) => key(e, item)}
               onPointerDown={(event) => {
                 event.stopPropagation();
                 if (event.button !== 0 || gesture.current) return;
                 controller.select(item.id);
-                if (readOnly) return;
+                if (readOnly || !arranging) return;
                 if (item.locks.position) {
                   controller.notify(
                     'Position is locked. Unlock it in properties to move this piece.',
@@ -840,6 +887,7 @@ export function PlanView({
         </text>
         {placement && <CataloguePlanGhost placement={placement} />}
       </svg>
+      {frameControls}
       <div id={descriptionId} className={styles.announcement}>
         <p>
           {ghost
@@ -850,7 +898,9 @@ export function PlanView({
                 ? 'Editor load failed · Export your layout or reload to continue'
                 : state.candidate
                   ? 'Preview only · Ghosts mark current positions · Cancel to edit by hand'
-                  : 'Drag to place · arrow keys to nudge · dimensions in mm'}
+                  : arranging
+                    ? 'Drag to place · arrow keys to nudge · dimensions in mm'
+                    : 'Select a piece to inspect · arrow keys pan · dimensions in mm'}
         </p>
         {(room.room.width.value === null || room.room.depth.value === null) && (
           <p>Outline is illustrative until width and depth are measured.</p>

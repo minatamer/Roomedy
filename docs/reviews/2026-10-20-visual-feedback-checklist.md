@@ -72,3 +72,11 @@ The “I already own this” checkbox remains an ownership input distinguishing 
 - Physical touch/AT/GPU/paint/native-heap, Linux/hosted and real-provider evidence retain their individual limits in the packet receipts. Local screenshots/tests are not substitutes for those claims.
 
 Latest executable gate: 602 tests in 46 files plus 7 boundary tests, formatting/lint/types and both builds passed for `65048e2`. Current source/production BUILD_ID is `1e94dc09455fba3db4489bc72dce787acb551c3e8ebc959ca00b8102cd1b7a58`. No fresh app tests or browser run is claimed by this documentation checkpoint.
+
+## RM-015AP — Studio layout and controls
+
+- [ ] Owner approves serif Design Studio beside Furniture/Room/Assistant, removal of Add piece from that row and removal of the old canvas headings.
+- [ ] Owner approves aligned frame/left controls/right card and count/2D/3D inside the frame bottom right in both views.
+- [ ] Owner approves consistent Explore/Arrange, zoom/Fit, two-way Rotate/Delete/Snap; camera viewpoints remain contextual.
+
+[Implementation and actual checks](../validation/RM-015AP.md); [18-path allocation](../commit-plans/RM-015AP.md). Actual visual approval pending; Q held, guide paused and RM-016 Planned.

@@ -82,6 +82,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  align-items: center;
+}
+.studioTitle {
+  margin: 0 18px 0 0;
+  font:
+    italic 30px/1.2 Georgia,
+    serif;
+  letter-spacing: -0.04em;
+  color: #59412f;
 }
 .toolRail button {
   background: transparent;
@@ -101,16 +110,9 @@
   container-type: inline-size;
   min-width: 0;
   min-height: 0;
-  padding: 16px 20px 12px;
+  padding: 0 20px 12px;
   display: flex;
   flex-direction: column;
-}
-.canvasHeading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 12px;
 }
 .eyebrow {
   font-size: 9px;
@@ -118,57 +120,6 @@
   letter-spacing: 0.12em;
   color: #75614c;
   margin: 0 0 10px;
-}
-.canvasHeading h1 {
-  font-size: 26px;
-  margin: 0;
-  letter-spacing: -0.04em;
-}
-.canvasHeading > span {
-  font-size: 11px;
-  white-space: nowrap;
-  color: #75614c;
-}
-.viewTools {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.viewTools button {
-  padding: 8px 12px;
-  min-width: 44px;
-}
-.viewTools > span {
-  font-size: 11px;
-  min-width: 38px;
-  text-align: center;
-}
-.panButtons {
-  display: flex;
-  gap: 3px;
-  margin-left: 0;
-}
-.panButtons button {
-  padding-inline: 8px;
-}
-.rotationButtons {
-  display: flex;
-  flex-wrap: wrap;
-  grid-column: 1 / -1;
-  gap: 5px;
-}
-.rotationButtons button {
-  flex: 1;
-  min-width: 44px;
-  min-height: 44px;
-  padding-inline: 6px;
-}
-.rotationButtons button:last-child {
-  flex: 0 0 auto;
-}
-.viewTools > button[role='switch'] {
-  grid-column: 1 / -1;
 }
 .checkLabel input {
   width: 17px;
@@ -182,6 +133,9 @@
   flex-direction: column;
   justify-content: center;
   position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 65%, #eee4d5, #f7f5f0 70%);
 }
 .plan {
   display: block;
@@ -572,17 +526,6 @@
     stroke 0.18s;
 }
 
-.viewSwitch {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 0;
-}
-.viewSwitch button[aria-pressed='true'] {
-  background: #e7ddcc;
-  border-color: #aa9274;
-}
-
 .assistantPanel {
   overflow: auto;
   padding: 20px 18px 16px;
@@ -777,13 +720,6 @@
   }
 }
 
-.roomToolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 16px;
-  margin-bottom: 8px;
-}
 .inventory {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
 }
@@ -815,9 +751,6 @@
 @media (max-width: 1100px) {
   .canvasColumn {
     padding-inline: 16px;
-  }
-  .canvasHeading h1 {
-    font-size: 24px;
   }
   .panel {
     padding-inline: 16px;
@@ -887,35 +820,18 @@
     padding: 8px 12px;
     gap: 3px;
   }
+  .studioTitle {
+    font-size: 25px;
+    margin-right: 6px;
+  }
   .toolRail button {
     flex: 1;
-    min-width: 0;
+    min-width: 44px;
     padding: 9px 6px;
     font-size: 10px;
   }
   .canvasColumn {
-    padding: 18px 16px 12px;
-  }
-  .canvasHeading h1 {
-    font-size: 23px;
-  }
-  .canvasHeading > span {
-    font-size: 10px;
-  }
-  .roomToolbar {
-    gap: 8px;
-  }
-  .viewTools {
-    gap: 4px;
-  }
-  .viewTools button {
-    padding: 8px;
-  }
-  .viewTools > span {
-    min-width: 32px;
-  }
-  .panButtons {
-    flex-wrap: wrap;
+    padding: 0 16px 12px;
   }
   .planWrap {
     min-height: 300px;
@@ -940,47 +856,6 @@
   }
   .footer span {
     margin-left: 0;
-  }
-}
-
-.roomToolbar .canvasHeading {
-  flex: 1 1 270px;
-  min-width: 0;
-  margin-bottom: 0;
-}
-
-.planStage {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
-  gap: 8px;
-}
-@media (min-width: 900px) and (min-height: 600px),
-  (min-width: 760px) and (min-height: 801px) {
-  @container (min-width: 700px) {
-    .planStage {
-      display: grid;
-      grid-template-columns: 190px minmax(0, 1fr);
-      gap: 20px;
-    }
-    .planStage > .viewTools {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-content: start;
-      align-items: center;
-      gap: 8px;
-    }
-    .planStage .panButtons {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      width: 100%;
-    }
-    .planStage .panButtons button {
-      min-width: 0;
-      padding-inline: 4px;
-    }
   }
 }
 
@@ -1115,4 +990,11 @@
 .surfacePreview[data-texture='concrete'] {
   background-image: radial-gradient(#ffffff40 1px, transparent 1px);
   background-size: 3px 3px;
+}
+
+@media (max-width: 360px) {
+  .studioTitle {
+    font-size: 20px;
+    margin-right: 2px;
+  }
 }

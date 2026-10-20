@@ -2,8 +2,6 @@
   position: relative;
   flex: 1;
   min-height: 340px;
-  display: flex;
-  flex-direction: column;
 }
 .viewport {
   position: relative;
@@ -57,7 +55,7 @@
 }
 .notice {
   position: absolute;
-  bottom: 12px;
+  bottom: 82px;
   left: 12px;
   right: 12px;
   width: fit-content;
@@ -105,37 +103,6 @@
   }
 }
 
-.tools {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin: 0;
-}
-.tools button {
-  min-width: 44px;
-  min-height: 44px;
-  font-size: 12px;
-  padding: 8px 10px;
-}
-.tools button[aria-pressed='true'] {
-  background: #e7ddcc;
-  border-color: #aa9274;
-  color: #3f352c;
-}
-
-.wrap .toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 12px;
-  padding-bottom: 8px;
-}
-.toolbar .tools {
-  max-width: 100%;
-}
-.toolbar .tools:last-child {
-  flex-grow: 1;
-}
 @media (min-width: 900px) and (min-height: 600px),
   (min-width: 760px) and (min-height: 801px) {
   .wrap {
@@ -153,53 +120,5 @@
   }
   .viewport {
     height: clamp(300px, 56svh, 520px);
-  }
-  .tools button {
-    font-size: 11px;
-    padding-inline: 8px;
-  }
-}
-
-@media (min-width: 900px) and (min-height: 600px),
-  (min-width: 760px) and (min-height: 801px) {
-  @container (min-width: 700px) {
-    .wrap {
-      display: grid;
-      grid-template-columns: 190px minmax(0, 1fr);
-      grid-template-rows: minmax(0, 1fr);
-      gap: 0 20px;
-    }
-    .wrap > :global(.motion-surface) {
-      grid-column: 1;
-      grid-row: 1;
-      min-height: 0;
-      max-height: 100%;
-      overflow-y: auto;
-    }
-    .wrap .toolbar {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 10px;
-    }
-    .toolbar .tools {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .toolbar .tools + .tools {
-      border-top: 1px solid #ded8cf;
-      padding-top: 10px;
-    }
-    .toolbar .tools[aria-label='3D camera controls'] {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .toolbar .tools button {
-      min-width: 0;
-      padding-inline: 6px;
-      font-size: 11px;
-    }
-    .viewport {
-      grid-column: 2;
-      grid-row: 1;
-    }
   }
 }

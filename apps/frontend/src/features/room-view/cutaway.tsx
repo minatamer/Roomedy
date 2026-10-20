@@ -22,10 +22,8 @@ import type { SessionController } from '../session/controller';
 import styles from './room-view.module.css';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 import { findCatalogueEntry } from '@roomedy/spatial';
-import {
-  DeleteFurnitureButton,
-  SnapToggle,
-} from '../room-editor/selection-controls';
+import { ViewControls } from '../room-editor/view-controls';
+import controlsStyles from '../room-editor/view-controls.module.css';
 
 class GraphicsBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; onFailure: () => void },
@@ -54,6 +52,9 @@ export type CutawayProps = Pick<
   snap: boolean;
   placement: CataloguePlacement;
   onAddDesk: () => void;
+  arranging: boolean;
+  onArrange: (arranging: boolean) => void;
+  frameControls: ReactNode;
 };
 export default function Cutaway({
   controller,
@@ -61,6 +62,9 @@ export default function Cutaway({
   snap,
   placement,
   onAddDesk,
+  arranging,
+  onArrange,
+  frameControls,
   ...props
 }: CutawayProps) {
   const descriptionId = useId();
@@ -71,8 +75,7 @@ export default function Cutaway({
   const [cameraView, setCameraView] = useState<CameraView>(
     props.cameraStateRef.current?.view ?? 'overview',
   );
-  const [interaction, setInteraction] = useState<'explore' | 'move'>('explore');
-  const moving = interaction === 'move' && !readOnly && !lost;
+  const moving = arranging && !readOnly && !lost;
   const canvasRef = useRef<HTMLCanvasElement | null>(null),
     invalidateRef = useRef<() => void>(() => {});
   const invalidate = useCallback(() => invalidateRef.current(), []);
@@ -179,13 +182,32 @@ export default function Cutaway({
     }));
   };
   return (
-    <div className={styles.wrap}>
+    <div className={`${styles.wrap} ${controlsStyles.stage}`}>
       <div ref={toolsMotion} className="motion-surface">
-        <div className={`motion-flow ${styles.toolbar}`}>
+        <ViewControls
+          controller={controller}
+          arranging={arranging}
+          onArrange={(next) => {
+            editing.cancel();
+            onArrange(next);
+          }}
+          ready={ready && !lost}
+          readOnly={readOnly}
+          rotationLocked={!selectedPiece || selectedPiece.locks.rotation}
+          onRotate={editing.rotate}
+          snap={snap}
+          onSnap={(snap) => {
+            editing.cancel();
+            controller.setView({ snap });
+          }}
+          beforeDelete={editing.cancel}
+          onZoom={(direction) => command(direction === -1 ? 'out' : 'in')}
+          onFit={() => command('reset')}
+        >
           <div
             role="group"
             aria-label="Room viewpoints"
-            className={styles.tools}
+            className={controlsStyles.tools}
           >
             {views.map(({ view, label, available }) => (
               <button
@@ -218,114 +240,53 @@ export default function Cutaway({
           </div>
           <div
             role="group"
-            aria-label="3D interaction"
-            className={styles.tools}
+            aria-label="3D camera controls"
+            className={`${controlsStyles.tools} ${controlsStyles.directions}`}
           >
-            <button
-              aria-pressed={!moving}
-              disabled={!ready || lost}
-              onClick={() => {
-                editing.cancel();
-                setInteraction('explore');
-              }}
-            >
-              Explore view
-            </button>
-            <button
-              aria-pressed={moving}
-              disabled={readOnly || !ready || lost}
-              onClick={() => {
-                editing.cancel();
-                setInteraction('move');
-              }}
-            >
-              Arrange room
-            </button>
-          </div>
-          {moving ? (
-            <div
-              role="group"
-              aria-label="3D placement controls"
-              className={styles.tools}
-            >
+            {(
+              [
+                ['left', 'Orbit left', '↶'],
+                ['right', 'Orbit right', '↷'],
+                ['up', 'Orbit up', '↑'],
+                ['down', 'Orbit down', '↓'],
+              ] as const
+            ).map(([kind, label, text]) => (
               <button
-                aria-label="Rotate selected piece 90 degrees"
-                disabled={
-                  !editing.enabled ||
-                  !selectedPiece ||
-                  selectedPiece.locks.rotation
+                key={kind}
+                aria-label={
+                  cameraView === 'overview'
+                    ? label
+                    : label.replace('Orbit', 'Look')
                 }
-                onClick={editing.rotate}
+                title={
+                  cameraView === 'overview'
+                    ? label
+                    : label.replace('Orbit', 'Look')
+                }
+                onClick={() => command(kind)}
+                disabled={!ready || lost}
               >
-                Rotate 90°
+                {text}
               </button>
-              <DeleteFurnitureButton
-                controller={controller}
-                disabled={!editing.enabled}
-                beforeDelete={editing.cancel}
-              />
-              <SnapToggle
-                checked={snap}
-                onChange={(snap) => {
-                  editing.cancel();
-                  controller.setView({ snap });
-                }}
-              />
-            </div>
-          ) : (
-            <div
-              role="group"
-              aria-label="3D camera controls"
-              className={styles.tools}
-            >
-              {(
-                [
-                  ['left', 'Orbit left', '↶'],
-                  ['right', 'Orbit right', '↷'],
-                  ['up', 'Orbit up', '↑'],
-                  ['down', 'Orbit down', '↓'],
-                  ['out', 'Zoom 3D out', '−'],
-                  ['in', 'Zoom 3D in', '+'],
-                  ['reset', 'Reset camera', 'Reset'],
-                ] as const
-              ).map(([kind, label, text]) => (
+            ))}
+            {cameraView !== 'overview' && (
+              <>
                 <button
-                  key={kind}
-                  aria-label={
-                    cameraView === 'overview'
-                      ? label
-                      : label.replace('Orbit', 'Look')
-                  }
-                  title={
-                    cameraView === 'overview'
-                      ? label
-                      : label.replace('Orbit', 'Look')
-                  }
-                  onClick={() => command(kind)}
+                  onClick={() => command('forward')}
                   disabled={!ready || lost}
                 >
-                  {text}
+                  Step forward
                 </button>
-              ))}
-              {cameraView !== 'overview' && (
-                <>
-                  <button
-                    onClick={() => command('forward')}
-                    disabled={!ready || lost}
-                  >
-                    Step forward
-                  </button>
-                  <button
-                    onClick={() => command('backward')}
-                    disabled={!ready || lost}
-                  >
-                    Step back
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-        </div>
+                <button
+                  onClick={() => command('backward')}
+                  disabled={!ready || lost}
+                >
+                  Step back
+                </button>
+              </>
+            )}
+          </div>
+        </ViewControls>
       </div>
       <div className={styles.viewport} data-mode={moving ? 'move' : 'explore'}>
         {lost ? (
@@ -379,6 +340,7 @@ export default function Cutaway({
               : ''}
           </p>
         )}
+        {frameControls}
       </div>
       <div id={descriptionId} className={styles.description}>
         <p>
