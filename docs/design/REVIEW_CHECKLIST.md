@@ -33,6 +33,7 @@ Before edits, identify the requested task, affected component/states, existing a
 | Photo processing and studio handoff | Accessible animated loading, selected thumbnails/Cancel; finite fake-only preview, actual-work live timing, no fabricated percentage; direct studio entry with uncertainty, one baseline/fixed expiry |
 | Partial inference | Usable output retained for review; no restart just for a missed match; malformed/refused/timeout cases remain distinct |
 | Main editor | Default3D/precision2D share room/selection; room/furniture/feature/condition correction is here, with Undo, preserved estimates/unknowns and contextual unplaced-photo notes |
+| Selected furniture | Preset/finish Basic; exact numbers/details Advanced; Rotate/Delete beside the room, catalogue replacement and accessible shared Snap switch; deliberate protected edits retain locks and one Undo |
 | Ownership and checks | Independent locks, retained dimensions, unknown mechanism/height and baseline problems are visible and honest |
 | Assistant | Friendly useful request → one grounded preview → Apply/Cancel → actual receipt/Undo; no raw diagnostics or fake live success |
 | Comparison | Before is read-only and baseline stays fixed; active proposal resolved; same view/camera; no provider/history effect |

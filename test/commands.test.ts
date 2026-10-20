@@ -22,6 +22,56 @@ import {
 } from './fixtures/command-room.js';
 
 describe('atomic final batches and trusted authority', () => {
+  it('allows one deliberate visitor deletion of protected furniture without granting model or unrelated lock overrides', () => {
+    const selected = piece('selected');
+    selected.locks = { position: true, rotation: true, dimensions: true };
+    selected.preference = 'keep';
+    const other = piece('other', 5000);
+    other.locks.position = true;
+    const room = commandRoom([selected, other]);
+    const before = structuredClone(room);
+    const removal = {
+      type: 'remove',
+      id: selected.id,
+      overrideLocks: true,
+    } as const;
+    expect(
+      evaluateBatch(room, [{ type: 'remove', id: selected.id }], 'visitor'),
+    ).toMatchObject({ ok: false, code: 'locked' });
+    expect(evaluateBatch(room, [removal], 'assistant')).toMatchObject({
+      ok: false,
+      code: 'invalid-input',
+    });
+    expect(evaluateBatch(room, [removal], 'authored-sample')).toMatchObject({
+      ok: false,
+      code: 'invalid-input',
+    });
+    expect(
+      evaluateBatch(room, [{ ...removal, overrideLocks: false }], 'visitor'),
+    ).toMatchObject({ ok: false, code: 'invalid-input' });
+    expect(
+      evaluateBatch(room, [removal, move(other.id, 6000, 2000)], 'visitor'),
+    ).toMatchObject({ ok: false, code: 'locked' });
+    const workspace = createCommandWorkspace(room, {
+      workspaceId: 'delete-test',
+      generation: 0,
+    });
+    const result = applyCommand(
+      workspace,
+      envelope(workspace, [removal]),
+      'visitor',
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.workspace.current.furniture).toEqual([other]);
+    expect(result.workspace.history.entries).toHaveLength(1);
+    expect(result.workspace.baseline).toEqual(workspace.baseline);
+    const undone = undoCommand(result.workspace);
+    expect(undone.ok).toBe(true);
+    if (undone.ok)
+      expect(undone.workspace.current.furniture).toEqual(room.furniture);
+    expect(room).toEqual(before);
+  });
   it('permits a coordinated swap and rejects the invalid intermediate single move without mutation', () => {
     const room = commandRoom([piece('a'), piece('b', 5000)]);
     const before = structuredClone(room);

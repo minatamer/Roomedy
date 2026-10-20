@@ -1,0 +1,32 @@
+.deleteButton,
+.snapToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+}
+.track {
+  display: inline-flex;
+  align-items: center;
+  width: 28px;
+  height: 17px;
+  padding: 2px;
+  border-radius: 20px;
+  background: #c9bba9;
+  transition: background 220ms ease;
+}
+.track > span {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fffaf1;
+  box-shadow: 0 1px 3px #49311d30;
+  transition: transform 220ms ease;
+}
+.snapToggle[aria-checked='true'] .track {
+  background: #79563d;
+}
+.snapToggle[aria-checked='true'] .track > span {
+  transform: translateX(11px);
+}

@@ -154,23 +154,22 @@
 }
 .rotationButtons {
   display: flex;
+  flex-wrap: wrap;
   grid-column: 1 / -1;
   gap: 5px;
 }
 .rotationButtons button {
   flex: 1;
-  min-width: 76px;
+  min-width: 44px;
   min-height: 44px;
+  padding-inline: 6px;
 }
-.snap {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 11px;
-  min-height: 44px;
-  margin-left: 7px;
+.rotationButtons button:last-child {
+  flex: 0 0 auto;
 }
-.snap input,
+.viewTools > button[role='switch'] {
+  grid-column: 1 / -1;
+}
 .checkLabel input {
   width: 17px;
   height: 17px;
@@ -918,9 +917,6 @@
   .panButtons {
     flex-wrap: wrap;
   }
-  .snap {
-    margin-left: auto;
-  }
   .planWrap {
     min-height: 300px;
   }
@@ -984,10 +980,6 @@
     .planStage .panButtons button {
       min-width: 0;
       padding-inline: 4px;
-    }
-    .planStage .snap {
-      grid-column: 1 / -1;
-      margin-left: 0;
     }
   }
 }

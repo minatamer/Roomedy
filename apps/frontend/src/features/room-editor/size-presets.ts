@@ -123,8 +123,16 @@ export interface SizeInputValues {
 }
 export const sizeInputValues = (
   dimensions: Furniture['dimensions'],
+  presets: readonly SizePreset[] = [],
 ): SizeInputValues => ({
-  preset: '',
+  preset:
+    presets.find(
+      (preset) =>
+        preset.width === dimensions.width.value &&
+        preset.depth === dimensions.depth.value &&
+        (preset.height === undefined ||
+          preset.height === dimensions.height.value),
+    )?.id ?? '',
   width: String(dimensions.width.value ?? ''),
   depth: String(dimensions.depth.value ?? ''),
 });

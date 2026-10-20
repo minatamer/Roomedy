@@ -7,6 +7,7 @@ import { hasBaselineChanges } from '../apps/frontend/src/features/session/state.
 import { commandRoom, piece } from './fixtures/command-room.js';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { projectOf } from '../apps/frontend/src/features/session/project.js';
+import { deleteSelectedFurniture } from '../apps/frontend/src/features/room-editor/selection-actions.js';
 import {
   beginFloorEdit,
   rotateFloorSelection,
@@ -28,6 +29,88 @@ afterEach(() => {
   controllers.length = 0;
   now = 0;
   vi.useRealTimers();
+});
+
+describe('deliberate selected furniture actions', () => {
+  it.each(['plan', 'cutaway'] as const)(
+    'keeps protected preset and Delete edits atomic and undoable in %s',
+    (view) => {
+      const first = piece('a');
+      first.locks.dimensions = true;
+      const other = piece('other', 5000);
+      const s = session(commandRoom([first, other]));
+      s.setRoomView(view);
+      s.select(first.id);
+      const original = s.getSnapshot().workspace!;
+      s.setView({ snap: false });
+      expect(s.getSnapshot().workspace).toBe(original);
+      expect(
+        s.dispatch(
+          [
+            {
+              type: 'set-size-estimate',
+              id: first.id,
+              width: 1400,
+              depth: 600,
+              overrideSizeLock: true,
+            },
+          ],
+          'Change size estimate',
+        ).ok,
+      ).toBe(true);
+      expect(s.getSnapshot().workspace!.history.entries).toHaveLength(1);
+      expect(
+        s.getSnapshot().workspace!.current.furniture[0]!.locks.dimensions,
+      ).toBe(true);
+      expect(s.getSnapshot().workspace!.current.furniture[1]).toEqual(other);
+      expect(s.undo().ok).toBe(true);
+      expect(s.getSnapshot().workspace!.current.furniture).toEqual(
+        original.current.furniture,
+      );
+      const gesture = view === 'cutaway' ? beginFloorEdit(s, first.id) : null;
+      expect(deleteSelectedFurniture(s).ok).toBe(true);
+      expect(s.getSnapshot().workspace!.history.entries).toHaveLength(1);
+      expect(s.getSnapshot().presentation.selectedId).toBeNull();
+      expect(s.getSnapshot().workspace!.current.furniture).toEqual([other]);
+      expect(s.getSnapshot().workspace!.baseline).toEqual(original.baseline);
+      if (gesture) expect(gesture.commit({ x: 2500, z: 2500 }).ok).toBe(false);
+      expect(s.undo().ok).toBe(true);
+      expect(s.getSnapshot().workspace!.current.furniture).toEqual(
+        original.current.furniture,
+      );
+      s.setRoomView(view === 'plan' ? 'cutaway' : 'plan');
+      expect(s.getSnapshot().presentation.snap).toBe(false);
+    },
+  );
+
+  it('does not let direct visitor override flags mutate a preview or expired room', () => {
+    const s = session();
+    s.select('a');
+    expect(
+      s.prepareVisitorPreview(
+        [{ type: 'finish', id: 'a', finish: 'walnut' }],
+        'Finish preview',
+      ).ok,
+    ).toBe(true);
+    const original = s.getSnapshot().workspace;
+    const remove = { type: 'remove', id: 'a', overrideLocks: true } as const;
+    const size = {
+      type: 'set-size-estimate',
+      id: 'a',
+      width: 1400,
+      depth: 600,
+      overrideSizeLock: true,
+    } as const;
+    expect(deleteSelectedFurniture(s).ok).toBe(false);
+    expect(s.getSnapshot().workspace).toBe(original);
+    s.cancelPreview();
+    s.setComparison('before');
+    expect(s.dispatch([remove], 'Delete piece').ok).toBe(false);
+    expect(s.dispatch([size], 'Change size estimate').ok).toBe(false);
+    s.expiredRecovery();
+    expect(s.dispatch([remove], 'Delete piece').ok).toBe(false);
+    expect(s.dispatch([size], 'Change size estimate').ok).toBe(false);
+  });
 });
 
 describe('3D gestures use the canonical session command and lifecycle', () => {

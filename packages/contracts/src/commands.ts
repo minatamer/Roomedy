@@ -27,7 +27,6 @@ const transformActions = [
     id: idSchema,
     quarterTurns: poseTargetSchema.shape.quarterTurns,
   }),
-  z.strictObject({ type: z.literal('remove'), id: idSchema }),
   z.strictObject({
     type: z.literal('resize'),
     id: idSchema,
@@ -58,6 +57,7 @@ const candidateFurniture = furnitureSchema.refine(
 /** Model actions cannot unlock, confirm measurements, or assign ownership/preferences. */
 export const proposalActionSchema = z.discriminatedUnion('type', [
   ...transformActions,
+  z.strictObject({ type: z.literal('remove'), id: idSchema }),
   z.strictObject({ type: z.literal('add'), furniture: candidateFurniture }),
   z.strictObject({
     type: z.literal('replace'),
@@ -67,6 +67,11 @@ export const proposalActionSchema = z.discriminatedUnion('type', [
 ]);
 export const visitorActionSchema = z.discriminatedUnion('type', [
   ...transformActions,
+  z.strictObject({
+    type: z.literal('remove'),
+    id: idSchema,
+    overrideLocks: z.literal(true).optional(),
+  }),
   z
     .strictObject({
       type: z.literal('set-room-surface'),
@@ -85,6 +90,7 @@ export const visitorActionSchema = z.discriminatedUnion('type', [
     width: z.number().int().min(1).max(POLICY.furnitureEdgeMm),
     depth: z.number().int().min(1).max(POLICY.furnitureEdgeMm),
     height: z.number().int().min(1).max(POLICY.furnitureEdgeMm).optional(),
+    overrideSizeLock: z.literal(true).optional(),
   }),
   z.strictObject({ type: z.literal('add'), furniture: furnitureSchema }),
   z.strictObject({

@@ -323,24 +323,19 @@ function PiecePanel({
         </select>
       </label>
       <FurnitureSizeForm
-        key={`${controller.session.getSnapshot().generation}/${piece.id}/${piece.catalogueId}/${piece.ownership}`}
+        key={`${controller.session.getSnapshot().generation}/${piece.id}/${piece.catalogueId}`}
         item={piece}
         onCommit={(action) =>
           controller.command([action], 'Size estimate updated.')
         }
-        onUnlock={() =>
-          controller.command(
-            [
-              {
-                type: 'set-locks',
-                id: piece.id,
-                locks: { ...piece.locks, dimensions: false },
-              },
-            ],
-            'Size unlocked.',
-          )
-        }
-      />
+      >
+        {(customSize) => (
+          <details className={editorStyles.advanced}>
+            <summary>Advanced size</summary>
+            {customSize}
+          </details>
+        )}
+      </FurnitureSizeForm>
       <label className={editorStyles.checkLabel}>
         <input
           type="checkbox"

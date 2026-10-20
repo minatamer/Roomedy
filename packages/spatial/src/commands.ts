@@ -365,14 +365,21 @@ export function evaluateBatch(
           authority === 'assistant' ? 'assistant-proposal' : 'visitor-estimate',
         );
     } else if (action.type === 'set-size-estimate') {
-      if (start.locks.dimensions) return { ok: false, code: 'locked' };
+      if (action.overrideSizeLock && authority !== 'visitor')
+        return { ok: false, code: 'invalid-input' };
+      if (start.locks.dimensions && !action.overrideSizeLock)
+        return { ok: false, code: 'locked' };
       for (const axis of ['width', 'depth', 'height'] as const) {
         const value = action[axis];
         if (value !== undefined && value !== item.dimensions[axis].value)
           item.dimensions[axis] = estimated(value, 'visitor-estimate');
       }
     } else if (action.type === 'remove' || action.type === 'replace') {
-      if (Object.values(start.locks).some(Boolean))
+      const explicitRemoval =
+        action.type === 'remove' && action.overrideLocks === true;
+      if (explicitRemoval && authority !== 'visitor')
+        return { ok: false, code: 'invalid-input' };
+      if (Object.values(start.locks).some(Boolean) && !explicitRemoval)
         return { ok: false, code: 'locked' };
       if (
         authority === 'assistant' &&

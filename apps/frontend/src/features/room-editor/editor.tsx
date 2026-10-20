@@ -36,6 +36,7 @@ import { PreviewChangeList } from './preview-change-list';
 import { CataloguePlacement } from './catalogue-placement';
 import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
+import { DeleteFurnitureButton, SnapToggle } from './selection-controls';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
 const Cutaway = lazy(() => import('../room-view/cutaway'));
@@ -459,17 +460,15 @@ export function Editor({
                       {direction === -1 ? '↶' : '↷'} 90°
                     </button>
                   ))}
-                </div>
-                <label className={styles.snap}>
-                  <input
-                    type="checkbox"
-                    checked={view.snap}
-                    onChange={(e) =>
-                      controller.setView({ snap: e.target.checked })
-                    }
+                  <DeleteFurnitureButton
+                    controller={controller}
+                    disabled={readOnly}
                   />
-                  Snap
-                </label>
+                </div>
+                <SnapToggle
+                  checked={view.snap}
+                  onChange={(snap) => controller.setView({ snap })}
+                />
               </div>
               <PlanView
                 controller={controller}
@@ -725,14 +724,7 @@ export function Editor({
               ) : (
                 view.panel === 'inspector' &&
                 (item ? (
-                  <FurnitureInspector
-                    controller={controller}
-                    item={item}
-                    onReplace={() => {
-                      setReplacementId(item.id);
-                      controller.setPanel('catalogue');
-                    }}
-                  />
+                  <FurnitureInspector controller={controller} item={item} />
                 ) : feature ? (
                   <FeatureInspector controller={controller} feature={feature} />
                 ) : (
@@ -775,6 +767,9 @@ export function Editor({
                       room.furniture.find((f) => f.id === replacementId) ?? null
                     }
                     onDone={() => setReplacementId(null)}
+                    onReplaceSelected={
+                      item ? () => setReplacementId(item.id) : undefined
+                    }
                   />
                 ))}
               {view.panel === 'room' &&

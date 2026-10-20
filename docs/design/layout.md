@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Selected furniture — RM-015AN
+
+The basic properties card contains size preset and finish with a collapsed Advanced extension. Keep numeric dimension summaries, custom/confirmed measurements, position, independent locks and ownership/preferences there. Region names distinguish compact bed presets without numeric fields in Basic. Explicit preset Apply and selected Delete work through one deliberate visitor command/Undo while saved protection remains. Room-side rotation/Delete and the shared44px Snap switch align as ordinary controls in2D/3D; right properties has no duplicate rotation or Replace/Remove action row. Replace remains the catalogue's contextual task. Inspect desktop/short/narrow basic/Advanced, errors/focus, Undo and restored selection. [AN](../tickets/RM-015AN-simplify-selected-furniture-controls.md).
+
 ## Direct photo processing — RM-015AM
 
 Photo Continue replaces the upload surface with one centered processing composition, selected-photo strip, honest stage/status and reachable Cancel inside the same static warm background/header. On success the existing studio opens in3D; precision2D, room/furniture/feature measurements, starting condition, finishes and Undo remain there. Unknown outlines and unplaced observations have contextual transient notes in Room, without confirming any fact. Fake preview is explicitly finite/cancellable; live follows actual work. [Packet](../tickets/RM-015AM-process-photos-directly-into-the-studio.md).

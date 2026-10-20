@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Latest selected furniture controls,20October — RM-015AN:** Basic properties show size preset and piece finish; exact sizes, position, ownership/preferences and independent locks are Advanced. Rotation and selected Delete live beside the room in2D/3D arrangement tools, with a shared styled Snap switch. Catalogue owns Replace. Deliberate visitor Apply size/Delete use narrow per-action overrides with unchanged stored locks, strict final checks and one Undo; assistant/ordinary starting-lock behavior remains. [Ticket](tickets/RM-015AN-simplify-selected-furniture-controls.md), [27-path plan](commit-plans/RM-015AN.md), [evidence](validation/RM-015AN.md). This supersedes AA's separate basic Unlock-size action. Actual visual approval pending; Q held, guide paused, RM-016 Planned.
+
 **Latest owner flow,20October — RM-015AM:** Choose photos → explicit Continue → designed processing → main studio, with all room/furniture corrections in the studio. The separate rough2D review page and pre-studio shape acknowledgement are superseded. Preserve estimates/unknowns, strict reconciliation/validation, one baseline/fixed expiry, transient photo cleanup and default3D with2D available. Fake-only preview is finite and cancellable; live follows actual work without an artificial minimum. [Ticket](tickets/RM-015AM-process-photos-directly-into-the-studio.md), [24-path plan](commit-plans/RM-015AM.md), [evidence](validation/RM-015AM.md). Historical review-first decisions retain their date/evidence; actual visual approval pending, Q held, guide paused, RM-016 Planned.
 
 **Photo control cleanup, 20 October:** Uploaded/sample thumbnails open directly without View badges; selected-photo ordering arrows are removed and Remove fills the existing row. Recognition already derives photo roles from visual evidence rather than upload order, with stable source IDs. The four-photo example batch respects the actual registry/public limit and existing atomic admission. [Y allocation](commit-plans/RM-015Y.md#photo-control-cleanup-allocation--20-october-2026) and [scoped evidence](validation/RM-015Y.md#photo-control-cleanup--20-october-2026) keep actual owner visual approval pending; Q held, guide paused, RM-016 Planned.
@@ -348,7 +350,9 @@ The owner selected the 2D plan for precision placement: drag, rotate, snap and n
 
 ### 7.2 Editing controls
 
-Select a piece to see category, catalogue variant, dimensions, position, rotation, ownership, replacement preference, independent locks and supported finishes. Show a compact visual catalogue with footprint previews. Numeric controls support exact adjustments and remain usable without dragging. Lock controls explain what they protect.
+Select a piece to see its name/category, size preset and supported finish. Numeric dimension summaries/fields, frame allowance, position, independent locks and less-used ownership/planning preferences remain inside collapsed Advanced. Preset labels distinguish region without showing numeric dimensions in Basic. Rotate and selected Delete belong in the room controls in both views; no duplicate inspector Rotate/Replace/Remove row. Catalogue retains explicit replacement, while Add still starts an addition. Snap is a matching keyboard-accessible switch using the existing placement setting.
+
+Explicit visitor Apply size may deliberately change the chosen dimensions through a narrow visitor-only size-lock override; selected Delete may deliberately remove that piece through a narrow visitor-only lock override. Neither silently changes stored locks, confirms estimates, authorizes an assistant action or bypasses catalogue/final geometry validation. Each is one normal command/Undo. Exact custom estimates and measured corrections remain Advanced; unchanged/omitted axes retain evidence. Generic actions without those explicit flags still enforce starting locks, including same-batch unlock attempts.
 
 Pointer motion updates a transient drag state. Pointer-up produces one validated command; a drag is one Undo step, not one per frame. A rejected drop returns to the last committed pose and highlights the reason. Release pointer capture and transient resources on cancellation or component cleanup.
 
@@ -462,6 +466,8 @@ Application-owned request scope limits action kinds, target IDs and add/replace/
 10. Report the actual committed result. Preview prose is never a success receipt.
 
 Validating each move separately can falsely reject a coordinated swap. Validate the final state, while enforcing starting-state locks and permissions throughout. A batch cannot unlock a protected piece and move it merely because the model included an unlock action. Explicit visitor authorization must precede that protected change through the normal lock control/confirmation path.
+
+RM-015AN adds two narrow deliberate visitor paths: Apply size can override only that action's size protection and selected Delete can override only that removal's locks. Flags are literal-true and visitor-only; locks stay recorded, ordinary move/rotate/resize/replace rules and final spatial checks remain. Assistant actions cannot contain these flags or borrow their authority for another target/action.
 
 ### 9.3 Invalid existing rooms and new changes
 
@@ -1339,8 +1345,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Owner reviews RM-015AM processing design and direct editable studio on existing4320/private4321. Actual result approval remains pending; Q held, guide paused, RM-016 Planned. Exact24-path local ticket checkpoint under existing authority; no paid/live/delegation/new ports/push/deploy.
-Active ticket: RM-015AM
+Next action: Owner reviews RM-015AN simple preset/finish card, Advanced precision, room-side Delete/Rotate and styled Snap on existing4320/private4321. Exact27-path local checkpoint under existing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/new ports/push/deploy.
+Active ticket: RM-015AN
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1365,7 +1371,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T08:28:27+00:00",
+  "updated_at": "2026-10-20T08:54:33+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1554,8 +1560,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AM",
-  "next_action": "Owner reviews RM-015AM processing design and direct editable studio on existing4320/private4321. Actual result approval remains pending; Q held, guide paused, RM-016 Planned. Exact24-path local ticket checkpoint under existing authority; no paid/live/delegation/new ports/push/deploy.",
+  "active_ticket": "RM-015AN",
+  "next_action": "Owner reviews RM-015AN simple preset/finish card, Advanced precision, room-side Delete/Rotate and styled Snap on existing4320/private4321. Exact27-path local checkpoint under existing authority. Actual visual approval pending; Q held, guide paused, RM-016 Planned. No paid/live/delegation/new ports/push/deploy.",
   "phases": [
     {
       "id": "01-docs",
@@ -2016,14 +2022,15 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015Z.md#continue-cta-follow-up--20-october-2026: eight-path presentation follow-up reuses landing global button primary for Continue; scoped format/lint/frontend types passed; actual desktop390px/short/focus/Enter-to-rough2D and identical landing style observed on4320. Historical production gate remains distinct; owner visual approval pending.",
         "docs/validation/RM-015Y.md#furniture-capture-follow-up--20-october-2026: 13-path paired room/furniture SVG guide and four-image sample set; actual desktop/390px/short/replay/viewer/fake Continue-to-rough2D observations, all602tests/46files,7boundaries and pnpm check/both builds passed. Built-in imagegen prompts/asset hashes recorded. Default production build identity and current inventory recorded separately; no Linux/live/owner approval claim.",
         "docs/validation/RM-015Y.md#photo-control-cleanup--20-october-2026: seven-path thumbnail View/order cleanup, full-width Remove, four-example public capacity and atomic admission. Scoped format/lint/frontend types and24photo tests passed; actual desktop/390px/short viewer click+Enter/Escape/focus/removal/two+four=six checks passed, console empty, viewport reset/tab closed. Existing recognition prompt forbids role inference from upload order; no live quality/current production-build claim.",
-        "docs/validation/RM-015AM.md — photos Continue→designed processing→default3D studio directly; no separate review page or inferred confirmation. Native1280×720/390×844/1280×600 loading, Cancel/retry, actual3D, measurement/condition correction and Undo; browser errors empty. Final624tests/47files,7boundaries/root/both builds;226inputs/2154759bytes/BUILD_ID4022549203fefb78d703d3320f4b811df1e900fa03fc2c6f42b62f6b99e2dcb6. Clean24-path read-only pass2,620local links/missing0; exact local checkpoint prepared. Actual owner visual approval pending, Q held, guide paused, RM-016 Planned."
+        "docs/validation/RM-015AM.md — photos Continue→designed processing→default3D studio directly; no separate review page or inferred confirmation. Native1280×720/390×844/1280×600 loading, Cancel/retry, actual3D, measurement/condition correction and Undo; browser errors empty. Final624tests/47files,7boundaries/root/both builds;226inputs/2154759bytes/BUILD_ID4022549203fefb78d703d3320f4b811df1e900fa03fc2c6f42b62f6b99e2dcb6. Clean24-path read-only pass2,620local links/missing0; exact local checkpoint prepared. Actual owner visual approval pending, Q held, guide paused, RM-016 Planned.",
+        "docs/validation/RM-015AN.md — basic selected preset/finish, numbers/details Advanced, room-side Delete beside Rotate and shared Snap switch in2D/3D. Narrow explicit visitor protected size/Delete with unchanged locks, strict assistant/final checks and one Undo. Native1440×900/1280×600/390×844 basic/Advanced/preset/error/finish/rotation/Delete/Undo/Snap/catalogue/recovery; errors empty. Initial test-JSX boundary corrected without compiler expansion; final630tests/47files,7boundaries/root/both builds and229inputs/2158848bytes/BUILD_ID4c291864c79665f2fca09aca28787e5c4f7431e6b3146544e0bd21235b3b41fe passed. Clean27-path read-only pass2,606local links/missing0; exact local checkpoint prepared. Actual visual approval pending, Q held, guide paused, RM-016 Planned."
       ],
       "blockers": [],
       "approval": {
-        "quote": "this page doesnt make sense, its the same page as the studio with same controls and everything but its called a \"draft\"\n\nits an unnecessary step, i say we put the user after they choose photos into a processing loading page first, design that even in fake mdoe so i approve of design cuz surely in real mode ai will take time, and then straight into studio where the user can still edit everything just like this useless draft page",
-        "source": "human:current-chat/2026-10-20/direct-photo-processing-to-studio",
-        "scope": "RM-015AM implementation: remove separate rough review, show processing including finite fake preview and open editable studio. Not actual visual-result approval or live-provider authority.",
-        "recorded_at": "2026-10-20T08:23:54+00:00"
+        "quote": "I don't want to see the numbers if I'm not in the advanced setting, right? I just want to see the size preset. I want to see the piece finish. I don't want to see rotate 90 degrees on the right. Rotate is on the left. I want to see a delete button next to the rotate 90 on the left ... Instead of having replace and remove from plan in the right card ... in the Snap maybe let's make it at least in the same design as the other buttons, but in a toggle form",
+        "source": "human:current-chat/2026-10-20/simplify-selected-furniture-controls",
+        "scope": "RM-015AN implementation: basic preset/finish, detailed numbers/options Advanced, selected Delete beside Rotate, shared styled Snap switch. Explicit visitor Apply/Delete may deliberately override relevant protection for that operation without changing saved locks or assistant authority. Not actual visual approval.",
+        "recorded_at": "2026-10-20T08:41:06+00:00"
       },
       "decision": "changes-requested",
       "reviews": [
@@ -2331,6 +2338,15 @@ This checklist records local work. Human approvals and unresolved external check
             "source": "human:current-chat/2026-10-20/direct-photo-processing-to-studio",
             "scope": "RM-015AM implementation: remove separate rough review, show processing including finite fake preview and open editable studio. Not actual visual-result approval or live-provider authority.",
             "recorded_at": "2026-10-20T08:23:54+00:00"
+          }
+        },
+        {
+          "decision": "changes-requested",
+          "approval": {
+            "quote": "I don't want to see the numbers if I'm not in the advanced setting, right? I just want to see the size preset. I want to see the piece finish. I don't want to see rotate 90 degrees on the right. Rotate is on the left. I want to see a delete button next to the rotate 90 on the left ... Instead of having replace and remove from plan in the right card ... in the Snap maybe let's make it at least in the same design as the other buttons, but in a toggle form",
+            "source": "human:current-chat/2026-10-20/simplify-selected-furniture-controls",
+            "scope": "RM-015AN implementation: basic preset/finish, detailed numbers/options Advanced, selected Delete beside Rotate, shared styled Snap switch. Explicit visitor Apply/Delete may deliberately override relevant protection for that operation without changing saved locks or assistant authority. Not actual visual approval.",
+            "recorded_at": "2026-10-20T08:41:06+00:00"
           }
         }
       ]

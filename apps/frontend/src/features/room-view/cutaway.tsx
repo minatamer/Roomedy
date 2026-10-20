@@ -22,6 +22,10 @@ import type { SessionController } from '../session/controller';
 import styles from './room-view.module.css';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 import { findCatalogueEntry } from '@roomedy/spatial';
+import {
+  DeleteFurnitureButton,
+  SnapToggle,
+} from '../room-editor/selection-controls';
 
 class GraphicsBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; onFailure: () => void },
@@ -255,18 +259,18 @@ export default function Cutaway({
               >
                 Rotate 90°
               </button>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={snap}
-                  onChange={(e) => {
-                    editing.cancel();
-                    controller.setView({ snap: e.target.checked });
-                  }}
-                  aria-label="Snap 3D placement"
-                />{' '}
-                Snap
-              </label>
+              <DeleteFurnitureButton
+                controller={controller}
+                disabled={!editing.enabled}
+                beforeDelete={editing.cancel}
+              />
+              <SnapToggle
+                checked={snap}
+                onChange={(snap) => {
+                  editing.cancel();
+                  controller.setView({ snap });
+                }}
+              />
             </div>
           ) : (
             <div

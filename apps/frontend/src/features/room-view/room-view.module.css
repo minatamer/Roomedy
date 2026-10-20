@@ -122,15 +122,6 @@
   border-color: #aa9274;
   color: #3f352c;
 }
-.tools label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 44px;
-  padding: 8px 10px;
-  font-size: 12px;
-  cursor: pointer;
-}
 
 .wrap .toolbar {
   display: flex;

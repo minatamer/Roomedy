@@ -193,6 +193,7 @@ export function CataloguePanel({
   onDone,
   placement,
   initialCategory = 'all',
+  onReplaceSelected,
 }: {
   controller: SessionController;
   room: RoomDocument;
@@ -200,6 +201,7 @@ export function CataloguePanel({
   onDone: () => void;
   placement: CataloguePlacement;
   initialCategory?: string;
+  onReplaceSelected?: (() => void) | undefined;
 }) {
   const [chosen, setChosen] = useState<CatalogueEntry | null>(null);
   const [category, setCategory] = useState(initialCategory);
@@ -224,6 +226,25 @@ export function CataloguePanel({
           {replacement ? 'Choose a replacement' : 'Add a piece'}
         </h2>
       </div>
+      {!replacement && onReplaceSelected && (
+        <button
+          disabled={Object.values(
+            room.furniture.find(
+              (piece) =>
+                piece.id === controller.getSnapshot().presentation.selectedId,
+            )?.locks ?? {},
+          ).some(Boolean)}
+          title="Replace the selected piece; protected properties can be changed in Advanced"
+          onClick={() => {
+            placement.cancel();
+            setChosen(null);
+            setAdvanced(false);
+            onReplaceSelected();
+          }}
+        >
+          Replace selected piece…
+        </button>
+      )}
       {chosen && replacement ? (
         <PlacementForm
           key={`${chosen.id}-${replacement?.id ?? 'add'}`}

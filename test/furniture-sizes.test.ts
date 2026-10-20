@@ -188,6 +188,78 @@ it('respects starting size locks including same-batch unlock, without changing a
   ).toMatchObject({ ok: false, code: 'locked' });
   expect(room).toEqual(before);
 });
+it('applies an explicit visitor size choice through protection while retaining locks, untouched evidence and final geometry checks', () => {
+  const b = bed();
+  b.locks = { position: true, rotation: true, dimensions: true };
+  const original = commandRoom([b]);
+  const action = {
+    type: 'set-size-estimate',
+    id: b.id,
+    width: 1700,
+    depth: 2100,
+    overrideSizeLock: true,
+  } as const;
+  const workspace = createCommandWorkspace(original, {
+    workspaceId: 'explicit-size',
+    generation: 0,
+  });
+  const result = applyCommand(
+    workspace,
+    envelope(workspace, [action]),
+    'visitor',
+  );
+  expect(result.ok).toBe(true);
+  if (!result.ok) return;
+  const changed = result.workspace.current.furniture[0]!;
+  expect(changed.locks).toEqual(b.locks);
+  expect(changed.pose).toEqual(b.pose);
+  expect(changed.dimensions.width).toEqual({
+    value: 1700,
+    status: 'estimated',
+    sourceId: 'visitor-estimate',
+  });
+  expect(changed.dimensions.depth).toEqual(b.dimensions.depth);
+  expect(changed.dimensions.height).toEqual(b.dimensions.height);
+  expect(result.workspace.history.entries).toHaveLength(1);
+  const undo = undoCommand(result.workspace);
+  expect(undo.ok).toBe(true);
+  if (undo.ok)
+    expect(undo.workspace.current.furniture).toEqual(original.furniture);
+  expect(evaluateBatch(original, [action], 'assistant')).toMatchObject({
+    ok: false,
+    code: 'invalid-input',
+  });
+  expect(evaluateBatch(original, [action], 'authored-sample')).toMatchObject({
+    ok: false,
+    code: 'invalid-input',
+  });
+  expect(
+    visitorActionSchema.safeParse({ ...action, overrideSizeLock: false })
+      .success,
+  ).toBe(false);
+  b.pose.centerX = 800;
+  expect(
+    evaluateBatch(commandRoom([b]), [{ ...action, width: 1900 }], 'visitor'),
+  ).toMatchObject({ ok: false, code: 'new-conflict' });
+});
+it('matches preset identity only when the actual outer dimensions agree, without confusing wardrobe height variants', () => {
+  const sizes = furnitureSizePresets(entry('procedural-bed'));
+  expect(sizeInputValues(bed().dimensions, sizes).preset).toBe('uk-king');
+  const custom = bed();
+  custom.dimensions.width.value = 1650;
+  expect(sizeInputValues(custom.dimensions, sizes).preset).toBe('');
+  const wardrobe = piece('wardrobe', 4000, 4000, {
+    width: 1500,
+    depth: 600,
+    height: 2010,
+  });
+  const wardrobeSizes = furnitureSizePresets(entry('wardrobe-hinged'));
+  expect(sizeInputValues(wardrobe.dimensions, wardrobeSizes).preset).toBe(
+    'wardrobe-double',
+  );
+  wardrobe.dimensions.height.value = 2200;
+  expect(sizeInputValues(wardrobe.dimensions, wardrobeSizes).preset).toBe('');
+});
 it('changes only edited axes to estimated and preserves height, pose, ownership, locks and baseline through one Undo', () => {
   const original = commandRoom([bed()]);
   const w = createCommandWorkspace(original, {
