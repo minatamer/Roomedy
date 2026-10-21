@@ -1,0 +1,330 @@
+{
+  "kind": "hosted-release-candidate",
+  "version": 1,
+  "date": "2026-10-21",
+  "scope": "first managed-HTTPS paid-off release; conditional hosted paid/domain/native acceptance deferred",
+  "project": {
+    "id": "roomedy",
+    "number": "860563209111",
+    "region": "europe-west1"
+  },
+  "runtimeSourceCommit": "28d451f2b147de394afb302b490bb66aa2c15459",
+  "localHandoffCommit": "bf898b1",
+  "inputDigest": "8472b3dbfbbaf6c72eeac2730749b93118e1177b1c5bc3cfd5b67d26c8e30027",
+  "inputFiles": 287,
+  "localCandidate": "release-candidate-2026-10-21.json",
+  "canonicalPublicOrigin": "https://roomedy-frontend-860563209111.europe-west1.run.app",
+  "services": {
+    "backend": {
+      "service": "roomedy-backend",
+      "readyRevision": "roomedy-backend-00001-zxp",
+      "traffic": [
+        {
+          "latestRevision": true,
+          "percent": 100,
+          "revisionName": "roomedy-backend-00001-zxp"
+        }
+      ],
+      "registryImage": "europe-west1-docker.pkg.dev/roomedy/roomedy/backend@sha256:3736588f31baebba14fb385a05834b42ec0cfb3c162f0c9939d7d340ae5fc4b9",
+      "statusUrl": "https://roomedy-backend-fbdqwlfulq-ew.a.run.app",
+      "runtimeIdentity": "roomedy-backend@roomedy.iam.gserviceaccount.com",
+      "ingress": "all",
+      "anonymousInvoker": false,
+      "addedInvoker": "serviceAccount:roomedy-frontend@roomedy.iam.gserviceaccount.com",
+      "containerConcurrency": 4,
+      "timeoutSeconds": 120,
+      "cpu": "1",
+      "memory": "512Mi",
+      "maximumInstances": 1,
+      "minimumInstances": 0,
+      "executionEnvironment": "gen2",
+      "port": 8080,
+      "environment": [
+        {
+          "name": "APP_ENV",
+          "value": "production"
+        },
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "HOST",
+          "value": "0.0.0.0"
+        },
+        {
+          "name": "FAKE_MODE",
+          "value": "false"
+        },
+        {
+          "name": "PAID_DEMO_ENABLED",
+          "value": "false"
+        },
+        {
+          "name": "FRONTEND_ORIGIN",
+          "value": "https://roomedy-frontend-860563209111.europe-west1.run.app"
+        },
+        {
+          "name": "ROOMEDY_RELEASE_ID",
+          "value": "8472b3dbfbbaf6c72eeac2730749b93118e1177b1c5bc3cfd5b67d26c8e30027"
+        },
+        {
+          "name": "OPENAI_API_KEY",
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "1",
+              "name": "OPENAI_API_KEY"
+            }
+          }
+        },
+        {
+          "name": "ROOMEDY_BRIDGE_SECRET",
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "1",
+              "name": "ROOMEDY_BRIDGE_SECRET"
+            }
+          }
+        },
+        {
+          "name": "TURNSTILE_SECRET_KEY",
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "1",
+              "name": "TURNSTILE_SECRET_KEY"
+            }
+          }
+        },
+        {
+          "name": "TURNSTILE_SITE_KEY",
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "1",
+              "name": "TURNSTILE_SITE_KEY"
+            }
+          }
+        }
+      ]
+    },
+    "frontend": {
+      "service": "roomedy-frontend",
+      "readyRevision": "roomedy-frontend-00001-jsx",
+      "traffic": [
+        {
+          "latestRevision": true,
+          "percent": 100,
+          "revisionName": "roomedy-frontend-00001-jsx"
+        }
+      ],
+      "registryImage": "europe-west1-docker.pkg.dev/roomedy/roomedy/frontend@sha256:efeea7acf23dd582bf74af75e1995beecdc7d687192492c269af55a1525dfb4f",
+      "statusUrl": "https://roomedy-frontend-fbdqwlfulq-ew.a.run.app",
+      "runtimeIdentity": "roomedy-frontend@roomedy.iam.gserviceaccount.com",
+      "ingress": "all",
+      "anonymousInvoker": true,
+      "addedInvoker": "allUsers",
+      "containerConcurrency": 4,
+      "timeoutSeconds": 120,
+      "cpu": "1",
+      "memory": "512Mi",
+      "maximumInstances": 1,
+      "minimumInstances": 0,
+      "executionEnvironment": "gen2",
+      "port": 8080,
+      "environment": [
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "NEXT_TELEMETRY_DISABLED",
+          "value": "1"
+        },
+        {
+          "name": "ROOMEDY_BACKEND_ORIGIN",
+          "value": "https://roomedy-backend-fbdqwlfulq-ew.a.run.app"
+        },
+        {
+          "name": "ROOMEDY_PUBLIC_ORIGIN",
+          "value": "https://roomedy-frontend-860563209111.europe-west1.run.app"
+        },
+        {
+          "name": "ROOMEDY_SERVICE_IDENTITY",
+          "value": "gcp-metadata"
+        },
+        {
+          "name": "ROOMEDY_RELEASE_ID",
+          "value": "8472b3dbfbbaf6c72eeac2730749b93118e1177b1c5bc3cfd5b67d26c8e30027"
+        },
+        {
+          "name": "ROOMEDY_BRIDGE_SECRET",
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "1",
+              "name": "ROOMEDY_BRIDGE_SECRET"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "mode": "live",
+  "paidDemoEnabled": false,
+  "capabilities": {
+    "manual": true,
+    "recognition": false,
+    "assistant": false,
+    "simulation": false
+  },
+  "verification": {
+    "localRootTests": 1043,
+    "localTestFiles": 64,
+    "focusedSecurityTests": 70,
+    "linuxCriteriaPassed": 9,
+    "publicCases": [
+      {
+        "path": "/",
+        "status": 200,
+        "milliseconds": 281
+      },
+      {
+        "path": "/demo",
+        "status": 200,
+        "milliseconds": 500
+      },
+      {
+        "path": "/api/roomedy/v1/health",
+        "status": 200,
+        "milliseconds": 281,
+        "data": {
+          "status": "ok"
+        }
+      },
+      {
+        "path": "/api/roomedy/v1/ready",
+        "status": 200,
+        "milliseconds": 234,
+        "data": {
+          "status": "ok",
+          "ai": "disabled"
+        }
+      },
+      {
+        "path": "/api/roomedy/v1/config",
+        "status": 200,
+        "milliseconds": 235,
+        "data": {
+          "mode": "live",
+          "capabilities": {
+            "manual": true,
+            "recognition": false,
+            "assistant": false,
+            "simulation": false
+          },
+          "limits": {
+            "photos": 6,
+            "rawPhotoBytes": 8388608,
+            "rawTotalBytes": 25165824,
+            "furniture": 40,
+            "features": 24,
+            "actions": 32,
+            "visitorTextChars": 4000,
+            "projectBytes": 1048576,
+            "guestLifetimeMs": 7200000
+          }
+        }
+      },
+      {
+        "path": "/api/roomedy/v1/health?target=foreign",
+        "method": "GET",
+        "status": 400,
+        "milliseconds": 219
+      },
+      {
+        "path": "/api/roomedy/v1/health",
+        "method": "GET",
+        "status": 409,
+        "milliseconds": 250
+      },
+      {
+        "path": "/api/roomedy/v1/health",
+        "method": "POST",
+        "status": 405,
+        "milliseconds": 218
+      },
+      {
+        "path": "/api/roomedy/v1/admission",
+        "method": "POST",
+        "status": 403,
+        "milliseconds": 297
+      },
+      {
+        "path": "/api/roomedy/v1/admission",
+        "method": "POST",
+        "status": 400,
+        "milliseconds": 266
+      }
+    ],
+    "backendAnonymous": {
+      "health": 403,
+      "mutation": 403
+    },
+    "assets": {
+      "count": 90,
+      "allExactHashesAndBytes": true,
+      "workerCount": 1,
+      "workers": [
+        "/_next/static/chunks/0r6a-uqq61_as.js"
+      ],
+      "observedAssetListSha256": "feafe18ae7887cb6a30f3bb191550935f02ce3a71d1d8dd50bf88c7c9dc5f727"
+    },
+    "privatePrepublication": {
+      "anonymousFrontend": 403,
+      "anonymousBackend": 403,
+      "authenticatedFrontend": 200,
+      "actualMetadataBridgeHealthReadyConfig": 200
+    },
+    "nativeBrowser": {
+      "landing": true,
+      "publicSamplesInLiveMode": 4,
+      "localPreparedSamplePreviews": 4,
+      "manualFurnishedRoom": true,
+      "defaultPanel": "Medy",
+      "rendered3d": true,
+      "plan2d": true,
+      "finishOptions": 6,
+      "rotationDegrees": {
+        "initial": 90,
+        "afterEdit": 180,
+        "afterUndo": 90
+      },
+      "undoDisabledAfterRestoration": true,
+      "returnedTo3d": true,
+      "assistantMode": "unavailable; authored local advice/commands and contextual replies available",
+      "paidModelQualityTested": false
+    },
+    "newPaidProviderDispatches": 0,
+    "sourceChangedDuringHosting": false
+  },
+  "rollback": {
+    "firstPublicRelease": true,
+    "previousPublicPair": null,
+    "baselineFrontendRevision": "roomedy-frontend-00001-jsx",
+    "baselineBackendRevision": "roomedy-backend-00001-zxp",
+    "priorRevisionSwitchTested": false,
+    "futureAssetRetentionMinutes": 130
+  },
+  "security": {
+    "SEC-001": "fixed in deployed source; focused and native input-retirement proof retained",
+    "SEC-002": "selected operational hold; paid off pending enforceable funded-cutoff evidence"
+  },
+  "externalUnperformed": [
+    "domain/DNS/custom TLS and Turnstile hostname/site-secret pairing setup",
+    "actual hosted challenge binding and permitted bounded paid photo/Medy case",
+    "enforceable provider funded cutoff/outstanding-exposure and account privacy/retention verification",
+    "full held-out funded corpus",
+    "near-limit native concurrent memory, sustained capacity/cold-start and named physical/assistive cases",
+    "prior public revision rollback exercise (no prior pair)"
+  ],
+  "evidence": "HOSTED_ACCEPTANCE.md",
+  "receipt": "../validation/RM-020.md"
+}

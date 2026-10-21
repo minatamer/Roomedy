@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**First hosted release —21 October:** [Open Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). [Hosted acceptance](operations/HOSTED_ACCEPTANCE.md), [deployed manifest](operations/hosted-candidate-2026-10-21.json) and [receipt](validation/RM-020.md) record actual public frontend/private backend IAM, metadata bridge,90 exact assets/worker, safe rejections and native manual2D/3D/rotation/Undo/default-Medy/public sample preparation. Runtime8472b3db/source28d451f is unchanged from the1043-test/current Linux candidate. First paid-off hosting is complete; paid/challenge/funded/privacy/domain and precise native/physical evidence remain conditional. Earlier hosting-next/visual/security-hold notices below are dated history, not current gates.
+
 **Local release handoff —21October:** Accepted source28d451f/runtime8472b3db is verified:1043-test root,70 focused security tests, nine Linux probes/90 HTTP assets and corrected native input retirement. [Handoff](operations/LOCAL_HANDOFF.md), [candidate](operations/release-candidate-2026-10-21.json). SEC-001 fixed locally; SEC-002 and hostname/domain/funded/physical limits remain explicit. Owner-authorized paid-off roomedy hosting is next; no new permission question or paid call.
 
 **Visual checkpoint accepted —21 October:** The owner accepts the final BL correction and authorizes its exact file-level staging/local commit, then quality before security under the build workflow. [Atomic42-path checkpoint](commit-plans/RM-015BL.md#authorized-atomic-local-commit--21-october2026). Quality's full prompt is the next checkpoint; actual security findings still require the prescribed manual review.
@@ -1168,7 +1170,7 @@ Follow the inspected ScreenPilot/Retrosum/Retailor pattern: public Next frontend
 
 Do not equate ingress configuration with anonymous invocation. Verify actual IAM and network behavior on the deployed pair. The browser uses only relative frontend operations. The Next bridge forwards fixed paths, discards browser-supplied upstream credentials/targets and adds its own hosted identity. No downloaded service-account JSON key is part of the proposed baseline.
 
-Current21October: owner selects existing project roomedy860563209111 and authorizes deployment after audits. Billing and four secret version1 metadata records are verified; no secret values read. Same-region europe-west1/services roomedy-backend and roomedy-frontend/registry roomedy are inferred concrete deployment choices. Resources/IAM/public URLs have not yet been created by this local handoff. First hosting stays live/paid-off; actual setup/verification belongs to authorized RM-020. tryroomedy.com registration/DNS/TLS and Turnstile hostname setup remain owner-deferred.
+Current21October: actual authorized deployment uses existing roomedy860563209111/europe-west1 and named roomedy-backend/roomedy-frontend services, registry and dedicated runtime identities. Ready revisions roomedy-backend-00001-zxp/frontend-00001-jsx each serve100% of traffic with exact input8472b3db. Public canonical frontend is https://roomedy-frontend-860563209111.europe-west1.run.app; backend fixed metadata audience is its actual https://roomedy-backend-fbdqwlfulq-ew.a.run.app status URL. Actual public bridge200/private anonymous403, narrow per-secret version1 grants, live/paid-off config,90 exact assets/worker and manual editor checks pass. Secret values were not read; unrelated defaults/local env preserved. [Hosted record](operations/HOSTED_ACCEPTANCE.md). tryroomedy.com registration/DNS/custom TLS, Turnstile hostname setup and funded/privacy/paid-hosted conditions remain owner-deferred or external.
 
 ### 23.2 Local release artifacts, later
 
@@ -1440,8 +1442,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Commit exact validated13-path RM-019 local handoff, then execute already-authorized RM-020 paid-off deployment to roomedy with least-privilege identities and actual hosted evidence. No repeated general permission or paid call.
-Active ticket: RM-019
+Next action: Deliver the verified managed HTTPS paid-off deployment and exact-path local commit. Local build/quality/security/selected remedy/handoff and authorized hosting scope are complete. Remaining paid-hosted/challenge/funding/privacy/domain/native/physical conditions are explicitly deferred; preserve paid off. No routine question, new paid call, owner-env change or Git push.
+Active ticket: none
 Phase prompts: pre-approved by owner
 Local commits approved: yes
 
@@ -1466,7 +1468,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-21T15:45:36+00:00",
+  "updated_at": "2026-10-21T16:31:48+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1697,6 +1699,11 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "Owner explicitly rebukes the repeated question and instructs choosing the recommended path in direct response to the pending audit-vs-deploy question. Finish quality then security first; the question explicitly defined this recommendation as approval of saved RM-016 prompt and preapproval of remaining prompts. Keep existing Git/deployment authorizations and separate security-findings result gate. No routine clarification questions.",
       "source": "human:current-chat/2026-10-21/answer-recommended-audit-path-no-more-questions",
       "confidence": "confirmed"
+    },
+    "HOSTED_EXECUTION": {
+      "value": "First authorized paid-off Cloud Run release verified in roomedy860563209111/europe-west1. Canonical public https://roomedy-frontend-860563209111.europe-west1.run.app; private backend fixed audience https://roomedy-backend-fbdqwlfulq-ew.a.run.app. Ready revisions frontend-00001-jsx/backend-00001-zxp each100%, exact runtime8472b3db/source28d451f and observed immutable registry pair unchanged. Dedicated identities/secret-level refs/frontend-only backend invoker/frontend public binding verified. Actual private403/metadata-bridge200, ten public cases/90 byte-and-hash assets/one worker, live-paid-off config/provisional resources, and native browser manual2D/3D/rotation90-180-90Undo/default-Medy/live sample preparation pass. Test-photo confirmation/loading cleared without user intervention or source correction. Authored local assistant guidance/contextual replies work; no new paid call/model-quality claim. Domain/challenge/funded/privacy/paid-hosted/native-capacity/physical limits remain external. Source proof fresh-inspected again;13-path documentation/manifest/hash/link/credential/claim review clean, final exact-path local commit and user handoff next, no Git push.",
+      "source": "docs/operations/HOSTED_ACCEPTANCE.md; docs/operations/hosted-candidate-2026-10-21.json; docs/validation/RM-020.md; actual cloud metadata/IAM/probes and native IAB observations21October2026",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": {
@@ -1721,8 +1728,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-019",
-  "next_action": "Commit exact validated13-path RM-019 local handoff, then execute already-authorized RM-020 paid-off deployment to roomedy with least-privilege identities and actual hosted evidence. No repeated general permission or paid call.",
+  "active_ticket": null,
+  "next_action": "Deliver the verified managed HTTPS paid-off deployment and exact-path local commit. Local build/quality/security/selected remedy/handoff and authorized hosting scope are complete. Remaining paid-hosted/challenge/funding/privacy/domain/native/physical conditions are explicitly deferred; preserve paid off. No routine question, new paid call, owner-env change or Git push.",
   "phases": [
     {
       "id": "01-docs",

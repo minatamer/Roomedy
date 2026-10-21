@@ -1,6 +1,6 @@
 # RM-020 — Verify authorized hosting and pre-sharing readiness
 
-Status: **Planned**  
+Status: **Authorized paid-off hosting verified; conditional paid/domain/native acceptance deferred**
 Planning date: **17 October 2026**  
 Milestone: **Conditional external release acceptance**  
 Depends on: [RM-019](RM-019-finalize-local-release-evidence-and-handoff.md)  
@@ -10,11 +10,13 @@ Queue and execution rules: [ticket index](README.md)
 Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) (L-12, L-14, L-17, L-22–L-24) and [review checklist](../design/REVIEW_CHECKLIST.md)
 Additional gate: **No hosting, provider spend, publication, domain or account authority is supplied by this plan.**
 
+Current21October: [hosted acceptance](../operations/HOSTED_ACCEPTANCE.md), [manifest](../operations/hosted-candidate-2026-10-21.json), [receipt](../validation/RM-020.md), [execution/allocation](../commit-plans/RM-020.md). [Roomedy is deployed](https://roomedy-frontend-860563209111.europe-west1.run.app). Exact source/input8472b3db and accepted immutable images are unchanged. Actual public frontend/private backend IAM/metadata bridge,90 matching assets/worker, safe boundary rejections and manual2D/3D/rotation/Undo/default-Medy/public sample preparation pass. First pair is the future rollback baseline. Paid AI stays off; domain/challenge/funded/privacy/hosted-paid/native/physical evidence remains conditional.
+
 ## Outcome and standalone context
 
 When separately requested and authorized, verify the exact locally prepared candidate in its actual hosted/provider environment and record a careful pre-sharing decision. This packet prevents local image success from being mistaken for working IAM, real model behavior, effective account controls, domain/TLS or public abuse resistance.
 
-All required local deployment files, probes, rollback steps and evaluation kits are already owned by RM-014/RM-019. Missing external authority leaves this ticket unstarted with concrete prerequisites; it does not block writing those local artifacts. No automatic deployment is part of the current user request.
+All required local deployment files, probes, rollback steps and evaluation kits are already owned by RM-014/RM-019. Missing external authority leaves this ticket unstarted with concrete prerequisites; it does not block writing those local artifacts. The later direct owner request authorizes deployment to existing roomedy after audits, and “go for it” selects the recommended security repair/paid-off path. This supersedes the original planning-time no-deployment assumption; no routine question.
 
 ## Dependency evidence and proposed ownership
 
@@ -51,17 +53,27 @@ Explain public frontend visibility, private backend identity, paid enablement, T
 
 Only under later external authorization, verify the actual process/restart/multi-revision grant behavior, disconnect-independent deadlines, effective hosted instance exposure, account-funded controls and selected model/cache/retention settings. Resolve or explicitly accept the named paid exposure rather than assuming a single-instance setting is a global money cap. Exercise old-browser/new-server/chunk/worker/schema mismatch and rollback on the permitted candidate with truthful transient-photo/update behavior. Preserve measured performance, criterion-level accessibility limits and the existing visual/security gates; no part of the current adoption authorizes this packet's external execution.
 
-## Acceptance criteria — conditional, all unperformed
+## Performed authorized paid-off scope
 
-- [ ] Exact external action/data/funding/publication scope is supplied by a trusted human and recorded.
-- [ ] Deployed immutable candidate matches current locally reviewed source/image/proof.
+- [x] Direct owner cloud/publication scope and selected paid-off security disposition recorded; no new paid/provider/domain authority inferred.
+- [x] Exact current local source/proof/images verified, published and deployed by observed immutable registry digest.
+- [x] Actual runtime accounts, secret-level references, public frontend/private backend IAM and metadata-identity bridge verified.
+- [x] Actual live/paid-off config and provisional instance/concurrency/resource/deadline settings observed.
+- [x] Managed HTTPS landing/demo,90 exact assets/worker and safe API origin/method/query/release/input boundaries checked.
+- [x] Actual browser live sample preparation and manual studio2D/3D/rotation/Undo/default-Medy checked; no paid request.
+- [x] Exact first compatible revision pair, rollback plan and honest paid/domain/security/native limits recorded.
+
+## Full conditional acceptance — remaining external checks stay unchecked
+
+- [x] Exact external action/data/funding/publication scope is supplied by a trusted human and recorded: first paid-off deployment only.
+- [x] Deployed immutable candidate matches current locally reviewed source/image/proof.
 - [ ] Public frontend/private backend IAM, fixed bridge, real challenge/origin and safe configuration work as intended.
 - [ ] Effective hosted concurrency/time/resource/provider account controls are observed with explicit limitations.
 - [ ] Authorized real recognition/assistant cases have actual bounded model/latency/usage evidence.
 - [ ] Hosted assets/worker/headers/domain/TLS and core guest journeys are checked on the actual origin.
-- [ ] Security/physical/owner/vendor deferrals remain visible with a concrete sharing decision.
-- [ ] Rollback and safe operational evidence are recorded; public URL/claims reflect actual observed state.
-- [ ] Hosted evidence and instructions distinguish public/private/paid/domain/proxy status, and test actual permitted user flows without inheriting sibling permissions.
+- [x] Security/physical/owner/vendor deferrals remain visible with a concrete paid-off sharing decision.
+- [x] Rollback plan and safe operational evidence are recorded; public URL/claims reflect actual observed state. First pair only; prior-revision exercise unavailable.
+- [x] Hosted evidence and instructions distinguish public/private/paid/domain/proxy status, and test actual permitted paid-off user flows without inheriting sibling permissions. Broader paid-hosted cases remain unchecked above.
 
 ### Additional approved acceptance — all unperformed
 
@@ -80,4 +92,4 @@ Only under later external authorization, verify the actual process/restart/multi
 
 ## Handoff and limits
 
-Leave this packet Planned until applicable external execution is requested. It can finish only within the actual authorized and verified scope; no universal accuracy, traffic capacity, compliance or cost guarantee is implied. The current approved fake-mode local loop prepares requirements only for this conditional packet and does not host, publish or perform paid Roomedy calls.
+The initial fake-mode plan supplied no external authority. Later direct owner authorization now supplies the first paid-off hosting scope, which is complete and actually verified. Broader paid/provider/domain/native criteria above stay deferred until their separate inputs and bounded authorization exist. No universal accuracy, traffic capacity, compliance or cost guarantee is implied, and no unperformed criterion is converted to a pass.

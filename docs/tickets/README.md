@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+**RM-020 hosted paid-off scope verified —21 October:** [Roomedy is deployed](https://roomedy-frontend-860563209111.europe-west1.run.app) with actual IAM/metadata bridge,90 exact assets/worker, boundary rejections and native manual2D/3D/rotation/Undo/default-Medy/public sample checks. [Acceptance](../operations/HOSTED_ACCEPTANCE.md), [manifest](../operations/hosted-candidate-2026-10-21.json), [receipt](../validation/RM-020.md). No runtime input changed. Paid-hosted/domain/challenge/funded/physical/load criteria remain explicitly conditional; no new paid call or Git push. Prior hosting-next and pending-gate notices below are history.
+
 **Local release handoff —21October:** Accepted source28d451f/runtime8472b3db is verified:1043-test root,70 focused security tests, nine Linux probes/90 HTTP assets and corrected native input retirement. [Handoff](../operations/LOCAL_HANDOFF.md), [candidate](../operations/release-candidate-2026-10-21.json). SEC-001 fixed locally; SEC-002 and hostname/domain/funded/physical limits remain explicit. Owner-authorized paid-off roomedy hosting is next; no new permission question or paid call.
 
 **RM-018 selected remedy complete locally —21October:** SEC-001 input retirement repaired and retested: original native408/408 now reaches400 for later complete input, including after disconnect.70 focused checks and current nine-probe/90-asset Linux proof8472b3db pass; final root1043tests/64files and all builds pass. SEC-002 remains external with first deployment paid off. [Selected plan](../security/remediation-plan.md), [receipt](../validation/RM-018.md). Continue final handoff and already-authorized deployment; no routine question.
@@ -186,7 +188,7 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |
 | [RM-019](RM-019-finalize-local-release-evidence-and-handoff.md) | Current local candidate, refreshed release proof, evidence ledger and honest handoff | RM-014, RM-015, RM-016, RM-017, RM-018* | *RM-018 may be explicitly waived/deferred by security decision |
-| [RM-020](RM-020-verify-authorized-hosting-and-pre-sharing.md) | Separately authorized hosted/provider/domain and pre-sharing acceptance | RM-019 | Conditional external execution; no cloud authority from this plan |
+| [RM-020](RM-020-verify-authorized-hosting-and-pre-sharing.md) | Authorized hosting and conditional paid/provider/domain acceptance | RM-019 | Paid-off hosted scope verified; paid/domain/funded/native limits external |
 
 The normal execution path is numeric order. Dependencies permit local sequencing flexibility, not parallel-agent authorization. RM-006 and RM-007 share controller/render interfaces; RM-008 and RM-009 share pure validation inputs. Finish one packet and validate its settled diff before taking the next. Do not create duplicate scene stores or command engines to bypass an incomplete dependency.
 
