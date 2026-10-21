@@ -1,5 +1,11 @@
 # Roomedy ticket plan
 
+**BM accepted —21 October:** Owner says “looks good” after final fade, authorizes the [ten-path atomic checkpoint](../commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026), staging/commit and then the RM-020 hosted update with paid mode on. Current required checks/read-only review own the checkpoint; new image/retained-assets/hosted evidence stays separate. Earlier local-only/pending notices below are history.
+
+BM follow-up retains the initial360ms text fade, starting immediately before3D readiness. Same local visual review, [current evidence](../validation/RM-015BM.md#owner-follow-up--immediate-initial-text-fade); prior full checks belong to the pre-fade iteration.
+
+**Current local review — RM-015BM:** [Show the hero before the room loads](RM-015BM-show-the-hero-before-the-room-loads.md), base0594f1a. Direct owner selects immediate centered title/copy, then readiness-driven left movement and prepared-house fade. [Ten-path allocation](../commit-plans/RM-015BM.md), [evidence](../validation/RM-015BM.md). No staged/committed/deployed change; actual owner review pending. Accepted public paid-off deployment remains unchanged.
+
 **RM-020 hosted paid-off scope verified —21 October:** [Roomedy is deployed](https://roomedy-frontend-860563209111.europe-west1.run.app) with actual IAM/metadata bridge,90 exact assets/worker, boundary rejections and native manual2D/3D/rotation/Undo/default-Medy/public sample checks. [Acceptance](../operations/HOSTED_ACCEPTANCE.md), [manifest](../operations/hosted-candidate-2026-10-21.json), [receipt](../validation/RM-020.md). No runtime input changed. Paid-hosted/domain/challenge/funded/physical/load criteria remain explicitly conditional; no new paid call or Git push. Prior hosting-next and pending-gate notices below are history.
 
 **Local release handoff —21October:** Accepted source28d451f/runtime8472b3db is verified:1043-test root,70 focused security tests, nine Linux probes/90 HTTP assets and corrected native input retirement. [Handoff](../operations/LOCAL_HANDOFF.md), [candidate](../operations/release-candidate-2026-10-21.json). SEC-001 fixed locally; SEC-002 and hostname/domain/funded/physical limits remain explicit. Owner-authorized paid-off roomedy hosting is next; no new permission question or paid call.

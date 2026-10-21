@@ -1,5 +1,11 @@
 # Roomedy — product and engineering blueprint
 
+**Latest owner acceptance —21 October:** “looks good” accepts BM's final360ms initial fade and800ms ready-driven move/house reveal. Owner authorizes the [exact ten-path atomic stage/commit](commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026), then deployment with paid mode on. Supersedes older local-review/paid-off holds for this update; no funding/privacy/hosted-quality proof is implied. Current no-key checks and scoped review precede commit, fresh retained-assets/Linux proof precedes publication, and actual paid-mode outcomes/limits belong to the RM-020 follow-up. Public8472b3db remains current until that deployment actually completes.
+
+BM owner follow-up retains a short initial text fade. It starts immediately over360ms, independently of actual3D readiness; the separate prepared-house fade/leftward move remains800ms. [Current local observation](validation/RM-015BM.md#owner-follow-up--immediate-initial-text-fade). Review remains local/pending; prior e605f098/source/build/full-suite identity is the pre-fade iteration.
+
+**Current local landing correction —21 October, RM-015BM:** Owner requests immediate centered hero text, then smooth travel to its current left pose when the actual3D house is ready and fades in. [Ticket](tickets/RM-015BM-show-the-hero-before-the-room-loads.md), [ten-path allocation](commit-plans/RM-015BM.md), [local evidence](validation/RM-015BM.md). This supersedes the former P title wait. Preserve real GPU preparation/scroll choreography and responsive final composition. Owner review is pending at http://127.0.0.1:4320; no staging/commit/deploy/provider/config change. Historical hosted8472b3db remains the deployed candidate, distinct from this local worktree.
+
 **First hosted release —21 October:** [Open Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). [Hosted acceptance](operations/HOSTED_ACCEPTANCE.md), [deployed manifest](operations/hosted-candidate-2026-10-21.json) and [receipt](validation/RM-020.md) record actual public frontend/private backend IAM, metadata bridge,90 exact assets/worker, safe rejections and native manual2D/3D/rotation/Undo/default-Medy/public sample preparation. Runtime8472b3db/source28d451f is unchanged from the1043-test/current Linux candidate. First paid-off hosting is complete; paid/challenge/funded/privacy/domain and precise native/physical evidence remain conditional. Earlier hosting-next/visual/security-hold notices below are dated history, not current gates.
 
 **Local release handoff —21October:** Accepted source28d451f/runtime8472b3db is verified:1043-test root,70 focused security tests, nine Linux probes/90 HTTP assets and corrected native input retirement. [Handoff](operations/LOCAL_HANDOFF.md), [candidate](operations/release-candidate-2026-10-21.json). SEC-001 fixed locally; SEC-002 and hostname/domain/funded/physical limits remain explicit. Owner-authorized paid-off roomedy hosting is next; no new permission question or paid call.
@@ -1442,8 +1448,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Deliver the verified managed HTTPS paid-off deployment and exact-path local commit. Local build/quality/security/selected remedy/handoff and authorized hosting scope are complete. Remaining paid-hosted/challenge/funding/privacy/domain/native/physical conditions are explicitly deferred; preserve paid off. No routine question, new paid call, owner-env change or Git push.
-Active ticket: none
+Next action: Stage/commit the exact validated10 BM paths, then finish current retained-assets Linux proof and publish/deploy the paired RM-020 update with paid mode enabled under latest explicit owner instruction. Preserve private IAM/origins/secret refs/resources/local env; record current hosted/challenge/model outcomes and unresolved SEC-002 account limits. No repeated question or Git push.
+Active ticket: RM-015BM
 Phase prompts: pre-approved by owner
 Local commits approved: yes
 
@@ -1468,7 +1474,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-21T16:31:48+00:00",
+  "updated_at": "2026-10-21T17:07:31+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1704,6 +1710,21 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "First authorized paid-off Cloud Run release verified in roomedy860563209111/europe-west1. Canonical public https://roomedy-frontend-860563209111.europe-west1.run.app; private backend fixed audience https://roomedy-backend-fbdqwlfulq-ew.a.run.app. Ready revisions frontend-00001-jsx/backend-00001-zxp each100%, exact runtime8472b3db/source28d451f and observed immutable registry pair unchanged. Dedicated identities/secret-level refs/frontend-only backend invoker/frontend public binding verified. Actual private403/metadata-bridge200, ten public cases/90 byte-and-hash assets/one worker, live-paid-off config/provisional resources, and native browser manual2D/3D/rotation90-180-90Undo/default-Medy/live sample preparation pass. Test-photo confirmation/loading cleared without user intervention or source correction. Authored local assistant guidance/contextual replies work; no new paid call/model-quality claim. Domain/challenge/funded/privacy/paid-hosted/native-capacity/physical limits remain external. Source proof fresh-inspected again;13-path documentation/manifest/hash/link/credential/claim review clean, final exact-path local commit and user handoff next, no Git push.",
       "source": "docs/operations/HOSTED_ACCEPTANCE.md; docs/operations/hosted-candidate-2026-10-21.json; docs/validation/RM-020.md; actual cloud metadata/IAM/probes and native IAB observations21October2026",
       "confidence": "confirmed"
+    },
+    "LOCAL_LANDING_REVIEW": {
+      "value": "Direct owner21October requests immediate centered title then smooth movement to current left position while prepared3D house fades, locally first for actual review. BM CSS-only implementation removes loading-copy/cue hide, uses real hero content-container width and independent800ms translate alongside800ms canvas fade, keeps real GPU/1100ms scene preparation/choreography and vertical scroll owners. Actual loading x415/width520 at1350 usable width is centered and opacity1; real ready samples show continuous left move/fade, settledx95.55. Four responsive sizes/entry-Back/section navigation pass. Existing11 landing tests, repository format/lint/types/boundaries/assets, final1043tests/64files and both production builds pass; sandbox-loopback/initial CLI issues corrected without source/test changes. Exact10-path review clean; local source e605f0981c9b3d560295b963415c0626fbb785fd723df6a030464861d5d8d1b4/BUILD_ID GwkVgftluInIEEReBTs3j is distinct from deployed8472b3db. Owner review pending; no staging/commit/deploy/paid/env/dependency/newport/delegation. Healthy owned4320/4321 reused. Prior completed build/visual/security/hosted decisions remain historical for their exact accepted candidate, not approval of this local revision.",
+      "source": "human:current-chat/2026-10-21/immediate-centered-title-local-review; docs/tickets/RM-015BM-show-the-hero-before-the-room-loads.md; docs/validation/RM-015BM.md",
+      "confidence": "confirmed"
+    },
+    "LOCAL_LANDING_FADE_FOLLOWUP": {
+      "value": "Direct owner retains initial text fade. Existing hero copy starts360ms ease-out opacity immediately with0s delay/no retained fill, independently of readiness; separate800ms horizontal move/house fade unchanged. Actual local read-only reload samples show opacity0.149-0.287-0.416-0.535-0.591-0.787-0.828-0.866-0.900-1 while room remains loading, then1 at ready. Scoped format/whitespace and read-only follow-up pass. Earlier LOCAL_LANDING_REVIEW e605f098/full1043-test/build evidence is pre-fade history, no current fresh-full/Linux/hosted claim. Same10-path local scope; owner review pending; no staging/commit/deploy/paid/config change.",
+      "source": "human:current-chat/2026-10-21/retain-initial-text-fade; docs/validation/RM-015BM.md#owner-follow-up--immediate-initial-text-fade",
+      "confidence": "confirmed"
+    },
+    "BM_CHECKPOINT_APPROVAL": {
+      "value": "Direct owner accepts final360ms text fade/800ms move-house reveal: looks good, file level commit plan and you can stage and commit, then deploy this update along with turning on paid mode in deployment. Authorizes exact10-path atomic BM stage/local commit then RM-020 paired immutable update and existing paid-master enablement. Latest instruction supersedes prior BM local-only hold and paid-off activation disposition; does not verify account funding/privacy or grant unrelated cloud/DNS/Git push. Final fade-inclusive pnpm check passes1043tests/64files/all root gates and builds, source-onlyd43a2d63db478f2fed976a743b02c69d1c8fdc14fa8aebeaffbac67874f655c0/287inputs/BUILD_ID lm-oC-yOchNxTyMLZVWR2. Actual cloud stillfirstpair/paidfalse;90 public assets freshly snapshotted for compatibility, Linux build/probes with retained context running. Current10-path settled read-only review clean; exact stage/commit next.",
+      "source": "human:current-chat/2026-10-21/looks-good-commit-deploy-paid-mode; docs/commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026; docs/validation/RM-015BM.md",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": {
@@ -1728,8 +1749,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": null,
-  "next_action": "Deliver the verified managed HTTPS paid-off deployment and exact-path local commit. Local build/quality/security/selected remedy/handoff and authorized hosting scope are complete. Remaining paid-hosted/challenge/funding/privacy/domain/native/physical conditions are explicitly deferred; preserve paid off. No routine question, new paid call, owner-env change or Git push.",
+  "active_ticket": "RM-015BM",
+  "next_action": "Stage/commit the exact validated10 BM paths, then finish current retained-assets Linux proof and publish/deploy the paired RM-020 update with paid mode enabled under latest explicit owner instruction. Preserve private IAM/origins/secret refs/resources/local env; record current hosted/challenge/model outcomes and unresolved SEC-002 account limits. No repeated question or Git push.",
   "phases": [
     {
       "id": "01-docs",
