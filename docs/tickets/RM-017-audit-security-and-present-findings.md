@@ -1,6 +1,6 @@
 # RM-017 — Audit security and present findings
 
-Status: **Planned**  
+Status: **Complete: v1 reviewed; SEC-001 repair and SEC-002 paid-off hold selected**
 Planning date: **17 October 2026**  
 Milestone: **Security audit and owner review**  
 Depends on: [RM-016](RM-016-audit-and-improve-code-quality.md)  
@@ -9,6 +9,8 @@ Authority: [blueprint §21](../ROOMEDY.md#21-security-and-diagnostics), [§§16�
 Queue and execution rules: [ticket index](README.md)    
 Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) (L-14, L-20–L-24) and [review checklist](../design/REVIEW_CHECKLIST.md)
 Additional gate: **Audit only. Present detailed Markdown and severity-ranked PM HTML, then stop for explicit finding selection.**
+
+Current21October: [report v1](../security/SECURITY_REVIEW.md), [PM HTML](../security/SECURITY_OVERVIEW.html), [inputs](../security/audit-inputs-2026-10-21.json), [receipt](../validation/RM-017.md). Candidateb0f043c/runtime73929fd6. SEC-001 High reproduced in actual Linux; SEC-002 Medium conditional paid funding. The direct owner reply “go for it” now selects the recommended SEC-001 repair and SEC-002 paid-off hold; no fix is applied yet. Owner says no questions: present the concrete disposition gate without a routine question. Quality/deployment authority does not substitute for current result selection.
 
 ## Outcome and standalone context
 
@@ -54,18 +56,18 @@ Include the actually implemented refined contracts and runtime assumptions: per-
 
 ## Acceptance criteria
 
-- [ ] Exact candidate, performed checks, tools/database dates, assumptions and unperformed external evidence are recorded.
-- [ ] Real trust boundaries and relevant STRIDE/application/privacy/spend/dependency/release surfaces are covered.
-- [ ] Findings have stable IDs, evidence/confidence, realistic impact and bounded remediation/regression plans.
-- [ ] No sibling finding, unverified concern or old scan result is misrepresented as a confirmed current defect.
-- [ ] Detailed Markdown and self-contained severity-ranked PM HTML agree and contain no secrets/private room data.
-- [ ] Application/config/dependencies remain unchanged by the audit and artifacts remain unstaged/uncommitted for review.
-- [ ] Owner is shown the concrete report and asked which current findings to fix, defer or reject.
-- [ ] The report distinguishes confirmed/reachable/local issues from static/vendor/hosted uncertainty and retains Roomedy's explicit owner finding-selection gate.
+- [x] Exact candidate, performed checks, tools/database dates, assumptions and unperformed external evidence are recorded.
+- [x] Real trust boundaries and relevant STRIDE/application/privacy/spend/dependency/release surfaces are covered.
+- [x] Findings have stable IDs, evidence/confidence, realistic impact and bounded remediation/regression plans.
+- [x] No sibling finding, unverified concern or old scan result is misrepresented as a confirmed current defect.
+- [x] Detailed Markdown and self-contained severity-ranked PM HTML agree and contain no secrets/private room data.
+- [x] Application/config/dependencies remain unchanged by the audit and artifacts remain unstaged/uncommitted for review.
+- [x] Owner is shown the concrete report and required current-findings disposition gate; the routine question is omitted under their latest explicit no-questions instruction, without treating it as a finding selection.
+- [x] The report distinguishes confirmed/reachable/local issues from static/vendor/hosted uncertainty and retains Roomedy's explicit owner finding-selection gate.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — current evidence above
 
-- [ ] The report evaluates actual adopted contract/data/admission/skew behavior with current evidence and honest external limits; no review recommendation is pre-labelled a confirmed vulnerability or owner-selected fix.
+- [x] The report evaluates actual adopted contract/data/admission/skew behavior with current evidence and honest external limits; no review recommendation is pre-labelled a confirmed vulnerability or owner-selected fix.
 
 ## Focused verification and evidence
 
@@ -79,4 +81,4 @@ Include the actually implemented refined contracts and runtime assumptions: per-
 
 ## Owner decision and handoff
 
-Record exact trusted human selection of all findings or named IDs, plus explicit deferrals/rejections. RM-018 cannot begin from generic “continue” or this planned ticket. If no fixes are selected, an explicit no-fixes/defer decision permits skipping remediation while retaining unresolved release implications. New substantial findings return for selection. No approval has been supplied for this future report.
+Record exact trusted human selection of all findings or named IDs, plus explicit deferrals/rejections. RM-018 cannot begin from generic “continue” or this planned ticket. If no fixes are selected, an explicit no-fixes/defer decision permits skipping remediation while retaining unresolved release implications. New substantial findings return for selection. The direct owner reply “go for it” supplies the sole pending report-v1 recommended disposition. Canonical progress records selected SEC-001/SEC-002 and the context/source. This gate is complete for that exact scope; SEC-002 external evidence remains pending.

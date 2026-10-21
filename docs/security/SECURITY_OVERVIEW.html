@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'" />
+    <title>Roomedy · Security review</title>
+    <style>
+      :root { color-scheme:light; --ink:#43372c; --muted:#766656; --paper:#fbf7ef; --oat:#efe5d4; --cocoa:#77543a; --line:#dfd0bc; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { margin:0; background:radial-gradient(ellipse at top right,#e5d1ae88,transparent 60%),var(--paper); color:var(--ink); font:16px/1.65 system-ui,sans-serif; }
+      main { max-width:1040px; margin:auto; padding:32px clamp(18px,4vw,48px) 64px; }
+      header { display:flex; flex-wrap:wrap; gap:12px 24px; align-items:center; justify-content:space-between; margin-bottom:56px; }
+      .brand { font-weight:700; font-size:25px; letter-spacing:-1px; }
+      .brand span { color:var(--cocoa); }
+      .stamp,.tag { display:inline-block; padding:6px 12px; border-radius:99px; font-size:12px; font-weight:650; background:var(--oat); }
+      .eyebrow { color:var(--cocoa); text-transform:uppercase; letter-spacing:.12em; font-size:12px; font-weight:700; margin:0 0 12px; }
+      h1,h2,h3 { font-weight:500; line-height:1.2; letter-spacing:-.035em; }
+      h1 { font:500 clamp(38px,7vw,64px)/1.05 Georgia,serif; margin:0 0 22px; max-width:760px; }
+      h2 { font-size:28px; margin:0 0 16px; }
+      h3 { font-size:23px; margin:12px 0 18px; }
+      p { margin:0 0 16px; }
+      .intro { font-size:18px; color:var(--muted); max-width:730px; }
+      a { color:var(--cocoa); text-underline-offset:4px; }
+      a:focus-visible,summary:focus-visible { outline:3px solid var(--cocoa); outline-offset:5px; border-radius:5px; }
+      .metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:30px 0 40px; }
+      .metric { border-radius:22px; padding:18px 20px; background:#eee3d080; }
+      .metric strong { display:block; font-size:28px; line-height:1.2; font-weight:600; }
+      .metric span { display:block; margin-top:6px; font-size:13px; color:var(--muted); }
+      .finding { border:1px solid var(--line); background:#fffdf8b0; border-radius:26px; padding:clamp(22px,4vw,34px); margin:18px 0; box-shadow:0 12px 36px #6b4f2e08; }
+      .high { background:#efd5cb; color:#873c2a; }
+      .medium { background:#eee0b9; color:#72571e; }
+      .small { font-size:13px; color:var(--muted); }
+      .recommendation { padding:18px 20px; background:var(--oat); border-radius:16px; margin-top:20px; }
+      .recommendation p:last-child { margin:0; }
+      .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+      section { margin-top:42px; }
+      ul { padding-left:22px; margin:12px 0 0; }
+      li { margin:8px 0; }
+      .coverage { display:grid; grid-template-columns:1fr 1fr; gap:12px 30px; }
+      .coverage p { color:var(--muted); font-size:14px; }
+      .coverage strong { color:var(--ink); font-size:15px; }
+      details { background:#eee5d65e; border-radius:18px; padding:18px 22px; margin-top:16px; }
+      summary { cursor:pointer; font-weight:600; }
+      details p:first-of-type { margin-top:16px; }
+      code { font-size:.88em; overflow-wrap:anywhere; }
+      footer { margin-top:40px; font-size:13px; color:var(--muted); }
+      @media(max-width:560px) { header { margin-bottom:38px; } .metrics { grid-template-columns:1fr; gap:8px; margin-top:24px; } .metric { display:flex; gap:14px; align-items:center; padding:12px 18px; } .metric span { margin:0; } .coverage { grid-template-columns:1fr; gap:0; } }
+      @media print { body { background:white; } main { max-width:none; padding:0; } .finding { box-shadow:none; break-inside:avoid; } details { break-inside:avoid; } header { margin-bottom:28px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header><div class="brand">roomedy<span>.</span></div><span class="stamp">21 October 2026 · Report v1</span></header>
+      <p class="eyebrow">Security review · Before sharing</p>
+      <h1>One repair before we open the door.</h1>
+      <p class="intro">Quality is committed and the Linux release checks pass. The security audit found a real availability issue to repair, plus a funding condition for public paid AI.</p>
+      <div class="metrics" aria-label="Review status">
+        <div class="metric"><strong>1</strong><span>High · Confirmed local defect</span></div>
+        <div class="metric"><strong>1</strong><span>Medium · Paid activation condition</span></div>
+        <div class="metric"><strong>Selected</strong><span>Repair + paid-off hold</span></div>
+      </div>
+
+      <article class="finding" id="sec-001">
+        <div class="row"><span class="tag high">High</span><span class="small">SEC-001 · Reproduced in the actual Linux image</span></div>
+        <h2>Two unfinished uploads can make AI stay busy.</h2>
+        <p>A client can start two requests, send only part of each upload and leave them unfinished. The screen receives a timeout, but the server keeps both request slots occupied. Later requests are refused—even after those first clients disconnect.</p>
+        <p>No verification token, account or paid call is needed. This blocks fresh photo and Medy admission on the affected process. The ordinary pages and manual editor remain available.</p>
+        <div class="recommendation"><p><strong>Recommended: repair before public deployment.</strong></p><p>Make the upload deadline cancel and retire its own input stream. Preserve the separate protection that retains already-dispatched upstream work until it settles. Then repeat the exact two-upload test and release checks.</p></div>
+        <p class="small" style="margin:16px 0 0">Evidence: real 15-second timeouts returned 408/408; later complete input returned 429, including after disconnect. No upstream or provider request.</p>
+      </article>
+
+      <article class="finding" id="sec-002">
+        <div class="row"><span class="tag medium">Medium</span><span class="small">SEC-002 · Conditional on paid activation</span></div>
+        <h2>A budget alert does not stop provider spending.</h2>
+        <p>Roomedy already limits request rates, concurrent jobs, model rounds and output. Those controls reset with each process and do not set a spending limit over time or across overlapping revisions. Human verification helps with bots; it is not a money cap.</p>
+        <p>The budget alert is useful, but an enforceable provider funding boundary has not been verified. This is an unverified account condition, not an observed overspend.</p>
+        <div class="recommendation"><p><strong>Recommended: keep paid AI off for the first hosted checks.</strong></p><p>Verify the actual provider funding cutoff and acceptable outstanding exposure before public paid activation. Use existing account controls where possible; do not add a new quota database just for this demo.</p></div>
+        <p class="small" style="margin:16px 0 0">A paid-off release can be assessed separately. Domain and Turnstile hostname setup remain scheduled for later, as requested.</p>
+      </article>
+
+      <section aria-labelledby="coverage">
+        <p class="eyebrow">What was checked</p><h2 id="coverage">The actual boundaries of this demo.</h2>
+        <div class="coverage">
+          <p><strong>Photos and untrusted input</strong><br />Codecs, bytes, pixels, fragments, decompression, native decoding, imports and stream ownership.</p>
+          <p><strong>AI and room authority</strong><br />Prompt injection, typed tools, starting locks, replay, revision fences and explicit Apply / Undo.</p>
+          <p><strong>Public and private services</strong><br />Fixed routes, origins, secrets, metadata identity, redirects, grants and Turnstile input binding.</p>
+          <p><strong>Privacy and release</strong><br />Safe errors, private logs, two-hour semantic recovery, photo exclusions, non-root images and exact assets.</p>
+        </div>
+        <p class="small">No confirmed secret disclosure, remote-code execution or model-to-command authority bypass was found in the reviewed paths. Hosted IAM, real capacity and external provider privacy controls still require their own verification.</p>
+      </section>
+
+      <details><summary>Dependency results and their limits</summary>
+        <p>All <strong>446 exact lockfile package versions</strong> were checked locally against the current public npm advisory database. One version match affects <code>braces 3.0.3</code>, reached only through development lint tooling. No production dependency path or visitor-controlled glob endpoint was found. The upstream advisory currently lists no patch.</p>
+        <p>Both images' <strong>88 Debian packages</strong> were checked against Debian's current database. Source-level matches include unused tooling, architecture-specific and conditional library paths; they are not all exploitable app vulnerabilities. No substantial production-reachable OS exploit was established. Base refresh and vendor review remain release maintenance.</p>
+        <p class="small">The report preserves versions, database times/hashes, reachability and limitations. No repository, dependency graph, secrets or guest inputs were uploaded to a scanner. This is not a claim that all embedded native code or the managed host is vulnerability-free.</p>
+      </details>
+
+      <section aria-labelledby="next">
+        <p class="eyebrow">Deployment status</p><h2 id="next">Prepared locally. Not deployed yet.</h2>
+        <p>Quality commit <code>b0f043c</code> includes six reproduced release/documentation corrections. The repository gate passed <strong>1,039 tests</strong>; the current Linux pair passed <strong>nine probes and 90 HTTP asset checks</strong>. The owner selected the recommended repair and paid-off hold with “go for it”; implementation follows.</p>
+        <p>The authenticated <code>roomedy</code> project and four secret records were verified without reading their values. Cloud Run / Artifact Registry setup, private backend IAM and public frontend deployment remain downstream of this review.</p>
+        <div class="recommendation"><p><strong>Current decision: recommended path approved.</strong></p><p>The recommendation is to repair SEC-001 and preserve paid-off operation until SEC-002 is resolved externally. The direct owner reply “go for it” selects this exact scope. The reviewed audit checkpoint is authorized for local commit; the fix has not yet been applied.</p></div>
+      </section>
+      <footer>Read <a href="SECURITY_REVIEW.md">the detailed audit and careful fix plans</a> or <a href="audit-inputs-2026-10-21.json">the sanitized evidence manifest</a>. Candidate <code>b0f043c</code> · Runtime inputs <code>73929fd6…32760d</code>. No paid calls or cloud changes during this audit.</footer>
+    </main>
+  </body>
+</html>

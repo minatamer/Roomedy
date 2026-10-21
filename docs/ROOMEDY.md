@@ -1437,9 +1437,9 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **10b-security-review**
-Next action: Stage/commit the verified exact21-path quality candidate under existing authority, then prepare and run preapproved report-only RM-017. Security findings remain unstaged and require actual selection; no routine prompt question.
-Active ticket: RM-016
+Current phase: **11-security-fixes**
+Next action: Commit reviewed audit checkpoint, allocate and implement SEC-001 stream retirement with focused baseline/fix/native validation. SEC-002 remains paid-off/external funding condition.
+Active ticket: RM-017
 Phase prompts: pre-approved by owner
 Local commits approved: yes
 
@@ -1453,8 +1453,8 @@ Local commits approved: yes
 - [x] 08-performance — Performance investigation (complete_local)
 - [x] 09-visual-review — Frontend visual approval checkpoint (complete)
 - [x] 10a-quality — Quality audit and fixes (complete)
-- [ ] 10b-security-review — Security audit and manual review (pending)
-- [ ] 11-security-fixes — Approved security fixes (pending)
+- [x] 10b-security-review — Security audit and manual review (complete)
+- [ ] 11-security-fixes — Approved security fixes (in_progress)
 - [ ] 12-handoff — Final local handoff (pending)
 
 This checklist records local work. Human approvals and unresolved external checks are preserved below; it does not authorize paid calls or deployment.
@@ -1464,7 +1464,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-21T14:52:29+00:00",
+  "updated_at": "2026-10-21T15:22:02+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1719,8 +1719,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-016",
-  "next_action": "Stage/commit the verified exact21-path quality candidate under existing authority, then prepare and run preapproved report-only RM-017. Security findings remain unstaged and require actual selection; no routine prompt question.",
+  "active_ticket": "RM-017",
+  "next_action": "Commit reviewed audit checkpoint, allocate and implement SEC-001 stream retirement with focused baseline/fix/native validation. SEC-002 remains paid-off/external funding condition.",
   "phases": [
     {
       "id": "01-docs",
@@ -2940,20 +2940,80 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "10b-security-review",
       "name": "Security audit and manual review",
       "gate": "security",
-      "status": "pending",
-      "prompt": null,
-      "evidence": [],
+      "status": "complete",
+      "prompt": {
+        "text": "Execute audit-only build phase10b-security-review through RM-017 for Roomedy at C:/Users/minat/Work/Roomedy after quality commit b0f043c5fe5da0612f7dae7fe8965727e2835340. The owner has selected audits before deployment, preapproved phase prompts and directs no routine questions. Preserve the separate manual current-security-findings result checkpoint explicitly retained by the build skill and this ticket. No security fixes, application/config/dependency edits, staging or audit commits in this phase.\n\nRoomedy is a public guest bedroom/workspace demo: manual or transient photo intake produces one editable canonical room in synchronized2D/3D; Medy answers or proposes bounded typed previews with explicit Apply/Cancel/Undo. Public examples remain in real mode, the warm accepted design/motion and initial Medy remain. Architecture: pinned Next16.4.2/React19.3.1, private Express5.3.0, shared contracts/spatial policy, metered OpenAI Responses through a fixed frontend bridge, Cloudflare Turnstile plus input-bound one-use grants, bounded per-process work/admission/replay and deadlines. No database or user accounts are required. Preserve physical/provenance/locks/atomic commands/lifecycle/recovery/photo exclusions, safe helpful public errors and useful content-free private diagnostic logs.\n\nRead applicable repo instructions, blueprint security/provider/deployment contracts, full RM-017 and precision references. Audit exact current first-party source, manifests/lockfile and verified Linux package/image evidence73929fd68d965cb9113bf6743b7c4870f549628ab7e8f9507b9cc83a8532760d, nine actual probes/90 assets, plus1039-test root checks and final19 release regressions. Review all meaningful trust boundaries using STRIDE: spoofing, tampering, repudiation, disclosure, denial of service and privilege escalation. Inspect input/render/import/export/recovery, image codecs/decompression/metadata/bytes/fragments, model tool and action authority, replay/revision/starting locks, bridge origins/paths/SSRF/headers/host identity, Turnstile binding, provider privacy/storage/output/tool loops/dispatch/retry/cancellation/deadline/capacity, process-restart/revision overlap, secrets/logs/client bundles/contexts/nonroot/runtime packaging/CI and dependencies. Investigate substantial realistic risks, not minor speculative hardening or generic enterprise infrastructure.\n\nCheck exact direct/transitive lockfile versions against a current public npm OSV database downloaded for local matching. Do not upload repository metadata, dependency graph, secrets or guest inputs to scanners. Record download URL/time/database hash, matching method, affected exact versions/ranges, reachability/patch compatibility and limitations. Read primary advisories where a possible match warrants verification. Read-only GCloud evidence for the owner-selected roomedy project says billing enabled and four named secret version1 records exist; no secret values are read. Cloud Run/Artifact Registry APIs are not yet enabled. Domain/Turnstile hostname setup is owner-deferred. A budget alert is notification, not a hard provider spend cap. No cloud mutation, paid/provider calls, package update, new dependency/service/port, push or delegation.\n\nWrite docs/security/SECURITY_REVIEW.md with exact candidate and sanitized evidence manifest, actual methods/dates/coverage/limits and each substantial stable SEC-ID with severity/confidence, realistic trigger/impact, precise source evidence, smallest functionality-preserving correction plan, invariant risks and meaningful regressions/release refresh. Produce a self-contained severity-ranked PM HTML at docs/security/SECURITY_OVERVIEW.html agreeing with the detailed report and separating local fixes from hosted/vendor/account prerequisites. Inspect the HTML and report/diff consistency; keep findings/status/progress/audit docs unstaged/uncommitted. Do not preselect future findings. Record awaiting_owner with the concrete current report/selection gate and precise deployment consequence. Existing general deployment authorization does not waive that gate. Do all independent permitted audit work before pausing; no routine prompt approval question.",
+        "sha256": "283ee459ae27618bb08560cabbd552345a5f489b2a71955470d2129f99bd61ed",
+        "context_sources": [
+          "docs/tickets/RM-017-audit-security-and-present-findings.md",
+          "docs/ROOMEDY.md#21-security-and-diagnostics",
+          "docs/validation/RM-016.md",
+          "human:current-chat/recommended-audit-path-no-more-questions",
+          "commit:b0f043c5fe5da0612f7dae7fe8965727e2835340"
+        ],
+        "status": "preapproved",
+        "approval": {
+          "quote": "didnt i say not to ask me anything? .. why did u violate that when u clearly have a recomended path ?",
+          "source": "human:current-chat/2026-10-21/answer-recommended-audit-path-no-more-questions",
+          "question_context": "The quality and security audits haven’t run. Should I finish them before deployment? “Finish audits first” approves the saved RM-016 prompt and pre-approves the remaining build phase prompts; the separate review of actual security findings stays in place.",
+          "scope": "Direct response instructs taking the recommended Finish audits first path defined in the single pending question: approve saved RM-016 prompt and preapprove remaining phase prompts. Do not repeat routine questions. Preserve the separately named manual review of actual security findings; no future findings are preselected."
+        }
+      },
+      "evidence": [
+        "commit:b0f043c5fe5da0612f7dae7fe8965727e2835340",
+        "docs/security/SECURITY_REVIEW.md",
+        "docs/security/SECURITY_OVERVIEW.html",
+        "docs/security/audit-inputs-2026-10-21.json",
+        "docs/validation/RM-017.md"
+      ],
       "blockers": [],
-      "approval": null,
-      "decision": null,
-      "reviews": []
+      "approval": {
+        "quote": "go for it",
+        "source": "human:current-chat/2026-10-21/go-for-it-security-disposition",
+        "scope": "Direct affirmative response to the sole pending report-v1 security finding disposition: implement the explicitly recommended SEC-001 input-retirement repair and SEC-002 paid-off deployment hold pending external funded-cutoff verification. Candidate b0f043c; original reviewed report/HTML hashes in docs/validation/RM-017.md. No additional fixes, paid calls or funding assumption.",
+        "question_context": "The completed security report and immediately preceding checkpoint identify required current-finding disposition; recommended path was to fix SEC-001 before deployment and keep paid AI off until SEC-002 external funding controls are verified. The owner says go for it, resolving this sole pending result gate.",
+        "recorded_at": "2026-10-21T15:22:02+00:00"
+      },
+      "decision": "selected-fixes",
+      "reviews": [
+        {
+          "decision": "selected-fixes",
+          "approval": {
+            "quote": "go for it",
+            "source": "human:current-chat/2026-10-21/go-for-it-security-disposition",
+            "scope": "Direct affirmative response to the sole pending report-v1 security finding disposition: implement the explicitly recommended SEC-001 input-retirement repair and SEC-002 paid-off deployment hold pending external funded-cutoff verification. Candidate b0f043c; original reviewed report/HTML hashes in docs/validation/RM-017.md. No additional fixes, paid calls or funding assumption.",
+            "question_context": "The completed security report and immediately preceding checkpoint identify required current-finding disposition; recommended path was to fix SEC-001 before deployment and keep paid AI off until SEC-002 external funding controls are verified. The owner says go for it, resolving this sole pending result gate.",
+            "recorded_at": "2026-10-21T15:22:02+00:00"
+          }
+        }
+      ],
+      "selected_findings": [
+        "SEC-001",
+        "SEC-002"
+      ]
     },
     {
       "id": "11-security-fixes",
       "name": "Approved security fixes",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
+      "status": "in_progress",
+      "prompt": {
+        "text": "Execute build phase11-security-fixes through RM-018 for Roomedy at C:/Users/minat/Work/Roomedy. The owner directly says go for it in response to the sole report-v1 finding-disposition checkpoint. Record that trusted source and apply exactly the recommended SEC-001 local input-stream retirement repair; implement SEC-002 as a paid-off deployment condition pending enforceable external funding evidence, not a new quota database or a claim of verified account limits. Existing local stage/commit and deployment-to-roomedy authority remain; no routine prompt/permission questions. Preserve the original reviewed audit and actual source/image identity, plus selected/unresolved finding dispositions.\n\nRead applicable repo/blueprint/queue/feedback rules, report v1 and full RM-018. Base quality commit b0f043c passed1039tests and exact Linux proof73929fd68d965cb9113bf6743b7c4870f549628ab7e8f9507b9cc83a8532760d. SEC-001 is confirmed offline and in the actual image: two stalled public admission bodies time out408/408 but later complete requests return429, even after disconnect; no paid call. Fix at apps/frontend/src/server/bridge-post.ts so caller abort/intake deadline cancels its owned pending reader, retires input/memory/listeners and releases the slot exactly once. Preserve the separate abort-ignoring unresolved-upstream accounting until actual settlement, every byte/fragment/schema/origin/release/grant limit and existing safe diagnostics. No UI/domain/model/dependency change, implicit retry, raised limit, automatic restart or framework/service expansion.\n\nBefore source edits write a concrete exact file allocation and selected remediation plan. Add meaningful regressions that demonstrate stalled timeout/caller abort, late input, cancellation rejection/nonsettlement and subsequent valid intake, with original unresolved-upstream regression retained. Establish baseline failure, implement the smallest correction, run focused bridge/lifecycle/admission checks, then the settled required root gate and exact current Linux build/runtime proof. Repeat the original bounded native two-stream reproduction after the correction and verify later requests reach schema/normal validation. No new provider/Cloudflare request, owner-env change, secret-value access, scanner metadata export, delegation, new app service/port or push.\n\nUse execute/read-only validate/independently confirm/fix/revalidate until no actionable local finding. Preserve all accepted app behavior, motion, photo/Medy defaults, physical facts/locks/commands/Undo/expiry, private logs and explicit visitor authority. Update report/HTML/ticket/receipt/progress with actual selected fixed/external/deferred distinctions and new source/image identity. Stage only explicit reviewed owned paths under existing authority and make cohesive ticket-prefixed local commits. Mark external SEC-002 funding and deferred domain/Turnstile hosted conditions honestly. Then generate the preapproved final-handoff prompt and continue all independently authorized work toward the requested paid-off first deployment. No blanket all-secure or paid/hosted pass from local tests.",
+        "sha256": "d5bc9e0c35e15778635cbc1d0b45fc4dfdfd9dc961fd88642c2b8897b4b64a9b",
+        "context_sources": [
+          "human:current-chat/2026-10-21/go-for-it-security-disposition",
+          "docs/security/SECURITY_REVIEW.md",
+          "docs/validation/RM-017.md",
+          "docs/tickets/RM-018-remediate-owner-selected-security-findings.md"
+        ],
+        "status": "preapproved",
+        "approval": {
+          "quote": "didnt i say not to ask me anything? .. why did u violate that when u clearly have a recomended path ?",
+          "source": "human:current-chat/2026-10-21/answer-recommended-audit-path-no-more-questions",
+          "question_context": "The quality and security audits haven’t run. Should I finish them before deployment? “Finish audits first” approves the saved RM-016 prompt and pre-approves the remaining build phase prompts; the separate review of actual security findings stays in place.",
+          "scope": "Direct response instructs taking the recommended Finish audits first path defined in the single pending question: approve saved RM-016 prompt and preapprove remaining phase prompts. Do not repeat routine questions. Preserve the separately named manual review of actual security findings; no future findings are preselected."
+        }
+      },
       "evidence": [],
       "blockers": [],
       "approval": null,
