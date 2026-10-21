@@ -1,5 +1,7 @@
 # Roomedy security review — 21 October 2026
 
+**Later owner-directed activation:** After the final BM visual review, the owner explicitly instructs deployment **“along with turning on paid mode in deployment.”** This supersedes the older paid-off disposition for that named update, following the reminder that account-funded cutoff/privacy evidence remains unverified. SEC-002 stays unresolved; neither the instruction nor process/instance limits is proof of an enforced spending cutoff. The original report-v1 findings/recommendation/manifest below remain dated audit evidence. [Current disposition](remediation-plan.md#later-owner-decision--paid-activation21-october2026), [current deployment allocation](../commit-plans/RM-020.md#approved-landing-update-and-paid-activation--21-october2026). No audit finding was deleted or relabelled fixed to enable the update.
+
 **Report v1 · Reviewed; recommended SEC-001 repair and SEC-002 paid-off hold selected · SEC-001 fixed locally; SEC-002 externally pending.**
 **Owner disposition —21October2026:** Direct reply “go for it” approves the sole pending recommended report-v1 path: repair SEC-001 before deployment; implement SEC-002 as paid off pending external funded-cutoff verification. Selected scope is SEC-001 local cancellation/retirement and SEC-002 operational hold, not a new quota service or a verified funding claim. No repeated question is required. Local staging/commits and deployment authority already exist. This reviewed checkpoint is historical; the selected local remedy is now verified below.
 
@@ -30,7 +32,7 @@ The attacker is an unauthenticated internet client. They can forge Origin/fetch 
 | ID | Severity / confidence | Consequence | Recommended disposition | Owner selection |
 | --- | --- | --- | --- | --- |
 | SEC-001 | **High / reproduced in actual Linux image** | Two unfinished public mutation bodies leave an affected frontend route pool busy after timeout and disconnect | Fix before public deployment; preserve independent upstream settlement protection | Fixed locally — RM-018 |
-| SEC-002 | **Medium / confirmed design limit; account exposure unverified** | Process-local limits and a budget alert do not enforce a lifetime provider spending cutoff | Keep paid off; verify an enforceable funded bound before enabling public paid AI | Selected — paid-off hold; external verification pending |
+| SEC-002 | **Medium / confirmed design limit; account exposure unverified** | Process-local limits and a budget alert do not enforce a lifetime provider spending cutoff | Original recommendation: keep paid off until an enforceable funded bound is verified | Later explicit owner-directed activation; account verification remains unresolved |
 
 ### SEC-001 — Unfinished request bodies strand the public AI bridge's slots
 

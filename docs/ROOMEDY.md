@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Current deployment —21 October:** Approved BM3c30318 and paid activation are verified at [Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). Actual pair frontend00002-kjn/backend00003-f8t each100%, retained-context inputaba8aff03fbfff4d53da81135b62f62e316ad5d887ba0c3d3250de5468f3e08b, live-ready/AI capabilities on, private backend IAM and97 exact assets/one worker pass. One four-sample recognition and one provider-backed Medy request each complete in one round without retry; sample pieces are separated near the wall, uncertain sizes retained, Medy initially open,2D/3D and contextual replies observed. [Acceptance](operations/HOSTED_ACCEPTANCE.md), [current candidate](operations/landing-paid-candidate-2026-10-21.json), [receipt](validation/RM-020.md). Earlier8472b3db/paid-off/local-review checkpoints below remain history. SEC-002 funding/privacy evidence stays unresolved; explicit owner activation is not a hard spending-cap or broad model/device guarantee.
+
 **Latest owner acceptance —21 October:** “looks good” accepts BM's final360ms initial fade and800ms ready-driven move/house reveal. Owner authorizes the [exact ten-path atomic stage/commit](commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026), then deployment with paid mode on. Supersedes older local-review/paid-off holds for this update; no funding/privacy/hosted-quality proof is implied. Current no-key checks and scoped review precede commit, fresh retained-assets/Linux proof precedes publication, and actual paid-mode outcomes/limits belong to the RM-020 follow-up. Public8472b3db remains current until that deployment actually completes.
 
 BM owner follow-up retains a short initial text fade. It starts immediately over360ms, independently of actual3D readiness; the separate prepared-house fade/leftward move remains800ms. [Current local observation](validation/RM-015BM.md#owner-follow-up--immediate-initial-text-fade). Review remains local/pending; prior e605f098/source/build/full-suite identity is the pre-fade iteration.
@@ -1448,8 +1450,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Stage/commit the exact validated10 BM paths, then finish current retained-assets Linux proof and publish/deploy the paired RM-020 update with paid mode enabled under latest explicit owner instruction. Preserve private IAM/origins/secret refs/resources/local env; record current hosted/challenge/model outcomes and unresolved SEC-002 account limits. No repeated question or Git push.
-Active ticket: RM-015BM
+Next action: Deliver the verified live paid-mode update with BM3c30318 and the exact17-path deployment-record commit. Worktree should be clean after commit; no further model call, source/env change or Git push. Keep unresolved account-funded/privacy/full-corpus/native/interactive/domain limits explicit.
+Active ticket: none
 Phase prompts: pre-approved by owner
 Local commits approved: yes
 
@@ -1474,7 +1476,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-21T17:07:31+00:00",
+  "updated_at": "2026-10-21T17:35:57+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1725,6 +1727,16 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "Direct owner accepts final360ms text fade/800ms move-house reveal: looks good, file level commit plan and you can stage and commit, then deploy this update along with turning on paid mode in deployment. Authorizes exact10-path atomic BM stage/local commit then RM-020 paired immutable update and existing paid-master enablement. Latest instruction supersedes prior BM local-only hold and paid-off activation disposition; does not verify account funding/privacy or grant unrelated cloud/DNS/Git push. Final fade-inclusive pnpm check passes1043tests/64files/all root gates and builds, source-onlyd43a2d63db478f2fed976a743b02c69d1c8fdc14fa8aebeaffbac67874f655c0/287inputs/BUILD_ID lm-oC-yOchNxTyMLZVWR2. Actual cloud stillfirstpair/paidfalse;90 public assets freshly snapshotted for compatibility, Linux build/probes with retained context running. Current10-path settled read-only review clean; exact stage/commit next.",
       "source": "human:current-chat/2026-10-21/looks-good-commit-deploy-paid-mode; docs/commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026; docs/validation/RM-015BM.md",
       "confidence": "confirmed"
+    },
+    "CURRENT_PAID_DEPLOYMENT": {
+      "value": "Approved BM committed3c30318 after exact10-path review/fresh1043-test root/all builds. Updated pair actually deployed with paid mode enabled and fake off: frontend00002-kjn/backend00003-f8t each100%, releaseaba8aff03fbfff4d53da81135b62f62e316ad5d887ba0c3d3250de5468f3e08b/377inputs incl90 retained old files; source-onlyd43a2d63. Actual observed registry digests frontendc7bacbacaaa99b82cdbb31ed0051905a1967f3b54ada70edcc5fe54c86cc566f/backenda98f0fd3aa8ce7f97737dd4d6bb35dfd4f62fc4a37b41ddb4cc28bce47ef10e7. Nine Linux probes/97 HTTP asset hashes/one worker and fresh strict source-image verification pass, actual live-ready/capabilities true, private403/fixedAPI failures/IAM/identity/secretrefs/resources preserved. Hosted initial fade/centered copy and actual3D/left settled pose observed. One four-sample recognition and one provider Medy request pass quiet verification/one provider round each/no retry, defaultMedy/separate near-wall bed+drawers/2D3D/unknown dimensions/contextualquickreplies retained. Safe diagnostics17:20:15Z and17:23:07Z confirm two completed one-round operations. Initial backend00002-7p9 rejected malformed shell-expanded release arg before traffic; structured env/secret refs corrected same image, no source fix. Current exact17-path documentation record includes BM heading-fragment correction; previous source/hosted/audit manifests remain history. SEC-002 account-wide funding/privacy remains unresolved under explicit owner-directed activation, not claimed fixed. Full corpus/native/interactive/domain/proposalApplyUndo limits explicit. No further paid call, local-env/Gitpush/DNS/account/delegation change.",
+      "source": "human:current-chat/2026-10-21/looks-good-commit-deploy-paid-mode; docs/operations/HOSTED_ACCEPTANCE.md; docs/operations/landing-paid-candidate-2026-10-21.json; docs/validation/RM-020.md; actual service/IAM/probe/native/safe diagnostic evidence",
+      "confidence": "confirmed"
+    },
+    "PAID_DEPLOYMENT_FINAL_REVIEW": {
+      "value": "Requested deployment and paid activation achieved: BM3c30318 and current frontend00002-kjn/backend00003-f8t/aba8aff0 verified; actual2 completed one-round provider cases, defaultMedy/2D3D/separated sample pieces/contextual replies and deployed fade observed. Final exact17 documentation paths/377 actual hashes/9 probes/97 assets/90 retained/39 links/3 fragments/balanced securityHTML/secret and generated exclusions/read-only claims review clean. No source change afterBM, no extra paid test. Exact record stage/local commit next; known SEC-002 account-funded/privacy evidence and full-corpus/native/interactive/domain limits preserved. Prior first release and audit manifests retained.",
+      "source": "docs/validation/RM-020.md; docs/operations/landing-paid-candidate-2026-10-21.json; actual current native/cloud/proof evidence",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": {
@@ -1749,8 +1761,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015BM",
-  "next_action": "Stage/commit the exact validated10 BM paths, then finish current retained-assets Linux proof and publish/deploy the paired RM-020 update with paid mode enabled under latest explicit owner instruction. Preserve private IAM/origins/secret refs/resources/local env; record current hosted/challenge/model outcomes and unresolved SEC-002 account limits. No repeated question or Git push.",
+  "active_ticket": null,
+  "next_action": "Deliver the verified live paid-mode update with BM3c30318 and the exact17-path deployment-record commit. Worktree should be clean after commit; no further model call, source/env change or Git push. Keep unresolved account-funded/privacy/full-corpus/native/interactive/domain limits explicit.",
   "phases": [
     {
       "id": "01-docs",

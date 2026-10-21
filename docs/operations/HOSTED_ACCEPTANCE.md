@@ -1,4 +1,29 @@
-# First hosted release — 21 October 2026
+# Roomedy hosted releases — 21 October 2026
+
+## Current landing update and paid activation
+
+**Deployed and bounded live cases verified.** [Open Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). Owner accepted the final BM fade and explicitly authorized the checkpoint, then deployment with paid mode on. BM committed `3c30318` after a fresh1,043-test/64-file root gate/all builds. [Current exact manifest](landing-paid-candidate-2026-10-21.json), [17-path allocation](../commit-plans/RM-020.md), [receipt](../validation/RM-020.md), [later security disposition](../security/remediation-plan.md).
+
+Source-only input `d43a2d63db478f2fed976a743b02c69d1c8fdc14fa8aebeaffbac67874f655c0` plus90 freshly extracted prior public files yields377-input release `aba8aff03fbfff4d53da81135b62f62e316ad5d887ba0c3d3250de5468f3e08b`. Current Linux pair passes all nine probes and97 actual HTTP assets; independent current-source/Docker-image verification passes. Original audit/first-release manifests below remain dated evidence, not current-worktree proof.
+
+| Service | Actual ready revision / traffic | Published immutable digest |
+| --- | --- | --- |
+| `roomedy-frontend` | `roomedy-frontend-00002-kjn` /100% | `sha256:c7bacbacaaa99b82cdbb31ed0051905a1967f3b54ada70edcc5fe54c86cc566f` |
+| `roomedy-backend` | `roomedy-backend-00003-f8t` /100% | `sha256:a98f0fd3aa8ce7f97737dd4d6bb35dfd4f62fc4a37b41ddb4cc28bce47ef10e7` |
+
+Registry remains `europe-west1-docker.pkg.dev/roomedy/roomedy/{frontend,backend}`. Actual digests were observed after publication. Canonical frontend and fixed backend audience/origin, dedicated runtime accounts, version1 secret references, public frontend/IAM-private backend and gen2/1CPU/512MiB/concurrency4/max1/min0/120s remain verified. Backend is `FAKE_MODE=false`, `PAID_DEMO_ENABLED=true`; public readiness is `live-ready`, manual/recognition/assistant true and simulation false. Anonymous backend health/mutation still return403. No local env, secret value, account budget, DNS/domain, unrelated IAM/default, dependency or Git push changed.
+
+No-provider HTTPS probes pass ten expected page/API cases, all97 current/retained public assets with exact byte/hash matches and one worker. API no-store/nosniff/release headers and foreign-origin/query/method/stale-release/malformed-input rejection remain. Hosted desktop observations show text fading immediately while room status is loading, centered copyx372.5 at1265px usable width, then actual prepared house/left copyx89.59. Existing header remains divider-free.
+
+Economical actual browser cases: one explicit four-built-in-photo recognition and one contextual Medy request; no retry or extra corpus. Quiet verification succeeds without an interactive challenge. Recognition opens the editable studio with Medy initially selected; the bed and bedside drawers are separate and near the wall in actual3D/2D. Room/furniture dimensions remain unknown and illustrative, with truthful measurement guidance; no scale/fit confirmation was invented. Medy returns useful warm/calm guidance grounded in the estimated palette and existing pieces, plus “Check what’s missing”/“Keep it simple” quick replies. Safe backend diagnostics record two completed operations, each one provider round; assistant stage is provider. Token/account billing totals were not collected. These observations are bounded cases, not broad accuracy, geometry or assistant-tool quality certification.
+
+A first backend attempt `00002-7p9` failed startup because PowerShell expanded an unquoted comma env argument into a single malformed release value. The startup guard rejected it before traffic moved; the old revision continued serving. Corrected deployment uses a structured non-secret env file and explicit original secret refs, with the same verified image and no app/test change. Corrected backend was ready before frontend deployment. Temporary3D loading/fallback snapshots settled into the actual scene; no new source correction was justified. The only runtime source change is the approved landing CSS.
+
+SEC-001 remains fixed. **SEC-002 remains unresolved account-wide funding/privacy evidence**: the later direct owner instruction supersedes the earlier paid-off disposition, but does not establish an enforced funded cutoff/retention setting. Existing process/rate/instance bounds and Google alerts are not a lifetime money cap. Interactive challenge fallback, full held-out funded corpus, hosted AI proposal/Apply/Undo corpus, native concurrent peak/sustained capacity and named physical/assistive cases remain unperformed. Managed HTTPS is used; custom domain/DNS remains deferred. Exact limits and the original recommendation remain visible in security records.
+
+Previous compatible pair `frontend00001-jsx/backend00001-zxp` with release8472b3db and paid=false remains the rollback baseline below. Its90 public files are retained in the new image and byte-verified. Preserve paired versions/configuration and130minute retention after last old traffic. No operator rollback switch was exercised; the platform's failed-start traffic protection was actually observed. Screenshots/safe metadata/probes remain ignored under `.release/RM020-update-20261021`.
+
+## Original first release — historical paid-off scope
 
 **Deployed and verified for the paid-off scope.** [Open Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). Landing, manual studio, 2D/3D, selection, rotation and Undo work on this hosted candidate. Medy opens initially. Public samples remain visible and can be prepared locally. Recognition and provider-backed conversation are disabled; authored local guidance and manual commands remain available. This is not hosted paid-flow acceptance.
 

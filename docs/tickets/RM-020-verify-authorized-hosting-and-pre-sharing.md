@@ -1,6 +1,6 @@
 # RM-020 — Verify authorized hosting and pre-sharing readiness
 
-Status: **Authorized paid-off hosting verified; conditional paid/domain/native acceptance deferred**
+Status: **Approved landing/paid update verified with bounded real cases; account/full-corpus/native/domain limits remain**
 Planning date: **17 October 2026**  
 Milestone: **Conditional external release acceptance**  
 Depends on: [RM-019](RM-019-finalize-local-release-evidence-and-handoff.md)  
@@ -10,7 +10,9 @@ Queue and execution rules: [ticket index](README.md)
 Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) (L-12, L-14, L-17, L-22–L-24) and [review checklist](../design/REVIEW_CHECKLIST.md)
 Additional gate: **No hosting, provider spend, publication, domain or account authority is supplied by this plan.**
 
-Current21October: [hosted acceptance](../operations/HOSTED_ACCEPTANCE.md), [manifest](../operations/hosted-candidate-2026-10-21.json), [receipt](../validation/RM-020.md), [execution/allocation](../commit-plans/RM-020.md). [Roomedy is deployed](https://roomedy-frontend-860563209111.europe-west1.run.app). Exact source/input8472b3db and accepted immutable images are unchanged. Actual public frontend/private backend IAM/metadata bridge,90 matching assets/worker, safe boundary rejections and manual2D/3D/rotation/Undo/default-Medy/public sample preparation pass. First pair is the future rollback baseline. Paid AI stays off; domain/challenge/funded/privacy/hosted-paid/native/physical evidence remains conditional.
+Initial21October release: [hosted acceptance](../operations/HOSTED_ACCEPTANCE.md), [original manifest](../operations/hosted-candidate-2026-10-21.json), [receipt](../validation/RM-020.md), [execution/allocation](../commit-plans/RM-020.md). Source/input8472b3db and first pair were verified paid-off with90 matching assets/worker/private IAM and manual editor checks. That pair remains the previous rollback baseline; the later update below is current.
+
+Later21October update supersedes that first-release state: BM3c30318 is committed and deployed with paid mode explicitly requested on. [Current manifest](../operations/landing-paid-candidate-2026-10-21.json) owns inputaba8aff0, frontend00002-kjn/backend00003-f8t,97 exact assets/90 retained files, actual live-ready/AI flags/private IAM and one quiet-verification sample recognition plus one provider Medy request, one provider round each/no retry. Account-wide funded/privacy evidence remains unresolved SEC-002; held-out corpus/native load/physical/domain checks remain external. No full paid-quality or monetary-cap claim.
 
 ## Outcome and standalone context
 
@@ -67,7 +69,7 @@ Only under later external authorization, verify the actual process/restart/multi
 
 - [x] Exact external action/data/funding/publication scope is supplied by a trusted human and recorded: first paid-off deployment only.
 - [x] Deployed immutable candidate matches current locally reviewed source/image/proof.
-- [ ] Public frontend/private backend IAM, fixed bridge, real challenge/origin and safe configuration work as intended.
+- [x] Public frontend/private backend IAM, fixed bridge, real quiet verification/origin and safe configuration work for the two bounded cases. Interactive challenge fallback remains unperformed.
 - [ ] Effective hosted concurrency/time/resource/provider account controls are observed with explicit limitations.
 - [ ] Authorized real recognition/assistant cases have actual bounded model/latency/usage evidence.
 - [ ] Hosted assets/worker/headers/domain/TLS and core guest journeys are checked on the actual origin.

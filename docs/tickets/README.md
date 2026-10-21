@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+**RM-020 paid update verified —21 October:** BM committed3c30318; actual landing/paid release deployed as frontend00002-kjn/backend00003-f8t with inputaba8aff0. Fresh1043-test gate/nine Linux probes/97 HTTP assets, private backend and actual one-round photo/Medy cases pass without retry. [Acceptance](../operations/HOSTED_ACCEPTANCE.md), [manifest](../operations/landing-paid-candidate-2026-10-21.json), [17-path receipt](../validation/RM-020.md). SEC-002 account boundary remains unverified, with later explicit activation disposition. Old paid-off/local-review notices are history.
+
 **BM accepted —21 October:** Owner says “looks good” after final fade, authorizes the [ten-path atomic checkpoint](../commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026), staging/commit and then the RM-020 hosted update with paid mode on. Current required checks/read-only review own the checkpoint; new image/retained-assets/hosted evidence stays separate. Earlier local-only/pending notices below are history.
 
 BM follow-up retains the initial360ms text fade, starting immediately before3D readiness. Same local visual review, [current evidence](../validation/RM-015BM.md#owner-follow-up--immediate-initial-text-fade); prior full checks belong to the pre-fade iteration.
@@ -194,7 +196,7 @@ Every dependency below means its **required local outcome has actual verified ev
 | [RM-017](RM-017-audit-security-and-present-findings.md) | Read-only security/dependency audit with detailed Markdown and PM HTML | RM-016 | **Owner selects findings before remediation** |
 | [RM-018](RM-018-remediate-owner-selected-security-findings.md) | Only the selected security fixes, verified against the reviewed findings | RM-017 | Conditional on explicit finding selection |
 | [RM-019](RM-019-finalize-local-release-evidence-and-handoff.md) | Current local candidate, refreshed release proof, evidence ledger and honest handoff | RM-014, RM-015, RM-016, RM-017, RM-018* | *RM-018 may be explicitly waived/deferred by security decision |
-| [RM-020](RM-020-verify-authorized-hosting-and-pre-sharing.md) | Authorized hosting and conditional paid/provider/domain acceptance | RM-019 | Paid-off hosted scope verified; paid/domain/funded/native limits external |
+| [RM-020](RM-020-verify-authorized-hosting-and-pre-sharing.md) | Authorized hosting and conditional paid/provider/domain acceptance | RM-019 | Paid update/bounded real cases verified; account/full-corpus/domain/native limits external |
 
 The normal execution path is numeric order. Dependencies permit local sequencing flexibility, not parallel-agent authorization. RM-006 and RM-007 share controller/render interfaces; RM-008 and RM-009 share pure validation inputs. Finish one packet and validate its settled diff before taking the next. Do not create duplicate scene stores or command engines to bypass an incomplete dependency.
 

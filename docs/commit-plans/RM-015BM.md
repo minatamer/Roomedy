@@ -1,6 +1,6 @@
 # RM-015BM — Local immediate hero and prepared-room reveal
 
-## Approved atomic checkpoint —21 October2026
+## Approved atomic checkpoint — 21 October2026
 
 Direct owner: **“looks good, file level commit plan and you can stage and commit, then deploy this update along with turning on paid mode in deployment.”** This accepts the final360ms initial fade plus800ms ready-driven move/house reveal. It authorizes one cohesive ticket-prefixed local commit of the exact ten paths below, then the separate RM-020 hosted update/paid activation. Earlier no-commit/no-publication statements are iteration history, superseded for this exact current scope. No Git push, owner-env edit, new dependency/service/port or unrelated cloud/account action.
 

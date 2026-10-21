@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Landing update and paid mode deployed —21 October:** [Open Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). BM3c30318 is live with immediate text fade/center-to-left prepared-house reveal. Current pair00002-kjn/00003-f8t reports live-ready; actual sample recognition and Medy each pass in one provider round, with quiet verification and contextual replies. [Acceptance](operations/HOSTED_ACCEPTANCE.md), [candidate](operations/landing-paid-candidate-2026-10-21.json), [receipt](validation/RM-020.md).97 exact assets include90 retained prior files; backend stays private. SEC-002 account-wide funding/privacy evidence remains unverified under the later explicit activation instruction. Earlier local-review/paid-off records below are history.
+
 **BM approved for checkpoint and deployment —21 October:** Direct owner accepts the final text fade and authorizes the [exact ten-path commit](commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026), then a paired hosted update with paid mode on. Earlier local-review/pending notices below are history. [Current receipt](validation/RM-015BM.md); actual new Linux/hosted/paid evidence will be recorded separately, with SEC-002 account limits kept explicit.
 
 BM follow-up keeps the initial text fade: it starts immediately over360ms, independently of the prepared-house reveal/leftward move. [Actual fade observation](validation/RM-015BM.md#owner-follow-up--immediate-initial-text-fade). Same local review scope, no publication.
