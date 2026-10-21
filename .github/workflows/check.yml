@@ -6,20 +6,19 @@ permissions:
   contents: read
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       FAKE_MODE: 'true'
       PAID_DEMO_ENABLED: 'false'
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # verified v5
         with:
-          version: 11.25.0
-      - uses: actions/setup-node@v4
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # verified v5
         with:
           node-version-file: .node-version
-          cache: pnpm
+      - run: node scripts/release/install-pnpm.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm check

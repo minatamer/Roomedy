@@ -2,18 +2,19 @@ import { spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import net from 'node:net';
 import path from 'node:path';
-import { collectInputs, digest } from './inventory.mjs';
-import { verifyProof, requiredProbes, readProbeBody } from './proof.mjs';
+import { collectInputs } from './inventory.mjs';
+import { verifyProof, requiredProbes } from './proof.mjs';
+import { httpProbeSource } from './http-probe.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const deadline = Date.now() + 180_000;
-const run = (args) => {
+const run = (args, input, limit = 45_000) => {
   if (Date.now() >= deadline) throw new Error('release-probe-deadline');
   const r = spawnSync('docker', args, {
     encoding: 'utf8',
-    timeout: Math.max(1, Math.min(45_000, deadline - Date.now())),
+    timeout: Math.max(1, Math.min(limit, deadline - Date.now())),
     maxBuffer: 2 * 1024 * 1024,
+    input,
   });
   if (r.status !== 0) throw new Error('release-docker-probe');
   return r.stdout.trim();
@@ -60,15 +61,7 @@ try {
   for (const v of Object.values(observed.images))
     if (v.inputDigest !== id || v.user !== 'node')
       throw new Error('release-image-mismatch');
-  const port = await new Promise((resolve, reject) => {
-    const s = net.createServer();
-    s.once('error', reject);
-    s.listen(0, '127.0.0.1', () => {
-      const port = s.address().port;
-      s.close(() => resolve(port));
-    });
-  });
-  const origin = `http://127.0.0.1:${port}`,
+  const origin = 'http://127.0.0.1:8080',
     nonce = randomBytes(6).toString('hex'),
     secret = randomBytes(32).toString('hex');
   network = `roomedy-release-${nonce}`;
@@ -117,8 +110,6 @@ try {
     `FRONTEND_ORIGIN=${origin}`,
   ]);
   const frontend = launch('frontend', [
-    '--publish',
-    `127.0.0.1:${port}:8080`,
     '--env',
     'ROOMEDY_BACKEND_ORIGIN=http://backend:8080',
     '--env',
@@ -128,28 +119,6 @@ try {
     '--tmpfs',
     '/app/apps/frontend/.next/cache:rw,nosuid,size=33554432',
   ]);
-  const get = async (url) => {
-    if (Date.now() >= deadline) throw new Error('release-probe-deadline');
-    const r = await fetch(origin + url, {
-      redirect: 'error',
-      signal: AbortSignal.timeout(
-        Math.max(1, Math.min(3000, deadline - Date.now())),
-      ),
-    });
-    if (!r.ok) throw new Error('release-http-probe');
-    return r;
-  };
-  let ready = false;
-  for (let i = 0; i < 30; i++) {
-    try {
-      await get('/api/roomedy/v1/health');
-      ready = true;
-      break;
-    } catch {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-  }
-  if (!ready) throw new Error('release-readiness');
   const packages = {};
   for (const [service, name] of [
     ['frontend', frontend],
@@ -167,43 +136,6 @@ try {
       throw new Error('release-package-probe');
     packages[service] = r;
   }
-  const health = await get('/api/roomedy/v1/health');
-  if (
-    JSON.parse((await readProbeBody(health, 16_384)).toString('utf8'))
-      .status !== 'ok' ||
-    health.headers.get('cache-control') !== 'no-store'
-  )
-    throw new Error('release-health');
-  const readiness = JSON.parse(
-      (
-        await readProbeBody(await get('/api/roomedy/v1/ready'), 16_384)
-      ).toString('utf8'),
-    ),
-    config = JSON.parse(
-      (
-        await readProbeBody(await get('/api/roomedy/v1/config'), 16_384)
-      ).toString('utf8'),
-    );
-  if (
-    readiness.ai !== 'fake-ready' ||
-    config.mode !== 'fake' ||
-    !config.capabilities.simulation
-  )
-    throw new Error('release-mode');
-  const html = (await readProbeBody(await get('/'), 1024 * 1024)).toString(
-    'utf8',
-  );
-  if (!html.includes('Roomedy') || html.length > 1024 * 1024)
-    throw new Error('release-landing');
-  const anonymous = run([
-    'exec',
-    frontend,
-    'node',
-    '--input-type=module',
-    '-e',
-    `const r=await fetch('http://backend:8080/v1/admission',{method:'POST',headers:{'Content-Type':'application/json','Origin':${JSON.stringify(origin)},'X-Roomedy-Release':${JSON.stringify(id)}},body:'{}'});console.log(r.status)`,
-  ]);
-  if (anonymous !== '403') throw new Error('release-private-denial');
   // Read/hash every emitted public chunk/worker/asset from the actual image and HTTP service.
   const publicRows = JSON.parse(
     run([
@@ -215,19 +147,52 @@ try {
       `import fs from 'node:fs';import crypto from 'node:crypto';const rows=[];function walk(p,u){for(const d of fs.readdirSync(p,{withFileTypes:true})){const f=p+'/'+d.name,v=u+'/'+d.name;if(d.isDirectory())walk(f,v);else if(d.isFile())rows.push({url:v,bytes:fs.statSync(f).size,sha256:crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex')});if(rows.length>2000)throw Error('bound')}}walk('/app/apps/frontend/.next/static','/_next/static');walk('/app/apps/frontend/public','');console.log(JSON.stringify(rows));`,
     ]),
   );
-  for (const row of publicRows) {
-    if (row.bytes > 16 * 1024 * 1024) throw new Error('release-asset-bound');
-    const r = await get(row.url);
-    const body = await readProbeBody(r, row.bytes);
-    if (body.length !== row.bytes || digest(body) !== row.sha256)
-      throw new Error('release-asset-probe');
-  }
-  for (const name of owned) {
+  const httpInput = JSON.stringify(publicRows);
+  if (Buffer.byteLength(httpInput) > 2 * 1024 * 1024)
+    throw new Error('release-asset-bound');
+  const http = JSON.parse(
+    run(
+      [
+        'exec',
+        '--interactive',
+        frontend,
+        'node',
+        '--input-type=module',
+        '-e',
+        httpProbeSource(),
+      ],
+      httpInput,
+      120_000,
+    ),
+  );
+  if (!http.http || http.assets !== publicRows.length)
+    throw new Error('release-asset-probe');
+  const anonymous = run([
+    'exec',
+    frontend,
+    'node',
+    '--input-type=module',
+    '-e',
+    `const r=await fetch('http://backend:8080/v1/admission',{method:'POST',headers:{'Content-Type':'application/json','Origin':${JSON.stringify(origin)},'X-Roomedy-Release':${JSON.stringify(id)}},body:'{}'});console.log(r.status)`,
+  ]);
+  if (anonymous !== '403') throw new Error('release-private-denial');
+  for (const [service, name] of [
+    ['backend', backend],
+    ['frontend', frontend],
+  ]) {
+    if (run(['inspect', '--format', '{{.State.Running}}', name]) !== 'true')
+      throw new Error('release-shutdown');
     run(['stop', '--time', '12', name]);
-    const exit = Number(
-      run(['inspect', '--format', '{{.State.ExitCode}}', name]),
+    const state = JSON.parse(
+      run(['inspect', '--format', '{{json .State}}', name]),
     );
-    if (exit !== 0) throw new Error('release-shutdown');
+    if (
+      state.Status !== 'exited' ||
+      state.Running ||
+      state.OOMKilled ||
+      state.ExitCode !== (service === 'frontend' ? 143 : 0)
+    )
+      throw new Error('release-shutdown');
   }
   const proof = {
     version: 1,

@@ -1,6 +1,6 @@
 # RM-016 — Audit and improve code quality
 
-Status: **Planned**  
+Status: **Complete locally: quality corrections, current Linux proof and clean validation**
 Planning date: **17 October 2026**  
 Milestone: **Functionality-preserving quality pass**  
 Depends on: [RM-015](RM-015-verify-responsive-accessible-and-performant-experience.md), including the recorded owner visual decision or explicit waiver/defer  
@@ -10,6 +10,8 @@ Queue and execution rules: [ticket index](README.md)
 Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) (L-16, L-19–L-21, L-23) and [review checklist](../design/REVIEW_CHECKLIST.md)
 
 ## Outcome and standalone context
+
+21October execution: [concrete whole-candidate plan](../engineering/code-quality-plan.md), [exact21-path allocation](../commit-plans/RM-016.md), [validation](../validation/RM-016.md). Owner accepts BL65f6faa, directs taking the recommended path without routine questions, and pre-approves remaining prompts as defined in that question. Quality plan/execution/validation and cohesive local commits are authorized. Security remains a separate audit-only/manual-results phase.
 
 Perform the build workflow's documented quality/efficiency/structure iteration across the settled product. First write concrete findings and an ordered functionality-preserving plan, then execute and validate justified improvements under future authorization. LOC reduction is not the objective; preserve accepted product behavior, domain truth, privacy, bounded work and deliberate motion.
 
@@ -51,19 +53,19 @@ Reconcile the adopted PR-01–PR-15 requirements against their actual owning evi
 
 ## Acceptance criteria
 
-- [ ] A concrete quality plan covers the whole first-party candidate with evidence, ownership and invariant risks.
-- [ ] All prior required ticket outcomes are reconciled against implementation and actual checks.
-- [ ] Justified quality/efficiency/structure changes are implemented; retained/deferred items have explicit reasons.
-- [ ] Canonical authority, domain/lock/provenance/Undo/expiry rules and finite resource policy remain intact.
-- [ ] Private diagnostics remain useful; raw details do not leak to UI/browser logs.
-- [ ] Meaningful focused regressions and applicable settled root gates pass.
-- [ ] Read-only validation has no new actionable local findings, with exact external limits retained.
-- [ ] Materially affected release proof/owner acceptance is identified for refresh or re-review.
-- [ ] Every quality correction has a concrete consequence/regression and preserves runtime truth; no speculative abstraction, service, deletion or LOC-driven split is introduced.
+- [x] A concrete quality plan covers the whole first-party candidate with evidence, ownership and invariant risks.
+- [x] All prior required ticket outcomes are reconciled against implementation and actual checks.
+- [x] Justified quality/efficiency/structure changes are implemented; retained/deferred items have explicit reasons.
+- [x] Canonical authority, domain/lock/provenance/Undo/expiry rules and finite resource policy remain intact.
+- [x] Private diagnostics remain useful; raw details do not leak to UI/browser logs.
+- [x] Meaningful focused regressions and applicable settled root gates pass.
+- [x] Read-only validation has no new actionable local findings, with exact external limits retained.
+- [x] Materially affected release proof/owner acceptance is identified for refresh or re-review.
+- [x] Every quality correction has a concrete consequence/regression and preserves runtime truth; no speculative abstraction, service, deletion or LOC-driven split is introduced.
 
 ### Additional approved acceptance — all unperformed
 
-- [ ] Quality reconciliation includes the approved refinements and precise surface-specific privacy/accessibility claims without treating their approval as implementation evidence or adding speculative infrastructure.
+- [x] Quality reconciliation includes the approved refinements and precise surface-specific privacy/accessibility claims without treating their approval as implementation evidence or adding speculative infrastructure.
 
 ## Focused verification and evidence
 
@@ -78,4 +80,4 @@ Reconcile the adopted PR-01–PR-15 requirements against their actual owning evi
 
 ## Handoff and limits
 
-RM-017 audits the resulting current candidate and RM-019 rebuilds changed artifacts. This packet supplies no owner security selection, paid/cloud acceptance or permission to stage arbitrary paths. Future authorized commits use exact owned file allocation and the RM-016 prefix; currently this is an unimplemented plan.
+RM-017 audits the resulting candidate. Q-01–06 are corrected in the exact21-path allocation. The settled root gate passes1039tests/64files and all builds; the final probe-only follow-up passes scoped lint/format,19 release tests and actual matching Linux image proof (nine probes/90 assets). Read-only pass2 finds no actionable local issue. Current source digest73929fd68d965cb9113bf6743b7c4870f549628ab7e8f9507b9cc83a8532760d. Existing authority permits staging/local commit; no security selection or hosted success is inferred. RM-019 must refresh proof again if selected security fixes change relevant inputs.

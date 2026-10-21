@@ -10,6 +10,7 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 interface Inventory {
   version: number;
   kind: string;
@@ -32,6 +33,31 @@ const runtimeModule = new URL(
   '../scripts/release/check-runtime.mjs',
   import.meta.url,
 ).href;
+const snapshotModule = new URL(
+  '../scripts/release/public-snapshot.mjs',
+  import.meta.url,
+).href;
+const httpModule = new URL('../scripts/release/http-probe.mjs', import.meta.url)
+  .href;
+const { runHttpProbes } = (await import(httpModule)) as {
+  runHttpProbes: (
+    rows: { url: string; bytes: number; sha256: string }[],
+    fetcher: typeof fetch,
+    options: { pause: () => Promise<void> },
+  ) => Promise<{ assets: number; http: boolean }>;
+};
+type SnapshotRunner = (
+  command: string,
+  args: string[],
+  options: { timeout: number; maxBuffer: number; killSignal: string },
+) => { status: number | null; stdout: string };
+const { snapshotPublicAssets } = (await import(snapshotModule)) as {
+  snapshotPublicAssets: (
+    image: string,
+    target: string,
+    io: { run: SnapshotRunner; mkdir: () => Promise<void>; now?: () => number },
+  ) => Promise<void>;
+};
 const { collectInputs } = (await import(inventoryModule)) as {
   collectInputs: (root: string, retained?: string) => Promise<Inventory>;
 };
@@ -60,6 +86,134 @@ const { inspectRuntime } = (await import(runtimeModule)) as {
   ) => Promise<{ privateFiles: number }>;
 };
 const owned: string[] = [];
+
+it.each([
+  'valid',
+  'altered-bytes',
+  'oversize',
+  'live-mode',
+  'not-ready',
+  'foreign-url',
+] as const)(
+  'requires actual bounded HTTP delivery for isolated Linux proof: %s',
+  async (scenario) => {
+    const bytes = Buffer.from('emitted-worker-bytes'),
+      rows = [
+        {
+          url:
+            scenario === 'foreign-url'
+              ? 'https://untrusted.invalid/worker'
+              : '/_next/static/worker.js',
+          bytes: bytes.length,
+          sha256: createHash('sha256').update(bytes).digest('hex'),
+        },
+      ];
+    const requested: string[] = [];
+    const fetcher: typeof fetch = async (input) => {
+      const url = new URL(String(input));
+      expect(url.origin).toBe('http://127.0.0.1:8080');
+      requested.push(url.pathname);
+      if (scenario === 'not-ready') throw new Error('unavailable');
+      if (url.pathname.endsWith('/health'))
+        return Response.json(
+          { status: 'ok' },
+          { headers: { 'Cache-Control': 'no-store' } },
+        );
+      if (url.pathname.endsWith('/ready'))
+        return Response.json({ ai: 'fake-ready' });
+      if (url.pathname.endsWith('/config'))
+        return Response.json({
+          mode: scenario === 'live-mode' ? 'live' : 'fake',
+          capabilities: { simulation: true },
+        });
+      if (url.pathname === '/') return new Response('<h1>Roomedy</h1>');
+      return new Response(
+        scenario === 'altered-bytes'
+          ? Buffer.alloc(bytes.length)
+          : scenario === 'oversize'
+            ? Buffer.alloc(bytes.length + 1)
+            : bytes,
+      );
+    };
+    const pending = runHttpProbes(rows, fetcher, {
+      pause: async () => undefined,
+    });
+    if (scenario === 'valid') {
+      await expect(pending).resolves.toEqual({ assets: 1, http: true });
+      expect(requested).toContain('/_next/static/worker.js');
+    } else await expect(pending).rejects.toThrow();
+    if (scenario === 'not-ready') expect(requested).toHaveLength(30);
+  },
+);
+
+it.each([
+  'success',
+  'copy-failure',
+  'mkdir-failure',
+  'deadline',
+  'cleanup-failure',
+  'invalid-id',
+  'create-failure',
+] as const)(
+  'keeps public snapshot extraction bounded and owned through %s',
+  async (scenario) => {
+    const cid = 'c'.repeat(64),
+      image = `roomedy-frontend:${'a'.repeat(64)}`,
+      calls: string[][] = [];
+    let now = 0;
+    const run: SnapshotRunner = (command, args, options) => {
+      expect(command).toBe('docker');
+      expect(Number.isFinite(options.timeout) && options.timeout > 0).toBe(
+        true,
+      );
+      expect(options.timeout).toBeLessThanOrEqual(45_000);
+      expect(options.maxBuffer).toBeLessThanOrEqual(64 * 1024);
+      expect(options.killSignal).toBe('SIGKILL');
+      calls.push(args);
+      if (args[0] === 'create') {
+        if (scenario === 'create-failure') return { status: 1, stdout: '' };
+        if (scenario === 'deadline') now = 120_001;
+        return {
+          status: 0,
+          stdout: scenario === 'invalid-id' ? 'unrelated-target' : cid,
+        };
+      }
+      if (args[0] === 'cp' && scenario === 'copy-failure')
+        return { status: null, stdout: '' };
+      if (args[0] === 'rm' && scenario === 'cleanup-failure')
+        return { status: 1, stdout: '' };
+      return { status: 0, stdout: '' };
+    };
+    const pending = snapshotPublicAssets(image, 'owned-public-snapshot', {
+      run,
+      now: () => now,
+      mkdir: async () => {
+        if (scenario === 'mkdir-failure') throw new Error('filesystem-denied');
+      },
+    });
+    if (scenario === 'success') await expect(pending).resolves.toBeUndefined();
+    else await expect(pending).rejects.toThrow();
+    if (['invalid-id', 'create-failure'].includes(scenario)) {
+      expect(calls).toEqual([['create', image]]);
+    } else {
+      expect(calls.at(-1)).toEqual(['rm', '--force', cid]);
+      const copies = calls.filter((args) => args[0] === 'cp');
+      expect(copies.length).toBe(
+        scenario === 'mkdir-failure' || scenario === 'deadline'
+          ? 0
+          : scenario === 'copy-failure'
+            ? 1
+            : 2,
+      );
+      for (const copy of copies)
+        expect([
+          `${cid}:/app/apps/frontend/.next/static`,
+          `${cid}:/app/apps/frontend/public`,
+        ]).toContain(copy[1]);
+    }
+  },
+);
+
 async function temp() {
   const dir = await mkdtemp(path.join(tmpdir(), 'roomedy-release-test-'));
   owned.push(dir);

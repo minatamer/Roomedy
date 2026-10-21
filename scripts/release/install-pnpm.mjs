@@ -43,7 +43,7 @@ try {
   const result = spawnSync(
     'npm',
     ['install', '--global', '--ignore-scripts', archive],
-    { stdio: 'inherit' },
+    { stdio: 'inherit', timeout: 120_000, killSignal: 'SIGKILL' },
   );
   if (result.status !== 0) throw new Error('release-installer');
 } finally {

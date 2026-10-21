@@ -1,6 +1,8 @@
 # RM-015 — Verify the responsive, accessible and performant experience
 
-Status: **Owner-requested revision in progress — RM-015A–J before joint visual review; visual decision still pending**
+Status: **Local visual revisions through RM-015BL accepted by owner21October2026; quality audit resumed**
+
+Current decision/evidence: [BL acceptance and exact checkpoint](../validation/RM-015BL.md#owner-acceptance-and-authorized-local-checkpoint--21-october2026), committed65f6faa. This supersedes historical pending visual/revision statements below. Physical/assistive/peak-memory/continuous-paint and other explicitly unperformed criteria remain honest limits; visual approval does not turn them into measured passes. [RM-016 reconciliation](../engineering/code-quality-plan.md) owns the next quality phase. Q lighting remains held.
 Planning date: **17 October 2026**  
 Milestone: **Performance and frontend visual review**  
 Depends on: [RM-014](RM-014-prepare-linux-images-and-release-runbooks.md)  

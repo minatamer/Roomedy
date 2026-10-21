@@ -1,6 +1,8 @@
 # Roomedy documentation
 
-**Visual checkpoint accepted —21 October:** The owner accepts the final BL correction and authorizes its exact file-level staging/local commit, then quality before security under the build workflow. [Atomic42-path checkpoint](commit-plans/RM-015BL.md#authorized-atomic-local-commit--21-october2026). Quality's full prompt is the next checkpoint; actual security findings still require the prescribed manual review.
+**Quality audit —21 October:** Owner selects the recommended audit-first path without routine questions. [RM-016 plan](engineering/code-quality-plan.md) covers the current first-party candidate, prior outcomes and six reproduced corrections: current-status drift, snapshot ownership/deadlines, shared CI bootstrap, isolated HTTP probes, backend deployment self-link and framework-specific graceful shutdown. [Allocation](commit-plans/RM-016.md), [execution evidence](validation/RM-016.md). Security follows quality; deployment is separately requested for the existing roomedy project.
+
+**Visual checkpoint accepted —21 October:** The owner accepts the final BL correction and authorizes its exact file-level staging/local commit, then quality before security under the build workflow. [Atomic42-path checkpoint](commit-plans/RM-015BL.md#authorized-atomic-local-commit--21-october2026). Quality's prompt is approved and its local phase is complete; actual security findings still require the prescribed manual review.
 
 **Photo placement and initial Medy —21 October:** Fresh photo estimates are separated before acceptance, retaining observed wall relationships and a bounded bedside/bed starting plan. The actual real sample retest shows separate, wall-backed pieces in2D/3D, with Medy opened automatically. [42-path allocation](commit-plans/RM-015BL.md), [current139-test/native evidence and limits](validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up).
 

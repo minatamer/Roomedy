@@ -9,6 +9,7 @@ COPY packages ./packages
 RUN pnpm install --frozen-lockfile
 RUN pnpm build:shared && pnpm --filter @roomedy/backend build
 RUN pnpm --filter @roomedy/backend deploy --prod --legacy /out/backend
+RUN node --input-type=module -e "import {readlink,unlink} from 'node:fs/promises';import {resolve,dirname} from 'node:path';const link='/out/backend/node_modules/.pnpm/node_modules/@roomedy/backend';if(resolve(dirname(link),await readlink(link))!=='/work/apps/backend')throw new Error('release-deploy-self-link');await unlink(link);"
 
 FROM --platform=linux/amd64 docker.io/library/node:24.19.0-bookworm-slim@sha256:e5a8dee7bc1e6a215d224a7ef8206f7e77271bc3cabd5febf2beafac0674f174 AS runtime
 ARG ROOMEDY_RELEASE_ID

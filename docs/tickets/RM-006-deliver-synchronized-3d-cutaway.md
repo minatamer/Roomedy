@@ -1,6 +1,6 @@
 # RM-006 — Deliver the synchronized 3D cutaway
 
-Status: **Complete locally; exact authorized commit pending**
+Status: **Complete locally and committed; later accepted refinements through RM-015BL**
 Planning date: **17 October 2026**  
 Milestone: **Editable room**  
 Depends on: [RM-005](RM-005-deliver-canonical-session-and-precision-2d-editor.md)  

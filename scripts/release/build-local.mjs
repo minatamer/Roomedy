@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { collectInputs } from './inventory.mjs';
 import { retainAssets } from './retain-assets.mjs';
 import { toolsReady } from './check-tools.mjs';
+import { snapshotPublicAssets } from './public-snapshot.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 try {
   const args = process.argv.slice(2);
@@ -83,32 +84,8 @@ try {
     );
     if (proof.status !== 0) throw new Error('release-probe-failed');
     // Export only the final image's public web assets for a later bounded compatible rollout.
-    const container = spawnSync(
-      'docker',
-      ['create', `roomedy-frontend:${id}`],
-      { encoding: 'utf8' },
-    );
-    if (container.status !== 0) throw new Error('release-asset-snapshot');
-    const cid = container.stdout.trim();
-    if (!/^[a-f0-9]{64}$/.test(cid)) throw new Error('release-asset-snapshot');
     const current = path.join(run, 'current');
-    await mkdir(current, { recursive: true });
-    try {
-      for (const [source, target] of [
-        ['/app/apps/frontend/.next/static', 'static'],
-        ['/app/apps/frontend/public', 'public'],
-      ])
-        if (
-          spawnSync(
-            'docker',
-            ['cp', `${cid}:${source}`, path.join(current, target)],
-            { stdio: 'inherit' },
-          ).status !== 0
-        )
-          throw new Error('release-asset-snapshot');
-    } finally {
-      spawnSync('docker', ['rm', cid], { stdio: 'ignore' });
-    }
+    await snapshotPublicAssets(`roomedy-frontend:${id}`, current);
     await retainAssets(current, null, path.join(run, 'snapshot'));
     // Preserve exact verified context next to the proof; no cleanup outside this owned run.
     await cp(retained, path.join(run, 'verified-retained'), {
