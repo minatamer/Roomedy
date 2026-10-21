@@ -1,0 +1,15 @@
+# Selected security remediation — RM-018
+
+Owner source: direct21October reply **“go for it”** to the sole pending report-v1 finding disposition. The reviewed recommendation was SEC-001 repair before deployment plus SEC-002 paid-off hold until external funding evidence; canonical build progress records source/context/selection. Reviewed audit committed081feea after qualityb0f043c. No other security fixes, funding assumptions or new paid tests are selected.
+
+SEC-001: `read()` owns a native ReadableStream reader and packed bytes. Register a signal listener immediately after acquisition; abort cancels the owned reader so a pending read unwinds. Check the signal before/after reads. Finally clear packed data, remove listener, initiate cancellation with rejection observed and release the lock. Do not await an underlying cancellation algorithm that the input can leave unresolved. Retire the raw input job normally/exactly once; never decrement the shared counter merely because its visible timeout wins. The existing abort-ignoring upstream-fetch case must still retain its slots until actual settlement.
+
+Regress both timeout and caller abort with two stalled streams: cancellation once each, safe response, closed late input and a later valid request200. Cover tiny-fragment rejection with rejecting/nonsettling cancellation and verify cleanup does not quarantine input slots. Preserve all existing fixed routes/origin/release/content/schema/byte/fragment/grant/provider/lifecycle behavior. Native before-proof is already recorded on the unchanged original runtime:408/408 then429 even after disconnect. Repeat it on the final exact image; later complete `{}` should reach400 schema validation, never429 from stranded slots.
+
+SEC-002: preserve/verify paid-off first deployment. No owner local env change or invented quota service. External account-wide funded cutoff/privacy/challenge hostname evidence remains required before public paid activation. No claim that a Google alert, maxInstances1 or a process rate window is a hard spending cap.
+
+The [exact13-path allocation](../commit-plans/RM-018.md) precedes source edits. Focused meaningful checks, settled root gate, new source/image proof and complete read-only validation own acceptance. Relevant app behavior and accepted visuals are preserved; no repeated funded/UI tests are needed for this bridge cleanup. Record actual outcomes and external limits, then make the authorized cohesive local commit and continue preapproved handoff/deployment work.
+
+## Verified local disposition
+
+SEC-001 fixed:70 focused tests, final1043-test root/all builds and current8472b3db nine-probe/90-asset Linux proof pass. Native before408/408→429 becomes408/408→400, including after disconnect; no provider calls. SEC-002 is selected as a paid-off first-deployment hold with external funding evidence pending, not falsely marked fixed. Complete scoped read-only review found no actionable local issue; exact13-path commit and preapproved final handoff follow.

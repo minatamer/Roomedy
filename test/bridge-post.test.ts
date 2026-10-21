@@ -174,3 +174,133 @@ it('bounds unresolved upstream attempts when abort is ignored, then reuses only 
     vi.useRealTimers();
   }
 });
+
+it.each(['deadline', 'caller-abort'] as const)(
+  'retires stalled owned input after %s without waiting for cancellation settlement',
+  async (reason) => {
+    vi.useFakeTimers();
+    let cancellations = 0;
+    const sources: ReadableStreamDefaultController<Uint8Array>[] = [];
+    const aborts = [new AbortController(), new AbortController()];
+    const pending = aborts.map((abort) => {
+      const body = new ReadableStream<Uint8Array>({
+        start(controller) {
+          sources.push(controller);
+        },
+        cancel() {
+          cancellations++;
+          return new Promise<void>(() => undefined);
+        },
+      });
+      const req = new Request(
+        `${config.publicOrigin}/api/roomedy/v1/admission`,
+        {
+          method: 'POST',
+          headers: {
+            Origin: config.publicOrigin,
+            'Content-Type': 'application/json',
+          },
+          body,
+          signal: abort.signal,
+          duplex: 'half',
+        } as RequestInit,
+      );
+      return bridgePost('admission', req, config, async () => {
+        throw new Error('stalled-input-must-not-forward');
+      });
+    });
+    try {
+      await vi.advanceTimersByTimeAsync(0);
+      if (reason === 'deadline')
+        await vi.advanceTimersByTimeAsync(POLICY.intakeMs);
+      else for (const abort of aborts) abort.abort();
+      await vi.advanceTimersByTimeAsync(0);
+      expect((await Promise.all(pending)).map((r) => r.status)).toEqual([
+        408, 408,
+      ]);
+      expect(cancellations).toBe(2);
+      for (const source of sources)
+        expect(() => source.enqueue(new Uint8Array([123]))).toThrow(TypeError);
+      const response = await bridgePost(
+        'admission',
+        request(),
+        config,
+        async () =>
+          Response.json({
+            kind: 'verification',
+            state: 'interaction',
+            simulation: true,
+          }),
+      );
+      expect(response.status).toBe(200);
+      expect(cancellations).toBe(2);
+    } finally {
+      for (const source of sources) {
+        try {
+          source.close();
+        } catch {
+          /* Already retired by the correction. */
+        }
+      }
+      await vi.advanceTimersByTimeAsync(0);
+      vi.useRealTimers();
+    }
+  },
+);
+
+it.each(['rejects', 'never-settles'] as const)(
+  'releases rejected fragmented input when its cancellation %s',
+  async (cancellation) => {
+    vi.useFakeTimers();
+    let releaseCancel = () => undefined as void;
+    let cancellations = 0;
+    const body = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        controller.enqueue(new Uint8Array());
+      },
+      cancel() {
+        cancellations++;
+        return cancellation === 'rejects'
+          ? Promise.reject(new Error('synthetic-cancel-failure'))
+          : new Promise<void>((resolve) => {
+              releaseCancel = resolve;
+            });
+      },
+    });
+    const req = new Request(`${config.publicOrigin}/api/roomedy/v1/admission`, {
+      method: 'POST',
+      headers: {
+        Origin: config.publicOrigin,
+        'Content-Type': 'application/json',
+      },
+      body,
+      duplex: 'half',
+    } as RequestInit);
+    let status: number | null = null;
+    const pending = bridgePost('admission', req, config, async () => {
+      throw new Error('fragment-overflow-must-not-forward');
+    }).then((response) => {
+      status = response.status;
+    });
+    try {
+      await vi.advanceTimersByTimeAsync(0);
+      expect(status).toBe(413);
+      expect(cancellations).toBe(1);
+      expect(
+        (
+          await bridgePost('admission', request(), config, async () =>
+            Response.json({
+              kind: 'verification',
+              state: 'interaction',
+              simulation: true,
+            }),
+          )
+        ).status,
+      ).toBe(200);
+    } finally {
+      releaseCancel();
+      await pending;
+      vi.useRealTimers();
+    }
+  },
+);

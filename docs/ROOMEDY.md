@@ -1437,9 +1437,9 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **11-security-fixes**
-Next action: Commit reviewed audit checkpoint, allocate and implement SEC-001 stream retirement with focused baseline/fix/native validation. SEC-002 remains paid-off/external funding condition.
-Active ticket: RM-017
+Current phase: **12-handoff**
+Next action: Commit the clean exact13-path selected remedy, prepare preapproved final local handoff and verify current proof; then execute existing authorized paid-off deployment to roomedy. No routine questions or extra paid tests.
+Active ticket: RM-018
 Phase prompts: pre-approved by owner
 Local commits approved: yes
 
@@ -1454,7 +1454,7 @@ Local commits approved: yes
 - [x] 09-visual-review — Frontend visual approval checkpoint (complete)
 - [x] 10a-quality — Quality audit and fixes (complete)
 - [x] 10b-security-review — Security audit and manual review (complete)
-- [ ] 11-security-fixes — Approved security fixes (in_progress)
+- [x] 11-security-fixes — Approved security fixes (complete_local)
 - [ ] 12-handoff — Final local handoff (pending)
 
 This checklist records local work. Human approvals and unresolved external checks are preserved below; it does not authorize paid calls or deployment.
@@ -1464,7 +1464,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-21T15:22:02+00:00",
+  "updated_at": "2026-10-21T15:34:51+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1719,8 +1719,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-017",
-  "next_action": "Commit reviewed audit checkpoint, allocate and implement SEC-001 stream retirement with focused baseline/fix/native validation. SEC-002 remains paid-off/external funding condition.",
+  "active_ticket": "RM-018",
+  "next_action": "Commit the clean exact13-path selected remedy, prepare preapproved final local handoff and verify current proof; then execute existing authorized paid-off deployment to roomedy. No routine questions or extra paid tests.",
   "phases": [
     {
       "id": "01-docs",
@@ -2996,7 +2996,7 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "11-security-fixes",
       "name": "Approved security fixes",
       "gate": null,
-      "status": "in_progress",
+      "status": "complete_local",
       "prompt": {
         "text": "Execute build phase11-security-fixes through RM-018 for Roomedy at C:/Users/minat/Work/Roomedy. The owner directly says go for it in response to the sole report-v1 finding-disposition checkpoint. Record that trusted source and apply exactly the recommended SEC-001 local input-stream retirement repair; implement SEC-002 as a paid-off deployment condition pending enforceable external funding evidence, not a new quota database or a claim of verified account limits. Existing local stage/commit and deployment-to-roomedy authority remain; no routine prompt/permission questions. Preserve the original reviewed audit and actual source/image identity, plus selected/unresolved finding dispositions.\n\nRead applicable repo/blueprint/queue/feedback rules, report v1 and full RM-018. Base quality commit b0f043c passed1039tests and exact Linux proof73929fd68d965cb9113bf6743b7c4870f549628ab7e8f9507b9cc83a8532760d. SEC-001 is confirmed offline and in the actual image: two stalled public admission bodies time out408/408 but later complete requests return429, even after disconnect; no paid call. Fix at apps/frontend/src/server/bridge-post.ts so caller abort/intake deadline cancels its owned pending reader, retires input/memory/listeners and releases the slot exactly once. Preserve the separate abort-ignoring unresolved-upstream accounting until actual settlement, every byte/fragment/schema/origin/release/grant limit and existing safe diagnostics. No UI/domain/model/dependency change, implicit retry, raised limit, automatic restart or framework/service expansion.\n\nBefore source edits write a concrete exact file allocation and selected remediation plan. Add meaningful regressions that demonstrate stalled timeout/caller abort, late input, cancellation rejection/nonsettlement and subsequent valid intake, with original unresolved-upstream regression retained. Establish baseline failure, implement the smallest correction, run focused bridge/lifecycle/admission checks, then the settled required root gate and exact current Linux build/runtime proof. Repeat the original bounded native two-stream reproduction after the correction and verify later requests reach schema/normal validation. No new provider/Cloudflare request, owner-env change, secret-value access, scanner metadata export, delegation, new app service/port or push.\n\nUse execute/read-only validate/independently confirm/fix/revalidate until no actionable local finding. Preserve all accepted app behavior, motion, photo/Medy defaults, physical facts/locks/commands/Undo/expiry, private logs and explicit visitor authority. Update report/HTML/ticket/receipt/progress with actual selected fixed/external/deferred distinctions and new source/image identity. Stage only explicit reviewed owned paths under existing authority and make cohesive ticket-prefixed local commits. Mark external SEC-002 funding and deferred domain/Turnstile hosted conditions honestly. Then generate the preapproved final-handoff prompt and continue all independently authorized work toward the requested paid-off first deployment. No blanket all-secure or paid/hosted pass from local tests.",
         "sha256": "d5bc9e0c35e15778635cbc1d0b45fc4dfdfd9dc961fd88642c2b8897b4b64a9b",
@@ -3014,8 +3014,19 @@ This checklist records local work. Human approvals and unresolved external check
           "scope": "Direct response instructs taking the recommended Finish audits first path defined in the single pending question: approve saved RM-016 prompt and preapprove remaining phase prompts. Do not repeat routine questions. Preserve the separately named manual review of actual security findings; no future findings are preselected."
         }
       },
-      "evidence": [],
-      "blockers": [],
+      "evidence": [
+        "docs/security/remediation-plan.md",
+        "docs/commit-plans/RM-018.md",
+        "docs/validation/RM-018.md",
+        "runtime-input:8472b3dbfbbaf6c72eeac2730749b93118e1177b1c5bc3cfd5b67d26c8e30027"
+      ],
+      "blockers": [
+        {
+          "kind": "external",
+          "reason": "SEC-002 account-wide enforceable funded-cutoff evidence remains unverified. Owner selected paid-off first deployment; no public paid activation until this external condition and challenge hostname are resolved.",
+          "reference": "docs/security/SECURITY_REVIEW.md#sec-002--paid-activation-has-no-verified-account-wide-funded-cutoff"
+        }
+      ],
       "approval": null,
       "decision": null,
       "reviews": []

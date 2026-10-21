@@ -37,7 +37,12 @@ async function read(
   if (!stream) throw new Error('invalid-input');
   const reader = stream.getReader(),
     packed = new BoundedBytes(maximum, fragments);
+  const cancel = () => {
+    void reader.cancel().catch(() => undefined);
+  };
+  signal.addEventListener('abort', cancel, { once: true });
   try {
+    signal.throwIfAborted();
     while (true) {
       const part = await reader.read();
       if (signal.aborted) throw new Error('cancelled');
@@ -49,7 +54,8 @@ async function read(
     ) as unknown;
   } finally {
     packed.clear();
-    await reader.cancel().catch(() => undefined);
+    signal.removeEventListener('abort', cancel);
+    cancel();
     reader.releaseLock();
   }
 }

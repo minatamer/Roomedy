@@ -55,21 +55,21 @@
     <main>
       <header><div class="brand">roomedy<span>.</span></div><span class="stamp">21 October 2026 · Report v1</span></header>
       <p class="eyebrow">Security review · Before sharing</p>
-      <h1>One repair before we open the door.</h1>
-      <p class="intro">Quality is committed and the Linux release checks pass. The security audit found a real availability issue to repair, plus a funding condition for public paid AI.</p>
+      <h1>The repair is verified. Hosting comes next.</h1>
+      <p class="intro">Quality is committed and the Linux release checks pass. The selected availability repair now passes the original Linux reproduction. A funding condition remains before public paid AI.</p>
       <div class="metrics" aria-label="Review status">
-        <div class="metric"><strong>1</strong><span>High · Confirmed local defect</span></div>
+        <div class="metric"><strong>Fixed</strong><span>SEC-001 · Retested locally</span></div>
         <div class="metric"><strong>1</strong><span>Medium · Paid activation condition</span></div>
         <div class="metric"><strong>Selected</strong><span>Repair + paid-off hold</span></div>
       </div>
 
       <article class="finding" id="sec-001">
-        <div class="row"><span class="tag high">High</span><span class="small">SEC-001 · Reproduced in the actual Linux image</span></div>
+        <div class="row"><span class="tag">Fixed locally</span><span class="small">SEC-001 · Original severity High</span></div>
         <h2>Two unfinished uploads can make AI stay busy.</h2>
         <p>A client can start two requests, send only part of each upload and leave them unfinished. The screen receives a timeout, but the server keeps both request slots occupied. Later requests are refused—even after those first clients disconnect.</p>
         <p>No verification token, account or paid call is needed. This blocks fresh photo and Medy admission on the affected process. The ordinary pages and manual editor remain available.</p>
-        <div class="recommendation"><p><strong>Recommended: repair before public deployment.</strong></p><p>Make the upload deadline cancel and retire its own input stream. Preserve the separate protection that retains already-dispatched upstream work until it settles. Then repeat the exact two-upload test and release checks.</p></div>
-        <p class="small" style="margin:16px 0 0">Evidence: real 15-second timeouts returned 408/408; later complete input returned 429, including after disconnect. No upstream or provider request.</p>
+        <div class="recommendation"><p><strong>Selected repair complete and retested.</strong></p><p>The upload deadline now cancels and retires its own input stream. Separate unresolved upstream protection remains. The original attack and current release checks pass.</p></div>
+        <p class="small" style="margin:16px 0 0">Retest: real 15-second timeouts return 408/408; later complete input reaches 400 validation, including after disconnect. No stranded busy response or provider request.</p>
       </article>
 
       <article class="finding" id="sec-002">
@@ -100,11 +100,11 @@
 
       <section aria-labelledby="next">
         <p class="eyebrow">Deployment status</p><h2 id="next">Prepared locally. Not deployed yet.</h2>
-        <p>Quality commit <code>b0f043c</code> includes six reproduced release/documentation corrections. The repository gate passed <strong>1,039 tests</strong>; the current Linux pair passed <strong>nine probes and 90 HTTP asset checks</strong>. The owner selected the recommended repair and paid-off hold with “go for it”; implementation follows.</p>
+        <p>Quality commit <code>b0f043c</code> includes six reproduced release/documentation corrections. The repository gate passed <strong>1,043 tests</strong>; the current Linux pair passed <strong>nine probes and 90 HTTP asset checks</strong>. The owner selected this scope with “go for it”. The repair is locally verified; the paid-off funding hold remains.</p>
         <p>The authenticated <code>roomedy</code> project and four secret records were verified without reading their values. Cloud Run / Artifact Registry setup, private backend IAM and public frontend deployment remain downstream of this review.</p>
-        <div class="recommendation"><p><strong>Current decision: recommended path approved.</strong></p><p>The recommendation is to repair SEC-001 and preserve paid-off operation until SEC-002 is resolved externally. The direct owner reply “go for it” selects this exact scope. The reviewed audit checkpoint is authorized for local commit; the fix has not yet been applied.</p></div>
+        <div class="recommendation"><p><strong>Current decision: recommended path approved.</strong></p><p>The recommendation is to repair SEC-001 and preserve paid-off operation until SEC-002 is resolved externally. The direct owner reply “go for it” selects this exact scope. The reviewed audit checkpoint is authorized for local commit; SEC-001 is fixed locally and SEC-002 remains externally pending.</p></div>
       </section>
-      <footer>Read <a href="SECURITY_REVIEW.md">the detailed audit and careful fix plans</a> or <a href="audit-inputs-2026-10-21.json">the sanitized evidence manifest</a>. Candidate <code>b0f043c</code> · Runtime inputs <code>73929fd6…32760d</code>. No paid calls or cloud changes during this audit.</footer>
+      <footer>Read <a href="SECURITY_REVIEW.md">the detailed audit and careful fix plans</a> or <a href="audit-inputs-2026-10-21.json">the sanitized evidence manifest</a>. Original audit <code>b0f043c</code> · Current inputs <code>8472b3db…e30027</code>. No paid calls or cloud changes during this audit.</footer>
     </main>
   </body>
 </html>

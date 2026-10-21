@@ -1,6 +1,6 @@
 # RM-018 — Remediate owner-selected security findings
 
-Status: **Planned**  
+Status: **Complete locally: SEC-001 fixed/verified; SEC-002 paid-off hold with external funding evidence pending**
 Planning date: **17 October 2026**  
 Milestone: **Conditional security remediation**  
 Depends on: [RM-017](RM-017-audit-security-and-present-findings.md) and explicit human selection of current findings  
@@ -10,11 +10,13 @@ Queue and execution rules: [ticket index](README.md)
 Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) (L-02, L-21–L-23) and [review checklist](../design/REVIEW_CHECKLIST.md)
 Additional gate: **No findings are preselected. This packet is ineligible until selection exists.**
 
+Current21October: direct “go for it” selects SEC-001 repair and SEC-002 paid-off hold from report v1. [Plan](../security/remediation-plan.md), [allocation](../commit-plans/RM-018.md), [receipt](../validation/RM-018.md). Source8472b3db passes1043-test root and matching Linux proof; native original attack now recovers. No account-funded bound or hosted pass is invented.
+
 ## Outcome and standalone context
 
 Implement only the local remediations explicitly selected from the actual security review, with focused regressions and current release evidence. Keep unselected/deferred findings visible. Preserve the accepted product, canonical room semantics, privacy, useful private diagnostics, deliberate motion and required finite resource controls.
 
-This is a conditional packet because no application or security findings exist yet. It must not manufacture a vulnerability list or treat approval of the ticket plan as approval of future findings. Cloud/IAM/account/vendor fixes or paid verification still require their own applicable scope even if the owner approves a local code correction.
+This packet executes only the selected current findings; initial future-finding planning below is historical. It must not manufacture a vulnerability list or treat approval of the ticket plan as approval of future findings. Cloud/IAM/account/vendor fixes or paid verification still require their own applicable scope even if the owner approves a local code correction.
 
 ## Dependency evidence and proposed ownership
 
@@ -53,19 +55,19 @@ Any selected correction preserves the refined physical/provenance/coordinate/rep
 
 ## Acceptance criteria
 
-- [ ] Exact trusted finding selection/report scope is recorded before any remediation.
-- [ ] Each selected local issue has current reproduction/evidence, owned correction and focused regression.
-- [ ] Only selected scope is changed; new substantial issues return for review and unselected findings remain visible.
-- [ ] Domain behavior, private diagnostics, privacy, deliberate motion and finite work/admission policy are preserved.
-- [ ] Applicable focused/root gates pass and settled read-only validation has no new actionable local findings.
-- [ ] Report/HTML dispositions distinguish fixed, externally pending, deferred and rejected accurately.
-- [ ] Relevant release proof and any materially affected owner review are marked for refresh.
-- [ ] No cloud/vendor/account action, paid request, scanner export or unrelated Git action is inferred from finding selection.
-- [ ] Selected remedies remain proportionate to the demonstrated issue and do not introduce unrequested infrastructure or weaken behavior/verification for presentation.
+- [x] Exact trusted finding selection/report scope is recorded before any remediation.
+- [x] Each selected local issue has current reproduction/evidence, owned correction and focused regression.
+- [x] Only selected scope is changed; new substantial issues return for review and unselected findings remain visible.
+- [x] Domain behavior, private diagnostics, privacy, deliberate motion and finite work/admission policy are preserved.
+- [x] Applicable focused/root gates pass and settled read-only validation has no new actionable local findings.
+- [x] Report/HTML dispositions distinguish fixed, externally pending, deferred and rejected accurately.
+- [x] Relevant release proof and any materially affected owner review are marked for refresh.
+- [x] No cloud/vendor/account action, paid request, scanner export or unrelated Git action is inferred from finding selection.
+- [x] Selected remedies remain proportionate to the demonstrated issue and do not introduce unrequested infrastructure or weaken behavior/verification for presentation.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — current evidence above
 
-- [ ] Selected-fix regressions preserve approved refined contracts and refresh materially affected evidence; plan-review approval is never substituted for explicit current security finding selection.
+- [x] Selected-fix regressions preserve approved refined contracts and refresh materially affected evidence; plan-review approval is never substituted for explicit current security finding selection.
 
 ## Focused verification and evidence
 
