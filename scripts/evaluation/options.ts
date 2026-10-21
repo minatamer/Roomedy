@@ -1,3 +1,5 @@
+import { ROOMEDY_MODEL } from '../../apps/backend/src/providers/model.js';
+
 export interface EvaluationOptions {
   mode: 'offline' | 'live';
   dryRun: boolean;
@@ -161,7 +163,6 @@ export function livePrerequisites(
     /[\r\n]/.test(env.OPENAI_API_KEY)
   )
     missing.push('provider-key');
-  if (env.OPENAI_MODEL !== policy.model) missing.push('model-match');
-  if (env.LIVE_POLICY_REVIEWED !== 'true') missing.push('privacy-review');
+  if (policy.model !== ROOMEDY_MODEL) missing.push('model-match');
   return missing;
 }

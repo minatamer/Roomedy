@@ -206,9 +206,8 @@ describe('independent deadlines and shared unresolved work', () => {
       parseRuntimeConfig({
         FAKE_MODE: 'false',
         PAID_DEMO_ENABLED: 'true',
-        LIVE_POLICY_REVIEWED: 'true',
+        TURNSTILE_SITE_KEY: 'synthetic-site',
         OPENAI_API_KEY: 'synthetic-key',
-        OPENAI_MODEL: 'synthetic-model',
         ROOMEDY_BRIDGE_SECRET: 'synthetic',
       }),
       {

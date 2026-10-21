@@ -90,6 +90,10 @@ export {
 export type { SizePreset, SizeInputValues } from './size-presets.js';
 
 export { resolveMedyRequest, medyAdvice } from './medy.js';
+export {
+  contextualQuickReplies,
+  validateQuickReplies,
+} from './quick-replies.js';
 export { visitorCatalogueFurniture } from './catalogue.js';
 export type { MedyRequest, MedyControl, MedyControlResult } from './medy.js';
 export {

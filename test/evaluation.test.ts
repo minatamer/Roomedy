@@ -152,8 +152,25 @@ it('fails live scope/opt-in before provider construction; offline does not inher
     'paid-live-mode',
     'provider-key',
     'model-match',
-    'privacy-review',
   ]);
+  const enabled = {
+    FAKE_MODE: 'false',
+    PAID_DEMO_ENABLED: 'true',
+    OPENAI_API_KEY: 'synthetic-key',
+  };
+  expect(
+    livePrerequisites(
+      { ...options, executeLive: true },
+      { ...policy, model: 'gpt-6-luna' },
+      enabled,
+    ),
+  ).toEqual([]);
+  expect(
+    livePrerequisites({ ...options, executeLive: true }, policy, {
+      ...enabled,
+      OPENAI_MODEL: policy.model,
+    }),
+  ).toEqual(['model-match']);
   const example = JSON.parse(
     await readFile(
       new URL('../docs/evaluation/live-policy.example.json', import.meta.url),

@@ -9,6 +9,7 @@ import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import { readOperationResponse as read } from '../session/operation-client';
 export { operationAvailability as recognitionAvailability } from '../session/operation-client';
 import { releaseTransport } from '../session/release-client';
+import { obtainAdmission } from '../session/admission-client';
 import type { ReviewController } from './review-controller';
 
 type Transport = typeof fetch;
@@ -136,7 +137,9 @@ export async function draftFromPhotos(
     };
     if (!current()) return;
     controller.draftProgress(token, 'drafting');
-    const admitted = await post('admission', { input, proof: null });
+    const admitted = await obtainAdmission(input, signal, (body) =>
+      post('admission', body),
+    );
     if (!current()) return;
     const failure = safeErrorSchema.safeParse(admitted);
     if (failure.success) {

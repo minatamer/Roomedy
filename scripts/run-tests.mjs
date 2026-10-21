@@ -12,7 +12,8 @@ const env = {
   OPENAI_API_KEY: '',
   OPENAI_MODEL: '',
   ROOMEDY_BRIDGE_SECRET: '',
-  LIVE_POLICY_REVIEWED: 'false',
+  TURNSTILE_SITE_KEY: '',
+  TURNSTILE_SECRET_KEY: '',
   NEXT_TELEMETRY_DISABLED: '1',
 };
 const result = spawnSync(

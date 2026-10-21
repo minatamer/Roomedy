@@ -114,11 +114,15 @@ export function AssistantTour({
   autoStart,
   hideReplay = false,
   registerMedy,
+  onActivityChange,
+  onComplete,
 }: {
   controller: SessionController;
   autoStart: boolean;
   hideReplay?: boolean;
   registerMedy?: (start: (() => void) | null) => void;
+  onActivityChange?: (active: boolean) => void;
+  onComplete?: () => void;
 }) {
   const [mounted, setMounted] = useState(false),
     [open, setOpen] = useState(autoStart),
@@ -140,6 +144,9 @@ export function AssistantTour({
     stopScroll = useRef(() => {}),
     opener = useRef<HTMLElement | null>(null),
     displayed = useRef<TourLayout | null>(null);
+  useEffect(() => {
+    onActivityChange?.(open);
+  }, [open, onActivityChange]);
   useEffect(() => {
     registerMedy?.(() => {
       opener.current =
@@ -449,9 +456,12 @@ export function AssistantTour({
           type="button"
           data-tour-forward
           disabled={leaving || pending !== null}
-          onClick={() =>
-            selected === steps.length - 1 ? close() : setPending(selected + 1)
-          }
+          onClick={() => {
+            if (selected === steps.length - 1) {
+              onComplete?.();
+              close();
+            } else setPending(selected + 1);
+          }}
         >
           {selected === steps.length - 1 ? 'Done' : 'Next →'}
         </button>

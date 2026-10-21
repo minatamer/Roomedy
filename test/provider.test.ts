@@ -37,6 +37,17 @@ const completed = {
     },
   ],
 };
+it('uses the pinned Roomedy model when no model is supplied', async () => {
+  const fetcher = vi.fn<typeof fetch>(async (_url, options) => {
+    expect(JSON.parse(options!.body as string).model).toBe('gpt-6-luna');
+    return Response.json(completed);
+  });
+  const provider = createResponsesProvider('synthetic-key', undefined, fetcher);
+  const call = provider.start(input(), new AbortController().signal);
+  expect(await call.result).toMatchObject({ kind: 'completed' });
+  await call.settled;
+  expect(fetcher).toHaveBeenCalledTimes(1);
+});
 it('emits actual closed required/null-capable schemas and explicit strict serial stateless flags', async () => {
   const projected = projectProviderSchema(draftHypothesisSchema.toJSONSchema());
   expect(projected.type).toBe('object');

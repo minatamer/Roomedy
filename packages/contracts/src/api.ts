@@ -54,6 +54,7 @@ export const readySchema = z.strictObject({
     'pending-admission',
     'pending-integration',
     'missing-verification',
+    'live-ready',
   ]),
 });
 export type PublicConfig = z.infer<typeof publicConfigSchema>;

@@ -83,11 +83,27 @@ describe('safe runtime composition', () => {
     expect(runtime.publicConfig.mode).toBe('live');
     expect(runtime.readiness.ai).toBe('missing-configuration');
   });
+  it('needs only a provider key because the model is pinned in code', () => {
+    expect(
+      parseRuntimeConfig({ OPENAI_API_KEY: 'synthetic-key' })
+        .providerConfigured,
+    ).toBe(true);
+    expect(
+      parseRuntimeConfig({ OPENAI_API_KEY: 'synthetic-key', OPENAI_MODEL: '' })
+        .providerConfigured,
+    ).toBe(true);
+    expect(
+      parseRuntimeConfig({ OPENAI_MODEL: 'untrusted-override' })
+        .providerConfigured,
+    ).toBe(false);
+  });
   it('rejects malformed booleans, origin and ports with content-free errors', () => {
     for (const env of [
       { FAKE_MODE: 'yes' },
       { PORT: '1.5' },
       { FRONTEND_ORIGIN: 'https://secret@example.com' },
+      { TURNSTILE_SITE_KEY: 'bad site key' },
+      { TURNSTILE_SECRET_KEY: 'bad\nsecret' },
     ])
       expect(() => parseRuntimeConfig(env)).toThrow('invalid-configuration');
   });

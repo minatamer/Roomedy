@@ -810,15 +810,26 @@ function BorrowedModel({
   asset,
   surfaces,
   open,
+  finish,
 }: {
   asset: GLTF;
   surfaces: Surfaces;
   open: boolean;
+  finish: Furniture['finish'];
 }) {
+  const invalidate = useThree((s) => s.invalidate);
+  const [initialFinish] = useState(finish);
   const instance = useMemo(
-    () => surfaceModel(asset.scene, surfaces),
-    [asset, surfaces],
+    () => surfaceModel(asset.scene, surfaces, initialFinish),
+    [asset, surfaces, initialFinish],
   );
+  useLayoutEffect(() => {
+    instance.chooseFinish(finish);
+    invalidate();
+  }, [instance, finish, invalidate]);
+  useFrame((_, delta) => {
+    if (instance.advance(delta)) invalidate();
+  });
   useEffect(() => () => instance.dispose(), [instance]);
   const rig = useMemo(() => cabinetDoorRig(instance.object), [instance]);
   useOpeningMotion(open && !!rig, (amount) => rig?.apply(amount));
@@ -1246,7 +1257,7 @@ function Piece({
         findCatalogueEntry(
           piece.catalogueId,
           piece.catalogueVersion,
-        )?.category.match(/^(chair|seating)$/)
+        )?.category.match(/^(chair|seating|lighting)$/)
           ? FINISH_PALETTE[piece.finish]
           : '#eee5d5',
       ),
@@ -1327,7 +1338,12 @@ function Piece({
         : {})}
     >
       {representation.kind === 'mesh' && asset?.kind === 'ready' ? (
-        <BorrowedModel asset={asset.asset} surfaces={surfaces} open={open} />
+        <BorrowedModel
+          asset={asset.asset}
+          surfaces={surfaces}
+          open={open}
+          finish={piece.finish}
+        />
       ) : representation.kind === 'procedural' ? (
         parts.map((part) => {
           const motion = opening

@@ -170,7 +170,7 @@ describe('authored fixture truth', () => {
       Math.max(bed.pose.centerZ - 1050, desk.pose.centerZ - 300);
     expect(overlapX * overlapZ).toBe(SAMPLE_EXPECTATIONS.conflict.areaMm2);
   });
-  it('finish previews preserve identity, geometry, ownership, locks and revision, reporting unavailable recolors', () => {
+  it('finish previews preserve identity, geometry, ownership, locks and revision across the full supported palette', () => {
     const room = createRoomFixture();
     const before = structuredClone(room);
     for (const preset of FINISH_PRESETS) {
@@ -182,7 +182,10 @@ describe('authored fixture truth', () => {
           expect(item.finish).toBe(original.finish);
       }
       expect(preview.room.roomRevision).toBe(room.roomRevision);
-      expect(preview.unavailableIds).toContain('chair_1');
+      expect(preview.unavailableIds).toEqual([]);
+      expect(
+        preview.room.furniture.find((item) => item.id === 'chair_1')!.finish,
+      ).toBe(preset.furniture);
     }
     expect(room).toEqual(before);
   });

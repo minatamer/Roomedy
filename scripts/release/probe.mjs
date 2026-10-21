@@ -114,8 +114,6 @@ try {
     '--env',
     'PAID_DEMO_ENABLED=false',
     '--env',
-    'LIVE_POLICY_REVIEWED=false',
-    '--env',
     `FRONTEND_ORIGIN=${origin}`,
   ]);
   const frontend = launch('frontend', [

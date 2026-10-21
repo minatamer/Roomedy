@@ -242,8 +242,7 @@ describe('admitted photo interpretation', () => {
         FAKE_MODE: 'false',
         PAID_DEMO_ENABLED: 'true',
         OPENAI_API_KEY: 'synthetic',
-        OPENAI_MODEL: 'unverified',
-        LIVE_POLICY_REVIEWED: 'true',
+        TURNSTILE_SITE_KEY: 'synthetic-site',
         ROOMEDY_BRIDGE_SECRET: secret,
       }),
       {

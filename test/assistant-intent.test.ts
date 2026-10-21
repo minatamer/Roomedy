@@ -372,7 +372,7 @@ it.each([
   expect(task.scope.actionKinds).toEqual([]);
   expect(task.interpret).not.toBe(true);
 });
-it('offers state-aware clarification without promising a nonexistent layout or unsupported piece finish', () => {
+it('offers state-aware clarification and the chair’s now-supported piece finish without promising a nonexistent layout', () => {
   const empty = createRoomFixture('empty'),
     intent = {
       goal: 'clarify' as const,
@@ -396,7 +396,14 @@ it('offers state-aware clarification without promising a nonexistent layout or u
       targetIds: ['chair_1'],
       finish: 'walnut',
     }),
-  ).toEqual([]);
+  ).toEqual([
+    {
+      label: 'Preview Cushioned work chair in walnut',
+      request: 'Preview this selected piece finish walnut',
+      roomRevision: 0,
+      selectedId: 'chair_1',
+    },
+  ]);
 });
 it('keeps no-candidate alternatives truthful and separately authorized', () => {
   const room = commandRoom([piece('desk')]),

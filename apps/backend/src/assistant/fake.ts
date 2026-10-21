@@ -6,7 +6,11 @@ import { roomDocumentSchema } from '@roomedy/contracts/room';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { DesignIntent } from '@roomedy/contracts/assistant';
 import { POLICY } from '@roomedy/contracts/policy';
-import { findCatalogueEntry, medyAdvice } from '@roomedy/spatial';
+import {
+  findCatalogueEntry,
+  medyAdvice,
+  contextualQuickReplies,
+} from '@roomedy/spatial';
 
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
@@ -162,7 +166,7 @@ export async function assistantFakeResponse(
   if (request.input.at(-1)?.type === 'function_call_output')
     return {
       kind: 'completed',
-      data: { kind: 'done', message: null },
+      data: { kind: 'done', message: null, quickReplies: [] },
       calls: [],
     };
   const content = request.input.at(-1)?.content;
@@ -198,16 +202,16 @@ export async function assistantFakeResponse(
   if (request.format.name === 'room_medy_conversation_1') {
     const room = roomDocumentSchema.safeParse(context.room);
     if (!room.success || request.tools.length) return { kind: 'malformed' };
+    const selectedId =
+      typeof context.selectedId === 'string' ? context.selectedId : null;
+    const message = medyAdvice(room.data, context.request, selectedId);
     return {
       kind: 'completed',
       calls: [],
       data: {
         kind: 'done',
-        message: medyAdvice(
-          room.data,
-          context.request,
-          typeof context.selectedId === 'string' ? context.selectedId : null,
-        ),
+        message,
+        quickReplies: contextualQuickReplies(room.data, message, selectedId),
       },
     };
   }

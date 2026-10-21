@@ -57,7 +57,7 @@ export function createOperations(
       ? deps.provider.kind === 'fake'
       : config.paidEnabled &&
         config.providerConfigured &&
-        config.livePolicyReviewed &&
+        !!config.turnstileSiteKey &&
         deps.provider.kind === 'live' &&
         deps.challenge?.kind === 'live');
   async function grant(
@@ -112,6 +112,15 @@ export function createOperations(
           kind: 'verification' as const,
           state,
           simulation: config.mode === 'fake',
+          ...(config.mode === 'live' && state === 'interaction'
+            ? {
+                challenge: {
+                  siteKey: config.turnstileSiteKey,
+                  action: 'roomedy-ai' as const,
+                  inputHash: digest,
+                },
+              }
+            : {}),
         };
     } else if (config.mode !== 'fake')
       return {

@@ -6,6 +6,7 @@ import {
 import type { OperationInput } from '@roomedy/contracts/operations';
 import { safeErrorSchema, errorMessages } from '@roomedy/contracts/api';
 import { readOperationResponse } from '../session/operation-client';
+import { obtainAdmission } from '../session/admission-client';
 
 export async function askAssistant(
   input: Extract<OperationInput, { kind: 'assistant' }>,
@@ -22,15 +23,18 @@ export async function askAssistant(
       body: JSON.stringify(body),
       signal,
     });
-    const raw = await readOperationResponse(response, signal),
-      error = safeErrorSchema.safeParse(raw);
-    if (error.success) return { failure: errorMessages[error.data.error.code] };
-    return { raw };
+    return readOperationResponse(response, signal);
   };
-  const admission = await post('admission', { input: parsed, proof: null });
-  if (admission.failure)
-    return { ok: false as const, message: admission.failure };
-  const grant = admissionResultSchema.safeParse(admission.raw);
+  const admission = await obtainAdmission(parsed, signal, (body) =>
+    post('admission', body),
+  );
+  const admissionError = safeErrorSchema.safeParse(admission);
+  if (admissionError.success)
+    return {
+      ok: false as const,
+      message: errorMessages[admissionError.data.error.code],
+    };
+  const grant = admissionResultSchema.safeParse(admission);
   if (!grant.success || grant.data.kind !== 'granted')
     return {
       ok: false as const,
@@ -41,9 +45,13 @@ export async function askAssistant(
     input: parsed,
     grant: grant.data.grant,
   });
-  if (operation.failure)
-    return { ok: false as const, message: operation.failure };
-  const result = operationResultSchema.safeParse(operation.raw);
+  const operationError = safeErrorSchema.safeParse(operation);
+  if (operationError.success)
+    return {
+      ok: false as const,
+      message: errorMessages[operationError.data.error.code],
+    };
+  const result = operationResultSchema.safeParse(operation);
   if (
     !result.success ||
     JSON.stringify(result.data.identity) !== JSON.stringify(parsed.identity)

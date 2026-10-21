@@ -74,10 +74,12 @@ export function createRuntime(
         ? 'disabled'
         : !config.providerConfigured
           ? 'missing-configuration'
-          : !config.livePolicyReviewed ||
-              dependencies.challenge?.kind !== 'live'
+          : !config.turnstileSiteKey || dependencies.challenge?.kind !== 'live'
             ? 'missing-verification'
-            : 'pending-integration';
+            : publicConfig.capabilities.recognition &&
+                publicConfig.capabilities.assistant
+              ? 'live-ready'
+              : 'pending-integration';
   return {
     publicConfig,
     readiness: { status: 'ok', ai } as const,

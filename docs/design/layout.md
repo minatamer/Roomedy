@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Quick replies beside the composer — RM-015BJ
+
+Medy’s latest up-to-three suggestions share a labelled Quick replies shelf directly above the text box, outside the scrollable log. Retain the website glass-control gradient/cocoa ink/rounded pill,13px labels,44px targets and inset focus. A bounded174px scroll region contains long/wrapped choices; the composer does not shrink into history. Hide/inert the shelf until the latest text reveal completes, and omit old reply groups from history. Actual preview cards and Apply/Cancel remain with their proposal. Phone/short layouts retain ordinary keyboard/document scroll to all controls. No fixed overlay or second chat scroller around the composer.
+
 ## Mobile header action padding — RM-015AZ follow-up
 
 Within the existing natural/narrow header breakpoint, share clamp12px/4vw/20px side gutters between brand and actions, and clamp6px/2vw/10px between Project and Undo. Keep the header’s existing126px two-row height and full-width capsule/card alignment. Project remains a native summary with its marker,44px height, vertically centered12px text,1.25 line height and fluid12–16px horizontal padding. Undo is a centered44px square with zero padding and14px icon. Scope direct Undo and Project summary styles so dropdown actions/desktop/shared glass controls stay independent. Preserve native menu motion, Escape/focus and actual Undo semantics.

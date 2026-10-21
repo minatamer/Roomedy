@@ -115,7 +115,7 @@ it('opens the studio once with unchanged estimates, locks, baseline, fixed expir
   expect(original.furniture[0]!.locks).toEqual({
     position: false,
     rotation: false,
-    dimensions: true,
+    dimensions: false,
   });
   expect(revoked).toHaveBeenCalledTimes(2);
   expect(review.photos.getSnapshot()).toHaveLength(0);

@@ -198,7 +198,7 @@ export function FurnitureSizeForm({
         {form.error}
       </p>
     );
-  const customSize = presets.length > 0 && (
+  const customSize = (
     <form
       className={styles.section}
       ref={customRef}
@@ -243,7 +243,7 @@ export function FurnitureSizeForm({
   );
   return (
     <>
-      {presets.length ? (
+      {presets.length > 0 && (
         <form
           className={styles.section}
           ref={presetRef}
@@ -271,22 +271,6 @@ export function FurnitureSizeForm({
             <button type="submit">Apply size</button>
           )}
         </form>
-      ) : (
-        <div className={styles.section}>
-          <label>
-            Size preset
-            <select disabled value="fixed">
-              <option value="fixed">
-                {(['width', 'depth', 'height'] as const).every(
-                  (axis) =>
-                    item.dimensions[axis].value === entry.size[axis].default,
-                )
-                  ? 'Standard'
-                  : 'Custom size'}
-              </option>
-            </select>
-          </label>
-        </div>
       )}
       {children(customSize)}
     </>

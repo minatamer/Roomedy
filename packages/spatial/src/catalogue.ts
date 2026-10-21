@@ -158,7 +158,7 @@ const records = catalogueSchema.parse([
     assetId: 'chair-desk',
     representation: 'prepared-mesh',
     adjustable: false,
-    finishes: ['clay'],
+    finishes: ['clay', ...finishes.filter((finish) => finish !== 'clay')],
     size: { width: fixed(670), depth: fixed(630), height: fixed(1216) },
     accessMm: 800,
     accessMechanism: 'chair-pullout',
@@ -171,7 +171,7 @@ const records = catalogueSchema.parse([
     assetId: 'bedside-storage',
     representation: 'prepared-mesh',
     adjustable: false,
-    finishes: ['oak'],
+    finishes: [...finishes],
     size: { width: fixed(540), depth: fixed(440), height: fixed(470) },
     accessMm: 450,
     accessMechanism: 'hinged',
@@ -326,14 +326,20 @@ const records = catalogueSchema.parse([
         ? {
             placement: 'wall',
             defaultElevationMm: 1200,
-            finishes: ['charcoal'],
+            finishes: [
+              'charcoal',
+              ...finishes.filter((finish) => finish !== 'charcoal'),
+            ],
           }
         : {}),
       ...(id === 'tv-tabletop'
         ? {
             placement: 'surface',
             defaultElevationMm: 600,
-            finishes: ['charcoal'],
+            finishes: [
+              'charcoal',
+              ...finishes.filter((finish) => finish !== 'charcoal'),
+            ],
           }
         : {}),
     }),

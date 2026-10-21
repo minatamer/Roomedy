@@ -353,14 +353,14 @@ export function buildDesignScene(
     const asset = first.kind === 'mesh' ? assets.get(first.url) : undefined,
       representation = pieceRepresentation(piece, !!asset);
     if (representation.kind === 'mesh' && asset) {
-      const instance = surfaceModel(asset.scene, surfaces);
+      const instance = surfaceModel(asset.scene, surfaces, piece.finish);
       group.add(instance.object);
       instances.push(instance.dispose);
     } else if (representation.kind === 'procedural') {
       const chair = findCatalogueEntry(
         piece.catalogueId,
         piece.catalogueVersion,
-      )?.category.match(/^(chair|seating)$/);
+      )?.category.match(/^(chair|seating|lighting)$/);
       const frame = material(
           FINISH_PALETTE[piece.finish],
           piece.finish === 'oak' || piece.finish === 'walnut' ? 'wood' : 'wall',

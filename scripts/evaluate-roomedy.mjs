@@ -59,10 +59,7 @@ try {
         await import('../apps/backend/src/providers/responses.ts');
       live = {
         policy,
-        provider: createResponsesProvider(
-          process.env.OPENAI_API_KEY,
-          policy.model,
-        ),
+        provider: createResponsesProvider(process.env.OPENAI_API_KEY),
       };
     }
     const report = await runEvaluation(corpus, selected, live);
@@ -78,6 +75,7 @@ try {
       'scripts/evaluation/live-budget.ts',
       'apps/backend/src/recognition/recognize.ts',
       'apps/backend/src/providers/responses.ts',
+      'apps/backend/src/providers/model.ts',
       'apps/backend/src/providers/provider.ts',
       'apps/backend/src/assistant/assistant.ts',
       'packages/contracts/src/intake.ts',

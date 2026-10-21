@@ -9,6 +9,7 @@ import { createRecognitionHandler } from './recognition/recognize.js';
 import { createRoomedyFakeProvider } from './providers/fake.js';
 import { createAssistantHandler } from './assistant/assistant.js';
 import { createResponsesProvider } from './providers/responses.js';
+import { createTurnstileChallenge } from './security/turnstile.js';
 
 // This executable is the only backend module allowed to load environment or listen.
 loadEnvironment({
@@ -38,11 +39,13 @@ try {
     ...(config.mode === 'live' &&
     config.paidEnabled &&
     config.providerConfigured &&
-    config.livePolicyReviewed
+    config.turnstileSiteKey &&
+    process.env.TURNSTILE_SECRET_KEY?.trim()
       ? {
-          provider: createResponsesProvider(
-            process.env.OPENAI_API_KEY!,
-            process.env.OPENAI_MODEL!,
+          provider: createResponsesProvider(process.env.OPENAI_API_KEY!.trim()),
+          challenge: createTurnstileChallenge(
+            process.env.TURNSTILE_SECRET_KEY.trim(),
+            config.frontendOrigin,
           ),
         }
       : {}),

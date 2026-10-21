@@ -129,7 +129,6 @@ export function proceduralParts(
       w,
       h - feet,
       screenDepth,
-      'metal',
     );
     box(
       'tv-screen',

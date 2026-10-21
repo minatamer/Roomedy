@@ -1,6 +1,7 @@
 import { POLICY } from '@roomedy/contracts/policy';
 import { BoundedBytes } from '@roomedy/contracts/bounded-bytes';
 import { projectProviderSchema } from './schema.js';
+import { ROOMEDY_MODEL } from './model.js';
 import type {
   ProviderPort,
   ProviderRequest,
@@ -290,7 +291,7 @@ function decodePayload(
 /** Fixed endpoint and one native fetch attempt. Construction/import performs no I/O. */
 export function createResponsesProvider(
   key: string,
-  model: string,
+  model: string = ROOMEDY_MODEL,
   fetcher: typeof fetch = fetch,
 ): ProviderPort {
   if (!key || key.length > 4096 || /[\r\n]/.test(key))

@@ -8,7 +8,7 @@ export interface RuntimeConfig {
   frontendOrigin: string;
   providerConfigured: boolean;
   bridgeSecret: string;
-  livePolicyReviewed: boolean;
+  turnstileSiteKey: string;
 }
 
 /** Pure projection. Environment loading and access are confined to server.ts. */
@@ -51,6 +51,13 @@ export function parseRuntimeConfig(
   const releaseId = env.ROOMEDY_RELEASE_ID ?? '';
   if (releaseId && !/^[a-f0-9]{64}$/.test(releaseId))
     throw new Error('invalid-configuration');
+  const turnstileSiteKey = env.TURNSTILE_SITE_KEY?.trim() || '';
+  const turnstileSecretKey = env.TURNSTILE_SECRET_KEY?.trim() || '';
+  if (
+    (turnstileSiteKey && !/^[A-Za-z0-9_-]{1,256}$/.test(turnstileSiteKey)) ||
+    (turnstileSecretKey && !/^[\x21-\x7e]{1,4096}$/.test(turnstileSecretKey))
+  )
+    throw new Error('invalid-configuration');
   return {
     releaseId,
     appEnv: appEnv as RuntimeConfig['appEnv'],
@@ -59,10 +66,8 @@ export function parseRuntimeConfig(
     port,
     host,
     frontendOrigin,
-    providerConfigured: Boolean(
-      env.OPENAI_API_KEY?.trim() && env.OPENAI_MODEL?.trim(),
-    ),
+    providerConfigured: Boolean(env.OPENAI_API_KEY?.trim()),
     bridgeSecret,
-    livePolicyReviewed: bool('LIVE_POLICY_REVIEWED', false),
+    turnstileSiteKey,
   };
 }

@@ -64,6 +64,11 @@ export const designSuggestionSchema = z.strictObject({
   roomRevision: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
 });
 export type DesignSuggestion = z.infer<typeof designSuggestionSchema>;
+export const quickReplySchema = z.strictObject({
+  label: z.string().trim().min(1).max(64),
+  request: z.string().trim().min(1).max(240),
+});
+export type QuickReply = z.infer<typeof quickReplySchema>;
 export const assistantReplySchema = z.strictObject({
   kind: z.enum([
     'explanation',
@@ -150,6 +155,7 @@ export const assistantFinalSchema = z.strictObject({
   kind: z.literal('done'),
   // Advice is displayed only on the no-tools, no-actions conversation path.
   message: z.string().trim().min(1).max(1200).nullable().optional(),
+  quickReplies: z.array(quickReplySchema).max(3).nullable().optional(),
 });
 export const assistantJsonSchema = (
   name: AssistantTool | 'final' | 'interpretation',

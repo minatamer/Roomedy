@@ -1,4 +1,5 @@
 import {
+  Color,
   DataTexture,
   LinearFilter,
   LinearMipmapLinearFilter,
@@ -10,7 +11,9 @@ import {
   RGBAFormat,
   SRGBColorSpace,
 } from 'three';
-import type { Color, Material, Object3D } from 'three';
+import type { Material, Object3D } from 'three';
+import type { Furniture } from '@roomedy/contracts/room';
+import { FINISH_COLORS } from '@roomedy/contracts/surfaces';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import type { BoxPart, PhysicalSize } from './representations/definitions';
 import type { SurfaceTexture } from '@roomedy/contracts/surfaces';
@@ -308,9 +311,26 @@ export function detailedParts(parts: BoxPart[], size: PhysicalSize): BoxPart[] {
 }
 
 /** Instance-owned material copies borrow immutable cache geometry and canvas textures. */
-export function surfaceModel(source: Object3D, surfaces: Surfaces) {
+export function surfaceModel(
+  source: Object3D,
+  surfaces: Surfaces,
+  finish: Furniture['finish'] = 'oak',
+) {
   const object = source.clone(true),
-    materials = new Map<Material, Material>();
+    materials = new Map<Material, Material>(),
+    target = new Color(FINISH_COLORS[finish]),
+    finishes: {
+      material: MeshStandardMaterial;
+      cloth: boolean;
+      blend: ReturnType<typeof createSurfaceBlend> | null;
+    }[] = [];
+  let live = true;
+  const mapFor = (value: Furniture['finish'], cloth: boolean) =>
+    cloth
+      ? surfaces.fabric
+      : value === 'oak' || value === 'walnut'
+        ? surfaces.wood
+        : surfaces.plaster;
   const copy = (sourceMaterial: Material, uv: boolean) => {
     const cached = materials.get(sourceMaterial);
     if (cached) return cached;
@@ -321,11 +341,17 @@ export function surfaceModel(source: Object3D, surfaces: Surfaces) {
       if (name.includes('metal')) {
         material.metalness = 0.55;
         material.roughness = 0.38;
-      } else if (uv && (name.includes('wood') || name.includes('carpet'))) {
+      } else if (name.includes('wood') || name.includes('carpet')) {
         const cloth = name.includes('carpet');
-        setSurfaceMap(material, cloth ? surfaces.fabric : surfaces.wood);
+        material.color.copy(target);
+        if (uv) setSurfaceMap(material, mapFor(finish, cloth));
         material.bumpScale = cloth ? 0.0012 : 0.0004;
         material.roughness = cloth ? 0.95 : 0.65;
+        finishes.push({
+          material,
+          cloth,
+          blend: uv ? createSurfaceBlend(material) : null,
+        });
       }
     }
     return material;
@@ -340,7 +366,24 @@ export function surfaceModel(source: Object3D, surfaces: Surfaces) {
   });
   return {
     object,
+    chooseFinish(value: Furniture['finish']) {
+      if (!live) return;
+      target.set(FINISH_COLORS[value]);
+      for (const { cloth, blend } of finishes)
+        blend?.choose(mapFor(value, cloth));
+    },
+    advance(delta: number) {
+      if (!live) return false;
+      let moving = false;
+      for (const { material, blend } of finishes) {
+        if (advanceSurfaceColor(material.color, target, delta)) moving = true;
+        if (blend?.advance(delta)) moving = true;
+      }
+      return moving;
+    },
     dispose() {
+      if (!live) return;
+      live = false;
       for (const material of materials.values()) material.dispose();
     },
   };

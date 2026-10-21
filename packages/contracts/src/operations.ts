@@ -62,6 +62,12 @@ export const operationRequestSchema = z.strictObject({
   input: operationInputSchema,
   grant: idSchema,
 });
+export const verificationChallengeSchema = z.strictObject({
+  siteKey: z.string().regex(/^[A-Za-z0-9_-]{1,256}$/),
+  action: z.literal('roomedy-ai'),
+  inputHash: z.string().regex(/^[a-f0-9]{64}$/),
+});
+export type VerificationChallenge = z.infer<typeof verificationChallengeSchema>;
 export const admissionResultSchema = z.discriminatedUnion('kind', [
   z.strictObject({
     kind: z.literal('granted'),
@@ -73,6 +79,7 @@ export const admissionResultSchema = z.discriminatedUnion('kind', [
     kind: z.literal('verification'),
     state: z.enum(['interaction', 'unavailable', 'failed']),
     simulation: z.boolean(),
+    challenge: verificationChallengeSchema.optional(),
   }),
 ]);
 export const operationResultSchema = z.strictObject({

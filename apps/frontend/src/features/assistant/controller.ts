@@ -15,6 +15,8 @@ import {
   assistantSearchFallback,
   resolveMedyRequest,
   medyAdvice,
+  contextualQuickReplies,
+  validateQuickReplies,
 } from '@roomedy/spatial';
 import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
@@ -23,6 +25,9 @@ import { operationAvailability } from '../session/operation-client';
 import { releaseTransport } from '../session/release-client';
 import { askAssistant } from './client';
 import { failureMessage } from '../room-editor/messages';
+import { guidanceChoices, guidanceText } from './guidance';
+import type { GuidanceStep } from './guidance';
+import { MessageReveal } from './message-reveal';
 
 export interface AssistantMessage {
   id: number;
@@ -31,6 +36,8 @@ export interface AssistantMessage {
   reply: AssistantReply | null;
   operationId: string | null;
   simulation: boolean;
+  guidance: { step: GuidanceStep; roomRevision: number } | null;
+  quickReplies: readonly DesignSuggestion[];
 }
 interface Snapshot {
   readonly draft: string;
@@ -38,6 +45,7 @@ interface Snapshot {
   readonly busy: boolean;
   readonly stage: 'idle' | 'search' | 'request';
   readonly mode: 'loading' | 'fake' | 'live' | 'unavailable';
+  readonly tourSeen: boolean;
 }
 interface Dependencies {
   transport?: typeof fetch;
@@ -58,7 +66,9 @@ export class AssistantController {
     busy: false,
     stage: 'idle',
     mode: 'loading',
+    tourSeen: false,
   });
+  readonly reveal = new MessageReveal();
   private live = true;
   private serial = 0;
   private listeners = new Set<() => void>();
@@ -104,8 +114,31 @@ export class AssistantController {
     reply: AssistantReply | null = null,
     operationId: string | null = null,
     simulation = false,
+    guidance: AssistantMessage['guidance'] = null,
+    quickReplies?: readonly DesignSuggestion[],
   ) {
     if (this.serial >= Number.MAX_SAFE_INTEGER - 1) return;
+    const snapshot = this.session.getSnapshot(),
+      room = snapshot.workspace?.current;
+    const offered =
+      role !== 'assistant' || guidance
+        ? []
+        : quickReplies?.length
+          ? quickReplies
+          : reply?.suggestions?.length
+            ? reply.suggestions
+            : room
+              ? validateQuickReplies(
+                  room,
+                  contextualQuickReplies(
+                    room,
+                    text,
+                    snapshot.presentation.selectedId,
+                    reply?.kind === 'proposal' ? 'proposal' : 'other',
+                  ),
+                  snapshot.presentation.selectedId,
+                )
+              : [];
     const messages = [
       ...this.state.messages,
       {
@@ -133,6 +166,19 @@ export class AssistantController {
           : null,
         operationId,
         simulation,
+        guidance,
+        quickReplies:
+          role === 'assistant' && !guidance
+            ? offered.filter(
+                (choice) =>
+                  choice.request.trim().toLowerCase() !==
+                  this.state.messages
+                    .filter((message) => message.role === 'user')
+                    .at(-1)
+                    ?.text.trim()
+                    .toLowerCase(),
+              )
+            : [],
       },
     ];
     while (
@@ -140,7 +186,55 @@ export class AssistantController {
       jsonBytes(messages) > POLICY.contextBytes * 4
     )
       messages.shift();
+    this.reveal.retain(messages.map((message) => message.id));
     this.publish({ messages });
+  }
+  completeTour() {
+    if (!this.live || this.state.tourSeen) return;
+    this.publish({ tourSeen: true });
+    const room = this.session.getSnapshot().workspace?.current;
+    if (room && this.state.messages.length && this.session.canEdit())
+      this.append(
+        'assistant',
+        'That’s your room. Shall we find a design direction, or talk through what you’d like to change?',
+        null,
+        null,
+        false,
+        { step: 'welcome', roomRevision: room.roomRevision },
+      );
+  }
+  chooseGuidance(messageId: number, choiceId: string) {
+    const snapshot = this.session.getSnapshot(),
+      room = snapshot.workspace?.current,
+      last = this.state.messages.at(-1),
+      step =
+        messageId === 0 && !last
+          ? 'welcome'
+          : last?.id === messageId
+            ? last.guidance?.step
+            : null;
+    if (
+      !this.live ||
+      !this.session.canEdit() ||
+      this.state.busy ||
+      snapshot.comparison !== 'current' ||
+      !room ||
+      !step ||
+      (last?.guidance && last.guidance.roomRevision !== room.roomRevision)
+    )
+      return;
+    const choice = guidanceChoices(step, room, this.state.tourSeen).find(
+      (choice) => choice.id === choiceId,
+    );
+    if (!choice) return;
+    if (choice.request) void this.submit(choice.request);
+    else if (choice.next) {
+      this.append('user', choice.label);
+      this.append('assistant', guidanceText[choice.next], null, null, false, {
+        step: choice.next,
+        roomRevision: room.roomRevision,
+      });
+    }
   }
   private async search(
     token: OperationIdentity,
@@ -280,7 +374,12 @@ export class AssistantController {
     ) {
       this.publish({ draft: '' });
       this.append('user', text);
-      this.append('assistant', medyAdvice(workspace.current, text, selectedId));
+      this.append(
+        'assistant',
+        /\breview\b.*\bpreview\b|\bpreview\b.*\breview\b/i.test(text)
+          ? 'Compare the highlighted preview with your current room and read the changed fields above. Check sizes, clearances and finishes against your room. Apply keeps this preview; Cancel discards it, and Undo can reverse an accepted change. Nothing has been applied yet.'
+          : medyAdvice(workspace.current, text, selectedId),
+      );
       return;
     }
     const token = this.session.beginOperation();
@@ -362,6 +461,8 @@ export class AssistantController {
             task.kind === 'conversation' ? null : reply,
             token.operationId,
             simulation,
+            null,
+            reply.suggestions,
           ),
         );
     };
@@ -497,7 +598,7 @@ export class AssistantController {
       !this.session.canEdit() ||
       this.state.busy ||
       last?.id !== messageId ||
-      !last.reply?.suggestions?.includes(suggestion) ||
+      !last.quickReplies.includes(suggestion) ||
       !workspace ||
       workspace.current.roomRevision !== suggestion.roomRevision ||
       (suggestion.selectedId !== null &&
@@ -581,7 +682,9 @@ export class AssistantController {
       busy: false,
       stage: 'idle',
       mode: 'unavailable',
+      tourSeen: false,
     });
+    this.reveal.clear();
     this.listeners.clear();
     const release = this.release;
     this.release = null;

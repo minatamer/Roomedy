@@ -11,14 +11,18 @@ import { failureMessage, issueText } from '../room-editor/messages';
 import { PreviewChangeList } from '../room-editor/preview-change-list';
 import type { AssistantController } from './controller';
 import { MedyIcon } from './medy-icon';
+import { guidanceChoices, guidanceText } from './guidance';
+import { RevealedText } from './revealed-text';
 import styles from './assistant.module.css';
 
 export function Assistant({
   controller,
   roomState,
+  tourActive,
 }: {
   controller: AssistantController;
   roomState: SessionSnapshot;
+  tourActive: boolean;
 }) {
   const state = useSyncExternalStore(
       controller.subscribe,
@@ -28,7 +32,7 @@ export function Assistant({
     end = useRef<HTMLDivElement>(null),
     proposalActions = useRef<HTMLDivElement>(null),
     composer = useRef<HTMLTextAreaElement>(null);
-  const [goalsOpen, setGoalsOpen] = useState(() => state.messages.length === 0);
+  const [revealedId, setRevealedId] = useState<number | null>(null);
   const session = controller.session,
     room = roomState.workspace!.current,
     preview = roomState.candidate;
@@ -83,59 +87,17 @@ export function Assistant({
         target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
   };
-  const send = (text: string) => {
-    setGoalsOpen(false);
-    void controller.submit(text);
-  };
-  const submit = () => {
-    setGoalsOpen(false);
-    void controller.submit();
-  };
-  const goalOptions = (
-    <details
-      className={styles.goalOptions}
-      open={goalsOpen}
-      onToggle={(e) => setGoalsOpen(e.currentTarget.open)}
-    >
-      <summary>Room goals & finishes</summary>
-      <div className={styles.goals} aria-label="Room goals">
-        {room.furniture.some(
-          (p) =>
-            findCatalogueEntry(p.catalogueId, p.catalogueVersion)?.category ===
-            'desk',
-        ) &&
-          room.room.features.some((f) => f.kind === 'window') && (
-            <button onClick={() => send('Move the work area near the window')}>
-              Work area by window
-            </button>
-          )}
-        {room.furniture.some((p) => p.ownership === 'owned') ? (
-          <button onClick={() => send('Rearrange what I own')}>
-            Rearrange what I own
-          </button>
-        ) : (
-          <button
-            onClick={() => send('I need a bed, desk, chair and wardrobe')}
-          >
-            Furnish with essentials
-          </button>
-        )}
-        <button onClick={() => send('Explain the room checks')}>
-          Explain checks
-        </button>
-      </div>
-      <div className={styles.finishes} aria-label="Finish directions">
-        {['Warm & simple', 'Light & airy', 'Calm & focused'].map((label) => (
-          <button
-            key={label}
-            onClick={() => send('Preview ' + label + ' room palette')}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-    </details>
-  );
+  const submit = () => void controller.submit();
+  const latest = state.messages.at(-1),
+    replyId = latest ? (latest.role === 'assistant' ? latest.id : null) : 0,
+    guidance = latest?.guidance?.step ?? (!latest ? 'welcome' : null),
+    options = guidance
+      ? guidanceChoices(guidance, room, state.tourSeen)
+      : latest?.role === 'assistant'
+        ? latest.quickReplies
+        : [],
+    repliesReady =
+      replyId !== null && revealedId === replyId && !tourActive && !state.busy;
   return (
     <section
       className={styles.assistant}
@@ -168,27 +130,15 @@ export function Assistant({
         aria-live="polite"
         aria-relevant="additions text"
       >
-        {state.messages.length > 0 && goalOptions}
         {!state.messages.length && (
           <div className={styles.welcome}>
-            <p>Hi, I’m Medy. What would you like to make room for?</p>
-            <p>
-              We can try a layout, change an exact size, or explore the room
-              together.
-            </p>
-            <div className={styles.goals}>
-              <button onClick={() => send('Show me around')}>
-                Show me around
-              </button>
-              <button
-                onClick={() =>
-                  send('How can I make this room feel tidy and modern?')
-                }
-              >
-                Help me find a direction
-              </button>
-            </div>
-            {goalOptions}
+            <RevealedText
+              id={0}
+              text={guidanceText.welcome}
+              ledger={controller.reveal}
+              enabled={!tourActive}
+              onComplete={setRevealedId}
+            />
           </div>
         )}
         {state.messages.map((message) => {
@@ -205,29 +155,17 @@ export function Assistant({
                 message.role === 'user' ? 'Your request' : 'Medy response'
               }
             >
-              <p>{message.text}</p>
-              {!!reply?.suggestions?.length && (
-                <div
-                  className={styles.goals}
-                  aria-label="Clarify your design goal"
-                >
-                  {reply.suggestions.map((suggestion) => (
-                    <button
-                      key={suggestion.label}
-                      disabled={
-                        roomState.comparison !== 'current' ||
-                        state.busy ||
-                        state.messages.at(-1)?.id !== message.id ||
-                        suggestion.roomRevision !== room.roomRevision
-                      }
-                      onClick={() =>
-                        controller.chooseSuggestion(message.id, suggestion)
-                      }
-                    >
-                      {suggestion.label}
-                    </button>
-                  ))}
-                </div>
+              {message.role === 'assistant' &&
+              state.messages.at(-1)?.id === message.id ? (
+                <RevealedText
+                  id={message.id}
+                  text={message.text}
+                  ledger={controller.reveal}
+                  enabled={!tourActive}
+                  onComplete={setRevealedId}
+                />
+              ) : (
+                <p>{message.text}</p>
               )}
               {reply?.kind === 'proposal' && active && (
                 <p className={styles.note}>Preview</p>
@@ -451,6 +389,52 @@ export function Assistant({
           submit();
         }}
       >
+        {!!options.length && (
+          <div
+            className={styles.quickReplies}
+            data-ready={repliesReady || undefined}
+            inert={!repliesReady}
+            aria-hidden={!repliesReady || undefined}
+            style={{ visibility: repliesReady ? 'visible' : 'hidden' }}
+          >
+            <span className={styles.quickReplyLabel}>Quick replies</span>
+            <div
+              className={styles.goals}
+              role="group"
+              aria-label="Quick replies"
+            >
+              {options.map((option) => (
+                <button
+                  type="button"
+                  className="glass-control"
+                  key={option.label}
+                  disabled={
+                    !repliesReady ||
+                    roomState.comparison !== 'current' ||
+                    (latest?.guidance
+                      ? latest.guidance.roomRevision !== room.roomRevision
+                      : 'roomRevision' in option &&
+                        option.roomRevision !== room.roomRevision)
+                  }
+                  onClick={() => {
+                    if ('id' in option && replyId !== null)
+                      controller.chooseGuidance(replyId, option.id);
+                    else if (
+                      latest &&
+                      'request' in option &&
+                      'roomRevision' in option
+                    )
+                      controller.chooseSuggestion(latest.id, option);
+                    focusComposer();
+                  }}
+                >
+                  <span className={styles.choiceLabel}>{option.label}</span>
+                  <ChoiceArrow />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <div className={styles.composerBox}>
           <textarea
             ref={composer}
@@ -498,5 +482,25 @@ export function Assistant({
         </div>
       </form>
     </section>
+  );
+}
+
+function ChoiceArrow() {
+  return (
+    <span className={styles.choiceArrow} aria-hidden="true">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        focusable="false"
+      >
+        <path d="M5 12h14m-5-5 5 5-5 5" />
+      </svg>
+    </span>
   );
 }

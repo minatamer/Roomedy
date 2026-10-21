@@ -648,7 +648,7 @@ describe('review lifetime and accepted handoff', () => {
 });
 
 describe('draft furniture starts with explicit editing defaults', () => {
-  it('unlocks placement and rotation without manufacturing measurements for owned or proposed pieces', () => {
+  it('unlocks placement, rotation and size without manufacturing measurements for owned or proposed pieces', () => {
     const draft = createDraft('furnished', 'review_defaults');
     for (const owned of [false, true]) {
       const item = draftFurniture(
@@ -660,7 +660,7 @@ describe('draft furniture starts with explicit editing defaults', () => {
       expect(item.locks).toEqual({
         position: false,
         rotation: false,
-        dimensions: true,
+        dimensions: false,
       });
       expect(item.dimensions.width.status).toBe(
         owned ? 'unknown' : 'estimated',

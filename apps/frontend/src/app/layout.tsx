@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { SectionScroll } from '../features/navigation/section-scroll';
+import { Verification } from '../features/verification/verification';
 import './globals.css';
 export const metadata: Metadata = {
   title: 'Roomedy — make room for the way you live',
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to content
         </SectionScroll>
         {children}
+        <Verification />
       </body>
     </html>
   );

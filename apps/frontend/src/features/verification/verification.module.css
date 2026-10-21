@@ -1,0 +1,75 @@
+.dialog {
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(20px, 5vw, 32px);
+  width: min(400px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  box-shadow: 0 24px 80px #43352a30;
+  overscroll-behavior: contain;
+}
+.dialog[open] {
+  animation: enter 180ms ease-out both;
+}
+.dialog::backdrop {
+  background: #43352a66;
+}
+/* The vendor owns quiet iframe visibility; only required interaction opens a modal. */
+.dialog:not([open]) {
+  display: block;
+  position: fixed;
+  inset: auto 16px 16px auto;
+  width: auto;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  pointer-events: none;
+}
+.dialog h2 {
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  margin: 0 0 12px;
+}
+.dialog p {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+.widget {
+  display: grid;
+  justify-content: center;
+}
+.footer {
+  margin-top: 20px;
+}
+.footer[hidden] {
+  display: none;
+}
+.footer button {
+  min-height: 44px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--sage);
+  color: var(--ink);
+  padding: 10px 16px;
+  font-size: 14px;
+  transition: background 180ms ease;
+}
+.footer button:hover {
+  background: #ddd0bb;
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

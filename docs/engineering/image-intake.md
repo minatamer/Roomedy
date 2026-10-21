@@ -43,3 +43,9 @@ The owner now separates manual creation from photo intake. Upload photos opens i
 ## Z automatic source purpose
 
 Latest owner supersedes visitor room/detail selectors. Both example and chosen inputs carry `purpose:auto` through PhotoStore, bounded manifest/admission and the explicit recognition request. Preparation alone never calls recognition. Legacy explicit room/furniture hints remain accepted internally for controlled fixtures; they are not product controls. The upload card shows one Draft action only after selection, with existing readiness/failure/cancel/current-token fencing. The example card has no idle Draft button or fake transfer prose. Actual live transfer disclosure remains beside Draft; no hidden automatic submission. Input limits, one native decode, transient previews and privacy/lifecycle rules are unchanged.
+
+## Editable furniture assumptions — RM-015BK,21 October2026
+
+Latest owner instruction supersedes the automatic size lock for fresh photo draft furniture. Position, rotation and dimensions all start unlocked in draft construction, before both fake and real recognition adoption. Recognition never supplies locks; existing linked entities retain explicit visitor edits and protections. Reprocessing/recovery/import must not reset those protections. Manual catalogue Add/preset defaults remain independent.
+
+The accepted studio uses the same inspector, full six-finish catalogue, custom owned size estimate controls, bounded command evaluator and Undo as manual rooms. Prepared cabinet/chair materials now reflect finish choices in editor and export; the source mesh/material cache stays immutable. Fixed owned items can change their estimated physical dimensions without confirming a measurement; out-of-model sizes use the disclosed bounds representation. Physical limits, final conflict checks, fixed session lifetime and unchanged-axis provenance remain.

@@ -183,6 +183,9 @@ export function Editor({
     [],
   );
   const [assistant, setAssistant] = useState<AssistantController | null>(null);
+  const [tourActive, setTourActive] = useState(() =>
+    automaticallyOfferTour(state),
+  );
   useEffect(() => {
     let live = true,
       owned: AssistantController | null = null;
@@ -585,6 +588,8 @@ export function Editor({
             autoStart={automaticallyOfferTour(state)}
             hideReplay
             registerMedy={registerTour}
+            onActivityChange={setTourActive}
+            onComplete={() => assistant?.completeTour()}
           />
         </nav>
       </header>
@@ -861,7 +866,11 @@ export function Editor({
                     )}
                   </section>
                 ) : assistant ? (
-                  <Assistant controller={assistant} roomState={state} />
+                  <Assistant
+                    controller={assistant}
+                    roomState={state}
+                    tourActive={tourActive}
+                  />
                 ) : (
                   <p role="status">Opening assistant…</p>
                 ))}

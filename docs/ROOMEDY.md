@@ -1,5 +1,20 @@
 # Roomedy — product and engineering blueprint
 
+**Owner-authorized BH–BK checkpoint —21 October:** Owner accepts the requested correction and explicitly selects a file-level plan plus staging/local commit. [Exact85-file allocation](commit-plans/RM-015BH-BK-CHECKPOINT.md), [batch evidence](validation/RM-015BH-BK-CHECKPOINT.md). One atomic checkpoint includes shared Turnstile/model setup, finite Medy welcome/contextual replies and editable photo furniture. Final full isolated981tests/63files and repository lint pass; exclude local env/runtime/build artifacts and generated Next declaration. Whole RM-015 visual/funded quality remain separate, Q held, guide paused, RM-016 Planned; no push/deploy or paid-call authority.
+
+**Latest owner correction —21 October, RM-015BK:** Photo-derived furniture settings are editable starting values. New photo pieces have no automatic position/rotation/size locks, all catalogue items offer all six finishes, and fixed owned pieces expose custom size estimates. Prepared model finish targets are shared by editor/export; TV cases and lamp shades also respond. Deliberate locks/corrections survive reprocessing/recovery; no geometry/confirmation authority changes. [Ticket](tickets/RM-015BK-keep-photo-furniture-editable.md), [22-path allocation](commit-plans/RM-015BK.md), [evidence](validation/RM-015BK.md). Actual owner approval/funded quality pending, Q held, guide paused, RM-016 Planned; no paid calls/config/Git actions.
+
+**Contextual quick replies —21 October:** [RM-015BJ](tickets/RM-015BJ-contextual-quick-replies.md) moves the latest choices directly above the composer, outside scrolling history. Real Medy returns bounded, validated visitor reply pairs with its existing answer; fake mode uses the same contract and contextual local/preview/receipt alternatives. Warm glass styling, typing, tour and actual Apply/Cancel remain. [19-path allocation](commit-plans/RM-015BJ.md), [139 scoped tests plus final16-test guard checks and native desktop/phone/short evidence](validation/RM-015BJ.md). No paid calls or Git actions; funded model quality and owner visual approval pending, Q held, guide paused, RM-016 Planned.
+
+**Quieter Medy welcome and themed choices —21 October:** [RM-015BI](tickets/RM-015BI-simplify-medys-first-conversation.md) uses Retailor-inspired finite word reveal, at most three initial choices and conversational layout/finish paths. CTAs reuse the actual warm glass-control primitive with full-width rounded rows, cocoa text/arrows and inset focus. Tour completion suppresses its offered action for the current workspace lifetime; reveal waits behind the tour. Fake/live share the same UI/command path. [17-path allocation](commit-plans/RM-015BI.md), [112 focused tests and native desktop/short/phone evidence](validation/RM-015BI.md). Owner visual approval/funded quality pending; Q held, guide paused, RM-016 Planned. No paid calls or Git changes.
+
+**Actual fake/widget review and restart —21 October:** Both services are healthy on4320/4321 after verified cleanup/restart. Actual Cloudflare public test-key success stays invisible; required interaction opens one themed prompt, with no automatic failure retry. Desktop/phone/short, Escape/Cancel and fake Medy observations are recorded; temporary review route removed. Configured-key/paid-model quality and owner approval remain pending. [Current BH receipt](validation/RM-015BH.md#authorized-fake-startup-restart-and-actual-widget-review-21-october).
+
+**Pinned model follow-up —21 October:** Photo recognition and Medy now use code-pinned `gpt-6-luna`, matching Retailor's two actual provider constants. `OPENAI_MODEL` is removed from local/example files; only the three backend keys need filling. Local files retain the owner-selected comment-free layout. App startup, actual widget checks and paid calls remain held. [BH allocation](commit-plans/RM-015BH.md#owner-model-follow-up-21-october), [evidence](validation/RM-015BH.md).
+
+**Live-mode preparation and Turnstile —21 October:** [RM-015BH](tickets/RM-015BH-prepare-live-mode-and-turnstile.md) prepares both ignored app-local env files, adds backend Turnstile site/secret inputs, removes the redundant live-policy flag and leaves release IDs to release tooling. The existing matching private bridge identity remains. Photo processing and Medy now share lazy, themed, input-bound Turnstile verification with existing admission/grant/replay/capacity protection. [Allocation](commit-plans/RM-015BH.md), [evidence](validation/RM-015BH.md). The owner explicitly holds app startup and all real verification/paid calls until configuration is complete and running is authorized; actual widget/layout and live-model quality remain pending. Yesterday's visual decisions stay in place; visual approval, Q and RM-016 remain held.
+
+
 **Mobile Project/Undo padding —21October:** Natural/narrow headers now share fluid12–20px side gutters and6–10px action gaps. Project text is centered in a44px control with fluid horizontal padding; Undo is a centered44px square. [AZ allocation](commit-plans/RM-015AZ.md#mobile-action-padding-follow-up-allocation--21-october2026), [evidence](validation/RM-015AZ.md#mobile-action-padding-follow-up--21-october2026). Scoped formatting, six viewport geometries, Project/Escape and actual edit/Undo checks pass; actual owner approval pending.
 
 **Shared chapter-title size —21October:** All three numbered landing titles now share the smaller16–18px scale through chapterLabel, including16px on phones. No Medy-specific override; the two marketing taglines remain unchanged. [L allocation](commit-plans/RM-015L.md#shared-chapter-size-follow-up-allocation--21-october2026), [evidence](validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026). Scoped formatting/native shared-consumer checks pass; actual owner approval pending.
@@ -1413,8 +1428,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **09-visual-review**
-Next action: Await owner visual review of responsive mobile header actions and the shared chapter-size correction; exact validated local checkpoints authorized, Q held, guide paused and RM-016 Planned.
-Active ticket: RM-015AZ
+Next action: Complete the owner-authorized exact85-file BH-BK stage/local commit and report its Git identity. Keep generated Next/local env/runtime artifacts excluded. Whole visual/funded quality gates remain; Q held, guide paused, RM-016 Planned. No push/deploy/paid calls.
+Active ticket: RM-015BH-BK checkpoint
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1439,7 +1454,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-20T21:28:51+00:00",
+  "updated_at": "2026-10-21T09:59:33+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1547,8 +1562,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "VISUAL_FEEDBACK": {
-      "value": "Owner-requested RM-015A–J loop: motion-first UI and hero, interior cameras/quality, 3D editing, designer assistant/sample parity, concise copy, permanent active motion and final integrated evidence. Actual joint visual approval remains pending.",
-      "source": "human:current-chat/2026-10-19/pre-review-todo-loop",
+      "value": "21 October latest owner authorizes fake-mode app startup/test-key Turnstile widget review and restart after adding127.0.0.1 to hostnames. Verified restart healthy4320/4321; actual public test-key quiet success0 dialogs, single required interaction, no automatic retry, desktop/phone/short and Escape/Cancel tested. Fake Medy works with0 widget scripts/dialogs. Temporary review route removed; configured-key/account/paid quality and visual approval remain pending.",
+      "source": "human:current-chat/2026-10-21/fake-widget-review-and-restart",
       "confidence": "confirmed"
     },
     "RELEVANT_IMPLEMENTATION": {
@@ -1620,6 +1635,26 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "R adaptive demo space/static photo background plus matching glass header and relocated step Back locally validated.414tests/36files/seven boundary cases/root/both builds,191inputs/1500858bytes/BUILD_IDdee4dd163ab4881a2f4f313551f4bbce852d16dfbefd681efde416ebb985f8c8; actual15-size header/nine-size flow/photo/2D/3D/panels/fake lifecycle evidence and clean whole22-path read-only pass2. Owner supplied further S editor feedback; actual visual acceptance pending.",
       "source": "docs/validation/RM-015R.md; human:current-chat/2026-10-19/demo-space-glass-header-and-editor-feedback",
       "confidence": "confirmed"
+    },
+    "MEDY_FIRST_CONVERSATION": {
+      "value": "Owner-selected RM-015BI implemented locally: finite first-visible word reveal, max3 initial app-owned choices, progressive layout/finish/talk paths, completed-tour suppression for workspace lifetime and shared fake/live UI. Latest CTA feedback uses actual glass-control oat/cocoa pill rows.112 focused tests/5files, scoped format/lint/direct types,7 boundaries and actual fake desktop/short/phone/tour/preview/Apply/Undo pass. Native fresh-room reset was blocked by automatic approval review; existing room preserved. Actual owner visual approval/funded quality remain pending.",
+      "source": "docs/validation/RM-015BI.md; human:current-chat/2026-10-21/medy-welcome-and-cta-theme",
+      "confidence": "confirmed"
+    },
+    "MEDY_QUICK_REPLIES": {
+      "value": "Owner-selected BJ moves at-most-three latest-context quick replies above the composer. Real medy-room-7 returns bounded label/request pairs in the existing strict call; fake simulates same shape. Independent validation stamps current revision/selection and requires fresh visitor selection/submit. Local proposal review/receipt/failure fallbacks and no-repeat/negative-receipt guard preserve actual Apply/Cancel.139 scoped tests/7files plus final16 affected guard checks, shared builds/types/format/lint/7boundary tests and actual fake desktop/phone/short/keyboard/preview/Apply/Undo pass. Ten-source manifest 36e99d18af9942aef93d1c4ab638dd4c350cf27596a4b1e46e30dde67719b298. No paid call or Git action; funded quality/owner visual approval pending.",
+      "source": "docs/validation/RM-015BJ.md; human:current-chat/2026-10-21/contextual-fast-replies",
+      "confidence": "confirmed"
+    },
+    "PHOTO_FURNITURE_EDITING": {
+      "value": "BK locally implemented: all six furniture finishes with prepared-model/editor/export parity, TV case/lamp shade changes, unlocked fresh photo assumptions and custom owned size estimates. Explicit locks/corrections/import, geometry/provenance/Undo and manual defaults remain. Final310 tests/16files, shared build/direct types/scoped format/lint/7boundaries/assets pass; actual fake desktop/phone cabinet finish/door/custom size/Undo checked and temporary piece removed. Twelve-source manifest f2922b2d834efadbe8d55cb1c1126665aaeff874676275bd54ca35e223a21ca3. No paid calls or Git changes; owner approval/funded quality pending.",
+      "source": "docs/validation/RM-015BK.md; human:current-chat/2026-10-21/photo-furniture-editable",
+      "confidence": "confirmed"
+    },
+    "BH_BK_COMMIT_AUTHORIZATION": {
+      "value": "Owner says ok perfect and explicitly authorizes file-level planning, staging and one local commit for completed BH-BK. Exact85-file checkpoint after aacd65e, including shared overlapping source, feature docs and batch records. Preserve excluded generated next-env.d.ts and ignored local env/runtime/build artifacts. Final full offline981 tests/63files and root lint pass; scoped commit authority supersedes earlier no-Git wording only for this checkpoint. No whole visual/funded quality approval, push, deploy, paid call or RM-016 progression inferred.",
+      "source": "human:current-chat/2026-10-21/plan-stage-commit-bh-bk; docs/commit-plans/RM-015BH-BK-CHECKPOINT.md",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": null,
@@ -1628,8 +1663,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015AZ",
-  "next_action": "Await owner visual review of responsive mobile header actions and the shared chapter-size correction; exact validated local checkpoints authorized, Q held, guide paused and RM-016 Planned.",
+  "active_ticket": "RM-015BH-BK checkpoint",
+  "next_action": "Complete the owner-authorized exact85-file BH-BK stage/local commit and report its Git identity. Keep generated Next/local env/runtime artifacts excluded. Whole visual/funded quality gates remain; Q held, guide paused, RM-016 Planned. No push/deploy/paid calls.",
   "phases": [
     {
       "id": "01-docs",
