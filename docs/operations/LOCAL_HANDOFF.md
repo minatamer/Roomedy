@@ -1,0 +1,65 @@
+# Roomedy local release handoff —21 October2026
+
+**Complete locally; first paid-off hosting authorized and next.** This is not public paid-AI, domain, universal model-quality or physical-device certification. Owner accepted final visuals through RM-015BL, qualityb0f043c, reviewed audit081feea and selected SEC-001 repair/SEC-002 paid-off hold. Remedy commit28d451f passes final1043tests/64files/all builds and current Linux proof. [Candidate manifest](release-candidate-2026-10-21.json), [selected remedy receipt](../validation/RM-018.md), [security report](../security/SECURITY_REVIEW.md).
+
+## Exact accepted candidate and checks
+
+- Runtime input SHA8472b3dbfbbaf6c72eeac2730749b93118e1177b1c5bc3cfd5b67d26c8e30027,287 files. Includes source, configuration, exact lock/tool/CI identities, prepared public assets and release scripts; excludes secrets/docs/generated outputs.
+- Frontend local image sha256:efeea7acf23dd582bf74af75e1995beecdc7d687192492c269af55a1525dfb4f; backend sha256:3736588f31baebba14fb385a05834b42ec0cfb3c162f0c9939d7d340ae5fc4b9. These are Docker configuration identities; registry manifest digests must be observed after authorized publication, not confused with them.
+- Actual linux/amd64 non-root package/import/private-file/health/fake-ready/bridge/anonymous-denial/90HTTP-asset-and-worker/shutdown proof passes all nine criteria. Public snapshot extraction/retention succeeds. Strict current-source/current-image verification passes independently. Native original stalled input408/408→429 now reaches400 for later complete input, including after disconnect.70 focused regressions pass.
+- Final `NEXT_TELEMETRY_DISABLED=1 pnpm check` passes1043tests/64files, root format/lint/types, seven boundary negatives plus actual boundaries, exact local asset/licence/hash/budget checks and shared/backend/frontend builds. First concurrent-build export timeout was retested unchanged, then passed in this full settled gate; no expectation or timeout was relaxed.
+- Pinned Node24.19.0/pnpm11.25.0/base/platform/full action identities are captured in the manifest. Hosted CI was not executed here. Existing no-key bootstrap blocks outside transports before imports; no new paid test was needed for bridge cleanup or documentation.
+
+Current local proof/snapshot remains ignored at `.release/run-mU45FV`; the committed manifest preserves sanitized exact identity/probe results. This first public deployment has no previous public clients/revision pair. No older public asset set needs inventing. Future compatible releases must use the130minute-fresh bounded public snapshot and preserve old chunks/workers through the fixed two-hour client lifetime plus10minutes.
+
+## Outcome reconciliation
+
+| Packet | Actual outcome / owning evidence | Remaining or superseded criterion |
+| --- | --- | --- |
+| RM-001 | Workspace, pinned toolchain, inert factories and executable boundaries; current root gate | Hosted CI run remains separate |
+| RM-002 | Local supported catalogue, assets/licences/bounds; accepted AV/BK expansions and exact checks | Arbitrary reconstruction/downloads outside scope |
+| RM-003 | Canonical geometry/commands, half-mm centres, atomic checks/starting locks/replay/Undo; independent corpus | Conservative opening approximation is not fit certification |
+| RM-004 | Landing/entry and accepted L–R revisions; BL visual acceptance | No fabricated adoption/accuracy claims |
+| RM-005/006 | Synchronized2D/3D, direct editing, catalogue/materials/motion and opening previews; accepted later feature receipts | Specific physical GPU/assistive/long-heap observations remain unperformed |
+| RM-007 | Bounded transient photo preparation, per-value evidence and editable accepted draft | AM supersedes mandatory initial2D review: Continue→processing→main studio, with default3D/2D available |
+| RM-008 | Strict fixed bridge/grants/replay/shared admission/deadlines; actual local live BL and current controlled tests | Memory-only process/epoch limits; selected SEC-002 external funding condition |
+| RM-009 | Shared deterministic bounded search, browser worker/backend yielding and scoped proposal verification | Recorded worst-case performance miss is retained, not relabelled a pass |
+| RM-010 | Strict recognition/adoption/reconciliation; BL real four-photo flow separates wall-backed pieces | One bounded live sample is not general metric reconstruction/accuracy proof |
+| RM-011 | Friendly Medy, contextual quick replies, safe visitor compiler and model scope; actual live/local Apply/Cancel/Undo | No model prose or schema pass supplies edit authority; current funded corpus not universally benchmarked |
+| RM-012 | Fixed two-hour semantic current/baseline recovery/import/export; lifecycle fences and photo/chat/grant exclusions | Comparison controls temporarily hidden by AC; semantic baseline retained. Downloaded/provider copies cannot be deleted by local expiry |
+| RM-013 | No-key corpus/rubric/evaluator and finite live evaluation kit | Held-out funded full corpus not executed; actual BL evidence is bounded and separately recorded |
+| RM-014 | Frozen Linux files, proof/verifier, stale-client fences, asset retention/rollout/rollback | Historical Windows A/B browser/API/worker/recovery evidence stays dated; current pure skew regressions and current Linux proof pass. Managed hosted behavior next |
+| RM-015 / A–BL | Current owner accepts final photo separation/default-Medy correction; accepted warm UI/motion, public real samples, divider-free headers, editable inferred furniture and contextual chat | Q lighting/O-01 GPU research held; precise native touch/IME/AT/zoom/peak-memory/continuous-paint limitations remain |
+| RM-016 | Six reproduced quality/release corrections, prior-outcome reconciliation and clean checks; b0f043c | No speculative controller rewrite or dependency change |
+| RM-017 | Current STRIDE/app/privacy/spend/dependency audit, PM HTML and exact source manifest;081feea, direct owner selection | No blanket all-secure claim; dev-only advisory/conditional OS candidates and vendor/native limits retained |
+| RM-018 | SEC-001 fixed and native-retested,1043-test/root/current Linux proof;28d451f | SEC-002 selected as paid-off hold; enforceable external funded cutoff not verified |
+
+PR-01–05 physical representation/provenance/lattice/feature authority/replay, PR-06–11 uncertain drafts/scope/search/evaluation/provider-data/deadlines, PR-12 exact release identities/skew and PR-13–15 precise performance/accessibility/privacy claims retain their owning tests/receipts and explicit limits, as reconciled in RM-016. O-01 remains only a comparison seam, O-02 conservative door checking is disclosed, O-03 next relevant measurement is implemented. No stale unchecked box is silently converted to a pass. Accepted UI was not materially changed by quality/security/handoff; no unnecessary visual reapproval.
+
+## Runtime and operational contract
+
+Use Node24.19.0/pnpm11.25.0, frozen install and shared-first build. `pnpm dev:backend`/`pnpm dev:frontend` use owned127.0.0.1:4321/4320 with normal ignored app-local env and process precedence. Preserve the owner's current local real-mode files/processes; deterministic tests force their independent fake/off environment. No new local app port/service is required for deployment.
+
+Browser uses relative fixed operations only. Frontend alone holds the bridge secret and fixed backend audience; backend alone holds provider/challenge keys. Dedicated runtime identities get secret-level access and frontend-only backend invoker permission, never broad project grants or downloaded keys. Actual hosted metadata/IAM, origin/release/method/path behavior must be observed. Both apps retain helpful safe failures; private diagnostic codes/counts/references stay useful without payloads, secrets or raw browser-console errors.
+
+Current finite policy remains two input slots, two backend expensive jobs, no queue,30 admissions/12 operations per60seconds/process, four provider rounds,8192 output tokens;15s intake/45s provider/60s assistant/90s recognition/110s bridge/120s hosting. Owned input cancellation retires reads/memory/locks without waiting for an untrusted hook; unresolved upstream/provider work remains conservative. Restart/revision overlap is not a durable money cap. No hidden retry, timeout increase, motion suppression, duplicate command authority or permissive unknown fit is introduced.
+
+## Authorized first-hosting checklist
+
+Existing owner request authorizes deploying to the authenticated `roomedy` project after audits; the later “go for it” selects the recommended security path. No new general permission question is needed. Read-only observations: project860563209111 active/billing enabled; four expected secret metadata names/version1 exist; Run/Artifact Registry APIs not yet enabled. Global gcloud default targets another project: **every cloud command must explicitly select roomedy**, without changing shared defaults.
+
+Use one same-region pair in europe-west1, following the inspected Retailor deployment pattern. Planned names: Artifact Registry `roomedy`, services/runtime accounts `roomedy-backend` and `roomedy-frontend`. Publish only the accepted image pair, then deploy by observed immutable registry digest. Dedicated secrets: backend versions1 of OPENAI_API_KEY, ROOMEDY_BRIDGE_SECRET, TURNSTILE_SECRET_KEY, TURNSTILE_SITE_KEY; frontend bridge version1 only. Tooling reads metadata/references, not values. Scoped grants and service creation are necessary parts of the requested deployment; no unrelated account/resource/DNS action.
+
+First hosting is `FAKE_MODE=false`, `PAID_DEMO_ENABLED=false`: truthful live/disabled readiness, usable landing/manual editor and public sample preparation without provider dispatch. Keep1CPU/512MiB/concurrency4/maxInstances1/min0/120second timeout initially; these are bounded provisional settings, not measured hosted capacity or billing ceilings. Verify effective settings after deploy. Exact canonical origins must match; Google's deterministic URL format can bootstrap them, but actual service metadata must confirm them before public traffic. Backend remains IAM-private (no anonymous invoker); frontend identity alone gets its service-level invoker binding. Verify actual public bridge200 and direct anonymous backend denial. [Google URL format](https://docs.cloud.google.com/run/docs/triggering/https-request), [service identity](https://docs.cloud.google.com/run/docs/authenticating/service-to-service), [secrets](https://docs.cloud.google.com/run/docs/configuring/services/secrets).
+
+No-cost hosted checks: managed HTTPS landing/demo/health/config/ready; exact source release header; public chunks/worker/assets; fixed origin/path/method/release rejection; actual manual room/edit/Undo and safe unavailable AI; no photos/chat/credentials in diagnostics; public backend denial; least-privilege secret/identity configuration. Test only named synthetic content. A private service's externally resolvable URL is distinct from anonymous access; IAM must actually deny it. Domain registration/DNS/Turnstile allowlisting remain owner-deferred and are not required to publish the paid-off managed URL.
+
+Before public paid activation: configure the exact managed/custom hostname and matching public origin, verify real challenge hostname/action/input binding and existing site/secret pairing, verify enforceable provider funded boundary/accepted outstanding exposure and account privacy/retention. Then run only a separately authorized bounded hosted live case. Budget alerts, credential existence and maxInstances1 do not establish any of these. No extra provider call is included now.
+
+## Rollback, limits and exact next action
+
+There is no prior public release to claim as tested rollback. Record the first known-good immutable frontend/backend revision pair in hosted acceptance; use it as the future compatible rollback baseline. Keep both services paired, keep paid master off for incidents and preserve existing semantic recovery/explicit reload behavior. Stale clients get a useful update fence; original photos/drafts/chat/Undo are transient and cannot be promised through reload. Do not run a destructive rollback exercise to a nonexistent previous release. [Detailed runbook](rollout-and-rollback.md).
+
+Outstanding external evidence: actual hosted IAM/metadata/scaling/cold-start/native-memory observations; owner domain/Turnstile configuration; SEC-002 funded cutoff/provider privacy; full held-out funded model evaluation; named physical/assistive/performance limits. These do not excuse a broken local required feature. SEC-001 has current direct before/after proof; no known actionable local correction remains in selected scope.
+
+Next: commit this exact validated local handoff, then execute the existing authorized paid-off RM-020 deployment, verify the actual managed URL and record its immutable identities/outcomes. Do not push Git, alter owner local env, enable paid calls, buy/change domain, export scanner metadata or create recurring automation.

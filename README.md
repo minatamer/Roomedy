@@ -2,7 +2,7 @@
 
 Roomedy turns room photos into an editable studio with precision2D and stylized3D views. Choose photos, continue through processing, then correct measurements and arrange supported furniture in the studio manually or through reviewable assistant proposals. Manual room setup is also available. Furniture prices and budget planning are deferred.
 
-**Stage:** the editor, photo processing, grounded assistant and semantic project/recovery flows are implemented. The owner accepted the final visual correction in [RM-015BL](docs/validation/RM-015BL.md), including actual real-mode sample photos and Medy conversations. [RM-016](docs/engineering/code-quality-plan.md) now audits quality before the separate security review and deployment. The bounded live sample is not a general accuracy benchmark; current Linux image/hosted proof and security decisions remain distinct requirements. No deployment has occurred.
+**Stage:** implemented and locally verified, with owner-accepted visuals, quality and selected security remediation. Current root gate passes1,043tests and the exact Linux pair passes nine probes/90 HTTP assets. [Local handoff](docs/operations/LOCAL_HANDOFF.md) records evidence, limits and the already-authorized first Cloud Run deployment to `roomedy`, with paid AI off. Actual bounded real photo/Medy evidence is separate from general accuracy and future hosted paid activation. No deployment is claimed until hosted acceptance is recorded.
 
 Use Node **24.19.0** and pnpm **11.25.0**. From the root:
 

@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Local release handoff —21October:** Accepted source28d451f/runtime8472b3db is verified:1043-test root,70 focused security tests, nine Linux probes/90 HTTP assets and corrected native input retirement. [Handoff](operations/LOCAL_HANDOFF.md), [candidate](operations/release-candidate-2026-10-21.json). SEC-001 fixed locally; SEC-002 and hostname/domain/funded/physical limits remain explicit. Owner-authorized paid-off roomedy hosting is next; no new permission question or paid call.
+
 **RM-018 selected remedy complete locally —21October:** SEC-001 input retirement repaired and retested: original native408/408 now reaches400 for later complete input, including after disconnect.70 focused checks and current nine-probe/90-asset Linux proof8472b3db pass; final root1043tests/64files and all builds pass. SEC-002 remains external with first deployment paid off. [Selected plan](security/remediation-plan.md), [receipt](validation/RM-018.md). Continue final handoff and already-authorized deployment; no routine question.
 
 **Owner disposition —21October2026:** Direct reply “go for it” approves the sole pending recommended report-v1 path: repair SEC-001 before deployment; implement SEC-002 as paid off pending external funded-cutoff verification. Selected scope is SEC-001 local cancellation/retirement and SEC-002 operational hold, not a new quota service or a verified funding claim. No repeated question is required. Local staging/commits and deployment authority already exist. Remediation is not yet implemented at this checkpoint.

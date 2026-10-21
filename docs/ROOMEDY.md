@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Local release handoff —21October:** Accepted source28d451f/runtime8472b3db is verified:1043-test root,70 focused security tests, nine Linux probes/90 HTTP assets and corrected native input retirement. [Handoff](operations/LOCAL_HANDOFF.md), [candidate](operations/release-candidate-2026-10-21.json). SEC-001 fixed locally; SEC-002 and hostname/domain/funded/physical limits remain explicit. Owner-authorized paid-off roomedy hosting is next; no new permission question or paid call.
+
 **Visual checkpoint accepted —21 October:** The owner accepts the final BL correction and authorizes its exact file-level staging/local commit, then quality before security under the build workflow. [Atomic42-path checkpoint](commit-plans/RM-015BL.md#authorized-atomic-local-commit--21-october2026). Quality's full prompt is the next checkpoint; actual security findings still require the prescribed manual review.
 
 **Photo placement and initial Medy —21 October:** Fresh photo estimates are separated before acceptance, retaining observed wall relationships and a bounded bedside/bed starting plan. The actual real sample retest shows separate, wall-backed pieces in2D/3D, with Medy opened automatically. [42-path allocation](commit-plans/RM-015BL.md), [current139-test/native evidence and limits](validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up).
@@ -1166,7 +1168,7 @@ Follow the inspected ScreenPilot/Retrosum/Retailor pattern: public Next frontend
 
 Do not equate ingress configuration with anonymous invocation. Verify actual IAM and network behavior on the deployed pair. The browser uses only relative frontend operations. The Next bridge forwards fixed paths, discards browser-supplied upstream credentials/targets and adds its own hosted identity. No downloaded service-account JSON key is part of the proposed baseline.
 
-No project, region, billing account, service identity, registry, secret binding, domain registration or deployment has been selected/executed for Roomedy. tryroomedy.com is the selected spelling; availability, ownership, DNS and TLS are separate external checks. This document prepares the approach, not cloud resources.
+Current21October: owner selects existing project roomedy860563209111 and authorizes deployment after audits. Billing and four secret version1 metadata records are verified; no secret values read. Same-region europe-west1/services roomedy-backend and roomedy-frontend/registry roomedy are inferred concrete deployment choices. Resources/IAM/public URLs have not yet been created by this local handoff. First hosting stays live/paid-off; actual setup/verification belongs to authorized RM-020. tryroomedy.com registration/DNS/TLS and Turnstile hostname setup remain owner-deferred.
 
 ### 23.2 Local release artifacts, later
 
@@ -1437,9 +1439,9 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **12-handoff**
-Next action: Commit the clean exact13-path selected remedy, prepare preapproved final local handoff and verify current proof; then execute existing authorized paid-off deployment to roomedy. No routine questions or extra paid tests.
-Active ticket: RM-018
+Current phase: **local workflow finished**
+Next action: Commit exact validated13-path RM-019 local handoff, then execute already-authorized RM-020 paid-off deployment to roomedy with least-privilege identities and actual hosted evidence. No repeated general permission or paid call.
+Active ticket: RM-019
 Phase prompts: pre-approved by owner
 Local commits approved: yes
 
@@ -1455,7 +1457,7 @@ Local commits approved: yes
 - [x] 10a-quality — Quality audit and fixes (complete)
 - [x] 10b-security-review — Security audit and manual review (complete)
 - [x] 11-security-fixes — Approved security fixes (complete_local)
-- [ ] 12-handoff — Final local handoff (pending)
+- [x] 12-handoff — Final local handoff (complete_local)
 
 This checklist records local work. Human approvals and unresolved external checks are preserved below; it does not authorize paid calls or deployment.
 
@@ -1464,7 +1466,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-21T15:34:51+00:00",
+  "updated_at": "2026-10-21T15:45:36+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1719,8 +1721,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-018",
-  "next_action": "Commit the clean exact13-path selected remedy, prepare preapproved final local handoff and verify current proof; then execute existing authorized paid-off deployment to roomedy. No routine questions or extra paid tests.",
+  "active_ticket": "RM-019",
+  "next_action": "Commit exact validated13-path RM-019 local handoff, then execute already-authorized RM-020 paid-off deployment to roomedy with least-privilege identities and actual hosted evidence. No repeated general permission or paid call.",
   "phases": [
     {
       "id": "01-docs",
@@ -3035,10 +3037,49 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "12-handoff",
       "name": "Final local handoff",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
-      "evidence": [],
-      "blockers": [],
+      "status": "complete_local",
+      "prompt": {
+        "text": "Execute preapproved build phase12-handoff through RM-019 for Roomedy at C:/Users/minat/Work/Roomedy after selected remediation commit28d451f. Owner accepted final visuals through BL, qualityb0f043c, reviewed security audit081feea and directly selected the recommended SEC-001 repair/SEC-002 paid-off hold with go for it. Existing local stage/commit and deployment-to-project-roomedy authority persist; no routine question. Prepare a complete-local release handoff, then continue separately authorized RM-020 paid-off hosting. No paid calls, domain purchase/DNS change, secret-value reads, metadata export, delegation or Git push.\n\nRead current repository/blueprint/queue/feedback instructions and full RM-019/precision references. Reconcile RM-001 through018 against actual implementation, validation and trusted owner decisions, not commit subjects alone. Use current1043-test/64-file root gate,70 focused security regressions, original native408/408->429 corrected to408/408->400 and exact matching Linux input8472b3dbfbbaf6c72eeac2730749b93118e1177b1c5bc3cfd5b67d26c8e30027 with nine runtime probes/90 actual HTTP assets. Preserve original audit manifest as dated history. Relevant source is unchanged after the clean settled gate; do not repeat builds/full suites for documentation-only handoff.\n\nWrite an exact file allocation before edits. Produce docs/operations/LOCAL_HANDOFF.md and a sanitized current candidate manifest with exact source/config/lock/assets/tool/image/probe identity, checks, selected findings/dispositions and explicit unperformed external cases. Update README, blueprint, documentation/ticket entrypoints and PM overview so implemented/local/live/hosted claims and direct photos->Continue->processing->studio flow agree. Keep prototype illustration distinct. Preserve audit/quality guardrails, one canonical room/commands/Undo/evidence/lifetime and privacy/motion. Reconcile superseded/deferred/conditional outcomes with destinations; do not invent general live accuracy, physical/assistive, peak native memory or blanket security certification.\n\nVerify current proof against fresh image inspection; preserve exact initial compatible snapshot/rollback plan. Operations must distinguish public frontend from IAM-private backend, runtime identity/secret roles, mode/master flag and paid conditions. Current read-only cloud evidence: roomedy860563209111 active/billing enabled, four expected secret metadata records version1 enabled, Run/Artifact Registry APIs disabled. Use explicit --project=roomedy for later commands; never change shared gcloud default. Infer europe-west1 from actual Retailor/reference deployment pattern and sensible same-region pair, bounded1CPU/512MiB/concurrency4/maxInstances1/min0/120s defaults pending observed hosted capacity. Deterministic managed URL format is documented by Google; verify actual canonical URLs before traffic. Domain/Turnstile hostname setup is owner-deferred; SEC-002 funded cutoff/privacy evidence remains external and first hosted release live/paid-off.\n\nDo all required local handoff/checklist/rollback preparations and complete read-only validation. Stage only exact owned documents/manifests and make authorized RM-019 local commit; no runtime input change or secret/generated output. Mark build handoff complete_local with concrete external blockers rather than fully verified public paid release. Then proceed with separately authorized Cloud Run setup/deploy/no-cost browser/bridge/IAM/asset tests on the immutable accepted images, retaining future owner setup conditions and no extra paid testing.",
+        "sha256": "e34af7f9b52d5bab4acfac82660a32785b66115202f9b600637f5c038566e694",
+        "context_sources": [
+          "commit:28d451f",
+          "docs/validation/RM-018.md",
+          "docs/tickets/RM-019-finalize-local-release-evidence-and-handoff.md",
+          "human:current-chat/deploy-roomedy",
+          "human:current-chat/go-for-it-security-disposition"
+        ],
+        "status": "preapproved",
+        "approval": {
+          "quote": "didnt i say not to ask me anything? .. why did u violate that when u clearly have a recomended path ?",
+          "source": "human:current-chat/2026-10-21/answer-recommended-audit-path-no-more-questions",
+          "question_context": "The quality and security audits haven’t run. Should I finish them before deployment? “Finish audits first” approves the saved RM-016 prompt and pre-approves the remaining build phase prompts; the separate review of actual security findings stays in place.",
+          "scope": "Direct response instructs taking the recommended Finish audits first path defined in the single pending question: approve saved RM-016 prompt and preapprove remaining phase prompts. Do not repeat routine questions. Preserve the separately named manual review of actual security findings; no future findings are preselected."
+        }
+      },
+      "evidence": [
+        "commit:28d451f",
+        "docs/operations/LOCAL_HANDOFF.md",
+        "docs/operations/release-candidate-2026-10-21.json",
+        "docs/commit-plans/RM-019.md",
+        "docs/validation/RM-019.md"
+      ],
+      "blockers": [
+        {
+          "kind": "external",
+          "reason": "Actual Cloud Run deployment/IAM/metadata/URL/no-cost browser proof is separately authorized RM-020 and next; no hosted pass inferred from local images.",
+          "reference": "docs/operations/LOCAL_HANDOFF.md#authorized-first-hosting-checklist"
+        },
+        {
+          "kind": "external",
+          "reason": "SEC-002 enforceable provider funded cutoff/privacy and owner-deferred domain/Turnstile hostname configuration remain required before public paid activation; first hosting stays live/paid-off.",
+          "reference": "docs/security/SECURITY_REVIEW.md"
+        },
+        {
+          "kind": "external",
+          "reason": "Named full held-out funded model corpus and physical/assistive/peak-native-memory/continuous-paint criteria remain unperformed; bounded BL/owner acceptance is not blanket certification.",
+          "reference": "docs/operations/LOCAL_HANDOFF.md#outcome-reconciliation"
+        }
+      ],
       "approval": null,
       "decision": null,
       "reviews": []

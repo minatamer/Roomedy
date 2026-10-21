@@ -1,6 +1,6 @@
 # RM-019 — Finalize local release evidence and handoff
 
-Status: **Planned**  
+Status: **Complete locally; authorized paid-off hosting next, precise external limits retained**
 Planning date: **17 October 2026**  
 Milestone: **Final local handoff**  
 Depends on: [RM-014](RM-014-prepare-linux-images-and-release-runbooks.md), [RM-015](RM-015-verify-responsive-accessible-and-performant-experience.md), [RM-016](RM-016-audit-and-improve-code-quality.md), [RM-017](RM-017-audit-security-and-present-findings.md), [RM-018](RM-018-remediate-owner-selected-security-findings.md) or its explicit no-fixes/defer disposition  
@@ -8,6 +8,8 @@ Suggested commit: `RM-019: finalize local release evidence and handoff`
 Authority: [blueprint §§22–24](../ROOMEDY.md#22-local-engineering-conventions), actual owner visual/security decisions and current evidence  
 Queue and execution rules: [ticket index](README.md)  
 Build guidelines: [owner feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) (L-02, L-17, L-19, L-20, L-24) and [review checklist](../design/REVIEW_CHECKLIST.md)
+
+Current21October: [handoff](../operations/LOCAL_HANDOFF.md), [current manifest](../operations/release-candidate-2026-10-21.json), [exact13-path plan](../commit-plans/RM-019.md), [receipt](../validation/RM-019.md). No runtime input changes since selected remedy28d451f:8472b3db,1043-test/root and strict actual Linux proof. Owner already authorizes deployment after audits; RM-020 may now proceed live/paid-off with concrete external conditions, without a duplicate question.
 
 ## Outcome and standalone context
 
@@ -34,7 +36,7 @@ Read all ticket records, actual current source/status, visual decision, selected
 3. Rebuild changed shared packages/apps/images and refresh affected Linux runtime/assets/worker/health/bridge probes and strict proof where tooling exists. Re-run focused application regressions for changed behavior and settled root gates. If Linux tooling remains unavailable, preserve the exact unchecked release requirement and completed preparation.
 4. Verify operational instructions against actual commands/ports/config and ownership-safe startup/cleanup. Confirm blank-secret examples, fake/paid-off defaults and real-live fail-closed readiness. Do not read/dump secrets or run a paid smoke as a convenience.
 5. Preserve owner visual decision, security report/selection/dispositions and any explicitly deferred physical/live/vendor checks. New material findings or reviewed-scope changes reopen only affected gates; no new security fixes beyond selected scope are silently bundled.
-6. Update user-facing/docs claims to the implemented state, with scripted illustration, fake development and real provider evidence clearly distinguished. Keep selected no-price/no-budget scope and 2D-review-before-3D-editor story consistent. Never advertise hosted readiness from local artifacts alone.
+6. Update user-facing/docs claims to the implemented state, with scripted illustration, fake development and real provider evidence clearly distinguished. Keep selected no-price/no-budget scope and owner-selected direct photos→Continue→processing→studio story consistent. Never advertise hosted readiness from local artifacts alone.
 7. Prepare one concise external readiness checklist: model/provider key/privacy/funded cap/data rights, actual challenge, cloud project/region/identities/secrets/limits, image publishing and deploy permission, optional domain/TLS authority, specific physical/owner evidence and unresolved release-blocking findings. Avoid asking for inputs irrelevant to local completion.
 8. Document rollback/current known limitations and exact next action. If Git permission exists, stage only clean validated owned paths according to file plans; otherwise keep unstaged changes and report them. No push is implied.
 9. Present completed local outcomes, actual checks and named pending external evidence. Set the main workflow to complete-local while external requirements remain, not fully released. RM-020 remains conditional and cannot start from a generic automatic continuation.
@@ -51,19 +53,19 @@ Reconcile PR-01–PR-15 and adopted O dispositions against actual evidence, not 
 
 ## Acceptance criteria
 
-- [ ] Every required prior outcome has evidence or an explicit legitimate disposition/destination.
-- [ ] Required local failures are resolved or honestly block local completion, rather than being labelled external.
-- [ ] Current source/image/probe identity is accurate and affected release proof is refreshed or explicitly unchecked.
-- [ ] Actual local commands/config/ports/runbooks and blank/fake defaults agree with implementation.
-- [ ] Owner visual/security decisions and deferred findings remain traceable and scoped to the reviewed candidate.
-- [ ] README/blueprint/index/overview/ticket/progress claims distinguish implemented, fake, live, local and hosted status.
-- [ ] External prerequisites and release implications are concrete, with no credentials or assumed authorizations.
-- [ ] Final handoff reports actual checks, limits, Git state and exact next action without automatic deployment/spend.
-- [ ] Final evidence identifies how applicable feedback guidelines were checked and never reuses materially stale visual, provider, Linux or hosted acceptance.
+- [x] Every required prior outcome has evidence or an explicit legitimate disposition/destination.
+- [x] Required local failures are resolved or honestly block local completion, rather than being labelled external.
+- [x] Current source/image/probe identity is accurate and affected release proof is refreshed or explicitly unchecked.
+- [x] Actual local commands/config/ports/runbooks and blank/fake defaults agree with implementation.
+- [x] Owner visual/security decisions and deferred findings remain traceable and scoped to the reviewed candidate.
+- [x] README/blueprint/index/overview/ticket/progress claims distinguish implemented, fake, live, local and hosted status.
+- [x] External prerequisites and release implications are concrete, with no credentials or assumed authorizations.
+- [x] Final handoff reports actual checks, limits, Git state and exact next action without automatic deployment/spend.
+- [x] Final evidence identifies how applicable feedback guidelines were checked and never reuses materially stale visual, provider, Linux or hosted acceptance.
 
-### Additional approved acceptance — all unperformed
+### Additional approved acceptance — current disposition above
 
-- [ ] Final reconciliation includes adopted refinements, actual stale-client/rollback/action-identity proof and honest unperformed research/live/hosted cases without converting approval or old evidence into a pass.
+- [x] Final reconciliation includes adopted refinements, actual stale-client/rollback/action-identity proof and honest unperformed research/live/hosted cases without converting approval or old evidence into a pass.
 
 ## Focused verification and evidence
 
