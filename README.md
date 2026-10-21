@@ -1,5 +1,7 @@
 # Roomedy
 
+![Roomedy editorial artwork: a cocoa background, an ivory room cutaway and a Medy card reading Your room. Together.](docs/assets/roomedy-overview.png)
+
 Roomedy turns room photos into an editable studio with precision2D and stylized3D views. Choose photos, continue through processing, then correct measurements and arrange supported furniture in the studio manually or through reviewable assistant proposals. Manual room setup is also available. Furniture prices and budget planning are deferred.
 
 **Deployed:** [Try Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). The approved landing text fades in immediately at the center, then moves left as the prepared3D room fades in. Paid recognition and provider-backed Medy are enabled. One hosted four-sample photo flow and one contextual Medy request passed quiet verification on their first attempt; the resulting room opens in3D/2D with Medy initially selected. [Hosted acceptance](docs/operations/HOSTED_ACCEPTANCE.md) and [exact candidate](docs/operations/landing-paid-candidate-2026-10-21.json) record current identities,1,043-test gate/nine Linux probes/97 exact public assets and remaining limits. SEC-001 is fixed; SEC-002's account-wide spending-cutoff/privacy evidence remains unverified despite owner-directed activation. This bounded walkthrough is not a general accuracy, fit or capacity guarantee.
