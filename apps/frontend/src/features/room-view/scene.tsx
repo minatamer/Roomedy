@@ -29,6 +29,7 @@ import { findCatalogueEntry } from '@roomedy/spatial';
 import type { InstancedMesh, MeshBasicMaterial } from 'three';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { FINISH_PALETTE } from '../catalogue/finishes';
+import { displayFurnitureSize } from '../catalogue/display-size';
 import {
   changedPieces,
   displayRoom,
@@ -1201,7 +1202,11 @@ function Piece({
     { invalidate } = useThree(),
     pose = piecePose(piece),
     [initial] = useState(pose);
-  const representation = pieceRepresentation(piece, asset?.kind === 'ready');
+  const representation = pieceRepresentation(
+    piece,
+    asset?.kind === 'ready',
+    true,
+  );
   const materials = useMemo(
     () => ({
       screen: new MeshStandardMaterial({
@@ -1303,9 +1308,10 @@ function Piece({
     e.stopPropagation();
     if (e.delta <= 4) onSelect(piece.id);
   };
-  const w = metres(piece.dimensions.width.value ?? 250),
-    d = metres(piece.dimensions.depth.value ?? 250),
-    h = metres(piece.dimensions.height.value ?? 250);
+  const shownSize = displayFurnitureSize(piece);
+  const w = metres(shownSize?.width ?? 250),
+    d = metres(shownSize?.depth ?? 250),
+    h = metres(shownSize?.height ?? 250);
   const parts =
     representation.kind === 'procedural'
       ? detailedParts(representation.parts, representation.footprint)
@@ -1526,7 +1532,7 @@ export function RoomScene(props: SceneProps) {
   const urls = [
     ...new Set(
       rendered.furniture
-        .map((p) => pieceRepresentation(p))
+        .map((p) => pieceRepresentation(p, true, true))
         .flatMap((r) => (r.kind === 'mesh' ? [r.url] : [])),
     ),
   ]
@@ -1650,7 +1656,7 @@ export function RoomScene(props: SceneProps) {
         />
       ))}
       {rendered.furniture.map((p) => {
-        const r = pieceRepresentation(p);
+        const r = pieceRepresentation(p, true, true);
         return (
           <Piece
             key={p.id}
@@ -1673,6 +1679,7 @@ export function RoomScene(props: SceneProps) {
       })}
       {ghosts.map((p) => {
         const pose = piecePose(p);
+        const size = displayFurnitureSize(p);
         return (
           <group
             key={`ghost-${p.id}`}
@@ -1681,11 +1688,11 @@ export function RoomScene(props: SceneProps) {
           >
             <mesh
               geometry={geometry}
-              position={[0, metres(p.dimensions.height.value ?? 250) / 2, 0]}
+              position={[0, metres(size?.height ?? 250) / 2, 0]}
               scale={[
-                metres(p.dimensions.width.value ?? 250),
-                metres(p.dimensions.height.value ?? 250),
-                metres(p.dimensions.depth.value ?? 250),
+                metres(size?.width ?? 250),
+                metres(size?.height ?? 250),
+                metres(size?.depth ?? 250),
               ]}
               dispose={null}
             >

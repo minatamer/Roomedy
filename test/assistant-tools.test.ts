@@ -42,6 +42,7 @@ import {
   assistantProtocolFixture,
 } from './fixtures/assistant.js';
 import { identityIds } from './fixtures/operation.js';
+import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 function runtime(provider = createRoomedyFakeProvider()) {
   const log = vi.fn(),
     ids = identityIds();
@@ -66,6 +67,84 @@ const flat = {
   floorFinish: null,
   wallFinish: null,
 };
+it('reports only a fixed assistant failure stage for an unoffered tool', async () => {
+  const log = vi.fn(),
+    input = assistantInput(windowCase().room, 'Explain the room checks');
+  const result = await createAssistantHandler(log, () => 'opaque-reference')(
+    input,
+    {
+      signal: new AbortController().signal,
+      call: async () => ({
+        kind: 'completed',
+        data: null,
+        calls: [
+          {
+            name: 'private-canary-name',
+            callId: 'private-canary-id',
+            arguments: { text: 'private-canary-text' },
+          },
+        ],
+      }),
+    },
+  );
+  expect(result.kind).toBe('malformed');
+  expect(log).toHaveBeenCalledWith({
+    code: 'assistant-decision',
+    reference: 'opaque-reference',
+    stage: 'prepare',
+    outcome: 'malformed',
+    rounds: 1,
+    assistantFailure: 'tool-name',
+  });
+  expect(JSON.stringify(log.mock.calls)).not.toContain('private-canary');
+});
+it('completes the actual fixed-bed/wardrobe sample layout through a strict computed search', async () => {
+  const captured: ProviderRequest[] = [],
+    fake = createRoomedyFakeProvider();
+  const r = runtime(
+    createFakeProvider(async (request, signal) => {
+      captured.push(request);
+      return fake.start(request, signal).result;
+    }),
+  );
+  const input = assistantInput(
+    createRoomFixture('sample'),
+    'Try a layout with more open floor space. Keep the bed and wardrobe exactly where they are, keep all furniture and sizes, and leave the finishes unchanged.',
+  );
+  input.localCandidate = localAssistantCandidate(input);
+  const before = structuredClone(input.room);
+  const grant = await r.operations.grant(
+    input,
+    null,
+    new AbortController().signal,
+  );
+  if (!('grant' in grant)) throw new Error('grant');
+  const result = await r.operations.run(
+    input,
+    grant.grant,
+    new AbortController().signal,
+  );
+  if (!('kind' in result)) throw new Error('operation-result');
+  expect(result.kind).toBe('completed');
+  expect(result.assistant?.kind).toBe('proposal');
+  expect(input.room).toEqual(before);
+  expect(captured).toHaveLength(2);
+  expect(
+    result.assistant?.actions?.every(
+      (action) => action.type === 'move' || action.type === 'rotate',
+    ),
+  ).toBe(true);
+  expect(
+    result.assistant?.actions?.some(
+      (action) => 'id' in action && ['bed_1', 'wardrobe_1'].includes(action.id),
+    ),
+  ).toBe(false);
+  expect(captured[0]!.tools.map((tool) => tool.name)).toEqual([
+    'read_room',
+    'find_arrangements',
+  ]);
+  r.operations.close();
+});
 it('requests only a missing field used by a computed check for the selected piece', async () => {
   const room = windowCase().room;
   room.furniture.find((p) => p.id === 'desk')!.dimensions.width = unknown();

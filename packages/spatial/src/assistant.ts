@@ -763,10 +763,18 @@ export function resolveAssistantTask(
   operationId: string,
   context: readonly DesignTurn[] = [],
 ): AssistantTask {
+  const conversationalText = text
+    .trim()
+    .replace(/[’‘]/g, "'")
+    .replace(/^(?:hi|hey|hello)(?:\s+medy)?[\s,!:.–—-]+/i, '');
   const advice =
-    /^(?:what|how|why|should|do|does|is|are|any|suggest|recommend|tell me|i feel|i'm|i am)\b|^(?:can|could) i\b|^(?:can|could|would) you (?:suggest|recommend|explain|tell)\b|^would (?:this|that|it|a|the|my|we|i)\b|\b(?:whether|confirm if|verify if)\b/i.test(
-      text.trim(),
-    ) && !/\b(ignore|price|budget|shopping)\b/i.test(text);
+    (/^(?:what|how|why|should|do|does|is|are|any|suggest|recommend|tell me|i feel|i'm|i am)\b|^(?:can|could) i\b|^(?:can|could|would) you (?:suggest|recommend|explain|tell)\b|^would (?:this|that|it|a|the|my|we|i)\b|\b(?:whether|confirm if|verify if)\b/i.test(
+      conversationalText,
+    ) ||
+      /\b(?:(?:can|could|may) we|let's|let us) (?:talk|chat|discuss)\b/i.test(
+        conversationalText,
+      )) &&
+    !/\b(ignore|price|budget|shopping)\b/i.test(text);
   if (advice)
     return {
       ...resolveExplicitTask(room, '', null, operationId),

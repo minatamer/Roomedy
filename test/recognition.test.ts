@@ -6,7 +6,10 @@ import { recognitionInputSchema } from '@roomedy/contracts/operations';
 import { createRuntime } from '../apps/backend/src/runtime/create-runtime.js';
 import { parseRuntimeConfig } from '../apps/backend/src/config/runtime-config.js';
 import { createApp } from '../apps/backend/src/http/create-app.js';
-import { responseBody } from '../apps/backend/src/providers/responses.js';
+import {
+  createResponsesProvider,
+  responseBody,
+} from '../apps/backend/src/providers/responses.js';
 import { createFakeProvider } from '../apps/backend/src/providers/provider.js';
 import type {
   ProviderOutcome,
@@ -38,6 +41,99 @@ const take = (r: ReviewResult): ReviewDraft => {
   if (!r.ok) throw new Error(r.message);
   return r.draft;
 };
+it('diagnoses rejected hypotheses with fixed fields only, preserving strict rejection and useful partial output', () => {
+  const report = vi.fn();
+  const raw = recognitionFixture('two-identical', ['photo']);
+  raw.observations[1]!.ref = raw.observations[0]!.ref;
+  expect(parseDraftHypothesis(raw, ['photo'], [], report)).toBeNull();
+  expect(report.mock.calls).toEqual([[{ reason: 'references', field: 'ref' }]]);
+  report.mockClear();
+  const inconsistent = recognitionFixture('occluded', ['photo']);
+  inconsistent.observations[0]!.wall = 'north';
+  expect(parseDraftHypothesis(inconsistent, ['photo'], [], report)).toBeNull();
+  expect(report.mock.calls).toEqual([[{ reason: 'evidence', field: 'wall' }]]);
+  report.mockClear();
+  const foreign = recognitionFixture('occluded', ['photo']);
+  foreign.observations[0]!.sourceId = 'private-untrusted-value';
+  expect(parseDraftHypothesis(foreign, ['photo'], [], report)).toBeNull();
+  expect(report.mock.calls).toEqual([
+    [{ reason: 'source-reference', field: 'sourceId' }],
+  ]);
+  expect(JSON.stringify(report.mock.calls)).not.toContain(
+    'private-untrusted-value',
+  );
+  report.mockClear();
+  expect(
+    parseDraftHypothesis(
+      recognitionFixture('occluded', ['photo']),
+      ['photo'],
+      [],
+      report,
+    ),
+  ).not.toBeNull();
+  expect(report).not.toHaveBeenCalled();
+});
+it.each([4, 6])(
+  'passes %i prepared photos through the actual recognition wire adapter before one injected dispatch',
+  async (count) => {
+    const input = await recognitionInput();
+    const manifest = input.manifest[0]!,
+      image = input.images[0]!;
+    input.manifest = Array.from({ length: count }, (_, index) => ({
+      ...manifest,
+      id: `photo_${index}`,
+    }));
+    input.images = input.manifest.map(({ id }) => ({ ...image, id }));
+    const prepared = await prepareRecognitionImages(
+      input,
+      new AbortController().signal,
+    );
+    const fetcher = vi.fn<typeof fetch>(async (_url, options) => {
+      const body = JSON.parse(options!.body as string);
+      expect(body.input[0].content).toHaveLength(count * 2 + 1);
+      const imageParts = body.input[0].content.filter(
+        (part: { type: string }) => part.type === 'input_image',
+      );
+      expect(imageParts).toHaveLength(count);
+      expect(body.store).toBe(false);
+      return Response.json({
+        status: 'completed',
+        output: [
+          {
+            type: 'message',
+            content: [{ type: 'output_text', text: '{"ok":true}' }],
+          },
+        ],
+      });
+    });
+    const provider = createResponsesProvider(
+      'synthetic-key',
+      'fixture-model',
+      fetcher,
+    );
+    const call = provider.start(
+      recognitionRequest(input, prepared),
+      new AbortController().signal,
+    );
+    expect(await call.result).toMatchObject({
+      kind: 'completed',
+      data: { ok: true },
+    });
+    await call.settled;
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(provider.meteredDispatches).toBe(1);
+  },
+);
+it('still rejects a seventh image at the provider boundary', async () => {
+  const input = await recognitionInput();
+  const images = Array.from({ length: 7 }, (_, index) => ({
+    ...input.images[0]!,
+    id: `p_${index}`,
+  }));
+  expect(() =>
+    responseBody(recognitionRequest(input, images), 'fixture'),
+  ).toThrow('provider-request');
+});
 const secret = 'controlled-private-bridge',
   origin = 'http://127.0.0.1:4320';
 function setup(reply?: (r: ProviderRequest) => Promise<ProviderOutcome>) {

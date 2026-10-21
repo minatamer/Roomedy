@@ -1,5 +1,15 @@
 # Roomedy documentation
 
+**Visual checkpoint accepted —21 October:** The owner accepts the final BL correction and authorizes its exact file-level staging/local commit, then quality before security under the build workflow. [Atomic42-path checkpoint](commit-plans/RM-015BL.md#authorized-atomic-local-commit--21-october2026). Quality's full prompt is the next checkpoint; actual security findings still require the prescribed manual review.
+
+**Photo placement and initial Medy —21 October:** Fresh photo estimates are separated before acceptance, retaining observed wall relationships and a bounded bedside/bed starting plan. The actual real sample retest shows separate, wall-backed pieces in2D/3D, with Medy opened automatically. [42-path allocation](commit-plans/RM-015BL.md), [current139-test/native evidence and limits](validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up).
+
+**Divider-free headers —21 October:** Removed the photo-header rule; every site navigation header stays continuous with its background, without a bottom divider/shadow. [Actual desktop/phone/shared-header checks](validation/RM-015BL.md#no-header-divider--owner-follow-up).
+
+**Public sample photos in real mode —21 October:** The example gallery and Use example photos are available immediately in live/fake modes. Selection prepares the four local inputs; explicit Continue retains real verification/provider processing. [BL follow-up evidence](validation/RM-015BL.md#public-samples-in-real-mode--owner-follow-up).
+
+**Real-mode test/fix pass completed —21 October:** Owner authorizes [RM-015BL](tickets/RM-015BL-verify-real-photo-and-medy-flows.md), including normal-env restart and economical paid sample-photo/Medy testing. [Allocation](commit-plans/RM-015BL.md), [actual live evidence and limits](validation/RM-015BL.md). Existing gates are superseded only for this named test/fix task; no config/Git/publication action.
+
 **BH–BK local checkpoint —21 October:** Owner accepts the latest correction and explicitly authorizes planning, staging and committing this batch. [Exact85-file plan](commit-plans/RM-015BH-BK-CHECKPOINT.md), [settled batch evidence](validation/RM-015BH-BK-CHECKPOINT.md). Full isolated suite981/63files and repository lint pass; local env/runtime/generated Next artifacts are excluded. Historical whole-visual/funded checks remain pending; Q held, guide paused, RM-016 Planned.
 
 **Editable photo furniture —21 October:** [RM-015BK](tickets/RM-015BK-keep-photo-furniture-editable.md) unlocks new photo estimates, gives every catalogue item all six finishes, and exposes custom size estimates for fixed owned pieces. Prepared models, TV cases and lamp shades respond in editor/export; deliberate user locks and corrections survive later recognition. [22-path allocation](commit-plans/RM-015BK.md), [scoped checks and native evidence](validation/RM-015BK.md). No paid calls; owner visual approval/funded quality pending, Q held, guide paused, RM-016 Planned.

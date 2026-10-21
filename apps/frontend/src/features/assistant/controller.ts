@@ -589,6 +589,8 @@ export class AssistantController {
     )
       return false;
     this.session.cancelPreview();
+    if (candidate?.source === 'assistant' && !this.state.busy)
+      this.append('assistant', 'Preview cancelled. Your room is unchanged.');
     return true;
   }
   chooseSuggestion(messageId: number, suggestion: DesignSuggestion) {

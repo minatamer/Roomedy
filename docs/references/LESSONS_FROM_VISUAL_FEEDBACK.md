@@ -265,6 +265,16 @@ Owner asks outward dragging to express “as far left/up as possible,” stable 
 
 The owner distinguishes photo extraction/review (including example photos in fake mode) from manual empty/partial/furnished entry, asks consistent upload design, wall-constrained window dragging, and Corner diagonally opposite the nearest doorway corner. T/U/V own these selected follow-ups in that order. This is new implementation scope, not actual visual approval or live/paid/delegation authority.
 
+## No horizontal divider under site headers —21 October2026
+
+The owner rejects the thin full-width line beneath the photo-intake header and explicitly says never to show that treatment. Keep landing, demo entry, photo/processing/review and editor navigation headers visually continuous with their background at every viewport. Do not add a bottom border, separator pseudo-element or line-like header shadow. Preserve individual button borders/focus rings and useful separators inside cards. Actual cause: intake .header border-bottom; remove it at that owner rather than hiding the entire header or changing the photograph.
+
+## Public samples are part of the real demo —21 October2026
+
+The owner explicitly wants visitors to try the four built-in sample photos immediately in real mode. Do not hide the gallery or disable local sample selection based on fake/live mode. Samples use normal preparation and explicit Continue, then real verification/admission/provider processing in live mode. Offering samples does not authorize automatically spending credits or replacing live recognition with a fixture. [BL correction](../validation/RM-015BL.md#public-samples-in-real-mode--owner-follow-up).
+
 ## Photo estimates must stay editable —21 October2026
+
+The owner also rejects interpenetrating initial photo furniture and asks pieces to remain near the wall as shown in room photos. Validate the combined illustrated footprints, rather than adopting independently plausible centres. Preserve consistent observed back-wall relationships; use a bounded, explicitly planned bedside/bed relationship when co-visible head-side evidence is unique. Never solve overlap by floating a wall-backed piece into the room, inventing measured sizes or moving deliberate visitor poses. Test the actual sample path in2D and3D after repairs. Medy is the owner's selected initial tab for both photo and manual rooms; notes must not silently switch it to Room. [BL evidence](../validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up).
 
 The owner reports an oak-only cabinet after photo entry and requires every inferred setting to remain changeable. Inspect shared catalogue and material ownership as well as route defaults: this restriction came from the prepared asset’s single-finish definition, and new photo pieces also inherited an automatic size lock. RM-015BK exposes all six finishes with visible editor/export changes, unlocks fresh photo assumptions and exposes custom owned size estimates. Never clear deliberate saved locks or corrections while changing defaults. Keep normal physical checks, uncertainty and Undo; rendering limitations must not remove editing controls. Actual owner visual approval remains pending.

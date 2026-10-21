@@ -10,15 +10,20 @@ import type {
   OperationResult,
 } from '@roomedy/contracts/operations';
 import type { ChallengePort } from '../security/admission.js';
+import type { ProviderShapeFailure } from '../providers/responses.js';
+import type { DraftHypothesisFailure } from '@roomedy/contracts/intake';
+import type { AssistantTool } from '@roomedy/contracts/assistant';
 
 export interface Diagnostic {
   code:
     | 'request-failed'
     | 'server-started'
     | 'startup-failed'
+    | 'shutdown-forced'
     | 'operation-finished'
     | 'operation-uncertain'
     | 'recognition-decision'
+    | 'provider-rejected'
     | 'assistant-decision';
   reference: string;
   outcome?: OperationResult['kind'];
@@ -26,6 +31,16 @@ export interface Diagnostic {
   elapsedMs?: number;
   stage?: 'decode' | 'provider' | 'hypotheses' | 'prepare';
   observations?: number;
+  providerShape?: ProviderShapeFailure;
+  hypothesisFailure?: DraftHypothesisFailure;
+  assistantFailure?:
+    | 'provider'
+    | 'response'
+    | 'final'
+    | 'tool-envelope'
+    | 'tool-name'
+    | 'tool-input';
+  assistantTool?: AssistantTool;
 }
 export interface RuntimeDependencies {
   now: () => number;

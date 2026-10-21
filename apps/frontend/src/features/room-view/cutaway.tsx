@@ -16,6 +16,10 @@ import type { CameraAction, SceneProps } from './scene';
 import type { CameraPose, CameraView } from './adapter';
 import { cameraViewPose } from './camera';
 import { displayRoom, featureBox, pieceRepresentation } from './adapter';
+import {
+  hasIllustrativeSize,
+  ILLUSTRATIVE_SIZE_NOTICE,
+} from '../catalogue/display-size';
 import { useSurfaceMotion } from '../room-editor/use-surface-motion';
 import { useFloorEdit } from './use-floor-edit';
 import type { SessionController } from '../session/controller';
@@ -174,7 +178,7 @@ export default function Cutaway({
     (feature) => featureBox(rendered, feature) === null,
   );
   const unavailable = rendered.furniture.filter((p) => {
-    const r = pieceRepresentation(p);
+    const r = pieceRepresentation(p, true, true);
     return r.kind === 'unavailable' || (r.kind === 'procedural' && r.notice);
   }).length;
   const fallback = (
@@ -386,6 +390,11 @@ export default function Cutaway({
             {assets.failed > 0
               ? 'Some model detail could not load; simple shapes preserve the same sizes.'
               : ''}
+          </p>
+        )}
+        {rendered.furniture.some(hasIllustrativeSize) && (
+          <p className={styles.illustrativeNotice}>
+            {ILLUSTRATIVE_SIZE_NOTICE}
           </p>
         )}
       </div>

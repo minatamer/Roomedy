@@ -7,6 +7,10 @@ import {
   wallMountedPose,
 } from '@roomedy/spatial';
 import type { Presentation, RoomFrame } from '../session/state';
+import {
+  displayFurnitureFootprint,
+  displayFurnitureSize,
+} from '../catalogue/display-size';
 
 export interface PlanBox {
   x: number;
@@ -188,7 +192,7 @@ export function planLabelLayout(
   fontSize = 185,
   room?: RoomDocument,
 ): PlanLabelLayout {
-  const physical = footprint(item),
+  const physical = displayFurnitureFootprint(item),
     bounds = physical ?? {
       minX: item.pose.centerX - 260,
       maxX: item.pose.centerX + 260,
@@ -196,7 +200,9 @@ export function planLabelLayout(
       maxZ: item.pose.centerZ + 260,
     },
     front = localFront(item.pose.quarterTurns),
-    reserve = physical ? Math.min(160, item.dimensions.depth.value! * 0.3) : 0,
+    reserve = physical
+      ? Math.min(160, displayFurnitureSize(item)!.depth * 0.3)
+      : 0,
     layout = fitPlanText(
       text,
       bounds.maxX - bounds.minX - Math.abs(front[0]) * reserve,
@@ -233,7 +239,7 @@ export function planLabelLayout(
     others =
       room?.furniture
         .filter((other) => other.id !== item.id)
-        .map(footprint)
+        .map(displayFurnitureFootprint)
         .filter((r) => !!r) ?? [],
     openings =
       room?.room.features.flatMap((feature) => {
@@ -251,7 +257,7 @@ export function planLabelLayout(
         ];
       }) ?? [];
   // Thin footprints draw their front chevron beyond the body (up to110mm).
-  const gap = physical && item.dimensions.depth.value! < 250 ? 150 : 80;
+  const gap = physical && displayFurnitureSize(item)!.depth < 250 ? 150 : 80;
   let best = { x: item.pose.centerX, y: item.pose.centerZ, score: Infinity };
   for (const [dx, dz] of [
     front,

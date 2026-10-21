@@ -72,7 +72,6 @@
   align-items: center;
   gap: 24px;
   padding: 20px 32px;
-  border-bottom: 1px solid #dfd4c5;
   background: transparent;
 }
 .header > span {
@@ -816,7 +815,4 @@
 }
 .photoMain:has(.photos) .photoPreview {
   height: 110px;
-}
-.photoLayout:not([data-examples='true']) {
-  grid-template-columns: minmax(0, 1fr);
 }

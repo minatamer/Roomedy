@@ -54,7 +54,7 @@ export const initialPresentation = (
   roomView: Presentation['roomView'] = 'cutaway',
 ): Presentation => ({
   selectedId: null,
-  panel: 'inventory',
+  panel: 'assistant',
   zoom: 1,
   panX: 0,
   panZ: 0,

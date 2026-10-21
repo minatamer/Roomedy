@@ -1,5 +1,15 @@
 # Roomedy — product and engineering blueprint
 
+**Visual checkpoint accepted —21 October:** The owner accepts the final BL correction and authorizes its exact file-level staging/local commit, then quality before security under the build workflow. [Atomic42-path checkpoint](commit-plans/RM-015BL.md#authorized-atomic-local-commit--21-october2026). Quality's full prompt is the next checkpoint; actual security findings still require the prescribed manual review.
+
+**Photo placement and initial Medy —21 October:** Fresh photo estimates are separated before acceptance, retaining observed wall relationships and a bounded bedside/bed starting plan. The actual real sample retest shows separate, wall-backed pieces in2D/3D, with Medy opened automatically. [42-path allocation](commit-plans/RM-015BL.md), [current139-test/native evidence and limits](validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up).
+
+**Divider-free headers —21 October:** Removed the photo-header rule; every site navigation header stays continuous with its background, without a bottom divider/shadow. [Actual desktop/phone/shared-header checks](validation/RM-015BL.md#no-header-divider--owner-follow-up).
+
+**Public sample photos in real mode —21 October:** The example gallery and Use example photos are available immediately in live/fake modes. Selection prepares the four local inputs; explicit Continue retains real verification/provider processing. [BL follow-up evidence](validation/RM-015BL.md#public-samples-in-real-mode--owner-follow-up).
+
+**Current owner task —21 October, RM-015BL:** Real-mode restart and paid sample-photo/Medy test/fix/retest work are explicitly authorized, with batched repairs to conserve credits. Normal env remains owner-managed. [Ticket](tickets/RM-015BL-verify-real-photo-and-medy-flows.md), [allocation](commit-plans/RM-015BL.md), [actual evidence](validation/RM-015BL.md). This supersedes prior fake-only/no-paid holds only for the named local task. No Git/publication/delegation/new dependency/service/port; Q held, guide paused and RM-016 Planned.
+
 **Owner-authorized BH–BK checkpoint —21 October:** Owner accepts the requested correction and explicitly selects a file-level plan plus staging/local commit. [Exact85-file allocation](commit-plans/RM-015BH-BK-CHECKPOINT.md), [batch evidence](validation/RM-015BH-BK-CHECKPOINT.md). One atomic checkpoint includes shared Turnstile/model setup, finite Medy welcome/contextual replies and editable photo furniture. Final full isolated981tests/63files and repository lint pass; exclude local env/runtime/build artifacts and generated Next declaration. Whole RM-015 visual/funded quality remain separate, Q held, guide paused, RM-016 Planned; no push/deploy or paid-call authority.
 
 **Latest owner correction —21 October, RM-015BK:** Photo-derived furniture settings are editable starting values. New photo pieces have no automatic position/rotation/size locks, all catalogue items offer all six finishes, and fixed owned pieces expose custom size estimates. Prepared model finish targets are shared by editor/export; TV cases and lamp shades also respond. Deliberate locks/corrections survive reprocessing/recovery; no geometry/confirmation authority changes. [Ticket](tickets/RM-015BK-keep-photo-furniture-editable.md), [22-path allocation](commit-plans/RM-015BK.md), [evidence](validation/RM-015BK.md). Actual owner approval/funded quality pending, Q held, guide paused, RM-016 Planned; no paid calls/config/Git actions.
@@ -1427,9 +1437,9 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **09-visual-review**
-Next action: Complete the owner-authorized exact85-file BH-BK stage/local commit and report its Git identity. Keep generated Next/local env/runtime artifacts excluded. Whole visual/funded quality gates remain; Q held, guide paused, RM-016 Planned. No push/deploy/paid calls.
-Active ticket: RM-015BH-BK checkpoint
+Current phase: **10a-quality**
+Next action: Stage and locally commit the exact42-path accepted BL checkpoint after final staged inspection; prepare the full RM-016 quality prompt and retain its required prompt checkpoint.
+Active ticket: RM-015BL
 Phase prompts: manual approval before each phase
 Local commits approved: yes
 
@@ -1441,7 +1451,7 @@ Local commits approved: yes
 - [x] 06-plan-commit — Planning commit (complete)
 - [x] 07-build — Execute and validate tickets (complete_local)
 - [x] 08-performance — Performance investigation (complete_local)
-- [ ] 09-visual-review — Frontend visual approval checkpoint (awaiting_owner)
+- [x] 09-visual-review — Frontend visual approval checkpoint (complete)
 - [ ] 10a-quality — Quality audit and fixes (pending)
 - [ ] 10b-security-review — Security audit and manual review (pending)
 - [ ] 11-security-fixes — Approved security fixes (pending)
@@ -1454,7 +1464,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 2,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-21T09:59:33+00:00",
+  "updated_at": "2026-10-21T12:21:48+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1655,6 +1665,21 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "Owner says ok perfect and explicitly authorizes file-level planning, staging and one local commit for completed BH-BK. Exact85-file checkpoint after aacd65e, including shared overlapping source, feature docs and batch records. Preserve excluded generated next-env.d.ts and ignored local env/runtime/build artifacts. Final full offline981 tests/63files and root lint pass; scoped commit authority supersedes earlier no-Git wording only for this checkpoint. No whole visual/funded quality approval, push, deploy, paid call or RM-016 progression inferred.",
       "source": "human:current-chat/2026-10-21/plan-stage-commit-bh-bk; docs/commit-plans/RM-015BH-BK-CHECKPOINT.md",
       "confidence": "confirmed"
+    },
+    "REAL_MODE_REVIEW": {
+      "value": "RM-015BL real-mode test/fix/retest accepted by owner21 October after final wall-backed sample/default-Medy screenshots. Exact42-path atomic local checkpoint authorized. Current settled pnpm check passes1026 tests/64 files, all types/lint/format/boundaries/assets and shared/backend/frontend builds; read-only pass1 clean. Full current source evidence supersedes earlier scoped/full test limits, with Linux/image/hosted proof still separate. Actual13 real operations/17 provider rounds plus one pre-dispatch rejection retained; no new paid request for commit checks. Samples remain public, headers divider-free, measurements honest, planned initial placement separated/near-wall and Medy initially selected. Exact owned staging/local commit next, then RM-016 full prompt checkpoint. No env/key edits, delegation, push or deployment.",
+      "source": "human:current-chat/2026-10-21/approve-BL-checkpoint-and-audits; docs/validation/RM-015BL.md#owner-acceptance-and-authorized-local-checkpoint--21-october2026",
+      "confidence": "confirmed"
+    },
+    "SITE_HEADER_RULE": {
+      "value": "Owner explicitly forbids horizontal dividers under any site navigation header. Removed intake bottom border; native desktop/phone intake plus landing/entry/editor show0px bottom border/no shadow. Keep transparent continuous headers, no separator pseudo-element/line shadow; preserve control borders/focus. Existing36-path scope, CSS format/whitespace checks pass, no paid request.",
+      "source": "human:current-chat/2026-10-21/header-divider-screenshot; docs/validation/RM-015BL.md#no-header-divider--owner-follow-up",
+      "confidence": "confirmed"
+    },
+    "AUDIT_GIT_AUTHORITY": {
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.",
+      "source": "human:current-chat/2026-10-21/approve-BL-checkpoint-and-audits; build/SKILL.md",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": null,
@@ -1663,8 +1688,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit"
   },
-  "active_ticket": "RM-015BH-BK checkpoint",
-  "next_action": "Complete the owner-authorized exact85-file BH-BK stage/local commit and report its Git identity. Keep generated Next/local env/runtime artifacts excluded. Whole visual/funded quality gates remain; Q held, guide paused, RM-016 Planned. No push/deploy/paid calls.",
+  "active_ticket": "RM-015BL",
+  "next_action": "Stage and locally commit the exact42-path accepted BL checkpoint after final staged inspection; prepare the full RM-016 quality prompt and retain its required prompt checkpoint.",
   "phases": [
     {
       "id": "01-docs",
@@ -2038,7 +2063,7 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "09-visual-review",
       "name": "Frontend visual approval checkpoint",
       "gate": "visual",
-      "status": "awaiting_owner",
+      "status": "complete",
       "prompt": {
         "text": "Present Roomedy’s actual frontend for the RM-015 owner visual checkpoint. The runnable Windows standalone fake/paid-off candidate is http://127.0.0.1:4390/ with exact input/BUILD_ID cfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e and matching private review backend4391. Show the actual final studio/proposal screenshot and link the visual/performance/validation evidence. Preserve the owner tab and original services. State the real nine-size, short-height, native keyboard/numeric/drag, rough2D-to-main-editor3D, grounded fake worker, Apply/Undo, lifecycle and measured evidence; distinguish desktop emulation, native-memory/production-frame/paint/physical/AT/zoom/cold-network/Linux/hosted/live limitations. Keep the recorded fixed-work throughput miss visible without raising runtime bounds. Owner visual feedback is pending; no approval or waiver has been supplied for this candidate. Ask whether it is approved as-is, which specific changes are wanted, or whether review is explicitly waived/deferred. Stop here. If approved, skip unsolicited design changes and resume the authorized ordered loop with the scoped RM-015 commit and RM-016. If feedback is supplied, allocate exact owners before that round, preserve functionality/quality/security/efficiency, earthy website palette, independent finishes, rough2D-only initial review, deliberate motion and responsive room geometry; validate only the requested round and re-present for actual owner approval. No animation-off/render-off setting, OS suppression, paid call, deployment, push, reset consumption, delegation or inferred result approval. RM-015 remains awaiting owner and its changes unstaged/uncommitted; no RM-016 or security work now.",
         "sha256": "cfcf2b7ef79b84e06119c071e5bea51c3edb8c5aaa98d26acc31931f918a6629",
@@ -2164,16 +2189,17 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/validation/RM-015L.md#chapter-typography-follow-up--20-october2026: exact9-path title hierarchy correction, scoped format/lint/frontend types, five native viewport metrics and complete screenshots, long-title wrapping/scroll/link observations; clean read-only review; owner visual approval pending.",
         "human:current-chat/2026-10-21/shared-chapter-title-size — Owner clarifies: make sure this is a shared class so it reflects on the others. Existing in-progress revision now applies the smaller size to all three numbered chapter labels; marketing taglines remain unchanged.",
         "docs/validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026: final shared16–18px scale on all three numbered titles, exact8-path CSS checkpoint; scoped formatting and four native viewport shared-consumer observations pass; no actionable findings; actual owner approval pending.",
-        "docs/validation/RM-015AZ.md#mobile-action-padding-follow-up--21-october2026: exact8-path mobile Project/Undo padding correction, scoped formatting, six viewport geometries, native popup/Escape/focus and actual reversible Apply/Undo verified, complete screenshots; read-only review clean; owner visual approval pending."
+        "docs/validation/RM-015AZ.md#mobile-action-padding-follow-up--21-october2026: exact8-path mobile Project/Undo padding correction, scoped formatting, six viewport geometries, native popup/Escape/focus and actual reversible Apply/Undo verified, complete screenshots; read-only review clean; owner visual approval pending.",
+        "docs/validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up"
       ],
       "blockers": [],
       "approval": {
-        "quote": "fix top right buttons paddings in mobiel view dynamically",
-        "scope": "Correct mobile Project/Undo content alignment, responsive spacing and matching gutters; actual visual approval pending",
-        "source": "human:current-chat/2026-10-21/mobile-project-undo-padding",
-        "recorded_at": "2026-10-20T21:22:42+00:00"
+        "quote": "i think that was the only issue i had\n\nfile level commit and you have approval to stage and commit\n\nthen we move on to an important stage\n\nsecutiy audit and quality audit stage in build\n\nyou have approval to stage and commit after u finish the execute validation loops for both phases, and yes i trust u with the security anaylsis findings but stick to what the build says about it.\n\nyou're goal is to create a deployment ready project",
+        "source": "human:current-chat/2026-10-21/approve-BL-checkpoint-and-audits",
+        "scope": "Owner accepts the final BL photo placement/default-Medy correction and requests advancing from the frontend visual checkpoint to quality then security. Reviewed current42-path BL scope and actual placement-final-live-2d/3d screenshots, not the historical4390 artifact or unperformed device/hosted claims.",
+        "recorded_at": "2026-10-21T12:16:07+00:00"
       },
-      "decision": "changes-requested",
+      "decision": "approved",
       "reviews": [
         {
           "decision": "changes-requested",
@@ -2830,6 +2856,15 @@ This checklist records local work. Human approvals and unresolved external check
             "scope": "Correct mobile Project/Undo content alignment, responsive spacing and matching gutters; actual visual approval pending",
             "source": "human:current-chat/2026-10-21/mobile-project-undo-padding",
             "recorded_at": "2026-10-20T21:22:42+00:00"
+          }
+        },
+        {
+          "decision": "approved",
+          "approval": {
+            "quote": "i think that was the only issue i had\n\nfile level commit and you have approval to stage and commit\n\nthen we move on to an important stage\n\nsecutiy audit and quality audit stage in build\n\nyou have approval to stage and commit after u finish the execute validation loops for both phases, and yes i trust u with the security anaylsis findings but stick to what the build says about it.\n\nyou're goal is to create a deployment ready project",
+            "source": "human:current-chat/2026-10-21/approve-BL-checkpoint-and-audits",
+            "scope": "Owner accepts the final BL photo placement/default-Medy correction and requests advancing from the frontend visual checkpoint to quality then security. Reviewed current42-path BL scope and actual placement-final-live-2d/3d screenshots, not the historical4390 artifact or unperformed device/hosted claims.",
+            "recorded_at": "2026-10-21T12:16:07+00:00"
           }
         }
       ]

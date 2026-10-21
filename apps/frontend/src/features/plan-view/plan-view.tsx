@@ -23,6 +23,12 @@ import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 import { comparisonFrame } from '../session/state';
 import { FINISH_PALETTE } from '../catalogue/finishes';
+import {
+  displayFurnitureSize,
+  hasIllustrativeSize,
+  ILLUSTRATIVE_SIZE_NOTICE,
+} from '../catalogue/display-size';
+import previewStyles from '../room-view/room-view.module.css';
 import { roomSurface } from '@roomedy/contracts/surfaces';
 import { failureMessage } from '../room-editor/messages';
 import {
@@ -83,8 +89,9 @@ function OrientedFootprint({
     quarter.current = item.pose.quarterTurns;
     if (difference) setAngle((previous) => previous + difference * 90);
   }, [item.pose.quarterTurns]);
-  const w = item.dimensions.width.value,
-    d = item.dimensions.depth.value;
+  const size = displayFurnitureSize(item),
+    w = size?.width ?? item.dimensions.width.value,
+    d = size?.depth ?? item.dimensions.depth.value;
   if (w === null || d === null) return null;
   return (
     <g className={styles.pieceFootprint} transform={`rotate(${angle})`}>
@@ -102,6 +109,7 @@ function OrientedFootprint({
         }
         stroke={selected ? '#332b25' : '#5d5147'}
         strokeWidth={selected ? 35 : 14}
+        strokeDasharray={hasIllustrativeSize(item) ? '50 35' : undefined}
       />
       <path
         d={
@@ -911,7 +919,7 @@ export function PlanView({
               onPointerCancel={cancel}
               onLostPointerCapture={cancel}
             >
-              {w === null || d === null ? (
+              {!displayFurnitureSize(item) && (w === null || d === null) ? (
                 <circle
                   r="260"
                   fill="#f1e8da"
@@ -926,8 +934,6 @@ export function PlanView({
                 <PlanLabel
                   layout={labelLayout}
                   fill={
-                    w !== null &&
-                    d !== null &&
                     ['charcoal', 'walnut'].includes(item.finish)
                       ? '#fffaf2'
                       : '#302b25'
@@ -1040,6 +1046,11 @@ export function PlanView({
           ) : null;
         })}
       </svg>
+      {room.furniture.some(hasIllustrativeSize) && (
+        <p className={previewStyles.illustrativeNotice}>
+          {ILLUSTRATIVE_SIZE_NOTICE}
+        </p>
+      )}
       <div id={descriptionId} className={styles.announcement}>
         <p>
           {ghost

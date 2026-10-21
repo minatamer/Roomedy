@@ -5,6 +5,7 @@ import { config as loadEnvironment } from 'dotenv';
 import { parseRuntimeConfig } from './config/runtime-config.js';
 import { createApp } from './http/create-app.js';
 import { createRuntime } from './runtime/create-runtime.js';
+import type { Diagnostic } from './runtime/create-runtime.js';
 import { createRecognitionHandler } from './recognition/recognize.js';
 import { createRoomedyFakeProvider } from './providers/fake.js';
 import { createAssistantHandler } from './assistant/assistant.js';
@@ -17,7 +18,7 @@ loadEnvironment({
   override: false,
   quiet: true,
 });
-const log = (event: { code: string; reference: string }) => {
+const log = (event: Diagnostic) => {
   console.info(JSON.stringify(event));
 };
 try {
@@ -42,7 +43,19 @@ try {
     config.turnstileSiteKey &&
     process.env.TURNSTILE_SECRET_KEY?.trim()
       ? {
-          provider: createResponsesProvider(process.env.OPENAI_API_KEY!.trim()),
+          provider: createResponsesProvider(
+            process.env.OPENAI_API_KEY!.trim(),
+            undefined,
+            undefined,
+            (providerShape) =>
+              log({
+                code: 'provider-rejected',
+                reference: randomUUID(),
+                stage: 'provider',
+                outcome: 'malformed',
+                providerShape,
+              }),
+          ),
           challenge: createTurnstileChallenge(
             process.env.TURNSTILE_SECRET_KEY.trim(),
             config.frontendOrigin,

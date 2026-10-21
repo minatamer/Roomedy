@@ -80,6 +80,22 @@
   padding: 25px;
   gap: 10px;
 }
+.illustrativeNotice {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #fbf7eff5;
+  color: #70523b;
+  font-size: 11px;
+  line-height: 1.5;
+  pointer-events: none;
+}
 .fallback h2 {
   font-size: 22px;
   margin: 0;

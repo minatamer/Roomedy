@@ -41,6 +41,17 @@ afterEach(() => {
 });
 
 describe('deliberate selected furniture actions', () => {
+  it('opens Medy initially while preserving subsequent tab choices until a fresh room', () => {
+    const s = session();
+    expect(s.getSnapshot().presentation.panel).toBe('assistant');
+    s.setPanel('inventory');
+    expect(s.getSnapshot().presentation.panel).toBe('inventory');
+    s.setPanel('room');
+    s.setRoomView('plan');
+    expect(s.getSnapshot().presentation.panel).toBe('room');
+    s.reset(commandRoom());
+    expect(s.getSnapshot().presentation.panel).toBe('assistant');
+  });
   it.each(['plan', 'cutaway'] as const)(
     'deletes the last owned Keep bed and windows, protects doors and restores each change in %s',
     (view) => {
@@ -880,7 +891,7 @@ describe('selection determines room interaction', () => {
     (view) => {
       const s = session(commandRoom([piece('a')], [door(), windowFeature()]));
       s.setRoomView(view);
-      expect(activeRoomTool(s.getSnapshot())).toBe('inventory');
+      expect(activeRoomTool(s.getSnapshot())).toBe('assistant');
       s.setPanel('catalogue');
       expect(activeRoomTool(s.getSnapshot())).toBe('inventory');
       s.select('a');

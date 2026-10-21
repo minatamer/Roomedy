@@ -24,6 +24,7 @@ import {
   splitDraftPiece,
 } from './draft';
 import type { ReviewDraft, ReviewResult } from './draft';
+import { photoBackWalls, planPhotoPlacement } from './photo-layout';
 
 export interface ReviewToken {
   reviewId: string;
@@ -450,12 +451,23 @@ export class ReviewController {
         .filter((item) => !assigned.has(item.ref))
         .map((item) => item.label),
     };
+    const placement = planPhotoPlacement(
+      draft.room,
+      draft.links.map((link) => link.entityId),
+      photoBackWalls(draft),
+    );
     this.invalidate();
-    if (!this.session.acceptRoom(draft.room, notes)) return false;
+    if (!this.session.acceptRoom(placement.room, notes)) return false;
     this.photos.dispose();
     this.dispose();
-    if (notes.outline !== 'rectangle' || notes.unplaced.length || simulated)
-      this.session.setPanel('room');
+    if (placement.unresolved.length)
+      this.session.notify(
+        'Some starting positions need review. Add measurements in properties before checking fit.',
+      );
+    else if (placement.adjusted.length)
+      this.session.notify(
+        'Adjusted starting positions to keep preview furniture separate. Sizes and placement still need checking.',
+      );
     return true;
   }
   accept() {

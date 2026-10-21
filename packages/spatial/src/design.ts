@@ -71,6 +71,39 @@ export function designerRequest(
     )
   )
     return result();
+  let preserveFinishes = false;
+  if (openWording.test(t)) {
+    t = t.replace(
+      /[,.;]\s*(?:and\s+)?keep all (?:the )?furniture(?: and (?:all )?sizes)?(?:,?\s*and\s+leave (?:the )?finishes unchanged)?[.!]?$/,
+      (clause) => {
+        preserveFinishes = /finishes unchanged/.test(clause);
+        return '';
+      },
+    );
+    const held: string[] = [];
+    t = t.replace(
+      /(?:^|[.;,])\s*(?:keep|leave)\s+(.+?)\s+(?:exactly\s+)?(?:where (?:it|they) (?:is|are)|in place)(?=$|[.!;,])/g,
+      (_whole, clause: string) => {
+        held.push(clause);
+        return ' ';
+      },
+    );
+    for (const clause of held) {
+      for (const name of clause.split(/\s*(?:,|\band\b)\s*/)) {
+        const exact = name.trim().replace(/^(?:the|my)\s+/, '');
+        const matches = room.furniture.filter(
+          (piece) =>
+            piece.label.toLowerCase() === exact || category(piece) === exact,
+        );
+        if (matches.length !== 1) {
+          clarification =
+            'Which exact piece should stay in place? Select its card, then ask for the layout change.';
+          return result();
+        }
+        excluded.push(matches[0]!.id);
+      }
+    }
+  }
   const exclusion = t.match(
     /\s+(?:without moving|but (?:keep|leave))\s+(.+?)(?:\s+(?:where (?:it|they) (?:is|are)|in place|as (?:it|they) (?:is|are)))?[.!]?$/,
   );
@@ -106,8 +139,9 @@ export function designerRequest(
   const explicit = referenced(room, t);
   const pronoun = /\b(it|this|that|selected|instead|actually|rather)\b/.test(t);
   const finish = t.match(/\b(oak|ivory|walnut|clay|sage|charcoal)\b/)?.[1];
-  const mood =
-    /\b(cozy|cosy|cozier|cosier|warm|warmer|warmth|welcoming)\b/.test(t)
+  const mood = preserveFinishes
+    ? null
+    : /\b(cozy|cosy|cozier|cosier|warm|warmer|warmth|welcoming)\b/.test(t)
       ? 'warm'
       : /\b(light|lighter|bright|brighter|airy|airier)\b/.test(t)
         ? 'light'

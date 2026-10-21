@@ -10,6 +10,7 @@ import { PhotoViewer } from './photo-viewer';
 import { PhotoProcessing } from './processing';
 import { EXAMPLE_PHOTOS, loadExamplePhotos } from './example-photos';
 import type { PublicConfig } from '@roomedy/contracts/api';
+import { PUBLIC_LIMITS } from '@roomedy/contracts/policy';
 
 export function Intake({
   controller,
@@ -63,7 +64,7 @@ export function Intake({
     [controller],
   );
   const addExamples = async () => {
-    if (exampleAbort.current || availability?.mode !== 'fake') return;
+    if (exampleAbort.current) return;
     const abort = new AbortController();
     exampleAbort.current = abort;
     const release = controller.session.ownResource(() => abort.abort());
@@ -167,10 +168,7 @@ export function Intake({
                     Bring the room into view.
                   </h1>
                 </div>
-                <div
-                  className={styles.photoLayout}
-                  data-examples={availability?.mode === 'fake'}
-                >
+                <div className={styles.photoLayout}>
                   <div className={styles.photoMain}>
                     <section
                       className={styles.upload}
@@ -343,63 +341,61 @@ export function Intake({
                       )}
                     </section>
                   </div>
-                  {availability?.mode === 'fake' && (
-                    <div className={styles.startActions}>
-                      <section
-                        className={styles.examples}
-                        aria-label="Example room photos"
+                  <div className={styles.startActions}>
+                    <section
+                      className={styles.examples}
+                      aria-label="Example room photos"
+                    >
+                      <p className={styles.eyebrow}>A ROOM TO EXPLORE</p>
+                      <h2>Start with these photos.</h2>
+                      <div
+                        className={styles.exampleImages}
+                        tabIndex={0}
+                        aria-label="Example photo gallery"
                       >
-                        <p className={styles.eyebrow}>A ROOM TO EXPLORE</p>
-                        <h2>Start with these photos.</h2>
-                        <div
-                          className={styles.exampleImages}
-                          tabIndex={0}
-                          aria-label="Example photo gallery"
-                        >
-                          {EXAMPLE_PHOTOS.map((example, index) => (
-                            <figure key={example.path}>
-                              <button
-                                type="button"
-                                className={styles.photoOpen}
-                                aria-label={`View ${example.label.toLowerCase()}`}
-                                onClick={(e) =>
-                                  openPhoto(
-                                    'example',
-                                    example.path,
-                                    e.currentTarget,
-                                  )
-                                }
-                              >
-                                <Image
-                                  src={example.path}
-                                  loading={index === 0 ? 'eager' : 'lazy'}
-                                  width={1280}
-                                  height={960}
-                                  alt={example.label}
-                                  unoptimized
-                                />
-                              </button>
-                              <figcaption>{example.label}</figcaption>
-                            </figure>
-                          ))}
-                        </div>
-                        <button
-                          disabled={
-                            examplesBusy ||
-                            state.recognition !== 'idle' ||
-                            state.photos.length + EXAMPLE_PHOTOS.length >
-                              availability.limits.photos
-                          }
-                          aria-busy={examplesBusy}
-                          onClick={() => void addExamples()}
-                        >
-                          {examplesBusy
-                            ? 'Preparing examples…'
-                            : 'Use example photos'}
-                        </button>
-                      </section>
-                    </div>
-                  )}
+                        {EXAMPLE_PHOTOS.map((example, index) => (
+                          <figure key={example.path}>
+                            <button
+                              type="button"
+                              className={styles.photoOpen}
+                              aria-label={`View ${example.label.toLowerCase()}`}
+                              onClick={(e) =>
+                                openPhoto(
+                                  'example',
+                                  example.path,
+                                  e.currentTarget,
+                                )
+                              }
+                            >
+                              <Image
+                                src={example.path}
+                                loading={index === 0 ? 'eager' : 'lazy'}
+                                width={1280}
+                                height={960}
+                                alt={example.label}
+                                unoptimized
+                              />
+                            </button>
+                            <figcaption>{example.label}</figcaption>
+                          </figure>
+                        ))}
+                      </div>
+                      <button
+                        disabled={
+                          examplesBusy ||
+                          state.recognition !== 'idle' ||
+                          state.photos.length + EXAMPLE_PHOTOS.length >
+                            PUBLIC_LIMITS.photos
+                        }
+                        aria-busy={examplesBusy}
+                        onClick={() => void addExamples()}
+                      >
+                        {examplesBusy
+                          ? 'Preparing examples…'
+                          : 'Use example photos'}
+                      </button>
+                    </section>
+                  </div>
                 </div>
               </>
             )}

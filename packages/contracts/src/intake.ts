@@ -162,18 +162,81 @@ export const draftHypothesisJsonSchema = () =>
 export type DraftHypothesis = z.infer<typeof draftHypothesisSchema>;
 export type DraftObservation = z.infer<typeof draftObservationSchema>;
 export type PhotoManifest = z.infer<typeof photoManifestSchema>;
+const failureFields = [
+  'version',
+  'sourcePurposes',
+  'shape',
+  'frameEvidence',
+  'surfaces',
+  'room',
+  'observations',
+  'groups',
+  'ref',
+  'sourceId',
+  'wall',
+  'mechanism',
+  'hinge',
+  'width',
+  'depth',
+  'height',
+  'offset',
+  'sill',
+  'projection',
+  'sketch',
+  'finish',
+  'unknown',
+] as const;
+export interface DraftHypothesisFailure {
+  reason:
+    | 'schema'
+    | 'source-manifest'
+    | 'surface-type'
+    | 'source-reference'
+    | 'purpose-map'
+    | 'evidence'
+    | 'shape-evidence'
+    | 'references'
+    | 'associations'
+    | 'observation-limit';
+  field: (typeof failureFields)[number];
+}
 export function parseDraftHypothesis(
   raw: unknown,
   sources: readonly string[],
   automaticSources: readonly string[] = [],
+  report?: (failure: DraftHypothesisFailure) => void,
 ) {
+  const reject = (
+    reason: DraftHypothesisFailure['reason'],
+    field: DraftHypothesisFailure['field'],
+  ) => {
+    report?.({ reason, field });
+    return null;
+  };
   const parsed = draftHypothesisSchema.safeParse(raw);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0]!;
+    const field = [...issue.path]
+      .reverse()
+      .find(
+        (part) =>
+          typeof part === 'string' &&
+          failureFields.includes(part as DraftHypothesisFailure['field']),
+      ) as DraftHypothesisFailure['field'] | undefined;
+    return issue.message === 'Duplicate observation reference'
+      ? reject('references', 'ref')
+      : issue.message === 'Competing observation associations' ||
+          issue.message === 'Invalid observation association'
+        ? reject('associations', 'groups')
+        : issue.message === 'Too many photo observations'
+          ? reject('observation-limit', 'observations')
+          : reject('schema', field ?? 'unknown');
+  }
   if (
-    !parsed.success ||
     sources.length > POLICY.photos ||
     new Set(sources).size !== sources.length
   )
-    return null;
+    return reject('source-manifest', 'sourcePurposes');
   const allowed = new Set(sources),
     roles = parsed.data.sourcePurposes;
   if (parsed.data.surfaces) {
@@ -183,9 +246,10 @@ export function parseDraftHypothesis(
         appearance.texture.value &&
         !isSurfaceTexture(target, appearance.texture.value)
       )
-        return null;
+        return reject('surface-type', 'surfaces');
       for (const fact of [appearance.color, appearance.texture])
-        if (fact.sourceId && !allowed.has(fact.sourceId)) return null;
+        if (fact.sourceId && !allowed.has(fact.sourceId))
+          return reject('source-reference', 'surfaces');
       const supportsRoom = (id: string) =>
         roles
           ? roles.some((r) => r.id === id && r.purpose === 'room')
@@ -207,7 +271,7 @@ export function parseDraftHypothesis(
         new Set(roles.map((s) => s.id)).size !== roles.length ||
         roles.some((s) => !allowed.has(s.id))))
   )
-    return null;
+    return reject('purpose-map', 'sourcePurposes');
   const measurements = [
     ...Object.values(parsed.data.room),
     ...parsed.data.observations.flatMap((o) => [
@@ -228,23 +292,31 @@ export function parseDraftHypothesis(
       o.poseEvidence,
     ]),
   ];
-  const inconsistent = parsed.data.observations.some(
-    (o) =>
-      (o.wall === 'unknown') !== (o.wallEvidence.status === 'unknown') ||
-      (o.mechanism === 'unknown') !==
-        (o.mechanismEvidence.status === 'unknown') ||
-      (o.hinge === 'unknown') !== (o.hingeEvidence.status === 'unknown') ||
-      (o.kind === 'door' && o.mechanism === 'fixed'),
-  );
+  for (const observation of parsed.data.observations) {
+    for (const [field, evidence] of [
+      ['wall', 'wallEvidence'],
+      ['mechanism', 'mechanismEvidence'],
+      ['hinge', 'hingeEvidence'],
+    ] as const)
+      if (
+        (observation[field] === 'unknown') !==
+        (observation[evidence].status === 'unknown')
+      )
+        return reject('evidence', field);
+    if (observation.kind === 'door' && observation.mechanism === 'fixed')
+      return reject('evidence', 'mechanism');
+  }
   if (
-    inconsistent ||
     (parsed.data.shape === 'unknown') !==
-      (parsed.data.frameEvidence.status === 'unknown') ||
+    (parsed.data.frameEvidence.status === 'unknown')
+  )
+    return reject('shape-evidence', 'shape');
+  if (
     evidence.some((e) => e.sourceId !== null && !allowed.has(e.sourceId)) ||
     parsed.data.observations.some((o) => !allowed.has(o.sourceId)) ||
     measurements.some((m) => m.sourceId !== null && !allowed.has(m.sourceId))
   )
-    return null;
+    return reject('source-reference', 'sourceId');
   if (roles) {
     const roomSources = new Set(
       roles.filter((s) => s.purpose === 'room').map((s) => s.id),

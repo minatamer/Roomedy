@@ -20,6 +20,62 @@ const run = (
   selected: string | null = null,
   context: Parameters<typeof resolveAssistantTask>[4] = [],
 ) => resolveAssistantTask(room, text, selected, 'operation', context);
+it.each([
+  'Hi Medy, I want my room to feel calmer, but I’m a bit overwhelmed. Can we talk through where to start without moving anything yet?',
+  'Hi Medy! I’m a little overwhelmed. Could you help me figure out what I like before we start designing?',
+  'Hey, what would make my room feel more peaceful?',
+  'Can we chat about colours before changing anything?',
+])(
+  'keeps greeting-prefixed discussion conversational with no edit scope: %s',
+  (text) => {
+    const task = run(createRoomFixture('sample'), text);
+    expect(task.kind).toBe('conversation');
+    expect(task.scope.actionKinds).toEqual([]);
+    expect(task.interpret).not.toBe(true);
+  },
+);
+it('does not turn a greeted scoped layout command into conversation', () => {
+  const task = run(
+    createRoomFixture('sample'),
+    'Hi Medy, move my desk near the window without moving my bed',
+  );
+  expect(task.kind).toBe('search');
+  expect(task.goal?.fixedIds).toContain('bed_1');
+});
+it('understands explicit fixed-position clauses without requiring a special phrase', () => {
+  const room = createRoomFixture('sample');
+  const task = run(
+    room,
+    'Try a layout with more open floor space. Keep the bed and wardrobe exactly where they are, keep all furniture and sizes, and leave the finishes unchanged.',
+  );
+  expect(task.kind).toBe('search');
+  expect(task.goal?.kind).toBe('open-space');
+  expect(task.goal?.fixedIds).toEqual(
+    expect.arrayContaining(['bed_1', 'wardrobe_1']),
+  );
+  expect(task.scope.targetIds).not.toContain('bed_1');
+  expect(task.scope.targetIds).not.toContain('wardrobe_1');
+  expect(task.scope.actionKinds).toEqual(['move', 'rotate']);
+  expect(task.scope.additions).toEqual([]);
+  expect(task.scope.removals).toEqual([]);
+  expect(task.scope.roomFinishes).toBe(false);
+  const ambiguous = structuredClone(room);
+  ambiguous.furniture.push({
+    ...structuredClone(room.furniture[0]!),
+    id: 'other_bed',
+  });
+  expect(
+    run(ambiguous, 'Open up the room. Keep the bed in place.').scope
+      .actionKinds,
+  ).toEqual([]);
+  expect(
+    run(room, 'Open up the room. Keep the bed except the wardrobe in place.')
+      .scope.actionKinds,
+  ).toEqual([]);
+  expect(
+    run(room, 'Open up the room. Keep the sofa in place.').scope.actionKinds,
+  ).toEqual([]);
+});
 it('A: captures only the requested desk/chair scope and preserves unrelated unlocked furniture', () => {
   const { room } = windowCase(),
     task = run(

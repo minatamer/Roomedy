@@ -11,9 +11,66 @@ const object = (x: unknown): x is Record<string, unknown> =>
   !!x && typeof x === 'object' && !Array.isArray(x);
 const keys = (value: Record<string, unknown>, allowed: readonly string[]) =>
   Object.keys(value).every((key) => allowed.includes(key));
+export type ProviderShapeFailure =
+  | 'request'
+  | 'envelope'
+  | 'reasoning'
+  | 'function-call'
+  | 'content'
+  | 'json'
+  | 'usage';
+type ShapeReporter = (stage: ProviderShapeFailure) => void;
+function functionItem(
+  item: Record<string, unknown>,
+  tools?: readonly string[],
+) {
+  return (
+    keys(item, [
+      'type',
+      'id',
+      'status',
+      'name',
+      'call_id',
+      'arguments',
+      'async',
+      'caller',
+      'namespace',
+    ]) &&
+    item.type === 'function_call' &&
+    (item.id === undefined ||
+      (typeof item.id === 'string' && item.id.length <= 120)) &&
+    [undefined, 'completed'].includes(item.status as string | undefined) &&
+    [undefined, false].includes(item.async as false | undefined) &&
+    (item.caller === undefined ||
+      item.caller === null ||
+      (object(item.caller) &&
+        keys(item.caller, ['type']) &&
+        item.caller.type === 'direct')) &&
+    (item.namespace === undefined ||
+      item.namespace === null ||
+      (typeof item.namespace === 'string' &&
+        /^[A-Za-z0-9_-]{0,64}$/.test(item.namespace))) &&
+    typeof item.name === 'string' &&
+    item.name.length > 0 &&
+    item.name.length <= 64 &&
+    (!tools || tools.includes(item.name)) &&
+    typeof item.call_id === 'string' &&
+    item.call_id.length > 0 &&
+    item.call_id.length <= 80 &&
+    typeof item.arguments === 'string' &&
+    item.arguments.length <= POLICY.providerOutputBytes
+  );
+}
 function reasoningItem(item: Record<string, unknown>) {
   return (
-    keys(item, ['type', 'id', 'summary', 'encrypted_content', 'status']) &&
+    keys(item, [
+      'type',
+      'id',
+      'summary',
+      'encrypted_content',
+      'status',
+      'content',
+    ]) &&
     item.type === 'reasoning' &&
     typeof item.id === 'string' &&
     item.id.length > 0 &&
@@ -22,6 +79,17 @@ function reasoningItem(item: Record<string, unknown>) {
     item.encrypted_content.length > 0 &&
     item.encrypted_content.length <= POLICY.providerOutputBytes &&
     [undefined, 'completed'].includes(item.status as string | undefined) &&
+    (item.content === undefined ||
+      (Array.isArray(item.content) &&
+        item.content.length <= 8 &&
+        item.content.every(
+          (part: unknown) =>
+            object(part) &&
+            keys(part, ['type', 'text']) &&
+            part.type === 'reasoning_text' &&
+            typeof part.text === 'string' &&
+            part.text.length <= POLICY.contextBytes,
+        ))) &&
     Array.isArray(item.summary) &&
     item.summary.length <= 8 &&
     item.summary.every(
@@ -95,16 +163,7 @@ function checkInputItems(input: ProviderRequest['input']) {
     if (item.type === 'reasoning') {
       if (!reasoningItem(item)) throw new Error('provider-request');
     } else if (item.type === 'function_call') {
-      if (
-        !keys(item, ['type', 'id', 'status', 'name', 'call_id', 'arguments']) ||
-        (item.id !== undefined &&
-          (typeof item.id !== 'string' || item.id.length > 120)) ||
-        ![undefined, 'completed'].includes(item.status as string | undefined) ||
-        typeof item.name !== 'string' ||
-        typeof item.call_id !== 'string' ||
-        typeof item.arguments !== 'string'
-      )
-        throw new Error('provider-request');
+      if (!functionItem(item)) throw new Error('provider-request');
     } else if (item.type === 'function_call_output') {
       if (
         !keys(item, ['type', 'call_id', 'output']) ||
@@ -117,7 +176,7 @@ function checkInputItems(input: ProviderRequest['input']) {
         !keys(item, ['role', 'content']) ||
         !['user', 'assistant'].includes(String(item.role)) ||
         !Array.isArray(item.content) ||
-        item.content.length > POLICY.photos + 2
+        item.content.length > POLICY.photos * 2 + 1
       )
         throw new Error('provider-request');
       for (const part of item.content) {
@@ -196,8 +255,9 @@ export function responseBody(input: ProviderRequest, model: string) {
 export function decodeResponse(
   raw: unknown,
   tools: readonly string[],
+  report?: ShapeReporter,
 ): ProviderOutcome {
-  const result = decodePayload(raw, tools);
+  const result = decodePayload(raw, tools, report);
   if (!object(raw) || raw.usage === undefined || raw.usage === null)
     return result;
   const u = raw.usage;
@@ -208,8 +268,10 @@ export function decodeResponse(
         Number.isSafeInteger(n) && Number(n) >= 0 && Number(n) <= 1_000_000_000,
     ) ||
     Number(u.input_tokens) + Number(u.output_tokens) !== u.total_tokens
-  )
+  ) {
+    report?.('usage');
     return { kind: 'malformed' };
+  }
   return {
     ...result,
     usage: {
@@ -222,61 +284,55 @@ export function decodeResponse(
 function decodePayload(
   raw: unknown,
   tools: readonly string[],
+  report?: ShapeReporter,
 ): ProviderOutcome {
-  if (!object(raw)) return { kind: 'malformed' };
+  const invalid = (stage: ProviderShapeFailure): ProviderOutcome => {
+    report?.(stage);
+    return { kind: 'malformed' };
+  };
+  if (!object(raw)) return invalid('envelope');
   if (raw.status === 'incomplete') return { kind: 'incomplete' };
   if (
     raw.status !== 'completed' ||
     !Array.isArray(raw.output) ||
     raw.output.length > POLICY.toolCalls + 4
   )
-    return { kind: 'malformed' };
+    return invalid('envelope');
   let text = '';
   const calls: Extract<ProviderOutcome, { kind: 'completed' }>['calls'] = [];
   const continuation: Record<string, unknown>[] = [];
   for (const item of raw.output) {
-    if (!object(item)) return { kind: 'malformed' };
+    if (!object(item)) return invalid('envelope');
     if (item.type === 'reasoning') {
-      if (!reasoningItem(item)) return { kind: 'malformed' };
+      if (!reasoningItem(item)) return invalid('reasoning');
       continuation.push(item);
       continue;
     }
     if (item.type === 'function_call') {
-      if (
-        !keys(item, ['type', 'id', 'status', 'name', 'call_id', 'arguments']) ||
-        (item.id !== undefined &&
-          (typeof item.id !== 'string' || item.id.length > 120)) ||
-        ![undefined, 'completed'].includes(item.status as string | undefined) ||
-        typeof item.name !== 'string' ||
-        !tools.includes(item.name) ||
-        typeof item.call_id !== 'string' ||
-        item.call_id.length > 80 ||
-        typeof item.arguments !== 'string'
-      )
-        return { kind: 'malformed' };
+      if (!functionItem(item, tools)) return invalid('function-call');
       try {
         calls.push({
-          name: item.name,
-          callId: item.call_id,
-          arguments: JSON.parse(item.arguments),
+          name: item.name as string,
+          callId: item.call_id as string,
+          arguments: JSON.parse(item.arguments as string),
         });
         continuation.push(item);
       } catch {
-        return { kind: 'malformed' };
+        return invalid('json');
       }
-      if (calls.length > 1) return { kind: 'malformed' };
+      if (calls.length > 1) return invalid('function-call');
     } else if (item.type === 'message' && Array.isArray(item.content)) {
       for (const part of item.content) {
-        if (!object(part)) return { kind: 'malformed' };
+        if (!object(part)) return invalid('content');
         if (part.type === 'refusal') return { kind: 'refused' };
         if (part.type !== 'output_text' || typeof part.text !== 'string')
-          return { kind: 'malformed' };
+          return invalid('content');
         text += part.text;
       }
-    } else return { kind: 'malformed' };
+    } else return invalid('envelope');
   }
   if ((calls.length && text) || (!calls.length && !text))
-    return { kind: 'malformed' };
+    return invalid('content');
   try {
     return {
       kind: 'completed',
@@ -285,7 +341,7 @@ function decodePayload(
       ...(calls.length ? { continuation } : {}),
     };
   } catch {
-    return { kind: 'malformed' };
+    return invalid('json');
   }
 }
 /** Fixed endpoint and one native fetch attempt. Construction/import performs no I/O. */
@@ -293,6 +349,7 @@ export function createResponsesProvider(
   key: string,
   model: string = ROOMEDY_MODEL,
   fetcher: typeof fetch = fetch,
+  report?: ShapeReporter,
 ): ProviderPort {
   if (!key || key.length > 4096 || /[\r\n]/.test(key))
     throw new Error('provider-configuration');
@@ -303,7 +360,13 @@ export function createResponsesProvider(
       return dispatched;
     },
     start(input, parent) {
-      const body = responseBody(input, model);
+      let body: string;
+      try {
+        body = responseBody(input, model);
+      } catch (error) {
+        report?.('request');
+        throw error;
+      }
       const controller = new AbortController();
       let resolveResult: (result: ProviderOutcome) => void;
       let done = false;
@@ -381,6 +444,7 @@ export function createResponsesProvider(
               new TextDecoder('utf-8', { fatal: true }).decode(packed.take()),
             );
           } catch {
+            report?.('json');
             finish({ kind: 'malformed' });
             return;
           }
@@ -388,6 +452,7 @@ export function createResponsesProvider(
             decodeResponse(
               value,
               input.tools.map((tool) => tool.name),
+              report,
             ),
           );
         } catch {

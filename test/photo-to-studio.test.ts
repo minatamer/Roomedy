@@ -17,6 +17,9 @@ import {
   draftFromPhotos,
   FAKE_PROCESSING_PREVIEW_MS,
 } from '../apps/frontend/src/features/room-intake/recognition-client.js';
+import { displayFurnitureFootprint } from '../apps/frontend/src/features/catalogue/display-size.js';
+import { intersection } from '@roomedy/spatial';
+import { unknown } from './fixtures/command-room.js';
 
 async function setup() {
   let id = 0,
@@ -104,6 +107,7 @@ it('opens the studio once with unchanged estimates, locks, baseline, fixed expir
   expect(send).toHaveBeenCalledTimes(2);
   expect(state.phase).toBe('editor');
   expect(state.presentation.roomView).toBe('cutaway');
+  expect(state.presentation.panel).toBe('assistant');
   expect(state.expiresAt).toBe(expiry);
   expect(state.workspace!.baseline).toEqual(original);
   expect(original.furniture).toHaveLength(2);
@@ -147,6 +151,55 @@ it('opens the studio once with unchanged estimates, locks, baseline, fixed expir
   session.dispose();
 });
 
+it('accepts overlapping unknown-size photo estimates as one separated near-wall baseline with Medy open', async () => {
+  const { session, review } = await setup(),
+    expiry = session.getSnapshot().expiresAt;
+  const draft = bedroomExample(sources);
+  draft.room = { width: unknown(), depth: unknown(), height: unknown() };
+  for (const observation of draft.observations) {
+    observation.width = unknown();
+    observation.depth = unknown();
+    observation.height = unknown();
+    const bed = observation.catalogueId === 'procedural-bed';
+    observation.wall = bed ? 'north' : 'unknown';
+    observation.wallEvidence = bed
+      ? { status: 'estimated', sourceId: observation.sourceId }
+      : { status: 'unknown', sourceId: null };
+    observation.sketch = {
+      x: observation.ref.startsWith('bed_') ? 0.5 : 0.68,
+      z: 0.4,
+      quarterTurns: 0,
+    };
+  }
+  await draftFromPhotos(review, transport(draft, false), { openStudio: true });
+  const state = session.getSnapshot(),
+    room = state.workspace!.current;
+  expect(state.presentation.panel).toBe('assistant');
+  expect(state.expiresAt).toBe(expiry);
+  expect(room.furniture).toHaveLength(2);
+  const [bed, cabinet] = room.furniture.map((piece) =>
+    displayFurnitureFootprint(piece)!,
+  );
+  expect(intersection(bed!, cabinet!)).toBeUndefined();
+  expect(bed!.minZ).toBe(50);
+  expect(cabinet!.minZ).toBe(50);
+  expect(
+    room.furniture.every((piece) => piece.pose.provenance.status === 'planned'),
+  ).toBe(true);
+  expect(
+    room.furniture.every((piece) =>
+      Object.values(piece.dimensions).every(
+        (axis) => axis.status === 'unknown' && axis.value === null,
+      ),
+    ),
+  ).toBe(true);
+  expect(room.room.width).toEqual(unknown());
+  expect(state.workspace!.baseline).toEqual(room);
+  expect(state.workspace!.history.entries).toHaveLength(0);
+  expect(state.message).toContain('starting positions');
+  session.dispose();
+});
+
 it.each(['unknown', 'unsupported'] as const)(
   'opens a %s outline as an unconfirmed planning frame with contextual studio notes',
   async (shape) => {
@@ -161,7 +214,7 @@ it.each(['unknown', 'unsupported'] as const)(
     await draftFromPhotos(review, transport(draft), { openStudio: true });
     expect(session.getSnapshot().phase).toBe('editor');
     expect(session.getSnapshot().photoNotes?.outline).toBe(shape);
-    expect(session.getSnapshot().presentation.panel).toBe('room');
+    expect(session.getSnapshot().presentation.panel).toBe('assistant');
     expect(session.getSnapshot().workspace!.current.room.width.status).toBe(
       shape === 'unknown' ? 'unknown' : 'estimated',
     );

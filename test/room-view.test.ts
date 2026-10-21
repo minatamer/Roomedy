@@ -483,10 +483,44 @@ describe('cutaway projection over semantic snapshots', () => {
     p.dimensions.height.value = null;
     p.dimensions.height.status = 'unknown';
     expect(pieceRepresentation(p).kind).toBe('unavailable');
+    const illustration = pieceRepresentation(p, false, true);
+    expect(illustration.kind).toBe('procedural');
+    if (illustration.kind === 'procedural') {
+      expect(illustration.footprint.width).toBe(2501);
+      expect(illustration.notice).toContain('Illustrative furniture sizes');
+    }
+    expect(p.dimensions.height).toMatchObject({
+      value: null,
+      status: 'unknown',
+    });
     expect(displayRoom(createRoomFixture('partial'))).toMatchObject({
       height: 2.6,
       approximate: true,
     });
+  });
+  it('draws recognizable unknown-size furniture only when editor illustration is requested', () => {
+    const room = createRoomFixture('sample'),
+      p = room.furniture[0]!;
+    for (const axis of Object.values(p.dimensions)) {
+      axis.value = null;
+      axis.status = 'unknown';
+    }
+    const before = JSON.stringify(p);
+    const shown = pieceRepresentation(p, false, true);
+    expect(shown.kind).toBe('procedural');
+    if (shown.kind === 'procedural') {
+      expect(shown.footprint.width).toBeGreaterThan(1000);
+      expect(shown.parts.some((part) => part.name === 'physical-bounds')).toBe(
+        false,
+      );
+      expect(shown.notice).toContain('Illustrative');
+    }
+    expect(pieceRepresentation(p).kind).toBe('unavailable');
+    expect(
+      pieceRepresentation({ ...p, catalogueId: 'unavailable' }, false, true)
+        .kind,
+    ).toBe('unavailable');
+    expect(JSON.stringify(p)).toBe(before);
   });
   it('accepts readonly baseline/current/candidate projections without mutation', () => {
     const baseline = createRoomFixture('sample'),

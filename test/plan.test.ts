@@ -20,7 +20,32 @@ import {
   unknown,
 } from './fixtures/command-room.js';
 import { comparisonFrame } from '../apps/frontend/src/features/session/state.js';
+import {
+  displayFurnitureFootprint,
+  displayFurnitureSize,
+} from '../apps/frontend/src/features/catalogue/display-size.js';
 describe('precision plan display adapter', () => {
+  it('uses shared illustrative bounds without making unknown dimensions usable as fit facts', () => {
+    const item = piece('unknown');
+    item.dimensions.width = unknown();
+    item.dimensions.height = unknown();
+    item.pose.quarterTurns = 1;
+    const before = JSON.stringify(item),
+      entry = CATALOGUE.find((entry) => entry.id === item.catalogueId)!;
+    const size = displayFurnitureSize(item)!;
+    expect(size.width).toBe(entry.size.width.default);
+    expect(size.depth).toBe(item.dimensions.depth.value);
+    expect(footprint(item)).toBeUndefined();
+    const shown = displayFurnitureFootprint(item)!;
+    expect(shown.maxX - shown.minX).toBe(size.depth);
+    expect(shown.maxZ - shown.minZ).toBe(size.width);
+    const label = planLabelLayout(item, 'Desk ?');
+    expect(label.fontSize).toBeGreaterThanOrEqual(110);
+    expect(JSON.stringify(item)).toBe(before);
+    expect(
+      displayFurnitureSize({ ...item, catalogueId: 'unavailable' }),
+    ).toBeNull();
+  });
   it('compares different recorded room sizes at one world scale and centre', () => {
     const before = commandRoom(),
       current = structuredClone(before);

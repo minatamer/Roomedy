@@ -1,6 +1,11 @@
 import type { Furniture, RoomDocument, Feature } from '@roomedy/contracts/room';
 import { findCatalogueEntry, furnitureBottom } from '@roomedy/spatial';
 import { resolveRepresentation } from './representations/definitions';
+import {
+  displayFurnitureSize,
+  hasIllustrativeSize,
+  ILLUSTRATIVE_SIZE_NOTICE,
+} from '../catalogue/display-size';
 import type { RoomFrame } from '../session/state';
 
 export type Triple = [number, number, number];
@@ -34,14 +39,33 @@ export function piecePose(piece: Furniture) {
     rotationY: (-piece.pose.quarterTurns * Math.PI) / 2,
   };
 }
-export function pieceRepresentation(piece: Furniture, assetAvailable = true) {
+export function pieceRepresentation(
+  piece: Furniture,
+  assetAvailable = true,
+  illustrative = false,
+) {
   if (furnitureBottom(piece) === null)
     return {
       kind: 'unavailable' as const,
       notice: 'Choose a height above the floor to show this piece in 3D.',
     };
   const { width, depth, height } = piece.dimensions;
-  if (width.value === null || depth.value === null || height.value === null)
+  const missing =
+    width.value === null || depth.value === null || height.value === null;
+  if (illustrative && hasIllustrativeSize(piece)) {
+    const entry = findCatalogueEntry(
+        piece.catalogueId,
+        piece.catalogueVersion,
+      )!,
+      size = displayFurnitureSize(piece)!;
+    const representation = resolveRepresentation(entry, size, false, piece);
+    if (representation.kind === 'procedural')
+      return {
+        ...representation,
+        notice: ILLUSTRATIVE_SIZE_NOTICE,
+      };
+  }
+  if (missing)
     return {
       kind: 'unavailable' as const,
       notice: 'Confirm the missing dimensions to show this piece in 3D.',

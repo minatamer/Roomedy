@@ -350,3 +350,30 @@ it('retires old quick replies during a pending request and cancellation', async 
     s.close();
   }
 });
+it('replaces settled preview shortcuts with a cancellation receipt and rejects the old choices', async () => {
+  const s = await setup();
+  try {
+    await s.assistant.submit('Preview Calm & focused room palette');
+    const preview = s.assistant.getSnapshot().messages.at(-1)!;
+    expect(
+      preview.quickReplies.some(
+        (choice) => choice.label === 'Review this preview',
+      ),
+    ).toBe(true);
+    const current = s.session.getSnapshot().workspace;
+    const operationId = s.session.getSnapshot().candidate!.identity.operationId;
+    expect(s.assistant.cancel(operationId)).toBe(true);
+    const receipt = s.assistant.getSnapshot().messages.at(-1)!;
+    expect(receipt.text).toBe('Preview cancelled. Your room is unchanged.');
+    expect(
+      receipt.quickReplies.some((choice) => /this preview/i.test(choice.label)),
+    ).toBe(false);
+    expect(s.session.getSnapshot().workspace).toBe(current);
+    s.assistant.chooseSuggestion(preview.id, preview.quickReplies[0]!);
+    expect(s.assistant.getSnapshot().messages.at(-1)).toBe(receipt);
+    expect(s.assistant.cancel(operationId)).toBe(false);
+    expect(s.assistant.getSnapshot().messages.at(-1)).toBe(receipt);
+  } finally {
+    s.close();
+  }
+});

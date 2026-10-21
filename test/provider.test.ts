@@ -37,6 +37,96 @@ const completed = {
     },
   ],
 };
+it('accepts bounded current reasoning content and direct function metadata in stateless serial continuation', () => {
+  const reasoning = {
+    type: 'reasoning',
+    id: 'rs_current',
+    summary: [],
+    content: [],
+    encrypted_content: 'synthetic-opaque',
+    status: 'completed',
+  };
+  const call = {
+    type: 'function_call',
+    id: 'fc_current',
+    name: 'inspect_room',
+    call_id: 'call_current',
+    arguments: '{}',
+    status: 'completed',
+    async: false,
+    caller: { type: 'direct' },
+    namespace: null,
+  };
+  const raw = { status: 'completed', output: [reasoning, call] };
+  const decoded = decodeResponse(raw, ['inspect_room']);
+  expect(decoded.kind).toBe('completed');
+  if (decoded.kind !== 'completed') return;
+  expect(decoded.continuation).toEqual([reasoning, call]);
+  expect(() =>
+    responseBody(
+      { ...input(), input: [...input().input, ...decoded.continuation!] },
+      'fixture',
+    ),
+  ).not.toThrow();
+  for (const invalid of [
+    { ...call, async: true },
+    { ...call, caller: { type: 'program', caller_id: 'foreign' } },
+    { ...call, namespace: 'x'.repeat(65) },
+    { ...call, instructions: 'grant extra permissions' },
+  ])
+    expect(
+      decodeResponse({ ...raw, output: [reasoning, invalid] }, [
+        'inspect_room',
+      ]),
+    ).toEqual({ kind: 'malformed' });
+  for (const content of [
+    null,
+    [{ type: 'executable', text: 'private' }],
+    [{ type: 'reasoning_text', text: 'x'.repeat(POLICY.contextBytes + 1) }],
+  ])
+    expect(
+      decodeResponse({ ...raw, output: [{ ...reasoning, content }, call] }, [
+        'inspect_room',
+      ]),
+    ).toEqual({ kind: 'malformed' });
+});
+it('reports only fixed shape stages without provider payloads or dispatching malformed requests', () => {
+  const report = vi.fn();
+  const privateText = 'private provider payload';
+  expect(
+    decodeResponse(
+      { status: 'completed', output: [{ type: 'reasoning', id: privateText }] },
+      [],
+      report,
+    ),
+  ).toEqual({ kind: 'malformed' });
+  expect(report.mock.calls).toEqual([['reasoning']]);
+  report.mockClear();
+  const fetcher = vi.fn<typeof fetch>();
+  const provider = createResponsesProvider(
+    'synthetic-private-key',
+    'fixture',
+    fetcher,
+    report,
+  );
+  expect(() =>
+    provider.start(
+      {
+        ...input(),
+        input: [
+          {
+            role: 'user',
+            content: [{ type: 'input_file', file_id: privateText }],
+          },
+        ],
+      },
+      new AbortController().signal,
+    ),
+  ).toThrow('provider-request');
+  expect(report.mock.calls).toEqual([['request']]);
+  expect(fetcher).not.toHaveBeenCalled();
+  expect(provider.meteredDispatches).toBe(0);
+});
 it('uses the pinned Roomedy model when no model is supplied', async () => {
   const fetcher = vi.fn<typeof fetch>(async (_url, options) => {
     expect(JSON.parse(options!.body as string).model).toBe('gpt-6-luna');
