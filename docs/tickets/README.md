@@ -1,5 +1,25 @@
 # Roomedy ticket plan
 
+## CPQ extension — 26 October 2026
+
+Latest owner direction selects finishing/furnishing an existing room, richer customizable studio materials/furniture, and a separate centered-chat Plan & cost phase with connected 3D object/surface highlights. Drawing/document intake is permanently excluded. The owner authorizes this entire dependency-ordered sequence, recommended assumptions, fake-only execute/validate/fix loops and exact-path local staging/commits. Final owner manual tests remain pending; no live/provider tests, delegation, push or deployment. Earlier release constraints/approvals below retain their dated scope.
+
+Product authority: [Roomedy Extension for CPQ](../Roomedy%20Extension%20for%20CPQ.md). Each ticket requires its own prior file allocation and settled clean read-only review/receipt. Preserve current release, one canonical project, private boundaries and other apps.
+
+| Ticket | Outcome | Dependencies | State |
+| --- | --- | --- | --- |
+| [RM-021](RM-021-plan-the-cpq-extension.md) | Plan and checkpoint the CPQ extension | Current release | Planning validation |
+| [RM-022](RM-022-customize-detailed-room-surfaces.md) | Customize detailed room surfaces | RM-021 | Planned |
+| [RM-023](RM-023-customize-detailed-furniture.md) | Customize detailed furniture | RM-022 | Planned |
+| [RM-024](RM-024-calculate-transparent-room-estimates.md) | Calculate transparent room estimates | RM-022, RM-023 | Planned |
+| [RM-025](RM-025-build-the-3d-plan-and-cost-workspace.md) | Build the 3D Plan & cost workspace | RM-024 | Planned |
+| [RM-026](RM-026-research-local-products-and-services.md) | Research local products and services | RM-025 | Planned |
+| [RM-027](RM-027-deliver-reviewed-budget-and-work-plans.md) | Deliver reviewed budget and work plans | RM-026 | Planned |
+| [RM-028](RM-028-preserve-estimate-versions-and-recovery.md) | Preserve estimate versions and recovery | RM-027 | Planned |
+| [RM-029](RM-029-export-itemized-estimate-pdfs.md) | Export itemized estimate PDFs | RM-028 | Planned |
+| [RM-030](RM-030-validate-the-complete-cpq-experience.md) | Validate the complete CPQ experience | RM-029 | Planned |
+
+
 **RM-020 paid update verified —21 October:** BM committed3c30318; actual landing/paid release deployed as frontend00002-kjn/backend00003-f8t with inputaba8aff0. Fresh1043-test gate/nine Linux probes/97 HTTP assets, private backend and actual one-round photo/Medy cases pass without retry. [Acceptance](../operations/HOSTED_ACCEPTANCE.md), [manifest](../operations/landing-paid-candidate-2026-10-21.json), [17-path receipt](../validation/RM-020.md). SEC-002 account boundary remains unverified, with later explicit activation disposition. Old paid-off/local-review notices are history.
 
 **BM accepted —21 October:** Owner says “looks good” after final fade, authorizes the [ten-path atomic checkpoint](../commit-plans/RM-015BM.md#approved-atomic-checkpoint--21-october2026), staging/commit and then the RM-020 hosted update with paid mode on. Current required checks/read-only review own the checkpoint; new image/retained-assets/hosted evidence stays separate. Earlier local-only/pending notices below are history.
