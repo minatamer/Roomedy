@@ -55,6 +55,7 @@ export async function captureRoomPictures(
   signal: AbortSignal,
   check: () => void,
   progress: (text: string) => void,
+  mode: 'all' | 'overview' = 'all',
 ) {
   const assets = await loadDesignAssets(room, signal);
   let renderer: WebGLRenderer | undefined,
@@ -170,7 +171,10 @@ export async function captureRoomPictures(
       },
     ];
     const pictures: RoomPicture[] = [];
-    for (const [index, view] of views.entries()) {
+    for (const [index, view] of (mode === 'overview'
+      ? views.slice(0, 1)
+      : views
+    ).entries()) {
       check();
       progress('Creating room views…');
       projection.setCutaway(view.position, view.inside);

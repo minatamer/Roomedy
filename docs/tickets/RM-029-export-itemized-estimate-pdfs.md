@@ -1,6 +1,6 @@
 # RM-029 — Export itemized estimate PDFs
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-028](RM-028-preserve-estimate-versions-and-recovery.md).
+Status: **Complete locally — owner manual/visual and real-source acceptance pending**. Dependencies: [RM-028](RM-028-preserve-estimate-versions-and-recovery.md).
 
 ## Authority and outcome
 
@@ -25,10 +25,10 @@ Generate a branded estimate and shopping/work plan from one selected saved snaps
 
 ## Acceptance
 
-- [ ] All numbers and visuals come from the selected snapshot and remain unchanged after later design/price edits.
-- [ ] Actual rendered pages are readable, links are functional and missing costs cannot be mistaken for a complete quote.
-- [ ] Export/reopening uses no source refresh or provider call and does not alter saved versions.
-- [ ] PDF export is output-only and no document-intake feature is introduced.
+- [x] All numbers and visuals come from the selected snapshot and remain unchanged after later design/price edits.
+- [x] Actual rendered pages are readable, links are functional and missing costs cannot be mistaken for a complete quote.
+- [x] Export/reopening uses no source refresh or provider call and does not alter saved versions.
+- [x] PDF export is output-only and no document-intake feature is introduced.
 
 ## Execution and verification
 
@@ -44,3 +44,5 @@ After required checks pass, review the entire settled diff read-only against eve
 Explicit non-goal for this packet: no official merchant/contractor commitment or purchase execution. Drawing/document intake is permanently excluded from the extension. Keep output estimate PDF support in its owning packet. First-party sample prices and fake research remain visibly authored; no fixture proves real stock, local price, fit, installer availability or commercial acceptance.
 
 Use only owned Roomedy ports 4320/4321 after verifying full process/listener ownership. Never kill by executable name or port alone, start alternate review services, or change the owner's ignored environment. Existing live Roomedy processes must not be driven by fake tests; if a runtime change is needed, follow the restart/run skills with explicit process overrides and keep environment files unchanged. Test children must force fake/paid-off and deny network independently before application imports.
+
+Actual implementation, rendered12-page output, lifecycle checks and clean read-only review: [RM-029 receipt](../validation/RM-029.md).

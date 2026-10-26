@@ -1,4 +1,5 @@
-import type { Project } from '@roomedy/contracts/project';
+import type { EstimateVersion, Project } from '@roomedy/contracts/project';
+import { freezeVersion } from '../cost/versions';
 import { POLICY } from '@roomedy/contracts/policy';
 import type { SessionController } from '../session/controller';
 import { projectOf } from '../session/project';
@@ -6,6 +7,7 @@ import { DesignExportError, withExportSignal } from './facts';
 const active = new WeakSet<SessionController>();
 export interface ExportPort {
   project: Project;
+  estimate?: EstimateVersion;
   signal: AbortSignal;
   progress: (text: string) => void;
   check: () => void;
@@ -17,12 +19,26 @@ export function startDesignExport(
   deliver: (blob: Blob) => void,
   progress: (text: string) => void,
   deadlineMs: number = POLICY.designExportMs,
+  target?: { estimateId: string },
 ) {
   if (active.has(controller)) throw new DesignExportError('busy');
   if (!controller.checkExpiry()) throw new DesignExportError('changed');
   const start = controller.getSnapshot(),
     project = projectOf(start);
   if (!project) throw new DesignExportError('changed');
+  const saved = target
+    ? project.versions.find((v) => v.id === target.estimateId)
+    : undefined;
+  if (target && !saved) throw new DesignExportError('changed');
+  const estimate = saved ? freezeVersion(saved) : undefined;
+  const selectedProject = estimate
+    ? {
+        ...project,
+        current: estimate.room,
+        cost: estimate.pricing,
+        versions: [estimate],
+      }
+    : project;
   const abort = new AbortController();
   let reason: 'cancelled' | 'changed' | 'failed' = 'cancelled',
     retired = false;
@@ -37,8 +53,11 @@ export function startDesignExport(
       s.phase === 'editor' &&
       s.generation === start.generation &&
       s.workspace?.workspaceId === start.workspace?.workspaceId &&
-      s.workspace?.current.roomRevision ===
-        start.workspace?.current.roomRevision
+      (!estimate || s.destination === start.destination) &&
+      (estimate
+        ? s.estimateVersions.some((v) => v.id === estimate.id)
+        : s.workspace?.current.roomRevision ===
+          start.workspace?.current.roomRevision)
     );
   };
   const check = () => {
@@ -65,7 +84,8 @@ export function startDesignExport(
       pending = Promise.resolve().then(() => {
         check();
         return run({
-          project,
+          project: selectedProject,
+          ...(estimate ? { estimate } : {}),
           signal: abort.signal,
           progress: (text) => {
             if (!abort.signal.aborted && !retired) progress(text);

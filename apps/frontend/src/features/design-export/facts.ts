@@ -30,13 +30,21 @@ export const EXPORT_FORMATS = [
 ] as const;
 export type DesignExportKind = 'pdf' | 'glb' | 'obj';
 export type ExportCode =
-  'cancelled' | 'changed' | 'busy' | 'too-large' | 'graphics' | 'failed';
+  | 'cancelled'
+  | 'changed'
+  | 'busy'
+  | 'too-large'
+  | 'graphics'
+  | 'failed'
+  | 'unsupported-text';
 export class DesignExportError extends Error {
   constructor(readonly code: ExportCode) {
     super(code);
   }
 }
 export const exportFailureText: Record<ExportCode, string> = {
+  'unsupported-text':
+    'This English estimate PDF supports Latin text. Use Latin names/notes for this export, or keep the editable project with the original text. Arabic/RTL PDF output is not supported yet.',
   cancelled: 'Export cancelled. Your room is unchanged.',
   changed: 'The room changed. Export again to include your latest design.',
   busy: 'An export is already being prepared.',

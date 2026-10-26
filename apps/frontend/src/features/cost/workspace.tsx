@@ -2,6 +2,7 @@ import { Research } from './research';
 import { costIntent } from './planning';
 import { PlanCards } from './plan-cards';
 import { VersionControls } from './version-controls';
+import { EstimatePdfControls } from './estimate-pdf-controls';
 import type { CostDraft } from './state';
 import {
   Component,
@@ -373,6 +374,10 @@ export function CostWorkspace({
             onDesign={onDesign}
           />
         )}
+        <EstimatePdfControls
+          controller={controller}
+          selectedId={saved?.id ?? null}
+        />
         {!saved && (
           <>
             <section

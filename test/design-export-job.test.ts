@@ -40,6 +40,92 @@ function setup() {
   };
 }
 describe('bounded snapshot export authority', () => {
+  it('exports the selected saved room and prices while later draft edits remain independent', async () => {
+    const c = new SessionController(commandRoom([piece('desk')]));
+    controllers.push(c);
+    c.setDestination('cost');
+    c.saveEstimate('Approved');
+    const saved = c.getSnapshot().estimateVersions[0]!,
+      before = JSON.stringify(saved),
+      downloads: Blob[] = [];
+    let finish!: (blob: Blob) => void;
+    const pending = new Promise<Blob>((resolve) => {
+      finish = resolve;
+    });
+    const job = startDesignExport(
+      c,
+      async (port) => {
+        expect(port.estimate).toEqual(saved);
+        expect(port.project.current).toBe(port.estimate!.room);
+        expect(port.project.cost).toBe(port.estimate!.pricing);
+        expect(Object.isFrozen(port.estimate!.pricing.offers[0])).toBe(true);
+        return pending;
+      },
+      (blob) => downloads.push(blob),
+      () => {},
+      undefined,
+      { estimateId: saved.id },
+    );
+    await Promise.resolve();
+    const next = structuredClone(c.getSnapshot().cost!.settings);
+    next.floor.wasteBps = 2000;
+    c.updateCost(next);
+    c.dispatch([{ type: 'finish', id: 'desk', finish: 'sage' }], 'Sage');
+    finish(new Blob(['selected version']));
+    await job.completion;
+    expect(downloads).toHaveLength(1);
+    expect(c.getSnapshot().workspace!.current.furniture[0]!.finish).toBe(
+      'sage',
+    );
+    expect(JSON.stringify(c.getSnapshot().estimateVersions[0])).toBe(before);
+  });
+  it.each([
+    'reset',
+    'import',
+    'expiry',
+    'dispose',
+    'cancel',
+    'destination',
+  ] as const)('fences selected-version export after %s', async (event) => {
+    let now = 1000;
+    const c = new SessionController(commandRoom([piece('desk')]), {
+      now: () => now,
+    });
+    controllers.push(c);
+    c.setDestination('cost');
+    c.saveEstimate('Approved');
+    const id = c.getSnapshot().estimateVersions[0]!.id,
+      downloads: Blob[] = [];
+    let finish!: (blob: Blob) => void;
+    const pending = new Promise<Blob>((resolve) => {
+      finish = resolve;
+    });
+    const job = startDesignExport(
+      c,
+      async () => pending,
+      (blob) => downloads.push(blob),
+      () => {},
+      undefined,
+      { estimateId: id },
+    );
+    await Promise.resolve();
+    const rejection = expect(job.completion).rejects.toMatchObject({
+      code: event === 'cancel' ? 'cancelled' : 'changed',
+    });
+    if (event === 'reset') c.reset(commandRoom());
+    if (event === 'import') c.importProject(projectOf(c.getSnapshot()));
+    if (event === 'expiry') {
+      now = c.getSnapshot().expiresAt;
+      c.checkExpiry();
+    }
+    if (event === 'dispose') c.dispose();
+    if (event === 'cancel') job.cancel();
+    if (event === 'destination') c.setDestination('design');
+    await rejection;
+    finish(new Blob(['late']));
+    await pending;
+    expect(downloads).toHaveLength(0);
+  });
   it('exports an immutable accepted snapshot without changing room/history/camera', async () => {
     const env = setup(),
       before = env.c.getSnapshot();

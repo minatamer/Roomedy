@@ -151,7 +151,7 @@ function swatch(
     11,
   );
 }
-function plan(c: Context, project: Project) {
+export function drawPortfolioPlan(c: Context, project: Project) {
   const room = project.current,
     b = displayRoom(room),
     width = b.width * 1000,
@@ -284,6 +284,28 @@ async function encode(canvas: HTMLCanvasElement) {
   );
   return new Uint8Array(await blob.arrayBuffer());
 }
+/** The same plan geometry/labels as the portfolio, cropped to a standalone generated picture. */
+export async function captureEstimatePlan(project: Project, check: () => void) {
+  check();
+  const canvas = document.createElement('canvas');
+  canvas.width = 1140;
+  canvas.height = 1080;
+  try {
+    const context = canvas.getContext('2d');
+    if (!context) throw new DesignExportError('graphics');
+    context.fillStyle = palette.oat;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.scale(2, 2);
+    context.translate(-40, -165);
+    drawPortfolioPlan(context, project);
+    check();
+    const bytes = await encode(canvas);
+    check();
+    return bytes;
+  } finally {
+    canvas.width = canvas.height = 1;
+  }
+}
 /** Bounded editorial presentation pages. Text is intentionally rasterized at print resolution. */
 export async function createPortfolioPages(
   project: Project,
@@ -402,7 +424,7 @@ export async function createPortfolioPages(
       } else if (page === 2) {
         text(c, 'THE PLAN', 52, 113, 10, palette.walnut);
         text(c, 'Every piece, in place.', 52, 166, 42);
-        plan(c, project);
+        drawPortfolioPlan(c, project);
         text(
           c,
           'Space with intention.',

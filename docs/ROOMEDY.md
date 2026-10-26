@@ -1452,8 +1452,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage and locally commit the clean exact26-path RM-028 checkpoint, then allocate and execute RM-029.
-Active ticket: RM-028
+Next action: Stage and locally commit the exact20-path RM-029 checkpoint; select RM-030.
+Active ticket: RM-029
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
@@ -1498,6 +1498,10 @@ Provisional owner reviews: 04-decisions
   Reason: Preserve exact estimates and source evidence independently from editable prices without a new database/account, parallel Undo history or commercial-signature claim.
   Consequence / reversibility: Version1 rooms gain no inferred prices/approval. Unsupported engines/assets/totals/bytes reject before replacement; guest library remains session-bound with explicit file download/import. Actual external and owner visual tests remain pending.
   Owner review requested on return: yes. Evidence: docs/engineering/estimate-versions.md, docs/validation/RM-028.md
+- **AFK-0010** (AFK-SESSION-001, 2026-10-26T17:44:31+00:00, 07-build): RM-029 exports one reviewed saved version as a portrait selectable English estimate using existing shared export admission, finite actual3D/plan capture and installed pdf-lib standard14 font resources.
+  Reason: Keep exact historical calculations and source qualification connected to the saved design without refreshing prices or adding document intake/services.
+  Consequence / reversibility: 48-page/24-MiB/30-second bounds; unsupported scripts fail usefully. Every final page inspected. Owner real-source/physical/visual tests remain pending.
+  Owner review requested on return: yes. Evidence: docs/engineering/estimate-pdf.md, docs/validation/RM-029.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1520,7 +1524,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T16:57:35+00:00",
+  "updated_at": "2026-10-26T17:44:31+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1820,8 +1824,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-028",
-  "next_action": "Stage and locally commit the clean exact26-path RM-028 checkpoint, then allocate and execute RM-029.",
+  "active_ticket": "RM-029",
+  "next_action": "Stage and locally commit the exact20-path RM-029 checkpoint; select RM-030.",
   "phases": [
     {
       "id": "01-docs",
@@ -2175,9 +2179,9 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:50e2b05",
-        "docs/validation/RM-028.md",
-        "actual-settled-gate:1166-tests-71-files-root-both-builds-native-fake-file-roundtrip-pass"
+        "commit:5102ac2",
+        "docs/validation/RM-029.md",
+        "actual-settled-gate:1178-tests-72-files-all-types-boundaries-assets-both-builds-pass"
       ],
       "blockers": [
         {
@@ -3439,6 +3443,20 @@ This checklist records local work. Human approvals and unresolved external check
         "evidence": [
           "docs/engineering/estimate-versions.md",
           "docs/validation/RM-028.md"
+        ]
+      },
+      {
+        "id": "AFK-0010",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T17:44:31+00:00",
+        "phase": "07-build",
+        "choice": "RM-029 exports one reviewed saved version as a portrait selectable English estimate using existing shared export admission, finite actual3D/plan capture and installed pdf-lib standard14 font resources.",
+        "rationale": "Keep exact historical calculations and source qualification connected to the saved design without refreshing prices or adding document intake/services.",
+        "consequence": "48-page/24-MiB/30-second bounds; unsupported scripts fail usefully. Every final page inspected. Owner real-source/physical/visual tests remain pending.",
+        "review_needed": true,
+        "evidence": [
+          "docs/engineering/estimate-pdf.md",
+          "docs/validation/RM-029.md"
         ]
       }
     ]

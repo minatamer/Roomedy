@@ -16,7 +16,7 @@ Product authority: [Roomedy Extension for CPQ](../Roomedy%20Extension%20for%20CP
 | [RM-026](RM-026-research-local-products-and-services.md) | Research local products and services | RM-025 | Complete locally — fake/injected gate passed |
 | [RM-027](RM-027-deliver-reviewed-budget-and-work-plans.md) | Deliver reviewed budget and work plans | RM-026 | Complete locally — fake gate and affected checks passed |
 | [RM-028](RM-028-preserve-estimate-versions-and-recovery.md) | Preserve estimate versions and recovery | RM-027 | Complete locally — settled fake gate passed |
-| [RM-029](RM-029-export-itemized-estimate-pdfs.md) | Export itemized estimate PDFs | RM-028 | Planned |
+| [RM-029](RM-029-export-itemized-estimate-pdfs.md) | Export itemized estimate PDFs | RM-028 | Complete locally; final owner review pending |
 | [RM-030](RM-030-validate-the-complete-cpq-experience.md) | Validate the complete CPQ experience | RM-029 | Planned |
 
 
