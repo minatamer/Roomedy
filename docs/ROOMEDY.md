@@ -1451,14 +1451,14 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **07-build**
-Next action: Stage and locally commit the exact20-path RM-029 checkpoint; select RM-030.
-Active ticket: RM-029
+Current phase: **local workflow finished**
+Next action: Make the clean exact12-path RM-030 local commit under existing approval, then wait for the owner tests; no further ticket, paid call, push or deployment.
+Active ticket: RM-030
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
 AFK mode: AFK-SESSION-001
-Provisional owner reviews: 04-decisions
+Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
 
 ### AFK decisions
 
@@ -1502,6 +1502,18 @@ Provisional owner reviews: 04-decisions
   Reason: Keep exact historical calculations and source qualification connected to the saved design without refreshing prices or adding document intake/services.
   Consequence / reversibility: 48-page/24-MiB/30-second bounds; unsupported scripts fail usefully. Every final page inspected. Owner real-source/physical/visual tests remain pending.
   Owner review requested on return: yes. Evidence: docs/engineering/estimate-pdf.md, docs/validation/RM-029.md
+- **AFK-0011** (AFK-SESSION-001, 2026-10-26T17:51:21+00:00, 09-visual-review): The actual fake CPQ flow and four rendered size samples are ready for owner manual review; proceed with local audits.
+  Reason: Connected3D controls, quantities, reviewed changes, versions and output are usable in inspected states; no new visual correction is justified without actual feedback.
+  Consequence / reversibility: Agent self-review only. Owner final visual/manual, physical touch/IME/AT and real-source checks remain outstanding; no deployment.
+  Owner review requested on return: yes. Evidence: docs/validation/RM-030.md, docs/commit-plans/RM-030.md
+- **AFK-0012** (AFK-SESSION-001, 2026-10-26T17:58:57+00:00, 10b-security-review): No new actionable local CPQ security finding was confirmed; retain existing controls and explicit SEC-002/external evidence limits.
+  Reason: The reviewed fixed admitted sourcing, exact money, closed snapshots/exports and finite lifecycle boundaries retain their tested protections. Targeted official advisory refresh requires no version change; no speculative remedy is justified.
+  Consequence / reversibility: No new source fix selected. Owner security/visual/manual and real-source/provider/funding/physical/release checks remain pending; this is a provisional agent disposition only.
+  Owner review requested on return: yes. Evidence: docs/security/CPQ_SECURITY_REVIEW.md, docs/security/CPQ_SECURITY_OVERVIEW.html, docs/validation/RM-030.md
+- **AFK-0013** (AFK-SESSION-001, 2026-10-26T18:00:12+00:00, 12-handoff): Finish all ten local CPQ tickets and leave the existing4320/4321 runtime fake/paid-off, with an editable three-version sample, inspected12-pagePDF and owner walkthrough.
+  Reason: All required local tests, actual fake interactions, bounded measurements and quality/security reviews are complete without a new actionable local finding. The owner explicitly reserves their final manual tests for return.
+  Consequence / reversibility: No deployment, provider spend or other-app/env mutation. Product/visual/security self-reviews remain provisional; real sourcing/physical/funding/current-image release evidence is still outstanding.
+  Owner review requested on return: yes. Evidence: docs/operations/CPQ_LOCAL_HANDOFF.md, docs/validation/RM-030.md, docs/security/CPQ_SECURITY_REVIEW.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1509,13 +1521,13 @@ Provisional owner reviews: 04-decisions
 - [x] 04-decisions — Product decisions (provisional)
 - [x] 05-tickets — Ticket plan (complete)
 - [x] 06-plan-commit — Planning commit (complete)
-- [ ] 07-build — Execute and validate tickets (in_progress)
-- [ ] 08-performance — Performance investigation (pending)
-- [ ] 09-visual-review — Frontend visual approval checkpoint (pending)
-- [ ] 10a-quality — Quality audit and fixes (pending)
-- [ ] 10b-security-review — Security audit and manual review (pending)
-- [ ] 11-security-fixes — Approved security fixes (pending)
-- [ ] 12-handoff — Final local handoff (pending)
+- [x] 07-build — Execute and validate tickets (complete_local)
+- [x] 08-performance — Performance investigation (complete_local)
+- [x] 09-visual-review — Frontend visual approval checkpoint (provisional)
+- [x] 10a-quality — Quality audit and fixes (complete)
+- [x] 10b-security-review — Security audit and manual review (provisional)
+- [x] 11-security-fixes — Approved security fixes (skipped)
+- [x] 12-handoff — Final local handoff (complete_local)
 
 This checklist records local work. Human approvals and unresolved external checks are preserved below; it does not authorize paid calls or deployment.
 
@@ -1524,7 +1536,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T17:44:31+00:00",
+  "updated_at": "2026-10-26T18:00:13+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1824,8 +1836,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-029",
-  "next_action": "Stage and locally commit the exact20-path RM-029 checkpoint; select RM-030.",
+  "active_ticket": "RM-030",
+  "next_action": "Make the clean exact12-path RM-030 local commit under existing approval, then wait for the owner tests; no further ticket, paid call, push or deployment.",
   "phases": [
     {
       "id": "01-docs",
@@ -2164,7 +2176,7 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "07-build",
       "name": "Execute and validate tickets",
       "gate": null,
-      "status": "in_progress",
+      "status": "complete_local",
       "prompt": {
         "text": "Execute approved Roomedy CPQ tickets RM-022 through RM-030 sequentially at C:/Users/minat/Work/Roomedy. Planning commit4f7fb2b contains all ten packets and documented recommended assumptions. For each ticket, read the complete packet and owning precision references, reconcile real dependencies/Git state, allocate exact paths before edits, implement all locally possible acceptance behavior, run meaningful focused tests and the required settled root gate, then perform read-only validation of the full settled diff. Independently confirm/fix findings and revalidate until no actionable local findings remain. Record actual checks/limitations in per-ticket receipts, stage only explicit reviewed owned paths and make cohesive ticket-prefixed local commits. Continue without routine questions under the owner's keep-going-until-return instruction, recording material decisions in the canonical AFK ledger. Preserve one project/room/commands/Undo/evidence/lifecycle authority and current motion/private logs/security bounds. Prioritize rich customizable 3D studio materials/furniture and a separate centered-chat phase with interactive 3D object/surface highlights, deterministic sourcing/estimate/budget/work-plan/version/PDF behavior. Use current pinned dependencies and existing frontend/private backend pair; no extra service, arbitrary URL proxy, database/account, incoming drawing/PDF feature or unrelated product work. All automated/native testing must be fake/paid-off, with no actual provider/merchant/Cloudflare test dispatch. Inspect process/listener ownership and use only existing Roomedy4320/4321 if runtime is needed; never touch another app or rewrite owner env. No delegation, Git push, deployment, account/cloud mutation or metadata export. After integrated local completion and clean reviews, prepare the owner manual-test handoff with actual limits; do not claim personal visual approval, real local market accuracy or new hosted acceptance.",
         "sha256": "c122029b50215a3a33f3b6cf7430010da2d778a3687f1adedaa8b52eaaa08256",
@@ -2179,15 +2191,16 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:5102ac2",
+        "commit:67b2e08",
+        "docs/validation/RM-021.md",
         "docs/validation/RM-029.md",
-        "actual-settled-gate:1178-tests-72-files-all-types-boundaries-assets-both-builds-pass"
+        "docs/commit-plans/RM-030.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner requires fake-only testing until return; new live model/sourcing/merchant quality and actual final owner manual/visual acceptance are unperformed. This does not block independent local implementation.",
-          "reference": "docs/Roomedy Extension for CPQ.md#18-approved-execution-map-and-recorded-decisions"
+          "reason": "Owner final hands-on/visual and separately authorized real-source/provider/physical checks remain pending.",
+          "reference": "docs/tickets/RM-030-validate-the-complete-cpq-experience.md"
         }
       ],
       "approval": null,
@@ -2222,17 +2235,28 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "08-performance",
       "name": "Performance investigation",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
+      "status": "complete_local",
+      "prompt": {
+        "text": "Within RM-030, investigate actual CPQ synchronous quantity/pricing/version work and the reused room-view scene. Read Roomedy performance policy and existing finite rendering/benchmark owners. Use current fake/paid-off isolation before app imports and only the owned4320/4321 browser runtime. Predeclare local thresholds: representative pure calculation50ms, maximum-room calculation100ms, saved capture/recovery100ms and warm native orbit p95<=33.4ms; report startup tails separately. Measure bounded representative/maximum fixtures and existing DOM numeric probes, canvas ownership and three phase cycles. Preserve checks, animation and finite resources; make only independently reproduced scoped corrections after allocation. No provider, paid request, new service/port/dependency, owner-env edit, other-app mutation, delegation, cloud or push. Record actual source/count/host/repetition evidence and unmeasured physical/GPU/heap/paint limits in RM-030 and performance policy. Continue to actual visual self-review, leaving owner acceptance pending.",
+        "sha256": "aa56ad2bae89f5843e09dad35e2174d53cb57adaa1e6553ddc3806b024ca027a",
+        "context_sources": [
+          "docs/tickets/RM-030-validate-the-complete-cpq-experience.md",
+          "docs/design/performance.md",
+          "docs/commit-plans/RM-030.md"
+        ],
+        "status": "afk",
+        "approval": null,
+        "afk_session": "AFK-SESSION-001"
+      },
       "evidence": [
-        "docs/commit-plans/RM-015.md -12initial exact paths allocated before edits; full ticket/precision refs and feature baseline read. Existing346-test production candidate available4390/4391; dev4320/4321 untouched.",
-        "docs/validation/RM-015.md; docs/design/performance.md; docs/design/visual-review.md. Exact15-path local scope, five-source raw SHA b298c0f2080f2706e1f7feaf0779647c046051838a4885169529bc3746820fd1;214-input benchmark SHA2c00c300d679fde161edad5bebee44abab46e9e09aa3472dde420b14e133321e. Final346tests/33files/seven boundaries/root/builds and clean read-only pass1;263local file links and diff whitespace checks pass. Actual nine-size matrix,18native16MP decodes, named Node/frame measurements and final production three-condition/keyboard/drag/worker/3D ApplyUndo covered. Fixed200-node maximum throughput miss retained; actual yielding deadline/abort measurements pass. Current166-file input/BUILD_IDcfa9981ac3e270627870311bdd0a0fe19cd8663c5bc09fbd76bf2954e8c0428e; review pair4390/4391 ready fake/off. RM-015 uncommitted pending actual owner gate. Latest21used/79remaining; no reset."
+        "docs/validation/RM-030.md",
+        "docs/commit-plans/RM-030.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Permitted browser tooling exposes no native/GPU decode-peak profiler or effective200%/400% browser zoom; physical touch/virtual keyboard/IME/AT/GPU/long heap, production continuous/paint and cold-network evidence remain unperformed. Compound measurement criteria stay unchecked. No alternate renderer/tool bypass.",
-          "reference": "docs/design/performance.md"
+          "reason": "Physical GPU/native heap/paint and cold-network evidence require separate owner/device evaluation. Startup tail is recorded; no universal performance pass.",
+          "reference": "docs/validation/RM-030.md"
         }
       ],
       "approval": null,
@@ -2269,121 +2293,26 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "09-visual-review",
       "name": "Frontend visual approval checkpoint",
       "gate": "visual",
-      "status": "pending",
-      "prompt": null,
+      "status": "provisional",
+      "prompt": {
+        "text": "Perform the delegated provisional visual self-review for the Roomedy CPQ extension in RM-030. Inspect actual fake local studio customization and connected Plan & cost3D, budget, source/work/version/PDF flows on broad, short, tablet and phone layouts. Preserve the warm existing palette, header continuity, reachable44px controls, meaningful finite animation and one scene owner. Use actual screenshots and DOM/native input evidence, with honest startup/physical/assistive limits. No unsolicited redesign or paid request. Record what was inspected and recommend local handoff only; the absent owner has not personally approved visuals. Continue independent quality/security work under the owner instruction to finish all tickets before their manual tests.",
+        "sha256": "1d2af8e10b5a122b0f3b532ea4a456031af69a956acd575dabe3f463ca6a7ad3",
+        "context_sources": [
+          "docs/design/REVIEW_CHECKLIST.md",
+          "docs/validation/RM-030.md",
+          "docs/commit-plans/RM-030.md"
+        ],
+        "status": "afk",
+        "approval": null,
+        "afk_session": "AFK-SESSION-001"
+      },
       "evidence": [
-        "docs/validation/RM-015A.md",
-        "docs/validation/RM-015B.md",
-        "docs/validation/RM-015C.md",
-        "docs/validation/RM-015D.md",
-        "docs/tickets/RM-015E-edit-furniture-directly-in-3d.md",
-        "docs/validation/RM-015E.md: direct floor-plane3D editing, one command/Undo, desktop/phone interaction checks,360tests and both builds; clean read-only pass1.",
-        "docs/commit-plans/RM-015F.md: exact22-path refined plan; E dependency committed66c4dca.",
-        "docs/validation/RM-015F.md: conversational scoped designer, typed interpretation/clarification, explicit owned finish, computed space/style proposals,384tests/both builds and clean read-only pass2.",
-        "docs/commit-plans/RM-015G.md: exact15-path plan; current sample baseline finds valid empty/partial/work candidates, without geometry/limit changes.",
-        "docs/validation/RM-015G.md: actual3 sample conversations,5 injected Responses parity cases, zero actual metered dispatches,399tests/both builds; two reference/constraint findings fixed and read-only pass2 clean.",
-        "docs/commit-plans/RM-015H.md: exact17-path plan; actual visible-mode/copy inventory and preservation rules, with G dependency clean.",
-        "docs/validation/RM-015H.md:21 paths, concise honest product copy, actual review/error/chat/recovery,399tests/both builds and clean read-only pass1.",
-        "docs/validation/RM-015I.md:11 paths, permanent motion/copy authority, animated retained floor/wall materials, actual1280/390 checks,401tests/both builds and clean read-only pass1.",
-        "docs/validation/RM-015J.md; docs/design/visual-review.md: all ten local outcomes, current173-input/BUILD_ID8acd4dbbb784766d1d02e082708af184d31cdf46ec4d7e054b91527612feea11,401tests/both builds, production9-size/full-flow/three-condition/export/recovery/3D checks, current repeated measurements,305local links and clean read-only pass1. Actual owner decision remains unchecked.",
-        "docs/commit-plans/RM-015K.md; docs/tickets/RM-015K-review-and-rebalance-page-layouts.md: exact26-path allocation, actual1280 canvas y429.5/document948 and wide entry/intake/review baseline.",
-        "docs/validation/RM-015K.md; docs/design/layout.md; docs/design/visual-review.md: exact27-path all-page space correction, final173-input/BUILD_ID fdb8f63c2b37669c8111cbdf0787d243900b54077ff94ee6c0a5344d0908e3fd,401tests/33files/root/both builds,63 exact-production size/state observations, expanded-chat and tour fixes independently verified; read-only pass2 clean. Actual owner visual decision pending.",
-        "docs/tickets/RM-015L-create-a-scroll-driven-furniture-landing.md; docs/commit-plans/RM-015L.md; docs/references/landing-research-2026-10-19.md: owner-selected assembling/rotating/opening room, exact31-path plan, credible sources and icon requirements.",
-        "docs/validation/RM-015L.md; docs/design/visual-review.md: final182inputs/1,224,315bytes/BUILD_ID7fbe666c7fefbfc1a0698def8e8e3eb4108e0158d66fc93e153ca7933480e248,404tests/34files/root/both builds, actual production9-size/short/native scroll/corrected hash-entry-back/icon checks, bounded measurements and clean read-only pass3. Exact31-path local checkpoint; actual owner decision pending.",
-        "docs/tickets/RM-015M-integrate-landing-content-into-the-room.md; docs/commit-plans/RM-015M.md: exact22 paths, direct owner full-scene scope and three measured old entrances with54.7â€“72ms maxima.",
-        "docs/validation/RM-015M.md; docs/design/visual-review.md: final183inputs/1,232,196bytes/BUILD_ID3a6e49439c60a76d2de5be606498c6d45a2b44e5d6a1b36910076e078b01ec36,412tests/35files/root/both builds; purposeful clear grounded furniture paths, preserved warm text backgrounds with feathered seams; actual nine-size/short/native forward/reverse/hash-entry-back and3prepared startup runs; read-only pass2 clean. Sole browser URL4320, private4321 and stopped4390/4391. Exact22-path local checkpoint, actual owner decision pending.",
-        "docs/tickets/RM-015N-refine-landing-glass-and-scroll-navigation.md; docs/commit-plans/RM-015N.md: exact22-path direct owner refinement planned before source edits.",
-        "docs/validation/RM-015N.md; docs/design/visual-review.md: final185inputs/1,239,238bytes/BUILD_ID8e70695c2cee49e613961da3b6609c924abdadadc6250ba29909782de017677c,414tests/36files/root/both builds; glass/depth, no flat initial room, clean smooth section/skip/legacy navigation, beige underline/refined cue/account-copy removal. Actual13sizes/3startup/3entryBack cycles, measured local material cost and read-only pass1 clean. Exact24-path checkpoint; actual owner visual decision pending.",
-        "docs/tickets/RM-015O-create-a-warm-photographic-landing-background.md; docs/commit-plans/RM-015O.md: exact21-path owner-selected warm photographic background, local licensed crops and bounded existing motion planned before feature edits.",
-        "docs/validation/RM-015O.md; docs/design/visual-review.md: final190inputs/1760035bytes/BUILD_IDaa8d66aed1327592fde2b075ca3bc5db78b227bae1d70ccb31d93863894a0fd4,414tests/36files/root/both builds; licensed responsive515164byte background, actual13-size/photo-ready/3startup/3warm moves/clean section-legacy-skip/entryBack evidence and clean whole-ticket read-only pass1. Exact21-path local checkpoint; actual owner visual approval pending.",
-        "docs/commit-plans/RM-015P.md; docs/tickets/RM-015P-restore-smooth-landing-scrolling.md: exact19-path performance-first allocation before feature edits. Q lighting recorded Planned.",
-        "docs/validation/RM-015P.md; docs/design/visual-review.md: final188inputs/1495693bytes/BUILD_ID6f760018a29ea875ae511e5d436267795d3b490efba94ae68f1f3373ace47e65,414tests/36files/root/both builds; one local photo/batched scroll work, centered clear cue, small scoped frosted CTA and actual-ready text fade. Actual13-size/3startup/normal-reverse-rapid/loading/entryBack evidence, explicit limits and clean whole20-path read-only pass1. Exact20-path local checkpoint; actual owner performance/visual feedback pending, Q held.",
-        "docs/commit-plans/RM-015R.md; docs/tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md: exact22-path demo-space/background allocation before source edits.",
-        "docs/validation/RM-015R.md; docs/design/visual-review.md: exact22-path adaptive demo/photo/glass header correction,191inputs/1500858bytes/BUILD_IDdee4dd163ab4881a2f4f313551f4bbce852d16dfbefd681efde416ebb985f8c8,414tests/36files/seven boundaries/root/both builds and whole-ticket read-only pass2 clean. Actual owner visual approval pending; newer direct S editor feedback queued; Q held.",
-        "docs/commit-plans/RM-015S.md; docs/tickets/RM-015S-stabilize-and-simplify-room-editing.md: exact39-path plan before implementation; actual22px frame shrink baseline. T/U/V direct requests recorded Planned before held Q.",
-        "docs/validation/RM-015S.md:39allocated paths;429tests/36files/seven boundaries/root/both builds;191inputs/1505081bytes/BUILD_ID9666cc877a51ac2f3cab79db5169ca484ef213e2c6d6cf20b4b6cc6f2a58d039, actual partial/furnished/outside drag+Undo/locks/fieldfocus and45nine-size DOM rows. Actual owner acceptance pending; read-only review next.",
-        "docs/validation/RM-015S.md: settled39-path read-only pass1 clean; no actionable findings.429tests/root/exact191inputs and build current. Exact local checkpoint authorized separately from pending owner visual approval.",
-        "docs/commit-plans/RM-015T.md:29-path source/recovery/example-photo plan, no source edits yet.",
-        "docs/validation/RM-015T.md:28-path current code review has no actionable source findings;432tests/37files/seven boundaries/root/both builds,193inputs/1516490bytes/BUILD_ID3cad8f3e95adb084212e0d4d5daf668d6e43b593e73b981551c4680ec2103ccf. Final actual browser checks remain unverified after native dialog/control failure; local code checkpoint only, no visual approval.",
-        "docs/commit-plans/RM-015U.md:17exact paths, same-wall window offset/preview/command/provenance/cancellation plan before edits.",
-        "docs/validation/RM-015U.md:17paths,451tests/38files/seven boundaries/root/both builds,194inputs/1537856bytes/BUILD_ID85b702b15a070758551b4d37a170f3719b4b3550ca9dd95ac081abd4a258cf58; corrected canonical/display identity, clamp and finite motion. Read-only source review no actionable findings; actual browser/visual checks remain unverified after pending dialog/control failure.",
-        "docs/commit-plans/RM-015V.md:14exact paths and deterministic doorway/opposite-quadrant/safe-motion plan before edits.",
-        "docs/validation/RM-015V.md:14paths,469tests/39files/seven boundaries/root/both builds,194inputs/1539995bytes/BUILD_ID0a8b96b4f6afcba4d093684584dfedd7fb54ff32579ec306522e9c5b7ef230e7; same-door opposite-corner target and safe intended-area fallback. Read-only pass1 no actionable source findings; pure CPU timing distinct from pending actual T/U/V browser and owner visual checks.",
-        "docs/commit-plans/RM-015W.md:21paths allocated before source edits; direct default-tour scope and read-only Retailor comparison.",
-        "docs/validation/RM-015W.md:21paths,496tests/40files/seven boundaries/root/assets/both builds,197inputs/1561335bytes/BUILD_ID62bea8751b242ebb505a93b513f5f48e9a4ff3ce3c5649870773493317798e8b; immediate default fresh-room welcome and real-target guide. Ten actual welcome-size observations. Medium guide-event finding independently fixed; read-only pass2 no actionable source findings. Actual T/U/V/W guided/browser motion and owner acceptance remain unverified; automated Start unchanged, no JS dialog, manual check pending.",
-        "docs/commit-plans/RM-015X.md:25paths allocated before edits; snapshot GLB, branded raster-presentation PDF and semantic project preservation plan.",
-        "docs/validation/RM-015X.md:27allocated paths;525tests/42files/seven boundaries, actual four-format native downloads and JSON reimport, all latest native PDF/edge layout pages inspected, three responsive export sizes. Pass1 metadata finding independently corrected, read-only pass2 has no actionable findings. Actual owner approval/external limits stay pending.",
-        "docs/commit-plans/RM-015Y.md:25paths allocated before edits; direct owner photo/gallery/glass/capture-guide requests.",
-        "docs/validation/RM-015Y.md:25paths,526tests/42files/seven boundaries/root/assets/both builds,212inputs/1800508bytes/BUILD_ID41637f229a95a7e2c9b5a0f269106f1a1e2f6afeace2f509116f7e740ad1347d;26fresh empty/six-photo responsive observations,4viewer sizes, keyboard/focus/error/reorder/guide/fake2D journey; read-only pass1 no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending.",
-        "docs/commit-plans/RM-015Z.md:27paths allocated before source edits, latest direct owner simpler cards/automatic photo role requirements; Y27b0130 committed.",
-        "docs/validation/RM-015Z.md:27paths,539tests/43files/seven boundaries/root/assets/both builds;212inputs/1800640bytes/BUILD_IDca0265f57ee524c5b79a4527a44301609be7403d2da269a97681535762d20827.26native empty/six-photo responsive states, guide/viewer/error and automatic fake2D journey; read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external proof pending.",
-        "docs/commit-plans/RM-015AA.md:24paths allocated before source edits; direct owner popular bed/other useful furniture sizing request, primary sizing research. Z59dae0a committed.",
-        "docs/validation/RM-015AA.md:24paths;555tests/44files/seven boundaries/assets/root/both builds,214inputs/1815760bytes/BUILD_ID4d678008fd6e9befe7510bdf959e5f2976ea1efae73a47879100368324801a3d.13native sizes with44px controls/0horizontal overflow, actual2D/3D size/Undo/rejection/Add/Replace/photo-review checks. Read-only pass1 Meets ticket, no actionable findings. Exact checkpoint separately authorized; actual visual/physical/live/external limits pending.",
-        "docs/commit-plans/RM-015AB.md:16 paths allocated before source edits; AA a8f1c02 committed. Latest owner removes bottom copy and extends canvas/rail.",
-        "docs/validation/RM-015AB.md:16paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816197bytes/BUILD_ID2d590b7ce6e856fa1bcb0a0aa976bd820d602b432567910cef3bd166d8d9e996.26native responsive states, actual2D/3D full height, camera/move/Undo/Before/Checks/rejection;1280frame+rail gain72.5px to footer. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint separately authorized; actual owner/external limits pending.",
-        "docs/commit-plans/RM-015AC.md:14paths allocated before source edits; AB6db513e committed. Owner hides Before/Current temporarily, retains implementation.",
-        "docs/validation/RM-015AC.md:14paths,555tests/44files/seven boundaries/assets/root/both builds;214inputs/1816467bytes/BUILD_ID5abdfe2d55dc3851d721a033511e7d88fddce7da008415094438c70af8c9dd7d.13native sizes hide comparison with original buttons retained; full3step tour targets Undo, real2D/3D editing/Undo, full frame preserved. Read-only pass1 Meets ticket, no actionable findings. Exact local checkpoint authorized, actual visual/external evidence pending.",
-        "docs/commit-plans/RM-015AD.md:35paths allocated before source edits; AC42b400a committed; direct owner wall/floor colour/texture/photo-estimate selection.",
-        "docs/validation/RM-015AD.md; docs/tickets/RM-015AD-pick-and-infer-wall-and-floor-surfaces.md: exact39-path wall/floor appearance implementation, shared Room/rough2D controls, visitor-only command/Undo and source-bound photo hypotheses; actual1280/390 hot-reloaded fake photo-review-to-3D/custom-hex/error/Undo observations,7 owned maps/finite texture blend. Earlier68focused tests/type checks predate the owner test deferral; no final root/current-build/read-only/checkpoint pass claimed. Latest direct owner says skip routine tests until queued tasks finish, fix observed errors and keep going. Changes remain unstaged/uncommitted; actual visual approval pending.",
-        "docs/validation/RM-015AE.md; docs/commit-plans/RM-015AE.md:16-path shared landing/editor/export glass correction, original physical/daylight parameters and one finite prepared reflection per scene. Actual editor Overview/Doorway/click-to-select and landing render inspected on4320, captured browser errors empty. AD/AE47-path union remains unstaged, whitespace/allocation housekeeping clean. No routine tests/type/root/build/final read-only/checkpoint pass; latest owner test deferral remains, actual visual approval pending.",
-        "docs/validation/RM-015AF.md; docs/commit-plans/RM-015AF.md:16-path larger dot-free browser icon on existing soft beige#e7ddcc, one SVG regenerates96/192/512/Apple180 PNG and16/32/48 ICO. Actual source/served96px art and all six revised head metadata links inspected on4320. AD/AE/AF58-path union remains unstaged, allocation/whitespace housekeeping clean; no routine suite/root/build/final read-only/checkpoint pass or owner/indexing acceptance claimed.",
-        "docs/validation/RM-015AG.md; docs/commit-plans/RM-015AG.md:12-path removal of obstructing plan selection dot, shared-command clockwise/counterclockwise90deg controls and local shortest-angle CSS footprint/arrow motion. Native wardrobe180deg arrow visibility/90deg counterturn/Undo-to180deg observed; desktop frame retained480.578125px,390px controls76x44 and no horizontal overflow. Captured browser errors empty. ADâ€“AG61-path union unstaged with allocation/whitespace housekeeping clean; routine final tests/root/build/read-only/checkpoint and actual owner acceptance remain pending.",
-        "docs/validation/RM-015AH.md; docs/commit-plans/RM-015AH.md:10-path correction after owner clarifies horizontal dragging. Native Corner100px right drag reproduced old room-left/yaw-0.4004rad, corrected room-right/yaw+0.4002rad; equal left drag returns direction with fixed3750/1600/450mm eye, captured errors empty. One horizontal sign change in existing shared interior owner, same smooth motion/capture/edit guards; no camera/room authority expansion. ADâ€“AH64-path union unstaged with allocation/whitespace housekeeping clean; routine final tests/root/build/read-only/checkpoint and actual owner approval remain pending.",
-        "docs/validation/RM-015AD-AI.md â€” settled ADâ€“AI queue completed before578tests/45files +7boundaries/root/both builds; current216-file source/BUILD_ID0b9b5d4f8871d848efa21e195d3cf9afd171a48b8919e8ff94260aec02a2a88d; clean full-scope read-only pass1; actual native GLB/OBJ downloads and4PDF pages inspected; exact70-path authorized local checkpoint prepared. Actual owner visual acceptance and explicit external/device/full-matrix limits remain pending.",
-        "docs/validation/RM-015AI.md â€” Undo/Project glass-control follow-up: actual enabled/disabled Undo, native disclosure/keyboard/focus,1280Ã—720/390Ã—844/320Ã—640/1280Ã—600 fit; scoped format/lint/frontend types passed; clean eight-path read-only pass1 and264local links. Current hot-reload source692380139950ee927d68d5b3450360f09d9d502bb8c44c7a0ccb40b1046340bb differs from prior production artifact; exact local checkpoint prepared.",
-        "docs/validation/RM-015AJ.md â€” chat-owned proposal decisions and4s notices:52focused tests,586tests/45files +7boundaries/root/both builds passed;217inputs/1852400bytes/BUILD_ID6c06309495135fa86ab9afe0ab66370945057ca12afbd43ab8374b38538e6d0c; actual1280/390/320/short3D/chat Apply/Cancel/Undo, notice expiry and visitor palette observed; unchanged frame; clean15-path read-only pass1/425local links; exact local checkpoint prepared. Actual owner visual approval pending.",
-        "docs/validation/RM-015AK.md â€” primary catalogue drag in2D/3D and useful Work area:62focused tests; final599tests/46files +7boundaries/root/both builds passed;222inputs/1880272bytes/BUILD_IDe80a8f900a290a2fc3c82e3eeae7614c575ea63fd2c13295f00ced4dc4c85876. Actual native drags, invalid/retry/outside/Cancel/keyboard/Undo and1280/390/320/short states inspected; final source drags rechecked. Two input review findings fixed, clean21-path read-only pass2/449local links. Exact local checkpoint prepared; actual owner visual approval pending.",
-        "docs/validation/RM-015AK.md#panel-corner-follow-up--20-october-2026 â€” shared panel18px corner follow-up on618add8: CSS format passed, actual catalogue scroll/3D/390phone/short Assistant corners and Send checked; no browser errors. Exact eight-path read-only pass1 clean/442local links, local checkpoint prepared. Current hot-reload inpute264681384caeaf4198bbefffab89b7db85d60eb030ca7233c141252df9d9cca differs from prior production build; no fresh root/build/device claim. Actual owner approval pending.",
-        "docs/validation/RM-015AL.md â€” new-room main-editor3D default:125focused tests; final602tests/46files +7boundaries/root/both builds passed;222inputs/1880286bytes/BUILD_ID1e94dc09455fba3db4489bc72dce787acb551c3e8ebc959ca00b8102cd1b7a58. Actual fresh3D entry, native2D switch/refresh recovery, fake photosâ†’rough2D reviewâ†’accepted3D observed; error logs empty. Clean12-path read-only pass1/459local links; exact local checkpoint prepared. Actual owner visual approval pending.",
-        "docs/commit-plans/RM-015-VISUAL-REVIEW-CHECKPOINT.md and docs/reviews/2026-10-20-visual-feedback-checklist.md â€” owner explicitly approved staging/committing and will review all feedback later. Git was already clean at65048e2; 19 existing commits/211 historical paths inventoried. Exact five-file documentation-only checkpoint, clean read-only pass1/480local links/fragments; executable input/production identity unchanged from passed602-test gate. This is no actual visual approval or waiver; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015Z.md#continue-cta-follow-up--20-october-2026: eight-path presentation follow-up reuses landing global button primary for Continue; scoped format/lint/frontend types passed; actual desktop390px/short/focus/Enter-to-rough2D and identical landing style observed on4320. Historical production gate remains distinct; owner visual approval pending.",
-        "docs/validation/RM-015Y.md#furniture-capture-follow-up--20-october-2026: 13-path paired room/furniture SVG guide and four-image sample set; actual desktop/390px/short/replay/viewer/fake Continue-to-rough2D observations, all602tests/46files,7boundaries and pnpm check/both builds passed. Built-in imagegen prompts/asset hashes recorded. Default production build identity and current inventory recorded separately; no Linux/live/owner approval claim.",
-        "docs/validation/RM-015Y.md#photo-control-cleanup--20-october-2026: seven-path thumbnail View/order cleanup, full-width Remove, four-example public capacity and atomic admission. Scoped format/lint/frontend types and24photo tests passed; actual desktop/390px/short viewer click+Enter/Escape/focus/removal/two+four=six checks passed, console empty, viewport reset/tab closed. Existing recognition prompt forbids role inference from upload order; no live quality/current production-build claim.",
-        "docs/validation/RM-015AM.md â€” photos Continueâ†’designed processingâ†’default3D studio directly; no separate review page or inferred confirmation. Native1280Ã—720/390Ã—844/1280Ã—600 loading, Cancel/retry, actual3D, measurement/condition correction and Undo; browser errors empty. Final624tests/47files,7boundaries/root/both builds;226inputs/2154759bytes/BUILD_ID4022549203fefb78d703d3320f4b811df1e900fa03fc2c6f42b62f6b99e2dcb6. Clean24-path read-only pass2,620local links/missing0; exact local checkpoint prepared. Actual owner visual approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AN.md â€” basic selected preset/finish, numbers/details Advanced, room-side Delete beside Rotate and shared Snap switch in2D/3D. Narrow explicit visitor protected size/Delete with unchanged locks, strict assistant/final checks and one Undo. Native1440Ã—900/1280Ã—600/390Ã—844 basic/Advanced/preset/error/finish/rotation/Delete/Undo/Snap/catalogue/recovery; errors empty. Initial test-JSX boundary corrected without compiler expansion; final630tests/47files,7boundaries/root/both builds and229inputs/2158848bytes/BUILD_ID4c291864c79665f2fca09aca28787e5c4f7431e6b3146544e0bd21235b3b41fe passed. Clean27-path read-only pass2,606local links/missing0; exact local checkpoint prepared. Actual visual approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AO.md â€” only selected3D furniture has a non-pickable front arrow attached to its displayed group; no new state/frame loop/export geometry. Native1440Ã—900/1280Ã—600/390Ã—844 selection/rotation/Undo/cleared/bed-vs-wardrobe/Corner/view-switch/nudge checks, errors empty. Focused52tests; final630tests/47files,7boundaries/root/both builds and229inputs/2160618bytes/BUILD_ID3dae2a99e36f6caae562ca91611840994377cb1bbbf49fcb028e3effee21cb7b passed. Clean nine-path read-only pass1/588local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AP.md â€” Design Studio tool row, no top Add piece, live count/view switch in-frame bottom right and aligned shared2D/3D rail. Common Explore/Arrange/navigation/two-way Rotate/Delete/Snap, contextual camera controls, protected plan Explore and gesture cleanup retain commands/locks/motion/Undo. Native18 responsive geometry states, desktop/short/phone/tablet/edit/Undo/catalogue/recovery checks; errors empty. Focused53tests; final631tests/47files,7boundaries/root/both builds and231inputs/2160868bytes/BUILD_ID01f2d5a79a37d70b49aa2049f2e3886fc142a9865546fa19354a5b449a4671c0 pass. Full18-path read-only pass2 clean/603local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AQ.md â€” sensible fresh wardrobe facing/backing, bounded four-turn new-piece suggestion until explicit rotation, numeric Add and target-scoped AI access/back-wall preferences. Existing/recovered/replacement poses, locks, complete hard checks and unknown/photo evidence preserved; assistant/recognition prompt versions updated. Native fresh partial/furnished2D/3D, fake essentials Apply/Undo, keyboard/numeric/manual override/recovery, short/phone; errors empty. Focused97+40tests; final646tests/48files,7boundaries/root/both builds,232inputs/2167159bytes/BUILD_IDd3043747df39ced0246bce6e1aff6acd0e07400cfa67b5ec73f5aae07736b702 pass.22-path read-only pass2 clean/628local links/missing0; exact local checkpoint prepared. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AI.md â€” single-class Project Start a new room now uses shared brown styles.primary; native1280x720/1280x600/390x844,44px/focus/confirmation/Cancel/error checks and scoped format/lint/frontend types pass. Six-path read-only pass1 clean; exact local checkpoint prepared. No fresh full-root/build claim; prior AQ646 tests/artifact historical. Actual visual approval pending; Q held, guide paused, RM-016 Planned.",
-        "RM-015X cover follow-up: docs/validation/RM-015X.md; native furnished4/empty3 pages rendered and inspected; final651tests/48files/seven boundaries/root/both builds; current232hashes/BUILD_ID aa72fff1d6053151ce32de3abb24c6197581057b6a6e5ecdff2ca46ff22288fa; final exact nine-path read-only review and local checkpoint. Actual visual approval pending.",
-        "RM-015AF rounded icon follow-up: docs/validation/RM-015AF.md; exact SVG mark/Apple bytes, six decoded PNG/ICO frames, actual five served-asset bytes/head links, final651tests/48files/seven boundaries/root/both builds/current232hashes/BUILD_ID 2c85881e9b23195521d009a5c8f2daec5ab85092509499d8a062e5df69ca8a96; exact13-path local checkpoint, actual owner visual approval pending.",
-        "RM-015AB footer follow-up: docs/validation/RM-015AB.md; actual37px reclaimed/18settled responsive2D+3D observations/edit+Undo/reload/short+phone composer; final651tests/48files/seven boundaries/root/both builds/current232hashes/BUILD_ID e026073238defa4eabebf43ccc1e26f3b03375006537a68bb7ea6154431b0317; exact10-path local review/checkpoint; actual owner visual approval pending.",
-        "RM-015AR: docs/validation/RM-015AR.md; fact-owned named access toasts/removed access regions/shared4s timer, native import/selection/resolution/Undo/2D+3D/five-size no-overlap checks, final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 07d5abf467318520133c68b62cee6c66e21e44e75ae4129d3309d9bb791f782c; exact15-path local review/checkpoint. Actual owner visual approval pending.",
-        "RM-015AP scrollbar follow-up: docs/validation/RM-015AP.md; native5px transient overflow reproduced, same entrance retained inside stable clipped frame; five-size active switch samples without false overflow, actual properties scrolling/edit/Undo/rejection; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID c43cc5cb207d00e65dd270dd4f394d6a2e33735928076f4e27d7715822d6f262. Exact nine-path local review/checkpoint; actual owner visual approval pending.",
-        "RM-015AP single-header follow-up: docs/validation/RM-015AP.md; visible title/separate row removed, actual auto header/remaining room and card height/independent assistant panel sizing; native28 settled responsive states/tour/focus/menu/edit/Delete/Undo/chat/3D overflow checks; final674tests/49files/seven boundaries/root/both builds/current233hashes/BUILD_ID 703a59bebb5cb4ed26f538f1c0dd4a773e0d2f701466f7ac911ec6deb8402c2e. Exact eleven-path local review/checkpoint; actual owner approval pending.",
-        "RM-015AS: docs/validation/RM-015AS.md; verified CC0 sources/eight local PNGs/912545bytes, stable bounded PBR material ownership/editor+landing+exports, actual before/after/responsive/finish+Undo/native downloads/all4PDF pages; final693tests/50files/seven boundaries/root/both builds/current245hashes/BUILD_ID 80a23557163f23aa8eeda19175aefb5a6b367ee280754a91dc7f69b5c43bbd44; clean34-path read-only pass1 and exact local checkpoint. Actual owner visual approval pending.",
-        "docs/validation/RM-015AT.md",
-        "docs/validation/RM-015AP.md:20October animated exclusive2D/3D shared pill and count removal; canonical/MEDY selection and focus retained across view/loading changes. Native phone/tablet/short/desktop, keyboard and hover observations; final798tests/53files, seven boundaries, both builds and current250input identity. Actual owner visual approval pending. Full twelve-path read-only pass1 clean; exact authorized local checkpoint prepared.",
-        "docs/validation/RM-015AU.md: right-card3D open/close/slide previews with transient context fencing, shared finite demand motion, cloned cabinet door and tested drawer support. Native hinged/sliding/cabinet/window/keyboard/Undo/loading and six-size observations; final807tests/54files/seven boundaries/both builds/current254input identity. Full eighteen-path read-only pass2 clean after independently verified visual backing and preserved selection-tint corrections; exact authorized local checkpoint prepared. Actual owner visual approval pending.",
-        "RM-015AV: 19-entry catalogue/TV elevation/bathroom door implemented; 822 tests/55 files,7 boundaries,both builds; native six-size/manual/MEDY/export/import and4PDF-page observations;267 exact inputs BUILD_ID570ba31247edb3a7475e3b6b6504496402ba239ba5c7e5ec7dc870e6ae0d6a43; read-only pass3 clean. docs/validation/RM-015AV.md. Actual owner approval pending; Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AW.md",
-        "docs/validation/RM-015AX.md",
-        "docs/validation/RM-015AY.md",
-        "docs/validation/RM-015AZ.md",
-        "docs/validation/RM-015BA.md",
-        "docs/validation/RM-015BB.md",
-        "docs/validation/RM-015BC.md",
-        "docs/validation/RM-015BD.md",
-        "docs/validation/RM-015BE.md",
-        "docs/validation/RM-015BE.md#dimension-copy-follow-up--20october2026",
-        "docs/validation/RM-015BE.md#window-labels-follow-up--20october2026",
-        "docs/validation/RM-015AV.md#card-footer-alignment-follow-up--20october2026",
-        "docs/validation/RM-015BF.md",
-        "docs/validation/RM-015BG.md — exact24-path automatic clear bathroom-door placement and same-wall2D/3D door gestures, keyboard, finite aperture motion, final shared guard, Medy and Undo. Actual tab60 desktop/short/phone Add/drag/nudge/rejection/Medy Apply/Undo checked; closed/reset viewport. Final925tests/58files/root/7boundaries/both builds,272inputs/3408992bytes/BUILD_ID4dbab73f47bd3bab5a13488c4841ab12eea0ee032ba4a33e775f88d7e771fe33,16reviewed source/test hashes and read-only revision clean. Measured existing doorway review preserved. Exact local checkpoint authorized; actual owner visual approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AP.md — top-right view-toggle follow-up after0db0786. Shared frame grid/subgrid keeps the single mounted animated2D/3D switch12px inside actual top/right at desktop/short/tablet/phone;44px targets, pointer/Enter/Space/focus and loading observations pass. Tablet anchor independently fixed; CSS/JSX format, scoped lint and frontend types pass. Full root/build/source proof is historical925-test parent, not newly claimed. Exact nine paths; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AU.md — preview spacing follow-up after14a53da. Actual baseline14px heading/action and0px action/field; scoped shared group now12px/20px with44px button in desktop/short/phone door cards. Wardrobe next section retains24px, Open/Close and2D omission pass. CSS/component format, scoped lint/frontend types and nine-path read-only revision clean; no new full-suite/build identity claim. Exact local checkpoint; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AZ.md — room-tool design afterec6c287. One oat capsule/decorative icons/sliding cocoa surface,44px targets and preserved68px bounded header. Actual inspector/catalogue parent selection stays accurate without canonical state changes.47focused session/project-menu tests, scoped format/lint/frontend/test types, desktop/short/tablet/320/390 native context/keyboard/Project observations pass;11-path read-only revision clean. No new full-suite/build identity claim; actual owner approval pending, Q held, guide paused, RM-016 Planned.",
-        "docs/validation/RM-015AY.md#chat-typography-follow-up--20-october2026: scoped format/lint/frontend types; actual desktop/short/390/320 chat typography, scrolling, proposal Cancel and composer observations; exact9-path follow-up; owner visual approval pending.",
-        "docs/validation/RM-015AZ.md#capsule-alignment-follow-up--20-october2026: exact8-path CSS padding/width correction, seven native viewport geometries, keyboard/Project checks and full screenshots; scoped formatting/read-only review clean; actual owner approval pending.",
-        "docs/validation/RM-015L.md#chapter-typography-follow-up--20-october2026: exact9-path title hierarchy correction, scoped format/lint/frontend types, five native viewport metrics and complete screenshots, long-title wrapping/scroll/link observations; clean read-only review; owner visual approval pending.",
-        "human:current-chat/2026-10-21/shared-chapter-title-size — Owner clarifies: make sure this is a shared class so it reflects on the others. Existing in-progress revision now applies the smaller size to all three numbered chapter labels; marketing taglines remain unchanged.",
-        "docs/validation/RM-015L.md#shared-chapter-size-follow-up--21-october2026: final shared16–18px scale on all three numbered titles, exact8-path CSS checkpoint; scoped formatting and four native viewport shared-consumer observations pass; no actionable findings; actual owner approval pending.",
-        "docs/validation/RM-015AZ.md#mobile-action-padding-follow-up--21-october2026: exact8-path mobile Project/Undo padding correction, scoped formatting, six viewport geometries, native popup/Escape/focus and actual reversible Apply/Undo verified, complete screenshots; read-only review clean; owner visual approval pending.",
-        "docs/validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up"
+        "docs/validation/RM-030.md",
+        "docs/commit-plans/RM-030.md"
       ],
       "blockers": [],
       "approval": null,
-      "decision": null,
+      "decision": "self-reviewed",
       "reviews": [
         {
           "decision": "changes-requested",
@@ -3080,21 +3009,44 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-10-21T12:16:07+00:00"
           },
           "prior_decision": "approved"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0011",
+            "recorded_at": "2026-10-26T17:51:21+00:00"
+          },
+          "decision": "self-reviewed"
         }
-      ]
+      ],
+      "afk_review": {
+        "session_id": "AFK-SESSION-001",
+        "decision_id": "AFK-0011",
+        "recorded_at": "2026-10-26T17:51:21+00:00"
+      }
     },
     {
       "id": "10a-quality",
       "name": "Quality audit and fixes",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
+      "status": "complete",
+      "prompt": {
+        "text": "Within RM-030, document and execute a proportionate quality/efficiency/structure review of the actual CPQ delta from the accepted pre-extension source through67b2e08. Inspect contracts/pure quantities and exact money, session shared Undo/preview/version/persistence, full-page navigation/conversation/source controls, shared material/3D/export ownership, backend admitted sourcing/provider metadata and tests. Prioritize preserved behavior over line count. Keep strict bounds, private fixed diagnostics, safe helpful UI errors, existing dependencies/lazy entries and motion. Confirm concrete duplication/dead code/authority/cleanup faults independently before any scoped edit; allocate paths first, regress meaningful behavior and revalidate. Reconcile stale current README/pricing status with actual local completion. No speculative refactor, log removal, provider test, extra service/port, owner-env or other-app mutation, cloud/push/delegation. Required settled pnpm check is running; inspect final diff read-only. Commit exact RM-030 documentation/handoff under standing owner authority after audits finish; no source commit needed when no source defect exists.",
+        "sha256": "f28466c9701e1bef01d4982850fe36bed081cba8dc857b869bd9febb7458d612",
+        "context_sources": [
+          "docs/engineering/code-quality-plan.md",
+          "docs/validation/RM-030.md",
+          "docs/commit-plans/RM-030.md"
+        ],
+        "status": "afk",
+        "approval": null,
+        "afk_session": "AFK-SESSION-001"
+      },
       "evidence": [
-        "commit:65f6faaeec4ad6562df013200f46049eb382ef4b",
-        "docs/validation/RM-015BL.md#owner-acceptance-and-authorized-local-checkpoint--21-october2026",
         "docs/engineering/code-quality-plan.md",
-        "docs/commit-plans/RM-016.md",
-        "docs/validation/RM-016.md"
+        "docs/validation/RM-029.md",
+        "docs/validation/RM-030.md",
+        "commit:67b2e08"
       ],
       "blockers": [],
       "approval": null,
@@ -3132,18 +3084,29 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "10b-security-review",
       "name": "Security audit and manual review",
       "gate": "security",
-      "status": "pending",
-      "prompt": null,
+      "status": "provisional",
+      "prompt": {
+        "text": "Audit the Roomedy CPQ delta through67b2e08 under RM-030 using STRIDE and the prior reviewed security report. Inspect fixed admitted sourcing route, public origin/release/body/identity/grant/replay/deadline/settlement boundaries, pinned provider built-in web-search contract and untrusted opened-page evidence, no model command/purchase authority, source HTTPS URLs, price/fit/locality validation, exact bounded money, immutable imports/recovery/PDF and resource cleanup. Preserve private logs and helpful fixed public errors. Review unchanged lockfile/package identities against targeted current official Next/pdf-lib/braces advisories without uploading private graph/source or reading secrets. Record meaningful confirmed findings and small safe plans, retained SEC-002 account funding/privacy uncertainty and actual unperformed live/hosted/physical checks. Produce detailed CPQ_SECURITY_REVIEW.md and warm severity-ranked PM HTML. No app security fix before actual finding disposition; AFK may select a justified scoped local fix, or no-fixes with reasons when no actionable local issue exists. Never invent an exploit, full scanner result or security certification. No provider/paid request, cloud/account mutation, dependency install, delegation or push. Existing local-document commit authority applies after clean loop.",
+        "sha256": "0adf3be047040bf70fb0b24c6c0d8f6b86680603ec49614ee9ae55798b5ffa37",
+        "context_sources": [
+          "docs/security/SECURITY_REVIEW.md",
+          "docs/commit-plans/RM-030.md",
+          "docs/engineering/sourcing.md",
+          "docs/engineering/estimate-versions.md",
+          "docs/engineering/estimate-pdf.md"
+        ],
+        "status": "afk",
+        "approval": null,
+        "afk_session": "AFK-SESSION-001"
+      },
       "evidence": [
-        "commit:b0f043c5fe5da0612f7dae7fe8965727e2835340",
-        "docs/security/SECURITY_REVIEW.md",
-        "docs/security/SECURITY_OVERVIEW.html",
-        "docs/security/audit-inputs-2026-10-21.json",
-        "docs/validation/RM-017.md"
+        "docs/security/CPQ_SECURITY_REVIEW.md",
+        "docs/security/CPQ_SECURITY_OVERVIEW.html",
+        "docs/validation/RM-030.md"
       ],
       "blockers": [],
       "approval": null,
-      "decision": null,
+      "decision": "no-fixes",
       "reviews": [
         {
           "decision": "selected-fixes",
@@ -3185,24 +3148,42 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-10-21T15:22:02+00:00"
           },
           "prior_decision": "selected-fixes"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0012",
+            "recorded_at": "2026-10-26T17:58:57+00:00"
+          },
+          "decision": "no-fixes"
         }
       ],
-      "selected_findings": [
-        "SEC-001",
-        "SEC-002"
-      ]
+      "selected_findings": [],
+      "afk_review": {
+        "session_id": "AFK-SESSION-001",
+        "decision_id": "AFK-0012",
+        "recorded_at": "2026-10-26T17:58:57+00:00"
+      }
     },
     {
       "id": "11-security-fixes",
       "name": "Approved security fixes",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
+      "status": "skipped",
+      "prompt": {
+        "text": "Apply the actual provisional CPQ security disposition for RM-030: no new local findings selected, so no source remediation is needed. Retain the detailed audit and existing unresolved SEC-002 funding/privacy condition. Do not invent a patch, change dependencies/security controls, invoke a provider, alter env/account/cloud state or deploy. Record the justified skip and continue the authorized final documentation/handoff loop.",
+        "sha256": "55176623f03134e11323e9f6f31f5b975b66bc8f9785a46fae04c7507eefbc7c",
+        "context_sources": [
+          "docs/security/CPQ_SECURITY_REVIEW.md",
+          "docs/validation/RM-030.md"
+        ],
+        "status": "afk",
+        "approval": null,
+        "afk_session": "AFK-SESSION-001"
+      },
       "evidence": [
-        "docs/security/remediation-plan.md",
-        "docs/commit-plans/RM-018.md",
-        "docs/validation/RM-018.md",
-        "runtime-input:8472b3dbfbbaf6c72eeac2730749b93118e1177b1c5bc3cfd5b67d26c8e30027"
+        "docs/security/CPQ_SECURITY_REVIEW.md",
+        "docs/validation/RM-030.md"
       ],
       "blockers": [
         {
@@ -3238,36 +3219,38 @@ This checklist records local work. Human approvals and unresolved external check
           "prior_approval": null,
           "prior_decision": null
         }
-      ]
+      ],
+      "skip_reason": "No new actionable local CPQ security source finding was confirmed or selected; unresolved SEC-002 requires external account evidence, not an invented local source patch."
     },
     {
       "id": "12-handoff",
       "name": "Final local handoff",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
+      "status": "complete_local",
+      "prompt": {
+        "text": "Finish RM-030 and the ten-ticket Roomedy CPQ extension as a local fake-only handoff. Reconcile every RM-021–029 implementation/clean validation/commit with the queue and current source, final1178-test/72-file/root/both-build gate, real native size/3D/source/budget/work/version/PDF evidence, measured limits and security/quality outcomes. Preserve historical hosted/audit receipts while current README/docs clearly distinguish local extension from unchanged production. Provide exact4320/4321 owned fake readiness, sample/manual steps, editable three-version JSON and all-page-inspected12-pagePDF, source inventory and recommended-choice report. Keep owner final manual/visual/security, actual provider/merchant/physical and current-image release evidence pending. Verify documentation links, entire settled allocated diff and exact staged files/content; create the approved cohesive RM-030 local commit, no push/deploy/env/other-app mutation. Canonical handoff stays complete_local because provisional reviews/external checks remain. Mark the explicit local-ticket goal complete only after all required local work and commit are achieved, then wait for owner tests.",
+        "sha256": "134ca9e7451cbed1f6270262b0aa501e1c99c0a9d7d7a3dd9669be7b78a10c83",
+        "context_sources": [
+          "docs/operations/CPQ_LOCAL_HANDOFF.md",
+          "docs/commit-plans/RM-030.md",
+          "docs/validation/RM-030.md",
+          "docs/tickets/README.md"
+        ],
+        "status": "afk",
+        "approval": null,
+        "afk_session": "AFK-SESSION-001"
+      },
       "evidence": [
-        "commit:28d451f",
-        "docs/operations/LOCAL_HANDOFF.md",
-        "docs/operations/release-candidate-2026-10-21.json",
-        "docs/commit-plans/RM-019.md",
-        "docs/validation/RM-019.md"
+        "commit:67b2e08",
+        "docs/operations/CPQ_LOCAL_HANDOFF.md",
+        "docs/validation/RM-030.md",
+        "actual-gate:1178-tests-72-files-types-boundaries-assets-both-builds-exit0"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Actual Cloud Run deployment/IAM/metadata/URL/no-cost browser proof is separately authorized RM-020 and next; no hosted pass inferred from local images.",
-          "reference": "docs/operations/LOCAL_HANDOFF.md#authorized-first-hosting-checklist"
-        },
-        {
-          "kind": "external",
-          "reason": "SEC-002 enforceable provider funded cutoff/privacy and owner-deferred domain/Turnstile hostname configuration remain required before public paid activation; first hosting stays live/paid-off.",
-          "reference": "docs/security/SECURITY_REVIEW.md"
-        },
-        {
-          "kind": "external",
-          "reason": "Named full held-out funded model corpus and physical/assistive/peak-native-memory/continuous-paint criteria remain unperformed; bounded BL/owner acceptance is not blanket certification.",
-          "reference": "docs/operations/LOCAL_HANDOFF.md#outcome-reconciliation"
+          "reason": "Owner final manual/visual/security acceptance and real-source/provider/merchant/physical evaluation remain pending by explicit fake-only scope. Existing SEC-002 and changed-candidate Linux/hosted proof remain unverified.",
+          "reference": "docs/operations/CPQ_LOCAL_HANDOFF.md"
         }
       ],
       "approval": null,
@@ -3457,6 +3440,50 @@ This checklist records local work. Human approvals and unresolved external check
         "evidence": [
           "docs/engineering/estimate-pdf.md",
           "docs/validation/RM-029.md"
+        ]
+      },
+      {
+        "id": "AFK-0011",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T17:51:21+00:00",
+        "phase": "09-visual-review",
+        "choice": "The actual fake CPQ flow and four rendered size samples are ready for owner manual review; proceed with local audits.",
+        "rationale": "Connected3D controls, quantities, reviewed changes, versions and output are usable in inspected states; no new visual correction is justified without actual feedback.",
+        "consequence": "Agent self-review only. Owner final visual/manual, physical touch/IME/AT and real-source checks remain outstanding; no deployment.",
+        "review_needed": true,
+        "evidence": [
+          "docs/validation/RM-030.md",
+          "docs/commit-plans/RM-030.md"
+        ]
+      },
+      {
+        "id": "AFK-0012",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T17:58:57+00:00",
+        "phase": "10b-security-review",
+        "choice": "No new actionable local CPQ security finding was confirmed; retain existing controls and explicit SEC-002/external evidence limits.",
+        "rationale": "The reviewed fixed admitted sourcing, exact money, closed snapshots/exports and finite lifecycle boundaries retain their tested protections. Targeted official advisory refresh requires no version change; no speculative remedy is justified.",
+        "consequence": "No new source fix selected. Owner security/visual/manual and real-source/provider/funding/physical/release checks remain pending; this is a provisional agent disposition only.",
+        "review_needed": true,
+        "evidence": [
+          "docs/security/CPQ_SECURITY_REVIEW.md",
+          "docs/security/CPQ_SECURITY_OVERVIEW.html",
+          "docs/validation/RM-030.md"
+        ]
+      },
+      {
+        "id": "AFK-0013",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T18:00:12+00:00",
+        "phase": "12-handoff",
+        "choice": "Finish all ten local CPQ tickets and leave the existing4320/4321 runtime fake/paid-off, with an editable three-version sample, inspected12-pagePDF and owner walkthrough.",
+        "rationale": "All required local tests, actual fake interactions, bounded measurements and quality/security reviews are complete without a new actionable local finding. The owner explicitly reserves their final manual tests for return.",
+        "consequence": "No deployment, provider spend or other-app/env mutation. Product/visual/security self-reviews remain provisional; real sourcing/physical/funding/current-image release evidence is still outstanding.",
+        "review_needed": true,
+        "evidence": [
+          "docs/operations/CPQ_LOCAL_HANDOFF.md",
+          "docs/validation/RM-030.md",
+          "docs/security/CPQ_SECURITY_REVIEW.md"
         ]
       }
     ]

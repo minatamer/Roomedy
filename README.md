@@ -2,7 +2,9 @@
 
 ![Roomedy editorial artwork: a cocoa background, an ivory room cutaway and a Medy card reading Your room. Together.](docs/assets/roomedy-overview.png)
 
-Roomedy turns room photos into an editable studio with precision2D and stylized3D views. Choose photos, continue through processing, then correct measurements and arrange supported furniture in the studio manually or through reviewable assistant proposals. Manual room setup is also available. Furniture prices and budget planning are deferred.
+Roomedy turns room photos into an editable studio with precision2D and stylized3D views. Choose photos, continue through processing, then correct measurements and arrange supported furniture in the studio manually or through reviewable assistant proposals. Manual room setup is also available. The local CPQ extension adds richer furniture/wall/floor customization and a separate 3D Plan & cost phase with reviewed product research, transparent quantities/services/moving, budget alternatives, saved versions and itemized estimate PDF output. It finishes and furnishes an existing room; drawing/floor-plan/PDF intake is permanently excluded.
+
+**Local CPQ review —26October:** All ten RM-021–RM-030 tickets are complete locally with a1178-test/72-file gate and both builds under fake/paid-off authority. The hosted release below is unchanged and does not contain this extension. [Local walkthrough and limitations](docs/operations/CPQ_LOCAL_HANDOFF.md), [ticket queue](docs/tickets/README.md#cpq-extension--26-october-2026). Final owner manual/visual and real-source evaluation remain pending.
 
 **Deployed:** [Try Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). The approved landing text fades in immediately at the center, then moves left as the prepared3D room fades in. Paid recognition and provider-backed Medy are enabled. One hosted four-sample photo flow and one contextual Medy request passed quiet verification on their first attempt; the resulting room opens in3D/2D with Medy initially selected. [Hosted acceptance](docs/operations/HOSTED_ACCEPTANCE.md) and [exact candidate](docs/operations/landing-paid-candidate-2026-10-21.json) record current identities,1,043-test gate/nine Linux probes/97 exact public assets and remaining limits. SEC-001 is fixed; SEC-002's account-wide spending-cutoff/privacy evidence remains unverified despite owner-directed activation. This bounded walkthrough is not a general accuracy, fit or capacity guarantee.
 
@@ -25,7 +27,7 @@ Use `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:boundaries`,
 - [Backend setup](apps/backend/README.md) and [frontend setup](apps/frontend/README.md)
 - [Detailed blueprint](docs/ROOMEDY.md) and [documentation map](docs/README.md)
 - [Ordered ticket queue](docs/tickets/README.md)
-- [Product concept overview](docs/ROOMEDY_OVERVIEW.html) â€” scripted illustration, separate from the app
+- [Product concept overview](docs/ROOMEDY_OVERVIEW.html) — scripted illustration, separate from the app
 - [RM-001 allocation](docs/commit-plans/RM-001.md) and [validation evidence](docs/validation/RM-001.md)
 
 Selected domain: **tryroomedy.com**, not yet registered/configured. The owner has requested deployment to the existing `roomedy` cloud project after the recommended audit-first path. No domain purchase/DNS change or new paid evaluation is implied. Current security findings still follow the build review process.

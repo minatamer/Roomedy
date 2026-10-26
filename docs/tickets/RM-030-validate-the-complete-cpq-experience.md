@@ -1,6 +1,6 @@
 # RM-030 — Validate the complete CPQ experience
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-029](RM-029-export-itemized-estimate-pdfs.md).
+Status: **Complete locally — final owner manual/visual and real-source acceptance pending**. Dependencies: [RM-029](RM-029-export-itemized-estimate-pdfs.md).
 
 ## Authority and outcome
 
@@ -28,10 +28,10 @@ Finish integrated fake-mode functional, UX, performance, quality and security ve
 
 ## Acceptance
 
-- [ ] Each prior ticket has actual clean local validation and a cohesive exact-path local commit.
-- [ ] No actionable in-scope local findings remain; genuine unperformed external/physical/owner evidence is named without fabricated success.
-- [ ] All automated/browser tests use fake/paid-off; owner environment and existing hosted deployment remain unchanged.
-- [ ] Handoff provides the local review entry, sample walkthrough, decisions/limits and clean Git state; final owner manual/visual acceptance stays pending.
+- [x] Each prior ticket has actual clean local validation and a cohesive exact-path local commit.
+- [x] No actionable in-scope local findings remain; genuine unperformed external/physical/owner evidence is named without fabricated success.
+- [x] All automated/browser tests use fake/paid-off; owner environment and existing hosted deployment remain unchanged.
+- [x] Handoff provides the local review entry, sample walkthrough, decisions/limits and clean Git state; final owner manual/visual acceptance stays pending.
 
 ## Execution and verification
 
@@ -48,3 +48,5 @@ After required checks pass, review the entire settled diff read-only against eve
 Explicit non-goal for this packet: no deployment, paid call, owner acceptance or broad security certification. Drawing/document intake is permanently excluded from the extension. Keep output estimate PDF support in its owning packet. First-party sample prices and fake research remain visibly authored; no fixture proves real stock, local price, fit, installer availability or commercial acceptance.
 
 Use only owned Roomedy ports 4320/4321 after verifying full process/listener ownership. Never kill by executable name or port alone, start alternate review services, or change the owner's ignored environment. Existing live Roomedy processes must not be driven by fake tests; if a runtime change is needed, follow the restart/run skills with explicit process overrides and keep environment files unchanged. Test children must force fake/paid-off and deny network independently before application imports.
+
+Actual final gate, native flows, performance, clean local audits and limits: [RM-030 receipt](../validation/RM-030.md). [Owner walkthrough](../operations/CPQ_LOCAL_HANDOFF.md).
