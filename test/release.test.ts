@@ -1,4 +1,4 @@
-import { it, expect, afterEach } from 'vitest';
+import { it, expect, afterEach, beforeAll } from 'vitest';
 import {
   mkdtemp,
   readFile,
@@ -235,9 +235,17 @@ afterEach(async () => {
     await rm(checked, { recursive: true, force: true });
   }
 });
+// One actual immutable baseline per suite; each property still copies every byte afresh.
+// Source discovery is fixture setup, not the behavior of an independent fixture mutation.
+let actualInventory: Inventory;
+beforeAll(async () => {
+  actualInventory = await collectInputs(
+    fileURLToPath(new URL('../', import.meta.url)),
+  );
+});
 async function copiedInventory() {
   const repo = fileURLToPath(new URL('../', import.meta.url)),
-    current = await collectInputs(repo),
+    current = actualInventory,
     fixture = await temp();
   for (let index = 0; index < current.files.length; index += 8)
     await Promise.all(

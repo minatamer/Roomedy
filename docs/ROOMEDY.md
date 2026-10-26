@@ -1452,8 +1452,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage/local-commit the clean exact21-path RM-025 checkpoint, then allocate and execute RM-026 fake/injected sourcing.
-Active ticket: RM-025
+Next action: Stage/local-commit the clean exact34-path RM-026 checkpoint, then allocate and execute RM-027 reviewed budget and work plans in fake mode.
+Active ticket: RM-026
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
@@ -1486,6 +1486,10 @@ Provisional owner reviews: 04-decisions
   Reason: This delivers the requested second project phase without a new room authority, service or router-owned project reset. Text calculations remain available alongside actual target-linked3D inspection.
   Consequence / reversibility: Phase navigation preserves accepted design/history/current prices; durable estimate recovery and combined financial Undo remain with RM-028/RM-027. Owner final visual review is pending.
   Owner review requested on return: yes. Evidence: docs/commit-plans/RM-025.md, docs/design/plan-and-cost.md, docs/validation/RM-025.md
+- **AFK-0007** (AFK-SESSION-001, 2026-10-26T15:37:12+00:00, 07-build): RM-026 prepares the existing pinned Responses provider web_search path behind one fixed admitted sourcing operation, with selected-target briefs, explicit locality, opened-page evidence, seller-aware groups and reviewed candidate prices. All actual tests are fake/injected.
+  Reason: Reuse current provider/admission/bridge and typed offers rather than adding a search vendor account, arbitrary fetch proxy, new service or model. Unknown evidence/conditions remain leads or manual allowances.
+  Consequence / reversibility: Real model/tool account compatibility and local merchant quality stay pending owner testing. No source result may silently resize a room, mix currencies, merge different marketplace sellers or rewrite a saved price.
+  Owner review requested on return: yes. Evidence: docs/commit-plans/RM-026.md, docs/engineering/sourcing.md, docs/validation/RM-026.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1508,7 +1512,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T14:37:35+00:00",
+  "updated_at": "2026-10-26T15:37:13+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1808,8 +1812,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-025",
-  "next_action": "Stage/local-commit the clean exact21-path RM-025 checkpoint, then allocate and execute RM-026 fake/injected sourcing.",
+  "active_ticket": "RM-026",
+  "next_action": "Stage/local-commit the clean exact34-path RM-026 checkpoint, then allocate and execute RM-027 reviewed budget and work plans in fake mode.",
   "phases": [
     {
       "id": "01-docs",
@@ -2163,10 +2167,10 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:27e0902",
-        "docs/commit-plans/RM-025.md",
-        "docs/validation/RM-025.md",
-        "actual-current-gate:1107-tests-68-files-all-root-checks-both-builds-pass"
+        "commit:44a2854",
+        "docs/commit-plans/RM-026.md",
+        "docs/validation/RM-026.md",
+        "actual-current-gate:1127-tests-69-files-root-both-builds-pass-plus-final-label-affected-checks"
       ],
       "blockers": [
         {
@@ -3385,6 +3389,21 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/commit-plans/RM-025.md",
           "docs/design/plan-and-cost.md",
           "docs/validation/RM-025.md"
+        ]
+      },
+      {
+        "id": "AFK-0007",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T15:37:12+00:00",
+        "phase": "07-build",
+        "choice": "RM-026 prepares the existing pinned Responses provider web_search path behind one fixed admitted sourcing operation, with selected-target briefs, explicit locality, opened-page evidence, seller-aware groups and reviewed candidate prices. All actual tests are fake/injected.",
+        "rationale": "Reuse current provider/admission/bridge and typed offers rather than adding a search vendor account, arbitrary fetch proxy, new service or model. Unknown evidence/conditions remain leads or manual allowances.",
+        "consequence": "Real model/tool account compatibility and local merchant quality stay pending owner testing. No source result may silently resize a room, mix currencies, merge different marketplace sellers or rewrite a saved price.",
+        "review_needed": true,
+        "evidence": [
+          "docs/commit-plans/RM-026.md",
+          "docs/engineering/sourcing.md",
+          "docs/validation/RM-026.md"
         ]
       }
     ]

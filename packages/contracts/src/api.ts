@@ -30,6 +30,7 @@ export const publicConfigSchema = z.strictObject({
     manual: z.literal(true),
     recognition: z.boolean(),
     assistant: z.boolean(),
+    sourcing: z.boolean().optional(),
     simulation: z.boolean(),
   }),
   limits: z.strictObject({

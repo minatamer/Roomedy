@@ -1,3 +1,5 @@
+import { readSearchAction } from './web-search.js';
+import type { SearchEvidence } from './web-search.js';
 import { POLICY } from '@roomedy/contracts/policy';
 import { BoundedBytes } from '@roomedy/contracts/bounded-bytes';
 import { projectProviderSchema } from './schema.js';
@@ -210,6 +212,15 @@ export function responseBody(input: ProviderRequest, model: string) {
     !/^[A-Za-z0-9_-]{1,64}$/.test(input.format.name)
   )
     throw new Error('provider-request');
+  if (
+    input.search &&
+    (input.format.name !== 'room_sourcing_1' ||
+      input.tools.length ||
+      !/^[A-Z]{2}$/.test(input.search.country) ||
+      !input.search.city.trim() ||
+      input.search.city.length > 80)
+  )
+    throw new Error('provider-request');
   const tools = input.tools.map((tool) => {
     if (
       !/^[A-Za-z0-9_-]{1,64}$/.test(tool.name) ||
@@ -229,13 +240,28 @@ export function responseBody(input: ProviderRequest, model: string) {
     instructions: input.instructions,
     input: input.input,
     store: false,
-    include: ['reasoning.encrypted_content'],
+    include: input.search
+      ? ['reasoning.encrypted_content', 'web_search_call.action.sources']
+      : ['reasoning.encrypted_content'],
     background: false,
     stream: false,
     parallel_tool_calls: false,
     max_output_tokens: POLICY.providerOutputTokens,
-    tools,
-    tool_choice: tools.length ? 'auto' : 'none',
+    tools: input.search
+      ? [
+          {
+            type: 'web_search',
+            search_context_size: 'low',
+            user_location: {
+              type: 'approximate',
+              country: input.search.country,
+              city: input.search.city,
+            },
+          },
+        ]
+      : tools,
+    ...(input.search ? { max_tool_calls: 4 } : {}),
+    tool_choice: input.search ? 'required' : tools.length ? 'auto' : 'none',
     text: {
       format: {
         type: 'json_schema',
@@ -256,8 +282,9 @@ export function decodeResponse(
   raw: unknown,
   tools: readonly string[],
   report?: ShapeReporter,
+  search = false,
 ): ProviderOutcome {
-  const result = decodePayload(raw, tools, report);
+  const result = decodePayload(raw, tools, report, search);
   if (!object(raw) || raw.usage === undefined || raw.usage === null)
     return result;
   const u = raw.usage;
@@ -284,7 +311,8 @@ export function decodeResponse(
 function decodePayload(
   raw: unknown,
   tools: readonly string[],
-  report?: ShapeReporter,
+  report: ShapeReporter | undefined,
+  search: boolean,
 ): ProviderOutcome {
   const invalid = (stage: ProviderShapeFailure): ProviderOutcome => {
     report?.(stage);
@@ -299,10 +327,16 @@ function decodePayload(
   )
     return invalid('envelope');
   let text = '';
+  const searchEvidence: SearchEvidence = { calls: 0, opened: [], sources: [] };
   const calls: Extract<ProviderOutcome, { kind: 'completed' }>['calls'] = [];
   const continuation: Record<string, unknown>[] = [];
   for (const item of raw.output) {
     if (!object(item)) return invalid('envelope');
+    if (item.type === 'web_search_call') {
+      if (!search || !readSearchAction(item, searchEvidence))
+        return invalid('envelope');
+      continue;
+    }
     if (item.type === 'reasoning') {
       if (!reasoningItem(item)) return invalid('reasoning');
       continuation.push(item);
@@ -339,6 +373,7 @@ function decodePayload(
       data: text ? JSON.parse(text) : null,
       calls,
       ...(calls.length ? { continuation } : {}),
+      ...(search ? { search: searchEvidence } : {}),
     };
   } catch {
     return invalid('json');
@@ -453,6 +488,7 @@ export function createResponsesProvider(
               value,
               input.tools.map((tool) => tool.name),
               report,
+              !!input.search,
             ),
           );
         } catch {

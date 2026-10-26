@@ -1,4 +1,5 @@
 import type { FormEvent } from 'react';
+import { useState } from 'react';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { EstimateOffer } from '@roomedy/contracts/estimates';
 import { quoteCurrencySchema } from '@roomedy/contracts/estimates';
@@ -467,17 +468,54 @@ function ManualRate({
   controller: SessionController;
   draft: CostDraft;
 }) {
+  const [offerId, setOfferId] = useState(draft.offers[0]?.id ?? '');
+  const selected =
+    draft.offers.find((o) => o.id === offerId) ?? draft.offers[0];
+  const unit =
+    selected?.kind === 'floor'
+      ? `${selected.coverageMm2 / 1e6} m² pack`
+      : selected?.kind === 'underlay'
+        ? `${selected.packQuantity / 1e6} m² roll`
+        : selected?.kind === 'trim'
+          ? `${selected.packQuantity / 1000} m stock length`
+          : selected?.kind === 'service'
+            ? selected.basis
+            : selected?.kind === 'paint' || selected?.kind === 'primer'
+              ? 'paint can specified below'
+              : 'item';
   const save = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const offer = draft.offers.find((o) => o.id === data.get('offer'));
-    if (!offer || !('priceMinor' in offer)) return;
+    const offer = selected;
+    if (!offer) return;
     const amount = Number(data.get('amount')),
       reason = String(data.get('reason') ?? '').trim();
     if (!Number.isFinite(amount) || amount < 0 || !reason) return;
-    const updated: EstimateOffer = {
+    const taxStatus = String(data.get('tax')) as
+      'included' | 'excluded' | 'unknown';
+    const tax = {
+      status: taxStatus,
+      rateBps:
+        taxStatus === 'excluded' &&
+        String(data.get('tax-rate') ?? '').trim() !== ''
+          ? Math.round(Number(data.get('tax-rate')) * 100)
+          : null,
+      source: taxStatus === 'excluded' ? reason.slice(0, 240) : null,
+    };
+    const price = Math.round(amount * 100);
+    let updated: EstimateOffer = {
       ...offer,
-      priceMinor: Math.round(amount * 100),
+      id: `manual_${crypto.randomUUID()}`,
+      label: (offer.source.kind === 'manual'
+        ? offer.label
+        : `Manual: ${offer.label}`
+      ).slice(0, 96),
+      market: { ...draft.settings.locality },
+      availability: 'unknown',
+      leadTime: null,
+      deliveryIncluded: false,
+      ...(offer.kind === 'furniture' ? { assemblyIncluded: false } : {}),
+      tax,
       pricing: 'allowance',
       source: {
         kind: 'manual',
@@ -487,33 +525,97 @@ function ManualRate({
         evidence: reason,
       },
     };
-    controller.updateCost(
-      draft.settings,
-      draft.offers.map((o) => (o.id === updated.id ? updated : o)),
-    );
+    if (updated.kind === 'paint' || updated.kind === 'primer')
+      updated = {
+        ...updated,
+        coverageMm2PerLitre: Math.round(Number(data.get('yield')) * 1e6),
+        packs: [
+          {
+            id: 'manual-can',
+            volumeMl: Math.round(Number(data.get('can')) * 1000),
+            priceMinor: price,
+          },
+        ],
+      };
+    else if ('priceMinor' in updated)
+      updated = {
+        ...updated,
+        priceMinor: price,
+        ...(updated.kind === 'service'
+          ? { minimumMinor: Math.round(Number(data.get('minimum')) * 100) }
+          : {}),
+      };
+    const settings = structuredClone(draft.settings);
+    const replace = (id: string | null) => (id === offer.id ? updated.id : id);
+    settings.floor.offerId = replace(settings.floor.offerId);
+    settings.floor.underlayOfferId = replace(settings.floor.underlayOfferId);
+    settings.floor.trimOfferId = replace(settings.floor.trimOfferId);
+    settings.walls.forEach((w) => {
+      w.paintOfferId = replace(w.paintOfferId);
+      w.primerOfferId = replace(w.primerOfferId);
+    });
+    settings.furniture.forEach((f) => {
+      f.offerId = replace(f.offerId);
+      f.components.forEach((c) => {
+        c.offerId = replace(c.offerId);
+      });
+    });
+    settings.services.forEach((service) => {
+      service.offerId = replace(service.offerId);
+    });
+    settings.deliveries.forEach((delivery) => {
+      delivery.offerId = replace(delivery.offerId);
+    });
+    if (updated.kind === 'service' && updated.scope === 'delivery') {
+      const group = String(data.get('delivery-group'));
+      const product = draft.offers.find(
+        (o) => o.kind !== 'service' && o.deliveryGroup === group,
+      );
+      if (!product) {
+        controller.notify(
+          'Select the supplier group for this delivery allowance.',
+        );
+        return;
+      }
+      updated = {
+        ...updated,
+        supplierId: product.supplierId,
+        supplier: product.supplier,
+        deliveryGroup: group,
+      };
+      const delivery = settings.deliveries.find((d) => d.group === group);
+      if (delivery) delivery.offerId = updated.id;
+      else settings.deliveries.push({ group, offerId: updated.id });
+    }
+    if (controller.updateCost(settings, [...draft.offers, updated]))
+      controller.notify(
+        'Manual allowance saved for this locality and currency. Select it in work scope if it is not already selected.',
+      );
   };
   return (
     <details>
       <summary>Enter a manual product or service allowance</summary>
       <form onSubmit={save} className={styles.form}>
         <label>
-          Existing product / service
-          <select name="offer">
-            {draft.offers
-              .filter(
-                (o) =>
-                  'priceMinor' in o &&
-                  o.market.currency === draft.settings.locality.currency,
-              )
-              .map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.label}
-                </option>
-              ))}
+          Existing product / service unit
+          <select
+            value={selected?.id ?? ''}
+            onChange={(event) => setOfferId(event.target.value)}
+          >
+            {draft.offers.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.label}
+              </option>
+            ))}
           </select>
         </label>
+        <p>
+          Use this listed unit: <strong>{unit}</strong>. Enter a new allowance
+          in {draft.settings.locality.city} / {draft.settings.locality.currency}
+          ; this does not convert or refresh the old price.
+        </p>
         <label>
-          Price per listed unit · {draft.settings.locality.currency}
+          Price per {unit} · {draft.settings.locality.currency}
           <input
             name="amount"
             type="number"
@@ -523,14 +625,91 @@ function ManualRate({
             required
           />
         </label>
+        {(selected?.kind === 'paint' || selected?.kind === 'primer') && (
+          <div className={styles.fields}>
+            <label>
+              Can volume · litres
+              <input
+                name="can"
+                type="number"
+                min={0.25}
+                max={20}
+                step={0.25}
+                defaultValue={selected.packs[0]!.volumeMl / 1000}
+                required
+              />
+            </label>
+            <label>
+              Reviewed coverage · m²/L per coat
+              <input
+                name="yield"
+                type="number"
+                min={1}
+                max={30}
+                step={0.1}
+                defaultValue={selected.coverageMm2PerLitre / 1e6}
+                required
+              />
+            </label>
+          </div>
+        )}
+        {selected?.kind === 'service' && (
+          <label>
+            Minimum job charge · {draft.settings.locality.currency}
+            <input
+              name="minimum"
+              type="number"
+              min={0}
+              max={10000000}
+              step={0.01}
+              defaultValue={0}
+              required
+            />
+          </label>
+        )}
+        {selected?.kind === 'service' && selected.scope === 'delivery' && (
+          <label>
+            Delivery supplier group
+            <select name="delivery-group">
+              {draft.settings.deliveries.map((d) => (
+                <option key={d.group} value={d.group}>
+                  {draft.offers.find(
+                    (o) => o.kind !== 'service' && o.deliveryGroup === d.group,
+                  )?.supplier ?? d.group}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        <div className={styles.fields}>
+          <label>
+            Tax treatment
+            <select name="tax" defaultValue="unknown">
+              <option value="unknown">Needs review</option>
+              <option value="included">Included in this amount</option>
+              <option value="excluded">Excluded · rate below</option>
+            </select>
+          </label>
+          <label>
+            Tax rate % · if excluded
+            <input
+              name="tax-rate"
+              type="number"
+              min={0}
+              max={100}
+              step={0.01}
+              defaultValue=""
+            />
+          </label>
+        </div>
         <label>
           What does this allowance cover?
           <input name="reason" maxLength={400} required />
         </label>
         <p>
-          Stored as a manual allowance with the product’s existing unit, market
-          and tax treatment. Review the line’s rule and source before relying on
-          it.
+          Review the quantity, unit, coverage, minimum charge and tax
+          assumption. Unsupported work or hidden conditions need a supplier
+          assessment. Your manual allowance stays separate from a sourced price.
         </p>
         <button type="submit">Save manual allowance</button>
       </form>

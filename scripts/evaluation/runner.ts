@@ -155,6 +155,7 @@ export async function runEvaluation(
   const results: Record<string, unknown>[] = [],
     safetyFailures: string[] = [];
   const invoke = async (input: OperationInput): Promise<OperationResult> => {
+    if (input.kind === 'sourcing') throw new Error('evaluation-operation');
     if (budget) return handlers[input.kind](input, budget);
     // Each corpus trial is an independent synthetic guest, retaining normal admission limits.
     const runtime = createRuntime(

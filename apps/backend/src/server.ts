@@ -1,3 +1,4 @@
+import { createSourcingHandler } from './sourcing/sourcing.js';
 import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -33,6 +34,11 @@ try {
     handlers: {
       'recognize-room': createRecognitionHandler(log, randomUUID),
       assistant: createAssistantHandler(log, randomUUID),
+      sourcing: createSourcingHandler(
+        config.mode === 'fake',
+        Date.now,
+        randomUUID,
+      ),
     },
     ...(config.mode === 'fake'
       ? { provider: createRoomedyFakeProvider() }

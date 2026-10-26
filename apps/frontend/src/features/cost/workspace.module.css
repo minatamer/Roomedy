@@ -432,3 +432,70 @@
   color: #897763;
   margin-top: 5px;
 }
+
+.research {
+  margin: 28px 0;
+  padding: 22px;
+  border: 1px solid #dfd1bd;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #fffcf6, #ede2d1a0);
+}
+.research > p,
+.sourceCards > p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #806c58;
+}
+.sourceCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 16px;
+}
+.sourceCards > p {
+  grid-column: 1 / -1;
+}
+.sourceCards article {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #fffcf4;
+  border: 1px solid #e1d5c5;
+  overflow-wrap: anywhere;
+}
+.sourceCards h3,
+.sourceCards p {
+  margin: 0;
+}
+.sourceCards h3 {
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.sourceCards :is(p, li, a) {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.sourceCards a {
+  color: #75502e;
+  padding-block: 10px;
+}
+.sourceCards ul {
+  margin: 0;
+  padding-left: 16px;
+}
+.sourceCards .actions {
+  margin-top: auto;
+}
+.actions .primary {
+  background: #715139;
+  color: #fff8ec;
+  border-color: #715139;
+}
+@media (max-width: 600px) {
+  .research {
+    padding: 16px;
+  }
+}

@@ -1,6 +1,8 @@
 # RM-026 — Research local products and services
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-025](RM-025-build-the-3d-plan-and-cost-workspace.md).
+Status: **Complete locally — fake/injected gate passed; owner live-source/manual review pending**. Dependencies: [RM-025](RM-025-build-the-3d-plan-and-cost-workspace.md).
+
+[Exact allocation](../commit-plans/RM-026.md), [source/evidence policy](../engineering/sourcing.md), [actual validation](../validation/RM-026.md).
 
 ## Authority and outcome
 
@@ -27,10 +29,10 @@ Connect bounded sourcing to the cost workspace with structured product/variant/l
 
 ## Acceptance
 
-- [ ] Fake results use authored sample evidence and never claim real availability; live mode cannot silently fall back to fake.
-- [ ] Source snippets/pages are untrusted, URLs are safe, variants/units/currencies validate and missing/contradictory fields remain review states.
-- [ ] Selected offers reference room targets; physical differences require reviewed spatial changes before application.
-- [ ] No paid calls, external account changes, hidden retries or background refresh occur during this ticket.
+- [x] Fake results use authored sample evidence and never claim real availability; live mode cannot silently fall back to fake.
+- [x] Source snippets/pages are untrusted, URLs are safe, variants/units/currencies validate and missing/contradictory fields remain review states.
+- [x] Selected offers reference room targets; physical differences require reviewed spatial changes before application.
+- [x] No paid calls, external account changes, hidden retries or background refresh occur during this ticket.
 
 ## Execution and verification
 

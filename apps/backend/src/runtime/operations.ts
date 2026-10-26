@@ -230,7 +230,9 @@ export function createOperations(
         finish(failure('timeout'));
         retire();
       },
-      input.kind === 'assistant' ? POLICY.assistantMs : POLICY.recognitionMs,
+      input.kind === 'recognize-room'
+        ? POLICY.recognitionMs
+        : POLICY.assistantMs,
     );
     jobs.add(cancel);
     client.addEventListener('abort', cancel, { once: true });
@@ -296,7 +298,7 @@ export function createOperations(
         if (['timeout', 'cancelled', 'unavailable'].includes(outcome.kind))
           uncertain = true;
         if (outcome.kind === 'completed') {
-          tools += outcome.calls.length;
+          tools += outcome.calls.length + (outcome.search?.calls ?? 0);
           if (outcome.calls.length > 1 || tools > POLICY.toolCalls)
             return { kind: 'malformed' };
         }

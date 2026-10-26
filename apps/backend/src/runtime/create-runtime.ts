@@ -76,6 +76,7 @@ export function createRuntime(
       manual: true,
       recognition: operations.available('recognize-room'),
       assistant: operations.available('assistant'),
+      sourcing: operations.available('sourcing'),
       simulation: config.mode === 'fake',
     },
     limits: PUBLIC_LIMITS,

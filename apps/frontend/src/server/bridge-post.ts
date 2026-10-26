@@ -9,8 +9,9 @@ import {
   operationResultSchema,
 } from '@roomedy/contracts/operations';
 
-export type MutationOperation = 'admission' | 'recognize-room' | 'assistant';
-const operations = ['admission', 'recognize-room', 'assistant'];
+export type MutationOperation =
+  'admission' | 'recognize-room' | 'assistant' | 'sourcing';
+const operations = ['admission', 'recognize-room', 'assistant', 'sourcing'];
 const headers = {
   'Cache-Control': 'no-store',
   'X-Content-Type-Options': 'nosniff',

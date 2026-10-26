@@ -40,7 +40,7 @@ export function inputDigest(input: OperationInput): string | null {
         return null;
       }
     }
-  } else {
+  } else if (input.kind === 'assistant') {
     if (
       !validateRoom(input.room) ||
       input.identity.roomId !== input.room.roomId ||

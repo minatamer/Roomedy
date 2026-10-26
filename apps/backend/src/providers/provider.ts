@@ -1,5 +1,6 @@
 import type { JsonSchema } from './schema.js';
 export interface ProviderRequest {
+  search?: { country: string; city: string };
   instructions: string;
   input: readonly Record<string, unknown>[];
   format: { name: string; schema: JsonSchema };
@@ -21,6 +22,7 @@ export type ProviderOutcome = (
       calls: { name: string; callId: string; arguments: unknown }[];
       /** Bounded replay items for this operation only; never returned to the browser. */
       continuation?: Record<string, unknown>[];
+      search?: { calls: number; opened: string[]; sources: string[] };
     }
   | {
       kind:

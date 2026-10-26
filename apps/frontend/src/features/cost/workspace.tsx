@@ -1,3 +1,4 @@
+import { Research } from './research';
 import {
   Component,
   lazy,
@@ -319,6 +320,21 @@ export function CostWorkspace({
             </button>
           </form>
         </section>
+        <Research
+          controller={controller}
+          state={state}
+          selected={target}
+          onInspect={(key) => {
+            setSelected(key);
+            setLineId(null);
+            setGraphics(true);
+            roomCard.current?.focus({ preventScroll: true });
+            roomCard.current?.scrollIntoView({
+              block: 'start',
+              behavior: 'smooth',
+            });
+          }}
+        />
         <ScopeControls controller={controller} room={room} draft={draft} />
         {estimate && (
           <section className={styles.breakdown} aria-label="Itemized estimate">
@@ -502,7 +518,9 @@ function Calculation({
               {offer.source.observedAt !== null && (
                 <>
                   {' '}
-                  · checked{' '}
+                  · {offer.source.kind === 'manual'
+                    ? 'entered'
+                    : 'checked'}{' '}
                   {new Date(offer.source.observedAt).toLocaleDateString(
                     'en-GB',
                   )}

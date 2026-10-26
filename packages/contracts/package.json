@@ -70,6 +70,10 @@
     "./estimates": {
       "types": "./dist/estimates.d.ts",
       "default": "./dist/estimates.js"
+    },
+    "./sourcing": {
+      "types": "./dist/sourcing.d.ts",
+      "default": "./dist/sourcing.js"
     }
   },
   "scripts": {

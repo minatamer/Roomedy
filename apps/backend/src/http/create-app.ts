@@ -40,7 +40,12 @@ export function createApp(runtime: Runtime): Express {
     next();
   });
   const gets = ['/v1/health', '/v1/ready', '/v1/config'];
-  const posts = ['/v1/admission', '/v1/recognize-room', '/v1/assistant'];
+  const posts = [
+    '/v1/admission',
+    '/v1/recognize-room',
+    '/v1/assistant',
+    '/v1/sourcing',
+  ];
   app.use((req, res, next) => {
     if (!gets.includes(req.path) && !posts.includes(req.path)) {
       res.status(404).json(safeError('not-found', runtime.nextId()));

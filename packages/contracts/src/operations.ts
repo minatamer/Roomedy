@@ -1,3 +1,5 @@
+import { sourcingBriefSchema, sourcingReplySchema } from './sourcing.js';
+import { localitySchema } from './estimates.js';
 import { z } from 'zod';
 import { assistantReplySchema } from './assistant.js';
 import { searchCandidateSchema } from './search.js';
@@ -13,7 +15,11 @@ const versions = {
   rulesVersion: z.literal(VERSIONS.rules),
 };
 
-export const operationKindSchema = z.enum(['recognize-room', 'assistant']);
+export const operationKindSchema = z.enum([
+  'recognize-room',
+  'assistant',
+  'sourcing',
+]);
 export const recognitionInputSchema = z.strictObject({
   ...versions,
   kind: z.literal('recognize-room'),
@@ -50,9 +56,18 @@ export const assistantInputSchema = z.strictObject({
     )
     .max(POLICY.contextTurns),
 });
+export const sourcingInputSchema = z.strictObject({
+  ...versions,
+  kind: z.literal('sourcing'),
+  identity: operationIdentitySchema,
+  costRevision: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+  locality: localitySchema,
+  brief: sourcingBriefSchema,
+});
 export const operationInputSchema = z.discriminatedUnion('kind', [
   recognitionInputSchema,
   assistantInputSchema,
+  sourcingInputSchema,
 ]);
 export const admissionInputSchema = z.strictObject({
   input: operationInputSchema,
@@ -100,6 +115,7 @@ export const operationResultSchema = z.strictObject({
   message: z.string().max(6000),
   draft: draftHypothesisSchema.nullable(),
   assistant: assistantReplySchema.optional(),
+  sourcing: sourcingReplySchema.optional(),
 });
 export type OperationInput = z.infer<typeof operationInputSchema>;
 export type OperationKind = OperationInput['kind'];

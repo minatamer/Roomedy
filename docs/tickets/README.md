@@ -13,7 +13,7 @@ Product authority: [Roomedy Extension for CPQ](../Roomedy%20Extension%20for%20CP
 | [RM-023](RM-023-customize-detailed-furniture.md) | Customize detailed furniture | RM-022 | Complete locally —1081-test/root/build pass |
 | [RM-024](RM-024-calculate-transparent-room-estimates.md) | Calculate transparent room estimates | RM-022, RM-023 | Complete locally — fake gate passed |
 | [RM-025](RM-025-build-the-3d-plan-and-cost-workspace.md) | Build the 3D Plan & cost workspace | RM-024 | Complete locally — fake gate passed |
-| [RM-026](RM-026-research-local-products-and-services.md) | Research local products and services | RM-025 | Planned |
+| [RM-026](RM-026-research-local-products-and-services.md) | Research local products and services | RM-025 | Complete locally — fake/injected gate passed |
 | [RM-027](RM-027-deliver-reviewed-budget-and-work-plans.md) | Deliver reviewed budget and work plans | RM-026 | Planned |
 | [RM-028](RM-028-preserve-estimate-versions-and-recovery.md) | Preserve estimate versions and recovery | RM-027 | Planned |
 | [RM-029](RM-029-export-itemized-estimate-pdfs.md) | Export itemized estimate PDFs | RM-028 | Planned |
