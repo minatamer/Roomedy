@@ -2,44 +2,17 @@ import type { RoomDocument, CheckFacts } from '@roomedy/contracts/room';
 import { roomSurface } from '@roomedy/contracts/surfaces';
 import type { SearchFacts, SearchGoal } from '@roomedy/contracts/search';
 import type { Region } from '@roomedy/contracts/issues';
-import { footprint, intersection, area, localFront } from '../coordinates.js';
+import {
+  footprint,
+  intersection,
+  area,
+  localFront,
+  unionArea,
+} from '../coordinates.js';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry } from '../catalogue.js';
 import { windowPoint } from './positions.js';
 import { backWallGap } from '../orientation.js';
-function unionArea(rectangles: Region[]) {
-  const xs = [...new Set(rectangles.flatMap((r) => [r.minX, r.maxX]))].sort(
-    (a, b) => a - b,
-  );
-  let total = 0;
-  for (let i = 1; i < xs.length; i++) {
-    const left = xs[i - 1]!,
-      right = xs[i]!,
-      spans = rectangles
-        .filter((r) => r.minX < right && r.maxX > left)
-        .map((r) => [r.minZ, r.maxZ] as const)
-        .sort((a, b) => a[0] - b[0]);
-    let height = 0,
-      start = 0,
-      end = 0,
-      first = true;
-    for (const [a, b] of spans) {
-      if (first) {
-        start = a;
-        end = b;
-        first = false;
-      } else if (a <= end) end = Math.max(end, b);
-      else {
-        height += end - start;
-        start = a;
-        end = b;
-      }
-    }
-    if (!first) height += end - start;
-    total += (right - left) * height;
-  }
-  return total;
-}
 function missingInput(room: RoomDocument, input: string) {
   const [id, field] = input.split(':');
   if (!id || !field) return false;

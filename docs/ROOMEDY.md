@@ -1452,8 +1452,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage/local-commit the clean exact23-path RM-023 checkpoint, then allocate and execute RM-024 deterministic estimates.
-Active ticket: RM-023
+Next action: Stage/local-commit the clean exact15-path RM-024 checkpoint, then allocate and execute RM-025 separate 3D Plan & cost page.
+Active ticket: RM-024
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
@@ -1478,6 +1478,10 @@ Provisional owner reviews: 04-decisions
   Reason: The existing coherent catalogue and owned textures can support meaningful CPQ matching without a new asset service or pretending that generic models are exact retail products.
   Consequence / reversibility: Existing documents retain defaults; material controls apply as one Undo and optional records recover/export normally. Owner visual testing remains pending.
   Owner review requested on return: yes. Evidence: docs/commit-plans/RM-023.md, docs/tickets/RM-023-customize-detailed-furniture.md
+- **AFK-0005** (AFK-SESSION-001, 2026-10-26T13:00:09+00:00, 07-build): RM-024 uses a small authored Cairo/EGP catalogue, one fully modeled floating-floor system, product/colour-grouped whole-can paint selection, explicit work scope and target-linked cost lines. Currency mixing and unsupported systems reject or remain unpriced.
+  Reason: This provides complete CPQ quantity/money behavior with current pure contracts/spatial architecture and no new service. Price evidence, site conditions and measurement uncertainty stay separate.
+  Consequence / reversibility: Exact bounded arithmetic is testable before UI/sourcing. Sample prices are not market evidence; real-source quality and owner acceptance remain pending.
+  Owner review requested on return: yes. Evidence: docs/commit-plans/RM-024.md, docs/tickets/RM-024-calculate-transparent-room-estimates.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1500,7 +1504,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T12:56:23+00:00",
+  "updated_at": "2026-10-26T14:10:51+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1800,8 +1804,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-023",
-  "next_action": "Stage/local-commit the clean exact23-path RM-023 checkpoint, then allocate and execute RM-024 deterministic estimates.",
+  "active_ticket": "RM-024",
+  "next_action": "Stage/local-commit the clean exact15-path RM-024 checkpoint, then allocate and execute RM-025 separate 3D Plan & cost page.",
   "phases": [
     {
       "id": "01-docs",
@@ -2155,10 +2159,10 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:e2c625c",
-        "docs/commit-plans/RM-023.md",
-        "docs/validation/RM-023.md",
-        "actual-current-gate:1081-tests-66-files-all-root-checks-both-builds-pass"
+        "commit:f39e8d2",
+        "docs/commit-plans/RM-024.md",
+        "docs/validation/RM-024.md",
+        "actual-current-gate:1099-tests-67-files-all-root-checks-both-builds-pass"
       ],
       "blockers": [
         {
@@ -3348,6 +3352,20 @@ This checklist records local work. Human approvals and unresolved external check
         "evidence": [
           "docs/commit-plans/RM-023.md",
           "docs/tickets/RM-023-customize-detailed-furniture.md"
+        ]
+      },
+      {
+        "id": "AFK-0005",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T13:00:09+00:00",
+        "phase": "07-build",
+        "choice": "RM-024 uses a small authored Cairo/EGP catalogue, one fully modeled floating-floor system, product/colour-grouped whole-can paint selection, explicit work scope and target-linked cost lines. Currency mixing and unsupported systems reject or remain unpriced.",
+        "rationale": "This provides complete CPQ quantity/money behavior with current pure contracts/spatial architecture and no new service. Price evidence, site conditions and measurement uncertainty stay separate.",
+        "consequence": "Exact bounded arithmetic is testable before UI/sourcing. Sample prices are not market evidence; real-source quality and owner acceptance remain pending.",
+        "review_needed": true,
+        "evidence": [
+          "docs/commit-plans/RM-024.md",
+          "docs/tickets/RM-024-calculate-transparent-room-estimates.md"
         ]
       }
     ]

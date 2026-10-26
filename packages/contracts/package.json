@@ -66,6 +66,10 @@
     "./furniture-materials": {
       "types": "./dist/furniture-materials.d.ts",
       "default": "./dist/furniture-materials.js"
+    },
+    "./estimates": {
+      "types": "./dist/estimates.d.ts",
+      "default": "./dist/estimates.js"
     }
   },
   "scripts": {

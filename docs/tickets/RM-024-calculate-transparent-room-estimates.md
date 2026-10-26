@@ -1,6 +1,8 @@
 # RM-024 — Calculate transparent room estimates
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-022](RM-022-customize-detailed-room-surfaces.md), [RM-023](RM-023-customize-detailed-furniture.md).
+Status: **Complete locally — fake gate passed; owner real-source/manual review pending**. Dependencies: [RM-022](RM-022-customize-detailed-room-surfaces.md), [RM-023](RM-023-customize-detailed-furniture.md).
+
+[Exact allocation](../commit-plans/RM-024.md), [calculation policy](../engineering/estimates.md), [actual evidence](../validation/RM-024.md).
 
 ## Authority and outcome
 
@@ -26,10 +28,10 @@ Create the shared deterministic CPQ authority and a small honest authored market
 
 ## Acceptance
 
-- [ ] Independent hand-calculated cases cover flooring, walls, multiple cans, variants, minimum labour and grouped delivery.
-- [ ] Invalid/incompatible/mixed-currency or overflowing data rejects; missing height/openings/rates remain explicit incomplete lines.
-- [ ] Output lines retain target IDs, quantities, rule/evidence references and subtotal/allowance/unpriced distinctions for 3D/UI/PDF use.
-- [ ] No runtime network or mutable global authority exists in the pure calculation layer.
+- [x] Independent hand-calculated cases cover flooring, walls, multiple cans, variants, minimum labour and grouped delivery.
+- [x] Invalid/incompatible/mixed-currency or overflowing data rejects; missing height/openings/rates remain explicit incomplete lines.
+- [x] Output lines retain target IDs, quantities, rule/evidence references and subtotal/allowance/unpriced distinctions for 3D/UI/PDF use.
+- [x] No runtime network or mutable global authority exists in the pure calculation layer.
 
 ## Execution and verification
 

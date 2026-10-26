@@ -10,6 +10,7 @@ export {
   corners,
   intersection,
   area,
+  unionArea,
   subsetRegion,
   outsideRegions,
   frontBand,
@@ -37,6 +38,17 @@ export {
 } from './opening-sizes.js';
 export type { OpeningSizePreset } from './opening-sizes.js';
 export { evaluateBatch, validateRoom } from './commands.js';
+export { calculateRoomEstimate } from './estimates.js';
+export type { EstimateResult } from './estimates.js';
+export {
+  sampleEstimateOffers,
+  defaultEstimateSettings,
+} from './estimate-catalogue.js';
+export {
+  estimateWallAreas,
+  paintPackPlan,
+  estimateMoney,
+} from './estimate-quantities.js';
 export {
   LayoutSearch,
   proposedSearchPiece,
