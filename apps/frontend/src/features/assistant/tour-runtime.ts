@@ -11,7 +11,12 @@ import type { TourBox, TourRect, TourViewport } from './tour-layout';
 export function automaticallyOfferTour(
   state: Pick<
     SessionSnapshot,
-    'phase' | 'workspace' | 'recovered' | 'imported' | 'clientLoadFailure'
+    | 'phase'
+    | 'workspace'
+    | 'recovered'
+    | 'imported'
+    | 'clientLoadFailure'
+    | 'estimateVersions'
   >,
 ) {
   return (
@@ -19,6 +24,7 @@ export function automaticallyOfferTour(
     !!state.workspace &&
     !state.recovered &&
     !state.imported &&
+    state.estimateVersions.length === 0 &&
     !state.clientLoadFailure
   );
 }

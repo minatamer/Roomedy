@@ -556,3 +556,64 @@
   font-size: 22px;
   font-weight: 500;
 }
+
+.versions {
+  margin: 24px auto;
+  max-width: 880px;
+  padding: 22px;
+  border: 1px solid #ded1bf;
+  border-radius: 22px;
+  background: #fffaf3b3;
+  overflow-wrap: anywhere;
+}
+.versions summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+}
+.versions p,
+.versions li {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.versions button {
+  border: 1px solid #cbb69a;
+  background: #eee1ce;
+  border-radius: 24px;
+  padding: 10px 16px;
+  color: #70543b;
+}
+.versions input,
+.versions select {
+  display: block;
+  min-height: 44px;
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid #d8c8b3;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fffdf8;
+  color: inherit;
+  font: inherit;
+}
+.versions small {
+  display: block;
+  color: #806c58;
+  font-size: 12px;
+}
+.versionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 0;
+}
+.versionRow > div {
+  flex: 1 1 230px;
+}
+.savedBanner {
+  margin-bottom: 18px;
+}
+.savedBanner h2 {
+  font-weight: 500;
+}

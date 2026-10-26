@@ -170,7 +170,7 @@ it.each([
   const s = session(),
     snapshot = s.getSnapshot(),
     project = projectOf(snapshot)!;
-  if (kind === 'version') project.version = 9 as 1;
+  if (kind === 'version') project.version = 9 as 2;
   if (kind === 'asset')
     project.current.furniture[0]!.catalogueId = 'remote-asset';
   if (kind === 'duplicate')

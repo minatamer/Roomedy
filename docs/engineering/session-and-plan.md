@@ -53,3 +53,7 @@ The editor now lazily composes one cutaway with the same current/candidate/check
 ## CPQ shared history — RM-027
 
 Price-only and combined proposals now use the same bounded workspace history as room commands. Optional immutable pricing-before metadata restores exact product/component/scope/budget inputs; cost-only Undo leaves room revision unchanged, while financial revisions always advance. No-op prices add no entry. The Session owner validates both domains before one Apply publication and retires stale/cancelled previews through existing lifecycle authority. Historical room-only descriptions above describe their earlier ticket scope. See [cost planning](cost-planning.md) and [actual evidence](../validation/RM-027.md).
+
+## Saved planning records — RM-028
+
+Session owns up to four deeply frozen approved planning snapshots independently from current room/pricing and Undo. Save cancels pending work and requires resolving a preview. Later changes never rewrite saved records. Confirmed draft-from-version creates fresh workspace/history, retaining Before, approved records and original expiry; the cost presentation remounts by that identity. Format2 project/recovery excludes chat and transient authority, validates calculations/versions/bytes before replacement and explicitly migrates version1. See [estimate versions](estimate-versions.md).

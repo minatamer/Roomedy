@@ -22,6 +22,23 @@ import {
 } from '../apps/frontend/src/features/assistant/tour-layout.js';
 
 describe('fresh editor orientation without persistent tour authority', () => {
+  it('does not replay fresh-room onboarding for a new draft of an approved estimate', () => {
+    const c = new SessionController(createRoomFixture('sample'));
+    try {
+      c.setDestination('cost');
+      const saved = c.saveEstimate('Reviewed');
+      expect(saved.ok).toBe(true);
+      if (!saved.ok) return;
+      expect(c.draftFromEstimate(saved.id)).toBe(true);
+      expect(automaticallyOfferTour(c.getSnapshot())).toBe(false);
+      c.setDestination('design');
+      expect(automaticallyOfferTour(c.getSnapshot())).toBe(false);
+      c.reset(createRoomFixture('empty'));
+      expect(automaticallyOfferTour(c.getSnapshot())).toBe(true);
+    } finally {
+      c.dispose();
+    }
+  });
   it.each(['empty', 'partial', 'sample'] as const)(
     'offers a new %s room while preserving canonical state',
     (condition) => {

@@ -152,8 +152,9 @@ export function ExportDialog({
         Made to <em>share.</em>
       </h2>
       <p className={styles.intro}>
-        Export your Current arrangement, or save an editable project to return
-        to.
+        Export your Current arrangement, or keep an editable project with your
+        design, prices and saved estimate versions. Photos, chat and Undo are
+        excluded.
       </p>
       <div className={styles.formats}>
         {EXPORT_FORMATS.map((format) => (

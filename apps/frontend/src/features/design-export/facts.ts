@@ -25,7 +25,7 @@ export const EXPORT_FORMATS = [
     kind: 'project',
     title: 'Editable project',
     extension: '.json',
-    text: 'Reopen your room in Roomedy with Current, Before and measurements.',
+    text: 'Reopen Current, Before, measurements, draft prices and saved estimates. No photos, chat or Undo.',
   },
 ] as const;
 export type DesignExportKind = 'pdf' | 'glb' | 'obj';

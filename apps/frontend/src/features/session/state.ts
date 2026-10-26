@@ -1,5 +1,6 @@
 import type { CostDraft } from '../cost/state';
 import type { CostProposal } from '../cost/planning';
+import type { EstimateVersion } from '@roomedy/contracts/project';
 import type { ProjectDestination } from '../cost/navigation';
 import type { OperationIdentity } from '@roomedy/contracts/commands';
 import type { CheckFacts, RoomDocument } from '@roomedy/contracts/room';
@@ -36,6 +37,7 @@ export interface SessionSnapshot {
   readonly destination: ProjectDestination;
   readonly cost: CostDraft | null;
   readonly costProposal: CostProposal | null;
+  readonly estimateVersions: readonly EstimateVersion[];
   readonly phase: SessionPhase;
   readonly generation: number;
   readonly createdAt: number;

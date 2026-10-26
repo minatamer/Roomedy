@@ -553,6 +553,7 @@ export function Editor({
   if (state.destination === 'cost' && state.cost)
     return (
       <CostWorkspace
+        key={workspace.workspaceId}
         controller={controller}
         state={state}
         placement={placement}

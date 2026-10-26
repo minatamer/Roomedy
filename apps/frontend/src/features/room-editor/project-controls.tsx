@@ -17,6 +17,8 @@ type Decision = {
   generation: number;
   workspaceId: string | undefined;
   revision: number | undefined;
+  costRevision: number | undefined;
+  versions: object;
 };
 
 function readFile(file: File, signal: AbortSignal): Promise<string> {
@@ -153,6 +155,8 @@ export function ProjectControls({
         generation: state.generation,
         workspaceId: state.workspace?.workspaceId,
         revision: state.workspace?.current.roomRevision,
+        costRevision: state.cost?.revision,
+        versions: state.estimateVersions,
       });
   };
   const confirmDecision = () => {
@@ -163,7 +167,9 @@ export function ProjectControls({
       !controller.checkExpiry() ||
       state.generation !== accepted.generation ||
       state.workspace?.workspaceId !== accepted.workspaceId ||
-      state.workspace?.current.roomRevision !== accepted.revision
+      state.workspace?.current.roomRevision !== accepted.revision ||
+      state.cost?.revision !== accepted.costRevision ||
+      state.estimateVersions !== accepted.versions
     ) {
       decline();
       setMessage(
@@ -194,6 +200,8 @@ export function ProjectControls({
       generation = state.generation,
       workspaceId = state.workspace?.workspaceId,
       revision = state.workspace?.current.roomRevision,
+      costRevision = state.cost?.revision,
+      versions = state.estimateVersions,
       abort = new AbortController();
     let live = true;
     const timer = setTimeout(() => abort.abort(), POLICY.intakeMs);
@@ -211,7 +219,9 @@ export function ProjectControls({
         controller.checkExpiry() &&
         next.generation === generation &&
         next.workspace?.workspaceId === workspaceId &&
-        next.workspace?.current.roomRevision === revision
+        next.workspace?.current.roomRevision === revision &&
+        next.cost?.revision === costRevision &&
+        next.estimateVersions === versions
       );
     };
     try {
@@ -350,7 +360,9 @@ export function ProjectControls({
         </summary>
         <div ref={menuPanel} className={styles.projectOptions}>
           <p>
-            Take your Current design with you, or save a project to edit later.
+            Take your Current design with you. An editable project also includes
+            draft prices, source evidence and saved estimates; photos, chat and
+            Undo are excluded.
           </p>
           <div className={styles.projectFileActions}>
             <button
@@ -432,7 +444,8 @@ export function ProjectControls({
               Imported room: {decision.project.current.room.width.value ?? '?'}{' '}
               × {decision.project.current.room.depth.value ?? '?'} mm ·{' '}
               {decision.project.current.furniture.length} pieces. Its starting
-              Before layout is included.
+              Before layout, draft prices and {decision.project.versions.length}{' '}
+              saved estimate versions are included.
             </p>
           )}
           <p>

@@ -78,6 +78,74 @@ it('coalesces accepted changes and excludes candidate/chat/history/operations fr
   expect(p.flush()).toBe(true);
   expect(storage.writes).toBe(1);
 });
+it('recovers price-only edits and saved versions without serializing or rewriting chat', async () => {
+  vi.useFakeTimers();
+  const { session: s, persistence: p, storage } = setup();
+  s.setDestination('cost');
+  const settings = structuredClone(s.getSnapshot().cost!.settings);
+  settings.floor.wasteBps = 2000;
+  s.updateCost(settings);
+  expect(s.saveEstimate('Reviewed').ok).toBe(true);
+  await vi.advanceTimersByTimeAsync(250);
+  const writes = storage.writes;
+  s.costMessage('visitor', 'PRIVATE_COST_CHAT');
+  await vi.advanceTimersByTimeAsync(300);
+  expect(storage.writes).toBe(writes);
+  expect(storage.getItem(RECOVERY_KEY)).not.toContain('PRIVATE_COST_CHAT');
+  const read = readRecovery(storage.getItem(RECOVERY_KEY)!, 0);
+  expect(read.ok).toBe(true);
+  if (read.ok) {
+    expect(read.value.project.cost!.settings.floor.wasteBps).toBe(2000);
+    expect(read.value.project.versions).toHaveLength(1);
+    expect(read.value.ui.destination).toBe('cost');
+  }
+  expect(p.flush()).toBe(true);
+});
+it('does not claim a reentrant old price write saved after the same workspace changes prices', () => {
+  const { session: s, persistence: p, storage } = setup();
+  s.setDestination('cost');
+  storage.afterWrite = () => {
+    storage.afterWrite = null;
+    const next = structuredClone(s.getSnapshot().cost!.settings);
+    next.floor.wasteBps = 2500;
+    s.updateCost(next);
+  };
+  expect(p.flush()).toBe(false);
+  expect(storage.getItem(RECOVERY_KEY)).toBeNull();
+  expect(p.flush()).toBe(true);
+  const read = readRecovery(storage.getItem(RECOVERY_KEY)!, 0);
+  expect(read.ok && read.value.project.cost!.settings.floor.wasteBps).toBe(
+    2500,
+  );
+});
+it.each(['reset', 'expiry', 'dispose'] as const)(
+  'releases persistence-owned financial references after %s without deleting a valid teardown save',
+  (event) => {
+    let now = 0;
+    const { session: s, persistence: p, storage } = setup(undefined, () => now);
+    s.setDestination('cost');
+    s.saveEstimate('Reviewed');
+    p.flush();
+    const state = s.getSnapshot(),
+      references = [
+        state.cost!.settings,
+        state.cost!.offers,
+        state.estimateVersions,
+      ],
+      saved = storage.getItem(RECOVERY_KEY);
+    if (event === 'reset') s.reset();
+    if (event === 'expiry') {
+      now = state.expiresAt;
+      s.checkExpiry();
+    }
+    if (event === 'dispose') p.dispose();
+    for (const value of references)
+      expect(Object.values(p)).not.toContain(value);
+    expect(storage.getItem(RECOVERY_KEY)).toBe(
+      event === 'dispose' ? saved : null,
+    );
+  },
+);
 it.each(['reset', 'import', 'expiry', 'dispose'] as const)(
   'a scheduled old write cannot resurrect data after %s',
   async (event) => {

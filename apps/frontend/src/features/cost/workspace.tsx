@@ -1,6 +1,8 @@
 import { Research } from './research';
 import { costIntent } from './planning';
 import { PlanCards } from './plan-cards';
+import { VersionControls } from './version-controls';
+import type { CostDraft } from './state';
 import {
   Component,
   lazy,
@@ -15,7 +17,7 @@ import type {
   EstimateLine,
   EstimateQuantity,
 } from '@roomedy/contracts/estimates';
-import { calculateRoomEstimate } from '@roomedy/spatial';
+import { calculateRoomEstimate, checkRoom } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
@@ -64,8 +66,32 @@ export function CostWorkspace({
   placement: CataloguePlacement;
   onDesign: () => void;
 }) {
-  const room = state.workspace!.current,
-    draft = state.cost!;
+  const [viewingId, setViewingId] = useState<string | null>(null);
+  const saved = state.estimateVersions.find((v) => v.id === viewingId);
+  const currentRoom = state.workspace!.current,
+    currentCost = state.cost!;
+  const room = saved?.room ?? currentRoom,
+    draft: CostDraft = saved
+      ? {
+          ...saved.pricing,
+          revision: 0,
+          roomRevision: saved.room.roomRevision,
+          messages: [],
+        }
+      : state.cost!;
+  const currentResult = useMemo(
+    () =>
+      calculateRoomEstimate(
+        currentRoom,
+        currentCost.settings,
+        currentCost.offers,
+      ),
+    [currentRoom, currentCost.settings, currentCost.offers],
+  );
+  const viewChecks = useMemo(
+    () => (saved ? checkRoom(saved.room) : state.checks!),
+    [saved, state.checks],
+  );
   const [selected, setSelected] = useState<string | null>(null),
     [lineId, setLineId] = useState<string | null>(null),
     [isolated, setIsolated] = useState(false),
@@ -90,8 +116,11 @@ export function CostWorkspace({
     composer = useRef<HTMLTextAreaElement>(null),
     logEnd = useRef<HTMLDivElement>(null);
   const result = useMemo(
-    () => calculateRoomEstimate(room, draft.settings, draft.offers),
-    [room, draft.settings, draft.offers],
+    () =>
+      saved
+        ? { ok: true as const, estimate: saved.estimate }
+        : calculateRoomEstimate(room, draft.settings, draft.offers),
+    [room, draft.settings, draft.offers, saved],
   );
   const target = targetExists(room, selected) ? selected : null;
   const inspection = useMemo(() => ({ target, isolated }), [target, isolated]);
@@ -188,7 +217,10 @@ export function CostWorkspace({
         <nav aria-label="Project phases">
           <button onClick={onDesign}>← Design</button>
           <span aria-current="page">Plan &amp; cost</span>
-          <button disabled={!state.undoLabel} onClick={() => controller.undo()}>
+          <button
+            disabled={!state.undoLabel || !!saved}
+            onClick={() => controller.undo()}
+          >
             Undo{state.undoLabel ? ` · ${state.undoLabel}` : ''}
           </button>
         </nav>
@@ -216,16 +248,19 @@ export function CostWorkspace({
           <div className={styles.cardTop}>
             <div>
               <p className={styles.eyebrow}>
-                {state.costProposal
-                  ? 'Proposal preview'
-                  : target
-                    ? 'In focus'
-                    : 'The whole picture'}
+                {saved
+                  ? 'Saved version'
+                  : state.costProposal
+                    ? 'Proposal preview'
+                    : target
+                      ? 'In focus'
+                      : 'The whole picture'}
               </p>
               <h2>
                 {target?.startsWith('surface:')
                   ? `${target.slice(8)} surface`
                   : (room.furniture.find((p) => p.id === target)?.label ??
+                    saved?.label ??
                     'Your room')}
               </h2>
             </div>
@@ -266,11 +301,11 @@ export function CostWorkspace({
                 <Cutaway
                   room={room}
                   candidate={
-                    state.candidate?.source === 'cost'
+                    !saved && state.candidate?.source === 'cost'
                       ? state.candidate.room
                       : undefined
                   }
-                  checks={state.checks!}
+                  checks={viewChecks}
                   selectedId={target?.startsWith('surface:') ? null : target}
                   onSelect={(id) => {
                     setSelected(id);
@@ -318,121 +353,155 @@ export function CostWorkspace({
             </p>
           </div>
         </section>
-        <section
-          className={styles.conversation}
-          aria-label="Plan and cost conversation"
-        >
-          <h2>
-            <MedyIcon /> Let’s bring it together
-          </h2>
-          <p className={styles.welcome}>
-            I’ve broken your room into materials, furniture and work. Choose a
-            part in 3D or a cost line below, and we can explore its quantities
-            and assumptions.
-          </p>
-          <div role="log" aria-label="Cost conversation">
-            {draft.messages.map((message, i) => (
-              <div
-                key={i}
-                className={
-                  message.role === 'visitor' ? styles.visitor : styles.reply
-                }
-              >
-                <span className={styles.srOnly}>
-                  {message.role === 'visitor' ? 'You' : 'Medy'}:{' '}
-                </span>
-                {message.text}
-                <small className={styles.messageStamp}>
-                  Room {message.roomRevision} · estimate {message.costRevision}
-                </small>
-              </div>
-            ))}
-            <div ref={logEnd} />
-          </div>
-          <div className={styles.quick}>
-            {[
-              'Find options for this part',
-              'Compare a cheaper budget',
-              'Show my work plan',
-            ].map((text) => (
-              <button
-                key={text}
-                disabled={!!state.candidate}
-                onClick={() => ask(text)}
-              >
-                {text}
-              </button>
-            ))}
-          </div>
-          <form className={styles.composer} onSubmit={submit}>
-            <textarea
-              ref={composer}
-              aria-label="Ask Medy about costs"
-              value={input}
-              maxLength={2000}
-              rows={2}
-              placeholder="Ask about your room’s costs…"
-              onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (
-                  event.key === 'Enter' &&
-                  !event.shiftKey &&
-                  !event.nativeEvent.isComposing
-                ) {
-                  event.preventDefault();
-                  event.currentTarget.form?.requestSubmit();
-                }
-              }}
-            />
-            <button
-              aria-label="Send cost message"
-              disabled={!input.trim() || !estimate || !!state.candidate}
-              type="submit"
-            >
-              ↑
-            </button>
-          </form>
-        </section>
-        {estimate && (
-          <PlanCards
+        {currentResult.ok && (
+          <VersionControls
             controller={controller}
             state={state}
-            estimate={estimate}
-            budget={
-              budget?.currency === draft.settings.locality.currency
-                ? budget.amount
-                : null
-            }
-            work={work}
-            inspect={inspect}
-            onPreview={(key) => {
-              setSelected(key);
+            estimate={currentResult.estimate}
+            selectedId={saved?.id ?? null}
+            onView={(id) => {
+              setViewingId(id);
+              setSelected(null);
               setLineId(null);
-              setGraphics(true);
+              setIsolated(false);
+              roomCard.current?.focus({ preventScroll: true });
+              roomCard.current?.scrollIntoView({
+                block: 'start',
+                behavior: 'smooth',
+              });
             }}
-            onResolved={() => composer.current?.focus({ preventScroll: true })}
+            onDesign={onDesign}
           />
         )}
-        <Research
-          requestRef={research}
-          controller={controller}
-          state={state}
-          selected={target}
-          onInspect={(key) => {
-            setSelected(key);
-            setLineId(null);
-            setGraphics(true);
-            roomCard.current?.focus({ preventScroll: true });
-            roomCard.current?.scrollIntoView({
-              block: 'start',
-              behavior: 'smooth',
-            });
-          }}
-        />
-        <fieldset className={styles.scopeGuard} disabled={!!state.candidate}>
-          <legend className={styles.srOnly}>Estimate scope</legend>
-          <ScopeControls controller={controller} room={room} draft={draft} />
-        </fieldset>
+        {!saved && (
+          <>
+            <section
+              className={styles.conversation}
+              aria-label="Plan and cost conversation"
+            >
+              <h2>
+                <MedyIcon /> Let’s bring it together
+              </h2>
+              <p className={styles.welcome}>
+                I’ve broken your room into materials, furniture and work. Choose
+                a part in 3D or a cost line below, and we can explore its
+                quantities and assumptions.
+              </p>
+              <div role="log" aria-label="Cost conversation">
+                {draft.messages.map((message, i) => (
+                  <div
+                    key={i}
+                    className={
+                      message.role === 'visitor' ? styles.visitor : styles.reply
+                    }
+                  >
+                    <span className={styles.srOnly}>
+                      {message.role === 'visitor' ? 'You' : 'Medy'}:{' '}
+                    </span>
+                    {message.text}
+                    <small className={styles.messageStamp}>
+                      Room {message.roomRevision} · estimate{' '}
+                      {message.costRevision}
+                    </small>
+                  </div>
+                ))}
+                <div ref={logEnd} />
+              </div>
+              <div className={styles.quick}>
+                {[
+                  'Find options for this part',
+                  'Compare a cheaper budget',
+                  'Show my work plan',
+                ].map((text) => (
+                  <button
+                    key={text}
+                    disabled={!!state.candidate}
+                    onClick={() => ask(text)}
+                  >
+                    {text}
+                  </button>
+                ))}
+              </div>
+              <form className={styles.composer} onSubmit={submit}>
+                <textarea
+                  ref={composer}
+                  aria-label="Ask Medy about costs"
+                  value={input}
+                  maxLength={2000}
+                  rows={2}
+                  placeholder="Ask about your room’s costs…"
+                  onChange={(event) => setInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (
+                      event.key === 'Enter' &&
+                      !event.shiftKey &&
+                      !event.nativeEvent.isComposing
+                    ) {
+                      event.preventDefault();
+                      event.currentTarget.form?.requestSubmit();
+                    }
+                  }}
+                />
+                <button
+                  aria-label="Send cost message"
+                  disabled={!input.trim() || !estimate || !!state.candidate}
+                  type="submit"
+                >
+                  ↑
+                </button>
+              </form>
+            </section>
+            {estimate && (
+              <PlanCards
+                controller={controller}
+                state={state}
+                estimate={estimate}
+                budget={
+                  budget?.currency === draft.settings.locality.currency
+                    ? budget.amount
+                    : null
+                }
+                work={work}
+                inspect={inspect}
+                onPreview={(key) => {
+                  setSelected(key);
+                  setLineId(null);
+                  setGraphics(true);
+                }}
+                onResolved={() =>
+                  composer.current?.focus({ preventScroll: true })
+                }
+              />
+            )}
+            <Research
+              requestRef={research}
+              controller={controller}
+              state={state}
+              selected={target}
+              onInspect={(key) => {
+                setSelected(key);
+                setLineId(null);
+                setGraphics(true);
+                roomCard.current?.focus({ preventScroll: true });
+                roomCard.current?.scrollIntoView({
+                  block: 'start',
+                  behavior: 'smooth',
+                });
+              }}
+            />
+            <fieldset
+              className={styles.scopeGuard}
+              disabled={!!state.candidate}
+            >
+              <legend className={styles.srOnly}>Estimate scope</legend>
+              <ScopeControls
+                controller={controller}
+                room={room}
+                draft={draft}
+              />
+            </fieldset>
+          </>
+        )}
         {estimate && (
           <section className={styles.breakdown} aria-label="Itemized estimate">
             <div className={styles.cardTop}>

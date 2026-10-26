@@ -38,8 +38,10 @@ import { ResourceRegistry } from './effects';
 import { initialPresentation } from './state';
 import type { Panel, PhotoNotes, SessionSnapshot } from './state';
 import { recoverySchema } from '@roomedy/contracts/project';
-import type { Project, Recovery } from '@roomedy/contracts/project';
-import { validateProject } from './project';
+import { ESTIMATE_VERSION_LIMIT } from '@roomedy/contracts/project';
+import type { EstimateVersion, Recovery } from '@roomedy/contracts/project';
+import { validateProject, projectOf } from './project';
+import { captureVersion, freezeVersion } from '../cost/versions';
 import { clearanceNotice } from './clearance';
 
 interface Dependencies {
@@ -88,6 +90,7 @@ export class SessionController {
       destination: 'design',
       cost: null,
       costProposal: null,
+      estimateVersions: Object.freeze([]),
       generation: 0,
       createdAt,
       expiresAt: createdAt + POLICY.guestLifetimeMs,
@@ -202,6 +205,7 @@ export class SessionController {
       destination: 'design',
       cost: null,
       costProposal: null,
+      estimateVersions: Object.freeze([]),
       generation: this.state.generation + 1,
       workspace: null,
       photoNotes: null,
@@ -316,6 +320,9 @@ export class SessionController {
       recovered: boolean;
       imported: boolean;
       roomView: 'plan' | 'cutaway';
+      cost?: EstimateState | null;
+      versions?: readonly EstimateVersion[];
+      destination?: ProjectDestination;
     },
   ): boolean {
     if (this.cleaning || this.state.phase === 'disposed') return false;
@@ -336,8 +343,19 @@ export class SessionController {
       pending: null,
       candidate: null,
       phase: room ? 'editor' : 'entry',
-      destination: 'design',
-      cost: null,
+      destination: options?.destination ?? 'design',
+      cost:
+        room && options?.cost
+          ? {
+              ...structuredClone(options.cost),
+              revision: 0,
+              roomRevision: room.roomRevision,
+              messages: [],
+            }
+          : null,
+      estimateVersions: Object.freeze(
+        (options?.versions ?? []).map(freezeVersion),
+      ),
       createdAt,
       costProposal: null,
       expiresAt: options?.expiresAt ?? createdAt + POLICY.guestLifetimeMs,
@@ -367,7 +385,7 @@ export class SessionController {
     this.startTimer();
     return true;
   }
-  importProject(project: Project): boolean {
+  importProject(project: unknown): boolean {
     const validated = validateProject(project);
     if (!validated.ok) return false;
     const now = this.now();
@@ -380,6 +398,9 @@ export class SessionController {
         recovered: false,
         imported: true,
         roomView: this.state.presentation.roomView,
+        cost: validated.value.cost,
+        versions: validated.value.versions,
+        destination: validated.value.cost ? 'cost' : 'design',
       },
     );
   }
@@ -403,7 +424,77 @@ export class SessionController {
       recovered: true,
       imported: false,
       roomView: record.ui.view === '2d' ? 'plan' : 'cutaway',
+      cost: validated.value.cost,
+      versions: validated.value.versions,
+      destination: validated.value.cost ? record.ui.destination : 'design',
     });
+  }
+  saveEstimate(
+    label: string,
+  ): { ok: true; id: string } | { ok: false; reason: string } {
+    if (
+      !this.canEdit() ||
+      !this.state.workspace ||
+      !this.state.cost ||
+      this.state.candidate
+    )
+      return {
+        ok: false,
+        reason: 'Resolve the preview and open the current cost draft first.',
+      };
+    if (this.state.estimateVersions.length >= ESTIMATE_VERSION_LIMIT)
+      return {
+        ok: false,
+        reason:
+          'This project already has four saved versions. Download the project to keep them; start a separate room project for further versions.',
+      };
+    const version = captureVersion(
+      this.state.workspace.current,
+      pricingState(this.state.cost),
+      this.id(),
+      label,
+      this.now(),
+    );
+    if (!version)
+      return {
+        ok: false,
+        reason: 'Review the version name and estimate before saving.',
+      };
+    const versions = Object.freeze([...this.state.estimateVersions, version]);
+    if (!projectOf({ ...this.state, estimateVersions: versions }))
+      return {
+        ok: false,
+        reason:
+          'This version exceeds the bounded project size. Download the existing project before starting a separate one.',
+      };
+    if (!this.active())
+      return { ok: false, reason: 'This room session has expired.' };
+    this.cancelWork();
+    this.publish({
+      estimateVersions: versions,
+      message: `${label} saved in this session as a reviewed planning estimate.`,
+    });
+    return { ok: true, id: version.id };
+  }
+  draftFromEstimate(id: string): boolean {
+    if (!this.canEdit() || !this.state.workspace || this.state.candidate)
+      return false;
+    const version = this.state.estimateVersions.find((v) => v.id === id);
+    if (!version) return false;
+    return this.replaceRoom(
+      { ...version.room, roomRevision: 0 },
+      {
+        baseline: this.state.workspace.baseline,
+        createdAt: this.state.createdAt,
+        expiresAt: this.state.expiresAt,
+        recovered: false,
+        imported: false,
+        roomView: this.state.presentation.roomView,
+        cost: version.pricing,
+        versions: this.state.estimateVersions,
+        destination: 'cost',
+      },
+    );
   }
   setPersistence(status: SessionSnapshot['persistence']) {
     if (this.state.persistence !== status && this.state.phase !== 'disposed')

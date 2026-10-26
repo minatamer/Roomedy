@@ -1452,8 +1452,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage and locally commit the clean exact27-path RM-027 checkpoint, then allocate and execute RM-028.
-Active ticket: RM-027
+Next action: Stage and locally commit the clean exact26-path RM-028 checkpoint, then allocate and execute RM-029.
+Active ticket: RM-028
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
@@ -1494,6 +1494,10 @@ Provisional owner reviews: 04-decisions
   Reason: One Apply/Undo owner prevents room and estimate divergence without adding a second financial history or paid conversation operation.
   Consequence / reversibility: Incomplete costs never prove budget success; source-size changes require explicit visitor review with original locks. Actual merchant/physical/owner visual acceptance stays pending.
   Owner review requested on return: yes. Evidence: docs/engineering/cost-planning.md, docs/validation/RM-027.md
+- **AFK-0009** (AFK-SESSION-001, 2026-10-26T16:57:34+00:00, 07-build): RM-028 uses explicit project format2 migration, at most four deeply frozen consumer-planning versions and the existing bounded sessionStorage owner. New draft from version starts fresh operation/history identity while retaining original expiry and all approved records.
+  Reason: Preserve exact estimates and source evidence independently from editable prices without a new database/account, parallel Undo history or commercial-signature claim.
+  Consequence / reversibility: Version1 rooms gain no inferred prices/approval. Unsupported engines/assets/totals/bytes reject before replacement; guest library remains session-bound with explicit file download/import. Actual external and owner visual tests remain pending.
+  Owner review requested on return: yes. Evidence: docs/engineering/estimate-versions.md, docs/validation/RM-028.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1516,7 +1520,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T16:24:28+00:00",
+  "updated_at": "2026-10-26T16:57:35+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1816,8 +1820,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-027",
-  "next_action": "Stage and locally commit the clean exact27-path RM-027 checkpoint, then allocate and execute RM-028.",
+  "active_ticket": "RM-028",
+  "next_action": "Stage and locally commit the clean exact26-path RM-028 checkpoint, then allocate and execute RM-029.",
   "phases": [
     {
       "id": "01-docs",
@@ -2171,9 +2175,9 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:b904443",
-        "docs/validation/RM-027.md",
-        "actual-gate:1140-tests-root-both-builds-plus-final83-affected-tests-types-frontend-build-native-fake-pass"
+        "commit:50e2b05",
+        "docs/validation/RM-028.md",
+        "actual-settled-gate:1166-tests-71-files-root-both-builds-native-fake-file-roundtrip-pass"
       ],
       "blockers": [
         {
@@ -3421,6 +3425,20 @@ This checklist records local work. Human approvals and unresolved external check
         "evidence": [
           "docs/engineering/cost-planning.md",
           "docs/validation/RM-027.md"
+        ]
+      },
+      {
+        "id": "AFK-0009",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T16:57:34+00:00",
+        "phase": "07-build",
+        "choice": "RM-028 uses explicit project format2 migration, at most four deeply frozen consumer-planning versions and the existing bounded sessionStorage owner. New draft from version starts fresh operation/history identity while retaining original expiry and all approved records.",
+        "rationale": "Preserve exact estimates and source evidence independently from editable prices without a new database/account, parallel Undo history or commercial-signature claim.",
+        "consequence": "Version1 rooms gain no inferred prices/approval. Unsupported engines/assets/totals/bytes reject before replacement; guest library remains session-bound with explicit file download/import. Actual external and owner visual tests remain pending.",
+        "review_needed": true,
+        "evidence": [
+          "docs/engineering/estimate-versions.md",
+          "docs/validation/RM-028.md"
         ]
       }
     ]

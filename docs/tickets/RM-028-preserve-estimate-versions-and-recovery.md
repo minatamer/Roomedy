@@ -1,6 +1,6 @@
 # RM-028 — Preserve estimate versions and recovery
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-027](RM-027-deliver-reviewed-budget-and-work-plans.md).
+Status: **Complete locally — settled fake gate passed; owner acceptance pending**. Dependencies: [RM-027](RM-027-deliver-reviewed-budget-and-work-plans.md).
 
 ## Authority and outcome
 
@@ -25,9 +25,9 @@ Preserve reviewed estimate snapshots independently from editable drafts and futu
 
 ## Acceptance
 
-- [ ] Editing/refreshing v2 never changes v1 totals/evidence/design; snapshot references are detached and export selects one exact version.
-- [ ] Project roundtrip and old-project imports work; malformed/oversized/unsupported versions reject before replacing current work.
-- [ ] Local storage/expiry failures are truthful and no permanent library, issuer signature or tamper-proof claim appears.
+- [x] Editing/refreshing v2 never changes v1 totals/evidence/design; snapshot references are detached and export selects one exact version.
+- [x] Project roundtrip and old-project imports work; malformed/oversized/unsupported versions reject before replacing current work.
+- [x] Local storage/expiry failures are truthful and no permanent library, issuer signature or tamper-proof claim appears.
 
 ## Execution and verification
 
@@ -43,3 +43,5 @@ After required checks pass, review the entire settled diff read-only against eve
 Explicit non-goal for this packet: no accounts, database or commercial e-signing. Drawing/document intake is permanently excluded from the extension. Keep output estimate PDF support in its owning packet. First-party sample prices and fake research remain visibly authored; no fixture proves real stock, local price, fit, installer availability or commercial acceptance.
 
 Use only owned Roomedy ports 4320/4321 after verifying full process/listener ownership. Never kill by executable name or port alone, start alternate review services, or change the owner's ignored environment. Existing live Roomedy processes must not be driven by fake tests; if a runtime change is needed, follow the restart/run skills with explicit process overrides and keep environment files unchanged. Test children must force fake/paid-off and deny network independently before application imports.
+
+Actual results and review limitations: [RM-028 validation](../validation/RM-028.md); exact [file allocation](../commit-plans/RM-028.md).

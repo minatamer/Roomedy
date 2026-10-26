@@ -14,6 +14,11 @@ export class SessionPersistence {
   private generation: number;
   private current: object | null = null;
   private baseline: object | null = null;
+  private settings: object | null = null;
+  private offers: object | null = null;
+  private budget: number | null = null;
+  private versions: object | null = null;
+  private destination = '';
   private view = '';
   private latestWrite: object | null = null;
   constructor(
@@ -52,6 +57,7 @@ export class SessionPersistence {
   private clear() {
     this.cancelTimer();
     this.dirty = false;
+    this.forgetAccepted();
     try {
       this.storage?.removeItem(RECOVERY_KEY);
     } catch {
@@ -59,14 +65,22 @@ export class SessionPersistence {
       this.session.setPersistence('memory-only');
     }
   }
+  private forgetAccepted() {
+    this.current =
+      this.baseline =
+      this.settings =
+      this.offers =
+      this.versions =
+        null;
+    this.budget = null;
+    this.destination = this.view = '';
+  }
   private changed() {
     if (!this.live) return;
     const state = this.session.getSnapshot();
     if (state.generation !== this.generation) {
       this.generation = state.generation;
       this.clear();
-      this.current = null;
-      this.baseline = null;
     }
     if (state.phase !== 'editor' || !state.workspace) {
       if (
@@ -84,11 +98,21 @@ export class SessionPersistence {
     if (
       this.current === state.workspace.current &&
       this.baseline === state.workspace.baseline &&
+      this.settings === (state.cost?.settings ?? null) &&
+      this.offers === (state.cost?.offers ?? null) &&
+      this.budget === (state.cost?.budgetMinor ?? null) &&
+      this.versions === state.estimateVersions &&
+      this.destination === state.destination &&
       this.view === state.presentation.roomView
     )
       return;
     this.current = state.workspace.current;
     this.baseline = state.workspace.baseline;
+    this.settings = state.cost?.settings ?? null;
+    this.offers = state.cost?.offers ?? null;
+    this.budget = state.cost?.budgetMinor ?? null;
+    this.versions = state.estimateVersions;
+    this.destination = state.destination;
     this.view = state.presentation.roomView;
     this.dirty = true;
     this.cancelTimer();
@@ -111,11 +135,17 @@ export class SessionPersistence {
       record = recoveryOf(state);
     if (!record || state.expiresAt <= this.now()) {
       this.clear();
+      if (state.phase === 'editor' && state.expiresAt > this.now()) {
+        this.failed = true;
+        this.session.setPersistence('memory-only');
+        this.session.notify(projectMessages['too-large']);
+      }
       return false;
     }
     const text = JSON.stringify(record);
     if (new TextEncoder().encode(text).byteLength > POLICY.projectBytes) {
       this.failed = true;
+      this.clear();
       this.session.setPersistence('memory-only');
       this.session.notify(projectMessages['too-large']);
       return false;
@@ -132,6 +162,12 @@ export class SessionPersistence {
       if (
         latest.generation !== generation ||
         latest.workspace?.workspaceId !== workspaceId ||
+        latest.workspace?.current !== state.workspace?.current ||
+        latest.cost?.settings !== state.cost?.settings ||
+        latest.cost?.offers !== state.cost?.offers ||
+        latest.cost?.budgetMinor !== state.cost?.budgetMinor ||
+        latest.estimateVersions !== state.estimateVersions ||
+        latest.destination !== state.destination ||
         latest.phase !== 'editor' ||
         latest.expiresAt <= this.now()
       ) {
@@ -167,5 +203,6 @@ export class SessionPersistence {
     this.live = false;
     this.cancelTimer();
     this.unsubscribe();
+    this.forgetAccepted();
   }
 }
