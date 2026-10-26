@@ -27,6 +27,7 @@ export function inspectionPose(
       size = displayFurnitureSize(piece);
     if (!size) return null;
     const span = Math.max(size.width, size.depth, size.height) / 1000;
+    const distance = inspection.isolated ? 0.7 : 1;
     const target: [number, number, number] = [
       pose.position[0],
       pose.position[1] + size.height / 2000,
@@ -34,9 +35,9 @@ export function inspectionPose(
     ];
     return {
       position: [
-        target[0] + span * 1.4,
-        target[1] + span * 1.2,
-        target[2] + span * 1.6,
+        target[0] + span * 1.4 * distance,
+        target[1] + span * 1.2 * distance,
+        target[2] + span * 1.6 * distance,
       ],
       target,
       zoom: 1,

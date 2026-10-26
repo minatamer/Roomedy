@@ -66,6 +66,7 @@ export {
   createCommandWorkspace,
   prepareCommand,
   applyCommand,
+  recordCostChange,
   undoCommand,
   commandPayload,
   payloadDigest,

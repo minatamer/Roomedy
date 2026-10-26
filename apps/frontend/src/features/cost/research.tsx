@@ -1,11 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
-import type { FormEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
+import type { FormEvent, Ref } from 'react';
 import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 import type { SourcingBrief, SourcingReply } from '@roomedy/contracts/sourcing';
 import { buildSourcingBrief } from './brief';
 import { beginResearch } from './client';
-import { selectOffer, sourceOfferSelected } from './attach-offer';
+import {
+  reviewSourceSize,
+  selectOffer,
+  sourceOfferSelected,
+} from './attach-offer';
 import { money } from './state';
 import styles from './workspace.module.css';
 export function Research({
@@ -13,11 +23,15 @@ export function Research({
   state,
   selected,
   onInspect,
+  requestRef,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
   selected: string | null;
   onInspect: (key: string | null) => void;
+  requestRef?: Ref<
+    (key: string, query: string, primer?: boolean) => Promise<void>
+  >;
 }) {
   const room = state.workspace!.current,
     draft = state.cost!;
@@ -49,40 +63,57 @@ export function Research({
     found &&
     found.roomRevision === room.roomRevision &&
     found.costRevision === draft.revision;
-  const submit = async (event: FormEvent) => {
+  const start = useCallback(
+    async (requestedKey: string, preferences: string, usePrimer = false) => {
+      if (task.current) return;
+      const current = controller.getSnapshot();
+      if (!current.workspace) return;
+      const brief = buildSourcingBrief(
+        current.workspace.current,
+        requestedKey,
+        preferences,
+        usePrimer,
+      );
+      if (!brief) return;
+      const running = beginResearch(controller, brief);
+      if (!running) {
+        setMessage('Resolve the current preview before starting research.');
+        return;
+      }
+      task.current = running;
+      setChoice(requestedKey);
+      setQuery(preferences);
+      setPrimer(usePrimer);
+      setFound(null);
+      setBusy(true);
+      setMessage('Looking for suitable products and clear price evidence…');
+      const answer = await running.result;
+      if (!live.current || task.current !== running) return;
+      task.current = null;
+      setBusy(false);
+      if (!answer.ok) {
+        setMessage(answer.message);
+        return;
+      }
+      setFound({
+        brief,
+        reply: answer.reply,
+        roomRevision: answer.input.identity.inputRevision,
+        costRevision: answer.input.costRevision,
+        simulation: answer.simulation,
+      });
+      setMessage(
+        answer.reply.candidates.length
+          ? 'Review the evidence, size and inclusions before using a price.'
+          : 'No suitable priced match was found. You can enter a manual allowance.',
+      );
+    },
+    [controller],
+  );
+  useImperativeHandle(requestRef, () => start, [start]);
+  const submit = (event: FormEvent) => {
     event.preventDefault();
-    if (busy) return;
-    const brief = buildSourcingBrief(room, key, query, primer);
-    if (!brief) return;
-    const running = beginResearch(controller, brief);
-    if (!running) {
-      setMessage('Resolve the current preview before starting research.');
-      return;
-    }
-    task.current = running;
-    setFound(null);
-    setBusy(true);
-    setMessage('Looking for suitable products and clear price evidence…');
-    const answer = await running.result;
-    if (!live.current || task.current !== running) return;
-    task.current = null;
-    setBusy(false);
-    if (!answer.ok) {
-      setMessage(answer.message);
-      return;
-    }
-    setFound({
-      brief,
-      reply: answer.reply,
-      roomRevision: answer.input.identity.inputRevision,
-      costRevision: answer.input.costRevision,
-      simulation: answer.simulation,
-    });
-    setMessage(
-      answer.reply.candidates.length
-        ? 'Review the evidence, size and inclusions before using a price.'
-        : 'No suitable priced match was found. You can enter a manual allowance.',
-    );
+    void start(key, query, primer);
   };
   return (
     <section
@@ -295,6 +326,7 @@ export function Research({
                     disabled={
                       !fresh ||
                       busy ||
+                      !!state.candidate ||
                       (!!candidate.offer &&
                         sourceOfferSelected(
                           draft,
@@ -333,6 +365,34 @@ export function Research({
                       : 'Use this price'}
                   </button>
                 )}
+                {candidate.offer?.kind === 'furniture' &&
+                  candidate.offer.outerSizeMm && (
+                    <button
+                      disabled={!fresh || busy || !!state.candidate}
+                      onClick={() => {
+                        const result = reviewSourceSize(
+                          controller,
+                          found.brief,
+                          candidate,
+                          found.costRevision,
+                          found.roomRevision,
+                        );
+                        setMessage(
+                          result.ok
+                            ? 'Combined preview ready above. Review the new size and costs before Apply.'
+                            : result.reason,
+                        );
+                        if (result.ok)
+                          onInspect(
+                            found.brief.target.kind === 'furniture'
+                              ? found.brief.target.id
+                              : null,
+                          );
+                      }}
+                    >
+                      Review size &amp; price together
+                    </button>
+                  )}
               </div>
             </article>
           ))}

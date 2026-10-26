@@ -347,3 +347,10 @@ export type EstimateLine = z.infer<typeof estimateLineSchema>;
 export type RoomEstimate = z.infer<typeof roomEstimateSchema>;
 export type EstimateQuantity = z.infer<typeof estimateQuantitySchema>;
 export type EstimateTarget = z.infer<typeof targetSchema>;
+/** Accepted financial inputs, shared with the bounded room Undo history. */
+export const estimateStateSchema = z.strictObject({
+  settings: estimateSettingsSchema,
+  offers: estimateOffersSchema,
+  budgetMinor: minor.nullable(),
+});
+export type EstimateState = z.infer<typeof estimateStateSchema>;

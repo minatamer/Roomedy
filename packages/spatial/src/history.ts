@@ -2,10 +2,14 @@ import { utf8ToBytes } from '@noble/hashes/utils.js';
 import { roomDocumentSchema } from '@roomedy/contracts/room';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
+import { estimateStateSchema } from '@roomedy/contracts/estimates';
+import type { EstimateState } from '@roomedy/contracts/estimates';
 
 export interface HistoryEntry {
   readonly commandId: string;
   readonly previous: RoomDocument;
+  readonly pricing?: EstimateState;
+  readonly costOnly?: true;
   readonly bytes: number;
 }
 export interface History {
@@ -17,8 +21,7 @@ export const emptyHistory = (): History =>
 export const jsonBytes = (value: unknown): number =>
   utf8ToBytes(JSON.stringify(value)).byteLength;
 
-export function immutableRoom(room: RoomDocument): RoomDocument {
-  const copy = roomDocumentSchema.parse(room);
+function immutable<T>(copy: T): T {
   const freeze = (value: unknown): void => {
     if (value && typeof value === 'object') {
       for (const v of Object.values(value)) freeze(v);
@@ -27,6 +30,9 @@ export function immutableRoom(room: RoomDocument): RoomDocument {
   };
   freeze(copy);
   return copy;
+}
+export function immutableRoom(room: RoomDocument): RoomDocument {
+  return immutable(roomDocumentSchema.parse(room));
 }
 
 export function pushHistory(
@@ -37,6 +43,7 @@ export function pushHistory(
     entries: POLICY.undoEntries,
     bytes: POLICY.undoBytes,
   },
+  context: { pricing?: EstimateState; costOnly?: true } = {},
 ): { history: History; recorded: boolean } {
   if (
     !Number.isInteger(limits.entries) ||
@@ -47,7 +54,14 @@ export function pushHistory(
     limits.bytes > POLICY.undoBytes
   )
     throw new Error('invalid-history-policy');
-  const snapshot = { commandId, previous: immutableRoom(previous) };
+  const snapshot = {
+    commandId,
+    previous: immutableRoom(previous),
+    ...(context.pricing
+      ? { pricing: immutable(estimateStateSchema.parse(context.pricing)) }
+      : {}),
+    ...(context.costOnly ? { costOnly: true as const } : {}),
+  };
   const entry = Object.freeze({ ...snapshot, bytes: jsonBytes(snapshot) });
   const entries = [...history.entries, entry];
   let bytes = entries.reduce((total, item) => total + item.bytes, 0);

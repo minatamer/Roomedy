@@ -4,6 +4,7 @@ import type {
   EstimateSettings,
   EstimateTarget,
   RoomEstimate,
+  EstimateState,
 } from '@roomedy/contracts/estimates';
 import {
   estimateSettingsSchema,
@@ -21,7 +22,7 @@ export interface CostMessage {
   role: 'visitor' | 'assistant';
   text: string;
 }
-export interface CostDraft {
+export interface CostDraft extends EstimateState {
   revision: number;
   roomRevision: number;
   settings: EstimateSettings;
@@ -34,6 +35,7 @@ export function createCostDraft(room: RoomDocument): CostDraft {
     roomRevision: room.roomRevision,
     settings: defaultEstimateSettings(room),
     offers: sampleEstimateOffers(),
+    budgetMinor: null,
     messages: [],
   };
 }
@@ -74,7 +76,15 @@ export function validatedCost(
     roomRevision: room.roomRevision,
     settings: s.data,
     offers: o.data,
+    budgetMinor: null,
     messages: [],
+  };
+}
+export function pricingState(draft: CostDraft): EstimateState {
+  return {
+    settings: draft.settings,
+    offers: draft.offers,
+    budgetMinor: draft.budgetMinor,
   };
 }
 export function targetKey(target: EstimateTarget) {
@@ -111,24 +121,32 @@ export function explainCost(
 ) {
   const lower = text.toLowerCase();
   const lines = estimate.lines.filter((line) =>
-    selected
-      ? line.targets.some((target) => targetKey(target) === selected)
-      : /floor/.test(lower)
-        ? line.category === 'floor'
-        : /paint|wall|primer/.test(lower)
-          ? line.category === 'walls'
-          : /deliver|moving|labour|labor/.test(lower)
-            ? ['services', 'delivery'].includes(line.category)
+    /floor/.test(lower)
+      ? line.category === 'floor'
+      : /paint|wall|primer/.test(lower)
+        ? line.category === 'walls'
+        : /deliver|moving|labour|labor/.test(lower)
+          ? ['services', 'delivery'].includes(line.category)
+          : selected
+            ? line.targets.some((target) => targetKey(target) === selected)
             : true,
   );
   return (
-    lines
+    [...lines]
+      .sort(
+        (a, b) =>
+          Number(b.amountMinor !== null && b.amountMinor > 0) -
+          Number(a.amountMinor !== null && a.amountMinor > 0),
+      )
       .slice(0, 4)
       .map(
         (line) =>
           `${line.label}: ${line.amountMinor === null ? 'needs a price or measurement' : money(line.amountMinor, estimate.locality.currency)}. ${line.rule}`,
       )
-      .join('\n\n') ||
+      .join('\n\n') +
+      (lines.length
+        ? `\n\n${lines.filter((l) => l.amountMinor === null).length} unresolved lines in this scope. Review the breakdown for every included item, source and allowance.`
+        : '') ||
     'Choose a cost line to explore its quantities and assumptions. You can edit scope below, or return to Design for measurements and finishes.'
   );
 }

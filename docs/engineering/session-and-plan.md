@@ -49,3 +49,7 @@ Vitest integration-test type checking uses ESNext/Bundler resolution for importe
 ## RM-006 projection extension
 
 The editor now lazily composes one cutaway with the same current/candidate/checks/selection inputs. View/camera refs are presentation state scoped to the workspace; no semantic controller method, command policy or baseline authority changes. The loading boundary keeps PlanView usable; graphical failure preserves numeric/plan editing. [Renderer design and ownership](../design/room-view.md), [actual evidence](../validation/RM-006.md). References above to 3D being absent describe RM-005 historical scope.
+
+## CPQ shared history — RM-027
+
+Price-only and combined proposals now use the same bounded workspace history as room commands. Optional immutable pricing-before metadata restores exact product/component/scope/budget inputs; cost-only Undo leaves room revision unchanged, while financial revisions always advance. No-op prices add no entry. The Session owner validates both domains before one Apply publication and retires stale/cancelled previews through existing lifecycle authority. Historical room-only descriptions above describe their earlier ticket scope. See [cost planning](cost-planning.md) and [actual evidence](../validation/RM-027.md).

@@ -1,4 +1,6 @@
 import { Research } from './research';
+import { costIntent } from './planning';
+import { PlanCards } from './plan-cards';
 import {
   Component,
   lazy,
@@ -69,10 +71,23 @@ export function CostWorkspace({
     [isolated, setIsolated] = useState(false),
     [graphics, setGraphics] = useState(true),
     [input, setInput] = useState(''),
-    [openedAt] = useState(() => performance.now());
+    [openedAt] = useState(() => performance.now()),
+    [budget, setBudget] = useState<{ amount: number; currency: string } | null>(
+      draft.budgetMinor === null
+        ? null
+        : {
+            amount: draft.budgetMinor,
+            currency: draft.settings.locality.currency,
+          },
+    ),
+    [work, setWork] = useState(false);
+  const research = useRef<
+    ((key: string, query: string, primer?: boolean) => Promise<void>) | null
+  >(null);
   const camera = useRef<CameraPose | null>(null),
     roomCard = useRef<HTMLElement>(null),
     heading = useRef<HTMLHeadingElement>(null),
+    composer = useRef<HTMLTextAreaElement>(null),
     logEnd = useRef<HTMLDivElement>(null);
   const result = useMemo(
     () => calculateRoomEstimate(room, draft.settings, draft.offers),
@@ -97,12 +112,65 @@ export function CostWorkspace({
     setLineId(line.id);
     setSelected(targetKey(line.targets[0]!));
   };
+  const ask = (text: string) => {
+    if (!text.trim() || !estimate || !controller.checkExpiry()) return;
+    if (state.candidate) {
+      controller.notify(
+        'Apply or Cancel the preview before starting another request.',
+      );
+      return;
+    }
+    if (!controller.costMessage('visitor', text)) return;
+    const intent = costIntent(
+      text,
+      room,
+      draft.settings.locality.currency,
+      target,
+    );
+    if (intent.kind === 'budget') {
+      setWork(false);
+      setBudget({
+        amount: intent.amountMinor,
+        currency: draft.settings.locality.currency,
+      });
+      controller.costMessage(
+        'assistant',
+        'I’ll compare compatible recorded products and keeping your owned furniture. Review the alternatives below; required work and unresolved costs stay visible.',
+      );
+    } else if (intent.kind === 'work') {
+      setBudget(null);
+      setWork(true);
+      controller.costMessage(
+        'assistant',
+        'Your work sequence and shopping quantities are ready below. Site checks, product instructions and unresolved timing remain visible.',
+      );
+    } else if (intent.kind === 'research') {
+      setBudget(null);
+      setWork(false);
+      controller.costMessage(
+        'assistant',
+        'I’ll research this part using its design brief and your selected city and currency. Review the evidence and differences before using a price.',
+      );
+      void research.current?.(intent.key, intent.query, /primer/i.test(text));
+    } else
+      controller.costMessage(
+        'assistant',
+        intent.kind === 'clarify'
+          ? intent.message
+          : explainCost(estimate, text, target),
+      );
+  };
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    if (!input.trim() || !estimate || !controller.checkExpiry()) return;
-    if (!controller.costMessage('visitor', input)) return;
-    controller.costMessage('assistant', explainCost(estimate, input, target));
+    ask(input);
     setInput('');
+  };
+  const inspect = (key: string | null) => {
+    setSelected(key);
+    setLineId(null);
+    setGraphics(true);
+    roomCard.current?.focus({ preventScroll: true });
+    roomCard.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
   };
   const fallback = (
     <div className={styles.fallback}>
@@ -120,6 +188,9 @@ export function CostWorkspace({
         <nav aria-label="Project phases">
           <button onClick={onDesign}>← Design</button>
           <span aria-current="page">Plan &amp; cost</span>
+          <button disabled={!state.undoLabel} onClick={() => controller.undo()}>
+            Undo{state.undoLabel ? ` · ${state.undoLabel}` : ''}
+          </button>
         </nav>
         <span className={styles.revision}>
           Room revision {room.roomRevision}
@@ -145,7 +216,11 @@ export function CostWorkspace({
           <div className={styles.cardTop}>
             <div>
               <p className={styles.eyebrow}>
-                {target ? 'In focus' : 'The whole picture'}
+                {state.costProposal
+                  ? 'Proposal preview'
+                  : target
+                    ? 'In focus'
+                    : 'The whole picture'}
               </p>
               <h2>
                 {target?.startsWith('surface:')
@@ -190,7 +265,11 @@ export function CostWorkspace({
               >
                 <Cutaway
                   room={room}
-                  candidate={undefined}
+                  candidate={
+                    state.candidate?.source === 'cost'
+                      ? state.candidate.room
+                      : undefined
+                  }
                   checks={state.checks!}
                   selectedId={target?.startsWith('surface:') ? null : target}
                   onSelect={(id) => {
@@ -272,21 +351,14 @@ export function CostWorkspace({
           </div>
           <div className={styles.quick}>
             {[
-              'Explain the flooring',
-              'What does painting include?',
-              'Explain delivery and moving',
+              'Find options for this part',
+              'Compare a cheaper budget',
+              'Show my work plan',
             ].map((text) => (
               <button
                 key={text}
-                onClick={() => {
-                  if (estimate) {
-                    controller.costMessage('visitor', text);
-                    controller.costMessage(
-                      'assistant',
-                      explainCost(estimate, text, null),
-                    );
-                  }
-                }}
+                disabled={!!state.candidate}
+                onClick={() => ask(text)}
               >
                 {text}
               </button>
@@ -294,6 +366,7 @@ export function CostWorkspace({
           </div>
           <form className={styles.composer} onSubmit={submit}>
             <textarea
+              ref={composer}
               aria-label="Ask Medy about costs"
               value={input}
               maxLength={2000}
@@ -313,14 +386,35 @@ export function CostWorkspace({
             />
             <button
               aria-label="Send cost message"
-              disabled={!input.trim() || !estimate}
+              disabled={!input.trim() || !estimate || !!state.candidate}
               type="submit"
             >
               ↑
             </button>
           </form>
         </section>
+        {estimate && (
+          <PlanCards
+            controller={controller}
+            state={state}
+            estimate={estimate}
+            budget={
+              budget?.currency === draft.settings.locality.currency
+                ? budget.amount
+                : null
+            }
+            work={work}
+            inspect={inspect}
+            onPreview={(key) => {
+              setSelected(key);
+              setLineId(null);
+              setGraphics(true);
+            }}
+            onResolved={() => composer.current?.focus({ preventScroll: true })}
+          />
+        )}
         <Research
+          requestRef={research}
           controller={controller}
           state={state}
           selected={target}
@@ -335,7 +429,10 @@ export function CostWorkspace({
             });
           }}
         />
-        <ScopeControls controller={controller} room={room} draft={draft} />
+        <fieldset className={styles.scopeGuard} disabled={!!state.candidate}>
+          <legend className={styles.srOnly}>Estimate scope</legend>
+          <ScopeControls controller={controller} room={room} draft={draft} />
+        </fieldset>
         {estimate && (
           <section className={styles.breakdown} aria-label="Itemized estimate">
             <div className={styles.cardTop}>

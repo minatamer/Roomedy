@@ -1,5 +1,7 @@
 import { utf8ToBytes } from '@noble/hashes/utils.js';
 import { roomDocumentSchema } from '@roomedy/contracts/room';
+import { estimateStateSchema } from '@roomedy/contracts/estimates';
+import type { EstimateState } from '@roomedy/contracts/estimates';
 import { sha256 } from '@noble/hashes/sha2.js';
 import {
   commandEnvelopeSchema,
@@ -132,7 +134,14 @@ export function applyCommand(
   raw: unknown,
   authority: CommandAuthority,
   scope?: ActionScope,
+  pricingBefore?: EstimateState,
 ): ApplyResult {
+  if (
+    pricingBefore &&
+    (!estimateStateSchema.safeParse(pricingBefore).success ||
+      pricingBefore.settings.roomId !== workspace.current.roomId)
+  )
+    return { ok: false, code: 'invalid-input' };
   const parsed = commandEnvelopeSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, code: 'invalid-input' };
   const command = parsed.data,
@@ -204,7 +213,13 @@ export function applyCommand(
   )
     receiptBytes -= receipts.shift()!.bytes;
   const history = evaluation.changed
-    ? pushHistory(workspace.history, workspace.current, command.commandId)
+    ? pushHistory(
+        workspace.history,
+        workspace.current,
+        command.commandId,
+        undefined,
+        pricingBefore ? { pricing: pricingBefore } : {},
+      )
     : { history: workspace.history, recorded: false };
   const next: CommandWorkspace = {
     ...workspace,
@@ -222,6 +237,40 @@ export function applyCommand(
     undoRecorded: history.recorded,
   };
 }
+/** Cost changes share the room's single bounded LIFO history, without changing geometry. */
+export function recordCostChange(
+  workspace: CommandWorkspace,
+  pricing: EstimateState,
+  commandId: string,
+): ApplyResult {
+  if (
+    !idSchema.safeParse(commandId).success ||
+    !estimateStateSchema.safeParse(pricing).success ||
+    pricing.settings.roomId !== workspace.current.roomId
+  )
+    return { ok: false, code: 'invalid-input' };
+  if (workspace.lastCommandSequence >= Number.MAX_SAFE_INTEGER - 1)
+    return { ok: false, code: 'revision-limit' };
+  const history = pushHistory(
+    workspace.history,
+    workspace.current,
+    commandId,
+    undefined,
+    { pricing, costOnly: true },
+  );
+  return {
+    ok: true,
+    workspace: {
+      ...workspace,
+      history: history.history,
+      lastCommandSequence: workspace.lastCommandSequence + 1,
+    },
+    receipt: null,
+    status: 'applied',
+    evaluation: null,
+    undoRecorded: history.recorded,
+  };
+}
 export function undoCommand(workspace: CommandWorkspace):
   | { ok: false; code: FailureCode }
   | {
@@ -229,19 +278,25 @@ export function undoCommand(workspace: CommandWorkspace):
       workspace: CommandWorkspace;
       checks: ReturnType<typeof checkRoom>;
       commandId: string;
+      pricing?: EstimateState;
     } {
   const entry = popHistory(workspace.history);
   if (!entry) return { ok: false, code: 'nothing-to-undo' };
-  if (workspace.current.roomRevision >= Number.MAX_SAFE_INTEGER - 1)
+  if (
+    !entry.entry.costOnly &&
+    workspace.current.roomRevision >= Number.MAX_SAFE_INTEGER - 1
+  )
     return { ok: false, code: 'revision-limit' };
   const current = immutableRoom({
     ...roomDocumentSchema.parse(entry.entry.previous),
-    roomRevision: workspace.current.roomRevision + 1,
+    roomRevision:
+      workspace.current.roomRevision + (entry.entry.costOnly ? 0 : 1),
   });
   return {
     ok: true,
     workspace: { ...workspace, current, history: entry.history },
     checks: checkRoom(current),
     commandId: entry.entry.commandId,
+    ...(entry.entry.pricing ? { pricing: entry.entry.pricing } : {}),
   };
 }

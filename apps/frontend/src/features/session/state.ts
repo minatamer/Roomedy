@@ -1,4 +1,5 @@
 import type { CostDraft } from '../cost/state';
+import type { CostProposal } from '../cost/planning';
 import type { ProjectDestination } from '../cost/navigation';
 import type { OperationIdentity } from '@roomedy/contracts/commands';
 import type { CheckFacts, RoomDocument } from '@roomedy/contracts/room';
@@ -20,7 +21,7 @@ export interface Presentation {
 /** A renderer projection is never an independently editable room. */
 export interface CandidateProjection {
   readonly identity: OperationIdentity;
-  readonly source?: 'visitor' | 'assistant';
+  readonly source?: 'visitor' | 'assistant' | 'cost';
   readonly label?: string;
   readonly room: RoomDocument;
   readonly checks: CheckFacts;
@@ -34,6 +35,7 @@ export interface PhotoNotes {
 export interface SessionSnapshot {
   readonly destination: ProjectDestination;
   readonly cost: CostDraft | null;
+  readonly costProposal: CostProposal | null;
   readonly phase: SessionPhase;
   readonly generation: number;
   readonly createdAt: number;

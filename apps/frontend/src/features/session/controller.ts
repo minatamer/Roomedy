@@ -1,4 +1,11 @@
-import { createCostDraft, reconcileCost, validatedCost } from '../cost/state';
+import {
+  createCostDraft,
+  reconcileCost,
+  validatedCost,
+  pricingState,
+} from '../cost/state';
+import { estimateStateSchema } from '@roomedy/contracts/estimates';
+import type { EstimateState } from '@roomedy/contracts/estimates';
 import type { ProjectDestination } from '../cost/navigation';
 import type {
   OperationIdentity,
@@ -13,6 +20,8 @@ import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import {
   applyCommand,
+  recordCostChange,
+  calculateRoomEstimate,
   checkRoom,
   createCommandWorkspace,
   prepareCommand,
@@ -57,6 +66,13 @@ export class SessionController {
   private cleaning = false;
   private assistantPreview: AssistantPreview | null = null;
   private lastAssistant: AssistantPreview | null = null;
+  private costPreview: {
+    token: OperationIdentity;
+    command: CommandEnvelope | null;
+    revision: number;
+    pricing: EstimateState;
+    label: string;
+  } | null = null;
   private visitorPreview: {
     token: OperationIdentity;
     actions: VisitorAction[];
@@ -71,6 +87,7 @@ export class SessionController {
       phase: room ? 'editor' : 'entry',
       destination: 'design',
       cost: null,
+      costProposal: null,
       generation: 0,
       createdAt,
       expiresAt: createdAt + POLICY.guestLifetimeMs,
@@ -162,6 +179,7 @@ export class SessionController {
     this.retire('expired');
   }
   private cancelWork() {
+    this.costPreview = null;
     this.visitorPreview = null;
     this.assistantPreview = null;
     this.lastAssistant = null;
@@ -169,6 +187,7 @@ export class SessionController {
       ...this.state,
       pending: null,
       candidate: null,
+      costProposal: null,
     });
     this.cleaning = true;
     this.operations.clear();
@@ -182,6 +201,7 @@ export class SessionController {
       phase,
       destination: 'design',
       cost: null,
+      costProposal: null,
       generation: this.state.generation + 1,
       workspace: null,
       photoNotes: null,
@@ -201,6 +221,7 @@ export class SessionController {
     this.visitorPreview = null;
     this.assistantPreview = null;
     this.lastAssistant = null;
+    this.costPreview = null;
     this.cleaning = true;
     this.operations.clear();
     this.resources.clear();
@@ -318,6 +339,7 @@ export class SessionController {
       destination: 'design',
       cost: null,
       createdAt,
+      costProposal: null,
       expiresAt: options?.expiresAt ?? createdAt + POLICY.guestLifetimeMs,
       checks: room ? checkRoom(room) : null,
       presentation: initialPresentation(options?.roomView),
@@ -340,6 +362,7 @@ export class SessionController {
     this.visitorPreview = null;
     this.assistantPreview = null;
     this.lastAssistant = null;
+    this.costPreview = null;
     this.publish({});
     this.startTimer();
     return true;
@@ -405,7 +428,12 @@ export class SessionController {
     settings: unknown,
     offers: unknown = this.state.cost?.offers,
   ): boolean {
-    if (!this.canEdit() || !this.state.workspace || this.state.candidate)
+    if (
+      !this.canEdit() ||
+      !this.state.workspace ||
+      !this.state.cost ||
+      this.state.candidate
+    )
       return false;
     const cost = validatedCost(this.state.workspace.current, settings, offers);
     if (!cost) {
@@ -414,15 +442,156 @@ export class SessionController {
       );
       return false;
     }
-    this.cancelWork();
+    const pricing = {
+      ...pricingState(cost),
+      budgetMinor:
+        cost.settings.locality.currency ===
+        this.state.cost.settings.locality.currency
+          ? this.state.cost.budgetMinor
+          : null,
+    };
+    if (
+      JSON.stringify(pricing) === JSON.stringify(pricingState(this.state.cost))
+    )
+      return true;
+    const commandId = this.id();
+    return this.commitCommand(
+      { commandId },
+      'Estimate updated',
+      recordCostChange(
+        this.state.workspace,
+        pricingState(this.state.cost),
+        commandId,
+      ),
+      pricing,
+    ).ok;
+  }
+  prepareCostProposal(
+    pricing: EstimateState,
+    label: string,
+    tradeoffs: string[],
+    expectedRevision: number,
+    actions: VisitorAction[] = [],
+  ): { ok: true } | { ok: false; code: string } {
+    if (
+      !this.canEdit() ||
+      !this.state.workspace ||
+      !this.state.cost ||
+      this.state.cost.revision !== expectedRevision
+    )
+      return { ok: false, code: 'stale' };
+    const parsed = estimateStateSchema.safeParse(pricing);
+    if (
+      !parsed.success ||
+      tradeoffs.length > 8 ||
+      tradeoffs.some((t) => t.length > 600) ||
+      !label.trim() ||
+      label.length > 120
+    )
+      return { ok: false, code: 'invalid-input' };
+    const command = actions.length
+      ? this.envelope(structuredClone(actions))
+      : null;
+    const evaluation = command
+      ? prepareCommand(this.state.workspace, command, 'visitor')
+      : null;
+    if (evaluation && !evaluation.ok) return evaluation;
+    const room = evaluation?.ok
+      ? evaluation.room
+      : this.state.workspace.current;
+    const before = calculateRoomEstimate(
+        this.state.workspace.current,
+        this.state.cost.settings,
+        this.state.cost.offers,
+      ),
+      after = calculateRoomEstimate(
+        room,
+        parsed.data.settings,
+        parsed.data.offers,
+      );
+    if (!before.ok || !after.ok) return { ok: false, code: 'invalid-input' };
+    const token = this.beginOperation();
+    if (!token) return { ok: false, code: 'stale' };
+    this.costPreview = {
+      token,
+      command,
+      revision: expectedRevision,
+      pricing: structuredClone(parsed.data),
+      label,
+    };
     this.publish({
-      cost: {
-        ...cost,
-        revision: (this.state.cost?.revision ?? 0) + 1,
-        messages: this.state.cost?.messages ?? [],
+      candidate: {
+        identity: token,
+        source: 'cost',
+        label,
+        room,
+        checks: checkRoom(room),
       },
+      costProposal: {
+        label,
+        tradeoffs: [...tradeoffs],
+        before: before.estimate,
+        after: after.estimate,
+        pricing: parsed.data,
+      },
+      message: 'Review the design, quantities and cost changes before Apply.',
     });
-    return true;
+    return { ok: true };
+  }
+  applyCostProposal(): { ok: true; changed: boolean } | CommandFailure {
+    const preview = this.costPreview;
+    if (
+      !preview ||
+      !this.canEdit() ||
+      !this.isCurrent(preview.token) ||
+      !this.state.workspace ||
+      !this.state.cost ||
+      this.state.cost.revision !== preview.revision
+    )
+      return { ok: false, code: 'stale' };
+    const commandId = preview.command?.commandId ?? this.id();
+    let result = preview.command
+      ? applyCommand(
+          this.state.workspace,
+          preview.command,
+          'visitor',
+          undefined,
+          pricingState(this.state.cost),
+        )
+      : null;
+    if (result && !result.ok) return result;
+    const room = result?.ok
+      ? result.workspace.current
+      : this.state.workspace.current;
+    if (
+      !calculateRoomEstimate(
+        room,
+        preview.pricing.settings,
+        preview.pricing.offers,
+      ).ok
+    )
+      return { ok: false, code: 'invalid-input' };
+    const financialChange =
+      JSON.stringify(preview.pricing) !==
+      JSON.stringify(pricingState(this.state.cost));
+    if (!result || (result.status !== 'applied' && financialChange))
+      result = financialChange
+        ? recordCostChange(
+            this.state.workspace,
+            pricingState(this.state.cost),
+            commandId,
+          )
+        : null;
+    if (!result) {
+      this.cancelPreview();
+      return { ok: true, changed: false };
+    }
+    return this.commitCommand(
+      { commandId },
+      preview.label,
+      result,
+      preview.pricing,
+    );
   }
   costMessage(role: 'visitor' | 'assistant', text: string) {
     if (
@@ -630,15 +799,27 @@ export class SessionController {
     return this.commitCommand(
       command,
       label,
-      applyCommand(this.state.workspace, command, 'visitor'),
+      applyCommand(
+        this.state.workspace,
+        command,
+        'visitor',
+        undefined,
+        this.state.cost ? pricingState(this.state.cost) : undefined,
+      ),
     );
   }
   private commitCommand(
-    command: CommandEnvelope,
+    command: Pick<CommandEnvelope, 'commandId'>,
     label: string,
     result: ApplyResult,
+    pricing?: EstimateState,
   ): { ok: true; changed: boolean } | CommandFailure {
     if (!result.ok) return result;
+    if (
+      this.state.cost &&
+      this.state.cost.revision >= Number.MAX_SAFE_INTEGER - 1
+    )
+      return { ok: false, code: 'revision-limit' };
     const changed = result.status === 'applied';
     if (changed) this.cancelWork();
     if (result.undoRecorded)
@@ -666,6 +847,16 @@ export class SessionController {
       : null;
     this.publish({
       workspace: result.workspace,
+      ...(pricing && this.state.cost
+        ? {
+            cost: {
+              ...pricing,
+              revision: this.state.cost.revision + 1,
+              roomRevision: result.workspace.current.roomRevision,
+              messages: this.state.cost.messages,
+            },
+          }
+        : {}),
       checks,
       presentation: {
         ...this.state.presentation,
@@ -797,6 +988,7 @@ export class SessionController {
       preview.command,
       preview.authority,
       preview.scope,
+      this.state.cost ? pricingState(this.state.cost) : undefined,
     );
     const committed = this.commitCommand(
       preview.command,
@@ -811,6 +1003,11 @@ export class SessionController {
   undo(): { ok: true } | { ok: false; code: string } {
     if (!this.canEdit() || !this.state.workspace)
       return { ok: false, code: 'stale' };
+    if (
+      this.state.cost &&
+      this.state.cost.revision >= Number.MAX_SAFE_INTEGER - 1
+    )
+      return { ok: false, code: 'revision-limit' };
     const result = undoCommand(this.state.workspace);
     if (!result.ok) return result;
     this.cancelWork();
@@ -824,6 +1021,16 @@ export class SessionController {
     );
     this.publish({
       workspace: result.workspace,
+      ...(result.pricing && this.state.cost
+        ? {
+            cost: {
+              ...result.pricing,
+              revision: this.state.cost.revision + 1,
+              roomRevision: result.workspace.current.roomRevision,
+              messages: this.state.cost.messages,
+            },
+          }
+        : {}),
       checks: result.checks,
       presentation: {
         ...this.state.presentation,

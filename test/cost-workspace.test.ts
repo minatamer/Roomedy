@@ -43,7 +43,10 @@ describe('one project Design / Plan & cost', () => {
     expect(c.updateCost(settings)).toBe(true);
     c.setDestination('design');
     c.setDestination('cost');
-    expect(c.getSnapshot().workspace).toBe(accepted);
+    expect(c.getSnapshot().workspace!.current).toBe(accepted!.current);
+    expect(c.getSnapshot().workspace!.history.entries).toHaveLength(
+      accepted!.history.entries.length + 1,
+    );
     expect(c.getSnapshot().presentation.roomView).toBe('plan');
     expect(c.getSnapshot().cost!.settings.floor.wasteBps).toBe(2000);
     expect(c.getSnapshot().cost!.messages).toMatchObject([

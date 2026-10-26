@@ -499,3 +499,60 @@
     padding: 16px;
   }
 }
+
+.scopeGuard {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.planCards {
+  max-width: 720px;
+  margin: 24px auto 38px;
+}
+.planCards article,
+.planCards section {
+  padding: 22px;
+  border: 1px solid #ded1bf;
+  border-radius: 22px;
+  margin: 16px 0;
+  background: #fffaf3b3;
+  overflow-wrap: anywhere;
+}
+.planCards h3,
+.planCards h4 {
+  font-weight: 500;
+  margin: 6px 0 12px;
+}
+.planCards p,
+.planCards li {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.planCards li {
+  margin-bottom: 12px;
+}
+.planCards small {
+  display: block;
+  color: #806c58;
+}
+.planCards button {
+  color: #70543b;
+  background: #eee1ce;
+  border: 1px solid #cbb69a;
+  border-radius: 24px;
+  padding: 10px 16px;
+}
+.planCards .proposal {
+  background: linear-gradient(140deg, #fff9eedd, #e8dac4aa);
+}
+.pricePair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+.pricePair strong {
+  display: block;
+  font-size: 22px;
+  font-weight: 500;
+}

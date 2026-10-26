@@ -1,6 +1,6 @@
 # RM-027 — Deliver reviewed budget and work plans
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-026](RM-026-research-local-products-and-services.md).
+Status: **Complete locally — fake gate and final affected checks passed; owner acceptance pending**. Dependencies: [RM-026](RM-026-research-local-products-and-services.md).
 
 ## Authority and outcome
 
@@ -26,10 +26,10 @@ Make full-page Medy explain costs, research focused alternatives, prepare honest
 
 ## Acceptance
 
-- [ ] Budget success is qualified correctly when required costs remain unpriced; no dimensions/required accessories/tax are hidden to force savings.
-- [ ] Late/stale/duplicate proposals cannot apply after geometry/offer/locale/reset/import changes; one visible proposal owner prevents conflicting editor/CPQ writes.
-- [ ] Apply/Cancel/Undo and actual result receipts distinguish suggestions from committed actions.
-- [ ] Fake conversation covers useful requests end-to-end without live dispatch and keeps a reachable accessible composer.
+- [x] Budget success is qualified correctly when required costs remain unpriced; no dimensions/required accessories/tax are hidden to force savings.
+- [x] Late/stale/duplicate proposals cannot apply after geometry/offer/locale/reset/import changes; one visible proposal owner prevents conflicting editor/CPQ writes.
+- [x] Apply/Cancel/Undo and actual result receipts distinguish suggestions from committed actions.
+- [x] Fake conversation covers useful requests end-to-end without live dispatch and keeps a reachable accessible composer.
 
 ## Execution and verification
 
@@ -45,3 +45,5 @@ After required checks pass, review the entire settled diff read-only against eve
 Explicit non-goal for this packet: no invented quotations or autonomous purchases. Drawing/document intake is permanently excluded from the extension. Keep output estimate PDF support in its owning packet. First-party sample prices and fake research remain visibly authored; no fixture proves real stock, local price, fit, installer availability or commercial acceptance.
 
 Use only owned Roomedy ports 4320/4321 after verifying full process/listener ownership. Never kill by executable name or port alone, start alternate review services, or change the owner's ignored environment. Existing live Roomedy processes must not be driven by fake tests; if a runtime change is needed, follow the restart/run skills with explicit process overrides and keep environment files unchanged. Test children must force fake/paid-off and deny network independently before application imports.
+
+Actual results and review limitations: [RM-027 validation](../validation/RM-027.md); exact [file allocation](../commit-plans/RM-027.md).

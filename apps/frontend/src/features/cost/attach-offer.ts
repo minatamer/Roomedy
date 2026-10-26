@@ -75,6 +75,67 @@ export function selectOffer(
           'The price could not be selected. Your accepted estimate is unchanged.',
       };
 }
+/** Explicitly review a real product's outer size through normal visitor spatial validation. */
+export function reviewSourceSize(
+  controller: SessionController,
+  brief: SourcingBrief,
+  candidate: SourcingCandidate,
+  revision: number,
+  roomRevision: number,
+) {
+  const state = controller.getSnapshot(),
+    offer = candidate.offer;
+  if (
+    !state.cost ||
+    !state.workspace ||
+    state.candidate ||
+    state.cost.revision !== revision ||
+    state.workspace.current.roomRevision !== roomRevision ||
+    brief.target.kind !== 'furniture' ||
+    offer?.kind !== 'furniture' ||
+    !offer.outerSizeMm
+  )
+    return {
+      ok: false as const,
+      reason:
+        'Research the current piece and resolve the current preview first.',
+    };
+  const actions = [
+    {
+      type: 'set-size-estimate' as const,
+      id: brief.target.id,
+      ...offer.outerSizeMm,
+    },
+  ];
+  const preview = controller.previewVisitor(actions);
+  if (!preview.ok)
+    return {
+      ok: false as const,
+      reason: `The product size needs review in Design (${preview.code}). Check size locks, fit and the selected model before trying again.`,
+    };
+  const attached = attachOffer(preview.room, state.cost, brief, candidate);
+  if (!attached.ok) return attached;
+  const result = controller.prepareCostProposal(
+    {
+      settings: attached.settings,
+      offers: attached.offers,
+      budgetMinor: state.cost.budgetMinor,
+    },
+    `Use ${offer.label}`.slice(0, 120),
+    [
+      'Adopt the product’s outer size as a visitor planning estimate. This does not confirm a measured dimension or identify the mesh as this SKU.',
+      'Review fit, components, delivery and remaining costs. Apply changes the design and estimate together; Undo restores both.',
+    ],
+    revision,
+    actions,
+  );
+  return result.ok
+    ? { ok: true as const }
+    : {
+        ok: false as const,
+        reason: `The combined preview needs review (${result.code}).`,
+      };
+}
 export function attachOffer(
   room: RoomDocument,
   draft: CostDraft,

@@ -1263,7 +1263,9 @@ function Piece({
   editing,
   open,
   windowGlass,
+  inspecting = false,
 }: {
+  inspecting?: boolean;
   windowGlass: ReturnType<typeof createWindowGlass> | null;
   open: boolean;
   piece: Furniture;
@@ -1466,7 +1468,7 @@ function Piece({
       )}
       {selected && (
         <>
-          <SelectedDirection width={w} depth={d} height={h} />
+          {!inspecting && <SelectedDirection width={w} depth={d} height={h} />}
           <mesh
             geometry={geometry}
             position={[0, h / 2, 0]}
@@ -1720,6 +1722,7 @@ export function RoomScene(props: SceneProps) {
               piece={p}
               windowGlass={windowGlass}
               selected={selectedId === p.id}
+              inspecting={!!props.inspection}
               open={props.openingId === p.id && !!furnitureOpening(p)}
               proposed={
                 !!candidate &&
