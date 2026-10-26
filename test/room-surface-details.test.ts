@@ -31,6 +31,7 @@ import {
 } from '../apps/frontend/src/features/room-view/room-material.js';
 import type { roomSurfaceGeometry } from '../apps/frontend/src/features/room-view/room-material.js';
 import { createSurfaceBlend } from '../apps/frontend/src/features/room-view/surfaces.js';
+import { surfacePreviewChanges } from '../apps/frontend/src/features/room-editor/preview-surface-changes.js';
 
 const detail: SurfaceDetail = {
   repeatWidthMm: 600,
@@ -50,6 +51,29 @@ const roomWithWalls = () => {
 };
 
 describe('individual room materials retain domain truth', () => {
+  it('discloses named-wall and detail-only proposals without duplicating inherited wall rows', () => {
+    const room = roomWithWalls();
+    const north = evaluateBatch(
+      room,
+      [{ type: 'set-room-surface', surface: 'north', detail }],
+      'visitor',
+    );
+    if (!north.ok) throw new Error(north.code);
+    const changes = surfacePreviewChanges(room, north.room);
+    expect(changes).toHaveLength(1);
+    expect(changes[0]).toContain('north wall:');
+    expect(changes[0]).toContain('60 × 120 cm, 90°, satin');
+    const all = evaluateBatch(
+      room,
+      [{ type: 'set-room-surface', surface: 'walls', color: '#123456' }],
+      'visitor',
+    );
+    if (!all.ok) throw new Error(all.code);
+    expect(surfacePreviewChanges(room, all.room)).toEqual([
+      'walls: #123456, plaster',
+    ]);
+    expect(surfacePreviewChanges(room, room)).toEqual([]);
+  });
   it('inherits independent missing wall facts, patches one wall and undoes the whole choice', () => {
     const room = roomWithWalls(),
       session = new SessionController(room);

@@ -1,6 +1,6 @@
 import { furnitureBottom, featureLabel } from '@roomedy/spatial';
 import type { RoomDocument } from '@roomedy/contracts/room';
-import { roomSurface } from '@roomedy/contracts/surfaces';
+import { surfacePreviewChanges } from './preview-surface-changes';
 
 const same = (a: unknown, b: unknown) =>
   JSON.stringify(a) === JSON.stringify(b);
@@ -78,12 +78,7 @@ export function PreviewChangeList({
       roomDetails.push(
         `${axis}: ${measurement(current.room[axis])} → ${measurement(proposed.room[axis])}`,
       );
-  for (const surface of ['floor', 'walls'] as const) {
-    const before = roomSurface(current.room, surface),
-      after = roomSurface(proposed.room, surface);
-    if (!same(before, after))
-      roomDetails.push(`${surface}: ${after.color}, ${after.texture}`);
-  }
+  roomDetails.push(...surfacePreviewChanges(current, proposed));
   if (!same(current.intent, proposed.intent))
     roomDetails.push(
       `starting condition ${proposed.intent.condition}; goals ${proposed.intent.goals.join(', ') || 'none'}; style ${proposed.intent.style}`,

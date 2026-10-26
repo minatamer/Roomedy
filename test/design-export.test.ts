@@ -260,7 +260,7 @@ describe('canonical3D export projection', () => {
 describe('shared local export materials', () => {
   it('retires partial GLB canvas copies on graphics failure and restores borrowed samplers', () => {
     const scene = buildDesignScene(commandRoom([piece('desk')]));
-    const before = scene.root.toJSON();
+    const before = JSON.stringify(scene.root.toJSON());
     const canvases: { width: number; height: number }[] = [];
     let calls = 0;
     try {
@@ -285,7 +285,7 @@ describe('shared local export materials', () => {
       ).toThrow('graphics');
       expect(canvases.length).toBe(2);
       expect(canvases.every((c) => c.width === 1 && c.height === 1)).toBe(true);
-      expect(scene.root.toJSON()).toEqual(before);
+      expect(JSON.stringify(scene.root.toJSON())).toBe(before);
     } finally {
       scene.dispose();
     }

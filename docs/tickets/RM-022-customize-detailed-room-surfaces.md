@@ -1,6 +1,6 @@
 # RM-022 — Customize detailed room surfaces
 
-Status: **Implemented and locally validated — exact checkpoint ready; owner visual/manual review pending**. Dependencies: [RM-021](RM-021-plan-the-cpq-extension.md), committed `4f7fb2b`.
+Status: **Complete locally — main ac772cc and clean1059-test preview follow-up; owner visual/manual review pending**. Dependencies: [RM-021](RM-021-plan-the-cpq-extension.md), committed `4f7fb2b`.
 
 [Exact allocation](../commit-plans/RM-022.md), [actual validation](../validation/RM-022.md).
 
