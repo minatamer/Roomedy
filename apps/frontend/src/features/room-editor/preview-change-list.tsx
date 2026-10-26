@@ -1,3 +1,4 @@
+import { furnitureMaterialsLabel } from '@roomedy/contracts/furniture-materials';
 import { furnitureBottom, featureLabel } from '@roomedy/spatial';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { surfacePreviewChanges } from './preview-surface-changes';
@@ -54,6 +55,8 @@ export function PreviewChangeList({
       details.push(`front facing ${facing(piece.pose.quarterTurns)}`);
     if (!before || before.finish !== piece.finish)
       details.push(`finish ${piece.finish}`);
+    if (piece.materials && !same(before?.materials, piece.materials))
+      details.push(furnitureMaterialsLabel(piece.materials));
     if (!before || before.ownership !== piece.ownership)
       details.push(piece.ownership === 'owned' ? 'owned' : 'proposed');
     if (before && before.preference !== piece.preference)

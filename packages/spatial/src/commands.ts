@@ -1,3 +1,7 @@
+import {
+  furnitureMaterialRoles,
+  furnitureUpholsteryChoices,
+} from '@roomedy/contracts/furniture-materials';
 import { wallMountedPose } from './elevation.js';
 import {
   proposalBatchSchema,
@@ -14,7 +18,7 @@ import {
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { SpatialIssue } from '@roomedy/contracts/issues';
 import { checkRoom } from './checks.js';
-import { CATALOGUE } from './catalogue.js';
+import { CATALOGUE, supportsDimensions } from './catalogue.js';
 import { subsetRegion } from './coordinates.js';
 import { clearDoorIntervals } from './opening-placement.js';
 
@@ -159,6 +163,7 @@ const nonspatial = new Set([
   'finish',
   'room-finish',
   'set-room-surface',
+  'set-furniture-materials',
   'set-locks',
   'set-preference',
   'set-ownership',
@@ -443,6 +448,36 @@ export function evaluateBatch(
       )
         return { ok: false, code: 'unsupported-variant' };
       item.finish = action.finish;
+    } else if (action.type === 'set-furniture-materials') {
+      const entry = catalogue.find(
+        (e) => e.id === item.catalogueId && e.version === item.catalogueVersion,
+      );
+      if (!entry) return { ok: false, code: 'unsupported-variant' };
+      const size = {
+        width: item.dimensions.width.value ?? 0,
+        depth: item.dimensions.depth.value ?? 0,
+        height: item.dimensions.height.value ?? 0,
+      };
+      const roles = furnitureMaterialRoles(
+        entry,
+        supportsDimensions(entry, size),
+      );
+      const m = action.materials;
+      if (
+        m.upholstery &&
+        !furnitureUpholsteryChoices(entry).some(
+          (choice) => choice === m.upholstery,
+        )
+      )
+        return { ok: false, code: 'unsupported-variant' };
+      if (
+        (m.body !== undefined && !roles.body) ||
+        ((m.upholstery !== undefined || m.softColor !== undefined) &&
+          !roles.soft) ||
+        (m.hardware !== undefined && !roles.hardware)
+      )
+        return { ok: false, code: 'unsupported-variant' };
+      item.materials = { ...item.materials, ...m };
     } else if (action.type === 'set-locks') item.locks = { ...action.locks };
     else if (action.type === 'set-preference')
       item.preference = action.preference;

@@ -62,6 +62,10 @@
     "./assistant": {
       "types": "./dist/assistant.d.ts",
       "default": "./dist/assistant.js"
+    },
+    "./furniture-materials": {
+      "types": "./dist/furniture-materials.d.ts",
+      "default": "./dist/furniture-materials.js"
     }
   },
   "scripts": {

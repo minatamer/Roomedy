@@ -1,6 +1,8 @@
 # RM-023 — Customize detailed furniture
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-022](RM-022-customize-detailed-room-surfaces.md).
+Status: **Complete locally —1081-test/root/build pass; owner manual/visual review pending**. Dependencies: [RM-022](RM-022-customize-detailed-room-surfaces.md), committed ac772cc/e2c625c.
+
+[Exact allocation](../commit-plans/RM-023.md), [actual checks](../validation/RM-023.md).
 
 ## Authority and outcome
 
@@ -26,10 +28,10 @@ Improve the existing furniture catalogue with believable close-up construction/m
 
 ## Acceptance
 
-- [ ] Supported choices visibly affect intended material parts while screens, glass and unrelated hardware retain their distinct roles.
-- [ ] Fixed/procedural furniture, movable parts, selection, replacements, fit checks and per-value evidence remain correct.
-- [ ] Existing documents use compatible defaults and all current supported finish/size controls stay usable.
-- [ ] Focused regressions and actual fake close-up/desktop/phone/short checks pass without idle animation or material resource leaks.
+- [x] Supported choices visibly affect intended material parts while screens, glass and unrelated hardware retain their distinct roles.
+- [x] Fixed/procedural furniture, movable parts, selection, replacements, fit checks and per-value evidence remain correct.
+- [x] Existing documents use compatible defaults and all current supported finish/size controls stay usable.
+- [x] Focused regressions and actual fake close-up/desktop/phone/short checks pass without idle animation or material resource leaks.
 
 ## Execution and verification
 

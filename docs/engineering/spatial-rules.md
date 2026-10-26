@@ -1,5 +1,9 @@
 # Spatial rules and command authority
 
+## Furniture appearance commands — RM-023,26October2026
+
+`set-furniture-materials` is a strict visitor-only patch; the pure evaluator checks actual catalogue part roles and supported detailed size before accepting fields. It cannot alter measurements, locks, geometry, ownership or product identity. Unsupported mixtures reject atomically, including leather bedding/velvet lamp shades and soft/hardware edits on bounds-only models. Patch fields merge with accepted optional choices. Existing add/replace candidate policy, original finish permission, normal room validation, preview identity and one-command Undo remain authoritative. Imports retain optional strict data without inventing facts or stretching a fixed mesh. A nullable soft-colour patch explicitly restores its default, independently of upholstery/hardware. Use default colour in the inspector and an explicit Medy default-soft-colour request share that command. [Current evidence](../validation/RM-023.md).
+
 ## RM-022 material choices —26 October 2026
 
 `set-room-surface` retains its visitor-intent authority and adds named wall targets plus optional bounded material detail. Detail specifies full texture repeat width/height100–3000mm, direction0–3 and matte/satin/gloss; it is planned appearance, never measurement evidence. Each wall inherits unknown/omitted colour/texture/detail from all-walls. Individual edits preserve aggregate/other-wall state. All-walls patches apply only requested fields to existing overrides, preserving different textures/detail when changing colour. No-op and omitted fields retain their original evidence and do not create an empty override. Global room palettes intentionally apply colour to every existing wall record while preserving independent texture/detail.

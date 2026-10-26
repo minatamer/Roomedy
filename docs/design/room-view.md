@@ -1,5 +1,9 @@
 # Main-editor cutaway
 
+## Furniture material ownership — RM-023,26October2026
+
+The pure contract resolver supplies identical material targets for live and exported furniture. Four small piece-owned frame/soft/blanket/metal materials borrow the existing scene’s local wood/plaster/fabric/smooth maps. Finite colour, texture and roughness/metalness transitions stop requesting frames after convergence. Layout re-entry after React Strict Mode cleanup marks owned resources for reuse; final cleanup remains idempotent within each lifetime. Prepared material copies retain original geometry, source textures and opening rigs; per-role targets preserve source hardware colour on Original. Screens/glass use their existing separate materials. Scene/export disposal never retires shared samplers or prepared cache geometry. No scene, shader or sampler allocation occurs per animation frame. [Actual checks/limits](../validation/RM-023.md).
+
 ## Detailed studio surfaces — RM-022, 26 October 2026
 
 The CPQ extension adds individual north/east/south/west appearances alongside the compatible floor/all-walls records. Missing wall colour, texture or detail inherits from the aggregate wall choice; missing legacy detail resolves to a 1200×1200mm texture repeat, direction0 and matte finish. Repeat dimensions describe the full texture module, not a certified plank/tile size or measured wall. Detail is a planned material specification and does not confirm room measurements.

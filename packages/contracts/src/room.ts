@@ -3,6 +3,7 @@ import { issueSchema, ruleCoverageSchema } from './issues.js';
 export { issueSchema } from './issues.js';
 import { POLICY, VERSIONS } from './policy.js';
 import { roomSurfacesSchema } from './surfaces.js';
+import { furnitureMaterialsSchema } from './furniture-materials.js';
 import {
   finishSchema,
   factProvenanceSchema,
@@ -59,6 +60,7 @@ export const furnitureSchema = z.strictObject({
   preference: z.enum(['keep', 'flexible', 'replace']),
   locks: locksSchema,
   finish: finishSchema,
+  materials: furnitureMaterialsSchema.optional(),
 });
 const featureBase = {
   id: idSchema,

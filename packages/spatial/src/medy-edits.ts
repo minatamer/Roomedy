@@ -1,4 +1,8 @@
 import {
+  furnitureMaterialsSchema,
+  furnitureMaterialsLabel,
+} from '@roomedy/contracts/furniture-materials';
+import {
   featureLabel,
   placementTarget,
   wallMountedPose,
@@ -529,6 +533,49 @@ export function medyEdit(
   }
   const target = targets[0]!,
     label = title(target);
+  if (
+    target.kind === 'furniture' &&
+    /\b(frame material|wood grain|upholstery|bedding material|shade material|soft parts?|soft colou?r|hardware|linen|velvet|leather|brass|steel)\b/.test(
+      words,
+    )
+  ) {
+    const body =
+      words.match(
+        /\b(?:frame material(?: to)?|frame in) (auto|wood|painted|metal)\b/,
+      )?.[1] ?? (/\bwood grain\b/.test(words) ? 'wood' : undefined);
+    const cloth = words.match(/\b(linen|velvet|leather)\b/g) ?? [];
+    const hardware = words.match(
+      /\b(?:hardware(?: to)?|handles?(?: to)?) (original|dark|brass|steel)\b/,
+    )?.[1];
+    const colors = words.match(/#[a-f0-9]{6}\b/g) ?? [];
+    if (cloth.length > 1 || colors.length > 1)
+      return ask('Choose one soft material and one colour for this piece.');
+    const parsed = furnitureMaterialsSchema.safeParse({
+      ...(body ? { body } : {}),
+      ...(cloth[0] ? { upholstery: cloth[0] } : {}),
+      ...(hardware ? { hardware } : {}),
+      ...(/\b(?:default soft colou?r|soft colou?r(?: to)? default)\b/.test(
+        words,
+      )
+        ? { softColor: null }
+        : {}),
+      ...(colors[0] && /\b(soft|upholstery|bedding|shade)\b/.test(words)
+        ? { softColor: colors[0] }
+        : {}),
+    });
+    if (!parsed.success)
+      return ask(
+        'Choose a frame material (wood, painted or metal), linen/velvet/leather soft parts, a soft hex colour, or original/dark/brass/steel hardware.',
+      );
+    actions.push({
+      type: 'set-furniture-materials',
+      id: target.id,
+      materials: parsed.data,
+    });
+    return batch(
+      `Change ${label} materials: ${furnitureMaterialsLabel(parsed.data)}`,
+    );
+  }
   if (
     target.kind === 'furniture' &&
     /\b(lock|unlock|protect|unprotect)\b/.test(words)

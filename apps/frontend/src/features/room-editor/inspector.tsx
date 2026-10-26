@@ -1,3 +1,4 @@
+import { FurnitureMaterialControls } from './furniture-material-controls';
 import { MountControls } from './mount-controls';
 import { useId, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
@@ -251,6 +252,21 @@ export function FurnitureInspector({
                 </select>
               </label>
             </div>
+            <FurnitureMaterialControls
+              item={item}
+              onCommit={(materials) => {
+                const result = run(
+                  [{ type: 'set-furniture-materials', id: item.id, materials }],
+                  'Change piece materials',
+                );
+                return result.ok
+                  ? null
+                  : failureMessage(
+                      result,
+                      controller.getSnapshot().workspace?.current,
+                    );
+              }}
+            />
             <details className={styles.advanced}>
               <summary>
                 Advanced <span>Measurements, position & locks</span>

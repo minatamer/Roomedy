@@ -235,28 +235,40 @@ afterEach(async () => {
     await rm(checked, { recursive: true, force: true });
   }
 });
-it('hashes actual tracked/untracked source and binary bytes; excludes secrets/builds and rejects non-LF release text', async () => {
+async function copiedInventory() {
   const repo = fileURLToPath(new URL('../', import.meta.url)),
     current = await collectInputs(repo),
     fixture = await temp();
+  for (let index = 0; index < current.files.length; index += 8)
+    await Promise.all(
+      current.files.slice(index, index + 8).map(async (file) => {
+        const target = path.join(fixture, file.path);
+        await mkdir(path.dirname(target), { recursive: true });
+        await copyFile(path.join(repo, file.path), target);
+      }),
+    );
+  return { current, fixture };
+}
+it('reproduces actual source/binary inventory byte-for-byte while excluding private environment/build bytes', async () => {
+  const { current, fixture } = await copiedInventory();
   expect(
     current.files.some(
-      (f) => f.path === 'apps/frontend/src/features/layout-search/worker.ts',
+      (file) =>
+        file.path === 'apps/frontend/src/features/layout-search/worker.ts',
     ),
   ).toBe(true);
   expect(
-    current.files.some((f) => f.path === '.github/workflows/local-release.yml'),
+    current.files.some(
+      (file) => file.path === '.github/workflows/local-release.yml',
+    ),
   ).toBe(true);
-  for (const file of current.files) {
-    const target = path.join(fixture, file.path);
-    await mkdir(path.dirname(target), { recursive: true });
-    await copyFile(path.join(repo, file.path), target);
-  }
-  const first = await collectInputs(fixture);
-  expect(first.inputDigest).toBe(current.inputDigest);
   await put(fixture, 'apps/frontend/.env.local', 'PRIVATE_CANARY');
   await put(fixture, 'apps/frontend/.next/private', 'PRIVATE_CANARY');
-  expect((await collectInputs(fixture)).inputDigest).toBe(first.inputDigest);
+  // Exact equality to the real baseline proves both every included byte and both exclusions.
+  expect((await collectInputs(fixture)).inputDigest).toBe(current.inputDigest);
+});
+it('changes the inventory digest when actual tracked source bytes change', async () => {
+  const { fixture, current } = await copiedInventory();
   const worker = 'apps/frontend/src/features/layout-search/worker.ts',
     old = await readFile(path.join(fixture, worker));
   await writeFile(
@@ -264,25 +276,35 @@ it('hashes actual tracked/untracked source and binary bytes; excludes secrets/bu
     Buffer.concat([old, Buffer.from(' ')]),
   );
   expect((await collectInputs(fixture)).inputDigest).not.toBe(
-    first.inputDigest,
+    current.inputDigest,
   );
+});
+it('includes untracked source bytes in the inventory digest', async () => {
+  const { fixture, current } = await copiedInventory();
   await put(
     fixture,
     'apps/frontend/src/new-owned-source.ts',
     'export const added=1;\n',
   );
   const added = await collectInputs(fixture);
-  expect(added.files.some((f) => f.path.endsWith('/new-owned-source.ts'))).toBe(
-    true,
-  );
+  expect(
+    added.files.some((file) => file.path.endsWith('/new-owned-source.ts')),
+  ).toBe(true);
+  expect(added.inputDigest).not.toBe(current.inputDigest);
+});
+it('includes untracked binary bytes without applying text LF rules', async () => {
+  const { fixture, current } = await copiedInventory();
   await put(
     fixture,
     'apps/frontend/public/synthetic.jpg',
     new Uint8Array([255, 216, 13, 10, 255, 217]),
   );
   expect((await collectInputs(fixture)).inputDigest).not.toBe(
-    added.inputDigest,
+    current.inputDigest,
   );
+});
+it('rejects non-LF release text while preserving the full real-input fixture', async () => {
+  const { fixture } = await copiedInventory();
   await put(
     fixture,
     'apps/frontend/src/new-owned-source.ts',

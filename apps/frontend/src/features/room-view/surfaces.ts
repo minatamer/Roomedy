@@ -1,3 +1,8 @@
+import { furnitureMaterialTargets } from '@roomedy/contracts/furniture-materials';
+import type {
+  FurnitureMaterials,
+  FurnitureMaterialTarget,
+} from '@roomedy/contracts/furniture-materials';
 import {
   Color,
   DataTexture,
@@ -13,7 +18,6 @@ import {
 } from 'three';
 import type { Material, Object3D } from 'three';
 import type { Furniture } from '@roomedy/contracts/room';
-import { FINISH_COLORS } from '@roomedy/contracts/surfaces';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import type { BoxPart, PhysicalSize } from './representations/definitions';
 import type { SurfaceTexture } from '@roomedy/contracts/surfaces';
@@ -271,7 +275,7 @@ export function setSurfaceMap(
 
 /** Styling stays inside the authored outer size; original catalogue parts are untouched. */
 export function detailedParts(parts: BoxPart[], size: PhysicalSize): BoxPart[] {
-  return parts.flatMap((part) => {
+  const detailed = parts.flatMap((part) => {
     if (part.name === 'pillow')
       return [-1, 1].map((side) => ({
         ...part,
@@ -308,6 +312,28 @@ export function detailedParts(parts: BoxPart[], size: PhysicalSize): BoxPart[] {
       ];
     return [part];
   });
+  // Raised piping/stitched channels remain inside the existing physical envelope.
+  const seams: BoxPart[] = detailed.flatMap((part) => {
+    if (!(
+      part.name.startsWith('pillow-') ||
+      part.name === 'blanket' ||
+      part.name === 'seat'
+    ))
+      return [];
+    return (part.name === 'blanket' ? [-0.3, 0, 0.3] : [0.43]).map(
+      (fraction) => ({
+        name: `${part.name}-seam-${fraction}`,
+        center: [
+          part.center[0],
+          Math.min(size.height - 1, part.center[1] + part.size[1] / 2 + 0.3),
+          part.center[2] + part.size[2] * fraction,
+        ] as const,
+        size: [part.size[0] * 0.9, 1.4, 1.4] as const,
+        role: 'soft' as const,
+      }),
+    );
+  });
+  return [...detailed, ...seams];
 }
 
 /** Instance-owned material copies borrow immutable cache geometry and canvas textures. */
@@ -315,42 +341,64 @@ export function surfaceModel(
   source: Object3D,
   surfaces: Surfaces,
   finish: Furniture['finish'] = 'oak',
+  choices?: FurnitureMaterials,
 ) {
   const object = source.clone(true),
-    materials = new Map<Material, Material>(),
-    target = new Color(FINISH_COLORS[finish]),
-    finishes: {
-      material: MeshStandardMaterial;
-      cloth: boolean;
-      blend: ReturnType<typeof createSurfaceBlend> | null;
-    }[] = [];
+    materials = new Map<Material, Material>();
+  const finishes: {
+    material: MeshStandardMaterial;
+    role: 'frame' | 'soft' | 'metal';
+    originalColor: string;
+    target: FurnitureMaterialTarget;
+    color: Color;
+    blend: ReturnType<typeof createSurfaceBlend> | null;
+  }[] = [];
   let live = true;
-  const mapFor = (value: Furniture['finish'], cloth: boolean) =>
-    cloth
-      ? surfaces.fabric
-      : value === 'oak' || value === 'walnut'
-        ? surfaces.wood
-        : surfaces.plaster;
+  const resolve = (
+    value: Furniture['finish'],
+    settings: FurnitureMaterials | undefined,
+  ) =>
+    furnitureMaterialTargets(
+      { finish: value, ...(settings ? { materials: settings } : {}) },
+      'chair',
+    );
+  const initial = resolve(finish, choices);
   const copy = (sourceMaterial: Material, uv: boolean) => {
     const cached = materials.get(sourceMaterial);
     if (cached) return cached;
     const material = sourceMaterial.clone();
     materials.set(sourceMaterial, material);
     if (material instanceof MeshStandardMaterial) {
-      const name = material.name.toLowerCase();
-      if (name.includes('metal')) {
-        material.metalness = 0.55;
-        material.roughness = 0.38;
-      } else if (name.includes('wood') || name.includes('carpet')) {
-        const cloth = name.includes('carpet');
-        material.color.copy(target);
-        if (uv) setSurfaceMap(material, mapFor(finish, cloth));
-        material.bumpScale = cloth ? 0.0012 : 0.0004;
-        material.roughness = cloth ? 0.95 : 0.65;
+      const name = material.name.toLowerCase(),
+        role = name.includes('metal')
+          ? 'metal'
+          : name.includes('carpet')
+            ? 'soft'
+            : name.includes('wood')
+              ? 'frame'
+              : null;
+      if (role) {
+        const originalColor = `#${material.color.getHexString()}`;
+        const target = {
+          ...initial[role],
+          ...(role === 'metal' &&
+          (!choices?.hardware || choices.hardware === 'original')
+            ? { color: originalColor }
+            : {}),
+        };
+        material.color.set(target.color);
+        if (uv && role !== 'metal')
+          setSurfaceMap(material, surfaces[target.surface]);
+        material.bumpScale = target.bumpScale;
+        material.roughness = target.roughness;
+        material.metalness = target.metalness;
         finishes.push({
           material,
-          cloth,
-          blend: uv ? createSurfaceBlend(material) : null,
+          role,
+          originalColor,
+          target,
+          color: new Color(target.color),
+          blend: uv && role !== 'metal' ? createSurfaceBlend(material) : null,
         });
       }
     }
@@ -366,18 +414,39 @@ export function surfaceModel(
   });
   return {
     object,
-    chooseFinish(value: Furniture['finish']) {
-      if (!live) return;
-      target.set(FINISH_COLORS[value]);
-      for (const { cloth, blend } of finishes)
-        blend?.choose(mapFor(value, cloth));
+    chooseFinish(value: Furniture['finish'], settings?: FurnitureMaterials) {
+      // A new component layout setup can reuse materials after Strict Mode cleanup.
+      if (!live)
+        for (const material of materials.values()) material.needsUpdate = true;
+      live = true;
+      const next = resolve(value, settings);
+      for (const entry of finishes) {
+        entry.target = {
+          ...next[entry.role],
+          ...(entry.role === 'metal' &&
+          (!settings?.hardware || settings.hardware === 'original')
+            ? { color: entry.originalColor }
+            : {}),
+        };
+        entry.color.set(entry.target.color);
+        entry.blend?.choose(surfaces[entry.target.surface]);
+      }
     },
     advance(delta: number) {
       if (!live) return false;
       let moving = false;
-      for (const { material, blend } of finishes) {
-        if (advanceSurfaceColor(material.color, target, delta)) moving = true;
+      const amount = 1 - Math.exp(-Math.max(0, Math.min(delta, 0.05)) * 16);
+      for (const { material, target, color, blend } of finishes) {
+        if (advanceSurfaceColor(material.color, color, delta)) moving = true;
         if (blend?.advance(delta)) moving = true;
+        for (const key of ['roughness', 'metalness', 'bumpScale'] as const) {
+          if (Math.abs(material[key] - target[key]) <= 0.00001)
+            material[key] = target[key];
+          else {
+            material[key] += (target[key] - material[key]) * amount;
+            moving = true;
+          }
+        }
       }
       return moving;
     },

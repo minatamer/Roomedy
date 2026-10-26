@@ -13,7 +13,8 @@ import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry, featureLabel } from '@roomedy/spatial';
-import { FINISH_PALETTE } from '../catalogue/finishes';
+import { furnitureMaterialTargets } from '@roomedy/contracts/furniture-materials';
+import { furnitureMaterial } from '../room-view/furniture-material';
 import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import type { SurfaceTarget } from '@roomedy/contracts/surfaces';
 import {
@@ -413,24 +414,25 @@ export function buildDesignScene(
     const asset = first.kind === 'mesh' ? assets.get(first.url) : undefined,
       representation = pieceRepresentation(piece, !!asset);
     if (representation.kind === 'mesh' && asset) {
-      const instance = surfaceModel(asset.scene, surfaces, piece.finish);
+      const instance = surfaceModel(
+        asset.scene,
+        surfaces,
+        piece.finish,
+        piece.materials,
+      );
       group.add(instance.object);
       instances.push(instance.dispose);
     } else if (representation.kind === 'procedural') {
-      const chair = findCatalogueEntry(
-        piece.catalogueId,
-        piece.catalogueVersion,
-      )?.category.match(/^(chair|seating|lighting)$/);
-      const frame = material(
-          FINISH_PALETTE[piece.finish],
-          piece.finish === 'oak' || piece.finish === 'walnut' ? 'wood' : 'wall',
-        ),
-        soft = material(
-          chair ? FINISH_PALETTE[piece.finish] : '#eee5d5',
-          'soft',
-        ),
-        blanket = material('#bc9475', 'soft'),
-        metal = material('#514a40', 'metal');
+      const targets = furnitureMaterialTargets(
+        piece,
+        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+          ?.category ?? 'storage',
+      );
+      const frame = furnitureMaterial(targets.frame, surfaces),
+        soft = furnitureMaterial(targets.soft, surfaces),
+        blanket = furnitureMaterial(targets.blanket, surfaces),
+        metal = furnitureMaterial(targets.metal, surfaces);
+      for (const owned of [frame, soft, blanket, metal]) materials.add(owned);
       const screen = material('#101820', 'metal');
       screen.roughness = 0.19;
       screen.metalness = 0.35;
@@ -452,7 +454,7 @@ export function buildDesignScene(
             ? windowGlass.mirror
             : part.name === 'tv-screen'
               ? screen
-              : part.name === 'blanket'
+              : part.name.startsWith('blanket')
                 ? blanket
                 : part.role === 'soft'
                   ? soft

@@ -1452,8 +1452,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Commit the clean RM-022 preview follow-up, then allocate and execute RM-023 furniture customization.
-Active ticket: RM-022
+Next action: Stage/local-commit the clean exact23-path RM-023 checkpoint, then allocate and execute RM-024 deterministic estimates.
+Active ticket: RM-023
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
@@ -1474,6 +1474,10 @@ Provisional owner reviews: 04-decisions
   Reason: This provides richer practical studio customization without adding an asset service or treating texture size as a measured plank/tile or room fact. World-coordinate projection keeps aperture spans continuous and export shares image sources within the original pixel-copy bound.
   Consequence / reversibility: Semantic appearance is compatible with old rooms, one Undo owns changes and estimating can later attach products. Actual branded material fidelity and owner visuals remain review items; settings are reversible.
   Owner review requested on return: yes. Evidence: docs/commit-plans/RM-022.md, docs/design/room-view.md#detailed-studio-surfaces--rm-022-26-october-2026, docs/validation/RM-022.md
+- **AFK-0004** (AFK-SESSION-001, 2026-10-26T12:28:37+00:00, 07-build): RM-023 adds optional part-specific frame, upholstery, soft-colour and hardware settings, with bounded local materials and restrained procedural seams; preserve fixed assets, screens/glass, dimensions and command authority.
+  Reason: The existing coherent catalogue and owned textures can support meaningful CPQ matching without a new asset service or pretending that generic models are exact retail products.
+  Consequence / reversibility: Existing documents retain defaults; material controls apply as one Undo and optional records recover/export normally. Owner visual testing remains pending.
+  Owner review requested on return: yes. Evidence: docs/commit-plans/RM-023.md, docs/tickets/RM-023-customize-detailed-furniture.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1496,7 +1500,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T11:58:55+00:00",
+  "updated_at": "2026-10-26T12:56:23+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1796,8 +1800,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-022",
-  "next_action": "Commit the clean RM-022 preview follow-up, then allocate and execute RM-023 furniture customization.",
+  "active_ticket": "RM-023",
+  "next_action": "Stage/local-commit the clean exact23-path RM-023 checkpoint, then allocate and execute RM-024 deterministic estimates.",
   "phases": [
     {
       "id": "01-docs",
@@ -2151,9 +2155,10 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:ac772cc",
-        "docs/commit-plans/RM-022.md",
-        "docs/validation/RM-022.md"
+        "commit:e2c625c",
+        "docs/commit-plans/RM-023.md",
+        "docs/validation/RM-023.md",
+        "actual-current-gate:1081-tests-66-files-all-root-checks-both-builds-pass"
       ],
       "blockers": [
         {
@@ -3329,6 +3334,20 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/commit-plans/RM-022.md",
           "docs/design/room-view.md#detailed-studio-surfaces--rm-022-26-october-2026",
           "docs/validation/RM-022.md"
+        ]
+      },
+      {
+        "id": "AFK-0004",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T12:28:37+00:00",
+        "phase": "07-build",
+        "choice": "RM-023 adds optional part-specific frame, upholstery, soft-colour and hardware settings, with bounded local materials and restrained procedural seams; preserve fixed assets, screens/glass, dimensions and command authority.",
+        "rationale": "The existing coherent catalogue and owned textures can support meaningful CPQ matching without a new asset service or pretending that generic models are exact retail products.",
+        "consequence": "Existing documents retain defaults; material controls apply as one Undo and optional records recover/export normally. Owner visual testing remains pending.",
+        "review_needed": true,
+        "evidence": [
+          "docs/commit-plans/RM-023.md",
+          "docs/tickets/RM-023-customize-detailed-furniture.md"
         ]
       }
     ]

@@ -28,7 +28,8 @@ import type {
 import { findCatalogueEntry } from '@roomedy/spatial';
 import type { InstancedMesh, MeshBasicMaterial } from 'three';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
-import { FINISH_PALETTE } from '../catalogue/finishes';
+import { furnitureMaterialTargets } from '@roomedy/contracts/furniture-materials';
+import { createFurnitureMaterials } from './furniture-material';
 import { displayFurnitureSize } from '../catalogue/display-size';
 import {
   changedPieces,
@@ -50,7 +51,6 @@ import {
   roomSurfaceMap,
   createSurfaces,
   detailedParts,
-  setSurfaceMap,
   surfaceModel,
   surfaceProperties,
 } from './surfaces';
@@ -843,22 +843,25 @@ function BorrowedModel({
   surfaces,
   open,
   finish,
+  appearance,
 }: {
   asset: GLTF;
   surfaces: Surfaces;
   open: boolean;
   finish: Furniture['finish'];
+  appearance: Furniture['materials'];
 }) {
   const invalidate = useThree((s) => s.invalidate);
   const [initialFinish] = useState(finish);
+  const [initialAppearance] = useState(appearance);
   const instance = useMemo(
-    () => surfaceModel(asset.scene, surfaces, initialFinish),
-    [asset, surfaces, initialFinish],
+    () => surfaceModel(asset.scene, surfaces, initialFinish, initialAppearance),
+    [asset, surfaces, initialFinish, initialAppearance],
   );
   useLayoutEffect(() => {
-    instance.chooseFinish(finish);
+    instance.chooseFinish(finish, appearance);
     invalidate();
-  }, [instance, finish, invalidate]);
+  }, [instance, finish, appearance, invalidate]);
   useFrame((_, delta) => {
     if (instance.advance(delta)) invalidate();
   });
@@ -1238,66 +1241,40 @@ function Piece({
     asset?.kind === 'ready',
     true,
   );
-  const materials = useMemo(
-    () => ({
-      screen: new MeshStandardMaterial({
+  const targets = useMemo(
+    () =>
+      furnitureMaterialTargets(
+        piece,
+        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+          ?.category ?? 'storage',
+      ),
+    [piece],
+  );
+  const [initialMaterials] = useState(targets);
+  const appearance = useMemo(
+    () => createFurnitureMaterials(initialMaterials, surfaces),
+    [initialMaterials, surfaces],
+  );
+  const screen = useMemo(
+    () =>
+      new MeshStandardMaterial({
         color: '#101820',
         roughness: 0.19,
         metalness: 0.35,
       }),
-      frame: new MeshStandardMaterial({
-        roughness: 0.67,
-        ...surfaceProperties(surfaces.wood),
-        bumpScale: 0.0004,
-      }),
-      soft: new MeshStandardMaterial({
-        color: '#eee5d5',
-        roughness: 0.97,
-        ...surfaceProperties(surfaces.fabric),
-        bumpScale: 0.0012,
-      }),
-      blanket: new MeshStandardMaterial({
-        color: '#bc9475',
-        roughness: 0.98,
-        ...surfaceProperties(surfaces.fabric),
-        bumpScale: 0.0012,
-      }),
-      metal: new MeshStandardMaterial({
-        color: '#514a40',
-        roughness: 0.38,
-        metalness: 0.55,
-      }),
-    }),
-    [surfaces],
+    [],
   );
+  const materials = { ...appearance.materials, screen };
   useLayoutEffect(() => {
-    setSurfaceMap(
-      materials.frame,
-      piece.finish === 'oak' || piece.finish === 'walnut'
-        ? surfaces.wood
-        : surfaces.plaster,
-    );
+    appearance.choose(targets);
     invalidate();
-  }, [piece.finish, surfaces, materials, invalidate]);
+  }, [appearance, targets, invalidate]);
   useEffect(
-    () => () => Object.values(materials).forEach((m) => m.dispose()),
-    [materials],
-  );
-  const color = useMemo(
-    () => new Color(FINISH_PALETTE[piece.finish]),
-    [piece.finish],
-  );
-  const upholsteryColor = useMemo(
-    () =>
-      new Color(
-        findCatalogueEntry(
-          piece.catalogueId,
-          piece.catalogueVersion,
-        )?.category.match(/^(chair|seating|lighting)$/)
-          ? FINISH_PALETTE[piece.finish]
-          : '#eee5d5',
-      ),
-    [piece.catalogueId, piece.catalogueVersion, piece.finish],
+    () => () => {
+      appearance.dispose();
+      screen.dispose();
+    },
+    [appearance, screen],
   );
   useFrame((_, delta) => {
     const g = group.current;
@@ -1318,22 +1295,14 @@ function Piece({
     );
     const moving =
       g.position.distanceToSquared(target) > 0.00000001 ||
-      Math.abs(rotation) > 0.0001 ||
-      Math.abs(materials.frame.color.r - color.r) +
-        Math.abs(materials.frame.color.g - color.g) +
-        Math.abs(materials.frame.color.b - color.b) +
-        Math.abs(materials.soft.color.r - upholsteryColor.r) +
-        Math.abs(materials.soft.color.g - upholsteryColor.g) +
-        Math.abs(materials.soft.color.b - upholsteryColor.b) >
-        0.001;
+      Math.abs(rotation) > 0.0001;
+    const materialMoving = appearance.advance(delta);
     if (moving) {
       if (projected) g.position.copy(target);
       else g.position.lerp(target, amount);
       g.rotation.y += rotation * amount;
-      materials.frame.color.lerp(color, amount);
-      materials.soft.color.lerp(upholsteryColor, amount);
-      invalidate();
     }
+    if (moving || materialMoving) invalidate();
   });
   const pick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
@@ -1380,6 +1349,7 @@ function Piece({
           surfaces={surfaces}
           open={open}
           finish={piece.finish}
+          appearance={piece.materials}
         />
       ) : representation.kind === 'procedural' ? (
         parts.map((part) => {
@@ -1407,7 +1377,7 @@ function Piece({
                   : materials[
                       part.name === 'tv-screen'
                         ? 'screen'
-                        : part.name === 'blanket'
+                        : part.name.startsWith('blanket')
                           ? 'blanket'
                           : part.role
                     ]

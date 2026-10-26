@@ -1,5 +1,11 @@
 # Roomedy catalogue and representation policy
 
+## Part-specific furniture materials — RM-023,26October2026
+
+Optional `materials` on furniture describe planned frame material(auto/wood/painted/metal), supported upholstery(linen/velvet/leather), soft-part colour and original/dark/brass/steel hardware. They never establish dimensions, ownership, product identity or a price. Existing six finishes and omitted legacy defaults remain. Bedding offers linen/velvet; shades retain linen with editable colour; chairs/seating offer all three. Inspector controls appear only for actual frame/soft/hardware roles. Owned sizes outside a fixed model’s envelope keep honest bounds and frame appearance, with no soft/hardware controls that cannot affect the representation.
+
+A local disclosure edits several choices, then one Apply commits one bounded visitor action/Undo. Explicit human Medy material requests use the same evaluator and preview list; no new model transform authority is added. Unspecified choices remain unchanged. Prepared sources/geometry stay immutable; only named wood/carpet/metal instance materials change, with original hardware colour preserved by default. TV screens and mirror glass retain their separate render owners. Procedural bedding/cushions gain subtle raised stitched channels inside original outer envelopes; physical parts and clearance rules remain unchanged. Base catalogue thumbnails remain curated base appearances rather than personalized thumbnails. No new/licensed retail asset or dependency is introduced. A nullable soft-colour patch explicitly restores its default, independently of upholstery/hardware. Use default colour in the inspector and an explicit Medy default-soft-colour request share that command. [Current evidence](../validation/RM-023.md).
+
 RM-002, 17 October 2026. Canonical catalogue version: `catalogue-v1`. [Pure shared records](../../packages/spatial/src/catalogue.ts) are used by browser/backend consumers through `@roomedy/spatial`; [contracts](../../packages/contracts/src/catalogue.ts) own strict schemas. Frontend filtering, finish previews and representations consume those records. No price, currency, retailer, shopping or inventory-availability data exists.
 
 ## Supported collection
