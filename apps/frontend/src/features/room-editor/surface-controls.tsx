@@ -7,11 +7,12 @@ import {
   SURFACE_TEXTURES,
   roomSurface,
   surfaceColorSchema,
+  roomSurfaceDetail,
+  WALLS,
+  surfaceDetailSchema,
+  changedRoomSurface,
 } from '@roomedy/contracts/surfaces';
-import type {
-  SurfaceTarget,
-  SurfaceTexture,
-} from '@roomedy/contracts/surfaces';
+import type { SurfaceTarget, SurfaceDetail } from '@roomedy/contracts/surfaces';
 import styles from './editor.module.css';
 
 type Apply = (actions: VisitorAction[], label: string) => string | null;
@@ -30,12 +31,38 @@ function SurfaceForm({
     [hex, setHex] = useState(current.color),
     [texture, setTexture] = useState(current.texture);
   const hexInput = useRef<HTMLInputElement>(null);
+  const patternWidthInput = useRef<HTMLInputElement>(null);
+  const patternHeightInput = useRef<HTMLInputElement>(null);
   const validColor = surfaceColorSchema.safeParse(hex).success;
   const [error, setError] = useState('');
-  const name = target === 'walls' ? 'Walls' : 'Floor';
+  const [detail, setDetail] = useState(() => ({
+    ...roomSurfaceDetail(room.room, target),
+  }));
+  const updateDetail = (next: SurfaceDetail) => {
+    setDetail(next);
+    setError('');
+  };
+  const name =
+    target === 'walls'
+      ? 'All walls'
+      : target === 'floor'
+        ? 'Floor'
+        : `${target[0]!.toUpperCase()}${target.slice(1)} wall`;
   const appearance = room.room.surfaces?.[target];
+  const inherited = target === 'floor' ? undefined : room.room.surfaces?.walls;
+  const colorEvidence = appearance?.color.value
+    ? appearance.color
+    : (inherited?.color ?? appearance?.color);
+  const textureEvidence = appearance?.texture.value
+    ? appearance.texture
+    : (inherited?.texture ?? appearance?.texture);
   const preset =
     Object.entries(FINISH_COLORS).find(([, hex]) => hex === color)?.[0] ?? '';
+  const patch = changedRoomSurface(room.room, target, {
+    color: hex,
+    texture,
+    detail,
+  });
   return (
     <form
       noValidate
@@ -47,14 +74,25 @@ function SurfaceForm({
           hexInput.current?.focus();
           return;
         }
+        if (!surfaceDetailSchema.safeParse(detail).success) {
+          setError('Use pattern dimensions from 10 to 300 cm.');
+          const widthValid =
+            Number.isInteger(detail.repeatWidthMm) &&
+            detail.repeatWidthMm >= 100 &&
+            detail.repeatWidthMm <= 3000;
+          (widthValid
+            ? patternHeightInput
+            : patternWidthInput
+          ).current?.focus();
+          return;
+        }
+        if (!patch) return;
         setError(
           onApply(
             [
               {
                 type: 'set-room-surface',
-                surface: target,
-                color: hex.toLowerCase(),
-                texture,
+                ...patch,
               },
             ],
             `Change ${target} finish`,
@@ -97,7 +135,7 @@ function SurfaceForm({
         </label>
         <div>
           <label htmlFor={`${id}-picker`}>
-            Custom {target === 'walls' ? 'wall' : 'floor'} colour
+            Custom {target === 'floor' ? 'floor' : 'wall'} colour
           </label>
           <div className={styles.colourInput}>
             <input
@@ -131,31 +169,110 @@ function SurfaceForm({
           </div>
         </div>
       </div>
-      {appearance?.color.status === 'estimated' && (
+      {colorEvidence?.status === 'estimated' && (
         <p className={styles.hint}>
           Colour estimated from photos; lighting can affect it.
         </p>
       )}
-      {appearance?.color.status === 'unknown' && (
+      {colorEvidence?.status === 'unknown' && (
         <p className={styles.hint}>Default colour.</p>
       )}
-      <label>
-        {name} texture
-        <select
-          value={texture}
-          onChange={(event) => setTexture(event.target.value as SurfaceTexture)}
-        >
-          {SURFACE_OPTIONS[target].map((value) => (
-            <option key={value} value={value}>
-              {SURFACE_TEXTURES[value]}
-            </option>
+      <div
+        className={styles.materialChoices}
+        role="group"
+        aria-label={`${name} materials`}
+      >
+        {SURFACE_OPTIONS[target].map((value) => (
+          <button
+            type="button"
+            key={value}
+            aria-pressed={texture === value}
+            className={styles.materialChoice}
+            data-texture={value}
+            onClick={() => setTexture(value)}
+          >
+            <span
+              style={{ backgroundColor: color }}
+              data-texture={value}
+              aria-hidden="true"
+            />
+            {SURFACE_TEXTURES[value]}
+          </button>
+        ))}
+      </div>
+      <details className={styles.materialDetails}>
+        <summary>Pattern &amp; finish</summary>
+        <div className={styles.twoFields}>
+          {(['repeatWidthMm', 'repeatHeightMm'] as const).map((field) => (
+            <label key={field}>
+              Pattern {field === 'repeatWidthMm' ? 'width' : 'height'} (cm)
+              <input
+                type="number"
+                ref={
+                  field === 'repeatWidthMm'
+                    ? patternWidthInput
+                    : patternHeightInput
+                }
+                min={10}
+                max={300}
+                step={0.1}
+                value={Number.isFinite(detail[field]) ? detail[field] / 10 : ''}
+                aria-invalid={
+                  !Number.isFinite(detail[field]) ||
+                  detail[field] < 100 ||
+                  detail[field] > 3000
+                }
+                onChange={(event) =>
+                  updateDetail({
+                    ...detail,
+                    [field]: Math.round(event.target.valueAsNumber * 10),
+                  })
+                }
+              />
+            </label>
           ))}
-        </select>
-      </label>
-      {appearance?.texture.status === 'estimated' && (
+          <label>
+            Direction
+            <select
+              value={detail.direction}
+              onChange={(event) =>
+                updateDetail({
+                  ...detail,
+                  direction: Number(
+                    event.target.value,
+                  ) as SurfaceDetail['direction'],
+                })
+              }
+            >
+              {[0, 1, 2, 3].map((turn) => (
+                <option key={turn} value={turn}>
+                  {turn * 90}°
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Finish
+            <select
+              value={detail.sheen}
+              onChange={(event) =>
+                updateDetail({
+                  ...detail,
+                  sheen: event.target.value as SurfaceDetail['sheen'],
+                })
+              }
+            >
+              <option value="matte">Matte</option>
+              <option value="satin">Satin</option>
+              <option value="gloss">Gloss</option>
+            </select>
+          </label>
+        </div>
+      </details>
+      {textureEvidence?.status === 'estimated' && (
         <p className={styles.hint}>Texture estimated from photos.</p>
       )}
-      {appearance?.texture.status === 'unknown' && (
+      {textureEvidence?.status === 'unknown' && (
         <p className={styles.hint}>Default texture.</p>
       )}
       {error && (
@@ -166,11 +283,9 @@ function SurfaceForm({
       <button
         type="submit"
         aria-describedby={error ? id : undefined}
-        disabled={
-          validColor && color === current.color && texture === current.texture
-        }
+        disabled={validColor && patch === null}
       >
-        Apply {target === 'walls' ? 'wall' : 'floor'} finish
+        Apply {name.toLowerCase()} finish
       </button>
     </form>
   );
@@ -182,16 +297,31 @@ export function SurfaceControls({
   room: RoomDocument;
   onApply: Apply;
 }) {
+  const [target, setTarget] = useState<SurfaceTarget>('walls');
   return (
     <div className={styles.surfaceControls}>
-      {(['walls', 'floor'] as const).map((target) => (
-        <SurfaceForm
-          key={`${room.roomId}:${target}:${JSON.stringify(room.room.surfaces?.[target])}:${room.room.floorFinish}:${room.room.wallFinish}`}
-          room={room}
-          target={target}
-          onApply={onApply}
-        />
-      ))}
+      <label>
+        Customize surface
+        <select
+          value={target}
+          onChange={(event) => setTarget(event.target.value as SurfaceTarget)}
+        >
+          <option value="floor">Floor</option>
+          <option value="walls">All walls</option>
+          {WALLS.map((wall) => (
+            <option key={wall} value={wall}>
+              {wall[0]!.toUpperCase()}
+              {wall.slice(1)} wall
+            </option>
+          ))}
+        </select>
+      </label>
+      <SurfaceForm
+        key={`${room.roomId}:${target}:${JSON.stringify(room.room.surfaces)}:${room.room.floorFinish}:${room.room.wallFinish}`}
+        room={room}
+        target={target}
+        onApply={onApply}
+      />
     </div>
   );
 }

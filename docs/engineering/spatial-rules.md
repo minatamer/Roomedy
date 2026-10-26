@@ -1,5 +1,11 @@
 # Spatial rules and command authority
 
+## RM-022 material choices —26 October 2026
+
+`set-room-surface` retains its visitor-intent authority and adds named wall targets plus optional bounded material detail. Detail specifies full texture repeat width/height100–3000mm, direction0–3 and matte/satin/gloss; it is planned appearance, never measurement evidence. Each wall inherits unknown/omitted colour/texture/detail from all-walls. Individual edits preserve aggregate/other-wall state. All-walls patches apply only requested fields to existing overrides, preserving different textures/detail when changing colour. No-op and omitted fields retain their original evidence and do not create an empty override. Global room palettes intentionally apply colour to every existing wall record while preserving independent texture/detail.
+
+Legacy schema1 rooms remain valid; optional records are strictly validated on normal room/project import. The normal pure evaluator, command identity, stale/replay checks, atomic batches and whole-change Undo remain the only commit path. Studio controls and Medy's supported explicit visitor-intent edits share it. No physical dimensions, opening facts, pose, locks or fit authority are changed by material choices. [Actual validation](../validation/RM-022.md).
+
 RM-003 implementation policy, 17 October 2026. Use with the [ticket](../tickets/RM-003-build-spatial-checks-commands-and-undo.md), [approved refinements](../reviews/2026-10-17-plan-review.md) and [actual validation record](../validation/RM-003.md). This policy describes the supported semantic model; it is not a building-code, accessibility, ergonomic or real-world survey certification.
 
 ## Coordinates and physical truth

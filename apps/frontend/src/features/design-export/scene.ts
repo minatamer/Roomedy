@@ -1,7 +1,7 @@
 import {
   BoxGeometry,
   DataTexture,
-  Source,
+  TextureSource,
   Texture,
   Group,
   Mesh,
@@ -14,7 +14,13 @@ import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry, featureLabel } from '@roomedy/spatial';
 import { FINISH_PALETTE } from '../catalogue/finishes';
-import { roomSurface } from '@roomedy/contracts/surfaces';
+import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
+import type { SurfaceTarget } from '@roomedy/contracts/surfaces';
+import {
+  configureRoomSampler,
+  roomSurfaceGeometry,
+  surfaceRoughness,
+} from '../room-view/room-material';
 import {
   displayRoom,
   featureBox,
@@ -32,7 +38,6 @@ import {
   detailedParts,
   surfaceModel,
   surfaceProperties,
-  setSurfaceRepeat,
 } from '../room-view/surfaces';
 import { DesignExportError } from './facts';
 import { createWindowGlass } from '../room-view/window-glass';
@@ -108,6 +113,9 @@ export function buildDesignScene(
     unit = new BoxGeometry(1, 1, 1),
     marker = new OctahedronGeometry(0.12),
     materials = new Set<Material>(),
+    roomGeometries = new Set<BufferGeometry>(),
+    roomSamplers = new Set<Texture>(),
+    samplerCache = new Map<string, Texture>(),
     instances: (() => void)[] = [];
   const walls = new Map<string, Group>(),
     bounds = displayRoom(room);
@@ -137,16 +145,19 @@ export function buildDesignScene(
       displayBounds: bounds,
     },
   };
-  setSurfaceRepeat(surfaces.floor, bounds.width / 1.2, bounds.depth / 1.2);
   const material = (
     color: string,
     role: 'wood' | 'soft' | 'metal' | 'wall' | 'floor' = 'wood',
+    target?: SurfaceTarget,
   ) => {
     const map =
       role === 'floor'
         ? roomSurfaceMap(surfaces, roomSurface(room.room, 'floor').texture)
         : role === 'wall'
-          ? roomSurfaceMap(surfaces, roomSurface(room.room, 'walls').texture)
+          ? roomSurfaceMap(
+              surfaces,
+              roomSurface(room.room, target ?? 'walls').texture,
+            )
           : role === 'soft'
             ? surfaces.fabric
             : role === 'metal'
@@ -166,6 +177,28 @@ export function buildDesignScene(
               : 0.76,
       metalness: role === 'metal' ? 0.55 : 0,
     });
+    if (target) {
+      const detail = roomSurfaceDetail(room.room, target);
+      for (const key of [
+        'map',
+        'normalMap',
+        'roughnessMap',
+        'bumpMap',
+      ] as const) {
+        const source = m[key];
+        if (!source) continue;
+        const samplerKey = `${source.uuid}:${JSON.stringify(detail)}`;
+        let sampler = samplerCache.get(samplerKey);
+        if (!sampler) {
+          sampler = source.clone();
+          configureRoomSampler(sampler, detail);
+          roomSamplers.add(sampler);
+          samplerCache.set(samplerKey, sampler);
+        }
+        m[key] = sampler;
+      }
+      m.roughness = surfaceRoughness(detail.sheen);
+    }
     materials.add(m);
     return m;
   };
@@ -185,22 +218,49 @@ export function buildDesignScene(
     parent.add(mesh);
     return mesh;
   };
-  const floor = material(roomSurface(room.room, 'floor').color, 'floor');
+  const floor = material(
+    roomSurface(room.room, 'floor').color,
+    'floor',
+    'floor',
+  );
+  const surfaceGeometry = (
+    center: readonly number[],
+    size: readonly number[],
+    target: SurfaceTarget,
+  ) => {
+    const geometry = roomSurfaceGeometry(unit, center, size, target);
+    roomGeometries.add(geometry);
+    return geometry;
+  };
+  const floorCenter = [bounds.width / 2, -0.07, bounds.depth / 2];
+  const floorSize = [bounds.width + 0.24, 0.14, bounds.depth + 0.24];
   box(
     root,
     'Floor',
-    [bounds.width / 2, -0.07, bounds.depth / 2],
-    [bounds.width + 0.24, 0.14, bounds.depth + 0.24],
+    floorCenter,
+    floorSize,
     floor,
+    surfaceGeometry(floorCenter, floorSize, 'floor'),
   );
-  const wallMaterial = material(roomSurface(room.room, 'walls').color, 'wall');
   for (const wall of ['north', 'south', 'east', 'west'] as const) {
+    const wallMaterial = material(
+      roomSurface(room.room, wall).color,
+      'wall',
+      wall,
+    );
     const group = new Group();
     group.name = `Wall ${wall}`;
     root.add(group);
     walls.set(wall, group);
     for (const [i, b] of wallBoxes(room, wall).entries())
-      box(group, `Wall ${wall} ${i}`, b.center, b.size, wallMaterial);
+      box(
+        group,
+        `Wall ${wall} ${i}`,
+        b.center,
+        b.size,
+        wallMaterial,
+        surfaceGeometry(b.center, b.size, wall),
+      );
   }
   for (const feature of room.room.features) {
     const b = featureBox(room, feature);
@@ -418,6 +478,8 @@ export function buildDesignScene(
     disposed = true;
     instances.forEach((fn) => fn());
     materials.forEach((m) => m.dispose());
+    roomGeometries.forEach((g) => g.dispose());
+    roomSamplers.forEach((map) => map.dispose());
     unit.dispose();
     marker.dispose();
     surfaces.dispose();
@@ -446,7 +508,12 @@ export function buildDesignScene(
     nodes,
     triangles,
     dispose,
-    prepareSurfaces: (signal: AbortSignal) => surfaces.load(signal),
+    async prepareSurfaces(signal: AbortSignal) {
+      const result = await surfaces.load(signal);
+      if (!disposed)
+        for (const sampler of roomSamplers) sampler.needsUpdate = true;
+      return result;
+    },
     prepareGlass(renderer?: WebGLRenderer) {
       if (!disposed) windowGlass?.prepare(renderer);
     },
@@ -473,18 +540,19 @@ export function prepareGlbTextures(
   root: Object3D,
   canvas = () => document.createElement('canvas'),
 ) {
-  const copies = new Map<
-    DataTexture,
-    { map: Texture; canvas: HTMLCanvasElement }
+  const copies = new Map<DataTexture, Texture>();
+  const sources = new Map<
+    Texture['source'],
+    { source: TextureSource<HTMLCanvasElement>; canvas: HTMLCanvasElement }
   >();
   const restore: (() => void)[] = [];
   const dispose = () => {
     restore.splice(0).forEach((fn) => fn());
-    for (const copy of copies.values()) {
-      copy.map.dispose();
+    for (const copy of copies.values()) copy.dispose();
+    for (const copy of sources.values())
       copy.canvas.width = copy.canvas.height = 1;
-    }
     copies.clear();
+    sources.clear();
   };
   try {
     root.traverse((node) => {
@@ -498,33 +566,38 @@ export function prepareGlbTextures(
           if (!(original instanceof DataTexture)) continue;
           let copy = copies.get(original);
           if (!copy) {
-            const image = original.image;
-            if (
-              copies.size >= 8 ||
-              !Number.isInteger(image.width) ||
-              !Number.isInteger(image.height) ||
-              image.width < 1 ||
-              image.height < 1 ||
-              image.width > 512 ||
-              image.height > 512 ||
-              !(image.data instanceof Uint8Array) ||
-              image.data.length !== image.width * image.height * 4
-            )
-              throw new DesignExportError('too-large');
-            const target = canvas();
-            const map = new Texture().copy(original);
-            copy = { map, canvas: target };
+            if (copies.size >= 32) throw new DesignExportError('too-large');
+            let source = sources.get(original.source);
+            if (!source) {
+              const image = original.image;
+              if (
+                sources.size >= 8 ||
+                !Number.isInteger(image.width) ||
+                !Number.isInteger(image.height) ||
+                image.width < 1 ||
+                image.height < 1 ||
+                image.width > 512 ||
+                image.height > 512 ||
+                !(image.data instanceof Uint8Array) ||
+                image.data.length !== image.width * image.height * 4
+              )
+                throw new DesignExportError('too-large');
+              const target = canvas();
+              source = { source: new TextureSource(target), canvas: target };
+              sources.set(original.source, source);
+              target.width = image.width;
+              target.height = image.height;
+              const context = target.getContext('2d');
+              if (!context) throw new DesignExportError('graphics');
+              const pixels = context.createImageData(image.width, image.height);
+              pixels.data.set(image.data);
+              context.putImageData(pixels, 0, 0);
+            }
+            copy = new Texture().copy(original);
+            copy.source = source.source;
             copies.set(original, copy);
-            target.width = image.width;
-            target.height = image.height;
-            const context = target.getContext('2d');
-            if (!context) throw new DesignExportError('graphics');
-            const pixels = context.createImageData(image.width, image.height);
-            pixels.data.set(image.data);
-            context.putImageData(pixels, 0, 0);
-            map.source = new Source(target);
           }
-          material[slot] = copy.map;
+          material[slot] = copy;
           restore.push(() => {
             material[slot] = original;
           });

@@ -1451,9 +1451,9 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **06-plan-commit**
-Next action: Stage exact reviewed documentation paths and inspect the staged diff before local commit.
-Active ticket: RM-021
+Current phase: **07-build**
+Next action: Stage and locally commit the clean exact RM-022 checkpoint, then allocate and execute RM-023 furniture customization.
+Active ticket: RM-022
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
@@ -1470,14 +1470,18 @@ Provisional owner reviews: 04-decisions
   Reason: Revised proposal preserves current room/command/lifecycle architecture, removes the rejected input-document feature and separates studio customization from the cost phase.
   Consequence / reversibility: Local implementation may proceed once ticket planning is validated. Final owner product/visual testing remains outstanding; no live or hosted claims.
   Owner review requested on return: yes. Evidence: docs/Roomedy Extension for CPQ.md, AGENTS.md, docs/commit-plans/RM-021.md
+- **AFK-0003** (AFK-SESSION-001, 2026-10-26T11:27:02+00:00, 07-build): RM-022 uses bounded full-texture repeat dimensions (100–3000mm), quarter-turn direction and sheen, with named walls inheriting unspecified facts; reuse existing local material assets and one project authority.
+  Reason: This provides richer practical studio customization without adding an asset service or treating texture size as a measured plank/tile or room fact. World-coordinate projection keeps aperture spans continuous and export shares image sources within the original pixel-copy bound.
+  Consequence / reversibility: Semantic appearance is compatible with old rooms, one Undo owns changes and estimating can later attach products. Actual branded material fidelity and owner visuals remain review items; settings are reversible.
+  Owner review requested on return: yes. Evidence: docs/commit-plans/RM-022.md, docs/design/room-view.md#detailed-studio-surfaces--rm-022-26-october-2026, docs/validation/RM-022.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
 - [x] 03-product — Product and design (complete)
 - [x] 04-decisions — Product decisions (provisional)
 - [x] 05-tickets — Ticket plan (complete)
-- [ ] 06-plan-commit — Planning commit (in_progress)
-- [ ] 07-build — Execute and validate tickets (pending)
+- [x] 06-plan-commit — Planning commit (complete)
+- [ ] 07-build — Execute and validate tickets (in_progress)
 - [ ] 08-performance — Performance investigation (pending)
 - [ ] 09-visual-review — Frontend visual approval checkpoint (pending)
 - [ ] 10a-quality — Quality audit and fixes (pending)
@@ -1492,7 +1496,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T10:47:44+00:00",
+  "updated_at": "2026-10-26T11:36:03+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1590,8 +1594,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "PRICING_SCOPE": {
-      "value": "Furniture prices, currency/cost totals, visitor spending budgets, affordability goals, retail sourcing and checkout are deferred, including fictional prices. Internal provider/cloud spend, token/rate/concurrency controls remain required.",
-      "source": "Human explicitly leaves prices and budget planning out; docs/ROOMEDY.md sections 2, 13, 16, 18 and 26",
+      "value": "Finishing/furnishing CPQ prices, budgets, local sourcing, services/moving, versions and PDF output are selected for RM-021–RM-030. Earlier price deferral is superseded. No checkout, structural construction or drawing/document intake.",
+      "source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization",
       "confidence": "confirmed"
     },
     "TICKET_PREFIX": {
@@ -1640,8 +1644,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "ACTIVE_GOAL": {
-      "value": "Registered unbudgeted Roomedy ordered execute/validate goal is paused at the explicitly required RM-015 visual result gate. The owner-authorized checkpoint Git action is separate and does not resume automatic implementation. Goal objective and remaining account usage are distinct; no completion or visual acceptance is inferred.",
-      "source": "get_goal verified paused; direct human stop-at-review instruction and 2026-10-18 visual-refusal/checkpoint-commit messages",
+      "value": "Current registered goal is active and unbudgeted: finish approved RM-021–RM-030 CPQ tickets with clean per-ticket validation and local commits; all tests fake/paid-off until owner returns; actual owner manual/visual acceptance stays pending.",
+      "source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization; create_goal current thread",
       "confidence": "confirmed"
     },
     "CODEX_USAGE_CHECK": {
@@ -1763,6 +1767,11 @@ This checklist records local work. Human approvals and unresolved external check
       "value": "Finish/furnish the existing single room; richer customizable studio furniture/walls/floors; separate centered-chat Plan & cost phase with highlighted connected 3D objects/surfaces, sourcing/estimates/work plan, versions and estimate PDF output. No floor-plan/drawing/PDF input at any phase.",
       "source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization",
       "confidence": "confirmed"
+    },
+    "LOCAL_RUNTIME": {
+      "value": "Owned fake session verified4320/4321; supervisors6052/24508, listeners17824/22284 and launch trees recorded outside source under Temp/roomedy-cpq-runtime. Explicit process fake/off and blank provider keys; owner env unchanged; no other app stopped.",
+      "source": "actual owned launch/readiness/process checks26October2026; docs/validation/RM-022.md",
+      "confidence": "confirmed"
     }
   },
   "prompt_preapproval": {
@@ -1787,8 +1796,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-021",
-  "next_action": "Stage exact reviewed documentation paths and inspect the staged diff before local commit.",
+  "active_ticket": "RM-022",
+  "next_action": "Stage and locally commit the clean exact RM-022 checkpoint, then allocate and execute RM-023 furniture customization.",
   "phases": [
     {
       "id": "01-docs",
@@ -2076,7 +2085,7 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "06-plan-commit",
       "name": "Planning commit",
       "gate": null,
-      "status": "in_progress",
+      "status": "complete",
       "prompt": {
         "text": "Stage and make a cohesive local RM-021 commit for exactly the 17 paths allocated in docs/commit-plans/RM-021.md. The owner explicitly authorizes all necessary CPQ tickets and local staging/commits. Read-only validation pass2 and 87 local links/ten-packet dependencies pass. Inspect the staged full documentation diff and path/byte inventory for unrelated, secret or generated material. Preserve prior release/progress history, the current branch and all ignored env/runtime files. No source/build/provider tests, push, delegation, account change or publication. After successful commit, record actual hash in canonical progress and start the authorized phase07 sequential fake-only RM-022 through030 loop with prior per-ticket file allocation and clean read-only validation before each local commit.",
         "sha256": "8cc2cef70c142973cd4755f562689c2e9aa9ee0f57a072bb6e2b55650978583d",
@@ -2090,12 +2099,9 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:b97db4b927036e9f82d1ab4e44a876797d9ec1c3 — RM-000: document product blueprint guidelines and ticket plan; 33 exact allocated files, independently verified against reviewed bytes",
-        "docs/commit-plans/RM-000.md: all file allocations, two scoped RM-000 batches and explicit prohibition on implementation/future implementation commits/push/paid/cloud actions",
-        "docs/validation/RM-000.md: 388 local links, 20 Planned tickets/35 acyclic edges/188 unchecked criteria, 24 guidelines/27 evidence entries/22 unperformed checklist checks, balanced HTML/24 IDs/script integrity, source hashes and scoped credential/content/whitespace checks",
-        "Reviewed/committed 33-file sorted path/SHA-256 manifest digest: ba62eaae59f233c77502004a8033a2f26a9ac2ee64a49d14e7f8ea0b62f95826; initial snapshot worktree independently confirmed clean",
-        "Phase-six completion record is restricted to docs/ROOMEDY.md, docs/commit-plans/RM-000.md and docs/validation/RM-000.md in the planned RM-000 checkpoint commit",
-        "human:current-chat/2026-10-17/approve-plan-and-rm-000-commit: updated plan/guidelines and documentation-only local commits explicitly approved; implementation still explicitly withheld"
+        "commit:4f7fb2b",
+        "docs/validation/RM-021.md",
+        "docs/commit-plans/RM-021.md"
       ],
       "blockers": [],
       "approval": null,
@@ -2130,53 +2136,31 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "07-build",
       "name": "Execute and validate tickets",
       "gate": null,
-      "status": "pending",
-      "prompt": null,
+      "status": "in_progress",
+      "prompt": {
+        "text": "Execute approved Roomedy CPQ tickets RM-022 through RM-030 sequentially at C:/Users/minat/Work/Roomedy. Planning commit4f7fb2b contains all ten packets and documented recommended assumptions. For each ticket, read the complete packet and owning precision references, reconcile real dependencies/Git state, allocate exact paths before edits, implement all locally possible acceptance behavior, run meaningful focused tests and the required settled root gate, then perform read-only validation of the full settled diff. Independently confirm/fix findings and revalidate until no actionable local findings remain. Record actual checks/limitations in per-ticket receipts, stage only explicit reviewed owned paths and make cohesive ticket-prefixed local commits. Continue without routine questions under the owner's keep-going-until-return instruction, recording material decisions in the canonical AFK ledger. Preserve one project/room/commands/Undo/evidence/lifecycle authority and current motion/private logs/security bounds. Prioritize rich customizable 3D studio materials/furniture and a separate centered-chat phase with interactive 3D object/surface highlights, deterministic sourcing/estimate/budget/work-plan/version/PDF behavior. Use current pinned dependencies and existing frontend/private backend pair; no extra service, arbitrary URL proxy, database/account, incoming drawing/PDF feature or unrelated product work. All automated/native testing must be fake/paid-off, with no actual provider/merchant/Cloudflare test dispatch. Inspect process/listener ownership and use only existing Roomedy4320/4321 if runtime is needed; never touch another app or rewrite owner env. No delegation, Git push, deployment, account/cloud mutation or metadata export. After integrated local completion and clean reviews, prepare the owner manual-test handoff with actual limits; do not claim personal visual approval, real local market accuracy or new hosted acceptance.",
+        "sha256": "c122029b50215a3a33f3b6cf7430010da2d778a3687f1adedaa8b52eaaa08256",
+        "context_sources": [
+          "human:current-chat/2026-10-26/cpq-ticket-execution-authorization",
+          "docs/tickets/README.md#cpq-extension--26-october-2026",
+          "docs/Roomedy Extension for CPQ.md",
+          "commit:4f7fb2b"
+        ],
+        "status": "afk",
+        "approval": null,
+        "afk_session": "AFK-SESSION-001"
+      },
       "evidence": [
-        "commit:56b7d0fb8b97ed77b8f495460308a3778538ef95 — RM-001 verified local foundation; actual hosted CI unverified",
-        "commit:dc07101324ce91f7066abc34243ef218eebe80c4 — RM-002 complete local catalogue/asset/fixture outcome, 33 tests and all root gates passed",
-        "RM-003 selected in numeric order; clean worktree, both committed dependencies confirmed, full ticket and blueprint sections 8–10/24.3 read. Codex remaining 13%.",
-        "Owner approved all review recommendations and resumed ordered fake execution; approved documentation refinements written across exact allocated paths before RM-003 source/test edits resumed. docs/reviews/2026-10-17-plan-review.md and docs/commit-plans/PLAN-REFINEMENT-2026-10-17.md.",
-        "commit:3cf041b95fb12645a902aceae05bf8a2606ed805 - RM-000 approved plan refinements: 28 exact documentation paths; 20 packets/35 original dependency edges, 52 new unchecked criteria and 386 local links/fragments checked; source excluded. RM-003 resumed under amended authority; revised shared build passed, independent corpus/final gates pending.",
-        "RM-003 required local outcome verified: 70 focused tests and test types; pnpm check passed format/lint/all types, six executable boundary cases, exact two GLB/eight SVG asset checks, 84 unit/integration tests and shared/backend/frontend production builds. Read-only review has no actionable findings; 18-source manifest independently matches 5966599a0e245d8f5cad520d659cf54f62641883f92bbeb6694793fbfec43164. docs/validation/RM-003.md records limits. Exact-path commit next.",
-        "commit:bc349f5b546d3668a762155fed1877afee3d1f3a - RM-003 complete local outcome; exact35changedpaths staged from36allocatedpaths, reviewed source manifest matched, all gates passed and worktree clean immediately aftercommit. RM-004 selected next in numeric order; full amended ticket/linked scope read and dependencies verified. Latest usage97%used/3%remaining.",
-        "RM-004 local outcome verified 2026-10-18: actual five-size landing and mobile entry screenshots, keyboard/refresh/fallback, finite scripted sequence; final pnpm check passed 91 tests, six boundary cases, exact assets, format/lint/types and all builds. Settled eleven-source read-only review has no actionable findings; manifest c0d4fc7094e793a2d5be1201eb3bf5097acc2a6e69f4ef666bd444b92f1692ce. docs/validation/RM-004.md. Exact commit next. Active guide goal registered; 100% remaining at latest read.",
-        "commit:bd0bf78debd743b212ae5a1cf2308e2690c9f46e - RM-004 landing/entry and earthy palette locally complete; 25 exact allocated paths, eleven source blobs matched review identity; final gate 91/91 tests and all builds passed, worktree clean after commit. RM-005 selected next; full ticket and precision references read; exact pre-edit allocation docs/commit-plans/RM-005.md.",
-        "RM-005 in progress 2026-10-18: one controller/resource registry and precision SVG UI written within allocation; 20 focused session/adapter tests pass; frontend/test types, lint and executable boundaries pass at scoped checkpoints. Actual browser verified half-mm numeric placement, field focus/errors, scaled/panned drag to 3400 mm, outside drop cancellation, single drag Undo, keyboard nudge, palette Apply/whole Undo and catalogue insertion. Focus/navigation refinements and remaining browser matrix/settled full gate/read-only validation remain; no completion or commit claim. Latest usage1%used/99%remaining.",
-        "RM-005 complete local outcome 2026-10-18: final pnpm check passes112tests/11files, six boundaries, exact assets, format/lint/types and all builds; focused36tests pass. Actual furnished/partial/empty browser states cover half-mm placement, scaled/panned drag, outside/overlap rejection, lock/rotate/resize/measurements, catalogue/owned replacement/removal/Undo, previews and five viewport sizes. Native Change room interaction blocked by automatic browser approval and preserved; separate fixtures used safely, no bypass. OS pointer-cancel/physical/hosted/provider/owner acceptance limits explicit. Final read-only review clean;23source/config/test manifest b1d06ea3a28a19b72b0fe8d1b9e2dee9be407eb85074625df3a60a3953f28a1b;35allocatedpaths/217local linked files checked. docs/validation/RM-005.md. Exact scoped commit next.",
-        "RM-005 committed 85c73620a0bc6d36bbe3559676a94238b4c43ffc; exact 23 source/test/config blobs SHA b1d06ea3a28a19b72b0fe8d1b9e2dee9be407eb85074625df3a60a3953f28a1b; root gate 112/112 tests and builds passed.",
-        "RM-006 read fully and exact paths allocated in docs/commit-plans/RM-006.md before feature edits.",
-        "RM-006 docs/validation/RM-006.md: final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; read-only pass 2 no actionable findings; settled pnpm check passed 120 tests, six boundaries, exact assets, types/builds; actual browser controls/candidate/Undo, missing asset, empty/partial and responsive evidence with unperformed device/context limits.",
-        "RM-006 committed f73ce2e65c3d5e2954ecad523cb477c5bed3760a; clean worktree; 20 exact paths, final 9-file source SHA 29669d8011eebde4c2fb2e482223d376080d6d85b950ffb07123e2267d8b5d80; 120-test root gate and read-only pass 2 complete.",
-        "RM-007 packet and precision references read; 33 exact paths allocated in docs/commit-plans/RM-007.md before feature edits. Codex usage latest 4% used / 96% remaining; no reset consumed.",
-        "RM-007 final24-path source/config/test/fixture SHA809d6de1a53b51e7ba121ecded614e69e98fef8d97a94a757d7007342bc3bc2e;34 exact allocated paths; final147/147 tests, six boundaries, exact assets/types/builds passed. Read-only pass2 no actionable findings after independently reproduced position-lock and manifest/Undo fixes. Actual empty/partial/furnished intake/review/editor and responsive screenshots are in docs/validation/RM-007.md. Latest usage7% used /93% remaining; goal active; no reset consumed.",
-        "RM-007 committed d1d8c302909e85f052b66b37a70520354a8aa976; clean worktree after34-path commit; final147 tests/root/build gate and read-only pass2 complete. RM-008 full packet/precision sections and current OpenAI schema/function/data docs read;40 exact paths allocated before feature edits.",
-        "RM-008 allocation extended before shared test fixture creation to41 exact paths. Final31-path source/config/test SHA f202eec39a0a1e84c0ec2e9ebd6ec87160e6df5ba1cb1251fa3a898525371a3d; final170/170 tests in18 files (7.24s), six boundaries, exact assets/types/builds passed. Read-only pass2 no actionable findings after independently reproduced cancellation, empty output, active replay TTL and persistent provider file-reference corrections. Actual local no-cost probes and measured packed-body allocation are recorded in docs/validation/RM-008.md. Latest usage8% used/92% remaining; no reset consumed.",
-        "RM-008 committed3e6d4c102678f38828122421d7202eaf990ea5f6; clean41-path commit, source SHA f202eec39a0a1e84c0ec2e9ebd6ec87160e6df5ba1cb1251fa3a898525371a3d, final170-test/root gates and read-only pass2 complete. RM-009 full ticket/precision references and dependencies read;28 exact paths allocated before edits for incremental search, trusted scope, one owned worker and yielding backend adapter.",
-        "RM-009 allocation extended before lazy session-entry edit to29 paths. Final21-path source SHA db5ae4b95fb64ce0df67824bda14e5001f190151badc4f6c5b2497c6b1ad8c66; final190/190 tests in21 files (10.88s), six boundaries, exact assets/types/builds passed. Read-only pass3 no actionable findings after independently reproduced captured-scope, clean-estimate flag and irrelevant dimension-unlock advice corrections. Final-source native15 runs returned one candidate each; tight work-area distance3014.96->300mm with aligned chair, owned central area5227500->6250000mm2, maximum40-piece/24-feature loopback health14/2/2ms. Native browser search UI remains unperformed until RM-011; full receipt docs/validation/RM-009.md. Latest Codex9% used/91% remaining; no reset consumed.",
-        "RM-009 committed bfd9e6d524b4a58cfbc3768b127118db1a1fda32 after final190-test/root/native/read-only validation; clean worktree. RM-010 exact allocation docs/commit-plans/RM-010.md before feature edits.",
-        "RM-010 final235-test/root/build/browser gate and read-only pass3 passed;21-path source SHA256 2d3e65fe53c9796a4db0489228b1f2ebf25c0a08d3f2d2378e191bab9213b401; exact30-path commit next. Fake HTTP0/1/1 observations; actual photo correction/acceptance tests; live/device/owner evidence separate. Usage last10used/90remaining.",
-        "RM-010 committed 526a6b3c84670074fe4542b9c5f76e2c992c424d; clean worktree. RM-011 exact33-path allocation before feature edits. Usage11used/89remaining; no reset consumed.",
-        "RM-011 final274tests/26files, all root/build/asset/boundary gates and clean read-only pass1. Actual native worker/fake HTTP,2D/3D, Apply/Cancel/whole Undo, responsive composer/tour checked.32-path source SHA9ddb4990a285f1e964fc27c64d38819b637506ac34ad5abcbea04f33c5580fb6;41 exact allocated paths. Exact authorized local commit next; live/physical/hosted/owner limits in docs/validation/RM-011.md. Usage13used/87remaining; no reset consumed.",
-        "RM-011 committed7580870ca7430d82329b58e304ccd443cf10fe3c after274-test/root/browser/read-only validation; clean worktree. RM-012 exact25-path allocation before feature edits in docs/commit-plans/RM-012.md.",
-        "RM-012 allocation extended before renderer edits to31paths. Final314tests/28files, all root/build/boundary/asset gates and clean read-only pass3. Actual same-scale Before/Current2D/3D, refresh with unchanged expiry, project download/import/Cancel/reset and independent tabs checked; copied storage and load-failure/expiry clocks are controlled evidence.23-path source SHA5f1ae9b30a80041813e5c4e9e0f8b48e94130327ef879619d624198b1316326d; exact authorized local commit next. Limits in docs/validation/RM-012.md. Usage14used/86remaining, no reset consumed.",
-        "RM-012 committedb53dc8a40903020ff019c599fba41f8b7788b951 after314-test/root/native/read-only pass3; clean worktree. RM-013 exact39-path allocation before edits in docs/commit-plans/RM-013.md.",
-        "RM-013 final local329tests/30files and all root/build gates passed;23offline cases/27fake adapter calls/0paid,11original synthetic images/6room groups. Native chooser covered three conditions and EXIF/repeated views; accepted furnished editor3D follows rough2D. Read-only pass2 clean after independently reproduced settlement fix. Final15-path LF source SHA e99c16d9ad75f29028c8996edf4aee3455460dc9cfce5da4ea805e0487799735;39 allocated paths; exact local commit next, then RM-014. Live/model/privacy/funding/hosted/owner evidence unperformed.15%used/85%remaining; no reset.",
-        "commit:f5149b2c8b188bab67e2d6359b29e0fc9fbf3db1 - RM-013 exact39-path local commit; clean worktree. RM-014 full packet/precision refs read and49paths allocated before edits. Official Node linux/amd64 digest and CI action SHAs/pnpm integrity checked. Docker Linux daemon unavailable; actual Linux proof remains unperformed. No paid/deploy/push/reset/delegation.",
-        "RM-014 local outcome final346tests/33files, seven boundaries, all root/build gates, Windows A/B/update/rollback and final raw-input-ID production cases passed. Read-only pass3 clean after independently reproduced probe-stream/header/test-env fixes.53allocated paths;39owned source/config/test raw SHA 90ca59b863b449aaf8e6d3dbc422a6e8dd23a9b873128b2d8c1b0bdd7f0aac90;166-file raw input digest7a60eb17e8d4d14deec85db56a1f67923e36d120fcf6e6569c0d351876ab7ba3. Docker Linux engine absent; actual Linux/image/hosted/CI/live evidence unperformed, fail-closed checks preserved. Exact local commit next, then RM-015 performance and actual owner visual stop.17%used/83%remaining; no reset.",
-        "Final preflight adopted unchanged Next-generated frontend AGENTS.md after verifying its generator and reading matching bundled guides.54exact allocated paths; final166-input identity and39-source SHA/346-test gate unchanged. No feedback/export action. Exact local commit next.",
-        "commit:2e27f79b5aa912685b027b76e0c990bf0b0b4998 - RM-014 exact54-path validated local commit; clean worktree. RM-001 through RM-014 local outcomes prepared. Next RM-015 under the explicit numeric execution authority."
+        "commit:4f7fb2b",
+        "docs/commit-plans/RM-022.md",
+        "docs/validation/RM-022.md",
+        "actual-current-gate:1058-tests-65-files-all-root-checks-both-builds-pass"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Actual hosted GitHub/Linux workflow execution is unverified; no push was authorized.",
-          "reference": "docs/validation/RM-001.md"
-        },
-        {
-          "kind": "external",
-          "reason": "Actual Docker Linux engine unavailable; Linux images/runtime/nonroot/probes remain unperformed. Hosted CI/IAM/live/model/funding/privacy also unperformed; no external mutation authorized.",
-          "reference": "docs/validation/RM-014.md"
+          "reason": "Owner requires fake-only testing until return; new live model/sourcing/merchant quality and actual final owner manual/visual acceptance are unperformed. This does not block independent local implementation.",
+          "reference": "docs/Roomedy Extension for CPQ.md#18-approved-execution-map-and-recorded-decisions"
         }
       ],
       "approval": null,
@@ -3331,6 +3315,21 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/Roomedy Extension for CPQ.md",
           "AGENTS.md",
           "docs/commit-plans/RM-021.md"
+        ]
+      },
+      {
+        "id": "AFK-0003",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T11:27:02+00:00",
+        "phase": "07-build",
+        "choice": "RM-022 uses bounded full-texture repeat dimensions (100–3000mm), quarter-turn direction and sheen, with named walls inheriting unspecified facts; reuse existing local material assets and one project authority.",
+        "rationale": "This provides richer practical studio customization without adding an asset service or treating texture size as a measured plank/tile or room fact. World-coordinate projection keeps aperture spans continuous and export shares image sources within the original pixel-copy bound.",
+        "consequence": "Semantic appearance is compatible with old rooms, one Undo owns changes and estimating can later attach products. Actual branded material fidelity and owner visuals remain review items; settings are reversible.",
+        "review_needed": true,
+        "evidence": [
+          "docs/commit-plans/RM-022.md",
+          "docs/design/room-view.md#detailed-studio-surfaces--rm-022-26-october-2026",
+          "docs/validation/RM-022.md"
         ]
       }
     ]

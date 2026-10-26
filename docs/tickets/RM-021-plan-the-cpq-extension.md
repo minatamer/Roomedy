@@ -1,6 +1,6 @@
 # RM-021 — Plan and checkpoint the CPQ extension
 
-Status: **In progress — planning validation**. Dependencies: Existing accepted Roomedy release and the direct 26 October owner instruction.
+Status: **Complete — locally committed `4f7fb2b`**, with [clean planning validation](../validation/RM-021.md). Dependencies: Existing accepted Roomedy release and the direct 26 October owner instruction.
 
 ## Authority and outcome
 
@@ -23,9 +23,9 @@ Reconcile the owner-approved direction, permanently exclude drawing/document int
 
 ## Acceptance
 
-- [ ] Proposal and repository entry points agree with latest owner scope.
-- [ ] RM-021–RM-030 form an acyclic earlier-only dependency queue with concrete scope, checks and no incoming drawing/PDF feature.
-- [ ] One exact documentation allocation is reviewed and committed locally; no code/runtime acceptance is claimed.
+- [x] Proposal and repository entry points agree with latest owner scope.
+- [x] RM-021–RM-030 form an acyclic earlier-only dependency queue with concrete scope, checks and no incoming drawing/PDF feature.
+- [x] One exact documentation allocation is reviewed and committed locally; no code/runtime acceptance is claimed.
 
 ## Execution and verification
 

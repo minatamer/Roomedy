@@ -178,9 +178,19 @@ function plan(c: Context, project: Project) {
     oy = 205 + (475 - (maxZ - minZ) * scale) / 2 - minZ * scale;
   c.fillStyle = roomSurface(room.room, 'floor').color;
   c.fillRect(ox, oy, width * scale, depth * scale);
-  c.strokeStyle = roomSurface(room.room, 'walls').color;
   c.lineWidth = 3;
-  c.strokeRect(ox, oy, width * scale, depth * scale);
+  for (const [wall, x1, y1, x2, y2] of [
+    ['north', 0, 0, width, 0],
+    ['east', width, 0, width, depth],
+    ['south', 0, depth, width, depth],
+    ['west', 0, 0, 0, depth],
+  ] as const) {
+    c.strokeStyle = roomSurface(room.room, wall).color;
+    c.beginPath();
+    c.moveTo(ox + x1 * scale, oy + y1 * scale);
+    c.lineTo(ox + x2 * scale, oy + y2 * scale);
+    c.stroke();
+  }
   text(
     c,
     measurement(room.room.width),

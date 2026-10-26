@@ -8,8 +8,8 @@ Product authority: [Roomedy Extension for CPQ](../Roomedy%20Extension%20for%20CP
 
 | Ticket | Outcome | Dependencies | State |
 | --- | --- | --- | --- |
-| [RM-021](RM-021-plan-the-cpq-extension.md) | Plan and checkpoint the CPQ extension | Current release | Planning validation |
-| [RM-022](RM-022-customize-detailed-room-surfaces.md) | Customize detailed room surfaces | RM-021 | Planned |
+| [RM-021](RM-021-plan-the-cpq-extension.md) | Plan and checkpoint the CPQ extension | Current release | Complete — `4f7fb2b` |
+| [RM-022](RM-022-customize-detailed-room-surfaces.md) | Customize detailed room surfaces | RM-021 | Locally validated —1058-test/root/build; checkpoint ready |
 | [RM-023](RM-023-customize-detailed-furniture.md) | Customize detailed furniture | RM-022 | Planned |
 | [RM-024](RM-024-calculate-transparent-room-estimates.md) | Calculate transparent room estimates | RM-022, RM-023 | Planned |
 | [RM-025](RM-025-build-the-3d-plan-and-cost-workspace.md) | Build the 3D Plan & cost workspace | RM-024 | Planned |

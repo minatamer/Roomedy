@@ -622,15 +622,25 @@ export function PlanView({
           stroke="#51463d"
           strokeWidth="60"
         />
-        <rect
-          x={0}
-          y={0}
-          width={width}
-          height={depth}
-          fill="none"
-          stroke={roomSurface(room.room, 'walls').color}
-          strokeWidth="35"
-        />
+        {(
+          [
+            ['north', 0, 0, width, 0],
+            ['east', width, 0, width, depth],
+            ['south', 0, depth, width, depth],
+            ['west', 0, 0, 0, depth],
+          ] as const
+        ).map(([wall, x1, y1, x2, y2]) => (
+          <line
+            key={wall}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            stroke={roomSurface(room.room, wall).color}
+            strokeWidth="35"
+            pointerEvents="none"
+          />
+        ))}
         {/* Previous positions stay behind the current room and its names. */}
         {state.candidate &&
           state

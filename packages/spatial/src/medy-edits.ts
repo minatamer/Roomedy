@@ -13,7 +13,10 @@ import {
   FINISH_COLORS,
   SURFACE_TEXTURES,
   isSurfaceTexture,
+  roomSurfaceDetail,
+  surfaceDetailSchema,
 } from '@roomedy/contracts/surfaces';
+import type { SurfaceTarget } from '@roomedy/contracts/surfaces';
 import {
   CATALOGUE,
   findCatalogueEntry,
@@ -194,15 +197,19 @@ export function medyEdit(
     });
     return batch(`Update room goals: ${next.join(', ') || 'none'}`);
   }
-  const surface = /\b(floor)\b/.test(words)
-    ? 'floor'
-    : /\b(wall|walls)\b/.test(words) &&
-        !targets.some((t) => t.kind === 'feature')
-      ? 'walls'
-      : null;
+  const namedWall = words.match(/\b(north|east|south|west)\s+walls?\b/)?.[1] as
+    SurfaceTarget | undefined;
+  const surface =
+    namedWall ??
+    (/\b(floor)\b/.test(words)
+      ? 'floor'
+      : /\b(wall|walls)\b/.test(words) &&
+          !targets.some((t) => t.kind === 'feature')
+        ? 'walls'
+        : null);
   if (
     surface &&
-    /\b(colou?r|finish|texture|paint|plaster|wood|linen|smooth|tile|carpet|concrete|#[a-f0-9]{6})\b/.test(
+    /\b(colou?r|finish|texture|paint|plaster|wood|linen|smooth|tile|carpet|concrete|matte|satin|gloss|pattern|horizontal|vertical|direction|#[a-f0-9]{6})\b/.test(
       words,
     )
   ) {
@@ -223,28 +230,59 @@ export function medyEdit(
           words,
         ),
       );
-    if (!color && !texture)
+    const sheen = words.match(/\b(matte|satin|gloss)\b/)?.[1];
+    const degrees = words.match(/\bdirection\s+(0|90|180|270)\b/)?.[1];
+    const direction =
+      degrees !== undefined
+        ? Number(degrees) / 90
+        : /\bvertical\b/.test(words)
+          ? 1
+          : /\bhorizontal\b/.test(words)
+            ? 0
+            : undefined;
+    const pattern = words.match(
+      /\bpattern(?: size)?\s+(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*(mm|cm|m)\b/,
+    );
+    const hasDetail =
+      sheen !== undefined || direction !== undefined || pattern !== null;
+    if (!color && !texture && !hasDetail)
       return ask(
         'I can use a six-digit hex colour or a supported surface texture. Which would you like?',
       );
-    const surfaces: readonly ('floor' | 'walls')[] =
+    const surfaces: readonly SurfaceTarget[] =
       /\bfloor\b/.test(words) && /\bwalls?\b/.test(words)
-        ? (['floor', 'walls'] as const)
+        ? (['floor', namedWall ?? 'walls'] as const)
         : [surface];
     for (const target of surfaces) {
       if (texture && !isSurfaceTexture(target, texture))
         return ask(
           'Those surfaces offer different textures. Let’s choose the floor texture and wall texture separately.',
         );
+      const detail = {
+        ...roomSurfaceDetail(room.room, target),
+        ...(sheen ? { sheen } : {}),
+        ...(direction !== undefined ? { direction } : {}),
+      };
+      if (pattern) {
+        const factor = pattern[3] === 'm' ? 1000 : pattern[3] === 'cm' ? 10 : 1;
+        detail.repeatWidthMm = Number(pattern[1]) * factor;
+        detail.repeatHeightMm = Number(pattern[2]) * factor;
+      }
+      const checkedDetail = surfaceDetailSchema.safeParse(detail);
+      if (hasDetail && !checkedDetail.success)
+        return ask('Use a pattern width and height from 10 to 300 cm.');
       actions.push({
         type: 'set-room-surface',
         surface: target,
         ...(color ? { color } : {}),
         ...(texture ? { texture } : {}),
+        ...(hasDetail && checkedDetail.success
+          ? { detail: checkedDetail.data }
+          : {}),
       });
     }
     return batch(
-      `Change ${surfaces.length > 1 ? 'floor and wall' : surface === 'walls' ? 'wall' : 'floor'} finish`,
+      `Change ${surfaces.map((target) => (target === 'floor' ? 'floor' : target === 'walls' ? 'wall' : `${target} wall`)).join(' and ')} finish`,
     );
   }
   // Feature additions use the same unknown/default measurements as the manual Add flow.

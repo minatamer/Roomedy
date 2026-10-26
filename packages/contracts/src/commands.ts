@@ -5,6 +5,7 @@ import {
   surfaceColorSchema,
   surfaceTextureSchema,
   isSurfaceTexture,
+  surfaceDetailSchema,
 } from './surfaces.js';
 import { finishSchema, idSchema, revisionSchema } from './primitives.js';
 import {
@@ -78,8 +79,14 @@ export const visitorActionSchema = z.discriminatedUnion('type', [
       surface: surfaceTargetSchema,
       color: surfaceColorSchema.optional(),
       texture: surfaceTextureSchema.optional(),
+      detail: surfaceDetailSchema.optional(),
     })
-    .refine((a) => a.color !== undefined || a.texture !== undefined)
+    .refine(
+      (a) =>
+        a.color !== undefined ||
+        a.texture !== undefined ||
+        a.detail !== undefined,
+    )
     .refine(
       (a) => a.texture === undefined || isSurfaceTexture(a.surface, a.texture),
     ),

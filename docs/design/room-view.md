@@ -1,5 +1,17 @@
 # Main-editor cutaway
 
+## Detailed studio surfaces — RM-022, 26 October 2026
+
+The CPQ extension adds individual north/east/south/west appearances alongside the compatible floor/all-walls records. Missing wall colour, texture or detail inherits from the aggregate wall choice; missing legacy detail resolves to a 1200×1200mm texture repeat, direction0 and matte finish. Repeat dimensions describe the full texture module, not a certified plank/tile size or measured wall. Detail is a planned material specification and does not confirm room measurements.
+
+Room tools show one surface selector, four useful material cards, existing palette/custom colour and a Pattern & finish disclosure with repeat width/height (10–300cm), quarter-turn direction and matte/satin/gloss. Named wall choices preserve other walls; explicit all-walls commands patch only requested fields across existing overrides. The existing command/Undo/provenance/lifecycle authority owns every accepted choice. Medy's explicit visitor requests can name a wall, supported texture, pattern dimensions, vertical/horizontal direction and sheen through the same path; no new provider operation is added.
+
+Live room materials project metre coordinates from world position, including instanced aperture spans, so patterns remain continuous around windows/doors. A material-owned uniform animates repeat/rotation/roughness finitely; the existing colour/texture blend and cutaway fade remain. Repeated React initialization reuses one weakly owned hook/controller and preserves its target-specific program cache key. No sampler/image/GPU allocation occurs per frame. Existing local texture preparation/fallback remains unchanged.
+
+Export meshes encode the same world-plane metre UVs as standard geometry and use separately transformed samplers, sharing identical source/detail combinations. GLB preparation deduplicates drawable image canvases by source (maximum8), while at most32 finite sampler wrappers preserve distinct transforms; cleanup restores borrowed samplers and retires every owned canvas/map/geometry once. Independent-wall image data is not repeatedly copied merely to change UV transforms. 2D plan and portfolio plan edges use each wall's resolved colour. PDF scene captures and GLB/OBJ read the selected semantic surface state.
+
+Actual checks and remaining owner/physical limits belong to [RM-022 validation](../validation/RM-022.md). Earlier two-surface/no-per-wall records below are dated history.
+
 ## Clear doorway placement and wall editing — RM-015BG
 
 Bathroom-door Add and explicit Medy additions share bounded interval subtraction: north/east/south/west, lowest clear integer offset, whole opening inside the wall. Reserve at least600mm of room-side approach, or the larger opening width for inward/unknown mechanisms. Exclude actual furniture footprints at overlapping/unknown heights, obstacles, other door approach regions and every same-wall opening interval. Exact contact is allowed; unknown relevant geometry is not proof of free space. No clear/assessable interval means no addition, with contextual help. Automatic wall/offset stay estimated; hinge/mechanism and size evidence are retained independently. No bathroom/exterior room is created.

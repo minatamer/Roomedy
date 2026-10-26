@@ -1,6 +1,8 @@
 # RM-022 — Customize detailed room surfaces
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-021](RM-021-plan-the-cpq-extension.md).
+Status: **Implemented and locally validated — exact checkpoint ready; owner visual/manual review pending**. Dependencies: [RM-021](RM-021-plan-the-cpq-extension.md), committed `4f7fb2b`.
+
+[Exact allocation](../commit-plans/RM-022.md), [actual validation](../validation/RM-022.md).
 
 ## Authority and outcome
 
@@ -27,10 +29,10 @@ Make the studio floor and individual walls tactile and meaningfully customizable
 
 ## Acceptance
 
-- [ ] Changes visibly affect the correct surface at physical scale, without changing room geometry or confirming estimated facts.
-- [ ] Omitted new fields retain compatible defaults; invalid scales/texture/target combinations reject atomically.
-- [ ] Per-wall controls and all-walls actions preserve independent choices, shared Apply/Cancel/Undo and legacy import behavior.
-- [ ] Meaningful schema/command/render/export tests and desktop/phone/short visual checks pass; texture failures retain correct semantic choices.
+- [x] Changes visibly affect the correct surface at physical scale, without changing room geometry or confirming estimated facts.
+- [x] Omitted new fields retain compatible defaults; invalid scales/texture/target combinations reject atomically.
+- [x] Per-wall controls and all-walls actions preserve independent choices, shared Apply/Cancel/Undo and legacy import behavior.
+- [x] Meaningful schema/command/render/export tests and desktop/phone/short visual checks pass; texture failures retain correct semantic choices.
 
 ## Execution and verification
 

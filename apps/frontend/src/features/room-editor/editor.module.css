@@ -1114,3 +1114,57 @@
   background-image: radial-gradient(#ffffff40 1px, transparent 1px);
   background-size: 3px 3px;
 }
+.materialChoices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.materialChoice {
+  display: grid;
+  gap: 7px;
+  padding: 8px;
+  min-width: 0;
+  text-align: left;
+  border-radius: 12px;
+}
+.materialChoice[aria-pressed='true'] {
+  border-color: var(--cocoa, #604536);
+  box-shadow: inset 0 0 0 1px var(--cocoa, #604536);
+}
+.materialChoice span {
+  display: block;
+  width: 100%;
+  height: 42px;
+  border-radius: 7px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #0000 0 18px,
+    #0002 19px 20px
+  );
+}
+.materialChoice span[data-texture='tile'] {
+  background-image:
+    linear-gradient(#0002 1px, #0000 1px),
+    linear-gradient(90deg, #0002 1px, #0000 1px);
+  background-size: 20px 20px;
+}
+.materialChoice span[data-texture='smooth'] {
+  background-image: none;
+}
+.materialChoice span[data-texture='linen'],
+.materialChoice span[data-texture='carpet'] {
+  background-image:
+    repeating-linear-gradient(0deg, #fff2 0 1px, #0001 1px 2px),
+    repeating-linear-gradient(90deg, #fff2 0 1px, #0001 1px 2px);
+}
+.materialChoice span[data-texture='concrete'],
+.materialChoice span[data-texture='plaster'] {
+  background-image: radial-gradient(ellipse at 30% 50%, #fff3, #0001);
+}
+.materialDetails {
+  padding-block: 6px;
+}
+.materialDetails summary {
+  cursor: pointer;
+  padding-block: 10px;
+}

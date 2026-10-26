@@ -53,10 +53,11 @@ import {
   setSurfaceMap,
   surfaceModel,
   surfaceProperties,
-  setSurfaceRepeat,
 } from './surfaces';
 import type { Surfaces } from './surfaces';
-import { roomSurface } from '@roomedy/contracts/surfaces';
+import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
+import type { SurfaceDetail, SurfaceTarget } from '@roomedy/contracts/surfaces';
+import { animateRoomMaterial } from './room-material';
 import {
   advanceWindowOffset,
   roomWithWindowPreview,
@@ -222,22 +223,41 @@ function DevelopmentProbe({
 function OwnedStandard({
   color,
   surfaceMap,
+  surfaceDetail,
   ...props
 }: Omit<ThreeElements['meshStandardMaterial'], 'color'> & {
   color: string;
   surfaceMap?: DataTexture;
+  surfaceDetail?: SurfaceDetail;
 }) {
   const ref = useRef<MeshStandardMaterial>(null);
   const [initialMap] = useState(surfaceMap);
   const blend = useRef<ReturnType<typeof createSurfaceBlend> | null>(null);
+  const detailMotion = useRef<ReturnType<typeof animateRoomMaterial> | null>(
+    null,
+  );
+  const [initialDetail] = useState(surfaceDetail);
   const [initialColor] = useState(color);
   const target = useMemo(() => new Color(color), [color]);
   const { invalidate } = useThree();
   useEffect(() => invalidate(), [target, invalidate]);
   useLayoutEffect(() => {
-    if (initialMap && ref.current)
+    if (initialMap && ref.current) {
       blend.current = createSurfaceBlend(ref.current);
-  }, [initialMap]);
+      if (initialDetail)
+        detailMotion.current = animateRoomMaterial(
+          ref.current,
+          'floor',
+          initialDetail,
+        );
+    }
+  }, [initialMap, initialDetail]);
+  useEffect(() => {
+    if (surfaceDetail) {
+      detailMotion.current?.choose(surfaceDetail);
+      invalidate();
+    }
+  }, [surfaceDetail, invalidate]);
   useEffect(() => {
     if (surfaceMap) {
       blend.current?.choose(surfaceMap);
@@ -248,6 +268,7 @@ function OwnedStandard({
     if (ref.current && advanceSurfaceColor(ref.current.color, target, delta))
       invalidate();
     if (blend.current?.advance(delta)) invalidate();
+    if (detailMotion.current?.advance(delta)) invalidate();
   });
   useEffect(() => {
     const owned = ref.current;
@@ -706,25 +727,24 @@ function CameraRig({
 function Walls({
   boxes,
   geometry,
-  color,
   wall,
   room,
   surfaces,
 }: {
   boxes: SceneBox[];
   geometry: BoxGeometry;
-  color: string;
-  wall: string;
+  wall: SurfaceTarget;
   room: RoomDocument;
   surfaces: Surfaces;
 }) {
   const ref = useRef<InstancedMesh>(null),
     { camera, invalidate } = useThree(),
     bounds = displayRoom(room);
+  const color = roomSurface(room.room, wall).color;
   const [initialColor] = useState(color);
   const selectedMap = roomSurfaceMap(
     surfaces,
-    roomSurface(room.room, 'walls').texture,
+    roomSurface(room.room, wall).texture,
   );
   const [initialMap] = useState(selectedMap);
   const targetColor = useMemo(() => new Color(color), [color]);
@@ -741,6 +761,16 @@ function Walls({
   );
   const materialRef = useRef(material);
   const blend = useMemo(() => createSurfaceBlend(material), [material]);
+  const [initialDetail] = useState(() => roomSurfaceDetail(room.room, wall));
+  const detailMotion = useMemo(
+    () => animateRoomMaterial(material, wall, initialDetail),
+    [material, wall, initialDetail],
+  );
+  const detail = roomSurfaceDetail(room.room, wall);
+  useEffect(() => {
+    detailMotion.choose(detail);
+    invalidate();
+  }, [detailMotion, detail, invalidate]);
   useEffect(() => {
     blend.choose(selectedMap);
     invalidate();
@@ -795,6 +825,7 @@ function Walls({
     }
     if (advanceSurfaceColor(display.color, targetColor, delta)) invalidate();
     if (blend.advance(delta)) invalidate();
+    if (detailMotion.advance(delta)) invalidate();
   });
   return (
     <instancedMesh
@@ -1558,9 +1589,6 @@ export function RoomScene(props: SceneProps) {
     target.position.set(bounds.width / 2, 0, bounds.depth / 2);
     return target;
   }, [bounds.width, bounds.depth]);
-  useLayoutEffect(() => {
-    setSurfaceRepeat(surfaces.floor, bounds.width / 1.2, bounds.depth / 1.2);
-  }, [surfaces, bounds.width, bounds.depth]);
   const shadowSpan = Math.max(bounds.width, bounds.depth) * 0.8 + 0.5;
   const walls = useMemo(
     () =>
@@ -1621,6 +1649,7 @@ export function RoomScene(props: SceneProps) {
       >
         <OwnedStandard
           color={roomSurface(rendered.room, 'floor').color}
+          surfaceDetail={roomSurfaceDetail(rendered.room, 'floor')}
           roughness={0.76}
           surfaceMap={roomSurfaceMap(
             surfaces,
@@ -1634,7 +1663,6 @@ export function RoomScene(props: SceneProps) {
           key={w}
           boxes={walls[w]!}
           geometry={geometry}
-          color={roomSurface(rendered.room, 'walls').color}
           wall={w}
           room={rendered}
           surfaces={surfaces}

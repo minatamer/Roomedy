@@ -8,8 +8,7 @@ import { roomDocumentSchema, furnitureSchema } from '@roomedy/contracts/room';
 import type { RoomDocument, CheckFacts } from '@roomedy/contracts/room';
 import type { Measurement } from '@roomedy/contracts/primitives';
 import {
-  emptySurfaceAppearance,
-  roomSurface,
+  withRoomSurface,
   withSurfacePalette,
 } from '@roomedy/contracts/surfaces';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
@@ -261,27 +260,7 @@ export function evaluateBatch(
       continue;
     }
     if (action.type === 'set-room-surface') {
-      const previous =
-        room.room.surfaces?.[action.surface] ?? emptySurfaceAppearance();
-      const visible = roomSurface(room.room, action.surface);
-      const next = { ...previous };
-      if (
-        action.color !== undefined &&
-        action.color.toLowerCase() !== visible.color.toLowerCase()
-      )
-        next.color = {
-          value: action.color.toLowerCase(),
-          status: 'planned',
-          sourceId: 'visitor-plan',
-        };
-      if (action.texture !== undefined && action.texture !== visible.texture)
-        next.texture = {
-          value: action.texture,
-          status: 'planned',
-          sourceId: 'visitor-plan',
-        };
-      if (next.color !== previous.color || next.texture !== previous.texture)
-        room.room.surfaces = { ...room.room.surfaces, [action.surface]: next };
+      room.room = withRoomSurface(room.room, action);
       affected.add(room.roomId);
       continue;
     }
