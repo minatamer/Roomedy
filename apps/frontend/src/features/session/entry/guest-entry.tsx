@@ -59,7 +59,13 @@ export function GuestEntry({
   useEffect(() => {
     if (mounted.current) heading.current?.focus();
     mounted.current = true;
-    window.history.replaceState(null, '', entryHref(state));
+    const href = entryHref(state);
+    const phase =
+      state.step === 'ready' &&
+      new URLSearchParams(window.location.search).get('phase') === 'cost'
+        ? '&phase=cost'
+        : '';
+    window.history.replaceState(window.history.state, '', href + phase);
   }, [state]);
   if (state.step === 'ready')
     return state.intent.source === 'manual' ? (

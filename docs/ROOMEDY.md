@@ -1452,8 +1452,8 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **07-build**
-Next action: Stage/local-commit the clean exact15-path RM-024 checkpoint, then allocate and execute RM-025 separate 3D Plan & cost page.
-Active ticket: RM-024
+Next action: Stage/local-commit the clean exact21-path RM-025 checkpoint, then allocate and execute RM-026 fake/injected sourcing.
+Active ticket: RM-025
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
@@ -1482,6 +1482,10 @@ Provisional owner reviews: 04-decisions
   Reason: This provides complete CPQ quantity/money behavior with current pure contracts/spatial architecture and no new service. Price evidence, site conditions and measurement uncertainty stay separate.
   Consequence / reversibility: Exact bounded arithmetic is testable before UI/sourcing. Sample prices are not market evidence; real-source quality and owner acceptance remain pending.
   Owner review requested on return: yes. Evidence: docs/commit-plans/RM-024.md, docs/tickets/RM-024-calculate-transparent-room-estimates.md
+- **AFK-0006** (AFK-SESSION-001, 2026-10-26T14:37:35+00:00, 07-build): RM-025 uses a separate full-page phase at /demo?phase=cost with native history while retaining the mounted Editor/session, one active reused3D scene and a bounded strict pricing draft.
+  Reason: This delivers the requested second project phase without a new room authority, service or router-owned project reset. Text calculations remain available alongside actual target-linked3D inspection.
+  Consequence / reversibility: Phase navigation preserves accepted design/history/current prices; durable estimate recovery and combined financial Undo remain with RM-028/RM-027. Owner final visual review is pending.
+  Owner review requested on return: yes. Evidence: docs/commit-plans/RM-025.md, docs/design/plan-and-cost.md, docs/validation/RM-025.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1504,7 +1508,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-26T14:10:51+00:00",
+  "updated_at": "2026-10-26T14:37:35+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1804,8 +1808,8 @@ This checklist records local work. Human approvals and unresolved external check
     "local_commits_approved": true,
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
-  "active_ticket": "RM-024",
-  "next_action": "Stage/local-commit the clean exact15-path RM-024 checkpoint, then allocate and execute RM-025 separate 3D Plan & cost page.",
+  "active_ticket": "RM-025",
+  "next_action": "Stage/local-commit the clean exact21-path RM-025 checkpoint, then allocate and execute RM-026 fake/injected sourcing.",
   "phases": [
     {
       "id": "01-docs",
@@ -2159,10 +2163,10 @@ This checklist records local work. Human approvals and unresolved external check
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:f39e8d2",
-        "docs/commit-plans/RM-024.md",
-        "docs/validation/RM-024.md",
-        "actual-current-gate:1099-tests-67-files-all-root-checks-both-builds-pass"
+        "commit:27e0902",
+        "docs/commit-plans/RM-025.md",
+        "docs/validation/RM-025.md",
+        "actual-current-gate:1107-tests-68-files-all-root-checks-both-builds-pass"
       ],
       "blockers": [
         {
@@ -3366,6 +3370,21 @@ This checklist records local work. Human approvals and unresolved external check
         "evidence": [
           "docs/commit-plans/RM-024.md",
           "docs/tickets/RM-024-calculate-transparent-room-estimates.md"
+        ]
+      },
+      {
+        "id": "AFK-0006",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-10-26T14:37:35+00:00",
+        "phase": "07-build",
+        "choice": "RM-025 uses a separate full-page phase at /demo?phase=cost with native history while retaining the mounted Editor/session, one active reused3D scene and a bounded strict pricing draft.",
+        "rationale": "This delivers the requested second project phase without a new room authority, service or router-owned project reset. Text calculations remain available alongside actual target-linked3D inspection.",
+        "consequence": "Phase navigation preserves accepted design/history/current prices; durable estimate recovery and combined financial Undo remain with RM-028/RM-027. Owner final visual review is pending.",
+        "review_needed": true,
+        "evidence": [
+          "docs/commit-plans/RM-025.md",
+          "docs/design/plan-and-cost.md",
+          "docs/validation/RM-025.md"
         ]
       }
     ]

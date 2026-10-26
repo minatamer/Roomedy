@@ -140,3 +140,22 @@
     height: clamp(300px, 56svh, 520px);
   }
 }
+
+/* The full-page cost card has its own natural-height frame, outside editor rows. */
+.wrap[data-inspection='true'] .viewport {
+  flex: none;
+  height: clamp(340px, 48svh, 520px);
+  min-height: 340px;
+}
+.wrap[data-inspection='true'] button {
+  border: 1px solid #d8c8b3;
+  border-radius: 24px;
+  color: #70543b;
+  background: #fffaf099;
+  padding: 10px 14px;
+}
+@media (max-width: 600px) {
+  .wrap[data-inspection='true'] .viewport {
+    height: 340px;
+  }
+}

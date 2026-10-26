@@ -1,3 +1,5 @@
+import type { CostDraft } from '../cost/state';
+import type { ProjectDestination } from '../cost/navigation';
 import type { OperationIdentity } from '@roomedy/contracts/commands';
 import type { CheckFacts, RoomDocument } from '@roomedy/contracts/room';
 import type { CommandWorkspace } from '@roomedy/spatial';
@@ -30,6 +32,8 @@ export interface PhotoNotes {
   readonly simulated: boolean;
 }
 export interface SessionSnapshot {
+  readonly destination: ProjectDestination;
+  readonly cost: CostDraft | null;
   readonly phase: SessionPhase;
   readonly generation: number;
   readonly createdAt: number;

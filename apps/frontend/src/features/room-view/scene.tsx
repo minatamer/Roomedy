@@ -1,3 +1,5 @@
+import { inspectionPose, inspectionVisible } from './inspection';
+import type { Inspection } from './inspection';
 import {
   useCallback,
   useEffect,
@@ -94,6 +96,7 @@ export type CameraAction = {
   sequence: number;
 };
 export interface SceneProps {
+  inspection?: Inspection | undefined;
   placement?: CataloguePlacement | undefined;
   room: RoomDocument;
   candidate: RoomDocument | undefined;
@@ -306,6 +309,7 @@ function setCameraZoom(
 }
 
 function CameraRig({
+  inspection,
   room,
   cameraStateRef,
   cameraAction,
@@ -315,6 +319,7 @@ function CameraRig({
 }: Pick<
   SceneProps,
   | 'room'
+  | 'inspection'
   | 'cameraStateRef'
   | 'cameraAction'
   | 'cameraFrame'
@@ -400,6 +405,23 @@ function CameraRig({
     aspect,
     fit,
     invalidate,
+  ]);
+  const inspectionTarget = inspection?.target,
+    inspectionIsolated = inspection?.isolated;
+  useEffect(() => {
+    if (!inspection) return;
+    const pose =
+      inspectionPose(room, inspection) ??
+      cameraViewPose(room, 'overview', cameraFrame);
+    if (pose) begin([pose.position], pose.target, pose.zoom * fit, 0.8);
+  }, [
+    inspectionTarget,
+    inspectionIsolated,
+    room,
+    cameraFrame,
+    fit,
+    begin,
+    inspection,
   ]);
   const act = useCallback(
     (kind: CameraAction['kind']) => {
@@ -725,12 +747,16 @@ function CameraRig({
 }
 
 function Walls({
+  highlighted,
+  onPick,
   boxes,
   geometry,
   wall,
   room,
   surfaces,
 }: {
+  highlighted?: boolean;
+  onPick?: (() => void) | undefined;
   boxes: SceneBox[];
   geometry: BoxGeometry;
   wall: SurfaceTarget;
@@ -755,6 +781,7 @@ function Walls({
         ...surfaceProperties(initialMap),
         bumpScale: 0.0015,
         roughness: 0.94,
+        emissiveIntensity: 0,
         transparent: true,
       }),
     [initialColor, initialMap],
@@ -816,11 +843,19 @@ function Walls({
       camera.position.y > 0 &&
       camera.position.y < bounds.height;
     const display = materialRef.current,
-      goal = inside ? 1 : front ? 0.06 : 1,
+      goal = highlighted || inside ? 1 : front ? 0.06 : 1,
       difference = goal - display.opacity;
     if (Math.abs(difference) > 0.002) {
       display.opacity +=
         difference * (1 - Math.exp(-Math.min(delta, 0.05) * 16));
+      invalidate();
+    }
+    const glow = highlighted ? 0.23 : 0;
+    if (Math.abs(display.emissiveIntensity - glow) > 0.001) {
+      display.emissive.set('#b78335');
+      display.emissiveIntensity +=
+        (glow - display.emissiveIntensity) *
+        (1 - Math.exp(-Math.min(delta, 0.05) * 16));
       invalidate();
     }
     if (advanceSurfaceColor(display.color, targetColor, delta)) invalidate();
@@ -830,6 +865,14 @@ function Walls({
   return (
     <instancedMesh
       ref={ref}
+      {...(onPick
+        ? {
+            onClick: (event: ThreeEvent<MouseEvent>) => {
+              event.stopPropagation();
+              if (event.delta <= 4) onPick();
+            },
+          }
+        : {})}
       args={[geometry, material, boxes.length]}
       dispose={null}
       receiveShadow
@@ -1607,10 +1650,12 @@ export function RoomScene(props: SceneProps) {
         onUpdate={(light) => light.shadow.camera.updateProjectionMatrix()}
       />
       <mesh
+        visible={inspectionVisible(props.inspection, 'surface:floor')}
         geometry={geometry}
         onClick={(event) => {
           event.stopPropagation();
-          if (event.delta <= 4) onSelect(null);
+          if (event.delta <= 4)
+            onSelect(props.inspection ? 'surface:floor' : null);
         }}
         position={[bounds.width / 2, -0.07, bounds.depth / 2]}
         scale={[bounds.width + 0.24, 0.14, bounds.depth + 0.24]}
@@ -1618,6 +1663,10 @@ export function RoomScene(props: SceneProps) {
         dispose={null}
       >
         <OwnedStandard
+          emissive={
+            props.inspection?.target === 'surface:floor' ? '#b78335' : '#000000'
+          }
+          emissiveIntensity={0.23}
           color={roomSurface(rendered.room, 'floor').color}
           surfaceDetail={roomSurfaceDetail(rendered.room, 'floor')}
           roughness={0.76}
@@ -1628,53 +1677,63 @@ export function RoomScene(props: SceneProps) {
           bumpScale={0.001}
         />
       </mesh>
-      {(['north', 'south', 'east', 'west'] as const).map((w) => (
-        <Walls
-          key={w}
-          boxes={walls[w]!}
-          geometry={geometry}
-          wall={w}
-          room={rendered}
-          surfaces={surfaces}
-        />
-      ))}
-      {rendered.room.features.map((feature) => (
-        <Opening
-          key={feature.id}
-          room={rendered}
-          feature={feature}
-          dragTarget={windowDragTarget(candidate ?? room, feature)}
-          geometry={geometry}
-          surfaces={surfaces}
-          windowGlass={windowGlass}
-          selected={selectedId === feature.id}
-          open={props.openingId === feature.id && !!featureOpening(feature)}
-          editing={props.editing}
-          onSelect={onSelect}
-        />
-      ))}
-      {rendered.furniture.map((p) => {
-        const r = pieceRepresentation(p, true, true);
-        return (
-          <Piece
-            key={p.id}
-            piece={p}
-            windowGlass={windowGlass}
-            selected={selectedId === p.id}
-            open={props.openingId === p.id && !!furnitureOpening(p)}
-            proposed={
-              !!candidate &&
-              JSON.stringify(p) !==
-                JSON.stringify(room.furniture.find((c) => c.id === p.id))
+      {(['north', 'south', 'east', 'west'] as const)
+        .filter((w) => inspectionVisible(props.inspection, `surface:${w}`))
+        .map((w) => (
+          <Walls
+            key={w}
+            highlighted={props.inspection?.target === `surface:${w}`}
+            onPick={
+              props.inspection ? () => onSelect(`surface:${w}`) : undefined
             }
+            boxes={walls[w]!}
             geometry={geometry}
-            asset={r.kind === 'mesh' ? assets.get(r.url) : undefined}
+            wall={w}
+            room={rendered}
             surfaces={surfaces}
+          />
+        ))}
+      {rendered.room.features
+        .filter(() => !props.inspection?.isolated || !props.inspection.target)
+        .map((feature) => (
+          <Opening
+            key={feature.id}
+            room={rendered}
+            feature={feature}
+            dragTarget={windowDragTarget(candidate ?? room, feature)}
+            geometry={geometry}
+            surfaces={surfaces}
+            windowGlass={windowGlass}
+            selected={selectedId === feature.id}
+            open={props.openingId === feature.id && !!featureOpening(feature)}
             editing={props.editing}
             onSelect={onSelect}
           />
-        );
-      })}
+        ))}
+      {rendered.furniture
+        .filter((p) => inspectionVisible(props.inspection, p.id))
+        .map((p) => {
+          const r = pieceRepresentation(p, true, true);
+          return (
+            <Piece
+              key={p.id}
+              piece={p}
+              windowGlass={windowGlass}
+              selected={selectedId === p.id}
+              open={props.openingId === p.id && !!furnitureOpening(p)}
+              proposed={
+                !!candidate &&
+                JSON.stringify(p) !==
+                  JSON.stringify(room.furniture.find((c) => c.id === p.id))
+              }
+              geometry={geometry}
+              asset={r.kind === 'mesh' ? assets.get(r.url) : undefined}
+              surfaces={surfaces}
+              editing={props.editing}
+              onSelect={onSelect}
+            />
+          );
+        })}
       {ghosts.map((p) => {
         const pose = piecePose(p);
         const size = displayFurnitureSize(p);
@@ -1708,6 +1767,7 @@ export function RoomScene(props: SceneProps) {
       {checks.issues
         .filter(
           (i) =>
+            !props.inspection &&
             i.region &&
             i.rule !== 'front-access' &&
             i.objectIds.includes(selectedId ?? ''),
@@ -1743,6 +1803,7 @@ export function RoomScene(props: SceneProps) {
       <CatalogueGhost placement={props.placement} />
       <CameraRig
         room={candidate ?? room}
+        inspection={props.inspection}
         cameraFrame={props.cameraFrame}
         cameraStateRef={props.cameraStateRef}
         cameraAction={props.cameraAction}

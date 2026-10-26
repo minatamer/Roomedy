@@ -1,3 +1,5 @@
+import { createCostDraft, reconcileCost, validatedCost } from '../cost/state';
+import type { ProjectDestination } from '../cost/navigation';
 import type {
   OperationIdentity,
   VisitorAction,
@@ -67,6 +69,8 @@ export class SessionController {
     const createdAt = this.now();
     this.state = Object.freeze({
       phase: room ? 'editor' : 'entry',
+      destination: 'design',
+      cost: null,
       generation: 0,
       createdAt,
       expiresAt: createdAt + POLICY.guestLifetimeMs,
@@ -100,6 +104,11 @@ export class SessionController {
     };
   };
   private publish(change: Partial<SessionSnapshot>) {
+    if (change.workspace?.current && this.state.cost && !('cost' in change))
+      change = {
+        ...change,
+        cost: reconcileCost(change.workspace.current, this.state.cost),
+      };
     this.state = Object.freeze({
       ...this.state,
       ...('message' in change ? { messageKind: 'notice' as const } : {}),
@@ -171,6 +180,8 @@ export class SessionController {
     this.state = Object.freeze({
       ...this.state,
       phase,
+      destination: 'design',
+      cost: null,
       generation: this.state.generation + 1,
       workspace: null,
       photoNotes: null,
@@ -304,6 +315,8 @@ export class SessionController {
       pending: null,
       candidate: null,
       phase: room ? 'editor' : 'entry',
+      destination: 'design',
+      cost: null,
       createdAt,
       expiresAt: options?.expiresAt ?? createdAt + POLICY.guestLifetimeMs,
       checks: room ? checkRoom(room) : null,
@@ -372,6 +385,69 @@ export class SessionController {
   setPersistence(status: SessionSnapshot['persistence']) {
     if (this.state.persistence !== status && this.state.phase !== 'disposed')
       this.publish({ persistence: status });
+  }
+  setDestination(destination: ProjectDestination): boolean {
+    if (!this.active() || !this.state.workspace) return false;
+    if (this.state.candidate) {
+      this.notify('Apply or Cancel the preview before changing project phase.');
+      return false;
+    }
+    if (destination === this.state.destination) return true;
+    this.cancelWork();
+    this.publish({
+      destination,
+      comparison: 'current',
+      cost: this.state.cost ?? createCostDraft(this.state.workspace.current),
+    });
+    return true;
+  }
+  updateCost(
+    settings: unknown,
+    offers: unknown = this.state.cost?.offers,
+  ): boolean {
+    if (!this.canEdit() || !this.state.workspace || this.state.candidate)
+      return false;
+    const cost = validatedCost(this.state.workspace.current, settings, offers);
+    if (!cost) {
+      this.notify(
+        'Review the estimate units, products and currency before applying.',
+      );
+      return false;
+    }
+    this.cancelWork();
+    this.publish({
+      cost: {
+        ...cost,
+        revision: (this.state.cost?.revision ?? 0) + 1,
+        messages: this.state.cost?.messages ?? [],
+      },
+    });
+    return true;
+  }
+  costMessage(role: 'visitor' | 'assistant', text: string) {
+    if (
+      !this.active() ||
+      !this.state.cost ||
+      !text.trim() ||
+      text.length > 4000
+    )
+      return false;
+    const messages = [
+      ...this.state.cost.messages,
+      {
+        role,
+        text: text.trim(),
+        roomRevision: this.state.cost.roomRevision,
+        costRevision: this.state.cost.revision,
+      },
+    ].slice(-40);
+    while (
+      new TextEncoder().encode(messages.map((message) => message.text).join(''))
+        .byteLength > 131072
+    )
+      messages.shift();
+    this.publish({ cost: { ...this.state.cost, messages } });
+    return true;
   }
   setRoomView(roomView: 'plan' | 'cutaway') {
     if (this.active())

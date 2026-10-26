@@ -48,6 +48,7 @@ class GraphicsBoundary extends Component<
 export type CutawayProps = Pick<
   SceneProps,
   | 'room'
+  | 'inspection'
   | 'candidate'
   | 'checks'
   | 'selectedId'
@@ -183,12 +184,18 @@ export default function Cutaway({
   }).length;
   const fallback = (
     <div className={styles.fallback} role="status">
-      <h2>Continue in the 2D plan.</h2>
+      <h2>
+        {props.inspection
+          ? 'Explore your cost breakdown.'
+          : 'Continue in the 2D plan.'}
+      </h2>
       <p>
         The 3D view is unavailable here. Your room and measurements are still
         ready to edit.
       </p>
-      <button onClick={props.onPlan}>Open 2D plan</button>
+      <button onClick={props.onPlan}>
+        {props.inspection ? 'Use text view' : 'Open 2D plan'}
+      </button>
     </div>
   );
   const command = (kind: CameraAction['kind']) => {
@@ -236,107 +243,137 @@ export default function Cutaway({
     };
   }, [medyCamera, ready, lost, editing, views, onMedyCamera, controller]);
   return (
-    <div className={`${styles.wrap} ${controlsStyles.stage}`}>
+    <div
+      className={`${styles.wrap} ${controlsStyles.stage}`}
+      data-inspection={props.inspection ? 'true' : undefined}
+    >
       <div ref={toolsMotion} className="motion-surface">
-        <ViewControls
-          controller={controller}
-          arranging={arranging}
-          ready={ready && !lost}
-          readOnly={readOnly}
-          rotationLocked={!selectedPiece || selectedPiece.locks.rotation}
-          onRotate={editing.rotate}
-          snap={snap}
-          onSnap={(snap) => {
-            editing.cancel();
-            controller.setView({ snap });
-          }}
-          beforeDelete={editing.cancel}
-          onZoom={(direction) => command(direction === -1 ? 'out' : 'in')}
-          onFit={() => command('reset')}
-        >
+        {props.inspection ? (
           <div
-            role="group"
-            aria-label="Room viewpoints"
             className={controlsStyles.tools}
+            role="group"
+            aria-label="Inspect in 3D"
           >
-            {views.map(({ view, label, available }) => (
+            {(
+              [
+                ['left', 'Orbit left'],
+                ['right', 'Orbit right'],
+                ['in', 'Zoom in'],
+                ['out', 'Zoom out'],
+              ] as const
+            ).map(([kind, label]) => (
               <button
-                key={view}
-                aria-pressed={cameraView === view}
-                disabled={
-                  !ready ||
-                  lost ||
-                  (!available &&
-                    !(view === 'work-area' && !hasDesk && !readOnly))
-                }
-                title={
-                  view === 'work-area' && !hasDesk && !readOnly
-                    ? 'Add a desk to create a work area'
-                    : available
-                      ? label
-                      : view === 'corner'
-                        ? 'Corner needs a positioned doorway and clear space in the opposite corner'
-                        : view === 'doorway'
-                          ? 'Doorway needs a positioned doorway and a clear view'
-                          : `${label} needs a clear position in this room`
-                }
-                onClick={() =>
-                  view === 'work-area' && !hasDesk ? onAddDesk() : command(view)
-                }
+                key={kind}
+                onClick={() => command(kind)}
+                disabled={!ready || lost}
               >
                 {label}
               </button>
             ))}
           </div>
-          <div
-            role="group"
-            aria-label="3D camera controls"
-            className={`${controlsStyles.tools} ${controlsStyles.directions}`}
+        ) : (
+          <ViewControls
+            controller={controller}
+            arranging={arranging}
+            ready={ready && !lost}
+            readOnly={readOnly}
+            rotationLocked={!selectedPiece || selectedPiece.locks.rotation}
+            onRotate={editing.rotate}
+            snap={snap}
+            onSnap={(snap) => {
+              editing.cancel();
+              controller.setView({ snap });
+            }}
+            beforeDelete={editing.cancel}
+            onZoom={(direction) => command(direction === -1 ? 'out' : 'in')}
+            onFit={() => command('reset')}
           >
-            {(
-              [
-                ['left', 'Orbit left', '↶'],
-                ['right', 'Orbit right', '↷'],
-                ['up', 'Orbit up', '↑'],
-                ['down', 'Orbit down', '↓'],
-              ] as const
-            ).map(([kind, label, text]) => (
-              <button
-                key={kind}
-                aria-label={
-                  cameraView === 'overview'
-                    ? label
-                    : label.replace('Orbit', 'Look')
-                }
-                title={
-                  cameraView === 'overview'
-                    ? label
-                    : label.replace('Orbit', 'Look')
-                }
-                onClick={() => command(kind)}
-                disabled={!ready || lost}
-              >
-                {text}
-              </button>
-            ))}
-            {cameraView !== 'overview' && (
-              <>
+            <div
+              role="group"
+              aria-label="Room viewpoints"
+              className={controlsStyles.tools}
+            >
+              {views.map(({ view, label, available }) => (
                 <button
-                  onClick={() => command('forward')}
+                  key={view}
+                  aria-pressed={cameraView === view}
+                  disabled={
+                    !ready ||
+                    lost ||
+                    (!available &&
+                      !(view === 'work-area' && !hasDesk && !readOnly))
+                  }
+                  title={
+                    view === 'work-area' && !hasDesk && !readOnly
+                      ? 'Add a desk to create a work area'
+                      : available
+                        ? label
+                        : view === 'corner'
+                          ? 'Corner needs a positioned doorway and clear space in the opposite corner'
+                          : view === 'doorway'
+                            ? 'Doorway needs a positioned doorway and a clear view'
+                            : `${label} needs a clear position in this room`
+                  }
+                  onClick={() =>
+                    view === 'work-area' && !hasDesk
+                      ? onAddDesk()
+                      : command(view)
+                  }
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div
+              role="group"
+              aria-label="3D camera controls"
+              className={`${controlsStyles.tools} ${controlsStyles.directions}`}
+            >
+              {(
+                [
+                  ['left', 'Orbit left', '↶'],
+                  ['right', 'Orbit right', '↷'],
+                  ['up', 'Orbit up', '↑'],
+                  ['down', 'Orbit down', '↓'],
+                ] as const
+              ).map(([kind, label, text]) => (
+                <button
+                  key={kind}
+                  aria-label={
+                    cameraView === 'overview'
+                      ? label
+                      : label.replace('Orbit', 'Look')
+                  }
+                  title={
+                    cameraView === 'overview'
+                      ? label
+                      : label.replace('Orbit', 'Look')
+                  }
+                  onClick={() => command(kind)}
                   disabled={!ready || lost}
                 >
-                  Step forward
+                  {text}
                 </button>
-                <button
-                  onClick={() => command('backward')}
-                  disabled={!ready || lost}
-                >
-                  Step back
-                </button>
-              </>
-            )}
-          </div>
-        </ViewControls>
+              ))}
+              {cameraView !== 'overview' && (
+                <>
+                  <button
+                    onClick={() => command('forward')}
+                    disabled={!ready || lost}
+                  >
+                    Step forward
+                  </button>
+                  <button
+                    onClick={() => command('backward')}
+                    disabled={!ready || lost}
+                  >
+                    Step back
+                  </button>
+                </>
+              )}
+            </div>
+          </ViewControls>
+        )}
       </div>
       <div className={styles.viewport} data-mode={moving ? 'move' : 'explore'}>
         {lost ? (

@@ -1,6 +1,8 @@
 # RM-025 — Build the 3D Plan & cost workspace
 
-Status: **Planned — authorized fake-mode execution**. Dependencies: [RM-024](RM-024-calculate-transparent-room-estimates.md).
+Status: **Complete locally — fake gate passed; owner final manual/visual review pending**. Dependencies: [RM-024](RM-024-calculate-transparent-room-estimates.md).
+
+[Exact allocation](../commit-plans/RM-025.md), [design/state policy](../design/plan-and-cost.md), [actual evidence](../validation/RM-025.md).
 
 ## Authority and outcome
 
@@ -27,10 +29,10 @@ Add a distinct project page/phase after studio edits, with centered conversation
 
 ## Acceptance
 
-- [ ] Navigation, selected lines, furniture/surface highlights and current estimate all refer to the same room revision.
-- [ ] Category/product changes update actual quantities/totals; inspection alone dispatches no provider request.
-- [ ] WebGL failure/loading, empty/incomplete estimate, narrow/short screens and keyboard flow remain usable.
-- [ ] No header divider, squeezed editor columns, dead dashboard filler, automatic metered action or unbounded GPU/history resources.
+- [x] Navigation, selected lines, furniture/surface highlights and current estimate all refer to the same room revision.
+- [x] Category/product changes update actual quantities/totals; inspection alone dispatches no provider request.
+- [x] WebGL failure/loading, empty/incomplete estimate, narrow/short screens and keyboard flow remain usable.
+- [x] No header divider, squeezed editor columns, dead dashboard filler, automatic metered action or unbounded GPU/history resources.
 
 ## Execution and verification
 

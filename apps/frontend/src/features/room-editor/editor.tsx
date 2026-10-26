@@ -1,3 +1,6 @@
+import { CostWorkspace } from '../cost/workspace';
+import { destinationHref, projectDestination } from '../cost/navigation';
+import type { ProjectDestination } from '../cost/navigation';
 import { featureLabel } from '@roomedy/spatial';
 import Image from 'next/image';
 import { thumbnailUrl, findCatalogueEntry } from '../catalogue/catalogue';
@@ -133,6 +136,33 @@ export function Editor({
   const setRoomView = (view: 'plan' | 'cutaway') =>
     controller.setRoomView(view);
   const workspaceId = state.workspace?.workspaceId;
+  useEffect(() => {
+    const sync = () => {
+      const next = projectDestination(window.location.search);
+      if (!controller.setDestination(next))
+        window.history.replaceState(
+          window.history.state,
+          '',
+          destinationHref(
+            window.location.href,
+            controller.getSnapshot().destination,
+          ),
+        );
+    };
+    sync();
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, [controller, workspaceId]);
+  const navigate = (destination: ProjectDestination) => {
+    placement.cancel();
+    if (!controller.setDestination(destination)) return;
+    window.history.pushState(
+      window.history.state,
+      '',
+      destinationHref(window.location.href, destination),
+    );
+  };
+
   const medyControl = useRef<(control: MedyControl) => MedyControlResult>(
     () => ({
       ok: false,
@@ -211,7 +241,7 @@ export function Editor({
   const previewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
-  }, [state.phase, workspaceId]);
+  }, [state.phase, workspaceId, state.destination]);
   useEffect(() => {
     if (!state.candidate || state.candidate.source === 'assistant') return;
     const target = previewRef.current;
@@ -520,6 +550,15 @@ export function Editor({
       }}
     />
   );
+  if (state.destination === 'cost' && state.cost)
+    return (
+      <CostWorkspace
+        controller={controller}
+        state={state}
+        placement={placement}
+        onDesign={() => navigate('design')}
+      />
+    );
   return (
     <div className={styles.studio} data-room-tour-root>
       <header className={styles.header}>
@@ -562,6 +601,12 @@ export function Editor({
             }
           >
             ↶ <span className={styles.undoLabel}>Undo</span>
+          </button>
+          <button
+            className={`glass-control ${styles.costLink}`}
+            onClick={() => navigate('cost')}
+          >
+            Plan &amp; cost →
           </button>
         </div>
         <nav
