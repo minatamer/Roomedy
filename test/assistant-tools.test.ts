@@ -145,12 +145,13 @@ it('completes the actual fixed-bed/wardrobe sample layout through a strict compu
   ]);
   r.operations.close();
 });
-it('requests only a missing field used by a computed check for the selected piece', async () => {
+it('explains design checks using planning estimates without asking for missing physical facts', async () => {
   const room = windowCase().room;
   room.furniture.find((p) => p.id === 'desk')!.dimensions.width = unknown();
   room.furniture.find((p) => p.id === 'unrelated_shelf')!.dimensions.height =
     unknown();
-  const input = assistantInput(room, 'Explain the desk checks');
+  const before = structuredClone(room),
+    input = assistantInput(room, 'Explain the desk checks');
   input.selectedId = 'desk';
   const task = resolveAssistantTask(
       room,
@@ -159,28 +160,18 @@ it('requests only a missing field used by a computed check for the selected piec
       input.identity.operationId,
     ),
     tools = createAssistantTools(input, task, new AbortController().signal);
+  expect((await tools.execute('explain_checks', { issueId: null })).ok).toBe(
+    true,
+  );
+  expect(tools.reply().question).toBeNull();
+  expect(tools.reply().control).toBeNull();
   expect(
-    (await tools.execute('request_measurement', { id: 'desk', field: 'width' }))
-      .ok,
-  ).toBe(true);
-  expect(tools.reply().question).toEqual({ id: 'desk', field: 'width' });
-  expect(
-    (
-      await tools.execute('request_measurement', {
-        id: 'unrelated_shelf',
-        field: 'height',
-      })
-    ).ok,
+    tools.reply().checks.issues.some((i) => i.severity === 'unassessed'),
   ).toBe(false);
-  expect(
-    (
-      await tools.execute('request_measurement', {
-        id: 'desk',
-        field: 'height',
-      })
-    ).ok,
-  ).toBe(false);
-  expect(room.furniture[0]!.dimensions.width.status).toBe('unknown');
+  expect(tools.reply().summary).not.toMatch(/incomplete|measur|physical fact/i);
+  const read = await tools.execute('read_room', {});
+  expect(read.ok).toBe(true);
+  expect(room).toEqual(before);
 });
 it('runs one admitted fake HTTP operation with two strict serial tool rounds and no state mutation', async () => {
   const r = runtime(),
@@ -904,4 +895,43 @@ it('keeps unresolved restrictive wording as a grounded clarification without a b
   expect(result.assistant?.objectIds).toContain('bed_1');
   expect(result.assistant?.suggestions ?? []).toEqual([]);
   expect(input.room).toEqual(before);
+});
+
+it('does not advertise or execute a model-initiated measurement request', async () => {
+  const captured: ProviderRequest[] = [];
+  const provider = createFakeProvider(async (request) => {
+    captured.push(request);
+    return {
+      kind: 'completed',
+      data: null,
+      calls: [
+        {
+          name: 'request_measurement',
+          callId: 'retired',
+          arguments: { id: 'desk', field: 'width' },
+        },
+      ],
+    };
+  });
+  const r = runtime(provider),
+    room = windowCase().room;
+  room.furniture.find((p) => p.id === 'desk')!.dimensions.width = unknown();
+  const before = structuredClone(room),
+    input = assistantInput(room, 'Explain the desk checks'),
+    grant = await r.operations.grant(input, null, new AbortController().signal);
+  if (!('grant' in grant)) throw new Error('fixture');
+  const result = await r.operations.run(
+    input,
+    grant.grant,
+    new AbortController().signal,
+  );
+  expect('kind' in result && result.kind).toBe('malformed');
+  expect(captured).toHaveLength(1);
+  expect(captured[0]!.tools.map((tool) => tool.name)).toEqual([
+    'read_room',
+    'explain_checks',
+    'focus_item',
+  ]);
+  expect(room).toEqual(before);
+  r.operations.close();
 });

@@ -1,5 +1,37 @@
 # Roomedy ticket plan
 
+**Owner-authorized local checkpoint —29 October2026:** The owner requests a file-level plan, staging and one local commit of the completed BN–BY/RM-031/RM-032 work before reviewing everything tomorrow,30October. [Exact189-path plan](../commit-plans/RM-015BN-BY-CPQ-CHECKPOINT.md), [receipt](../validation/RM-015BN-BY-CPQ-CHECKPOINT.md). This supersedes earlier no-staging/no-commit notices for this checkpoint only. Preserve visual/manual acceptance and real-photo human verification as pending; no push/deploy/provider/env/restart/delegation action.
+
+**Current photo appearance/RGB work:** [RM-015BY](RM-015BY-capture-photo-appearance-and-edit-rgb-patterns.md) implements source-linked photo RGB/pattern estimates and independent furniture/door/frame controls. Preserve plain fresh-manual defaults,161prior paths, owner env and current services. Complete locally with1303tests/83files/root/both builds and native RGB/door/frame/phone/PDF/GLB evidence. Real photo quality requires human verification; owner subjective acceptance pending. No Chrome/delegation/Git/hosted action.
+
+**Current owner material correction:** [RM-015BX](RM-015BX-start-manual-rooms-plain-and-suggest-materials.md) starts fresh manual rooms plainly and teaches Medy to recommend real material previews. [Allocation](../commit-plans/RM-015BX.md), [receipt](../validation/RM-015BX.md). Complete locally:1281tests/81files/root/both builds and actual plain baseline/material previews/Undo/live advice pass; owner subjective acceptance pending.
+
+**Current owner AI-quality correction:** [RM-015BW](RM-015BW-make-medy-proactive-and-offer-useful-choices.md) makes advice proactive and completes sparse reply choices with useful supported additions/layout/finish discovery. [Allocation](../commit-plans/RM-015BW.md), [receipt](../validation/RM-015BW.md). Complete locally:113affected tests,1270tests/80files/root/both builds and actual advice→window-aware preview→Cancel review pass. Actual owner subjective/visual acceptance pending; no Git/hosted action.
+
+**Current owner AI correction:** [RM-015BV](RM-015BV-continue-ai-with-planning-estimates.md) removes missing-fact/entry-coverage nags and measurement gates, using planning estimates instead. [Allocation](../commit-plans/RM-015BV.md), [receipt](../validation/RM-015BV.md). Complete locally:1259tests/79files/root/both builds and actual component/studio regression checks pass; owner aesthetic acceptance pending. Preserve existing live services and prior work; no provider/env/Git/hosted action.
+
+**Current owner chat polish:** [RM-015BU](RM-015BU-refine-thinking-and-shared-scrollbars.md): Thinking with a continuously rotating warm spinner, no busy Cancel CTA, shared much thinner warm scrollbars. [Allocation](../commit-plans/RM-015BU.md), [receipt](../validation/RM-015BU.md). Complete locally:1250 tests/78files/root/both builds and responsive/native-scroll checks pass; no provider/env/Git/hosted action; owner aesthetic acceptance pending.
+
+**Current owner studio correction:** [RM-015BT](RM-015BT-unify-studio-beige-surfaces.md) unifies the warm surface palette and makes Medy/cost composers softly translucent. [Allocation](../commit-plans/RM-015BT.md), [receipt](../validation/RM-015BT.md). CSS-only local refinement, no provider/env/Git/hosted action; complete locally after1250 tests/78files/root/both builds and responsive visual checks; owner aesthetic acceptance pending.
+
+**Latest owner landing decision —28 October2026:** [RM-015BS](RM-015BS-restore-landing-scale-and-add-house-loader.md): larger room, hero copy fixed left immediately, smooth opposite-copy room travel and a real-pending house loader. [Allocation](../commit-plans/RM-015BS.md), [receipt](../validation/RM-015BS.md). Preserve completed CPQ/chat work; complete locally after1250 tests/78files/root/both builds and actual responsive/pending/ready checks; owner visual acceptance pending.
+
+**Current owner follow-up —28 October2026:** [RM-032](RM-032-make-cost-and-medy-chat-visual.md) makes Plan & cost and Medy visually led, using Choreograph as read-only inspiration. Keep meaningful source/fit/estimate review accessible while removing redundant static prose. [Allocation](../commit-plans/RM-032.md), [receipt](../validation/RM-032.md). Complete locally:1249 tests/78files, both builds and actual desktop/phone/short interactions pass. Separate Desktop chat gallery delivered; owner visual acceptance pending.
+
+**Latest follow-up —28 October2026:** [RM-031](RM-031-review-live-cpq-and-usd-sourcing.md) is complete locally after actual real-mode CPQ/PDF testing and fixes. [Receipt](../validation/RM-031.md):1246 tests/77files, both builds,14 single-round live operations,62Desktop screenshots, fully inspected12-page USD PDF and exact project round trip. Owner final visual/manual acceptance remains pending; prior landing changes remain local and no Git/publication action is selected.
+
+## Local landing correction — 28 October 2026
+
+[RM-015BR — Raise the walls at the end](RM-015BR-raise-the-walls-at-the-end.md) follows direct owner wall-direction feedback. Start lowered, finish upright through a late continuous rise; preserve orbit, finishing, USD/plain rows and BN/BO/BP/BQ. [13-path allocation](../commit-plans/RM-015BR.md), [receipt](../validation/RM-015BR.md). Existing fake-only local review; actual owner acceptance pending, no Git/provider/env/hosted action.
+
+[RM-015BQ — Use USD throughout the demo](RM-015BQ-use-usd-throughout-the-demo.md) follows direct owner currency/table feedback. [28-path allocation](../commit-plans/RM-015BQ.md), [receipt](../validation/RM-015BQ.md). Fresh appwide dollar examples/defaults and USD/$ budgets preserve existing saved monetary records; landing table background emphasis is removed. BN/BO/BP and the3D finishing story remain. Fake-only local validation, no provider/env/Git/hosted action; owner review pending.
+
+[RM-015BP — Show the CPQ journey in the landing room](RM-015BP-show-the-cpq-scroll-story.md) is selected by explicit owner approval of the recommended motion study. [23-path allocation](../commit-plans/RM-015BP.md), [actual evidence](../validation/RM-015BP.md). Existing BN/BO are preserved. Plain room → paint/floor/furnishing → connected illustrative finish/cost change → shopping/work/PDF outcomes. Local fake review only; actual owner acceptance pending, no provider/env/Git/hosted action or reopening completed CPQ work.
+
+[RM-015BO — Speed up the first visible landing room](RM-015BO-speed-up-the-landing-room.md) follows the separate BN cue/browser-rule change. Direct owner authorizes bottleneck reduction, shorter reveal and staged furniture when beneficial. [Allocation](../commit-plans/RM-015BO.md), [measurements/checks](../validation/RM-015BO.md). Actual local owner acceptance stays pending; no CPQ restart, provider/env/hosted or Git action.
+
+[RM-015BN — Use device-aware landing scroll cues](RM-015BN-use-device-aware-scroll-cues.md) follows ff11054 under direct owner feedback. Local implementation and scoped checks are complete; actual owner visual/touch acceptance remains pending. [Exact allocation](../commit-plans/RM-015BN.md), [receipt](../validation/RM-015BN.md). No CPQ restart, provider/config/hosted change or Git action. Browser testing stays in the in-app browser without desktop Chrome permission prompts.
+
 ## CPQ extension — 26 October 2026
 
 Latest owner direction selects finishing/furnishing an existing room, richer customizable studio materials/furniture, and a separate centered-chat Plan & cost phase with connected 3D object/surface highlights. Drawing/document intake is permanently excluded. The owner authorizes this entire dependency-ordered sequence, recommended assumptions, fake-only execute/validate/fix loops and exact-path local staging/commits. Final owner manual tests remain pending; no live/provider tests, delegation, push or deployment. Earlier release constraints/approvals below retain their dated scope.
@@ -358,3 +390,7 @@ RM-005 local completion: [112 tests, final gates, actual interaction/device-size
 
 
 Latest landing feedback: [RM-015L](RM-015L-create-a-scroll-driven-furniture-landing.md) follows committed K/9c76653. Owner selected the assembling/rotating/opening scroll room; palette/mark/dot retained, old marketing control card replaced, richer workflow/motivation and beige icon/centered footer. [Research](../references/landing-research-2026-10-19.md) and [actual L evidence](../validation/RM-015L.md) govern this visual correction; no RM-016 or inferred result approval.
+
+### RM-031 — current local review
+
+[Live CPQ testing and USD sourcing](RM-031-review-live-cpq-and-usd-sourcing.md): owner AFK-authorized normal-env real startup, economical actual CPQ tests, confirmed UX/UI/PDF fixes/retests, USD equivalents for local sources and Desktop review gallery. [Allocation](../commit-plans/RM-031.md), [receipt](../validation/RM-031.md). No Git or hosted action selected; owner final visual acceptance stays pending.

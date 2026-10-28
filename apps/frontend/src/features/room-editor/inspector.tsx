@@ -1,3 +1,4 @@
+import { OpeningMaterialControls } from './opening-material-controls';
 import { FurnitureMaterialControls } from './furniture-material-controls';
 import { MountControls } from './mount-controls';
 import { useId, useRef, useState } from 'react';
@@ -204,6 +205,7 @@ export function FurnitureInspector({
         </h2>
       </div>
       {openingPreview}
+
       <MountControls
         key={`${item.id}/${item.pose.bottomY}`}
         controller={controller}
@@ -449,6 +451,21 @@ export function FeatureInspector({
         </h2>
       </div>
       {openingPreview}
+      <OpeningMaterialControls
+        feature={feature}
+        onCommit={(materials) => {
+          const result = controller.dispatch(
+            [{ type: 'set-opening-materials', id: feature.id, materials }],
+            'Change opening appearance',
+          );
+          return result.ok
+            ? null
+            : failureMessage(
+                result,
+                controller.getSnapshot().workspace?.current,
+              );
+        }}
+      />
       {presets.length > 0 && (
         <label>
           Size preset

@@ -178,13 +178,15 @@ it('is reproducible for fixed work, reports exact prefixes at deadlines and neve
   expect(deadline.candidate).toEqual(fixed.candidate);
   expect(fixed.termination).toBe('work-limit');
 });
-it('keeps unknown measurements actionable and preserves exact half-mm centres', () => {
+it('continues past unknown room dimensions and preserves exact half-mm centres', () => {
   const { room, selected } = windowCase();
   room.room.width = unknown();
   const result = run(request(room, selected));
-  expect(result.termination).toBe('needs-measurement');
-  expect(result.question).toEqual({ id: room.roomId, field: 'width' });
-  expect(result.visitedNodes).toBe(0);
+  expect(result.termination).not.toBe('needs-measurement');
+  expect(result.question).toBeNull();
+  expect(result.candidate).not.toBeNull();
+  expect(result.visitedNodes).toBeGreaterThan(0);
+  expect(room.room.width).toEqual(unknown());
   const exact = commandRoom(
     [piece('desk', 750.5, 1800, { width: 1501 })],
     [windowFeature()],
@@ -275,7 +277,7 @@ it('changes only explicitly scoped proposed appearance and keeps all poses/owned
     checkRoom(evaluated.room).issues.filter((i) => i.severity === 'hard'),
   ).toEqual(checkRoom(room).issues.filter((i) => i.severity === 'hard'));
 });
-it('returns an approximate usable candidate with actual missing dependencies, without relabelling confirmed values or unsupported path checks as measurements', () => {
+it('uses planning estimates for missing heights without measurement prompts or changed evidence', () => {
   const { room, selected } = windowCase();
   room.room.height = unknown();
   room.furniture.find((p) => p.id === 'desk')!.dimensions.height = unknown();
@@ -283,8 +285,12 @@ it('returns an approximate usable candidate with actual missing dependencies, wi
   const answer = run(request(room, selected, 500));
   expect(answer.candidate).not.toBeNull();
   expect(answer.candidate!.facts.approximate).toBe(true);
-  expect(answer.alternatives).toContain('confirm-measurement');
-  expect(answer.candidate!.facts.missingInputs).toContain('desk:height');
+  expect(answer.alternatives).not.toContain('confirm-measurement');
+  expect(answer.question).toBeNull();
+  expect(answer.candidate!.facts.missingInputs).toEqual([]);
+  expect(
+    room.furniture.find((p) => p.id === 'desk')!.dimensions.height,
+  ).toEqual(unknown());
   expect(answer.candidate!.facts.missingInputs).not.toContain('room:width');
   expect(answer.candidate!.facts.missingInputs).not.toContain(
     'bounded-entry-path-algorithm',

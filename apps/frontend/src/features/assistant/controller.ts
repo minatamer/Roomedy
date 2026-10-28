@@ -15,8 +15,7 @@ import {
   assistantSearchFallback,
   resolveMedyRequest,
   medyAdvice,
-  contextualQuickReplies,
-  validateQuickReplies,
+  completeQuickReplies,
 } from '@roomedy/spatial';
 import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
@@ -25,7 +24,7 @@ import { operationAvailability } from '../session/operation-client';
 import { releaseTransport } from '../session/release-client';
 import { askAssistant } from './client';
 import { failureMessage } from '../room-editor/messages';
-import { guidanceChoices, guidanceText } from './guidance';
+import { guidanceChoices, guidanceMessage } from './guidance';
 import type { GuidanceStep } from './guidance';
 import { MessageReveal } from './message-reveal';
 
@@ -120,25 +119,42 @@ export class AssistantController {
     if (this.serial >= Number.MAX_SAFE_INTEGER - 1) return;
     const snapshot = this.session.getSnapshot(),
       room = snapshot.workspace?.current;
-    const offered =
-      role !== 'assistant' || guidance
-        ? []
-        : quickReplies?.length
-          ? quickReplies
-          : reply?.suggestions?.length
-            ? reply.suggestions
-            : room
-              ? validateQuickReplies(
-                  room,
-                  contextualQuickReplies(
-                    room,
-                    text,
-                    snapshot.presentation.selectedId,
-                    reply?.kind === 'proposal' ? 'proposal' : 'other',
-                  ),
-                  snapshot.presentation.selectedId,
-                )
-              : [];
+    const previousRequest = this.state.messages
+      .filter((message) => message.role === 'user')
+      .at(-1)?.text;
+    const completed =
+      role === 'assistant' && !guidance && room
+        ? completeQuickReplies(room, {
+            message: text,
+            choices: quickReplies?.length
+              ? quickReplies
+              : (reply?.suggestions ?? []),
+            selectedId: snapshot.presentation.selectedId,
+            kind:
+              snapshot.candidate || reply?.kind === 'proposal'
+                ? 'proposal'
+                : 'other',
+            context: this.state.messages
+              .map(({ role, text }) => ({ role, text }))
+              .slice(-POLICY.contextTurns),
+            previousRequest: previousRequest ?? '',
+          })
+        : [];
+    // Interpreter choices were already validated as explicit visitor requests.
+    // Preserve their identity and target binding; model quick-reply rules are narrower.
+    const interpreted =
+      reply?.kind === 'clarification' ? (reply.suggestions ?? []) : [];
+    const offered = [...interpreted, ...completed]
+      .filter((choice, index, choices) => {
+        const request = choice.request.trim().toLocaleLowerCase();
+        return (
+          request !== previousRequest?.trim().toLocaleLowerCase() &&
+          choices.findIndex(
+            (other) => other.request.trim().toLocaleLowerCase() === request,
+          ) === index
+        );
+      })
+      .slice(0, 3);
     const messages = [
       ...this.state.messages,
       {
@@ -167,18 +183,7 @@ export class AssistantController {
         operationId,
         simulation,
         guidance,
-        quickReplies:
-          role === 'assistant' && !guidance
-            ? offered.filter(
-                (choice) =>
-                  choice.request.trim().toLowerCase() !==
-                  this.state.messages
-                    .filter((message) => message.role === 'user')
-                    .at(-1)
-                    ?.text.trim()
-                    .toLowerCase(),
-              )
-            : [],
+        quickReplies: offered,
       },
     ];
     while (
@@ -230,10 +235,17 @@ export class AssistantController {
     if (choice.request) void this.submit(choice.request);
     else if (choice.next) {
       this.append('user', choice.label);
-      this.append('assistant', guidanceText[choice.next], null, null, false, {
-        step: choice.next,
-        roomRevision: room.roomRevision,
-      });
+      this.append(
+        'assistant',
+        guidanceMessage(choice.next, room),
+        null,
+        null,
+        false,
+        {
+          step: choice.next,
+          roomRevision: room.roomRevision,
+        },
+      );
     }
   }
   private async search(

@@ -1,5 +1,19 @@
 # Roomedy feature and visual review checklist
 
+## Finished-room wall reveal — RM-015BR
+
+- [x] Walls start lowered, stay down through finishing/cost and rise at the end into an upright finished-room reveal; pure direction/continuity/reverse and9-size projected framing checks pass.
+- [x] Actual in-app initial/painting/floor/cost/partial-rise/final/reverse/restored and desktop/phone/short observations recorded; attached window/rollers and semantic copy remain coherent.
+- [x] Final root/build gate and read-only scope review recorded. Preserve USD/plain table, one finite demand canvas, cached materials/readiness and current guest project. Actual owner/physical/hosted acceptance remains separate. [Receipt](../validation/RM-015BR.md).
+
+## CPQ landing story — RM-015BP
+
+- [x] Plain warm initial surfaces and kept bed/bedside; immediate semantic hero/CTA, preserved cue/light/window/header and prepared220/420ms entrance.
+- [x] Actual partial/completed north/west paint and rollers, window aperture/glass preserved, partly/fully laid floor and furnishing; continuous reverse/offset restoration with chapter geometry and narrow framing.
+- [x] Example floor identity/amount/total changes with the visible alternative; actual wall/floor emphasis matches its illustrative line. Clearly authored example, no sourcing/purchase/booking or complete-real-budget claim.
+- [x] Shopping quantities/work/version/itemized-PDF capabilities are understandable with useful semantic fallback and no fake download action. Section/focus/entry/home and nine-size/short layouts retain usable content.
+- [x] Same cached images, one finite demand canvas, bounded pixels/instances/materials; actual startup/frame/resource/three-cycle checks, failure/retirement tests, settled root/build gate and clean read-only review recorded. [Receipt](../validation/RM-015BP.md) retains the increased startup cost and one maximum-frame target miss. Physical/paint/cold/AT/native-heap/Linux/hosted and actual owner acceptance remain separately named.
+
 Prepared and refined **17 October 2026**; the boxes below are an **unchecked reusable template**. Actual feature checks are recorded in their validation receipts; cumulative product/owner acceptance remains pending. This is a reusable acceptance aid under the approved fake-mode loop, not a visual pass. Adopted [review refinements](../reviews/2026-10-17-plan-review.md) supply requirements, not evidence.\
 Read [feedback lessons](../references/LESSONS_FROM_VISUAL_FEEDBACK.md), [blueprint](../ROOMEDY.md) and the [owning ticket](../tickets/README.md).
 
@@ -126,3 +140,9 @@ Prepared examples and ready local previews open a shared native full-image viewe
 Empty upload shows a small SVG/CSS room/person/phone guide: take a wide corner photo, walk along a clear route and photograph the opposite corner with overlapping furniture/floor/wall context. One4.6second sequence settles; Replay restarts it. After photos are selected, Photo guide/Show photos revisits the same area without duplicating controls or losing prepared images. This is an instructional illustration, not an extracted3D preview. Two coherent generated room views use the existing bed/cabinet fake vocabulary and remain estimated review input; no real recognition, scale confirmation or new provider capability is inferred. Provenance/prompts are in [the asset reference](../references/photo-capture-assets-2026-10-19.md).
 
 Actual states, measured responsive/card/gallery geometry, viewer/input/guide/draft checks and limits are recorded in [Y evidence](../validation/RM-015Y.md). Actual owner acceptance remains pending; physical touch/keyboard/GPU/performance/Linux/live proof is separate.
+
+## RM-031 actual local CPQ review
+
+Current live review covers local product/service sourcing, dated USD equivalents, source/variant/size/lock guards, connected3D selection, budget/work/shopping, editable scope/manual/tax/delivery, version immutability/comparison, project export/import/recovery, responsive controls and actual complete PDF page inspection. Follow [current evidence](../validation/RM-031.md) for pass/failure/fix details; do not infer actual acceptance from an offline test or a passing build. Owner final visual acceptance remains pending. All active monetary output is USD; local/native evidence is preserved internally and historic foreign amounts are not silently converted.
+
+RM-031 local completion: all named UI/state/PDF/import/guard cases have actual evidence or an explicit external limit in the receipt. Final1246 tests/77files,7boundary probes/assets/both builds pass.62numbered screenshots and12final PDF renders are delivered. Paint research hit one deadline and one rejected provider envelope; unknown supplier/site prices remain unresolved, not fabricated. Actual owner acceptance remains the independent pending checkpoint.

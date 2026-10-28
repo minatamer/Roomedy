@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import type { Furniture } from '@roomedy/contracts/room';
 import {
   furnitureMaterialsSchema,
@@ -6,8 +6,12 @@ import {
   furnitureMaterialTargets,
   furnitureUpholsteryChoices,
 } from '@roomedy/contracts/furniture-materials';
-import type { FurnitureMaterials } from '@roomedy/contracts/furniture-materials';
+import type {
+  FurnitureMaterials,
+  MaterialPattern,
+} from '@roomedy/contracts/furniture-materials';
 import { findCatalogueEntry, supportsDimensions } from '@roomedy/spatial';
+import { ColourPicker, PatternPicker } from './colour-picker';
 import styles from './editor.module.css';
 
 export function FurnitureMaterialControls({
@@ -17,169 +21,184 @@ export function FurnitureMaterialControls({
   item: Furniture;
   onCommit: (materials: FurnitureMaterials) => string | null;
 }) {
-  const errorId = useId(),
-    entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion);
-  const detailed =
-    !!entry &&
-    supportsDimensions(entry, {
-      width: item.dimensions.width.value ?? 0,
-      depth: item.dimensions.depth.value ?? 0,
-      height: item.dimensions.height.value ?? 0,
-    });
-  const roles = entry
-    ? furnitureMaterialRoles(entry, detailed)
-    : { body: false, soft: false, hardware: false };
-  const upholstery = entry ? furnitureUpholsteryChoices(entry) : [];
-  const values = {
-    body: item.materials?.body ?? 'auto',
-    upholstery: item.materials?.upholstery ?? 'linen',
-    softColor: item.materials?.softColor ?? 'auto',
-    hardware: item.materials?.hardware ?? 'original',
-  };
-  const defaultSoftColor = furnitureMaterialTargets(
-    { ...item, materials: { ...item.materials, softColor: null } },
-    entry?.category ?? 'storage',
-  ).soft.color;
-  const signature = JSON.stringify([item.id, item.dimensions, values]);
-  const [form, setForm] = useState({
-    signature,
-    values: { ...values } as Record<keyof typeof values, string>,
-    error: '',
-  });
-  if (form.signature !== signature) setForm({ signature, values, error: '' });
-  const fields = (
-    ['body', 'upholstery', 'softColor', 'hardware'] as const
-  ).filter((key) =>
-    key === 'body'
-      ? roles.body
-      : key === 'hardware'
-        ? roles.hardware
-        : roles.soft,
-  );
-  const patch = Object.fromEntries(
-    fields
-      .filter((key) => form.values[key] !== values[key])
-      .map((key) => [
-        key,
-        key === 'softColor' && form.values[key] === 'auto'
-          ? null
-          : form.values[key],
-      ]),
-  );
-  const dirty = Object.keys(patch).length > 0;
-  const update = (key: keyof typeof values, value: string) =>
-    setForm((current) => ({
-      ...current,
-      values: { ...current.values, [key]: value },
-      error: '',
-    }));
-  if (!fields.length) return null;
+  const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion);
+  if (!entry) return null;
   return (
     <details className={styles.advanced}>
       <summary>
         Materials & details <span>Make it your own</span>
       </summary>
-      <form
-        className={styles.section}
-        onSubmit={(event) => {
-          event.preventDefault();
-          const parsed = furnitureMaterialsSchema.safeParse(patch);
-          if (!parsed.success) {
-            setForm((current) => ({
-              ...current,
-              error: 'Choose a supported material or a six-digit colour.',
-            }));
-            return;
-          }
-          const error = onCommit(parsed.data);
-          setForm((current) => ({ ...current, error: error ?? '' }));
-        }}
-      >
-        <p className={styles.hint}>
-          {detailed
-            ? 'Choose the frame, soft parts and hardware available on this piece. Size and placement stay as you set them.'
-            : 'This size uses a simple shape. Frame appearance is available; detailed parts return with a supported catalogue size.'}
-        </p>
-        {roles.body && (
+      <MaterialForm
+        key={JSON.stringify([
+          item.id,
+          item.dimensions,
+          item.finish,
+          item.materials,
+        ])}
+        item={item}
+        entry={entry}
+        onCommit={onCommit}
+      />
+    </details>
+  );
+}
+function MaterialForm({
+  item,
+  entry,
+  onCommit,
+}: {
+  item: Furniture;
+  entry: NonNullable<ReturnType<typeof findCatalogueEntry>>;
+  onCommit: (materials: FurnitureMaterials) => string | null;
+}) {
+  const detailed = supportsDimensions(entry, {
+    width: item.dimensions.width.value ?? 0,
+    depth: item.dimensions.depth.value ?? 0,
+    height: item.dimensions.height.value ?? 0,
+  });
+  const roles = furnitureMaterialRoles(entry, detailed);
+  const [patch, setPatch] = useState<FurnitureMaterials>({}),
+    [error, setError] = useState('');
+  const chosen = { ...item.materials, ...patch };
+  const current = furnitureMaterialTargets(
+    { ...item, materials: chosen },
+    entry.category,
+  );
+  const update = (next: FurnitureMaterials) => {
+    setPatch((p) => ({ ...p, ...next }));
+    setError('');
+  };
+  const valid = furnitureMaterialsSchema.safeParse(patch).success;
+  return (
+    <form
+      className={styles.section}
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        const parsed = furnitureMaterialsSchema.safeParse(patch);
+        if (!parsed.success) return;
+        setError(onCommit(parsed.data) ?? '');
+      }}
+    >
+      {!detailed && (
+        <p className={styles.hint}>Simple shape - frame appearance</p>
+      )}
+      {roles.body && (
+        <>
           <label>
             Frame material
             <select
-              value={form.values.body}
-              onChange={(e) => update('body', e.target.value)}
+              value={chosen.body ?? 'auto'}
+              onChange={(e) =>
+                update({
+                  body: e.target.value as FurnitureMaterials['body'],
+                  bodyPattern: null,
+                })
+              }
             >
-              <option value="auto">Follow piece finish</option>
-              <option value="wood">Wood grain</option>
-              <option value="painted">Painted</option>
-              <option value="metal">Metal</option>
+              {Object.entries({
+                auto: 'Follow piece finish',
+                plain: 'Plain matte',
+                wood: 'Wood grain',
+                painted: 'Painted',
+                metal: 'Metal',
+              }).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
             </select>
           </label>
-        )}
-        {roles.soft && (
-          <div className={styles.twoFields}>
-            {upholstery.length > 1 && (
-              <label>
-                {entry?.category === 'bed' ? 'Bedding material' : 'Upholstery'}
-                <select
-                  value={form.values.upholstery}
-                  onChange={(e) => update('upholstery', e.target.value)}
-                >
-                  {upholstery.map((choice) => (
-                    <option key={choice} value={choice}>
-                      {choice[0]!.toUpperCase() + choice.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            )}
-            <label>
-              Soft-part colour
-              <input
-                type="color"
-                value={
-                  form.values.softColor === 'auto'
-                    ? defaultSoftColor
-                    : form.values.softColor
-                }
-                onChange={(e) => update('softColor', e.target.value)}
-              />
-            </label>
-            <button
-              type="button"
-              disabled={form.values.softColor === 'auto'}
-              onClick={() => update('softColor', 'auto')}
+          <ColourPicker
+            label="Frame colour"
+            value={chosen.bodyColor ?? current.frame.color}
+            onChange={(bodyColor) => update({ bodyColor })}
+          />
+          <PatternPicker
+            label="Frame pattern"
+            value={
+              (chosen.bodyPattern ??
+                (current.frame.surface === 'plaster'
+                  ? 'smooth'
+                  : current.frame.surface)) as MaterialPattern
+            }
+            onChange={(bodyPattern) => update({ bodyPattern })}
+          />
+        </>
+      )}
+      {roles.soft && (
+        <>
+          <label>
+            {entry.category === 'bed' ? 'Bedding material' : 'Upholstery'}
+            <select
+              value={chosen.upholstery ?? 'linen'}
+              onChange={(e) =>
+                update({
+                  upholstery: e.target
+                    .value as FurnitureMaterials['upholstery'],
+                  softPattern: null,
+                })
+              }
             >
-              Use default colour
-            </button>
-          </div>
-        )}
-        {roles.hardware && (
+              {furnitureUpholsteryChoices(entry).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
+          <ColourPicker
+            label="Soft-part colour"
+            value={chosen.softColor ?? current.soft.color}
+            onChange={(softColor) => update({ softColor })}
+          />
+          <button
+            type="button"
+            disabled={!chosen.softColor}
+            onClick={() => update({ softColor: null })}
+          >
+            Use default colour
+          </button>
+          <PatternPicker
+            label="Soft-part pattern"
+            value={
+              (chosen.softPattern ?? current.soft.surface) as MaterialPattern
+            }
+            onChange={(softPattern) => update({ softPattern })}
+          />
+        </>
+      )}
+      {roles.hardware && (
+        <>
           <label>
             Hardware
             <select
-              value={form.values.hardware}
-              onChange={(e) => update('hardware', e.target.value)}
+              value={chosen.hardware ?? 'original'}
+              onChange={(e) =>
+                update({
+                  hardware: e.target.value as FurnitureMaterials['hardware'],
+                  hardwareColor: null,
+                })
+              }
             >
-              <option value="original">Original</option>
-              <option value="dark">Dark</option>
-              <option value="brass">Brass</option>
-              <option value="steel">Steel</option>
+              {['original', 'dark', 'brass', 'steel'].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
             </select>
           </label>
-        )}
-        <button
-          type="submit"
-          className={styles.primary}
-          disabled={!dirty}
-          aria-describedby={form.error ? errorId : undefined}
-        >
-          Apply materials
-        </button>
-        {form.error && (
-          <p id={errorId} role="alert">
-            {form.error}
-          </p>
-        )}
-      </form>
-    </details>
+          <ColourPicker
+            label="Hardware colour"
+            value={chosen.hardwareColor ?? current.metal.color}
+            onChange={(hardwareColor) => update({ hardwareColor })}
+          />
+        </>
+      )}
+      <button type="submit" className={styles.primary} disabled={!valid}>
+        Apply materials
+      </button>
+      {error && <p role="alert">{error}</p>}
+    </form>
   );
 }

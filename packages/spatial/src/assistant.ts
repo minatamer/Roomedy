@@ -5,6 +5,7 @@ import type { SearchGoal } from '@roomedy/contracts/search';
 import type { SearchResult } from '@roomedy/contracts/search';
 import { findCatalogueEntry, CATALOGUE } from './catalogue.js';
 import { checkRoom } from './checks.js';
+import { planningRoom, planningChecks } from './planning.js';
 import { designerRequest, designPalette, designSuggestions } from './design.js';
 import type { DesignTurn } from './design.js';
 import { medyCommandWords } from './medy-language.js';
@@ -45,7 +46,7 @@ export function emptyAssistantReply(
     actions: null,
     objectIds: [],
     catalogueIds: [],
-    checks: checkRoom(room),
+    checks: planningChecks(room),
     facts: null,
     question: null,
     control: null,
@@ -58,17 +59,6 @@ export function assistantSearchFallback(
   task: AssistantTask,
   found: SearchResult,
 ): AssistantReply {
-  if (found.question)
-    return {
-      ...emptyAssistantReply(
-        room,
-        'Review this measurement so I can check the arrangement.',
-        'visitor-action',
-      ),
-      objectIds: [found.question.id],
-      question: found.question,
-      control: 'measurement',
-    };
   const finish = task.goal?.pieceFinishes.find((f) => {
     const piece = room.furniture.find((p) => p.id === f.id);
     return (
@@ -149,6 +139,7 @@ function resolveExplicitTask(
   selectedId: string | null,
   operationId: string,
 ): AssistantTask {
+  room = planningRoom(room);
   const t = text.toLowerCase().replace(/[’]/g, "'").trim();
   const scope: ActionScope = {
     roomId: room.roomId,
@@ -225,7 +216,7 @@ function resolveExplicitTask(
     return {
       ...task,
       kind: 'explain',
-      label: 'Here are the current modeled checks and their missing inputs.',
+      label: 'Here are the layout details worth reviewing.',
       objectIds: selected ? [selected.id] : referenced.map((p) => p.id),
     };
   if (
@@ -410,21 +401,8 @@ function resolveExplicitTask(
     const entry = CATALOGUE.find((e) => e.category === replacementTypes[0])!;
     let size = null;
     if (/\bsmaller\b/.test(replacementText)) {
-      const width = target.dimensions.width.value,
-        depth = target.dimensions.depth.value;
-      if (width === null || depth === null)
-        return {
-          ...task,
-          kind: 'control',
-          label:
-            'Measure the existing footprint before comparing a smaller replacement.',
-          objectIds: [target.id],
-          question: {
-            id: target.id,
-            field: width === null ? 'width' : 'depth',
-          },
-          control: 'measurement',
-        };
+      const width = target.dimensions.width.value!,
+        depth = target.dimensions.depth.value!;
       if (entry.size.width.min >= width)
         return {
           ...task,
@@ -621,7 +599,7 @@ function resolveExplicitTask(
         ...task,
         kind: 'explain',
         label:
-          'Review the recorded entrance checks and missing doorway measurements before choosing a piece to move.',
+          'The entrance has no identified furniture blocker. We can try opening up the room instead.',
       };
     scope.targetIds = [...goal.targetIds];
     scope.actionKinds = ['move', 'rotate'];
@@ -706,25 +684,9 @@ function resolveExplicitTask(
         };
       const w =
           p.pose.quarterTurns % 2
-            ? p.dimensions.depth.value
-            : p.dimensions.width.value,
-        roomWidth = room.room.width.value;
-      if (w === null || roomWidth === null)
-        return {
-          ...task,
-          kind: 'control',
-          label:
-            'Confirm the room and piece footprint width before a wall-side move.',
-          objectIds: [roomWidth === null ? room.roomId : p.id],
-          question: {
-            id: roomWidth === null ? room.roomId : p.id,
-            field:
-              roomWidth === null || p.pose.quarterTurns % 2 === 0
-                ? 'width'
-                : 'depth',
-          },
-          control: 'measurement',
-        };
+            ? p.dimensions.depth.value!
+            : p.dimensions.width.value!,
+        roomWidth = room.room.width.value!;
       const x = /\bleft\b/.test(t) ? w / 2 + 100 : roomWidth - w / 2 - 100;
       scope.actionKinds = ['move'];
       return {

@@ -46,7 +46,16 @@ export function setSurfaceRepeat(map: DataTexture, x: number, y: number) {
 }
 
 type Surface =
-  'floor' | 'wood' | 'fabric' | 'plaster' | 'smooth' | 'tile' | 'concrete';
+  | 'floor'
+  | 'wood'
+  | 'fabric'
+  | 'plaster'
+  | 'smooth'
+  | 'tile'
+  | 'concrete'
+  | 'stripes'
+  | 'checker'
+  | 'herringbone';
 
 /** Mutates only a canvas-owned display color; true keeps demand frames awake. */
 export function advanceSurfaceColor(
@@ -70,7 +79,7 @@ const noise = (x: number, y: number) => {
   const hash = Math.imul(x + 71, 374761393) ^ Math.imul(y + 19, 668265263);
   return ((Math.imul(hash ^ (hash >>> 13), 1274126177) >>> 0) % 1024) / 1023;
 };
-function texture(kind: Surface) {
+function proceduralPixels(kind: Surface) {
   const edge =
     kind === 'floor' ? 512 : kind === 'wood' || kind === 'tile' ? 256 : 128;
   const data = new Uint8Array(edge * edge * 4);
@@ -98,6 +107,24 @@ function texture(kind: Surface) {
       if (kind === 'concrete')
         value = 235 + n * 12 + Math.sin(u * 3) * Math.sin(v * 2) * 5;
       if (kind === 'tile') value = x % 64 < 2 || y % 64 < 2 ? 193 : 249 + n * 5;
+      if (kind === 'stripes') value = Math.floor(x / 16) % 2 ? 175 : 250;
+      if (kind === 'checker')
+        value = (Math.floor(x / 32) + Math.floor(y / 32)) % 2 ? 165 : 250;
+      if (kind === 'herringbone') {
+        // Interlocking 4:1 boards, rotated 45 degrees. Integer periods tile seamlessly.
+        const px = x + y,
+          py = x - y + edge * 2;
+        const band = (((Math.floor(px / 8) - Math.floor(py / 8)) % 8) + 8) % 8;
+        const horizontal = band < 4;
+        const joint = horizontal
+          ? py % 8 < 1 || (band === 0 && px % 8 < 1)
+          : px % 8 < 1 || (band === 4 && py % 8 < 1);
+        const grain = Math.sin(
+          (horizontal ? px : py) * 0.7 +
+            Math.sin((horizontal ? py : px) * 0.06),
+        );
+        value = joint ? 185 : 236 + grain * 4 + n * 5;
+      }
       const at = (y * edge + x) * 4;
       data[at] =
         data[at + 1] =
@@ -121,7 +148,25 @@ function texture(kind: Surface) {
         pixels.set(data.subarray(source, source + 4), (y * targetEdge + x) * 4);
       }
   }
-  const map = new DataTexture(pixels, targetEdge, targetEdge, RGBAFormat);
+  return { data: pixels, width: targetEdge, height: targetEdge };
+}
+
+function texture(kind: Surface, deferred = false) {
+  const asset = SURFACE_ASSETS.find((entry) => entry.kind === kind),
+    image =
+      deferred && asset
+        ? {
+            data: new Uint8Array(asset.edge * asset.edge * 4).fill(255),
+            width: asset.edge,
+            height: asset.edge,
+          }
+        : proceduralPixels(kind);
+  const map = new DataTexture(
+    image.data,
+    image.width,
+    image.height,
+    RGBAFormat,
+  );
   map.name = `roomedy-${kind}`;
   map.wrapS = map.wrapT = RepeatWrapping;
   map.magFilter = LinearFilter;
@@ -138,10 +183,10 @@ function texture(kind: Surface) {
 /** Synchronous fallbacks, optional bounded local preparation, one scene-owned lifetime. */
 export function createSurfaces(io: SurfaceIO = {}) {
   const maps = {
-    floor: texture('floor'),
-    wood: texture('wood'),
-    fabric: texture('fabric'),
-    plaster: texture('plaster'),
+    floor: texture('floor', io.deferFallback),
+    wood: texture('wood', io.deferFallback),
+    fabric: texture('fabric', io.deferFallback),
+    plaster: texture('plaster', io.deferFallback),
     smooth: texture('smooth'),
     tile: texture('tile'),
     concrete: texture('concrete'),
@@ -149,9 +194,11 @@ export function createSurfaces(io: SurfaceIO = {}) {
   maps.fabric.repeat.set(3, 3);
   const companions: DataTexture[] = [];
   for (const { kind, edge } of SURFACE_ASSETS) {
-    const neutral = (pixels: number[]) => {
-      const data = new Uint8Array(edge * edge * 4);
-      for (let at = 0; at < data.length; at += 4) data.set(pixels, at);
+    const neutral = (normal: boolean) => {
+      const data = new Uint8Array(edge * edge * 4).fill(255);
+      if (normal)
+        for (let at = 0; at < data.length; at += 4)
+          data[at] = data[at + 1] = 128;
       const map = new DataTexture(data, edge, edge, RGBAFormat);
       map.wrapS = map.wrapT = RepeatWrapping;
       map.magFilter = LinearFilter;
@@ -165,13 +212,29 @@ export function createSurfaces(io: SurfaceIO = {}) {
       return map;
     };
     (maps[kind] as DetailedMap).detail = {
-      normal: neutral([128, 128, 255, 255]),
-      roughness: neutral([255, 255, 255, 255]),
+      normal: neutral(true),
+      roughness: neutral(false),
     };
   }
   let live = true;
+  const patterns = new Map<
+    'stripes' | 'checker' | 'herringbone',
+    DataTexture
+  >();
+  const pattern = (kind: 'stripes' | 'checker' | 'herringbone') => {
+    if (!live) return maps.smooth;
+    let map = patterns.get(kind);
+    if (!map) {
+      map = texture(kind);
+      patterns.set(kind, map);
+    }
+    return map;
+  };
+  const loaded = new Set<Surface>();
+  let preparation: ReturnType<SurfaceAssets['load']> | undefined;
   const assets = new SurfaceAssets((kind, pixels) => {
     if (!live) return;
+    loaded.add(kind);
     const map = maps[kind],
       detail = (map as DetailedMap).detail!;
     for (const [target, data] of [
@@ -187,15 +250,43 @@ export function createSurfaces(io: SurfaceIO = {}) {
   const soft = new RoundedBoxGeometry(1, 1, 1, 1, 0.1);
   return {
     ...maps,
+    get stripes() {
+      return pattern('stripes');
+    },
+    get checker() {
+      return pattern('checker');
+    },
+    get herringbone() {
+      return pattern('herringbone');
+    },
     hard,
     soft,
-    textures: [...Object.values(maps), ...companions],
-    load: (signal?: AbortSignal) => assets.load(signal),
+    get textures() {
+      return [...Object.values(maps), ...companions, ...patterns.values()];
+    },
+    load: (signal?: AbortSignal) => {
+      if (!io.deferFallback) return assets.load(signal);
+      return (preparation ??= assets.load(signal).then((result) => {
+        if (live && !signal?.aborted)
+          for (const { kind } of SURFACE_ASSETS)
+            if (!loaded.has(kind)) {
+              maps[kind].image = proceduralPixels(kind);
+              maps[kind].needsUpdate = true;
+            }
+        return result;
+      }));
+    },
     dispose() {
       if (!live) return;
       live = false;
       assets.dispose();
-      for (const map of [...Object.values(maps), ...companions]) map.dispose();
+      for (const map of [
+        ...Object.values(maps),
+        ...companions,
+        ...patterns.values(),
+      ])
+        map.dispose();
+      patterns.clear();
       hard.dispose();
       soft.dispose();
     },
@@ -382,6 +473,7 @@ export function surfaceModel(
         const target = {
           ...initial[role],
           ...(role === 'metal' &&
+          !choices?.hardwareColor &&
           (!choices?.hardware || choices.hardware === 'original')
             ? { color: originalColor }
             : {}),
@@ -424,6 +516,7 @@ export function surfaceModel(
         entry.target = {
           ...next[entry.role],
           ...(entry.role === 'metal' &&
+          !settings?.hardwareColor &&
           (!settings?.hardware || settings.hardware === 'original')
             ? { color: entry.originalColor }
             : {}),

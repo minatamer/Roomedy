@@ -18,6 +18,7 @@ import {
   resolveMedyRequest,
 } from '@roomedy/spatial';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
+import { createManualRoom } from '../apps/frontend/src/features/session/entry/manual-room.js';
 import { assistantInput } from './fixtures/assistant.js';
 import { identityIds } from './fixtures/operation.js';
 import { commandRoom, piece, windowFeature } from './fixtures/command-room.js';
@@ -297,4 +298,95 @@ describe('MEDY real protocol and authored fake parity', () => {
       [],
     );
   });
+});
+
+it('grounds proactive work-zone advice and three next choices in the supported catalogue and actual partial-room gaps', async () => {
+  const room = createRoomFixture('partial'),
+    before = structuredClone(room),
+    captured: ProviderRequest[] = [];
+  const result = await createAssistantHandler(vi.fn(), identityIds())(
+    assistantInput(
+      room,
+      'Suggest how to organize a work zone by the north window while keeping the bed and wardrobe.',
+    ),
+    {
+      signal: new AbortController().signal,
+      call: (request) => {
+        captured.push(request);
+        return assistantFakeResponse(request, new AbortController().signal);
+      },
+    },
+  );
+  expect(result.kind).toBe('completed');
+  expect(result.assistant?.summary).toMatch(/no desk|add a desk and chair/i);
+  expect(result.assistant?.suggestions).toHaveLength(3);
+  expect(
+    result.assistant?.suggestions?.some(
+      (choice) => choice.request === 'I need a desk and chair near the window',
+    ),
+  ).toBe(true);
+  expect(result.assistant?.actions).toBeNull();
+  expect(captured).toHaveLength(1);
+  const content = captured[0]!.input[0]!.content;
+  if (!Array.isArray(content) || typeof content[0]?.text !== 'string')
+    throw new Error('fixture');
+  const context = JSON.parse(content[0].text);
+  expect(
+    context.furnitureOptions.some(
+      (entry: { id: string }) => entry.id === 'floor-lamp',
+    ),
+  ).toBe(true);
+  expect(context.designOpportunities[0].catalogueIds).toEqual([
+    'procedural-desk',
+    'procedural-chair',
+  ]);
+  expect(
+    context.designOpportunities.some((option: { catalogueIds: string[] }) =>
+      option.catalogueIds.includes('procedural-bed'),
+    ),
+  ).toBe(false);
+  expect(room).toEqual(before);
+});
+
+it('gives a plain manual room real material opportunities and reviewed texture requests in one advice round', async () => {
+  const room = createManualRoom('partial'),
+    before = structuredClone(room),
+    captured: ProviderRequest[] = [];
+  const result = await createAssistantHandler(vi.fn(), identityIds())(
+    assistantInput(
+      room,
+      'How can I make this plain room feel warmer with textures?',
+    ),
+    {
+      signal: new AbortController().signal,
+      call: (request) => {
+        captured.push(request);
+        return assistantFakeResponse(request, new AbortController().signal);
+      },
+    },
+  );
+  expect(result.kind).toBe('completed');
+  expect(result.assistant?.summary).toMatch(/oak planks|wood frame/i);
+  expect(result.assistant?.actions).toBeNull();
+  expect(result.assistant?.suggestions).toHaveLength(3);
+  expect(
+    result.assistant?.suggestions?.some(
+      (choice) =>
+        choice.request === 'Change floor texture to wood planks in oak',
+    ),
+  ).toBe(true);
+  expect(captured).toHaveLength(1);
+  const content = captured[0]!.input[0]!.content;
+  if (!Array.isArray(content) || typeof content[0]?.text !== 'string')
+    throw new Error('fixture');
+  const context = JSON.parse(content[0].text);
+  expect(
+    context.materialOpportunities
+      .map((choice: { label: string }) => choice.label)
+      .slice(0, 3),
+  ).toEqual(['Try oak flooring', 'Wood for the bed', 'Wood for the wardrobe']);
+  expect(captured[0]!.instructions).toMatch(
+    /changing the colour alone does not add texture/i,
+  );
+  expect(room).toEqual(before);
 });

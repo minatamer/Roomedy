@@ -43,9 +43,10 @@ export async function sourcingFakeResponse(
           (brief.target.kind === 'service' && o.scope === brief.target.scope)),
     ) ?? null;
   if (
-    locality.country !== 'EG' ||
-    locality.city.toLowerCase() !== 'cairo' ||
-    locality.currency !== 'EGP'
+    offer &&
+    (locality.country !== offer.market.country ||
+      locality.city.toLowerCase() !== offer.market.city.toLowerCase() ||
+      locality.currency !== offer.market.currency)
   )
     offer = null;
   if (

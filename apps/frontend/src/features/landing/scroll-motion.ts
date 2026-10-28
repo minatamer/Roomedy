@@ -2,6 +2,35 @@ export function boundedProgress(value: number) {
   return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
 }
 
+/** Authored beats meet real chapter tops, including taller phone/short-screen copy. */
+export function landingChapterProgress(
+  scroll: number,
+  chapterOffsets: readonly number[],
+) {
+  const beats = [0, 0.15, 0.31, 0.49, 0.65, 0.82, 1] as const;
+  if (!Number.isFinite(scroll) || chapterOffsets.length !== beats.length)
+    return 0;
+  const points = chapterOffsets.map((offset, i) =>
+    i === 0 ? 0 : Math.max(0, offset - 30),
+  );
+  if (
+    points.some(
+      (point, i) =>
+        !Number.isFinite(point) || (i > 0 && point <= points[i - 1]!),
+    )
+  )
+    return 0;
+  for (let i = 1; i < points.length; i++) {
+    if (scroll <= points[i]!) {
+      const t = boundedProgress(
+        (scroll - points[i - 1]!) / (points[i]! - points[i - 1]!),
+      );
+      return beats[i - 1]! + (beats[i]! - beats[i - 1]!) * t;
+    }
+  }
+  return 1;
+}
+
 const smooth = (value: number, from: number, to: number) => {
   const t = boundedProgress((value - from) / (to - from));
   return t * t * (3 - 2 * t);
@@ -11,8 +40,8 @@ const smooth = (value: number, from: number, to: number) => {
 export function roomChoreography(value: number) {
   const progress = boundedProgress(value);
   return {
-    rotation: smooth(progress, 0.2, 0.46),
-    opening: smooth(progress, 0.43, 0.72),
+    rotation: smooth(progress, 0.28, 0.5),
+    opening: 1 - smooth(progress, 0.74, 0.98),
   };
 }
 
@@ -30,29 +59,46 @@ export interface ScrollTarget {
   progress: number;
   visible: boolean;
   wake?: () => void;
+  prepared?: boolean;
+  publish?: (progress: number) => void;
 }
 
 /** Full-viewport composition: perspective changes remain continuous on resize/reverse. */
 export function landingFraming(value: number, aspect: number) {
   const p = boundedProgress(value),
     { rotation, opening } = roomChoreography(p),
+    reveal = 1 - opening,
     final = smooth(p, 0.72, 1),
     ratio = Number.isFinite(aspect) && aspect > 0 ? aspect : 1,
     narrow = boundedProgress((1.3 - ratio) / 0.8),
-    distance = 1 + narrow * 0.28;
+    desktop = smooth(ratio, 1.3, 1.8),
+    // Restore the room's scale on wide screens; retain the established narrow fit.
+    fit =
+      1.45 +
+      0.9 * boundedProgress((1.8 - ratio) / 0.8) -
+      desktop * 0.31 * (1 - smooth(p, 0.68, 0.84)),
+    distance = (1 + narrow * 1.2) * fit,
+    vertical = -narrow * 2.6 * fit;
   return {
     camera: [
-      (6.2 - opening * 2.1 + final * 0.8) * distance,
-      (5.6 + rotation * 2.2 - opening * 4.7) * distance,
-      (8.2 - opening * 0.8 - final * 0.8) * distance,
+      (6.2 - reveal * 2.1 + final * 0.8) * distance,
+      (5.6 + rotation * 2.2 - reveal * 4.7) * distance + vertical,
+      (8.2 - reveal * 0.8 - final * 0.8) * distance,
     ] as const,
     lookAt: [
-      (-1.45 + rotation * 2.5 - opening * 1.3) * (1 - narrow),
-      0.65,
+      (-1.45 + rotation * 2.5 - reveal * 1.3) * (1 - narrow) * (1 - desktop),
+      0.65 + vertical,
       0,
     ] as const,
     scale: 1.55 - narrow * 0.2,
-    turn: rotation * -0.85 + opening * 0.35 + final * 0.2,
+    turn: rotation * -0.85 + reveal * 0.35 + final * 0.2,
+    shift:
+      desktop *
+      (0.32 -
+        0.64 * smooth(p, 0.19, 0.3) +
+        0.64 * smooth(p, 0.39, 0.48) -
+        0.64 * smooth(p, 0.55, 0.64) +
+        0.32 * smooth(p, 0.72, 0.82)),
   };
 }
 
@@ -102,6 +148,18 @@ export const landingFurniture = [
   },
 ] as const;
 type LandingPiece = (typeof landingFurniture)[number]['key'];
+
+/** The first scroll chapter furnishes the room; reversing retraces the same assembly. */
+export function landingFurnitureAssembly(piece: LandingPiece, value: number) {
+  const p = boundedProgress(value);
+  return piece === 'bed' || piece === 'bedside'
+    ? 1
+    : piece === 'shelf'
+      ? smooth(p, 0.405, 0.45)
+      : piece === 'desk'
+        ? smooth(p, 0.425, 0.475)
+        : smooth(p, 0.45, 0.495);
+}
 type FloorFrame = readonly [
   progress: number,
   x: number,

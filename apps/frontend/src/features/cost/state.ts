@@ -1,6 +1,7 @@
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type {
   EstimateOffer,
+  EstimateQuantity,
   EstimateSettings,
   EstimateTarget,
   RoomEstimate,
@@ -17,6 +18,7 @@ import {
 } from '@roomedy/spatial';
 
 export interface CostMessage {
+  lineIds?: string[];
   roomRevision: number;
   costRevision: number;
   role: 'visitor' | 'assistant';
@@ -114,7 +116,7 @@ export function money(amount: number, currency: string) {
     maximumFractionDigits: 2,
   }).format(amount / 100);
 }
-export function explainCost(
+export function explanationLines(
   estimate: RoomEstimate,
   text: string,
   selected: string | null,
@@ -131,6 +133,14 @@ export function explainCost(
             ? line.targets.some((target) => targetKey(target) === selected)
             : true,
   );
+  return lines;
+}
+export function explainCost(
+  estimate: RoomEstimate,
+  text: string,
+  selected: string | null,
+) {
+  const lines = explanationLines(estimate, text, selected);
   return (
     [...lines]
       .sort(
@@ -149,4 +159,20 @@ export function explainCost(
         : '') ||
     'Choose a cost line to explore its quantities and assumptions. You can edit scope below, or return to Design for measurements and finishes.'
   );
+}
+
+export function quantity(q: EstimateQuantity | null) {
+  if (!q) return 'Needs review';
+  const value = q.numerator / q.denominator;
+  const divisor =
+    q.unit === 'mm2' ? 1e6 : q.unit === 'mm' || q.unit === 'ml' ? 1000 : 1;
+  const unit =
+    q.unit === 'mm2'
+      ? 'm²'
+      : q.unit === 'mm'
+        ? 'm'
+        : q.unit === 'ml'
+          ? 'L'
+          : q.unit;
+  return `${new Intl.NumberFormat('en', { maximumFractionDigits: 3 }).format(value / divisor)} ${unit}`;
 }

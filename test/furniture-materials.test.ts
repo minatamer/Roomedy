@@ -68,7 +68,7 @@ describe('planned furniture materials retain independent room authority', () => 
       furnitureMaterialRoles(
         findCatalogueEntry('chair-desk-fixed', 'catalogue-v1')!,
       ),
-    ).toEqual({ body: false, soft: true, hardware: true });
+    ).toEqual({ body: true, soft: true, hardware: true });
     for (const entry of CATALOGUE)
       expect(furnitureMaterialRoles(entry, false)).toEqual({
         body: true,

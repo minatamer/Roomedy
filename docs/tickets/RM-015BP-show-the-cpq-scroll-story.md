@@ -1,0 +1,20 @@
+# RM-015BP — Show the CPQ journey in the landing room
+
+Status: **Locally implemented and validated; actual owner review pending.** 28 October 2026. The owner explicitly approves the recommended continuous room story after viewing the motion study: plain surfaces, rollers painting walls, flooring laid into place, furnishing, connected finish/estimate changes, shopping quantities/work plan/itemized PDF. Latest owner AFK steering selects recommended choices without questions; it does not invent actual visual acceptance.
+
+Read [allocation](../commit-plans/RM-015BP.md), [receipt](../validation/RM-015BP.md), [landing authority](../ROOMEDY.md#41-first-viewport), [CPQ capabilities and limits](../operations/CPQ_LOCAL_HANDOFF.md), [motion](../design/motion.md), [performance](../design/performance.md#local-startup-refinement--rm-015bo28-october2026), [feedback](../references/LESSONS_FROM_VISUAL_FEEDBACK.md) and [review checklist](../design/REVIEW_CHECKLIST.md). Current BN/BO changes are owned uncommitted prerequisites, not unrelated changes to discard or independent approvals to invent.
+
+## Required result
+
+- Preserve immediate hero text/CTA, warm lighting/physical window/photo, native scrolling, the mouse/finger cue and fast prepared-room entrance. Begin with warm plain walls/floor and the kept bed/bedside.
+- Make How it works tell four concrete stages: start with the existing room; choose finishes/furniture; see options and costs together; leave with shopping quantities/work steps/itemized estimate. Weave Medy into the cost/budget story. Keep truthful editable measurements and review language; do not claim purchases/bookings, guaranteed prices or complete budgets from unresolved data.
+- Use actual3D rollers with paint revealed behind their strokes, preserving the real window opening/frame/glass. Lay a bounded set of textured floor panels into the plain floor, then assemble the remaining furniture and retain purposeful arrangement/camera/wall motion.
+- Demonstrate a flooring alternative changing both the visible floor and the corresponding illustrative estimate/total. Highlight the actual wall/floor with its example cost line. A concise sample label distinguishes authored marketing amounts from current merchant evidence; no landing provider/editor/session initialization.
+- Keep one finite scroll presentation owner, continuous bounded poses and exact reverse/offset restoration. Retain one demand canvas, the2million backing-pixel/DPR cap, cache allow-list, four local image jobs and overlapping actual preparation. Reuse existing photographed maps; precompile new finite programs before reveal. Own/dispose additional geometry/material/instance buffers; no new image/download/dependency/service/port/global cache or perpetual animation.
+- Ensure useful semantic content and example pricing without graphics, normal section/focus/entry/home navigation, readable copy/controls at nine responsive sizes and short layouts. Do not put a fake download control on the landing.
+
+## Verification
+
+Meaningful tests cover paint coverage/roller alignment, floor transforms/settlement, bounded continuity/reversal/restored offsets, material/shader/resource lifetime and example arithmetic/finish identity. Actual in-app observations cover initial/partial paint/floor/full/cost/alternative/plan/reverse, navigation and three entry/home canvas cycles. Compare three warm local startups with BO, record active frame callbacks and actual draw/texture/geometry counts; targets remain p95≤33.4ms and max≤50ms for declared isolated motion runs, not universal paint/device guarantees. Run the settled full no-key root gate/both builds and a read-only review/fix/revalidate loop. Physical/coarse-pointer/AT/cold-network/Linux/production/hosted and owner visual evidence remain explicit limits.
+
+Reuse the current fake/paid-off4320/4321 services. No desktop Chrome prompt, delegation, paid/provider request, owner-env change, extra service/port, Git staging/commit/push or deployment is selected.

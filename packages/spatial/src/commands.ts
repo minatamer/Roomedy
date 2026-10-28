@@ -164,6 +164,7 @@ const nonspatial = new Set([
   'room-finish',
   'set-room-surface',
   'set-furniture-materials',
+  'set-opening-materials',
   'set-locks',
   'set-preference',
   'set-ownership',
@@ -253,6 +254,20 @@ export function evaluateBatch(
         room.room.features[index] = action.feature;
       }
       affected.add(action.id);
+      continue;
+    }
+    if (action.type === 'set-opening-materials') {
+      const feature = room.room.features.find((f) => f.id === action.id);
+      if (
+        !feature ||
+        feature.kind === 'obstacle' ||
+        (feature.kind === 'window' &&
+          (action.materials.color !== undefined ||
+            action.materials.texture !== undefined))
+      )
+        return { ok: false, code: 'unsupported-variant' };
+      feature.materials = { ...feature.materials, ...action.materials };
+      affected.add(feature.id);
       continue;
     }
     if (action.type === 'room-finish') {
@@ -448,6 +463,8 @@ export function evaluateBatch(
       )
         return { ok: false, code: 'unsupported-variant' };
       item.finish = action.finish;
+      if (item.materials?.bodyColor)
+        item.materials = { ...item.materials, bodyColor: null };
     } else if (action.type === 'set-furniture-materials') {
       const entry = catalogue.find(
         (e) => e.id === item.catalogueId && e.version === item.catalogueVersion,
@@ -471,10 +488,16 @@ export function evaluateBatch(
       )
         return { ok: false, code: 'unsupported-variant' };
       if (
-        (m.body !== undefined && !roles.body) ||
-        ((m.upholstery !== undefined || m.softColor !== undefined) &&
+        ((m.body !== undefined ||
+          m.bodyColor !== undefined ||
+          m.bodyPattern !== undefined) &&
+          !roles.body) ||
+        ((m.upholstery !== undefined ||
+          m.softColor !== undefined ||
+          m.softPattern !== undefined) &&
           !roles.soft) ||
-        (m.hardware !== undefined && !roles.hardware)
+        ((m.hardware !== undefined || m.hardwareColor !== undefined) &&
+          !roles.hardware)
       )
         return { ok: false, code: 'unsupported-variant' };
       item.materials = { ...item.materials, ...m };

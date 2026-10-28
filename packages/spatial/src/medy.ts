@@ -7,7 +7,12 @@ import { medyEdit } from './medy-edits.js';
 import type { MedyEdit } from './medy-edits.js';
 import { evaluateBatch } from './commands.js';
 import { POLICY } from '@roomedy/contracts/policy';
-import { checkRoom } from './checks.js';
+import { planningRoom, planningChecks } from './planning.js';
+import {
+  roomDesignOpportunities,
+  roomMaterialOpportunities,
+} from './design-opportunities.js';
+import { findCatalogueEntry } from './catalogue.js';
 
 export type MedyRequest = MedyEdit | { kind: 'control'; control: MedyControl };
 /** Shared application language policy. Models never call this with self-authored text. */
@@ -156,6 +161,7 @@ export function medyAdvice(
   text: string,
   selectedId: string | null,
 ): string {
+  room = planningRoom(room);
   const words = medyText(text),
     targets = medyTargets(room, text, selectedId, []);
   const target =
@@ -176,14 +182,36 @@ export function medyAdvice(
       .join(', ');
     return `${target.label}: ${sizes}. Its front faces ${['south', 'west', 'north', 'east'][target.pose.quarterTurns]}. Tell me an exact value to preview a change, or ask me to rotate it.`;
   }
-  const checks = checkRoom(room),
+  const checks = planningChecks(room),
     hard = checks.issues.filter((issue) => issue.severity === 'hard'),
-    access = checks.issues.filter((issue) => issue.rule === 'front-access');
+    access = checks.issues.filter(
+      (issue) =>
+        issue.rule === 'front-access' && issue.severity !== 'unassessed',
+    );
   if (/\b(check|wrong|problem|blocked|fit|safe|attention)\b/.test(words))
     return hard.length
-      ? `I’d start with the ${hard.length === 1 ? 'conflict' : `${hard.length} conflicts`} in the current room checks. Open the checks and select an affected piece so we can work through it. A cleaner layout starts with usable floor space and clear furniture fronts; measurements still need to match your real room.`
-      : `There are no hard conflicts in the current modeled checks.${access.length ? ' The furniture-front access checks still deserve a look.' : ''} That’s useful planning feedback, rather than a guarantee of physical fit. We can look at an exact piece or try a more open arrangement.`;
+      ? `I’d start with the ${hard.length === 1 ? 'conflict' : `${hard.length} conflicts`} in the current room checks. Open the checks and select an affected piece so we can work through it. A cleaner layout starts with usable floor space and clear furniture fronts.`
+      : `There are no hard conflicts in the current modeled checks.${access.length ? ' The furniture-front access checks still deserve a look.' : ''} We can look at an exact piece or try a more open arrangement.`;
+  const opportunities = roomDesignOpportunities(room),
+    first = opportunities[0],
+    materials = roomMaterialOpportunities(room);
+  if (
+    materials.length &&
+    !/\b(keep|stay|retain|prefer)\b.*\bplain\b|\bno textures?\b/.test(words) &&
+    /\b(texture|material|plain|finish|colou?r|style|warm|cozy|modern|improve|design|suggest)\b/.test(
+      words,
+    )
+  )
+    return `${materials[0]!.reason}${materials[1] ? ` ${materials[1].reason}` : ''} I can preview either finish so you can compare it with the plain room.`;
   if (!room.furniture.length)
-    return 'Let’s start with the essentials you actually need, then leave the centre easy to move through. A bed against a solid wall and a desk near daylight make a useful starting point. Oak or walnut with ivory keeps the palette calm. Would you like me to find places for a bed, desk, chair and wardrobe?';
-  return `I’d keep a clear route through the room, give storage fronts space to open, and keep the desk and chair together${room.room.features.some((feature) => feature.kind === 'window') ? ' near daylight' : ''}. For a tidy modern look, use one main wood tone with ivory walls and a restrained finish palette. ${room.furniture.some((piece) => piece.ownership === 'owned') ? 'We can build around the pieces you own and keep their recorded finishes.' : 'We can coordinate proposed pieces without adding unnecessary furniture.'} Would you like to preview a more open layout or a calm palette?`;
+    return 'Let’s give the room a useful starting layout with the essentials for your goals and a clear centre. I can preview the first pieces together, then coordinate them with warm wood and ivory.';
+  if (/\b(work|desk|window|study|workspace|work zone)\b/.test(words)) {
+    const desk = room.furniture.some(
+      (piece) =>
+        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+          ?.category === 'desk',
+    );
+    return `I’d anchor the work zone ${room.room.features.some((feature) => feature.kind === 'window') ? 'near the window' : 'against a clear wall'}, with the chair facing into the room and room to pull it back. ${!desk ? `There’s no desk in this plan yet; I can preview ${opportunities[0]?.catalogueIds.includes('procedural-chair') ? 'a desk and chair' : 'a desk'} while keeping your existing pieces.` : first ? first.reason : 'We can compare a more open arrangement or coordinate the finishes.'}`;
+  }
+  return `I’d keep a clear route through the room and give the furniture fronts useful space. ${first ? `${first.reason} I can preview that addition, or coordinate the wood and wall finishes around the pieces you have.` : 'We can compare a more open layout, a coordinated palette, or a new use for one corner without adding more furniture.'}`;
 }

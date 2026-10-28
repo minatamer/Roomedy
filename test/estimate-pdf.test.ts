@@ -10,6 +10,7 @@ import {
 } from '../apps/frontend/src/features/cost/estimate-pdf.js';
 import { DesignExportError } from '../apps/frontend/src/features/design-export/facts.js';
 import { POLICY } from '@roomedy/contracts/policy';
+import { convertOfferToUsd, calculateRoomEstimate } from '@roomedy/spatial';
 const requireFrontend = createRequire(
   new URL('../apps/frontend/package.json', import.meta.url),
 );
@@ -79,6 +80,46 @@ async function read(bytes: Uint8Array) {
   return { pdf, pages, text: pages.join('\n'), links };
 }
 describe('actual selectable itemized estimate PDF', () => {
+  it('prints frozen USD equivalents with a dated reference link, and rejects a foreign-currency PDF', async () => {
+    const v = structuredClone(version()),
+      floor = v.pricing.offers.find(
+        (o) => o.id === v.pricing.settings.floor.offerId,
+      )!;
+    const usd = convertOfferToUsd(
+      {
+        ...floor,
+        market: { ...floor.market, currency: 'EGP' },
+        source: {
+          ...floor.source,
+          kind: 'sourced',
+          observedAt: 1000,
+          evidence: 'Verified variant',
+        },
+      },
+      {
+        usdPerUnit: '0.017831',
+        date: '1970-01-01',
+        observedAt: 1000,
+        url: 'https://api.frankfurter.dev/v2/rate/egp/usd',
+      },
+    );
+    v.pricing.offers[v.pricing.offers.indexOf(floor)] = usd;
+    const calculated = calculateRoomEstimate(
+      v.room,
+      v.pricing.settings,
+      v.pricing.offers,
+    );
+    if (!calculated.ok) throw new Error('fixture');
+    v.estimate = calculated.estimate;
+    const output = await read(await estimatePdf(v, pictures));
+    expect(output.text).toContain('USD reference equivalent');
+    expect(output.text).toContain('rate dated 1970-01-01');
+    expect(output.text).not.toContain('EGP');
+    expect(output.links).toContain(usd.fx!.url);
+    const foreign = structuredClone(v);
+    foreign.estimate.locality.currency = 'EGP';
+    await expect(estimatePdf(foreign, pictures)).rejects.toThrow();
+  });
   it('writes exact known totals, six unresolved items, pack/can quantities and historical source annotations', async () => {
     const v = version(),
       before = JSON.stringify(v),
@@ -86,10 +127,14 @@ describe('actual selectable itemized estimate PDF', () => {
       result = await read(bytes);
     expect(Buffer.from(bytes).toString('latin1', 0, 8)).toMatch(/^%PDF-/);
     expect(result.pdf.getTitle()).toBe('Roomedy estimate - Room estimate v1');
-    expect(result.text).toContain('EGP 27,424.35');
+    expect(result.text).toContain('USD 1,801.48');
+    expect(result.text).toContain('USD 42.00/pack');
+    expect(result.text).not.toContain('EGP');
     expect(result.text).toContain('6 unpriced lines');
     expect(result.text).toContain('11 pack');
     expect(result.text).toContain('2 x 5 L');
+    expect(result.text).toContain('9.6 m2 net');
+    expect(result.text).not.toContain('/1000000 m2 net');
     expect(result.text).toContain('UNPRICED');
     expect(result.text).toContain('Known costs so far');
     expect(result.text).not.toContain('Continued:');
@@ -159,6 +204,6 @@ describe('actual selectable itemized estimate PDF', () => {
         unit: 'mm2',
       }),
     ).toBe('22.176 m2');
-    expect(estimateQuantityText(null)).toBe('Needs measurement');
+    expect(estimateQuantityText(null)).toBe('Needs review');
   });
 });

@@ -14,6 +14,19 @@ export interface SurfacePixels {
   roughness: Uint8Array<ArrayBuffer>;
 }
 export interface SurfaceIO {
+  /** Landing-only opt-in: four bounded local material jobs; other scenes stay serial. */
+  concurrency?: 1 | 4;
+  /** A landing awaiting local photos can generate its procedural fallback only on failure. */
+  deferFallback?: boolean;
+  /** Only fixed versioned public images may prefer the browser's persistent HTTP cache. */
+  cache?: 'force-cache';
+  /** Optional scene-owned development counters; totals may overlap across parallel jobs. */
+  timing?: {
+    readMs: number;
+    validationMs: number;
+    decodeMs: number;
+    unpackMs: number;
+  };
   fetch?: typeof globalThis.fetch;
   decode?: (
     bytes: Uint8Array<ArrayBuffer>,
@@ -63,10 +76,12 @@ async function image(
   io: SurfaceIO,
 ) {
   active(signal);
+  const readStarted = io.timing ? performance.now() : 0;
   const response = await (io.fetch ?? globalThis.fetch)(url, {
     signal,
     credentials: 'same-origin',
     redirect: 'error',
+    ...(io.cache ? { cache: io.cache } : {}),
   });
   if (!response.ok || !response.body) throw new Error('surface-unavailable');
   const reader = response.body.getReader(),
@@ -92,6 +107,8 @@ async function image(
     bytes.set(chunk, offset);
     offset += chunk.byteLength;
   }
+  if (io.timing) io.timing.readMs += performance.now() - readStarted;
+  const validationStarted = io.timing ? performance.now() : 0;
   const clean = decodeInput(bytes);
   if (
     clean.header.type !== 'image/png' ||
@@ -100,13 +117,17 @@ async function image(
     clean.orientation !== 1
   )
     throw new Error('surface-size');
+  if (io.timing)
+    io.timing.validationMs += performance.now() - validationStarted;
+  const decodeStarted = io.timing ? performance.now() : 0;
   const pixels = await (io.decode ?? decodePixels)(clean.bytes, edge, signal);
+  if (io.timing) io.timing.decodeMs += performance.now() - decodeStarted;
   active(signal);
   if (pixels.byteLength !== edge * edge * 4) throw new Error('surface-pixels');
   return pixels;
 }
 
-/** One serial, allow-listed local job per scene. No retry, global cache or late publication. */
+/** Bounded allow-listed local jobs per scene. No retry, global cache or late publication. */
 export class SurfaceAssets {
   private abort = new AbortController();
   private pending: Promise<{ loaded: number; failed: number }> | undefined;
@@ -128,40 +149,49 @@ export class SurfaceAssets {
     if (!this.abort.signal.aborted) this.timer = setTimeout(cancel, 10_000);
     this.pending = (async () => {
       let loaded = 0,
-        failed = 0;
+        failed = 0,
+        next = 0;
       try {
-        for (const { kind, edge } of SURFACE_ASSETS) {
-          if (!this.live || this.abort.signal.aborted) break;
-          try {
-            const packed = await image(
-                `/surfaces/${kind}-detail-v1.png`,
-                edge,
-                this.abort.signal,
-                this.io,
-              ),
-              normal = await image(
-                `/surfaces/${kind}-normal-v1.png`,
-                edge,
-                this.abort.signal,
-                this.io,
-              );
-            active(this.abort.signal);
-            const color = new Uint8Array(packed.length),
-              roughness = new Uint8Array(packed.length);
-            for (let at = 0; at < packed.length; at += 4) {
-              color[at] = color[at + 1] = color[at + 2] = packed[at]!;
-              roughness[at] =
-                roughness[at + 1] =
-                roughness[at + 2] =
-                  packed[at + 1]!;
-              color[at + 3] = roughness[at + 3] = 255;
+        const worker = async () => {
+          while (next < SURFACE_ASSETS.length) {
+            if (!this.live || this.abort.signal.aborted) break;
+            const { kind, edge } = SURFACE_ASSETS[next++]!;
+            try {
+              const read = (role: 'detail' | 'normal') =>
+                image(
+                  `/surfaces/${kind}-${role}-v1.png`,
+                  edge,
+                  this.abort.signal,
+                  this.io,
+                );
+              // A material's pair stays serial, bounding active image jobs to four.
+              const packed = await read('detail'),
+                normal = await read('normal');
+              active(this.abort.signal);
+              const unpackStarted = this.io.timing ? performance.now() : 0;
+              const color = new Uint8Array(packed.length),
+                roughness = new Uint8Array(packed.length);
+              for (let at = 0; at < packed.length; at += 4) {
+                color[at] = color[at + 1] = color[at + 2] = packed[at]!;
+                roughness[at] =
+                  roughness[at + 1] =
+                  roughness[at + 2] =
+                    packed[at + 1]!;
+                color[at + 3] = roughness[at + 3] = 255;
+              }
+              if (this.io.timing)
+                this.io.timing.unpackMs += performance.now() - unpackStarted;
+              if (this.live)
+                this.apply(kind, { edge, color, normal, roughness });
+              loaded++;
+            } catch {
+              failed++;
             }
-            if (this.live) this.apply(kind, { edge, color, normal, roughness });
-            loaded++;
-          } catch {
-            failed++;
           }
-        }
+        };
+        await Promise.all(
+          Array.from({ length: this.io.concurrency === 4 ? 4 : 1 }, worker),
+        );
       } finally {
         clearTimeout(this.timer);
         signal?.removeEventListener('abort', cancel);

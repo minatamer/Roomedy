@@ -3,6 +3,10 @@ import type { RoomDocument } from '@roomedy/contracts/room';
 import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import { findCatalogueEntry } from '@roomedy/spatial';
 import { serviceScopeSchema } from '@roomedy/contracts/estimates';
+function parseBrief(raw: unknown) {
+  const result = sourcingBriefSchema.safeParse(raw);
+  return result.success ? result.data : null;
+}
 export function buildSourcingBrief(
   room: RoomDocument,
   key: string,
@@ -13,7 +17,7 @@ export function buildSourcingBrief(
   if (piece) {
     const entry = findCatalogueEntry(piece.catalogueId, piece.catalogueVersion);
     if (!entry) return null;
-    return sourcingBriefSchema.parse({
+    return parseBrief({
       target: { kind: 'furniture', id: piece.id },
       kind: 'furniture',
       category: entry?.category ?? null,
@@ -32,7 +36,7 @@ export function buildSourcingBrief(
     const surface = key.slice(8) as
         'floor' | 'north' | 'east' | 'south' | 'west',
       appearance = roomSurface(room.room, surface);
-    return sourcingBriefSchema.parse({
+    return parseBrief({
       target: { kind: 'surface', surface },
       kind: surface === 'floor' ? 'floor' : primer ? 'primer' : 'paint',
       category: null,
@@ -48,7 +52,7 @@ export function buildSourcingBrief(
   }
   const scope = serviceScopeSchema.safeParse(key.replace(/^service:/, ''));
   if (!key.startsWith('service:') || !scope.success) return null;
-  return sourcingBriefSchema.parse({
+  return parseBrief({
     target: { kind: 'service', scope: scope.data },
     kind: 'service',
     category: null,

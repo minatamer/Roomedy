@@ -7,6 +7,10 @@ import { quickReplySchema } from '@roomedy/contracts/assistant';
 import { resolveMedyRequest } from './medy.js';
 import { resolveAssistantTask } from './assistant.js';
 import type { DesignTurn } from './design.js';
+import {
+  roomDesignOpportunities,
+  roomMaterialOpportunities,
+} from './design-opportunities.js';
 
 /** Validation only: a model-authored suggestion never executes or establishes visitor facts. */
 export function validateQuickReplies(
@@ -35,7 +39,7 @@ export function validateQuickReplies(
       labels.has(labelKey) ||
       requests.has(requestKey) ||
       /https?:|www\.|javascript:|[<>\u0000-\u001f\u007f]/i.test(joined) ||
-      /\b(ignore|instructions|system prompt|api key|shopping|buy|price|budget|export|download|import|reset|unlock|confirm|delete|remove|applied|unlocked|confirmed)\b/i.test(
+      /\b(ignore|instructions|system prompt|api key|shopping|buy|price|budget|export|download|import|reset|unlock|confirm|delete|remove|applied|unlocked|confirmed|measure|measured|measuring|measurement|measurements|dimension|dimensions|width|depth|height|hinge|sill|survey|physical)\b/i.test(
         joined,
       ) ||
       /\b\d+(?:[.,]\d+)?\s*(?:mm|cm|m|ft|feet|inches|in)\b/i.test(
@@ -54,7 +58,14 @@ export function validateQuickReplies(
       (manual?.kind === 'edits' &&
         manual.actions.some(
           (action) =>
-            !['finish', 'room-finish', 'set-intent'].includes(action.type) ||
+            ![
+              'finish',
+              'room-finish',
+              'set-intent',
+              'set-room-surface',
+              'set-furniture-materials',
+              'set-opening-materials',
+            ].includes(action.type) ||
             (action.type === 'set-intent' &&
               (!manual.actions.some((item) => item.type === 'room-finish') ||
                 action.intent.condition !== room.intent.condition ||
@@ -131,8 +142,8 @@ export function contextualQuickReplies(
     return [
       { label: 'Open room checks', request: 'Show room checks' },
       {
-        label: 'What should I measure?',
-        request: 'What measurements would help plan this room?',
+        label: 'Try a calm palette',
+        request: 'Preview Calm & focused room palette',
       },
     ];
   if (!room.furniture.length)
@@ -192,4 +203,143 @@ export function contextualQuickReplies(
       request: 'How can I improve this room’s layout?',
     },
   ];
+}
+
+interface ReplyOptions {
+  message: string;
+  choices?: readonly QuickReply[];
+  selectedId: string | null;
+  context?: readonly DesignTurn[];
+  kind?: 'proposal' | 'other';
+  previousRequest?: string;
+}
+const replyDirection = (request: string) =>
+  /\b(?:need|add|furnish)\b/i.test(request)
+    ? 'furnishing'
+    : /palette|colou?r|materials?|finish|texture|upholstery|linen|plaster|oak|walnut|ivory/i.test(
+          request,
+        )
+      ? 'appearance'
+      : /layout|arrange|space|zone|window|circulation/i.test(request)
+        ? 'layout'
+        : 'discovery';
+
+/** Fill the shelf once, without a second model call or permission to execute a suggestion. */
+export function completeQuickReplies(
+  room: RoomDocument,
+  options: ReplyOptions,
+): DesignSuggestion[] {
+  const context = options.context ?? [],
+    selectedId = options.selectedId,
+    previous = options.previousRequest?.trim().toLocaleLowerCase(),
+    proposal = options.kind === 'proposal',
+    failure =
+      /unavailable|couldn.t|could not|cancelled|too long|verification/i.test(
+        options.message,
+      );
+  const supplied = (options.choices ?? []).slice(0, 3);
+  const materialOptions =
+    proposal || failure ? [] : roomMaterialOpportunities(room);
+  const opportunities =
+    proposal || failure ? [] : roomDesignOpportunities(room);
+  const adjacent: QuickReply[] = proposal
+    ? [
+        {
+          label: 'Review this preview',
+          request: 'How should I review this preview?',
+        },
+        {
+          label: 'Explore another direction',
+          request: 'What other design direction could work?',
+        },
+        {
+          label: 'Another layout idea',
+          request: 'What is another way to arrange these pieces?',
+        },
+      ]
+    : failure
+      ? [
+          { label: 'What can you help with?', request: 'What can you do?' },
+          { label: 'Open room checks', request: 'Show room checks' },
+          {
+            label: 'Try a calm palette',
+            request: 'Preview Calm & focused room palette',
+          },
+        ]
+      : [
+          ...opportunities.map(({ label, request }) => ({
+            label,
+            request,
+          })),
+          ...materialOptions.map(({ label, request }) => ({ label, request })),
+          {
+            label: 'Try a calm palette',
+            request: 'Preview Calm & focused room palette',
+          },
+          {
+            label: 'Another layout idea',
+            request:
+              'Suggest another layout while keeping my current furniture.',
+          },
+          ...contextualQuickReplies(room, options.message, selectedId),
+          {
+            label: 'Explore furniture ideas',
+            request: 'What furniture could make this room more useful?',
+          },
+        ];
+  const candidates: DesignSuggestion[] = [],
+    labels = new Set<string>(),
+    requests = new Set<string>();
+  for (const raw of [...supplied, ...adjacent].slice(0, 16)) {
+    const valid = validateQuickReplies(room, [raw], selectedId, context)[0];
+    if (!valid) continue;
+    const key = valid.request.trim().toLocaleLowerCase(),
+      label = valid.label.toLocaleLowerCase();
+    if (key === previous || requests.has(key) || labels.has(label)) continue;
+    // A live proposal must remain reviewable; its shelf offers discussion, not another mutation.
+    if (
+      proposal &&
+      resolveAssistantTask(
+        room,
+        valid.request,
+        selectedId,
+        'preview-reply',
+        context,
+      ).kind !== 'conversation'
+    )
+      continue;
+    requests.add(key);
+    labels.add(label);
+    candidates.push(valid);
+  }
+  const result: DesignSuggestion[] = [],
+    directions = new Set<string>();
+  const take = (candidate: DesignSuggestion) => {
+    if (result.length >= 3 || result.includes(candidate)) return;
+    result.push(candidate);
+    directions.add(replyDirection(candidate.request));
+  };
+  if (candidates[0]) take(candidates[0]);
+  if (!directions.has('furnishing')) {
+    const gap = candidates.find((candidate) =>
+      opportunities.some((option) => option.request === candidate.request),
+    );
+    if (gap) take(gap);
+  }
+  if (
+    !result.some((choice) =>
+      /texture|frame material|upholstery/i.test(choice.request),
+    )
+  ) {
+    const material = candidates.find((candidate) =>
+      materialOptions.some((option) => option.request === candidate.request),
+    );
+    if (material) take(material);
+  }
+  // Keep the main model idea, a useful inventory gap, then a different design direction.
+  for (const candidate of candidates) {
+    if (!directions.has(replyDirection(candidate.request))) take(candidate);
+  }
+  for (const candidate of candidates) take(candidate);
+  return result;
 }

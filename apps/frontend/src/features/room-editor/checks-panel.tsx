@@ -15,7 +15,8 @@ export function ChecksPanel({
   room: RoomDocument;
 }) {
   const [page, setPage] = useState(0),
-    pages = Math.max(1, Math.ceil(checks.issues.length / 20));
+    issues = checks.issues.filter((issue) => issue.severity !== 'unassessed'),
+    pages = Math.max(1, Math.ceil(issues.length / 20));
   const current = Math.min(page, pages - 1);
   const name = (id: string) =>
     room.furniture.find((f) => f.id === id)?.label ??
@@ -30,20 +31,9 @@ export function ChecksPanel({
         <p className={styles.eyebrow}>Computed from this room</p>
         <h2 tabIndex={-1}>Room checks</h2>
       </div>
-      <p className={styles.hint}>
-        These checks use the recorded measurements and mechanisms. They do not
-        certify a real room.
-      </p>
-      <ul className={styles.coverage}>
-        {checks.coverage.map((c) => (
-          <li key={c.rule}>
-            <span>{c.rule.replaceAll('-', ' ')}</span>
-            <strong>{c.status.replaceAll('-', ' ')}</strong>
-          </li>
-        ))}
-      </ul>
+      {!issues.length && <p className={styles.hint}>No layout conflicts.</p>}
       <ul className={styles.issues}>
-        {checks.issues.slice(current * 20, current * 20 + 20).map((issue) => (
+        {issues.slice(current * 20, current * 20 + 20).map((issue) => (
           <li key={issue.id}>
             <button
               onClick={() => {
@@ -58,11 +48,7 @@ export function ChecksPanel({
               }}
             >
               <span className={styles.issueSeverity}>
-                {issue.severity === 'hard'
-                  ? 'Needs space'
-                  : issue.severity === 'unassessed'
-                    ? 'Not checked'
-                    : 'Review'}
+                {issue.severity === 'hard' ? 'Needs space' : 'Review'}
               </span>
               <strong>{issueText(issue)}</strong>
               <span>{issue.objectIds.map(name).join(' · ') || 'Room'}</span>

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import type { RoomCondition } from '../session/entry/entry-state';
-import { createRoomFixture } from '../session/fixtures/rooms';
+import { createManualRoom } from '../session/entry/manual-room';
 import type { SessionController } from '../session/controller';
 import { createGuestSession } from '../session/lifecycle';
 import { RecoveryChoice } from '../session/entry/recovery-choice';
@@ -24,9 +24,7 @@ export default function EditorEntry({
     // Client-only resource initialization. An unmounted/StrictMode setup cannot publish a session.
     queueMicrotask(() => {
       if (!live) return;
-      owned = createGuestSession(
-        createRoomFixture(condition === 'furnished' ? 'sample' : condition),
-      );
+      owned = createGuestSession(createManualRoom(condition));
       setNeedsChoice(fresh && owned.session.getSnapshot().recovered);
       setController(owned.session);
     });
@@ -41,9 +39,7 @@ export default function EditorEntry({
         photos={false}
         onContinue={() => setNeedsChoice(false)}
         onStart={() => {
-          controller.reset(
-            createRoomFixture(condition === 'furnished' ? 'sample' : condition),
-          );
+          controller.reset(createManualRoom(condition));
           setNeedsChoice(false);
         }}
       />

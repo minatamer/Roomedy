@@ -8,7 +8,10 @@ import {
   surfaceDetailSchema,
 } from './surfaces.js';
 import { finishSchema, idSchema, revisionSchema } from './primitives.js';
-import { furnitureMaterialsSchema } from './furniture-materials.js';
+import {
+  openingMaterialsSchema,
+  furnitureMaterialsSchema,
+} from './furniture-materials.js';
 import {
   roomDocumentSchema,
   checkFactsSchema,
@@ -68,6 +71,11 @@ export const proposalActionSchema = z.discriminatedUnion('type', [
   }),
 ]);
 export const visitorActionSchema = z.discriminatedUnion('type', [
+  z.strictObject({
+    type: z.literal('set-opening-materials'),
+    id: idSchema,
+    materials: openingMaterialsSchema,
+  }),
   ...transformActions,
   z.strictObject({
     type: z.literal('set-furniture-materials'),

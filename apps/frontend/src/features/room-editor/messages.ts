@@ -60,8 +60,5 @@ export const issueText = (issue: SpatialIssue): string =>
     height: 'Height needs attention',
     window: 'Window area needs attention',
     obstacle: 'Fixed obstacle conflict',
-    unassessed:
-      issue.limitation === 'not-implemented'
-        ? 'Entry connectivity is not checked'
-        : 'A measurement or physical fact is missing',
+    unassessed: 'Planning estimate',
   })[issue.code];

@@ -1,3 +1,7 @@
+import {
+  photoFurnitureMaterials,
+  photoOpeningMaterials,
+} from './photo-appearance';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import type { RoomDocument, Furniture, Feature } from '@roomedy/contracts/room';
 import type { Measurement } from '@roomedy/contracts/primitives';
@@ -683,6 +687,8 @@ export function adoptHypothesis(
         quarterTurns: first.sketch.quarterTurns ?? 0,
       };
       if (first.finish) piece.finish = first.finish;
+      const materials = photoFurnitureMaterials(members, piece.catalogueId);
+      if (materials) piece.materials = materials;
       if (
         next.room.furniture.length >= POLICY.furniture ||
         !validateRoom({
@@ -703,6 +709,8 @@ export function adoptHypothesis(
       feature.sill = first.sill;
       if (feature.kind === 'obstacle') feature.projection = first.projection;
       else {
+        const materials = photoOpeningMaterials(members);
+        if (materials) feature.materials = materials;
         if (first.mechanism !== 'fixed' || feature.kind === 'window') {
           feature.mechanism = first.mechanism;
           feature.mechanismProvenance = first.mechanismEvidence;

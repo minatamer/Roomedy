@@ -38,6 +38,10 @@ describe('one project Design / Plan & cost', () => {
     expect(c.setDestination('cost')).toBe(true);
     c.costMessage('visitor', 'Explain floor packs');
     const d = c.getSnapshot().cost!;
+    expect(d.settings.locality.currency).toBe('USD');
+    expect(d.offers.every((offer) => offer.market.currency === 'USD')).toBe(
+      true,
+    );
     const settings = structuredClone(d.settings);
     settings.floor.wasteBps = 2000;
     expect(c.updateCost(settings)).toBe(true);
@@ -66,7 +70,7 @@ describe('one project Design / Plan & cost', () => {
     expect(
       c.updateCost({
         ...draft!.settings,
-        locality: { ...draft!.settings.locality, currency: 'USD' },
+        locality: { ...draft!.settings.locality, currency: 'EUR' },
       }),
     ).toBe(false);
     expect(c.getSnapshot().cost).toBe(draft);

@@ -1,3 +1,4 @@
+import { furnitureMaterialsLabel } from '@roomedy/contracts/furniture-materials';
 import { POLICY } from '@roomedy/contracts/policy';
 import type { Project } from '@roomedy/contracts/project';
 import type { RoomDocument } from '@roomedy/contracts/room';
@@ -228,7 +229,14 @@ export function drawPortfolioPlan(c: Context, project: Project) {
     c.moveTo(horizontal ? x - w / 2 : x, horizontal ? y : y - h / 2);
     c.lineTo(horizontal ? x + w / 2 : x, horizontal ? y : y + h / 2);
     c.stroke();
-    c.strokeStyle = f.kind === 'window' ? '#92a9a7' : palette.walnut;
+    c.strokeStyle =
+      f.kind === 'window'
+        ? (f.materials?.frameColor ?? '#92a9a7')
+        : f.kind === 'door'
+          ? ((f.purpose === 'balcony'
+              ? f.materials?.frameColor
+              : f.materials?.color) ?? palette.walnut)
+          : palette.walnut;
     c.lineWidth = 4;
     c.stroke();
   });
@@ -249,7 +257,9 @@ export function drawPortfolioPlan(c: Context, project: Project) {
       findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
         ?.category === 'tv'
         ? '#282b2a'
-        : FINISH_PALETTE[piece.finish];
+        : (piece.materials?.bodyColor ??
+          piece.materials?.softColor ??
+          FINISH_PALETTE[piece.finish]);
     c.fillRect(x, y, w, h);
     c.strokeStyle = '#77573f';
     c.lineWidth = 1.1;
@@ -533,10 +543,22 @@ export async function createPortfolioPages(
             11,
             palette.muted,
           );
+          if (piece.materials) {
+            c.font = '9px Arial';
+            text(
+              c,
+              short(c, furnitureMaterialsLabel(piece.materials), w),
+              x,
+              y + 33,
+              9,
+              palette.muted,
+            );
+          }
           c.strokeStyle = palette.line;
           c.beginPath();
-          c.moveTo(x, y + 31);
-          c.lineTo(x + w, y + 31);
+          const dividerY = y + (piece.materials ? 40 : 31);
+          c.moveTo(x, dividerY);
+          c.lineTo(x + w, dividerY);
           c.stroke();
         });
       }

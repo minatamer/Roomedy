@@ -78,7 +78,7 @@ describe('fact-owned furniture access notices', () => {
     );
     r.furniture[0]!.pose.provenance = { status: 'unknown', sourceId: null };
     expect(clearanceNotice(r, checkRoom(r), 'bed')).toContain(
-      'Some measurements are missing',
+      'Leave more space',
     );
     r.furniture[0]!.dimensions.width = unknown();
     expect(clearanceNotice(r, checkRoom(r), 'bed')).toBeNull();

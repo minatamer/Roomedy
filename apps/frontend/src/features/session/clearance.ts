@@ -34,9 +34,8 @@ export function clearanceNotice(
     names.length === 2
       ? `between ${names[0]} and ${names[1]}`
       : `around ${names[0]}`;
-  return (
-    issue.confidence === 'unassessed'
-      ? `Check access space ${space}. Some measurements are missing.`
-      : `${issue.confidence === 'approximate' ? 'Estimated clearance: ' : ''}Leave more space ${space} for access.`
-  ).slice(0, 240);
+  return `${issue.confidence === 'approximate' ? 'Estimated clearance: ' : ''}Leave more space ${space} for access.`.slice(
+    0,
+    240,
+  );
 }

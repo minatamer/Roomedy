@@ -2,7 +2,6 @@ import type { FormEvent } from 'react';
 import { useState } from 'react';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { EstimateOffer } from '@roomedy/contracts/estimates';
-import { quoteCurrencySchema } from '@roomedy/contracts/estimates';
 import { findCatalogueEntry } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import type { CostDraft } from './state';
@@ -24,11 +23,13 @@ function OfferSelect({
       {label}
       <select name={name} defaultValue={value ?? ''}>
         <option value="">Needs a price</option>
-        {offers.map((offer) => (
-          <option key={offer.id} value={offer.id}>
-            {offer.label} · {offer.market.currency}
-          </option>
-        ))}
+        {offers
+          .filter((offer) => offer.market.currency === 'USD')
+          .map((offer) => (
+            <option key={offer.id} value={offer.id}>
+              {offer.label} · {offer.market.currency}
+            </option>
+          ))}
       </select>
     </label>
   );
@@ -163,16 +164,13 @@ export function ScopeControls({
             </label>
             <label>
               Currency
-              <select name="currency" defaultValue={s.locality.currency}>
-                {quoteCurrencySchema.options.map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
+              <input name="currency" value="USD" readOnly />
             </label>
           </div>
           <p>
-            Choose your locality. Sample prices are authored examples; changing
-            currency clears selected prices without conversion.
+            Choose where you are sourcing. All amounts are in USD. Local
+            listings use dated USD reference equivalents; sample prices are
+            authored examples.
           </p>
         </fieldset>
         <details>
@@ -505,6 +503,7 @@ function ManualRate({
     const price = Math.round(amount * 100);
     let updated: EstimateOffer = {
       ...offer,
+      fx: undefined,
       id: `manual_${crypto.randomUUID()}`,
       label: (offer.source.kind === 'manual'
         ? offer.label

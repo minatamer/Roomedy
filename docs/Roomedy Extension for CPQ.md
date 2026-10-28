@@ -1,5 +1,7 @@
 # Roomedy Extension for CPQ
 
+**Currency follow-up —28 October2026:** Direct owner selects USD throughout the app. [RM-015BQ](tickets/RM-015BQ-use-usd-throughout-the-demo.md) supersedes the initial authored EGP default/illustrations for fresh flows with newly authored dollar amounts. Location remains a separate explicit choice. Existing saved records retain their original money/currency; no implicit FX or rewriting. Historical EGP merchant observations, worked examples and26October receipts below are dated evidence, not the current default. The landing estimate table also loses row highlighting while its3D story remains.
+
 **Approved extension direction · 26 October 2026 · Sequential fake-mode implementation authorized**
 
 The owner now selects this extension and authorizes all necessary tickets, sequential execute → read-only validate → independently confirm/fix → revalidate → exact-path local staging/commit. Testing remains fake/paid-off until the owner returns. Final hands-on and visual acceptance remain pending. [Extension queue](tickets/README.md#cpq-extension--26-october-2026), [planning allocation](commit-plans/RM-021.md).

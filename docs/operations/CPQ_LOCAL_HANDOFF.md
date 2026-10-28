@@ -1,5 +1,15 @@
 # Roomedy CPQ local review —26October2026
 
+**Current handoff —28 October2026, RM-031:** Normal-env local frontend4320/backend4321 remain real/live-ready, simulation false. In-app review tab shows saved USD budget review. [Receipt](../validation/RM-031.md), [exact40-path allocation](../commit-plans/RM-031.md). Desktop: `C:/Users/minat/OneDrive/Desktop/Roomedy-CPQ-Review-2026-10-28/START-HERE.html`;62screenshots, actual12-page USD PDF, editable three-version project, page previews, report and gate evidence. Import the JSON through the normal reviewed Project flow if the guest session expires. Final1246-test/77-file gate,7boundary probes/assets/both builds and exact JSON round trip pass.14actual source operations each used one provider round; no hidden retry. Confirmed source-clock/prose/country/input/UI/PDF faults are fixed; paint provider latency/envelope and unresolved supplier/site facts stay visible. Owner values were not inspected or edited. Final process ownership: frontend supervisor22108/listener10672; backend11756/listener11744;8owned processes each. External logs/records remain in the named live-cpq runtime directory. Owner acceptance pending; no further paid test, staging/commit/push/deploy selected.
+
+## Current currency correction —28 October2026
+
+The owner now selects USD appwide through [RM-015BQ](../tickets/RM-015BQ-use-usd-throughout-the-demo.md). Fresh Plan & cost defaults, authored catalogue, fake sourcing, budget inputs, saved versions and PDF outputs use dollars. Country/city remain explicit, with the editable Cairo example unchanged. USD/$ budgets work, such as “Keep this under $1,700”. Current deterministic sample-room tests start at USD1,801.48 with six unresolved lines; the simple floor alternative saves USD110 and retains all required work. These are newly authored dollar examples, not current prices or FX conversions. The landing has its own explicitly illustrative USD2,261→2,079 finish comparison and plain rows.
+
+Use the existing local app and ordinary controls below, entering a dollar budget appropriate to the actual current design. Existing projects/versions/imports/recovery preserve their recorded currency and amounts; an old saved EGP estimate is not silently rewritten. Changing its currency explicitly clears incompatible selected prices without conversion. The26October EGP amounts, three-version JSON/PDF artifacts, process identities and acceptance evidence below remain dated history for those exact bytes, not current USD artifacts or current readiness. [Current checks, fake mode and limits](../validation/RM-015BQ.md). No new paid/provider test, owner-env edit or hosted update is selected.
+
+## Historical26October handoff and exact artifacts
+
 RM-021–RM-030 are complete locally under the owner's fake-only execute/validate/local-commit instruction. [Proposal](../Roomedy%20Extension%20for%20CPQ.md), [ten-ticket queue](../tickets/README.md#cpq-extension--26-october-2026), [final evidence](../validation/RM-030.md), [security review](../security/CPQ_SECURITY_REVIEW.md) and [PM summary](../security/CPQ_SECURITY_OVERVIEW.html). Final owner manual/visual, real-source and physical acceptance remain pending. The existing hosted release is unchanged and does not contain this extension.
 
 ## Open the local review
@@ -61,3 +71,9 @@ These are documented agent recommendations under the owner's delegated choices, 
 | RM-030 |This exact documentation/handoff checkpoint; see Git log and final receipt|
 
 No further ticket is selected. Final owner manual/visual and real-source evaluation is the next activity; future corrections get a scoped allocation and execute/validate loop. Nothing is pushed or deployed by this handoff.
+
+## Latest local live review — RM-031, 28 October2026
+
+Direct owner AFK request now selects normal-env real-mode startup and economical full CPQ testing/fixes. See [current receipt](../validation/RM-031.md) and [exact allocation](../commit-plans/RM-031.md). Ports4320/4321 use the existing stack, actual readiness live-ready; no env value was read or changed. External owned runtime directory is `C:/Users/minat/AppData/Local/Temp/roomedy-local-runtime/live-cpq-20261028-01a1816d/`. Desktop review folder: `C:/Users/minat/OneDrive/Desktop/Roomedy-CPQ-Review-2026-10-28/`.
+
+Latest scope supersedes the former no-provider/no-FX holds only for this local review. No purchase/contact/cloud/delegation/Git/push/deployment. BN-BR landing work stays intact. Final check and actual artifact coverage are recorded in the receipt rather than inferred here.

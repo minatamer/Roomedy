@@ -26,6 +26,7 @@ import { evaluateScopedBatch } from './scope.js';
 import { candidatePositions, windowPoint } from './positions.js';
 import type { SearchPose } from './positions.js';
 import { candidateRank, searchFacts } from './facts.js';
+import { planningRoom } from '../planning.js';
 
 const emptyIdentity = {
   workspaceId: 'invalid',
@@ -111,7 +112,7 @@ export class LayoutSearch {
       scope = actionScopeSchema.safeParse(rawScope);
     if (!request.success || !scope.success)
       throw new Error('invalid-search-input');
-    this.request = request.data;
+    this.request = { ...request.data, room: planningRoom(request.data.room) };
     this.scope = scope.data;
     this.result = emptySearchResult(
       this.request.identity,
@@ -145,13 +146,6 @@ export class LayoutSearch {
     this.done = true;
     this.result.termination = reason;
     this.result.alternatives = alternatives;
-  }
-  private question(
-    id: string,
-    field: NonNullable<SearchResult['question']>['field'],
-  ) {
-    this.result.question = { id, field };
-    this.stop('needs-measurement', ['confirm-measurement']);
   }
   private prepare() {
     const { room, goal } = this.request,
@@ -220,30 +214,9 @@ export class LayoutSearch {
       this.stop('unsupported', ['relax-preference']);
       return;
     }
-    if (goal.kind !== 'appearance') {
-      for (const axis of ['width', 'depth'] as const)
-        if (room.room[axis].value === null) {
-          this.question(room.roomId, axis);
-          return;
-        }
-      if (goal.windowId && !windowPoint(room, goal.windowId)) {
-        const feature = room.room.features.find(
-          (f) => f.id === goal.windowId && f.kind === 'window',
-        );
-        if (!feature) {
-          this.stop('unsupported');
-          return;
-        }
-        this.question(
-          feature.id,
-          feature.wall === 'unknown'
-            ? 'wall'
-            : feature.offset.value === null
-              ? 'offset'
-              : 'width',
-        );
-        return;
-      }
+    if (goal.windowId && !windowPoint(room, goal.windowId)) {
+      this.stop('unsupported');
+      return;
     }
     for (const id of goal.targetIds) {
       const piece = existing.get(id);
@@ -335,12 +308,6 @@ export class LayoutSearch {
       this.stop('out-of-scope');
       return;
     }
-    for (const actor of this.actors)
-      for (const axis of ['width', 'depth'] as const)
-        if (actor.piece.dimensions[axis].value === null) {
-          this.question(actor.piece.id, axis);
-          return;
-        }
     if (this.actors.length)
       this.frames.push({
         positions: candidatePositions(
@@ -501,8 +468,6 @@ export class LayoutSearch {
     if (reason && !this.done) this.stop(reason);
     if (!this.done) throw new Error('search-still-running');
     if (this.result.termination === 'cancelled') this.result.candidate = null;
-    if (this.result.candidate?.facts.missingInputs.length)
-      this.result.alternatives = ['confirm-measurement'];
     if (
       !this.result.candidate &&
       !this.result.alternatives.length &&
@@ -531,7 +496,11 @@ export function validateSearchCandidate(
   candidate: Pick<SearchCandidate, 'actions'>,
   scope: ActionScope,
 ): SearchCandidate | null {
-  return evaluateSearchActions(request, candidate.actions, scope);
+  return evaluateSearchActions(
+    { ...request, room: planningRoom(request.room) },
+    candidate.actions,
+    scope,
+  );
 }
 function evaluateSearchActions(
   request: SearchRequest,

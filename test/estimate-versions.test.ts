@@ -13,7 +13,7 @@ import {
   recoveryOf,
   validateProject,
 } from '../apps/frontend/src/features/session/project.js';
-import { calculateRoomEstimate } from '@roomedy/spatial';
+import { calculateRoomEstimate, convertOfferToUsd } from '@roomedy/spatial';
 import { POLICY } from '@roomedy/contracts/policy';
 const controllers: SessionController[] = [];
 function session(now = () => 1000) {
@@ -26,6 +26,56 @@ afterEach(() => {
   controllers.splice(0).forEach((c) => c.dispose());
 });
 describe('detached reviewed planning versions', () => {
+  it('freezes dated USD conversion inputs across project import, recovery and later pricing edits', () => {
+    const c = session(),
+      draft = c.getSnapshot().cost!,
+      offers = structuredClone(draft.offers);
+    const floor = offers.find((o) => o.id === draft.settings.floor.offerId)!;
+    const converted = convertOfferToUsd(
+      {
+        ...floor,
+        market: { ...floor.market, currency: 'EGP' },
+        source: {
+          kind: 'sourced',
+          label: 'Observed product',
+          url: 'https://example.com/floor',
+          observedAt: 1000,
+          evidence: 'Exact product',
+        },
+      },
+      {
+        usdPerUnit: '0.017831',
+        date: '1970-01-01',
+        observedAt: 1000,
+        url: 'https://api.frankfurter.dev/v2/rate/egp/usd',
+      },
+    );
+    offers[offers.indexOf(floor)] = converted;
+    expect(c.updateCost(draft.settings, offers)).toBe(true);
+    expect(c.saveEstimate('Dated USD equivalent').ok).toBe(true);
+    const saved = JSON.stringify(c.getSnapshot().estimateVersions[0]);
+    const file = readProject(exportProject(c.getSnapshot())!);
+    expect(file.ok).toBe(true);
+    if (file.ok) {
+      const imported = session();
+      expect(imported.importProject(file.value)).toBe(true);
+      expect(JSON.stringify(imported.getSnapshot().estimateVersions[0])).toBe(
+        saved,
+      );
+    }
+    const record = recoveryOf(c.getSnapshot())!,
+      recovered = readRecovery(JSON.stringify(record), 2000);
+    expect(recovered.ok).toBe(true);
+    if (recovered.ok) {
+      const restored = session(() => 2000);
+      expect(restored.restore(recovered.value)).toBe(true);
+      expect(JSON.stringify(restored.getSnapshot().estimateVersions[0])).toBe(
+        saved,
+      );
+    }
+    c.updateCost(draft.settings, draft.offers);
+    expect(JSON.stringify(c.getSnapshot().estimateVersions[0])).toBe(saved);
+  });
   it('freezes v1 design, totals, quantities and evidence independently from later draft edits, refresh and Undo', () => {
     const c = session(),
       first = c.saveEstimate('First plan');
@@ -90,8 +140,8 @@ describe('detached reviewed planning versions', () => {
       result.estimate.knownTotalMinor - before.estimate.knownTotalMinor,
     );
     const changed = structuredClone(result.estimate);
-    changed.locality.currency = 'USD';
-    p.settings.locality.currency = 'USD';
+    changed.locality.currency = 'EUR';
+    p.settings.locality.currency = 'EUR';
     expect(
       versionChanges(before, {
         room: before.room,
@@ -165,6 +215,44 @@ describe('detached reviewed planning versions', () => {
   });
 });
 describe('strict format2 project migration and recovery', () => {
+  it('preserves recorded EGP prices and frozen totals through import/recovery while fresh projects default to USD', () => {
+    const historical = session(),
+      pricing = structuredClone(pricingState(historical.getSnapshot().cost!));
+    // Synthetic historical record: explicit EGP input, never a currency migration.
+    pricing.settings.locality.currency = 'EGP';
+    for (const offer of pricing.offers) {
+      offer.market.currency = 'EGP';
+      if ('packs' in offer) {
+        for (const pack of offer.packs) pack.priceMinor *= 20;
+      } else {
+        offer.priceMinor *= 20;
+        if (offer.kind === 'service') offer.minimumMinor *= 20;
+      }
+    }
+    expect(historical.updateCost(pricing.settings, pricing.offers)).toBe(true);
+    expect(historical.saveEstimate('Recorded EGP plan').ok).toBe(true);
+    const source = historical.getSnapshot(),
+      saved = JSON.stringify(source.estimateVersions),
+      project = readProject(exportProject(source)!);
+    expect(project.ok).toBe(true);
+    if (!project.ok) return;
+    const imported = session();
+    expect(imported.getSnapshot().cost!.settings.locality.currency).toBe('USD');
+    expect(imported.importProject(project.value)).toBe(true);
+    expect(pricingState(imported.getSnapshot().cost!)).toEqual(pricing);
+    expect(JSON.stringify(imported.getSnapshot().estimateVersions)).toBe(saved);
+    const record = recoveryOf(imported.getSnapshot())!,
+      read = readRecovery(JSON.stringify(record), 2000);
+    expect(read.ok).toBe(true);
+    if (!read.ok) return;
+    const restored = session(() => 2000);
+    expect(restored.restore(read.value)).toBe(true);
+    expect(pricingState(restored.getSnapshot().cost!)).toEqual(pricing);
+    expect(JSON.stringify(restored.getSnapshot().estimateVersions)).toBe(saved);
+    expect(session().getSnapshot().cost!.settings.locality.currency).toBe(
+      'USD',
+    );
+  });
   it('round-trips exact saved versions and accepted pricing, excluding private operational state', () => {
     const c = session();
     c.costMessage('visitor', 'PRIVATE_CHAT');
@@ -247,7 +335,7 @@ describe('strict format2 project migration and recovery', () => {
     if (kind === 'representation') v.representationVersion = 'future-assets';
     if (kind === 'duplicate') raw.versions.push(v);
     if (kind === 'chat') raw.cost.messages = ['PRIVATE'];
-    if (kind === 'currency') raw.cost.settings.locality.currency = 'USD';
+    if (kind === 'currency') raw.cost.settings.locality.currency = 'EUR';
     if (kind === 'future') raw.version = 8;
     expect(readProject(JSON.stringify(raw)).ok).toBe(false);
     expect(c.importProject(raw)).toBe(false);

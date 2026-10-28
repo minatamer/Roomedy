@@ -1,3 +1,5 @@
+import { openingMaterialTargets } from '@roomedy/contracts/furniture-materials';
+import type { MaterialPattern } from '@roomedy/contracts/furniture-materials';
 import {
   BoxGeometry,
   DataTexture,
@@ -150,9 +152,11 @@ export function buildDesignScene(
     color: string,
     role: 'wood' | 'soft' | 'metal' | 'wall' | 'floor' = 'wood',
     target?: SurfaceTarget,
+    pattern?: MaterialPattern,
   ) => {
-    const map =
-      role === 'floor'
+    const map = pattern
+      ? surfaces[pattern]
+      : role === 'floor'
         ? roomSurfaceMap(surfaces, roomSurface(room.room, 'floor').texture)
         : role === 'wall'
           ? roomSurfaceMap(
@@ -167,7 +171,14 @@ export function buildDesignScene(
     const m = new MeshStandardMaterial({
       color,
       ...(map ? surfaceProperties(map) : {}),
-      bumpScale: role === 'floor' ? 0.001 : role === 'soft' ? 0.0012 : 0.0004,
+      bumpScale:
+        pattern === 'smooth'
+          ? 0
+          : role === 'floor'
+            ? 0.001
+            : role === 'soft'
+              ? 0.0012
+              : 0.0004,
       roughness:
         role === 'metal'
           ? 0.38
@@ -264,6 +275,9 @@ export function buildDesignScene(
       );
   }
   for (const feature of room.room.features) {
+    const appearance = openingMaterialTargets(
+      feature.kind === 'obstacle' ? undefined : feature.materials,
+    );
     const b = featureBox(room, feature);
     if (!b) continue;
     const group = new Group();
@@ -310,8 +324,10 @@ export function buildDesignScene(
             part.kind === 'glass'
               ? windowGlass.material
               : material(
-                  part.kind === 'handle' ? '#574b3e' : '#e8e0d3',
+                  part.kind === 'handle' ? '#574b3e' : appearance.frameColor,
                   part.kind === 'handle' ? 'metal' : undefined,
+                  undefined,
+                  part.kind === 'handle' ? undefined : appearance.frameTexture,
                 ),
           );
           if (part.kind === 'glass')
@@ -342,12 +358,19 @@ export function buildDesignScene(
         [0, 0, 0],
         [w, h, feature.kind === 'door' ? d * 0.6 : d],
         material(
-          feature.kind === 'door' ? '#765238' : '#9a8870',
+          feature.kind === 'door' ? appearance.color : '#9a8870',
           feature.kind === 'door' ? 'wood' : 'wall',
+          undefined,
+          feature.kind === 'door' ? appearance.texture : undefined,
         ),
       );
     if (feature.kind === 'obstacle') continue;
-    const trim = material('#e8e0d3');
+    const trim = material(
+      appearance.frameColor,
+      'wood',
+      undefined,
+      appearance.frameTexture,
+    );
     for (const [x, y, width, height] of [
       [-w / 2 + t / 2, 0, t, h],
       [w / 2 - t / 2, 0, t, h],
@@ -375,7 +398,12 @@ export function buildDesignScene(
         'Door panel',
         [0, 0, d * 0.32],
         [w - t * 4, h - t * 4, d * 0.2],
-        material('#806046'),
+        material(
+          feature.materials?.color ?? '#806046',
+          'wood',
+          undefined,
+          appearance.texture,
+        ),
         surfaces.hard,
       );
       box(

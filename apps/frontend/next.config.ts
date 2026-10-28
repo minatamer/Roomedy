@@ -20,5 +20,19 @@ const config: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   devIndicators: false,
+  async headers() {
+    // These exact versioned bytes are pinned by asset/release checks. Changed bytes need a new URL.
+    return ['floor', 'wood', 'fabric', 'plaster'].flatMap((kind) =>
+      ['detail', 'normal'].map((role) => ({
+        source: `/surfaces/${kind}-${role}-v1.png`,
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      })),
+    );
+  },
 };
 export default config;

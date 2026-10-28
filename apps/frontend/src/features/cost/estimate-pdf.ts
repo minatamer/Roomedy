@@ -24,7 +24,7 @@ const paper = rgb(0.969, 0.953, 0.925),
 const cash = (minor: number, currency: string) =>
   `${currency} ${(minor / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 export function estimateQuantityText(q: EstimateQuantity | null) {
-  if (!q) return 'Needs measurement';
+  if (!q) return 'Needs review';
   const divisor =
     q.unit === 'mm2' ? 1e6 : q.unit === 'mm' || q.unit === 'ml' ? 1000 : 1;
   const unit =
@@ -69,6 +69,7 @@ export async function estimatePdf(
   const version = estimateVersionSchema.parse(raw),
     e = version.estimate,
     currency = e.locality.currency;
+  if (currency !== 'USD') throw new DesignExportError('changed');
   const calculated = calculateRoomEstimate(
     version.room,
     version.pricing.settings,
@@ -108,6 +109,11 @@ export async function estimatePdf(
       .replace(/\t/g, ' ')
       .replace(/×/g, 'x')
       .replace(/²/g, '2')
+      .replace(
+        /(\d+)\/1000000 m2 net/g,
+        (_match, mm2: string) =>
+          `${(Number(mm2) / 1e6).toLocaleString('en-US', { maximumFractionDigits: 4 })} m2 net`,
+      )
       .replace(/[‘’]/g, "'")
       .replace(/[“”]/g, '"');
   const safe = (value: string, face = font) => {
@@ -547,6 +553,9 @@ export async function estimatePdf(
       `${offer.market.city}, ${offer.market.country}, ${offer.market.currency}. Tax ${offer.tax.status}; rate ${offer.tax.rateBps === null ? 'not established' : `${offer.tax.rateBps / 100}%`}${offer.tax.source ? ` [T${taxEvidence.get(offer.tax.source)}]` : ''}. Delivery ${offer.deliveryIncluded ? 'included' : 'separate/unresolved'}; stock ${offer.availability}; lead time ${offer.leadTime ?? 'not established'}.`,
       spec,
       `${date}. ${offer.source.evidence ? `Evidence E${evidence.get(offer.source.evidence)}.` : 'No further price evidence recorded.'} Confirm exact product and conditions before ordering.`,
+      offer.fx
+        ? `USD reference equivalent; rate dated ${offer.fx.date}, checked ${new Date(offer.fx.observedAt).toISOString()}. Merchant checkout rates and fees may differ. Original monetary inputs and rate are frozen in the editable project. Quantities are converted before rounding each line; rounded displayed unit prices may not multiply to the exact line total.`
+        : '',
     ]
       .filter(Boolean)
       .join('\n');
@@ -559,6 +568,7 @@ export async function estimatePdf(
           wrap(body, 511, 9).length * 14 +
           6 +
           (offer.source.url ? 21 : 0) +
+          (offer.fx ? 21 : 0) +
           8,
       ),
     );
@@ -569,6 +579,8 @@ export async function estimatePdf(
         `${offer.source.kind === 'sample' ? 'Discovery link only' : 'Supplier source'} [${sourceNumbers.get(offer.id)}]: ${new URL(offer.source.url).hostname}`,
         offer.source.url,
       );
+    if (offer.fx)
+      link(`Dated USD reference rate: ${offer.fx.date}`, offer.fx.url);
     y -= 8;
     await yieldWork();
   }

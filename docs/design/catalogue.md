@@ -1,5 +1,15 @@
 # Roomedy catalogue and representation policy
 
+## Independent RGB and patterns — RM-015BY
+
+Furniture frame/case, soft parts and hardware accept independent six-digit RGB; neutral plain/wood/woven/stripes/checker/herringbone patterns do not embed a fixed colour. Actual chair/seating frames now expose their existing frame role. Lighting's solid photo colour maps to its hardware role. Door leaves and opening frames have separate optional colours/patterns; window glass, screens and protected doors retain their owners. Popular swatches and a shared Presets/Custom picker offer native selection, hex and numeric RGB0–255. Invalid drafts cannot apply; accepted changes persist and Undo atomically.
+
+Photo observations retain independent estimated/source-linked appearance facts. Fresh photo entities adopt visible supported parts, reconcile small channel differences (maximum32 per channel) and leave conflicting colours/patterns unassigned. Repeat recognition preserves accepted/reviewed entity choices. Existing six finishes remain a legacy/default palette; explicit finish changes clear a custom body-colour override. No exact colour/bitmap recovery is claimed. Three small128px grayscale procedural samplers share normal scene ownership and finite transitions; no extra image downloads, canvas, shader, dependency or provider round. [Receipt](../validation/RM-015BY.md).
+
+## Plain starting specification — RM-015BX
+
+Fresh manual room creation wraps the unchanged authored fixture: concrete floor, smooth ivory walls, ivory furniture with explicit plain matte bodies and plain soft parts where real roles exist. Plain uses the existing smooth sampler, zero bump, matte nonmetallic targets and uniform bedding colour; construction/seams/shape and distinct hardware/glass/screens remain. It is a supported optional material choice in schema/inspector/chat/export, not a global change to omitted legacy defaults. Recovered/imported/photo rooms and catalogue additions retain their recorded/default choices. Medy offers actual wood/linen/flooring previews; user selection never applies automatically. [Evidence](../validation/RM-015BX.md).
+
 ## Part-specific furniture materials — RM-023,26October2026
 
 Optional `materials` on furniture describe planned frame material(auto/wood/painted/metal), supported upholstery(linen/velvet/leather), soft-part colour and original/dark/brass/steel hardware. They never establish dimensions, ownership, product identity or a price. Existing six finishes and omitted legacy defaults remain. Bedding offers linen/velvet; shades retain linen with editable colour; chairs/seating offer all three. Inspector controls appear only for actual frame/soft/hardware roles. Owned sizes outside a fixed model’s envelope keep honest bounds and frame appearance, with no soft/hardware controls that cannot affect the representation.

@@ -325,7 +325,7 @@ describe('one atomic design / estimate history', () => {
   });
 });
 describe('computed budgets and typed planning tools', () => {
-  it('calculates eleven packs with 1,650 EGP savings without reducing required work', () => {
+  it('calculates eleven packs with USD 110 savings without reducing required work', () => {
     const c = session(),
       d = pricingState(c.getSnapshot().cost!),
       room = c.getSnapshot().workspace!.current;
@@ -335,7 +335,7 @@ describe('computed budgets and typed planning tools', () => {
     )!;
     expect(floor).toBeDefined();
     expect(estimate(c).knownTotalMinor - floor.estimate.knownTotalMinor).toBe(
-      165000,
+      11000,
     );
     expect({
       ...floor.pricing.settings.floor,
@@ -391,32 +391,63 @@ describe('computed budgets and typed planning tools', () => {
   it('routes focused explicit tools, rejects FX ambiguity and keeps exact integer budgets', () => {
     const room = createRoomFixture('sample');
     expect(
-      costIntent('Keep this under 30,000.25 EGP', room, 'EGP', null),
-    ).toEqual({ kind: 'budget', amountMinor: 3000025 });
-    expect(costIntent('budget 50 USD', room, 'EGP', null).kind).toBe('clarify');
-    expect(costIntent('cheaper budget', room, 'EGP', null).kind).toBe(
+      costIntent('Keep this under 3,000.25 USD', room, 'USD', null),
+    ).toEqual({ kind: 'budget', amountMinor: 300025 });
+    expect(costIntent('budget 50 EGP', room, 'USD', null).kind).toBe('clarify');
+    expect(costIntent('cheaper budget', room, 'USD', null).kind).toBe(
       'clarify',
     );
-    expect(costIntent('Find flooring online', room, 'EGP', null)).toMatchObject(
+    expect(costIntent('Find flooring online', room, 'USD', null)).toMatchObject(
       { kind: 'research', key: 'surface:floor' },
     );
     expect(
-      costIntent('Find similar furniture', room, 'EGP', room.furniture[0]!.id),
+      costIntent('Find similar furniture', room, 'USD', room.furniture[0]!.id),
     ).toMatchObject({ kind: 'research', key: room.furniture[0]!.id });
-    expect(costIntent('show my work plan', room, 'EGP', null).kind).toBe(
+    expect(costIntent('show my work plan', room, 'USD', null).kind).toBe(
       'work',
     );
-    expect(costIntent('explain paint', room, 'EGP', null).kind).toBe('explain');
-    expect(costIntent('Explain underlay', room, 'EGP', null).kind).toBe(
+    expect(costIntent('explain paint', room, 'USD', null).kind).toBe('explain');
+    expect(costIntent('Explain underlay', room, 'USD', null).kind).toBe(
       'explain',
     );
-    expect(costIntent('Find cheaper flooring', room, 'EGP', null).kind).toBe(
+    expect(costIntent('Find cheaper flooring', room, 'USD', null).kind).toBe(
       'research',
     );
     for (const amount of ['30.001', '3k', '1,2'])
-      expect(costIntent(`Budget ${amount}`, room, 'EGP', null).kind).toBe(
+      expect(costIntent(`Budget ${amount}`, room, 'USD', null).kind).toBe(
         'clarify',
       );
+  });
+  it('accepts exact dollar budgets only for USD without converting foreign symbols/codes', () => {
+    const room = createRoomFixture('sample');
+    for (const text of [
+      'Keep it under $2,100',
+      'budget USD $2,100',
+      'budget $2,100 USD',
+      'budget $ 2,100',
+    ])
+      expect(costIntent(text, room, 'USD', null)).toEqual({
+        kind: 'budget',
+        amountMinor: 210000,
+      });
+    expect(costIntent('Budget $1,250.01', room, 'USD', null)).toEqual({
+      kind: 'budget',
+      amountMinor: 125001,
+    });
+    for (const text of [
+      'budget $3,000 EGP',
+      'budget €3000',
+      'budget £3000',
+      'budget $3.001',
+      'budget $3k',
+      'budget $1,2',
+    ])
+      expect(costIntent(text, room, 'USD', null).kind).toBe('clarify');
+    expect(costIntent('budget $50', room, 'EGP', null).kind).toBe('clarify');
+    expect(costIntent('budget 50 EGP', room, 'EGP', null)).toEqual({
+      kind: 'budget',
+      amountMinor: 5000,
+    });
   });
   it('diffs actual lines without spurious sequential-ID changes and retains repeated lines', () => {
     const c = session(),

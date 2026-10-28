@@ -142,6 +142,23 @@ export async function researchProducts(
     return fail(errorMessages[operationError.data.error.code]);
   const result = operationResultSchema.safeParse(raw);
   if (
+    result.success &&
+    JSON.stringify(result.data.identity) === JSON.stringify(parsed.identity)
+  ) {
+    if (result.data.kind === 'timeout')
+      return fail(
+        'Research reached its time limit. Your accepted prices are unchanged. Try a specific product or supplier page, or enter a manual allowance.',
+      );
+    if (result.data.kind === 'refused')
+      return fail(
+        'This research request could not be answered. Your accepted prices are unchanged. Try another product or enter a manual allowance.',
+      );
+    if (result.data.kind === 'malformed')
+      return fail(
+        'The source response could not be verified. Your accepted prices are unchanged. Try a specific variant or enter a manual allowance.',
+      );
+  }
+  if (
     !result.success ||
     JSON.stringify(result.data.identity) !== JSON.stringify(parsed.identity) ||
     result.data.kind !== 'completed' ||

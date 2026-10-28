@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" className="roomedy-scroll" data-scroll-behavior="smooth">
       <body>
         <SectionScroll className="skip-link" target="main-content">
           Skip to content

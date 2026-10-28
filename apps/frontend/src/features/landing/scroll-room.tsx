@@ -4,12 +4,18 @@ import type { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import type { ScrollTarget } from './scroll-motion';
-import { boundedProgress } from './scroll-motion';
+import { landingChapterProgress, landingFraming } from './scroll-motion';
+import { HouseLoader } from './house-loader';
 import styles from './landing.module.css';
+import {
+  landingAmount,
+  landingEstimate,
+  landingEstimateAt,
+} from './story-estimate';
+import { landingFinishState } from './finish-motion';
 
-const FurnitureScene = dynamic(() => import('./furniture-scene'), {
-  ssr: false,
-});
+// Canvas is inert on the server; retaining prerendering lets Next preload this chunk.
+const FurnitureScene = dynamic(() => import('./furniture-scene'));
 
 class GraphicsBoundary extends Component<
   { children: ReactNode; onFailure: () => void },
@@ -34,7 +40,11 @@ export function ScrollRoom() {
   const [ready, setReady] = useState(false),
     [lost, setLost] = useState(false);
   const graphicsReady = useCallback(() => setReady(true), []),
-    graphicsLost = useCallback(() => setLost(true), []);
+    graphicsLost = useCallback(() => {
+      target.current.prepared = false;
+      target.current.publish?.(target.current.progress);
+      setLost(true);
+    }, []);
   useEffect(() => {
     const element = stage.current,
       journey = element?.closest<HTMLElement>('[data-landing-journey]');
@@ -43,15 +53,50 @@ export function ScrollRoom() {
       journey.querySelectorAll<HTMLElement>('[data-room-chapter]'),
       (element) => ({ element, y: '', opacity: '' }),
     );
+    const quote = journey.querySelector<HTMLElement>('[data-landing-estimate]'),
+      finish = quote?.querySelector<HTMLElement>('[data-example-finish]'),
+      floor = quote?.querySelector<HTMLElement>('[data-example-floor]'),
+      total = quote?.querySelector<HTMLElement>('[data-example-total]'),
+      saving = quote?.querySelector<HTMLElement>('[data-example-saving]'),
+      plan = journey.querySelector<HTMLElement>('[data-landing-plan]');
+    let previousChoice = '',
+      previousPlan = '',
+      previousShift = '',
+      aspect =
+        document.documentElement.clientWidth /
+        Math.max(1, document.documentElement.clientHeight);
+    const publish = (progress: number) => {
+      const shift = `${landingFraming(progress, aspect).shift * 50}%`;
+      if (shift !== previousShift) {
+        element.style.setProperty('--room-shift', shift);
+        previousShift = shift;
+      }
+      const example = landingEstimateAt(progress);
+      if (example.choice !== previousChoice) {
+        if (finish) finish.textContent = example.finish;
+        if (floor) floor.textContent = landingAmount(example.floor);
+        if (total) total.textContent = landingAmount(example.total);
+        if (saving) {
+          saving.hidden = !example.saving;
+          saving.textContent = `${landingEstimate.currency} ${landingAmount(example.saving)} less with this floor`;
+        }
+        quote?.setAttribute('data-choice', example.choice);
+        previousChoice = example.choice;
+      }
+      const planOpen = landingFinishState(progress).planOpen.toFixed(4);
+      if (planOpen !== previousPlan) {
+        plan?.style.setProperty('--plan-open', planOpen);
+        previousPlan = planOpen;
+      }
+    };
+    const control = target.current;
+    control.publish = publish;
+    publish(control.progress);
     let frame = 0,
       photoTransform = '';
     const measure = () => {
       frame = 0;
       const rect = journey.getBoundingClientRect();
-      target.current.progress = boundedProgress(
-        -rect.top /
-          Math.max(1, rect.height - document.documentElement.clientHeight),
-      );
       // Finish geometry reads before any style writes can invalidate layout.
       const height = document.documentElement.clientHeight,
         positions = chapters.map((chapter) => {
@@ -61,9 +106,15 @@ export function ScrollRoom() {
             distance:
               (bounds.top + Math.min(bounds.height, height) / 2 - height / 2) /
               Math.max(1, height),
+            offset: bounds.top - rect.top,
           };
-        }),
-        transform = `translate3d(0, ${target.current.progress * -36}px, 0)`;
+        });
+      aspect = document.documentElement.clientWidth / Math.max(1, height);
+      target.current.progress = landingChapterProgress(
+        -rect.top,
+        positions.map(({ offset }) => offset),
+      );
+      const transform = `translate3d(0, ${target.current.progress * -36}px, 0)`;
       if (photo.current && transform !== photoTransform) {
         photo.current.style.transform = transform;
         photoTransform = transform;
@@ -81,6 +132,7 @@ export function ScrollRoom() {
         }
       }
       if (target.current.visible) target.current.wake?.();
+      if (!target.current.prepared) publish(target.current.progress);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(measure);
@@ -93,6 +145,7 @@ export function ScrollRoom() {
     observer.observe(element);
     const resize = new ResizeObserver(schedule);
     resize.observe(journey);
+    for (const chapter of chapters) resize.observe(chapter.element);
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     measure();
@@ -102,6 +155,7 @@ export function ScrollRoom() {
       resize.disconnect();
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
+      if (control.publish === publish) delete control.publish;
     };
   }, []);
   return (
@@ -141,10 +195,11 @@ export function ScrollRoom() {
         role={ready && !lost ? 'img' : undefined}
         aria-label={
           ready && !lost
-            ? 'Furniture slides and turns into a more open bedroom and workspace, with the desk moving toward the window as you scroll.'
+            ? 'The room starts with its walls lowered. Rollers paint the walls, textured floor panels settle into place and furniture is arranged. A flooring alternative changes the room and its illustrative estimate together. The walls rise at the end to reveal the finished room.'
             : undefined
         }
       >
+        {!ready && !lost && <HouseLoader />}
         {!lost && (
           <div
             className={`${styles.canvas} ${ready ? styles.canvasReady : ''}`}

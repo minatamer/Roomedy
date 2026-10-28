@@ -136,11 +136,11 @@ export function EstimatePdfControls({
   return (
     <section className={styles.pdfExport} aria-label="Estimate PDF export">
       <div>
-        <h2>Take the plan with you.</h2>
+        <h2>Estimate PDF</h2>
         <p>
           {selectedId
-            ? 'Download this saved estimate with its room views, quantities, sources and work plan.'
-            : 'Approve and save the draft, or view a saved version above, to export its exact estimate.'}
+            ? 'Room, itemized costs & work plan.'
+            : 'Select a saved version to export.'}
         </p>
       </div>
       <button
@@ -151,13 +151,17 @@ export function EstimatePdfControls({
           const version = controller
             .getSnapshot()
             .estimateVersions.find((v) => v.id === selectedId);
-          if (version) {
+          if (version && version.estimate.locality.currency !== 'USD') {
+            setMessage(
+              'This historical estimate is preserved in the editable project. Start and save a USD draft to export its financial PDF.',
+            );
+          } else if (version) {
             setMessage('');
             setChosen(version);
           }
         }}
       >
-        Download Roomedy estimate
+        Download PDF
       </button>
       {chosen &&
         createPortal(

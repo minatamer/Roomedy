@@ -1,0 +1,29 @@
+# RM-015BR — Finished-room wall reveal evidence
+
+28 October 2026. Implemented and locally validated under the [13-path allocation](../commit-plans/RM-015BR.md). Owner selects lowered walls initially, rising to an upright finished-room reveal at the end. Preserve BN/BO/BP/BQ and fake-only local services; actual owner visual acceptance remains pending.
+
+## Result and framing correction
+
+Wall opening is1at the first prepared room and through finishing/cost, then decreases continuously over progress.74–.98 to0/upright. Existing north/west pivots, window/frame/glass and attached paint rollers receive that reversed amount through the same presentation owner. Rotation, painting, floor-panel laying, furniture arrangement, USD/plain rows, real preparation/cache and the220/420ms entrance retain their existing timing. Reverse and restored scroll positions retrace the same authored state; no new clock/frame loop/resource, geometry/material, network request or room command.
+
+The wall-opening value previously also drove the camera. Separating the advancing reveal from reversed articulation preserves orbit direction and target progression. Actual initial/final inspection showed the wider lowered-wall start and upright finale needed more space. The first responsive fit still failed the new independent corner projection check(extent1.142 versus required<.98). A bounded aspect-based fit now passes the same unchanged projection margin across all nine declared viewport ratios and101settled poses each. It adjusts camera distance and the phone's vertical composition, preserving relative orbit/scale and keeping both extended walls/finished room visible. Camera continuity is measured relative to camera distance because those world-space distances are now larger; wall timing/continuity thresholds and pixel ceilings stay unchanged.
+
+## Actual checks
+
+- Final focused25tests/three files pass: late direction/endpoints,1001-sample monotonic/reverse motion, interrupted settling, relative camera continuity, actual perspective-projected wall/floor corners with near/far checks, backing buffer, furniture paths and paint/floor/material/shader lifetime. No render/animation suppression or timeout increase.
+- Scoped Prettier and complete test TypeScript checks pass.
+- Final settled `pnpm check` exits0 with1215tests/75files, format/lint/all shared/app/test types, seven boundaries, exact assets and shared/backend/frontend production builds. Unit-test stage113.72s, not whole-gate timing. Log: `C:/Users/minat/AppData/Local/Temp/roomedy-local-runtime/manual-20261028-01a1816d/RM-015BR-check.log`.
+
+In-app browser only, existing tab/current guest preserved. Desktop1366×768: lowered starting room, paint at.31 with complete north/partial west and attached roller, completed floor/furniture/cost at.466/.649, partial wall rise at.836 and fully upright at1observed. Phone390×844: lowered start and upright finish fit; reverse to start restores no paint/no panels/two pieces. Reload at.975 restores exactly.975 and the current late-rise pose, without replaying earlier finishing. Short1280×600: start/finish fit, no horizontal overflow, header CTA20–65px and hero CTA383–433px remain in the600px first fold. One offscreen-heading/native-root keyboard attempt was unavailable after resize; actual screenshot/native wheel navigation completed the check, with no injected scroll or desktop Chrome fallback.
+
+Actual settled probes retain one canvas,8cached material images,21textures, at most6GPU geometries,36initial calls/two pieces and55final calls/five pieces/28panels. The upright finale now displays the window/walls rather than their old lowered pose;55calls are observed, not the former53-call final-pose claim. Frames settle inactive. These are local functional/resource observations, not a new comparative startup/physical GPU benchmark. No asset/cache or full graphics-quality reduction.
+
+Screenshots in `C:/Users/minat/.codex/visualizations/2026/10/28/01a1816d-460f-7202-8b7f-cad5889a78ac/output/`: `roomedy-walls-upright-desktop.jpg`, `roomedy-walls-rising-desktop.jpg`, `roomedy-walls-painting-desktop.jpg`, `roomedy-walls-upright-phone.jpg`, `roomedy-walls-lowered-phone.jpg`, `roomedy-walls-lowered-short.jpg` and normal-size `roomedy-walls-finished.jpg`. Temporary viewport overrides are reset; original tab is left on the finished room. Larger temporary IAB captures retain the previously observed soft DOM raster text; normal sizing is legible. Existing page shading remains unchanged.
+
+After the gate, actual config says `mode:fake` and readiness returns `{status:ok,ai:fake-ready}`. Existing process-only paid-off launch and4320/4321services remain. No restart, paid/provider request, owner-env/config/hosted mutation, new service/port, delegation or Git mutation.
+
+## Read-only review
+
+**BR-1 — Meets ticket; no actionable findings.** Reviewed the settled13-path BR correction and its actual bindings against the complete ticket/precision references, preserving the56-path BN/BO/BP/BQ baseline. Lowered/upright direction, late timing, continuous reverse/restoration, independent orbit/responsive fit, existing grouped window/roller ownership, unchanged finishing/USD/plain rows, finite resource/readiness/cache/pixel limits and accessible description are covered. Earlier numeric clipping is corrected and independently revalidated; no implementation finding remains. Final gate and actual three-size/native observations support the local result.
+
+Combined allocation is59owned/59allocated paths, with no extra/missing/staged paths or broken local Markdown links; `git diff --check` passes. Generated Next/build/runtime/env/log/screenshot files remain excluded. Only result documentation/canonical context follows the settled app/test gate. Owner actual visual/manual acceptance, physical touch/assistive and current Linux/production/hosted evidence remain separate and unperformed. No staging/commit/push/deployment is selected.

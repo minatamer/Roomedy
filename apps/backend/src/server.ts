@@ -1,4 +1,5 @@
 import { createSourcingHandler } from './sourcing/sourcing.js';
+import { createExchangeRates } from './sourcing/exchange-rates.js';
 import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -38,6 +39,21 @@ try {
         config.mode === 'fake',
         Date.now,
         randomUUID,
+        config.mode === 'live' ? createExchangeRates() : undefined,
+        (sourcingIssues) =>
+          log({
+            code: 'sourcing-decision',
+            reference: randomUUID(),
+            outcome: sourcingIssues.some(
+              (issue) => issue.code === 'usd-rate-unavailable',
+            )
+              ? 'unavailable'
+              : 'malformed',
+            stage: sourcingIssues.some((issue) => issue.code.startsWith('usd-'))
+              ? 'provider'
+              : 'decode',
+            sourcingIssues,
+          }),
       ),
     },
     ...(config.mode === 'fake'

@@ -182,7 +182,11 @@ it('a direct left move uses measured extents and retains unrelated dimensions an
     );
   }
   room.room.width = { value: null, status: 'unknown', sourceId: null };
-  expect(run(room, 'Move the desk to the left').question?.field).toBe('width');
+  expect(run(room, 'Move the desk to the left')).toMatchObject({
+    kind: 'edits',
+    question: null,
+    control: null,
+  });
   room.room.width = known(10000);
   room.furniture[0]!.pose.quarterTurns = 1;
   room.furniture[0]!.dimensions.depth = {
@@ -190,9 +194,10 @@ it('a direct left move uses measured extents and retains unrelated dimensions an
     status: 'unknown',
     sourceId: null,
   };
-  expect(run(room, 'Move the desk to the left').question).toEqual({
-    id: 'desk',
-    field: 'depth',
+  expect(run(room, 'Move the desk to the left')).toMatchObject({
+    kind: 'edits',
+    question: null,
+    control: null,
   });
 });
 it('rearrange-owned never includes proposed additions or replacements and fixed positions remain fixed', () => {
@@ -487,8 +492,8 @@ it('keeps no-candidate alternatives truthful and separately authorized', () => {
   expect(next.scope.targetIds).toEqual([]);
   found.question = { id: 'desk', field: 'width' };
   const measured = assistantSearchFallback(room, task, found);
-  expect(measured.question).toEqual(found.question);
-  expect(measured.control).toBe('measurement');
-  expect(measured.objectIds).toEqual(['desk']);
+  expect(measured.question).toBeNull();
+  expect(measured.control).toBeNull();
+  expect(measured.kind).toBe('explanation');
   expect(measured.actions).toBeNull();
 });

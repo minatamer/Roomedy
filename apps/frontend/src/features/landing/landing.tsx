@@ -7,6 +7,15 @@ import {
   SectionScroll,
 } from '../navigation/section-scroll';
 import styles from './landing.module.css';
+import {
+  landingAmount,
+  landingEstimate,
+  landingEstimateAt,
+  landingFloorPacks,
+  landingPaintCans,
+} from './story-estimate';
+
+const example = landingEstimateAt(0);
 export function Landing() {
   return (
     <>
@@ -38,24 +47,53 @@ export function Landing() {
                   the way <em>you live.</em>
                 </h1>
                 <p className={styles.description}>
-                  The room you have. The life you want to make room for. See
-                  your ideas take shape, in 2D and 3D.
+                  The room you have. The life you want to make room for. Explore
+                  the design, the finishes, and what it could cost.
                 </p>
                 <Link className="button primary" href="/demo">
                   Start designing <span aria-hidden="true">↗</span>
                 </Link>
               </div>
               <SectionScroll className={styles.scrollCue} target="how-it-works">
-                <span className={styles.cueArrow} aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 5v14m-5-5 5 5 5-5"
+                <span className={styles.cueMouse}>
+                  <svg viewBox="0 0 24 34" fill="none" aria-hidden="true">
+                    <rect
+                      x="4.5"
+                      y="2.5"
+                      width="15"
+                      height="28"
+                      rx="7.5"
                       stroke="currentColor"
                       strokeWidth="1.4"
                     />
+                    <rect
+                      className={styles.cueWheel}
+                      x="11"
+                      y="8"
+                      width="2"
+                      height="6"
+                      rx="1"
+                      fill="currentColor"
+                    />
                   </svg>
+                  <span>Scroll to explore</span>
                 </span>
-                <span>Explore the room</span>
+                <span className={styles.cueTouch}>
+                  <svg
+                    className={styles.cueFinger}
+                    viewBox="0 0 28 32"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 16V6a2 2 0 0 1 4 0v7a2 2 0 0 1 4 0v2a2 2 0 0 1 4 0v2a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-2c-3 0-4.5-1.5-6-4l-4-6a2 2 0 0 1 3-2l2 2" />
+                    <path d="M13 13v4m4-2v3m4-1v2" />
+                  </svg>
+                  <span>Swipe up to explore</span>
+                </span>
               </SectionScroll>
             </section>
             <section
@@ -74,8 +112,8 @@ export function Landing() {
                   <em>a starting point.</em>
                 </h2>
                 <p className={styles.description}>
-                  An empty bedroom. A desk you love. A room that has almost
-                  everything, except the right arrangement.
+                  An empty bedroom. A desk you love. Start with the space and
+                  pieces you already have, then picture what comes next.
                 </p>
                 <div className={styles.sketch} aria-hidden="true">
                   <svg viewBox="0 0 360 155" fill="none">
@@ -118,15 +156,14 @@ export function Landing() {
                   </svg>
                 </div>
                 <p className={styles.detail}>
-                  Build manually, or start with photos. We’ll prepare your room,
-                  then open the studio so you can arrange the pieces and adjust
-                  the measurements.
+                  Build manually, or start with photos. Adjust the measurements
+                  and choose what stays. Your room is the starting point.
                 </p>
                 <SectionScroll
                   className={styles.chapterLink}
                   target="make-it-yours"
                 >
-                  Find your flow <span aria-hidden="true">↘</span>
+                  Make it yours <span aria-hidden="true">↘</span>
                 </SectionScroll>
               </div>
             </section>
@@ -138,75 +175,216 @@ export function Landing() {
             >
               <div className={styles.copy}>
                 <p className={styles.chapterLabel}>
-                  <span>02</span> Give your ideas some space
+                  <span>02</span> Choose how it feels
                 </p>
                 <h2 id="arrange-title">
-                  A place to work.
+                  Colour. Texture.
                   <br />
-                  Room to <em>switch off.</em>
+                  Room for <em>you.</em>
                 </h2>
                 <p className={styles.description}>
-                  Your room does more than one thing. Find an arrangement that
-                  makes sense for the way you use it.
+                  A fresh coat of paint. A floor with a little warmth. Furniture
+                  that fits the way you live. Watch your choices come together.
                 </p>
-                <div className={styles.intentions}>
+                <div
+                  className={styles.finishes}
+                  aria-label="Example room finishes"
+                >
                   <div>
-                    <span aria-hidden="true">☀</span>
-                    <h3>Follow the daylight.</h3>
-                    <p>Explore a brighter place for your work area.</p>
+                    <span className={styles.paintSwatch} aria-hidden="true" />
+                    <div>
+                      <h3>Soft sage walls</h3>
+                      <p>A little colour changes the whole room.</p>
+                    </div>
                   </div>
                   <div>
-                    <span aria-hidden="true">↗</span>
-                    <h3>Find a little breathing room.</h3>
-                    <p>Try the layout before moving the heavy furniture.</p>
+                    <span className={styles.floorSwatch} aria-hidden="true" />
+                    <div>
+                      <h3>Oak underfoot</h3>
+                      <p>Try the texture before making the choice.</p>
+                    </div>
                   </div>
                 </div>
                 <p className={styles.detail}>
-                  Place and rotate pieces in 3D. Use the 2D plan for precise
-                  measurements. Keep what works, and change what doesn’t.
+                  Explore wall, floor and furniture finishes in 3D. Arrange the
+                  pieces, then use the 2D plan to check placement and
+                  dimensions.
                 </p>
+                <SectionScroll
+                  className={styles.chapterLink}
+                  target="a-fresh-angle"
+                >
+                  See what it could cost <span aria-hidden="true">↘</span>
+                </SectionScroll>
               </div>
             </section>
             <section
-              className={styles.chapter}
+              className={`${styles.chapter} ${styles.costChapter}`}
               data-scroll-target="a-fresh-angle"
               aria-labelledby="perspective-title"
               data-room-chapter
             >
               <div className={styles.copy}>
                 <p className={styles.chapterLabel}>
-                  <span>03</span> Meet Medy
+                  <span>03</span> See the choices and the costs
                 </p>
                 <h2 id="perspective-title">
-                  A little help.
+                  Your design.
                   <br />
-                  <em>A room that’s you.</em>
+                  <em>A clearer budget.</em>
                 </h2>
                 <p className={styles.description}>
-                  Meet Medy, your room design partner. Talk through an idea,
-                  find a calmer layout, or get the details just right — one
-                  conversation at a time.
+                  Connect the room you can see to the costs behind it. Compare
+                  options with Medy, and review a change before making it yours.
                 </p>
                 <div
-                  className={styles.medyConversation}
-                  aria-label="An example conversation with Medy"
+                  className={styles.quote}
+                  data-landing-estimate
+                  data-choice="oak"
+                  role="group"
+                  aria-label="Illustrative room estimate in US dollars"
                 >
-                  <p className={styles.medyVisitor}>
-                    “A tidy room, with a place to work by the window.”
-                  </p>
-                  <p>
-                    <MedyIcon />
-                    <strong>Medy</strong> Let’s keep the centre open and bring
-                    your desk closer to daylight. We can try it together.
+                  <div className={styles.quoteHeading}>
+                    <span>
+                      Illustrative estimate · {landingEstimate.currency}
+                    </span>
+                    <span>{landingEstimate.floorArea.toFixed(1)} m² room</span>
+                  </div>
+                  <dl>
+                    <div className={styles.quoteRow}>
+                      <dt>
+                        Flooring
+                        <small>
+                          <span data-example-finish>{example.finish}</span> ·{' '}
+                          {landingFloorPacks} packs
+                        </small>
+                      </dt>
+                      <dd data-example-floor>{landingAmount(example.floor)}</dd>
+                    </div>
+                    <div className={styles.quoteRow}>
+                      <dt>
+                        Walls
+                        <small>{landingPaintCans} paint cans + primer</small>
+                      </dt>
+                      <dd>{landingAmount(example.paint)}</dd>
+                    </div>
+                    <div className={styles.quoteRow}>
+                      <dt>
+                        Furniture<small>Five selected pieces</small>
+                      </dt>
+                      <dd>{landingAmount(example.furniture)}</dd>
+                    </div>
+                    <div className={styles.quoteRow}>
+                      <dt>
+                        Work &amp; moving
+                        <small>Fitting, painting, clear &amp; return</small>
+                      </dt>
+                      <dd>{landingAmount(example.work)}</dd>
+                    </div>
+                  </dl>
+                  <div className={styles.quoteTotal}>
+                    <span>Estimated total</span>
+                    <span aria-live="polite">
+                      {landingEstimate.currency}{' '}
+                      <strong data-example-total>
+                        {landingAmount(example.total)}
+                      </strong>
+                    </span>
+                  </div>
+                  <p className={styles.quoteSaving}>
+                    <span data-example-saving hidden />
                   </p>
                 </div>
-                <p className={styles.detail}>
-                  Ask for exact sizes, finishes, a different view or a quick
-                  tour. Review room changes, keep what you love, and Undo
-                  whenever you need.
+                <div
+                  className={styles.budgetConversation}
+                  aria-label="An example budget conversation with Medy"
+                >
+                  <p>“Could we keep it under $2,100?”</p>
+                  <p>
+                    <MedyIcon />
+                    <strong>Medy</strong> Let’s compare a lighter oak floor and
+                    keep the pieces you chose.
+                  </p>
+                </div>
+                <SectionScroll
+                  className={styles.chapterLink}
+                  target="plan-your-room"
+                >
+                  See the plan take shape <span aria-hidden="true">↘</span>
+                </SectionScroll>
+              </div>
+            </section>
+            <section
+              className={`${styles.chapter} ${styles.right}`}
+              data-scroll-target="plan-your-room"
+              aria-labelledby="plan-title"
+              data-room-chapter
+            >
+              <div className={styles.copy}>
+                <p className={styles.chapterLabel}>
+                  <span>04</span> Take the next step with a plan
                 </p>
+                <h2 id="plan-title">
+                  Know what to buy.
+                  <br />
+                  <em>And what comes next.</em>
+                </h2>
+                <p className={styles.description}>
+                  Bring the design, the quantities and the work together. Keep a
+                  version you can return to, and take an itemized estimate with
+                  you.
+                </p>
+                <div
+                  className={styles.planSheet}
+                  data-landing-plan
+                  role="group"
+                  aria-label="Shopping, work and estimate example"
+                >
+                  <div className={styles.planHeading}>
+                    <span className={styles.sheetBrand}>Roomedy estimate</span>
+                    <span>Your room plan</span>
+                  </div>
+                  <ol>
+                    <li>
+                      <span>01</span>
+                      <div>
+                        <h3>A useful shopping list</h3>
+                        <p>
+                          Floor packs, paint cans and chosen pieces, with the
+                          quantities behind them.
+                        </p>
+                      </div>
+                    </li>
+                    <li>
+                      <span>02</span>
+                      <div>
+                        <h3>The work around the room</h3>
+                        <p>
+                          Painting, fitting and moving pieces, with the checks
+                          still needed before work begins.
+                        </p>
+                      </div>
+                    </li>
+                    <li>
+                      <span>03</span>
+                      <div>
+                        <h3>A version you can keep</h3>
+                        <p>
+                          Compare saved estimates and download an itemized PDF
+                          of the version you choose.
+                        </p>
+                      </div>
+                    </li>
+                  </ol>
+                  <div className={styles.planFooter}>
+                    <span className={styles.pdfMark} aria-hidden="true">
+                      PDF
+                    </span>
+                    <span>Design · quantities · costs · work plan</span>
+                  </div>
+                </div>
                 <Link href="/demo" className={styles.chapterLink}>
-                  Design with Medy <span aria-hidden="true">↗</span>
+                  Design and plan your room <span aria-hidden="true">↗</span>
                 </Link>
               </div>
             </section>
@@ -255,19 +433,19 @@ export function Landing() {
                     </p>
                   </div>
                   <div>
-                    <span>MAKE IT FEEL RIGHT</span>
-                    <h3>See beyond the floor plan.</h3>
+                    <span>UNDERSTAND YOUR OPTIONS</span>
+                    <h3>See the trade-offs.</h3>
                     <p>
-                      Try an interior view, explore finishes, and get a feel for
-                      the whole room.
+                      Compare finishes and products alongside their quantities
+                      and costs, with unknowns kept visible.
                     </p>
                   </div>
                   <div>
-                    <span>START WITH AN IDEA</span>
-                    <h3>Your browser is your studio.</h3>
+                    <span>TAKE A CLEARER NEXT STEP</span>
+                    <h3>Leave with a plan.</h3>
                     <p>
-                      No account or installation to begin. Just a room and a
-                      little curiosity.
+                      Bring together what to buy, the work involved and an
+                      itemized estimate. No account or installation to begin.
                     </p>
                   </div>
                 </div>
@@ -294,7 +472,7 @@ export function Landing() {
                   <Link className="button primary" href="/demo">
                     Start designing <span aria-hidden="true">↗</span>
                   </Link>
-                  <p>Build your room, or begin with photos.</p>
+                  <p>Design your room. Explore the options. Plan the cost.</p>
                 </div>
               </div>
             </section>

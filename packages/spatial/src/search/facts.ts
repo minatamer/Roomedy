@@ -13,6 +13,7 @@ import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry } from '../catalogue.js';
 import { windowPoint } from './positions.js';
 import { backWallGap } from '../orientation.js';
+import { planningRoom } from '../planning.js';
 function missingInput(room: RoomDocument, input: string) {
   const [id, field] = input.split(':');
   if (!id || !field) return false;
@@ -174,6 +175,23 @@ export function searchFacts(
   goal: SearchGoal,
   checks: CheckFacts,
 ): SearchFacts {
+  before = planningRoom(before);
+  // Keep one assumed room envelope when comparing a layout; moving furniture
+  // cannot silently change the room size used to calculate the improvement.
+  after = planningRoom({
+    ...after,
+    room: {
+      ...after.room,
+      width:
+        after.room.width.value === null ? before.room.width : after.room.width,
+      depth:
+        after.room.depth.value === null ? before.room.depth : after.room.depth,
+      height:
+        after.room.height.value === null
+          ? before.room.height
+          : after.room.height,
+    },
+  });
   const a = roomFacts(before, goal),
     b = roomFacts(after, goal),
     changed: string[] = [];

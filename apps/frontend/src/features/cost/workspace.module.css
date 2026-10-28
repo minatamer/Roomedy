@@ -1,7 +1,7 @@
 .page {
   color: #493827;
   min-height: 100svh;
-  background: #f7f5f0;
+  background: var(--ivory);
 }
 .header {
   display: flex;
@@ -43,14 +43,14 @@
 }
 .intro {
   text-align: center;
-  padding: 16px 0 30px;
+  padding: 0 0 18px;
 }
 .intro h1 {
-  font-size: clamp(34px, 5vw, 54px);
+  font-size: clamp(26px, 4vw, 36px);
   line-height: 1.12;
   font-weight: 500;
   letter-spacing: -0.04em;
-  margin: 10px 0 18px;
+  margin: 4px 0 12px;
 }
 .intro p,
 .welcome {
@@ -130,7 +130,8 @@
   font-size: 28px;
   margin-top: 6px;
 }
-.total p {
+.total p,
+.totalMeta {
   font-size: 12px;
   line-height: 1.7;
   max-width: 340px;
@@ -160,7 +161,7 @@
   line-height: 1.7;
 }
 .reply {
-  white-space: pre-wrap;
+  white-space: normal;
   margin: 20px 0;
   animation: appear 0.32s ease-out;
 }
@@ -179,10 +180,14 @@
 }
 .composer {
   position: relative;
-  background: #fffdf8;
-  border: 1px solid #d8c8b3;
+  background: var(--surface-field);
+  border: 1px solid var(--surface-field-border);
   border-radius: 22px;
   padding: 16px 16px 54px;
+  box-shadow:
+    inset 0 1px 0 var(--surface-highlight),
+    0 5px 18px #6343260a;
+  backdrop-filter: blur(8px);
 }
 .composer textarea {
   width: 100%;
@@ -426,23 +431,16 @@
   }
 }
 
-.messageStamp {
-  display: block;
-  font-size: 10px;
-  color: #897763;
-  margin-top: 5px;
-}
-
 .research {
-  margin: 28px 0;
-  padding: 22px;
+  margin: 18px 0;
+  padding: 18px;
   border: 1px solid #dfd1bd;
   border-radius: 22px;
   background: linear-gradient(145deg, #fffcf6, #ede2d1a0);
 }
 .research > p,
 .sourceCards > p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.7;
   color: #806c58;
 }
@@ -472,11 +470,14 @@
 .sourceCards h3 {
   font-size: 19px;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 .sourceCards :is(p, li, a) {
-  font-size: 12px;
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.sourceCards .eyebrow {
+  font-size: 11px;
 }
 .sourceCards a {
   color: #75502e;
@@ -508,7 +509,7 @@
 }
 .planCards {
   max-width: 720px;
-  margin: 24px auto 38px;
+  margin: 12px 0;
 }
 .planCards article,
 .planCards section {
@@ -558,9 +559,9 @@
 }
 
 .versions {
-  margin: 24px auto;
-  max-width: 880px;
-  padding: 22px;
+  margin: 0;
+  max-width: none;
+  padding: 12px 18px;
   border: 1px solid #ded1bf;
   border-radius: 22px;
   background: #fffaf3b3;
@@ -623,17 +624,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  margin: 24px auto 36px;
-  padding: 22px;
-  max-width: 880px;
+  margin: 0;
+  padding: 16px 18px;
+  max-width: none;
   border: 1px solid #ded1bf;
   border-radius: 22px;
   background: #eee1ce80;
 }
 .pdfExport h2 {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 500;
-  margin: 0 0 12px;
+  margin: 0;
 }
 .pdfExport p {
   font-size: 14px;
@@ -674,4 +675,274 @@
 .pdfDialog :is(button, a):focus-visible {
   outline: 2px solid #8d633f;
   outline-offset: 3px;
+}
+
+/* Conversation widgets use existing semantic facts; no extra scene or motion owner. */
+.conversation > .quick button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.quick svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.evidenceInfo {
+  max-width: 360px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.page .evidenceInfo > summary {
+  font-size: 12px;
+  padding: 8px 0;
+  min-height: 44px;
+}
+.evidenceInfo span {
+  float: none;
+  margin: 0;
+}
+.researchForm > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+.researchForm > summary::after {
+  content: '+';
+  margin-left: auto;
+}
+.researchForm[open] > summary::after {
+  content: '−';
+}
+.research > [role='status']:empty {
+  display: none;
+}
+.offerVisual {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  min-height: 92px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #eee2d1, #f6efe3);
+}
+.offerVisual > svg {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  color: #8c674a;
+}
+.offerVisual span {
+  display: grid;
+  gap: 5px;
+}
+.offerVisual strong {
+  font-size: 17px;
+  font-weight: 500;
+}
+.offerVisual small {
+  font-size: 11px;
+  color: #806c58;
+}
+.sourceCards article > strong {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.factChips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.factChips > span {
+  padding: 5px 9px;
+  border: 1px solid #e2d4c1;
+  border-radius: 16px;
+  font-size: 11px;
+  color: #806c58;
+}
+.sourceEvidence {
+  font-size: 13px;
+  line-height: 1.65;
+}
+.sourceEvidence p {
+  margin: 0 0 12px;
+}
+.page .sourceEvidence > summary {
+  font-size: 13px;
+}
+.sourceCards .actions {
+  padding-top: 8px;
+}
+.utilities {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 22px 0;
+  align-items: start;
+}
+.pdfExport p {
+  font-size: 12px;
+  margin: 6px 0 0;
+}
+.pdfExport > button {
+  font-size: 13px;
+}
+.lineCards {
+  display: grid;
+  gap: 10px;
+}
+.lineCards article {
+  border: 1px solid #dfd1bd;
+  border-radius: 18px;
+  padding: 18px;
+  background: #fffaf3b3;
+}
+.lineCardTop {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.lineCardTop svg {
+  flex-shrink: 0;
+  color: #8c674a;
+}
+.lineCardTop h3 {
+  flex: 1;
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+.lineCardTop strong {
+  font-size: 16px;
+  font-weight: 500;
+}
+.lineCards button {
+  border: 0;
+  background: transparent;
+  color: #75502e;
+  padding: 8px 0;
+  font: inherit;
+  font-size: 13px;
+}
+.amountTrack {
+  height: 6px;
+  border-radius: 6px;
+  background: #e9dece;
+  overflow: hidden;
+  margin: 14px 0 2px;
+}
+.amountTrack > span {
+  height: 100%;
+  display: block;
+  background: #a57a55;
+  border-radius: inherit;
+}
+.planCards h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+.budgetBars {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+.budgetBars > div {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+}
+.budgetBars .amountTrack {
+  margin: 0;
+}
+.budgetBars strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.workSteps {
+  list-style: none;
+  padding: 0;
+}
+.workSteps > li {
+  margin: 0;
+  padding: 4px 0;
+}
+.workSteps summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+}
+.workSteps summary::after {
+  content: '+';
+  margin-left: auto;
+  color: #89725a;
+}
+.workSteps details[open] > summary::after {
+  content: '−';
+}
+.page .workSteps .stepNumber {
+  float: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  flex-shrink: 0;
+  border: 1px solid #d4c0a4;
+  border-radius: 50%;
+  font-size: 12px;
+  color: #896744;
+}
+.workSteps details > p,
+.workSteps details > .quick {
+  margin-left: 46px;
+}
+@media (max-width: 600px) {
+  .utilities {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .intro h1 {
+    font-size: 28px;
+  }
+  .planCards article,
+  .planCards section {
+    padding: 16px;
+  }
+  .lineCardTop {
+    flex-wrap: wrap;
+  }
+  .lineCardTop strong {
+    margin-left: 34px;
+  }
+  .offerVisual {
+    padding: 14px;
+    gap: 12px;
+  }
+  .offerVisual > svg {
+    width: 42px;
+    height: 42px;
+  }
+  .offerVisual strong {
+    font-size: 15px;
+  }
+}
+
+.lineQuantity {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  color: #806c58;
+}
+
+.composer textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
 }

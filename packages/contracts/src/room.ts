@@ -3,7 +3,10 @@ import { issueSchema, ruleCoverageSchema } from './issues.js';
 export { issueSchema } from './issues.js';
 import { POLICY, VERSIONS } from './policy.js';
 import { roomSurfacesSchema } from './surfaces.js';
-import { furnitureMaterialsSchema } from './furniture-materials.js';
+import {
+  openingMaterialsSchema,
+  furnitureMaterialsSchema,
+} from './furniture-materials.js';
 import {
   finishSchema,
   factProvenanceSchema,
@@ -76,6 +79,7 @@ export const featureSchema = z
     z.strictObject({
       ...featureBase,
       kind: z.literal('door'),
+      materials: openingMaterialsSchema.optional(),
       purpose: z.enum(['room', 'bathroom', 'balcony']).optional(),
       mechanism: z.enum(['inward', 'outward', 'sliding', 'unknown']),
       mechanismProvenance: factProvenanceSchema,
@@ -85,6 +89,7 @@ export const featureSchema = z
     z.strictObject({
       ...featureBase,
       kind: z.literal('window'),
+      materials: openingMaterialsSchema.optional(),
       mechanism: z.enum(['fixed', 'inward', 'outward', 'sliding', 'unknown']),
       mechanismProvenance: factProvenanceSchema,
     }),
@@ -103,6 +108,16 @@ export const featureSchema = z
           message: 'Unknown fact and evidence must agree',
         });
     };
+    if (
+      feature.kind === 'window' &&
+      (feature.materials?.color !== undefined ||
+        feature.materials?.texture !== undefined)
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['materials'],
+        message: 'Window appearance applies to its frame only',
+      });
     check(feature.wall, feature.wallProvenance.status, 'wallProvenance');
     if (feature.kind !== 'obstacle')
       check(

@@ -62,7 +62,7 @@ function input(key = 'surface:floor') {
       inputRevision: room.roomRevision,
     },
     costRevision: 0,
-    locality: { country: 'EG', city: 'Cairo', currency: 'EGP' },
+    locality: { country: 'EG', city: 'Cairo', currency: 'USD' },
     brief: buildSourcingBrief(room, key)!,
   });
 }
@@ -103,6 +103,19 @@ const config = () => ({
   limits: PUBLIC_LIMITS,
 });
 describe('strict admitted source contracts and evidence', () => {
+  it('rejects oversized local briefs safely before admission, without truncating constraints', () => {
+    const room = createRoomFixture('sample');
+    for (const key of [
+      room.furniture[0]!.id,
+      'surface:north',
+      'service:moving',
+    ]) {
+      expect(buildSourcingBrief(room, key, 'x'.repeat(241))).toBeNull();
+      expect(
+        buildSourcingBrief(room, key, 'x'.repeat(240))?.query,
+      ).toHaveLength(240);
+    }
+  });
   it('projects only the selected item and explicit locality, never photos/full room/chat', () => {
     const room = createRoomFixture('sample'),
       p = room.furniture[0]!;
@@ -273,11 +286,15 @@ describe('strict admitted source contracts and evidence', () => {
   it('does not reuse another currency, market or service city and keeps unsupported fake markets as leads', async () => {
     const i = input(),
       reply = await fakeReply(i);
-    reply.candidates[0]!.offer!.market.currency = 'USD';
+    expect(reply.candidates[0]!.offer!.market.currency).toBe('USD');
+    reply.candidates[0]!.offer!.market.currency = 'EUR';
     expect(
       normalizeSourcing(i, reply, undefined, true, 123, id).candidates[0]!
         .offer,
     ).toBeNull();
+    i.locality.currency = 'EGP';
+    expect((await fakeReply(i)).candidates[0]!.offer).toBeNull();
+    i.locality.currency = 'USD';
     i.locality.city = 'Alexandria';
     expect((await fakeReply(i)).candidates[0]!.offer).toBeNull();
     const service = input('service:moving'),
@@ -290,6 +307,43 @@ describe('strict admitted source contracts and evidence', () => {
   });
 });
 describe('bounded existing Responses web-search wire', () => {
+  it('keeps application-owned FX out of the provider schema', () => {
+    expect(JSON.stringify(sourcingRequest(input()).format)).not.toContain(
+      'usdPerUnit',
+    );
+    expect(JSON.stringify(sourcingRequest(input()).format)).not.toContain(
+      '"fx"',
+    );
+    expect(sourcingRequest(input()).instructions).toContain(
+      'never guess an exchange rate',
+    );
+    const wire = JSON.parse(
+      responseBody(sourcingRequest(input()), 'synthetic-model'),
+    ).text.format.schema;
+    const countries: unknown[] = [];
+    function visit(value: unknown) {
+      if (!value || typeof value !== 'object') return;
+      if (Array.isArray(value)) {
+        value.forEach(visit);
+        return;
+      }
+      const node = value as Record<string, unknown>;
+      if (node.properties && typeof node.properties === 'object') {
+        const country = (node.properties as Record<string, unknown>).country;
+        if (country) countries.push(country);
+      }
+      Object.values(node).forEach(visit);
+    }
+    visit(wire);
+    expect(countries.length).toBeGreaterThan(0);
+    expect(
+      countries.every(
+        (country) =>
+          JSON.stringify(country) ===
+          JSON.stringify({ type: 'string', enum: ['EG'] }),
+      ),
+    ).toBe(true);
+  });
   it('emits one fixed strict foreground request, max4 built-in calls and no room command tools', () => {
     const body = JSON.parse(
       responseBody(sourcingRequest(input()), 'synthetic-model'),
@@ -417,6 +471,172 @@ describe('bounded existing Responses web-search wire', () => {
     expect((await call.result).kind).toBe('completed');
     await call.settled;
     expect(attempts).toBe(1);
+  });
+});
+describe('server-owned USD sourcing equivalents', () => {
+  it('rejects model-authored FX and logs only schema codes/paths for malformed input', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    candidate.offer!.fx = {
+      currency: 'EGP',
+      usdPerUnit: '0.017831',
+      date: '2026-10-28',
+      observedAt: Date.UTC(2026, 9, 28),
+      url: 'https://api.frankfurter.dev/v2/rate/egp/usd',
+      inputs: [{ key: 'price', minor: 19 }],
+    };
+    expect(
+      normalizeSourcing(i, reply, undefined, true, 123, id).candidates[0]!
+        .offer,
+    ).toBeNull();
+    candidate.url = 'javascript:PRIVATE_SOURCE_TEXT';
+    const invalid = vi.fn<(issues: { code: string; path: string }[]) => void>();
+    const result = await createSourcingHandler(
+      false,
+      Date.now,
+      id,
+      undefined,
+      invalid,
+    )(i, {
+      signal: new AbortController().signal,
+      call: async () => ({ kind: 'completed', data: reply, calls: [] }),
+    });
+    expect(result.kind).toBe('malformed');
+    const diagnostics = invalid.mock.calls[0]![0];
+    expect(diagnostics.length).toBeLessThanOrEqual(6);
+    expect(diagnostics).toContainEqual({
+      code: 'invalid_format',
+      path: 'candidates.0.url',
+    });
+    expect(JSON.stringify(diagnostics)).not.toContain('PRIVATE_SOURCE_TEXT');
+    expect(Object.keys(diagnostics[0]!)).toEqual(['code', 'path']);
+  });
+  async function run(
+    mode:
+      | 'priced'
+      | 'unopened'
+      | 'conditional'
+      | 'missing-rate'
+      | 'cancelled'
+      | 'extra-notes'
+      | 'long-notes',
+  ) {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    candidate.url = 'https://merchant.example/exact-variant';
+    candidate.match = 'similar';
+    candidate.conditions = mode === 'conditional' ? 'conditional' : 'standard';
+    candidate.evidence = 'Price EGP 11995; variant verified';
+    candidate.differences = ['Listed in EGP, local checkout required'];
+    if (mode === 'extra-notes')
+      candidate.differences = [
+        'Dimensions differ.',
+        'Colour differs.',
+        'Stock is unconfirmed.',
+        'Delivery is separate.',
+        'Tax needs review.',
+      ];
+    if (mode === 'long-notes')
+      candidate.differences = Array.from(
+        { length: 5 },
+        (_, index) => `${index} ${'x'.repeat(198)}`,
+      );
+    reply.notes = ['Native price EGP 11995'];
+    candidate.offer!.market.currency = 'EGP';
+    candidate.offer!.source.url = candidate.url;
+    candidate.offer!.source.kind = 'sourced';
+    candidate.offer!.source.observedAt = null; // Models supply no clock authority.
+    candidate.offer!.source.evidence = '';
+    if ('priceMinor' in candidate.offer!) candidate.offer!.priceMinor = 1199500;
+    const abort = new AbortController();
+    const lookup = vi.fn(async () => {
+      if (mode === 'cancelled') abort.abort();
+      return mode === 'missing-rate'
+        ? null
+        : {
+            usdPerUnit: '0.017831',
+            date: '2026-10-28',
+            observedAt: Date.UTC(2026, 9, 28, 12),
+            url: 'https://api.frankfurter.dev/v2/rate/egp/usd',
+          };
+    });
+    const call = vi.fn(async () => ({
+      kind: 'completed' as const,
+      calls: [],
+      data: reply,
+      search: {
+        calls: 2,
+        opened: mode === 'unopened' ? [] : [candidate.url],
+        sources: [],
+      },
+    }));
+    const result = await createSourcingHandler(
+      false,
+      () => Date.UTC(2026, 9, 28, 12),
+      id,
+      lookup,
+    )(i, { signal: abort.signal, call });
+    return { result, lookup, call };
+  }
+  it('prices an opened local offer in USD, keeps exact source inputs and removes native-price prose', async () => {
+    const { result, lookup, call } = await run('priced');
+    expect(result.kind).toBe('completed');
+    const candidate = result.sourcing!.candidates[0]!;
+    expect(candidate.offer?.market.currency).toBe('USD');
+    expect(
+      candidate.offer &&
+        'priceMinor' in candidate.offer &&
+        candidate.offer.priceMinor,
+    ).toBe(21388);
+    expect(candidate.offer?.fx?.inputs).toEqual([
+      { key: 'price', minor: 1199500 },
+    ]);
+    expect(candidate.offer?.source.url).toBe(candidate.url);
+    expect(
+      candidate.evidence +
+        candidate.differences.join(' ') +
+        result.sourcing!.notes.join(' '),
+    ).not.toMatch(/EGP|11995/);
+    expect(lookup).toHaveBeenCalledTimes(1);
+    expect(call).toHaveBeenCalledTimes(1);
+  });
+  it.each(['unopened', 'conditional'] as const)(
+    'never fetches a rate for a %s lead',
+    async (mode) => {
+      const { result, lookup } = await run(mode);
+      expect(result.sourcing!.candidates[0]!.offer).toBeNull();
+      expect(lookup).not.toHaveBeenCalled();
+    },
+  );
+  it('keeps every short qualification when compacting prose, or excludes a lead if they cannot fit', async () => {
+    const short = await run('extra-notes'),
+      candidate = short.result.sourcing!.candidates[0]!;
+    expect(candidate.offer?.market.currency).toBe('USD');
+    expect(candidate.differences.length).toBeLessThanOrEqual(4);
+    for (const fact of [
+      'Dimensions differ.',
+      'Colour differs.',
+      'Stock is unconfirmed.',
+      'Delivery is separate.',
+      'Tax needs review.',
+    ])
+      expect(candidate.differences.join(' ')).toContain(fact);
+    const long = await run('long-notes');
+    expect(long.result.sourcing!.candidates[0]!.offer).toBeNull();
+    expect(
+      long.result.sourcing!.candidates[0]!.differences.join(' '),
+    ).toContain('Further qualifications need review');
+    expect(long.lookup).not.toHaveBeenCalled();
+  });
+  it('keeps a missing-rate offer unpriced and fences cancellation without a second model call', async () => {
+    const missing = await run('missing-rate');
+    expect(missing.result.sourcing!.candidates[0]!.match).toBe('lead');
+    expect(missing.result.sourcing!.candidates[0]!.offer).toBeNull();
+    const cancelled = await run('cancelled');
+    expect(cancelled.result.kind).toBe('cancelled');
+    expect(cancelled.call).toHaveBeenCalledTimes(1);
   });
 });
 describe('selected prices and lifecycle', () => {
@@ -688,4 +908,39 @@ describe('selected prices and lifecycle', () => {
     )!;
     expect((await unavailable.result).ok).toBe(false);
   });
+  it.each(['timeout', 'malformed', 'refused'] as const)(
+    'explains an identity-checked %s without retrying or changing prices',
+    async (kind) => {
+      const i = input();
+      const transport = vi.fn<typeof fetch>().mockImplementation(async (url) =>
+        String(url).endsWith('/admission')
+          ? Response.json({
+              kind: 'granted',
+              grant: 'grant',
+              expiresAt: 123,
+              simulation: true,
+            })
+          : Response.json({
+              identity: i.identity,
+              kind,
+              draft: null,
+              simulation: true,
+              message: 'Server failure',
+            }),
+      );
+      const result = await researchProducts(
+        i,
+        new AbortController().signal,
+        transport,
+      );
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.message).toContain('Your accepted prices are unchanged');
+        expect(result.message).toContain('manual allowance');
+        expect(result.message).not.toContain('Server failure');
+        if (kind === 'timeout') expect(result.message).toContain('time limit');
+      }
+      expect(transport).toHaveBeenCalledTimes(2);
+    },
+  );
 });

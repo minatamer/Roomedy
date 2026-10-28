@@ -1,0 +1,29 @@
+# RM-015BS landing composition and pending-house receipt
+
+28 October2026. **Complete locally; actual owner visual acceptance pending.** Direct owner chooses larger room scale, initial hero copy fixed left, gentle room travel opposite the copy and an original building-house loading animation based on their wireframe reference. All99 prior dirty paths and CPQ/chat/USD/cache work remain; no provider/env/Git/hosted action.
+
+## Delivered
+
+- Removed BM/BO's initial centered-copy/readiness translation. The hero starts in its final left position independently of the scene, retaining360ms opacity and existing vertical scroll motion.
+- Wide-screen fit returns from1.45 to1.14 while the open room is featured, blended across viewport ratios. Normalized projection bias reaches±0.32 (±16% viewport width), with the room right for hero/starting/cost and left for finish/work. Existing progress smoothing, orbit and demand-frame ownership drive the glide and retrace it on reverse/restored offsets. Narrow framing remains centered. Fit returns smoothly during the final wall rise; the centered finale keeps its full wall fit.
+- New code-native inline SVG house uses an immediate wire outline plus assembling foundation/walls/roof. The outline is visible from the first pending frame; an initial fully invisible animation interval was caught and removed during review. Only actual pending mounts its CSS animation nodes; readiness/failure removes them. No extra canvas/image fetch/JS timer, invented percentage or minimum display hold. Fast loads can show only early assembly rather than waiting to finish a decorative cycle.
+- The camera remains owned by the landing canvas. Cached viewport geometry supplies the small loader-position variable without per-frame layout reads. Material/shadow/glass quality, shader/upload/warm readiness, texture cache, DPR limit, USD/plain estimate and wall direction remain unchanged.
+
+## Verification
+
+- 39 focused landing motion/preparation/finish/story/batch regressions pass. New checks cover meaningful opening floor size, opposite-copy/neutral endpoints, continuous bias and projected world geometry at phone/tablet/desktop/short ratios. The enlarged core floor stays within0.99 normalized viewport extent; narrow/final wall fit stays within0.98. Decorative outer lowered-wall cropping is bounded separately below1.4. This explicitly replaces the old all-corners desktop fit, whose extra distance caused the rejected small scene. Depth bounds, actual wall geometry, reverse/late rise, furnishing and buffer checks remain.
+- Final settled `pnpm check`: **1250 tests/78 files**, format/lint/types,7 executable boundary probes, exact assets and both production builds pass. Unit duration104.23s. Log: `C:/Users/minat/AppData/Local/Temp/roomedy-local-runtime/live-cpq-20261028-01a1816d/rm015bs-check.log`. Final frontend production build with `NEXT_TELEMETRY_DISABLED=1` also passes (`rm015bs-frontend-build.log`).
+- Actual in-app desktop hero is larger and right-biased. Finishing copy on the right settles the shared bias at about−15.66%; cost copy brings it right again. Actual final/short-screen room has upright walls; reverse returns toward the lowered hero continuously.
+- Actual390×844 phone pending observation: status loading, one loader, hero left24px. Ready observation: status ready, no loader, hero left24px. Final default desktop: ready, one canvas, no loader, hero left89.59px and document scroll/client widths both1265px. Phone widths both375px; no horizontal overflow. Viewport override is reset. No artificial pending route, runtime injection or delayed GPU fixture was needed.
+- Actual pending screenshots show the indicator during genuine scene preparation, followed by its removal at ready. Failure removal follows the same existing lost/boundary state and is reviewed with existing preparation/failure regression coverage; deliberate GPU context loss was not newly injected. No new physical-touch/AT/hosted/slow-device performance claim.
+- Public local config after checks remains live/simulation false. Both4320 frontend and4321 backend ready return status ok/ai live-ready. Existing services and normal ignored env are preserved; no restart, new port/dependency, provider call, Chrome, delegation, staging/commit/push or deployment.
+
+## Read-only review
+
+**Meets ticket — no actionable findings after the immediate-outline correction.** Reviewed the six source/test inputs, real pending/ready DOM observations, fixed-left CSS, valid view-offset projection and existing scene-resource lifetime, bounded geometry/reverse behavior and actual screenshot composition. The old all-corner desktop test was deliberately replaced by core-floor/narrow/final-fit and bounded decorative-crop checks under the owner's larger-scene decision; it was not used to hide core clipping. The initially captured invisible loader interval was corrected and real pending retested. Owner aesthetic acceptance remains pending.
+
+## Artifacts and scope
+
+14 screenshots, owner before image, pending/ready observations, both build/check logs and a short gallery/report are in `C:/Users/minat/OneDrive/Desktop/Roomedy-Landing-Review-2026-10-28/START-HERE.html`, mirrored at `C:/Users/minat/.codex/visualizations/2026/10/28/01a1816d-460f-7202-8b7f-cad5889a78ac/output/landing-composition-review/`. Earlier attempts and moving frames are labelled separately. Prior CPQ and chat Desktop galleries remain unchanged.
+
+Exact allocation:16 paths, including6 source/test inputs.12 overlap the prior99,4 are new, giving103 dirty paths with an empty index. Ignored `.release/runtime/rm015bs-code-inputs.json` hashes the final six inputs; the16 prior RM-032 code/test hashes are also unchanged. Only documentation changes follow the final source gate. Canonical state updates the existing LANDING_WALL_REVEAL context, preserving all64 keys and completed phases. No source/Git/publication follow-up selected. Deviation: none.

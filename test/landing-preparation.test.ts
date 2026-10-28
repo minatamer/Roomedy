@@ -1,100 +1,37 @@
 import { describe, expect, it } from 'vitest';
 import { prepareLandingScene } from '../apps/frontend/src/features/landing/prepare-scene.js';
 
+const deferred = () => {
+  let resolve!: () => void, reject!: (reason: Error) => void;
+  const promise = new Promise<void>((done, fail) => {
+    resolve = done;
+    reject = fail;
+  });
+  return { promise, resolve, reject };
+};
+const tick = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+};
+
 describe('landing GPU preparation ownership', () => {
-  it('uploads, waits for shader completion and warms the first render before visible readiness', async () => {
-    const order: string[] = [];
-    let resolve!: () => void;
-    const compiled = new Promise<void>((r) => {
-      resolve = r;
-    });
-    const task = prepareLandingScene({
-      current: () => true,
-      upload: () => {
-        order.push('upload');
-      },
-      compile: () => {
-        order.push('compile');
-        return compiled;
-      },
-      warm: () => {
-        order.push('warm');
-      },
-      ready: () => {
-        order.push('ready');
-      },
-      failed: () => {
-        order.push('failed');
-      },
-    });
-    expect(order).toEqual(['upload', 'compile']);
-    resolve();
-    await task;
-    expect(order).toEqual(['upload', 'compile', 'warm', 'ready']);
-  });
-  it('fences a retired canvas after asynchronous compilation', async () => {
-    const order: string[] = [];
-    let current = true,
-      resolve!: () => void;
-    const compiled = new Promise<void>((r) => {
-      resolve = r;
-    });
-    const task = prepareLandingScene({
-      current: () => current,
-      upload: () => {
-        order.push('upload');
-      },
-      compile: () => compiled,
-      warm: () => {
-        order.push('warm');
-      },
-      ready: () => {
-        order.push('ready');
-      },
-      failed: () => {
-        order.push('failed');
-      },
-    });
-    current = false;
-    resolve();
-    await task;
-    expect(order).toEqual(['upload']);
-  });
-  it('keeps a failed preparation on the fallback without reporting readiness', async () => {
-    for (const stage of ['upload', 'compile', 'warm']) {
-      const events: string[] = [];
-      await prepareLandingScene({
-        current: () => true,
-        upload: () => {
-          if (stage === 'upload') throw Error();
-        },
-        compile: async () => {
-          if (stage === 'compile') throw Error();
-        },
-        warm: () => {
-          if (stage === 'warm') throw Error();
-        },
-        ready: () => {
-          events.push('ready');
-        },
-        failed: () => {
-          events.push('failed');
-        },
-      });
-      expect(events).toEqual(['failed']);
-    }
-  });
-  it('never reports an asynchronous failure after retirement', async () => {
-    let current = true,
-      reject!: (e: Error) => void;
+  it('retires both scheduled jobs before they start if cleanup wins the next microtask', async () => {
     const events: string[] = [];
-    const compiled = new Promise<void>((_, r) => {
-      reject = r;
-    });
+    let current = true;
     const task = prepareLandingScene({
       current: () => current,
-      upload: () => {},
-      compile: () => compiled,
+      load: async () => {
+        events.push('load');
+      },
+      initialize: () => {
+        events.push('environment');
+      },
+      compile: async () => {
+        events.push('compile');
+      },
+      upload: () => {
+        events.push('upload');
+      },
       warm: () => {
         events.push('warm');
       },
@@ -106,8 +43,207 @@ describe('landing GPU preparation ownership', () => {
       },
     });
     current = false;
-    reject(Error());
     await task;
+    expect(events).toEqual([]);
+  });
+
+  it('overlaps images with environment/compilation, then uploads final pixels and warms before readiness', async () => {
+    const events: string[] = [],
+      loaded = deferred(),
+      compiled = deferred();
+    const task = prepareLandingScene({
+      current: () => true,
+      load: () => {
+        events.push('load');
+        return loaded.promise;
+      },
+      initialize: () => {
+        events.push('environment');
+      },
+      compile: () => {
+        events.push('compile');
+        return compiled.promise;
+      },
+      upload: () => {
+        events.push('upload');
+      },
+      warm: () => {
+        events.push('warm');
+      },
+      ready: () => {
+        events.push('ready');
+      },
+      failed: () => {
+        events.push('failed');
+      },
+    });
+    await tick();
+    expect(events).toEqual(['load', 'environment', 'compile']);
+    compiled.resolve();
+    await tick();
+    expect(events).toEqual(['load', 'environment', 'compile']);
+    loaded.resolve();
+    await task;
+    expect(events).toEqual([
+      'load',
+      'environment',
+      'compile',
+      'upload',
+      'warm',
+      'ready',
+    ]);
+  });
+
+  it('fences a retired canvas while either independent job is unfinished', async () => {
+    const events: string[] = [],
+      compiled = deferred();
+    let current = true;
+    const task = prepareLandingScene({
+      current: () => current,
+      load: async () => {},
+      initialize: () => {
+        events.push('environment');
+      },
+      compile: () => compiled.promise,
+      upload: () => {
+        events.push('upload');
+      },
+      warm: () => {
+        events.push('warm');
+      },
+      ready: () => {
+        events.push('ready');
+      },
+      failed: () => {
+        events.push('failed');
+      },
+    });
+    await tick();
+    current = false;
+    compiled.resolve();
+    await task;
+    expect(events).toEqual(['environment']);
+  });
+
+  it.each(['load', 'initialize', 'compile', 'upload', 'warm'])(
+    'keeps a failed %s stage from publishing readiness',
+    async (stage) => {
+      const events: string[] = [];
+      const fail = (name: string) => {
+        if (stage === name) throw new Error('fixture-failure');
+      };
+      await prepareLandingScene({
+        current: () => true,
+        load: async () => {
+          fail('load');
+        },
+        initialize: () => fail('initialize'),
+        compile: async () => {
+          fail('compile');
+        },
+        upload: () => fail('upload'),
+        warm: () => fail('warm'),
+        ready: () => {
+          events.push('ready');
+        },
+        failed: () => {
+          events.push('failed');
+        },
+      });
+      expect(events).toEqual(['failed']);
+    },
+  );
+
+  it('retains an unresolved image job even if compilation fails, without late upload', async () => {
+    const loaded = deferred(),
+      events: string[] = [];
+    const task = prepareLandingScene({
+      current: () => true,
+      load: () => loaded.promise,
+      initialize: () => {},
+      compile: async () => {
+        throw new Error('fixture-compile');
+      },
+      upload: () => {
+        events.push('upload');
+      },
+      warm: () => {
+        events.push('warm');
+      },
+      ready: () => {
+        events.push('ready');
+      },
+      failed: () => {
+        events.push('failed');
+      },
+    });
+    let settled = false;
+    void task.then(() => {
+      settled = true;
+    });
+    await tick();
+    expect(settled).toBe(false);
+    expect(events).toEqual([]);
+    loaded.resolve();
+    await task;
+    expect(events).toEqual(['failed']);
+  });
+
+  it('never reports an asynchronous failure after retirement', async () => {
+    const compiled = deferred(),
+      events: string[] = [];
+    let current = true;
+    const task = prepareLandingScene({
+      current: () => current,
+      load: async () => {},
+      initialize: () => {},
+      compile: () => compiled.promise,
+      upload: () => {
+        events.push('upload');
+      },
+      warm: () => {
+        events.push('warm');
+      },
+      ready: () => {
+        events.push('ready');
+      },
+      failed: () => {
+        events.push('failed');
+      },
+    });
+    await tick();
+    current = false;
+    compiled.reject(new Error('fixture-compile'));
+    await task;
+    expect(events).toEqual([]);
+  });
+
+  it('does not start either job on an already retired canvas', async () => {
+    const events: string[] = [];
+    await prepareLandingScene({
+      current: () => false,
+      load: async () => {
+        events.push('load');
+      },
+      initialize: () => {
+        events.push('environment');
+      },
+      compile: async () => {
+        events.push('compile');
+      },
+      upload: () => {
+        events.push('upload');
+      },
+      warm: () => {
+        events.push('warm');
+      },
+      ready: () => {
+        events.push('ready');
+      },
+      failed: () => {
+        events.push('failed');
+      },
+    });
     expect(events).toEqual([]);
   });
 });

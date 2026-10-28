@@ -1,5 +1,8 @@
 import type { RoomDocument } from '@roomedy/contracts/room';
-import { findCatalogueEntry } from '@roomedy/spatial';
+import {
+  findCatalogueEntry,
+  roomMaterialOpportunities,
+} from '@roomedy/spatial';
 
 export type GuidanceStep =
   'welcome' | 'direction' | 'layout' | 'finishes' | 'talk';
@@ -8,24 +11,31 @@ export interface GuidanceChoice {
   label: string;
   next?: Exclude<GuidanceStep, 'welcome'>;
   request?: string;
+  colors?: readonly string[];
 }
 export const guidanceText: Record<GuidanceStep, string> = {
-  welcome:
-    'Hi, I’m Medy. What would you like to make room for?\n\nWe can find a direction together, or talk through what’s on your mind.',
-  direction:
-    'Let’s take it one step at a time. Would you like to start with how the room works, or how it feels?',
-  layout:
-    'What would make the space more useful for you? We can start with one idea and preview it together.',
-  finishes:
-    'What kind of atmosphere feels like you? Pick a starting point and I’ll prepare a palette to preview.',
-  talk: 'I’m listening. What do you like about your room, and what isn’t working for you? You can start anywhere.',
+  welcome: 'Hi, I’m Medy. What would you like to make room for?',
+  direction: 'Start with the layout or the mood?',
+  layout: 'What would make your space work better?',
+  finishes: 'Choose a palette to preview.',
+  talk: 'What’s working in your room, and what would you change?',
 };
+
+export function guidanceMessage(step: GuidanceStep, room: RoomDocument) {
+  if (roomMaterialOpportunities(room).length) {
+    if (step === 'welcome')
+      return 'Hi, I’m Medy. Let’s bring your room to life with materials.';
+    if (step === 'finishes') return 'Start with a finish you’d like to see.';
+  }
+  return guidanceText[step];
+}
 
 export function guidanceChoices(
   step: GuidanceStep,
   room: RoomDocument,
   tourSeen: boolean,
 ): readonly GuidanceChoice[] {
+  const materials = roomMaterialOpportunities(room);
   switch (step) {
     case 'welcome':
       return [
@@ -33,9 +43,11 @@ export function guidanceChoices(
           ? [{ id: 'tour', label: 'Show me around', request: 'Show me around' }]
           : []),
         {
-          id: 'direction',
-          label: 'Help me find a direction',
-          next: 'direction',
+          id: materials.length ? 'materials' : 'direction',
+          label: materials.length
+            ? 'Explore materials'
+            : 'Help me find a direction',
+          next: materials.length ? 'finishes' : 'direction',
         },
         { id: 'talk', label: 'Let’s talk', next: 'talk' },
       ];
@@ -77,6 +89,15 @@ export function guidanceChoices(
         },
       ];
     case 'finishes':
+      if (materials.length)
+        return materials
+          .slice(0, 3)
+          .map(({ label, request, colors }, index) => ({
+            id: `material-${index}`,
+            label,
+            request,
+            colors,
+          }));
       return ['Warm & simple', 'Light & airy', 'Calm & focused'].map(
         (label) => ({
           id: label,

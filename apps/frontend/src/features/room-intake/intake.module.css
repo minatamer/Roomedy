@@ -620,7 +620,6 @@
   max-width: 100%;
   padding: 3px 3px 12px;
   margin: 0;
-  scrollbar-color: #bba17c #eee3d1;
 }
 .photos > li {
   flex: 0 0 min(260px, 85%);
@@ -719,7 +718,6 @@
   scroll-behavior: smooth;
   padding: 3px 3px 12px;
   margin-bottom: 12px;
-  scrollbar-color: #bba17c #eee3d1;
 }
 .exampleImages figure {
   display: flex;

@@ -24,7 +24,8 @@ export interface Diagnostic {
     | 'operation-uncertain'
     | 'recognition-decision'
     | 'provider-rejected'
-    | 'assistant-decision';
+    | 'assistant-decision'
+    | 'sourcing-decision';
   reference: string;
   outcome?: OperationResult['kind'];
   rounds?: number;
@@ -41,6 +42,7 @@ export interface Diagnostic {
     | 'tool-name'
     | 'tool-input';
   assistantTool?: AssistantTool;
+  sourcingIssues?: { code: string; path: string }[];
 }
 export interface RuntimeDependencies {
   now: () => number;

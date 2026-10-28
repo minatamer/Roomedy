@@ -143,7 +143,6 @@ export const assistantToolSchemas = {
   }),
   explain_checks: z.strictObject({ issueId: issueSchema.shape.id.nullable() }),
   focus_item: z.strictObject({ id: idSchema }),
-  request_measurement: z.strictObject({ id: idSchema, field: fieldSchema }),
   request_lock_change: z.strictObject({
     id: idSchema,
     lock: z.enum(['position', 'rotation']),

@@ -105,7 +105,9 @@ function OrientedFootprint({
           findCatalogueEntry(item.catalogueId, item.catalogueVersion)
             ?.category === 'tv'
             ? '#282b2a'
-            : FINISH_PALETTE[item.finish]
+            : (item.materials?.bodyColor ??
+              item.materials?.softColor ??
+              FINISH_PALETTE[item.finish])
         }
         stroke={selected ? '#332b25' : '#5d5147'}
         strokeWidth={selected ? 35 : 14}
@@ -812,13 +814,17 @@ export function PlanView({
                 x2={r.maxX}
                 y2={r.maxZ}
                 stroke={
-                  selected
-                    ? '#704830'
-                    : feature.kind === 'window' ||
-                        (feature.kind === 'door' &&
-                          feature.purpose === 'balcony')
-                      ? '#f7f5ef'
-                      : '#77634c'
+                  feature.kind !== 'obstacle' && feature.materials
+                    ? feature.kind === 'window' || feature.purpose === 'balcony'
+                      ? (feature.materials.frameColor ?? '#f7f5ef')
+                      : (feature.materials.color ?? '#77634c')
+                    : selected
+                      ? '#704830'
+                      : feature.kind === 'window' ||
+                          (feature.kind === 'door' &&
+                            feature.purpose === 'balcony')
+                        ? '#f7f5ef'
+                        : '#77634c'
                 }
                 strokeWidth={selected ? 140 : 100}
               />

@@ -14,11 +14,13 @@ import {
   useState,
 } from 'react';
 import type { FormEvent, ReactNode } from 'react';
-import type {
-  EstimateLine,
-  EstimateQuantity,
-} from '@roomedy/contracts/estimates';
-import { calculateRoomEstimate, checkRoom } from '@roomedy/spatial';
+import type { EstimateLine } from '@roomedy/contracts/estimates';
+import {
+  calculateRoomEstimate,
+  checkRoom,
+  defaultEstimateSettings,
+  sampleEstimateOffers,
+} from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
@@ -26,7 +28,15 @@ import type { CameraPose } from '../room-view/adapter';
 import { Brand } from '../landing/brand';
 import { MedyIcon } from '../assistant/medy-icon';
 import { ScopeControls } from './scope-controls';
-import { explainCost, money, targetExists, targetKey } from './state';
+import {
+  explainCost,
+  explanationLines,
+  quantity,
+  money,
+  targetExists,
+  targetKey,
+} from './state';
+import { ChatIcon, CostLineCards } from './chat-visuals';
 import styles from './workspace.module.css';
 const Cutaway = lazy(() => import('../room-view/cutaway'));
 class SceneBoundary extends Component<
@@ -40,21 +50,6 @@ class SceneBoundary extends Component<
   override render() {
     return this.state.failed ? this.props.fallback : this.props.children;
   }
-}
-function quantity(q: EstimateQuantity | null) {
-  if (!q) return 'Needs measurement';
-  const value = q.numerator / q.denominator;
-  const divisor =
-    q.unit === 'mm2' ? 1e6 : q.unit === 'mm' || q.unit === 'ml' ? 1000 : 1;
-  const unit =
-    q.unit === 'mm2'
-      ? 'm²'
-      : q.unit === 'mm'
-        ? 'm'
-        : q.unit === 'ml'
-          ? 'L'
-          : q.unit;
-  return `${new Intl.NumberFormat('en', { maximumFractionDigits: 3 }).format(value / divisor)} ${unit}`;
 }
 export function CostWorkspace({
   controller,
@@ -108,6 +103,7 @@ export function CostWorkspace({
           },
     ),
     [work, setWork] = useState(false);
+  const [researchOpen, setResearchOpen] = useState(false);
   const research = useRef<
     ((key: string, query: string, primer?: boolean) => Promise<void>) | null
   >(null);
@@ -133,6 +129,14 @@ export function CostWorkspace({
       logEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }, [draft.messages.length]);
   const estimate = result.ok ? result.estimate : null;
+  const usedOfferIds = new Set(
+    estimate?.lines.flatMap((line) => line.offerIds),
+  );
+  const origins = (['sample', 'sourced', 'manual'] as const).filter((kind) =>
+    draft.offers.some(
+      (offer) => offer.source.kind === kind && usedOfferIds.has(offer.id),
+    ),
+  );
   const pickedLine =
     estimate?.lines.find((line) => line.id === lineId) ??
     estimate?.lines.find(
@@ -163,32 +167,31 @@ export function CostWorkspace({
         amount: intent.amountMinor,
         currency: draft.settings.locality.currency,
       });
-      controller.costMessage(
-        'assistant',
-        'I’ll compare compatible recorded products and keeping your owned furniture. Review the alternatives below; required work and unresolved costs stay visible.',
-      );
+      controller.costMessage('assistant', 'Let’s compare your options.');
     } else if (intent.kind === 'work') {
       setBudget(null);
       setWork(true);
-      controller.costMessage(
-        'assistant',
-        'Your work sequence and shopping quantities are ready below. Site checks, product instructions and unresolved timing remain visible.',
-      );
+      controller.costMessage('assistant', 'Your work plan.');
     } else if (intent.kind === 'research') {
       setBudget(null);
       setWork(false);
-      controller.costMessage(
-        'assistant',
-        'I’ll research this part using its design brief and your selected city and currency. Review the evidence and differences before using a price.',
-      );
+      controller.costMessage('assistant', 'Finding options for this part.');
       void research.current?.(intent.key, intent.query, /primer/i.test(text));
-    } else
+    } else {
+      setBudget(null);
+      setWork(false);
       controller.costMessage(
         'assistant',
         intent.kind === 'clarify'
           ? intent.message
           : explainCost(estimate, text, target),
+        intent.kind === 'clarify'
+          ? undefined
+          : explanationLines(estimate, text, target)
+              .slice(0, 4)
+              .map((line) => line.id),
       );
+    }
   };
   const submit = (event: FormEvent) => {
     event.preventDefault();
@@ -211,6 +214,50 @@ export function CostWorkspace({
       <button onClick={onDesign}>Open Design &amp; 2D plan</button>
     </div>
   );
+  if (draft.settings.locality.currency !== 'USD')
+    return (
+      <div className={styles.page}>
+        <header className={styles.header}>
+          <Brand />
+          <button onClick={onDesign}>← Design</button>
+        </header>
+        <main className={styles.main}>
+          <h1>Keep your history. Plan in USD.</h1>
+          <p>
+            This earlier estimate is preserved in the editable project. Its
+            original amounts have not been relabelled or converted. Active
+            estimates and PDF exports use USD.
+          </p>
+          {saved && currentCost.settings.locality.currency === 'USD' ? (
+            <button onClick={() => setViewingId(null)}>
+              Return to current USD draft
+            </button>
+          ) : (
+            <button
+              disabled={!!state.candidate}
+              onClick={() => {
+                const settings = defaultEstimateSettings(currentRoom);
+                settings.locality = {
+                  ...currentCost.settings.locality,
+                  currency: 'USD',
+                };
+                if (controller.updateCost(settings, sampleEstimateOffers())) {
+                  setViewingId(null);
+                  setBudget(null);
+                }
+              }}
+            >
+              Start a fresh USD estimate for this room
+            </button>
+          )}
+          <p>
+            The fresh estimate uses clearly marked sample prices where
+            applicable. Saved versions and the room stay intact; Undo restores
+            the earlier draft.
+          </p>
+        </main>
+      </div>
+    );
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -225,20 +272,12 @@ export function CostWorkspace({
             Undo{state.undoLabel ? ` · ${state.undoLabel}` : ''}
           </button>
         </nav>
-        <span className={styles.revision}>
-          Room revision {room.roomRevision}
-        </span>
       </header>
       <main id="main-content" className={styles.main}>
         <div className={styles.intro}>
-          <p className={styles.eyebrow}>Your room, made real</p>
           <h1 ref={heading} tabIndex={-1}>
-            Bring your room to life.
+            Plan &amp; cost
           </h1>
-          <p>
-            Explore what to buy, what to keep and the work that brings it
-            together.
-          </p>
         </div>
         <section
           ref={roomCard}
@@ -282,10 +321,7 @@ export function CostWorkspace({
               >
                 Whole room
               </button>
-              <button
-                aria-pressed={graphics}
-                onClick={() => setGraphics((v) => !v)}
-              >
+              <button onClick={() => setGraphics((v) => !v)}>
                 {graphics ? 'Use text view' : 'Show 3D'}
               </button>
             </div>
@@ -340,44 +376,23 @@ export function CostWorkspace({
                   : 'Review your cost scope'}
               </strong>
             </div>
-            <p>
+            <div className={styles.totalMeta}>
               {estimate
                 ? `${estimate.unpricedCount} unresolved ${estimate.unpricedCount === 1 ? 'line' : 'lines'} · ${draft.settings.locality.city}`
                 : result.ok
                   ? ''
                   : result.code}
-              <br />
-              <span>
-                Authored sample prices until you select sourced or manual
-                prices.
-              </span>
-            </p>
+              <details className={styles.evidenceInfo}>
+                <summary>Price evidence</summary>
+                <span>
+                  {origins.length
+                    ? `Price evidence: ${origins.map((kind) => (kind === 'sample' ? 'authored samples' : kind === 'sourced' ? 'merchant sources' : 'manual allowances')).join(', ')}. Review before ordering.`
+                    : 'Unpriced costs are additional; choose a product or enter an allowance.'}
+                </span>
+              </details>
+            </div>
           </div>
         </section>
-        {currentResult.ok && (
-          <VersionControls
-            controller={controller}
-            state={state}
-            estimate={currentResult.estimate}
-            selectedId={saved?.id ?? null}
-            onView={(id) => {
-              setViewingId(id);
-              setSelected(null);
-              setLineId(null);
-              setIsolated(false);
-              roomCard.current?.focus({ preventScroll: true });
-              roomCard.current?.scrollIntoView({
-                block: 'start',
-                behavior: 'smooth',
-              });
-            }}
-            onDesign={onDesign}
-          />
-        )}
-        <EstimatePdfControls
-          controller={controller}
-          selectedId={saved?.id ?? null}
-        />
         {!saved && (
           <>
             <section
@@ -385,13 +400,8 @@ export function CostWorkspace({
               aria-label="Plan and cost conversation"
             >
               <h2>
-                <MedyIcon /> Let’s bring it together
+                <MedyIcon /> Medy
               </h2>
-              <p className={styles.welcome}>
-                I’ve broken your room into materials, furniture and work. Choose
-                a part in 3D or a cost line below, and we can explore its
-                quantities and assumptions.
-              </p>
               <div role="log" aria-label="Cost conversation">
                 {draft.messages.map((message, i) => (
                   <div
@@ -403,26 +413,111 @@ export function CostWorkspace({
                     <span className={styles.srOnly}>
                       {message.role === 'visitor' ? 'You' : 'Medy'}:{' '}
                     </span>
-                    {message.text}
-                    <small className={styles.messageStamp}>
-                      Room {message.roomRevision} · estimate{' '}
-                      {message.costRevision}
-                    </small>
+                    {message.lineIds &&
+                    estimate &&
+                    message.roomRevision === room.roomRevision &&
+                    message.costRevision === draft.revision ? (
+                      <>
+                        <CostLineCards
+                          estimate={estimate}
+                          lines={estimate.lines.filter((line) =>
+                            message.lineIds!.includes(line.id),
+                          )}
+                          inspect={inspect}
+                        />
+                        <details>
+                          <summary>Full explanation</summary>
+                          {message.text}
+                        </details>
+                      </>
+                    ) : message.lineIds ? (
+                      <details>
+                        <summary>Earlier cost explanation</summary>
+                        {message.text}
+                      </details>
+                    ) : message.role === 'assistant' &&
+                      message.text.length > 280 ? (
+                      <details>
+                        <summary>Cost details</summary>
+                        {message.text}
+                      </details>
+                    ) : message.role === 'assistant' &&
+                      [
+                        'Your work plan.',
+                        'Let’s compare your options.',
+                        'Finding options for this part.',
+                      ].includes(message.text) ? (
+                      <span className={styles.srOnly}>{message.text}</span>
+                    ) : (
+                      message.text
+                    )}
                   </div>
                 ))}
                 <div ref={logEnd} />
               </div>
+              {estimate && (
+                <PlanCards
+                  controller={controller}
+                  state={state}
+                  estimate={estimate}
+                  budget={
+                    budget?.currency === draft.settings.locality.currency
+                      ? budget.amount
+                      : null
+                  }
+                  work={work}
+                  inspect={inspect}
+                  onPreview={(key) => {
+                    setSelected(key);
+                    setLineId(null);
+                    setGraphics(true);
+                  }}
+                  onResolved={() =>
+                    composer.current?.focus({ preventScroll: true })
+                  }
+                />
+              )}
+              <Research
+                requestRef={research}
+                open={researchOpen}
+                onOpenChange={setResearchOpen}
+                onDesign={onDesign}
+                controller={controller}
+                state={state}
+                selected={target}
+                onInspect={(key) => {
+                  setSelected(key);
+                  setLineId(null);
+                  setGraphics(true);
+                  roomCard.current?.focus({ preventScroll: true });
+                  roomCard.current?.scrollIntoView({
+                    block: 'start',
+                    behavior: 'smooth',
+                  });
+                }}
+              />
               <div className={styles.quick}>
-                {[
-                  'Find options for this part',
-                  'Compare a cheaper budget',
-                  'Show my work plan',
-                ].map((text) => (
+                {(
+                  [
+                    ['Find options', 'search'],
+                    ['Compare budget', 'budget'],
+                    ['Work plan', 'work'],
+                  ] as const
+                ).map(([text, icon]) => (
                   <button
                     key={text}
                     disabled={!!state.candidate}
-                    onClick={() => ask(text)}
+                    onClick={() => {
+                      if (icon === 'search') setResearchOpen((v) => !v);
+                      else
+                        ask(
+                          icon === 'budget'
+                            ? 'Compare a cheaper budget'
+                            : 'Show my work plan',
+                        );
+                    }}
                   >
+                    <ChatIcon kind={icon} />
                     {text}
                   </button>
                 ))}
@@ -456,44 +551,6 @@ export function CostWorkspace({
                 </button>
               </form>
             </section>
-            {estimate && (
-              <PlanCards
-                controller={controller}
-                state={state}
-                estimate={estimate}
-                budget={
-                  budget?.currency === draft.settings.locality.currency
-                    ? budget.amount
-                    : null
-                }
-                work={work}
-                inspect={inspect}
-                onPreview={(key) => {
-                  setSelected(key);
-                  setLineId(null);
-                  setGraphics(true);
-                }}
-                onResolved={() =>
-                  composer.current?.focus({ preventScroll: true })
-                }
-              />
-            )}
-            <Research
-              requestRef={research}
-              controller={controller}
-              state={state}
-              selected={target}
-              onInspect={(key) => {
-                setSelected(key);
-                setLineId(null);
-                setGraphics(true);
-                roomCard.current?.focus({ preventScroll: true });
-                roomCard.current?.scrollIntoView({
-                  block: 'start',
-                  behavior: 'smooth',
-                });
-              }}
-            />
             <fieldset
               className={styles.scopeGuard}
               disabled={!!state.candidate}
@@ -507,11 +564,36 @@ export function CostWorkspace({
             </fieldset>
           </>
         )}
+        <div className={styles.utilities}>
+          {currentResult.ok && (
+            <VersionControls
+              controller={controller}
+              state={state}
+              estimate={currentResult.estimate}
+              selectedId={saved?.id ?? null}
+              onView={(id) => {
+                setViewingId(id);
+                setSelected(null);
+                setLineId(null);
+                setIsolated(false);
+                roomCard.current?.focus({ preventScroll: true });
+                roomCard.current?.scrollIntoView({
+                  block: 'start',
+                  behavior: 'smooth',
+                });
+              }}
+              onDesign={onDesign}
+            />
+          )}
+          <EstimatePdfControls
+            controller={controller}
+            selectedId={saved?.id ?? null}
+          />
+        </div>
         {estimate && (
           <section className={styles.breakdown} aria-label="Itemized estimate">
             <div className={styles.cardTop}>
               <div>
-                <p className={styles.eyebrow}>Connected to your design</p>
                 <h2>The breakdown</h2>
               </div>
               <span>{estimate.lines.length} lines</span>
@@ -673,6 +755,16 @@ function Calculation({
               <strong>{offer.label}</strong> · {offer.variant}
               <br />
               {offer.supplier} · {offer.source.kind} · {offer.source.evidence}
+              {offer.fx && (
+                <>
+                  <br />
+                  USD reference equivalent · rate dated {offer.fx.date}.{' '}
+                  <a href={offer.fx.url} target="_blank" rel="noreferrer">
+                    Exchange-rate source ↗
+                  </a>{' '}
+                  Checkout rates and fees may differ.
+                </>
+              )}
               {offer.source.url && (
                 <>
                   {' '}

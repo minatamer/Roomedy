@@ -82,6 +82,7 @@ const goods = <K extends EstimateOffer['kind']>(
 describe('independent whole-room takeoff and price cases', () => {
   it('calculates20.16m² floor,43.59m² walls, waste once, eleven packs and installed-area labour', () => {
     const estimate = calculate();
+    expect(estimate.locality.currency).toBe('USD');
     const floor = estimate.lines.find((line) =>
       line.offerIds.includes('sample-floor-oak'),
     )!;
@@ -97,18 +98,18 @@ describe('independent whole-room takeoff and price cases', () => {
     });
     expect(floor.quantity?.numerator).toBe(11);
     expect(floor.purchased?.numerator).toBe(24_200_000);
-    expect(floor.amountMinor).toBe(935_000);
+    expect(floor.amountMinor).toBe(46_200);
     const labour = estimate.lines.find((line) =>
       line.offerIds.includes('sample-floor-install'),
     )!;
-    expect(labour.amountMinor).toBe(241_920);
-    expect(floor.amountMinor! + labour.amountMinor!).toBe(1_176_920);
+    expect(labour.amountMinor).toBe(12_096);
+    expect(floor.amountMinor! + labour.amountMinor!).toBe(58_296);
     expect(
       estimate.lines.filter((line) => line.category === 'delivery'),
     ).toHaveLength(2);
     expect(estimate.complete).toBe(true);
-    expect(estimate.totalMinor).toBe(2_457_835);
-    expect(estimate.allowanceMinor).toBe(85_000);
+    expect(estimate.totalMinor).toBe(148_588);
+    expect(estimate.allowanceMinor).toBe(16_000);
     expect(
       estimate.pricedSubtotalMinor +
         estimate.allowanceMinor +
@@ -159,12 +160,12 @@ describe('independent whole-room takeoff and price cases', () => {
       unit: 'ml',
     });
     expect(paint.purchased?.numerator).toBe(10_000);
-    expect(paint.amountMinor).toBe(300_000);
+    expect(paint.amountMinor).toBe(11_200);
     expect(primer.required!.numerator / primer.required!.denominator).toBe(
       5448.75,
     );
     expect(primer.purchased?.numerator).toBe(6000);
-    expect(primer.amountMinor).toBe(115_000);
+    expect(primer.amountMinor).toBe(5_000);
     room.room = withRoomSurface(room.room, {
       surface: 'north',
       color: '#526577',
@@ -188,7 +189,7 @@ describe('independent whole-room takeoff and price cases', () => {
           denominator: 10_000_000,
           unit: 'ml',
         },
-        price: 80_000,
+        price: 3_600,
         packs: [{ id: 'paint-1l', count: 2 }],
       },
       {
@@ -198,7 +199,7 @@ describe('independent whole-room takeoff and price cases', () => {
           denominator: 10_000_000,
           unit: 'ml',
         },
-        price: 230_000,
+        price: 9_200,
         packs: [
           { id: 'paint-1l', count: 2 },
           { id: 'paint-5l', count: 1 },
@@ -206,7 +207,7 @@ describe('independent whole-room takeoff and price cases', () => {
       },
     ]);
     expect(colours.reduce((sum, line) => sum + line.amountMinor!, 0)).toBe(
-      310_000,
+      12_800,
     );
     expect(
       calculate(room, settings).lines.filter((line) =>
@@ -300,10 +301,10 @@ describe('independent whole-room takeoff and price cases', () => {
     const settings = onlyPurchases(reviewedSettings(room));
     expect(calculate(room, settings).totalMinor).toBe(0);
     settings.furniture[0]!.mode = 'buy';
-    expect(calculate(room, settings).totalMinor).toBe(1_300_000);
+    expect(calculate(room, settings).totalMinor).toBe(67_500);
     settings.furniture[0]!.components[0]!.mode = 'reuse';
     const reused = calculate(room, settings);
-    expect(reused.totalMinor).toBe(850_000);
+    expect(reused.totalMinor).toBe(45_000);
     expect(
       reused.lines.find((line) => line.label.includes('Bed base included')),
     ).toMatchObject({ pricing: 'included', amountMinor: 0 });
@@ -338,7 +339,7 @@ describe('independent whole-room takeoff and price cases', () => {
     expect(
       estimate.lines.filter((line) => line.category === 'delivery'),
     ).toHaveLength(1);
-    expect(estimate.totalMinor).toBe(590_000);
+    expect(estimate.totalMinor).toBe(33_000);
   });
   it('does not add delivery/assembly when already included, but rejects an unknown selected component', () => {
     const room = commandRoom([piece('desk')]),
@@ -351,7 +352,7 @@ describe('independent whole-room takeoff and price cases', () => {
     const desk = goods(offers, 'sample-desk', 'furniture');
     desk.deliveryIncluded = true;
     desk.assemblyIncluded = true;
-    expect(calculate(room, settings, offers).totalMinor).toBe(280_000);
+    expect(calculate(room, settings, offers).totalMinor).toBe(14_000);
     settings.furniture[0]!.components = [
       { key: 'not-offered', mode: 'buy', offerId: 'sample-mattress' },
     ];
@@ -456,7 +457,7 @@ describe('exact money, evidence and incomplete estimates', () => {
       code: 'incompatible-offer',
     });
     settings.floor.offerId = 'sample-floor-oak';
-    goods(offers, settings.floor.offerId, 'floor').market.currency = 'USD';
+    goods(offers, settings.floor.offerId, 'floor').market.currency = 'EUR';
     expect(calculateRoomEstimate(room, settings, offers)).toEqual({
       ok: false,
       code: 'mixed-currency',

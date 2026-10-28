@@ -9,6 +9,16 @@ export const FINISH_COLORS = {
   walnut: '#735243',
   charcoal: '#344846',
 } as const;
+export const COLOUR_PRESETS = {
+  ivory: '#f3eee2',
+  sand: '#cbb79b',
+  white: '#ffffff',
+  sage: '#8eaa96',
+  terracotta: '#c97f60',
+  navy: '#283e56',
+  walnut: '#735243',
+  charcoal: '#344846',
+} as const;
 export const SURFACE_TEXTURES = {
   planks: 'Wood planks',
   tile: 'Tile',
@@ -18,11 +28,30 @@ export const SURFACE_TEXTURES = {
   plaster: 'Plaster',
   wood: 'Wood panels',
   linen: 'Linen',
+  stripes: 'Stripes',
+  checker: 'Checker',
+  herringbone: 'Herringbone',
 } as const;
-const WALL_TEXTURES = ['smooth', 'plaster', 'wood', 'linen'] as const;
+const WALL_TEXTURES = [
+  'smooth',
+  'plaster',
+  'wood',
+  'linen',
+  'stripes',
+  'checker',
+  'herringbone',
+] as const;
 export const WALLS = ['north', 'east', 'south', 'west'] as const;
 export const SURFACE_OPTIONS = {
-  floor: ['planks', 'tile', 'concrete', 'carpet'],
+  floor: [
+    'planks',
+    'tile',
+    'concrete',
+    'carpet',
+    'stripes',
+    'checker',
+    'herringbone',
+  ],
   walls: WALL_TEXTURES,
   north: WALL_TEXTURES,
   east: WALL_TEXTURES,
@@ -57,6 +86,9 @@ export const surfaceTextureSchema = z.enum([
   'plaster',
   'wood',
   'linen',
+  'stripes',
+  'checker',
+  'herringbone',
 ]);
 const fact = <T extends z.ZodType>(value: T) =>
   z.discriminatedUnion('status', [

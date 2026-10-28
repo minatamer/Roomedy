@@ -42,6 +42,178 @@ afterEach(() => {
 });
 
 describe('scene-owned local material preparation', () => {
+  it('prefers HTTP cache only when explicitly selected for the fixed public material images', async () => {
+    for (const cache of [undefined, 'force-cache'] as const) {
+      const port = io();
+      if (cache) port.cache = cache;
+      const loader = new SurfaceAssets(vi.fn(), port);
+      try {
+        expect(await loader.load()).toEqual({ loaded: 4, failed: 0 });
+        expect(port.fetch).toHaveBeenCalledTimes(8);
+        for (const [url, options] of vi.mocked(port.fetch!).mock.calls) {
+          expect(String(url)).toMatch(
+            /^\/surfaces\/(floor|wood|fabric|plaster)-(detail|normal)-v1\.png$/,
+          );
+          expect(options?.cache).toBe(cache);
+          expect(options).toMatchObject({
+            credentials: 'same-origin',
+            redirect: 'error',
+          });
+        }
+      } finally {
+        loader.dispose();
+      }
+    }
+  });
+
+  it('does not generate or publish a deferred fallback after external cancellation', async () => {
+    const port = io(),
+      abort = new AbortController();
+    port.deferFallback = true;
+    let finish!: (data: Uint8Array<ArrayBuffer>) => void;
+    port.decode = vi.fn(
+      () =>
+        new Promise<Uint8Array<ArrayBuffer>>((resolve) => {
+          finish = resolve;
+        }),
+    );
+    const maps = createSurfaces(port),
+      original = maps.floor.image;
+    const pending = maps.load(abort.signal);
+    await vi.waitFor(() => expect(port.decode).toHaveBeenCalledTimes(1));
+    abort.abort();
+    finish(pixels(512));
+    await pending;
+    expect(maps.floor.image).toBe(original);
+    maps.dispose();
+  });
+
+  it('defers landing procedural work until failure while keeping exact fallback dimensions and other photo sets', async () => {
+    const port = io(),
+      original = port.fetch!;
+    port.concurrency = 4;
+    port.deferFallback = true;
+    port.fetch = vi.fn(async (url, options) =>
+      String(url).includes('/floor-')
+        ? new Response(null, { status: 404 })
+        : original(url, options),
+    );
+    const maps = createSurfaces(port);
+    try {
+      const initial = maps.floor.image.data;
+      expect(new Set(initial)).toEqual(new Set([255]));
+      const pending = maps.load();
+      expect(maps.load()).toBe(pending);
+      expect(await pending).toEqual({ loaded: 3, failed: 1 });
+      expect(maps.floor.image.data).not.toBe(initial);
+      expect(maps.floor.image.width).toBe(512);
+      expect(maps.floor.image.height).toBe(512);
+      expect(new Set(maps.floor.image.data).size).toBeGreaterThan(2);
+      expect(Array.from(maps.wood.image.data?.slice(0, 4) ?? [])).toEqual([
+        198, 198, 198, 255,
+      ]);
+      expect([
+        ...(surfaceProperties(maps.floor).normalMap?.image.data?.slice(0, 4) ??
+          []),
+      ]).toEqual([128, 128, 255, 255]);
+    } finally {
+      maps.dispose();
+    }
+  });
+
+  it('bounds the landing opt-in to four concurrent material jobs while retaining one load owner', async () => {
+    const port = io(),
+      apply = vi.fn();
+    port.concurrency = 4;
+    let active = 0,
+      maximum = 0,
+      release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    port.decode = vi.fn(async (_bytes, edge) => {
+      maximum = Math.max(maximum, ++active);
+      await gate;
+      active--;
+      return pixels(edge);
+    });
+    const loader = new SurfaceAssets(apply, port),
+      pending = loader.load();
+    expect(loader.load()).toBe(pending);
+    await vi.waitFor(() => expect(port.decode).toHaveBeenCalledTimes(4));
+    expect(maximum).toBe(4);
+    release();
+    expect(await pending).toEqual({ loaded: 4, failed: 0 });
+    expect(maximum).toBe(4);
+    expect(port.fetch).toHaveBeenCalledTimes(8);
+    expect(new Set(apply.mock.calls.map((call) => call[0]))).toEqual(
+      new Set(['floor', 'wood', 'fabric', 'plaster']),
+    );
+    loader.dispose();
+  });
+
+  it.each(['dispose', 'abort', 'deadline'])(
+    'retires all four parallel material jobs on %s without late application',
+    async (retirement) => {
+      vi.useFakeTimers();
+      const port = io(),
+        apply = vi.fn(),
+        abort = new AbortController();
+      port.concurrency = 4;
+      const pendingDecodes: {
+        edge: number;
+        resolve: (data: Uint8Array<ArrayBuffer>) => void;
+      }[] = [];
+      port.decode = vi.fn(
+        (_bytes, edge) =>
+          new Promise<Uint8Array<ArrayBuffer>>((resolve) => {
+            pendingDecodes.push({ edge, resolve });
+          }),
+      );
+      const loader = new SurfaceAssets(apply, port),
+        pending = loader.load(abort.signal);
+      await vi.waitFor(() => expect(pendingDecodes).toHaveLength(4));
+      if (retirement === 'dispose') loader.dispose();
+      else if (retirement === 'abort') abort.abort();
+      else await vi.advanceTimersByTimeAsync(10_000);
+      expect(vi.getTimerCount()).toBe(0);
+      for (const decode of pendingDecodes) decode.resolve(pixels(decode.edge));
+      expect(await pending).toEqual({ loaded: 0, failed: 4 });
+      expect(port.fetch).toHaveBeenCalledTimes(4);
+      expect(apply).not.toHaveBeenCalled();
+      loader.dispose();
+    },
+  );
+
+  it('retains other material jobs when one parallel set fails early', async () => {
+    const port = io(),
+      original = port.fetch!,
+      apply = vi.fn();
+    port.concurrency = 4;
+    let finish!: (response: Response) => void;
+    port.fetch = vi.fn((url, options) =>
+      String(url) === '/surfaces/floor-detail-v1.png'
+        ? Promise.resolve(new Response(null, { status: 404 }))
+        : String(url) === '/surfaces/wood-normal-v1.png'
+          ? new Promise<Response>((resolve) => {
+              finish = resolve;
+            })
+          : original(url, options),
+    );
+    const loader = new SurfaceAssets(apply, port),
+      pending = loader.load();
+    let settled = false;
+    void pending.then(() => {
+      settled = true;
+    });
+    await vi.waitFor(() => expect(port.fetch).toHaveBeenCalledTimes(7));
+    expect(settled).toBe(false);
+    finish(new Response(png('wood', 'normal')));
+    expect(await pending).toEqual({ loaded: 3, failed: 1 });
+    expect(apply.mock.calls.some((call) => call[0] === 'floor')).toBe(false);
+    loader.dispose();
+  });
+
   it('starts lazily once and serializes the eight allow-listed reads and decodes', async () => {
     const port = io(),
       apply = vi.fn();

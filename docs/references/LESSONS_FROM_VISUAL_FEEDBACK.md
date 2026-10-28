@@ -1,5 +1,47 @@
 # Lessons from the owner's visual feedback
 
+## Capture photographed appearance; edit colour independently —28 October2026
+
+Plain defaults belong only to fresh manual rooms. Photographs should retain editable estimates of visible furniture, wall/floor and door/window-frame colours and patterns. Patterns must be separable from RGB, with popular presets plus Custom hex/native/RGB0–255 controls. Do not tint glass or replace visible photo colours with a six-name palette. Ambiguity remains unknown and never interrupts design for measurements. [RM-015BY](../tickets/RM-015BY-capture-photo-appearance-and-edit-rgb-patterns.md).
+
+## Begin manual design with a plain base —28 October2026
+
+The owner wants fresh manual rooms to start with the plainest floor and furniture appearance, then have Medy actively recommend textures. Start with a neutral concrete floor, smooth ivory walls and plain matte body/soft-part choices. Keep geometry and saved/photo/imported/recovered appearances. Material recommendations must produce actual grain/weave/texture changes through reviewed previews; a colour palette alone is insufficient. Expose useful material choices early, without automatic upgrades or preventing the visitor from keeping a plain finish. [RM-015BX](../tickets/RM-015BX-start-manual-rooms-plain-and-suggest-materials.md).
+
+## Help users discover useful design actions —28 October2026
+
+The owner finds generic advice and a single expected reply unhelpful. Medy should notice useful additions absent from the current plan, explain how a suggested piece helps, and offer multiple distinct next messages. Context is a starting point, not a requirement that every reply paraphrase the last answer. Keep suggestions grounded in supported furniture, goals and current inventory, with optional additions rather than a checklist everyone must buy. Preserve the aesthetic, three-choice shelf, preview review and measurement-free planning. [RM-015BW](../tickets/RM-015BW-make-medy-proactive-and-offer-useful-choices.md).
+
+## Keep AI design moving with estimates —28 October2026
+
+The owner explicitly rejects missing-physical-fact/measurement and entry-connectivity nags and says these must not stop AI or prompt measurement questions. Use deterministic planning estimates for absent geometry and continue with useful design suggestions. Keep sizes editable; do not turn assumptions into confirmed measurements or rewrite accepted values. Remove the repeated cards and AI measurement-request controls/tools, including older response metadata. Deliberate locks, actual layout conflicts and normal preview/Apply/Undo remain useful. This supersedes prior O-03 measurement-first AI requirements. [RM-015BV](../tickets/RM-015BV-continue-ai-with-planning-estimates.md).
+
+## Compact Thinking and delicate warm scrollbars —28 October2026
+
+The owner rejects Preparing a response… with a Cancel CTA. Use Thinking and a continuously spinning indicator that matches the warm site palette, without adding busy-row actions. Preserve actual proposal review and lifecycle safeguards. Native scrollbar chrome should be much thinner and share the site’s translucent cocoa/champagne appearance through one reusable class; avoid separate white tracks and arrow boxes. [RM-015BU](../tickets/RM-015BU-refine-thinking-and-shared-scrollbars.md). Implementation permission is distinct from actual owner aesthetic acceptance.
+
+## Raise the walls to finish the room —28 October2026
+
+The owner prefers the walls' lowered pose at the start and their rising/upright pose at the end, so the last reveal shows a finished room. [RM-015BR](../tickets/RM-015BR-raise-the-walls-at-the-end.md) reverses the articulation without reversing painting/flooring/furnishing or the camera's orbit. Keep the camera's framing spacious enough for the wider lowered-wall start and the upright finish across responsive sizes. Existing attached window/rollers/paint must move together; reverse/restored scrolling must retrace the actual pose. Preserve USD/plain rows and previous startup/cache/cue decisions. Implementation permission is not actual owner visual acceptance.
+
+## Use USD and keep the landing estimate table plain —28 October2026
+
+The owner explicitly rejects EGP and requests USD appwide, plus no highlighted rows in the illustrated estimate table. [RM-015BQ](../tickets/RM-015BQ-use-usd-throughout-the-demo.md) therefore changes the shared fresh default/catalogue, fake sourcing, budget examples and landing dollar illustration, with versions/PDFs inheriting recorded USD. Dollar-sign budgets must work. Reauthor invented example rates in dollars; do not merely change the label or fabricate FX/current prices. Preserve existing historical monetary records and explicit location/currency compatibility. Remove table emphasis at every scroll state, including its publisher; the connected floor/total/saving and independent3D animation remain useful. This is implementation authority, not owner visual acceptance.
+
+## Demonstrate finishing and CPQ through the room —28 October2026
+
+The owner wants the landing's How it works and especially its3D animations to show the CPQ extension, suggesting rollers painting walls and textured flooring being fitted onto a plain starting floor. They explicitly approve the recommended continuous-room motion study: retain the kept bed/bedside and warmth, paint and lay finishes, furnish, then connect a material alternative with its cost line/estimate and finish with shopping/work/itemized PDF outcomes. [RM-015BP](../tickets/RM-015BP-show-the-cpq-scroll-story.md). Make the actual product relationship visible through the same scene, keeping clearly illustrative marketing amounts distinct from real sourcing/visitor authority and Medy tied to an understandable budget trade-off. Preserve the BN cue and BO startup/cache work; leave physical/device/current-market and actual owner acceptance as separate evidence.
+
+## Faster first room and progressive furnishing —28 October 2026
+
+After diagnosis of serial material loading and the800ms reveal, the owner explicitly requests improving performance until the room appears as quickly as practical. They authorize a few initial furniture pieces and more appearing while scrolling through How it works when that helps performance. [RM-015BO](../tickets/RM-015BO-speed-up-the-landing-room.md) therefore targets actual startup work and measured drawing cost, not just opacity timing: framework preloading, batched exact furniture parts, a bed/bedside start, bounded local material concurrency and avoiding procedural pixels immediately replaced by photographs. Keep genuine graphics preparation, liked materials/glass/lighting, scrolling/camera/wall animation, BN cue, failure accessibility and lifecycle bounds. Compare named actual runs; reject experiments that worsen the measured path. Owner request is implementation authority, not acceptance or a cold-network/physical performance claim.
+
+## Device-aware scroll cue and uninterrupted browser work —28 October 2026
+
+The owner rejects the circular-arrow Explore the room cue as visually poor and requests the familiar mouse/finger indicator from an earlier repository. Actual source search identifies Choreograph's `apps/frontend/components/hero-scroll-cue.tsx` and `apps/frontend/app/landing-hero.css`, with the same finger outline also in Retailor. [RM-015BN](../tickets/RM-015BN-use-device-aware-scroll-cues.md) adapts those outlines and gentle motion to Roomedy's cocoa palette, selecting the hint by primary pointer capability rather than viewport width. Preserve the existing centered section action and keyboard/hit-target behavior; do not import the sibling's delayed visibility, theme or perpetual loop. This supersedes the historical arrow-circle choice only; 3D initialization/reveal remains separate.
+
+After an unnecessary desktop Chrome permission request interrupted the chat, the owner explicitly forbids using or requesting desktop Google Chrome while the in-app browser is available. Missing touch/device emulation must be reported as unverified, without triggering another app-access prompt or interrupting AFK work. This is now a permanent [repository browser rule](../../AGENTS.md#visual-and-interaction-discipline), not a reason to claim a missing test passed.
+
 Prepared **17 October 2026** for Roomedy, before implementation.  
 Authority: [current blueprint](../ROOMEDY.md), the owner's current request and [repository instructions](../../AGENTS.md).  
 Use with: [ticket queue](../tickets/README.md) and [feature/review checklist](../design/REVIEW_CHECKLIST.md).
@@ -284,3 +326,22 @@ The owner explicitly wants visitors to try the four built-in sample photos immed
 The owner also rejects interpenetrating initial photo furniture and asks pieces to remain near the wall as shown in room photos. Validate the combined illustrated footprints, rather than adopting independently plausible centres. Preserve consistent observed back-wall relationships; use a bounded, explicitly planned bedside/bed relationship when co-visible head-side evidence is unique. Never solve overlap by floating a wall-backed piece into the room, inventing measured sizes or moving deliberate visitor poses. Test the actual sample path in2D and3D after repairs. Medy is the owner's selected initial tab for both photo and manual rooms; notes must not silently switch it to Room. [BL evidence](../validation/RM-015BL.md#separate-photo-placement-and-initial-medy--owner-follow-up).
 
 The owner reports an oak-only cabinet after photo entry and requires every inferred setting to remain changeable. Inspect shared catalogue and material ownership as well as route defaults: this restriction came from the prepared asset’s single-finish definition, and new photo pieces also inherited an automatic size lock. RM-015BK exposes all six finishes with visible editor/export changes, unlocks fresh photo assumptions and exposes custom owned size estimates. Never clear deliberate saved locks or corrections while changing defaults. Keep normal physical checks, uncertainty and Undo; rendering limitations must not remove editing controls. Actual owner visual approval remains pending.
+
+## USD-only CPQ and AFK live review — 28 October2026
+
+Owner explicitly wants local product/service discovery where useful but always USD equivalents in the application and PDFs. A USD default alone is insufficient: active foreign-currency controls and native-price research prose violate this feedback. Use dated reference conversion, preserve source and fit uncertainty, and never relabel an immutable old amount. Thoroughly test actual CPQ, PDF/export/import, useful responsive states and failures; fix/retest/document confirmed issues. Save many labelled screenshots and final PDF/project artifacts in a Desktop review folder for the owner's return. Real tests are authorized without a fixed budget, used economically. No routine questions while AFK. [RM-031](../tickets/RM-031-review-live-cpq-and-usd-sourcing.md).
+
+
+## Visual chat over repeated prose — 28 October 2026
+
+Owner: “there is too much yapping and it breaks our aesthetic” and requests visual, interactive content for both CPQ and Medy, citing Choreograph. Remove redundant surrounding text. Prefer genuine financial/object/finish/work cards with meaningful actions; disclose supporting evidence rather than deleting distinct qualifications. Product icons/swatch previews cannot invent supplier photos, size fit or budget completeness. Keep Roomedy warm glass/cocoa styling and explicit reviewed changes. See RM-032.
+
+
+## Larger room, fixed-left hero and a building-house loader —28 October2026
+
+Owner explicitly removes the centered-text/leftward intro, asks for the earlier larger room and a gentle glide to the side opposite the copy, and supplies a wireframe Cartier animal as loading-animation inspiration. Use an original small assembling house in Roomedy colours, not that brand logo. Show it only for actual pending work, with immediate feedback and no artificial loading hold. Preserve phone readability, real finishing/wall motion and CPQ story. RM-015BS supersedes earlier desktop full-wall-fit and center-to-left instructions for this named correction.
+
+
+## One warm studio palette —28 October2026
+
+Owner identifies white left buttons, a beige Medy panel, white composer and gray viewport as conflicting. Prefer one warm beige family with tonal separation and a softly glossy/translucent chat field, using Roomedy's actual colour theme. Shared semantic surface tokens should replace independent hard-coded neutrals. Keep text/selected/focus contrast, physical finish colours and the existing room/chat behavior. RM-015BT records the local correction.

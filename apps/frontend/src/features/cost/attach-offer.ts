@@ -111,7 +111,12 @@ export function reviewSourceSize(
   if (!preview.ok)
     return {
       ok: false as const,
-      reason: `The product size needs review in Design (${preview.code}). Check size locks, fit and the selected model before trying again.`,
+      reason:
+        preview.code === 'locked'
+          ? 'Dimensions are protected. Unlock the piece in Design if you want to change its size, then research again. Your room and price are unchanged.'
+          : preview.code === 'unsupported-variant'
+            ? 'This room model supports one size. Choose an adjustable model in Design to represent a different product size, then research again. Your room and price are unchanged.'
+            : 'The product size does not pass the room checks. Review fit and measurements in Design before trying again. Your room and price are unchanged.',
     };
   const attached = attachOffer(preview.room, state.cost, brief, candidate);
   if (!attached.ok) return attached;

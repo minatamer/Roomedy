@@ -2,13 +2,18 @@ import type { RoomDocument } from '@roomedy/contracts/room';
 import {
   estimateOffersSchema,
   estimateSettingsSchema,
+  DEFAULT_QUOTE_CURRENCY,
 } from '@roomedy/contracts/estimates';
 import { WALLS } from '@roomedy/contracts/surfaces';
 import { findCatalogueEntry } from './catalogue.js';
 
 /** Fresh authored fixtures, never merchant observations or a mutable global price list. */
 export function sampleEstimateOffers() {
-  const market = { country: 'EG', city: 'Cairo', currency: 'EGP' } as const;
+  const market = {
+    country: 'EG',
+    city: 'Cairo',
+    currency: DEFAULT_QUOTE_CURRENCY,
+  } as const;
   const base = (id: string, label: string, supplierId: string) => ({
     id,
     label,
@@ -68,24 +73,24 @@ export function sampleEstimateOffers() {
     includedWork,
   });
   const furniture = [
-    ['bed', 'Bed frame', 850_000],
-    ['desk', 'Desk', 280_000],
-    ['chair', 'Work chair', 320_000],
-    ['wardrobe', 'Wardrobe', 950_000],
-    ['storage', 'Storage', 180_000],
-    ['mirror', 'Mirror', 140_000],
-    ['tv', 'TV', 800_000],
-    ['seating', 'Seating', 350_000],
-    ['table', 'Side table', 150_000],
-    ['lighting', 'Lamp', 90_000],
+    ['bed', 'Bed frame', 45_000],
+    ['desk', 'Desk', 14_000],
+    ['chair', 'Work chair', 16_000],
+    ['wardrobe', 'Wardrobe', 50_000],
+    ['storage', 'Storage', 9_000],
+    ['mirror', 'Mirror', 7_000],
+    ['tv', 'TV', 40_000],
+    ['seating', 'Seating', 18_000],
+    ['table', 'Side table', 7_500],
+    ['lighting', 'Lamp', 4_500],
   ] as const;
   return estimateOffersSchema.parse([
-    floor('sample-floor-oak', 'Oak-look click flooring', 85_000, 'required'),
-    floor('sample-floor-value', 'Simple click flooring', 70_000, 'required'),
+    floor('sample-floor-oak', 'Oak-look click flooring', 4_200, 'required'),
+    floor('sample-floor-value', 'Simple click flooring', 3_200, 'required'),
     floor(
       'sample-floor-integrated',
       'Click flooring with integrated underlay',
-      110_000,
+      5_400,
       'integrated',
     ),
     {
@@ -97,14 +102,14 @@ export function sampleEstimateOffers() {
       kind: 'underlay',
       system: 'floating-click',
       packQuantity: 20_000_000,
-      priceMinor: 100_000,
+      priceMinor: 4_800,
     },
     {
       ...base('sample-trim', 'Skirting stock length', 'sample-floor-shop'),
       kind: 'trim',
       system: 'floating-click',
       packQuantity: 2400,
-      priceMinor: 20_000,
+      priceMinor: 800,
     },
     {
       ...base('sample-paint', 'Matte wall paint', 'sample-paint-shop'),
@@ -113,8 +118,8 @@ export function sampleEstimateOffers() {
       sheen: 'matte',
       coverageMm2PerLitre: 10_000_000,
       packs: [
-        { id: 'paint-1l', volumeMl: 1000, priceMinor: 40_000 },
-        { id: 'paint-5l', volumeMl: 5000, priceMinor: 150_000 },
+        { id: 'paint-1l', volumeMl: 1000, priceMinor: 1_800 },
+        { id: 'paint-5l', volumeMl: 5000, priceMinor: 5_600 },
       ],
     },
     {
@@ -124,8 +129,8 @@ export function sampleEstimateOffers() {
       sheen: 'primer',
       coverageMm2PerLitre: 8_000_000,
       packs: [
-        { id: 'primer-1l', volumeMl: 1000, priceMinor: 25_000 },
-        { id: 'primer-5l', volumeMl: 5000, priceMinor: 90_000 },
+        { id: 'primer-1l', volumeMl: 1000, priceMinor: 1_200 },
+        { id: 'primer-5l', volumeMl: 5000, priceMinor: 3_800 },
       ],
     },
     ...furniture.map(([category, label, priceMinor]) => ({
@@ -158,76 +163,76 @@ export function sampleEstimateOffers() {
       kind: 'component',
       pricing: 'allowance',
       key: 'mattress',
-      priceMinor: 450_000,
+      priceMinor: 22_500,
     },
     crew(
       'floor-prep',
       'Light subfloor preparation',
       'm2',
-      2500,
-      50_000,
+      250,
+      5_000,
       'Light preparation only; moisture, levelling and hidden damage need assessment.',
     ),
     crew(
       'floor-install',
       'Floating floor installation',
       'm2',
-      12_000,
-      100_000,
+      600,
+      10_000,
       'Install the selected floor over the net installed area. Materials and preparation separate.',
     ),
     crew(
       'paint-prep',
       'Light wall preparation',
       'm2',
-      2000,
-      50_000,
+      200,
+      5_000,
       'Cleaning, light filling, sanding and protection. Major repairs excluded.',
     ),
     crew(
       'paint-labour',
       'Wall coating labour',
       'm2',
-      6500,
-      100_000,
+      650,
+      10_000,
       'Apply the selected primer/topcoat system over net wall area. Preparation and materials separate.',
     ),
     crew(
       'assembly',
       'Furniture assembly',
       'each',
-      20_000,
-      20_000,
+      4_000,
+      4_000,
       'One newly purchased furniture item; wall mounting needs a specific supplier quote.',
     ),
     crew(
       'moving',
       'Move and protect existing furniture',
       'job',
-      40_000,
-      40_000,
+      10_000,
+      10_000,
       'Move within this home and return after work. Between-address relocation excluded.',
     ),
     crew(
       'disposal',
       'Removal and disposal allowance',
       'job',
-      25_000,
-      25_000,
+      6_000,
+      6_000,
       'Small-room debris allowance; actual volume, access and disposal terms need review.',
     ),
     crew(
       'consumables',
       'Protection and consumables',
       'job',
-      20_000,
-      20_000,
+      3_500,
+      3_500,
       'One job allowance for protection and ordinary consumables; no duplicate material waste.',
     ),
     ...[
-      ['sample-floor-shop', 25_000],
-      ['sample-paint-shop', 15_000],
-      ['sample-furniture-shop', 30_000],
+      ['sample-floor-shop', 4_000],
+      ['sample-paint-shop', 2_500],
+      ['sample-furniture-shop', 5_000],
     ].map(([group, priceMinor]) => ({
       ...base(
         `delivery-${group}`,
@@ -250,7 +255,11 @@ export function sampleEstimateOffers() {
 export function defaultEstimateSettings(room: RoomDocument) {
   return estimateSettingsSchema.parse({
     roomId: room.roomId,
-    locality: { country: 'EG', city: 'Cairo', currency: 'EGP' },
+    locality: {
+      country: 'EG',
+      city: 'Cairo',
+      currency: DEFAULT_QUOTE_CURRENCY,
+    },
     floor: {
       enabled: true,
       offerId: 'sample-floor-oak',

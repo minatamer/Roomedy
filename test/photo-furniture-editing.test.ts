@@ -1,3 +1,4 @@
+import { furnitureMaterialTargets } from '@roomedy/contracts/furniture-materials';
 import { readFile } from 'node:fs/promises';
 import { expect, it, vi } from 'vitest';
 import { FINISH_COLORS } from '@roomedy/contracts/surfaces';
@@ -167,7 +168,19 @@ it('lets a photo cabinet change finish and size with per-axis estimate evidence 
       session
         .getSnapshot()
         .workspace!.current.furniture.find((p) => p.id === cabinet.id),
-    ).toEqual({ ...cabinet, finish: 'walnut' });
+    ).toEqual({
+      ...cabinet,
+      finish: 'walnut',
+      materials: { ...cabinet.materials, bodyColor: null },
+    });
+    expect(
+      furnitureMaterialTargets(
+        session
+          .getSnapshot()
+          .workspace!.current.furniture.find((p) => p.id === cabinet.id)!,
+        'storage',
+      ).frame.color,
+    ).toBe(FINISH_COLORS.walnut);
     expect(session.undo().ok).toBe(true);
     expect(session.getSnapshot().workspace!.current.furniture).toEqual(
       original.furniture,

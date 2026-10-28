@@ -5,6 +5,7 @@ import {
   pricingState,
 } from '../cost/state';
 import { estimateStateSchema } from '@roomedy/contracts/estimates';
+import { idSchema } from '@roomedy/contracts/primitives';
 import type { EstimateState } from '@roomedy/contracts/estimates';
 import type { ProjectDestination } from '../cost/navigation';
 import type {
@@ -684,7 +685,7 @@ export class SessionController {
       preview.pricing,
     );
   }
-  costMessage(role: 'visitor' | 'assistant', text: string) {
+  costMessage(role: 'visitor' | 'assistant', text: string, lineIds?: string[]) {
     if (
       !this.active() ||
       !this.state.cost ||
@@ -692,11 +693,18 @@ export class SessionController {
       text.length > 4000
     )
       return false;
+    const cards =
+      role === 'assistant'
+        ? [...new Set(lineIds ?? [])]
+            .filter((id) => idSchema.safeParse(id).success)
+            .slice(0, 4)
+        : [];
     const messages = [
       ...this.state.cost.messages,
       {
         role,
         text: text.trim(),
+        ...(cards.length ? { lineIds: cards } : {}),
         roomRevision: this.state.cost.roomRevision,
         costRevision: this.state.cost.revision,
       },

@@ -1,3 +1,4 @@
+import { openingMaterialsLabel } from '@roomedy/contracts/furniture-materials';
 import { furnitureMaterialsLabel } from '@roomedy/contracts/furniture-materials';
 import { furnitureBottom, featureLabel } from '@roomedy/spatial';
 import type { RoomDocument } from '@roomedy/contracts/room';
@@ -95,6 +96,15 @@ export function PreviewChangeList({
     const before = current.room.features.find((item) => item.id === feature.id);
     if (same(before, feature)) continue;
     const details: string[] = [];
+    if (
+      feature.kind !== 'obstacle' &&
+      feature.materials &&
+      !same(
+        before && before.kind !== 'obstacle' ? before.materials : undefined,
+        feature.materials,
+      )
+    )
+      details.push(openingMaterialsLabel(feature.materials));
     for (const key of [
       'wall',
       'width',

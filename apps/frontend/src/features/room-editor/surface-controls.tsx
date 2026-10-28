@@ -1,8 +1,8 @@
+import { ColourPicker } from './colour-picker';
 import { useId, useRef, useState } from 'react';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import {
-  FINISH_COLORS,
   SURFACE_OPTIONS,
   SURFACE_TEXTURES,
   roomSurface,
@@ -30,7 +30,6 @@ function SurfaceForm({
   const [color, setColor] = useState(current.color),
     [hex, setHex] = useState(current.color),
     [texture, setTexture] = useState(current.texture);
-  const hexInput = useRef<HTMLInputElement>(null);
   const patternWidthInput = useRef<HTMLInputElement>(null);
   const patternHeightInput = useRef<HTMLInputElement>(null);
   const validColor = surfaceColorSchema.safeParse(hex).success;
@@ -56,8 +55,6 @@ function SurfaceForm({
   const textureEvidence = appearance?.texture.value
     ? appearance.texture
     : (inherited?.texture ?? appearance?.texture);
-  const preset =
-    Object.entries(FINISH_COLORS).find(([, hex]) => hex === color)?.[0] ?? '';
   const patch = changedRoomSurface(room.room, target, {
     color: hex,
     texture,
@@ -71,7 +68,6 @@ function SurfaceForm({
         event.preventDefault();
         if (!validColor) {
           setError('Use a six-digit colour, for example #8eaa96.');
-          hexInput.current?.focus();
           return;
         }
         if (!surfaceDetailSchema.safeParse(detail).success) {
@@ -108,67 +104,15 @@ function SurfaceForm({
         role="img"
         aria-label={`${name}: ${color}, ${SURFACE_TEXTURES[texture]}`}
       />
-      <div className={styles.twoFields}>
-        <label>
-          {name} colour
-          <select
-            value={preset}
-            onChange={(event) => {
-              const chosen =
-                FINISH_COLORS[event.target.value as keyof typeof FINISH_COLORS];
-              if (chosen) {
-                setColor(chosen);
-                setHex(chosen);
-                setError('');
-              }
-            }}
-          >
-            <option value="" disabled>
-              Custom
-            </option>
-            {Object.keys(FINISH_COLORS).map((finish) => (
-              <option key={finish} value={finish}>
-                {finish[0]!.toUpperCase() + finish.slice(1)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div>
-          <label htmlFor={`${id}-picker`}>
-            Custom {target === 'floor' ? 'floor' : 'wall'} colour
-          </label>
-          <div className={styles.colourInput}>
-            <input
-              id={`${id}-picker`}
-              type="color"
-              value={color}
-              onChange={(event) => {
-                setColor(event.target.value);
-                setHex(event.target.value);
-                setError('');
-              }}
-            />
-            <input
-              ref={hexInput}
-              aria-label={`${name} colour hex`}
-              type="text"
-              maxLength={7}
-              value={hex}
-              spellCheck={false}
-              autoComplete="off"
-              aria-invalid={!validColor}
-              aria-describedby={error && !validColor ? id : undefined}
-              onChange={(event) => {
-                setHex(event.target.value);
-                if (surfaceColorSchema.safeParse(event.target.value).success) {
-                  setColor(event.target.value.toLowerCase());
-                  setError('');
-                }
-              }}
-            />
-          </div>
-        </div>
-      </div>
+      <ColourPicker
+        label={`${name} colour`}
+        value={hex}
+        onChange={(value) => {
+          setHex(value);
+          if (surfaceColorSchema.safeParse(value).success) setColor(value);
+          setError('');
+        }}
+      />
       {colorEvidence?.status === 'estimated' && (
         <p className={styles.hint}>
           Colour estimated from photos; lighting can affect it.
@@ -283,7 +227,7 @@ function SurfaceForm({
       <button
         type="submit"
         aria-describedby={error ? id : undefined}
-        disabled={validColor && patch === null}
+        disabled={!validColor || patch === null}
       >
         Apply {name.toLowerCase()} finish
       </button>

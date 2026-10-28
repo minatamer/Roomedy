@@ -114,3 +114,18 @@ export {
   nearestClearDoorOffset,
   placeDoor,
 } from './opening-placement.js';
+export {
+  convertOfferToUsd,
+  convertNativeMinor,
+  validateOfferFx,
+  offerMoney,
+  fxRatio,
+} from './estimate-fx.js';
+
+export { planningRoom, planningChecks } from './planning.js';
+
+export {
+  roomDesignOpportunities,
+  roomMaterialOpportunities,
+} from './design-opportunities.js';
+export { completeQuickReplies } from './quick-replies.js';

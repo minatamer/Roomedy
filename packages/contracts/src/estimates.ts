@@ -4,10 +4,11 @@ import { catalogueEntrySchema } from './catalogue.js';
 import { surfaceColorSchema, WALLS } from './surfaces.js';
 
 export const CALCULATION_VERSION = 'roomedy-cpq-1' as const;
-/** Supported currencies all have two decimal minor units. No implicit FX. */
+export const DEFAULT_QUOTE_CURRENCY = 'USD' as const;
+/** Historical/native source currencies; active estimates use USD. Two decimal minor units. */
 export const quoteCurrencySchema = z.enum([
-  'EGP',
   'USD',
+  'EGP',
   'EUR',
   'GBP',
   'AED',
@@ -51,6 +52,24 @@ const taxSchema = z.strictObject({
   rateBps: z.number().int().min(0).max(10_000).nullable(),
   source: text.nullable(),
 });
+/** Application-owned, frozen reference conversion. Never supplied by a model. */
+export const estimateFxSchema = z.strictObject({
+  currency: z.enum(['EGP', 'EUR', 'GBP', 'AED', 'SAR']),
+  usdPerUnit: z.string().regex(/^(?:0|[1-9]\d{0,3})(?:\.\d{1,12})?$/),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  observedAt: z.number().int().min(0).max(8_640_000_000_000_000),
+  url: sourceUrlSchema,
+  inputs: z
+    .array(
+      z.strictObject({
+        key: z.string().min(1).max(140),
+        minor: unitPrice,
+      }),
+    )
+    .min(1)
+    .max(4),
+});
+export type EstimateFx = z.infer<typeof estimateFxSchema>;
 const offerBase = {
   id: idSchema,
   label: labelSchema,
@@ -65,6 +84,7 @@ const offerBase = {
   tax: taxSchema,
   availability: z.enum(['available', 'unavailable', 'unknown']),
   leadTime: text.nullable(),
+  fx: estimateFxSchema.optional(),
 };
 export const paintPackSchema = z.strictObject({
   id: idSchema,

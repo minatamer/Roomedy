@@ -1,5 +1,7 @@
 import {
   furnitureMaterialsSchema,
+  openingMaterialsSchema,
+  MATERIAL_PATTERNS,
   furnitureMaterialsLabel,
 } from '@roomedy/contracts/furniture-materials';
 import {
@@ -15,6 +17,7 @@ import type { Feature, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import {
   FINISH_COLORS,
+  COLOUR_PRESETS,
   SURFACE_TEXTURES,
   isSurfaceTexture,
   roomSurfaceDetail,
@@ -83,6 +86,19 @@ export function medyEdit(
   targets: MedyTarget[],
   operationId: string,
 ): MedyEdit | null {
+  // RGB is appearance syntax, never three physical dimensions.
+  let invalidRgb = false;
+  words = words.replace(/\brgb\s*\(\s*([^)]*)\)/g, (_, body: string) => {
+    const values = body.split(',').map((v) => v.trim());
+    if (
+      values.length !== 3 ||
+      values.some((v) => !/^\d{1,3}$/.test(v) || Number(v) > 255)
+    ) {
+      invalidRgb = true;
+      return '';
+    }
+    return `#${values.map((v) => Number(v).toString(16).padStart(2, '0')).join('')}`;
+  });
   const actions: VisitorAction[] = [];
   const ask = (
     summary: string,
@@ -93,6 +109,7 @@ export function medyEdit(
     objectIds: targets.map((t) => t.id),
     ...(suggestions?.length ? { suggestions } : {}),
   });
+  if (invalidRgb) return ask('Use three RGB values from 0 to 255.');
   const batch = (label: string): MedyEdit => {
     const parsed = visitorBatchSchema.safeParse(actions);
     return parsed.success
@@ -107,7 +124,7 @@ export function medyEdit(
         );
   };
   const editing =
-    /\b(set|make|change|preview|resize|adjust|correct|confirm|measured|mark|move|place|put|rotate|turn|face|delete|remove|lock|unlock|protect|unprotect|own|owned|replace|add|mount|hang)\b/.test(
+    /\b(set|make|paint|change|preview|resize|adjust|correct|confirm|measured|mark|move|place|put|rotate|turn|face|delete|remove|lock|unlock|protect|unprotect|own|owned|replace|add|mount|hang)\b/.test(
       words,
     );
   const openingPresetRequest =
@@ -213,18 +230,19 @@ export function medyEdit(
         : null);
   if (
     surface &&
-    /\b(colou?r|finish|texture|paint|plaster|wood|linen|smooth|tile|carpet|concrete|matte|satin|gloss|pattern|horizontal|vertical|direction|#[a-f0-9]{6})\b/.test(
+    /\b(colou?r|finish|texture|paint|plaster|wood|linen|smooth|tile|carpet|concrete|stripes|checker|herringbone|matte|satin|gloss|pattern|horizontal|vertical|direction|#[a-f0-9]{6})\b/.test(
       words,
     )
   ) {
-    const chosen = Object.keys(FINISH_COLORS).filter((f) =>
+    const surfaceColors = { ...FINISH_COLORS, ...COLOUR_PRESETS };
+    const chosen = Object.keys(surfaceColors).filter((f) =>
       new RegExp(`\\b${f}\\b`).test(words),
     );
     const hex = words.match(/#[a-f0-9]{6}\b/g);
     if (chosen.length > 1 || (hex?.length ?? 0) > 1)
       return ask('Which one colour should I use for that surface?');
     const color =
-      hex?.[0] ?? FINISH_COLORS[chosen[0] as keyof typeof FINISH_COLORS];
+      hex?.[0] ?? surfaceColors[chosen[0] as keyof typeof surfaceColors];
     const texture = (
       Object.keys(SURFACE_TEXTURES) as (keyof typeof SURFACE_TEXTURES)[]
     )
@@ -533,6 +551,123 @@ export function medyEdit(
   }
   const target = targets[0]!,
     label = title(target);
+  const requestedColors: string[] = words.match(/#[a-f0-9]{6}\b/g) ?? [];
+  if (
+    !requestedColors.length &&
+    (/\b(colou?r|paint)\b/.test(words) || target.kind === 'feature')
+  ) {
+    for (const [name, color] of Object.entries(COLOUR_PRESETS))
+      if (new RegExp(`\\b${name}\\b`).test(words)) requestedColors.push(color);
+  }
+  const patternWords = words
+    .replace(
+      /\bframe material(?: to)? (auto|plain|wood|painted|metal)\b/g,
+      'material',
+    )
+    .replace(
+      /\b(?:upholstery|bedding material|shade material|soft parts?)(?: to)? (plain|linen|velvet|leather)\b/g,
+      'material',
+    );
+  const patternAliases: Partial<
+    Record<keyof typeof MATERIAL_PATTERNS, string>
+  > = {
+    smooth: '(?:smooth|plain)',
+    fabric: '(?:fabric|woven)',
+    stripes: '(?:stripes|striped)',
+    checker: '(?:checker|checkered|checked)',
+  };
+  const requestedPatterns = (
+    Object.keys(MATERIAL_PATTERNS) as (keyof typeof MATERIAL_PATTERNS)[]
+  ).filter((pattern) =>
+    new RegExp(`\\b${patternAliases[pattern] ?? pattern}\\b`).test(
+      patternWords,
+    ),
+  );
+  if (requestedPatterns.length > 1 && /\b(pattern|texture)\b/.test(words))
+    return ask('Choose one pattern for this part.');
+  const requestedPattern = requestedPatterns[0];
+  const appearanceRequest =
+    /\b(colou?r|paint|pattern|texture)\b/.test(words) ||
+    requestedColors.length > 0;
+  if (appearanceRequest && (requestedColors.length || requestedPattern)) {
+    if (requestedColors.length > 1)
+      return ask('Choose one colour per part, or send separate changes.');
+    if (
+      /\b(move|rotate|resize|delete|remove|unlock|confirm|width|height|depth|offset)\b/.test(
+        words,
+      )
+    )
+      return ask('Change appearance separately from size or placement.');
+    const color = requestedColors[0];
+    if (target.kind === 'feature' && target.feature.kind !== 'obstacle') {
+      const frame =
+        target.feature.kind === 'window' ||
+        (target.feature.kind === 'door' &&
+          target.feature.purpose === 'balcony') ||
+        /\bframe\b/.test(words);
+      const parsed = openingMaterialsSchema.safeParse({
+        ...(color ? { [frame ? 'frameColor' : 'color']: color } : {}),
+        ...(requestedPattern
+          ? { [frame ? 'frameTexture' : 'texture']: requestedPattern }
+          : {}),
+      });
+      if (parsed.success) {
+        actions.push({
+          type: 'set-opening-materials',
+          id: target.id,
+          materials: parsed.data,
+        });
+        return batch(`Change ${label} appearance`);
+      }
+    }
+    if (target.kind === 'furniture') {
+      const entry = findCatalogueEntry(
+        target.piece.catalogueId,
+        target.piece.catalogueVersion,
+      );
+      const soft =
+        /\b(soft|upholstery|bedding|shade)\b/.test(words) ||
+        (!/\b(frame|body|hardware|handles?)\b/.test(words) &&
+          ['bed', 'chair', 'seating', 'lighting'].includes(
+            entry?.category ?? '',
+          ));
+      const hardware = /\b(hardware|handles?)\b/.test(words);
+      const body = words.match(
+        /\bframe material(?: to)? (auto|plain|wood|painted|metal)\b/,
+      )?.[1];
+      const cloth = words.match(
+        /\b(?:upholstery|bedding material|shade material|soft parts?)(?: to)? (plain|linen|velvet|leather)\b/,
+      )?.[1];
+      const metal = words.match(
+        /\b(?:hardware|handles?)(?: to)? (original|dark|brass|steel)\b/,
+      )?.[1];
+      const pattern = /\b(pattern|texture)\b/.test(words)
+        ? requestedPattern
+        : undefined;
+      const parsed = furnitureMaterialsSchema.safeParse({
+        ...(body ? { body, bodyPattern: null } : {}),
+        ...(cloth ? { upholstery: cloth, softPattern: null } : {}),
+        ...(metal ? { hardware: metal, hardwareColor: null } : {}),
+        ...(color
+          ? {
+              [hardware ? 'hardwareColor' : soft ? 'softColor' : 'bodyColor']:
+                color,
+            }
+          : {}),
+        ...(pattern && !hardware
+          ? { [soft ? 'softPattern' : 'bodyPattern']: pattern }
+          : {}),
+      });
+      if (parsed.success) {
+        actions.push({
+          type: 'set-furniture-materials',
+          id: target.id,
+          materials: parsed.data,
+        });
+        return batch(`Change ${label} appearance`);
+      }
+    }
+  }
   if (
     target.kind === 'furniture' &&
     /\b(frame material|wood grain|upholstery|bedding material|shade material|soft parts?|soft colou?r|hardware|linen|velvet|leather|brass|steel)\b/.test(
@@ -541,9 +676,15 @@ export function medyEdit(
   ) {
     const body =
       words.match(
-        /\b(?:frame material(?: to)?|frame in) (auto|wood|painted|metal)\b/,
+        /\b(?:frame material(?: to)?|frame in) (auto|plain|wood|painted|metal)\b/,
       )?.[1] ?? (/\bwood grain\b/.test(words) ? 'wood' : undefined);
-    const cloth = words.match(/\b(linen|velvet|leather)\b/g) ?? [];
+    const cloth: string[] = words.match(/\b(linen|velvet|leather)\b/g) ?? [];
+    if (
+      /\b(?:upholstery|bedding material|shade material|soft parts?) (?:to )?plain\b/.test(
+        words,
+      )
+    )
+      cloth.push('plain');
     const hardware = words.match(
       /\b(?:hardware(?: to)?|handles?(?: to)?) (original|dark|brass|steel)\b/,
     )?.[1];
@@ -565,7 +706,7 @@ export function medyEdit(
     });
     if (!parsed.success)
       return ask(
-        'Choose a frame material (wood, painted or metal), linen/velvet/leather soft parts, a soft hex colour, or original/dark/brass/steel hardware.',
+        'Choose a plain, wood, painted or metal frame, plain/linen/velvet/leather soft parts, a soft hex colour, or original/dark/brass/steel hardware.',
       );
     actions.push({
       type: 'set-furniture-materials',

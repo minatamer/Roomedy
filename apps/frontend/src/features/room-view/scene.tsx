@@ -1,3 +1,4 @@
+import { openingMaterialTargets } from '@roomedy/contracts/furniture-materials';
 import { inspectionPose, inspectionVisible } from './inspection';
 import type { Inspection } from './inspection';
 import {
@@ -937,6 +938,9 @@ function Opening({
   onSelect: SceneProps['onSelect'];
   open: boolean;
 }) {
+  const appearance = openingMaterialTargets(
+    feature.kind === 'obstacle' ? undefined : feature.materials,
+  );
   const box = featureBox(room, feature);
   if (!box) return null;
   const alongX = feature.wall === 'north' || feature.wall === 'south';
@@ -987,8 +991,9 @@ function Opening({
       receiveShadow
     >
       <OwnedStandard
-        color={selected ? '#a77342' : '#e8e0d3'}
-        map={surfaces.wood}
+        color={appearance.frameColor}
+        emissive={selected ? '#21170c' : '#000000'}
+        surfaceMap={surfaces[appearance.frameTexture]}
         roughness={0.7}
       />
     </mesh>
@@ -1059,10 +1064,13 @@ function Opening({
                             color={
                               part.kind === 'handle'
                                 ? '#574b3e'
-                                : selected
-                                  ? '#a77342'
-                                  : '#e8e0d3'
+                                : appearance.frameColor
                             }
+                            {...(part.kind === 'handle'
+                              ? {}
+                              : {
+                                  surfaceMap: surfaces[appearance.frameTexture],
+                                })}
                             roughness={part.kind === 'handle' ? 0.35 : 0.7}
                           />
                         </mesh>
@@ -1117,8 +1125,9 @@ function Opening({
               receiveShadow
             >
               <OwnedStandard
-                color={selected ? '#a77342' : '#765238'}
-                map={surfaces.wood}
+                color={appearance.color}
+                emissive={selected ? '#21170c' : '#000000'}
+                surfaceMap={surfaces[appearance.texture]}
                 roughness={0.7}
               />
             </mesh>
@@ -1131,8 +1140,13 @@ function Opening({
               receiveShadow
             >
               <OwnedStandard
-                color={selected ? '#a77342' : '#806046'}
-                map={surfaces.wood}
+                color={
+                  feature.kind === 'door'
+                    ? (feature.materials?.color ?? '#806046')
+                    : appearance.color
+                }
+                emissive={selected ? '#21170c' : '#000000'}
+                surfaceMap={surfaces[appearance.texture]}
                 roughness={0.7}
               />
             </mesh>
@@ -1177,8 +1191,9 @@ function Opening({
             receiveShadow
           >
             <OwnedStandard
-              color={window && selected ? '#a77342' : '#e8e0d3'}
-              map={surfaces.wood}
+              color={appearance.frameColor}
+              emissive={selected ? '#21170c' : '#000000'}
+              surfaceMap={surfaces[appearance.frameTexture]}
               roughness={0.7}
             />
           </mesh>

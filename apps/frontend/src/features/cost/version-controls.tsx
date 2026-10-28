@@ -41,8 +41,12 @@ export function VersionControls({
   };
   const selected = state.estimateVersions.find((v) => v.id === selectedId),
     compare =
-      state.estimateVersions.find((v) => v.id === compareId) ??
-      state.estimateVersions[0];
+      state.estimateVersions.find(
+        (v) => v.id === compareId && v.estimate.locality.currency === 'USD',
+      ) ??
+      state.estimateVersions.find(
+        (v) => v.estimate.locality.currency === 'USD',
+      );
   const changes = compare
     ? versionChanges(compare, {
         room: state.workspace!.current,
@@ -87,15 +91,14 @@ export function VersionControls({
         </div>
       )}
       <details>
-        <summary>
-          Estimate versions · {state.estimateVersions.length} saved in this
-          session
-        </summary>
-        <p>
-          Approve a planning snapshot of your design, prices, quantities and
-          sources. This records your review; suppliers have not accepted a price
-          or order. Versions expire with this two-hour session.
-        </p>
+        <summary>Saved estimates · {state.estimateVersions.length}</summary>
+        <details>
+          <summary>About saved estimates</summary>
+          <p>
+            A frozen planning snapshot, not a supplier quote or order. Versions
+            expire with this two-hour session; export the project to keep them.
+          </p>
+        </details>
         {!selected && (
           <form onSubmit={save} className={styles.form}>
             <label>
@@ -125,11 +128,13 @@ export function VersionControls({
             <div>
               <strong>{version.label}</strong>
               <small>
-                {money(
-                  version.estimate.knownTotalMinor,
-                  version.estimate.locality.currency,
-                )}{' '}
-                known · {version.estimate.unpricedCount} unresolved ·{' '}
+                {version.estimate.locality.currency !== 'USD'
+                  ? 'Archived currency'
+                  : `${money(
+                      version.estimate.knownTotalMinor,
+                      version.estimate.locality.currency,
+                    )} known`}{' '}
+                · {version.estimate.unpricedCount} unresolved ·{' '}
                 {new Date(version.savedAt).toLocaleDateString('en-GB')}
               </small>
             </div>
@@ -205,7 +210,7 @@ export function VersionControls({
             </div>
           </div>
         )}
-        {compare && changes && (
+        {compare && changes && compare.estimate.locality.currency === 'USD' && (
           <details>
             <summary>Compare saved version with current draft</summary>
             <label>
@@ -214,11 +219,13 @@ export function VersionControls({
                 value={compare.id}
                 onChange={(e) => setCompareId(e.target.value)}
               >
-                {state.estimateVersions.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.label}
-                  </option>
-                ))}
+                {state.estimateVersions
+                  .filter((v) => v.estimate.locality.currency === 'USD')
+                  .map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.label}
+                    </option>
+                  ))}
               </select>
             </label>
             <p>

@@ -12,7 +12,8 @@ import type { SearchResult } from '@roomedy/contracts/search';
 import { POLICY } from '@roomedy/contracts/policy';
 import {
   CATALOGUE,
-  checkRoom,
+  planningRoom,
+  planningChecks,
   emptyAssistantReply,
   evaluateScopedBatch,
   proposedSearchPiece,
@@ -30,7 +31,7 @@ export function createAssistantTools(
   signal: AbortSignal,
 ) {
   const room = input.room,
-    checks = checkRoom(room);
+    checks = planningChecks(room);
   let reply = emptyAssistantReply(room, task.label),
     prepared: string | null = null,
     search: SearchResult | null = null;
@@ -161,7 +162,9 @@ export function createAssistantTools(
       ok: true,
       changed: evaluated.changed,
       actions: evaluated.changed ? actions : [],
-      checks: evaluated.checks,
+      checks: evaluated.checks.issues.filter(
+        (i) => i.severity !== 'unassessed',
+      ),
       facts,
     };
   }
@@ -218,7 +221,8 @@ export function createAssistantTools(
     if (signal.aborted) return reject();
     const schema = assistantToolSchemas[name];
     if (!schema || !schema.safeParse(args).success) return reject();
-    if (name === 'read_room') return { ok: true, room, checks };
+    if (name === 'read_room')
+      return { ok: true, room: planningRoom(room), checks: checks.issues };
     decisions++;
     if (name === 'find_furniture') {
       const a = assistantToolSchemas.find_furniture.parse(args),
@@ -229,10 +233,7 @@ export function createAssistantTools(
             (a.maxDepth === null || e.size.depth.min <= a.maxDepth),
         );
       reply = {
-        ...emptyAssistantReply(
-          room,
-          'Choose from these supported similar representations. Measure owned furniture separately; offered dimensions are estimates.',
-        ),
+        ...emptyAssistantReply(room, 'Here are some pieces to explore.'),
         catalogueIds: entries.map((e) => e.id),
       };
       return { ok: true, items: entries };
@@ -243,81 +244,25 @@ export function createAssistantTools(
           ? checks.issues.find((i) => i.id === a.issueId)
           : null;
       if (a.issueId && !issue) return reject();
-      const hard = checks.issues.filter((i) => i.severity === 'hard').length,
-        incomplete = checks.coverage.filter(
-          (c) => c.status === 'unassessed' || c.unassessed > 0,
-        ).length;
+      const hard = checks.issues.filter((i) => i.severity === 'hard').length;
       reply = {
         ...emptyAssistantReply(
           room,
-          `${hard ? `${hard} ${hard === 1 ? 'space issue needs' : 'space issues need'} review.` : 'No blocking issue was found in the room checks.'}${incomplete ? ` ${incomplete} ${incomplete === 1 ? 'check is' : 'checks are'} incomplete.` : ''}`,
+          `${hard ? `${hard} ${hard === 1 ? 'space issue needs' : 'space issues need'} review.` : 'No blocking issue was found in the room checks.'}`,
         ),
         objectIds: issue ? issue.objectIds : task.objectIds,
       };
-      return { ok: true, checks: issue ? [issue] : checks };
+      return { ok: true, checks: issue ? [issue] : checks.issues };
     }
     if (name === 'find_arrangements') return arrangements();
     if (name === 'focus_item') {
       const a = assistantToolSchemas.focus_item.parse(args);
       if (!ids.has(a.id)) return reject();
       reply = {
-        ...emptyAssistantReply(
-          room,
-          'Select this item to inspect its recorded measurements and room checks.',
-        ),
+        ...emptyAssistantReply(room, 'Here’s the piece to review.'),
         objectIds: [a.id],
       };
       return { ok: true, id: a.id };
-    }
-    if (name === 'request_measurement') {
-      const a = assistantToolSchemas.request_measurement.parse(args);
-      if (!ids.has(a.id)) return reject();
-      const piece = room.furniture.find((p) => p.id === a.id),
-        feature = room.room.features.find((f) => f.id === a.id);
-      if (
-        (a.id === room.roomId || piece) &&
-        !['width', 'depth', 'height'].includes(a.field)
-      )
-        return reject();
-      if (
-        feature &&
-        (a.field === 'depth' ||
-          (a.field === 'hinge' && feature.kind !== 'door') ||
-          (a.field === 'mechanism' && feature.kind === 'obstacle'))
-      )
-        return reject();
-      const source =
-        a.id === room.roomId ? room.room : piece ? piece.dimensions : feature;
-      const value = source
-        ? (source as unknown as Record<string, unknown>)[a.field]
-        : undefined;
-      const missing =
-        value === 'unknown' ||
-        (typeof value === 'object' &&
-          value !== null &&
-          'status' in value &&
-          value.status === 'unknown');
-      const tag = `${a.id === room.roomId ? 'room' : a.id}:${a.field}`;
-      const relevant = checks.issues.some(
-        (issue) =>
-          issue.severity === 'unassessed' &&
-          issue.requiredInputs.includes(tag) &&
-          (task.objectIds.length === 0 ||
-            a.id === room.roomId ||
-            issue.objectIds.some((id) => task.objectIds.includes(id))),
-      );
-      if (!missing || !relevant) return reject();
-      reply = {
-        ...emptyAssistantReply(
-          room,
-          `Review ${a.field} for this item. Only your explicit field confirmation can record a measured value.`,
-          'visitor-action',
-        ),
-        objectIds: [a.id],
-        question: a,
-        control: 'measurement',
-      };
-      return { ok: true, request: a };
     }
     if (name === 'request_lock_change') {
       const a = assistantToolSchemas.request_lock_change.parse(args),

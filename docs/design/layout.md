@@ -1,5 +1,21 @@
 # Layout and useful space
 
+## Plain room, visible material choices — RM-015BX
+
+Use the existing Medy welcome and three-choice shelf to introduce materials in fresh plain rooms. Explore materials opens actual floor/bed/storage requests; do not add a separate static tutorial, warning or extra panel. The room remains plain until a selected request is previewed and explicitly applied. General advice also includes a real material option; preserve selection/reveal, current-message fences and responsive composer. [Evidence](../validation/RM-015BX.md).
+
+## Useful conversation choices — RM-015BW
+
+Keep the existing maximum-three warm glass reply shelf above the composer and its reveal/focus/responsive behavior. A sparse or filtered model response should gain supported, distinct choices rather than leave one repetitive button. Offer the current idea, a worthwhile addition when present in the plan’s opportunity set, and another design direction; choices can expose adjacent capabilities. During a proposal, shelf choices are discussion only and actual Apply/Cancel remain separate. No new panel/static prose/badges or CSS layout change. [Evidence](../validation/RM-015BW.md).
+
+## Hide missing-fact interruptions — RM-015BV
+
+Do not show generic A measurement or physical fact is missing or unsupported Entry connectivity cards. Both fresh and older Medy replies filter unassessed issues; measurement Review controls are removed. Room checks show actual issues or one compact No layout conflicts state, without the historical coverage table or survey disclaimer. Access notices retain useful placement guidance without a missing-measurement nag. Keep actual conflicts, selection/focus and proposal controls interactive. [Evidence](../validation/RM-015BV.md).
+
+## Thinking and shared native scrollbars — RM-015BU
+
+Medy busy status is a compact Thinking label with a20px decorative warm-gradient ring rotating continuously while mounted. Remove the busy Cancel CTA only; proposal Apply/Cancel and existing controller lifecycles remain. The reusable roomedy-scroll class is applied to the html root and all descendant scroll containers, including logs, textareas, panels and dialogs. Supporting engines receive4px rounded translucent cocoa/champagne thumbs, clear tracks/corners and no arrow buttons; standard native thin/colour is the fallback. Reset non-auto standard scrollbar properties inside the pseudo-element branch because they otherwise override it. Retain native keyboard/wheel/touch/thumb behavior, existing stable gutters and forced-colour contrast. No custom scroll implementation or new timer/request. [Evidence](../validation/RM-015BU.md).
+
 ## Quick replies beside the composer — RM-015BJ
 
 Medy’s latest up-to-three suggestions share a labelled Quick replies shelf directly above the text box, outside the scrollable log. Retain the website glass-control gradient/cocoa ink/rounded pill,13px labels,44px targets and inset focus. A bounded174px scroll region contains long/wrapped choices; the composer does not shrink into history. Hide/inert the shelf until the latest text reveal completes, and omit old reply groups from history. Actual preview cards and Apply/Cancel remain with their proposal. Phone/short layouts retain ordinary keyboard/document scroll to all controls. No fixed overlay or second chat scroller around the composer.
@@ -206,3 +222,8 @@ Owner hides Before/Current for now without deletion. Native hidden and a scoped 
 ## AD wall/floor choices —20 October2026
 
 Put useful independent Walls/Floor forms near the top of Room, with small texture preview, palette selector, native44px custom-colour picker, bounded hex entry, labelled texture selector and one Apply per surface. Reuse them in rough2D room review. Changed values use shared authority/Undo; invalid hex focuses its field with a precise error. Existing palette previews stay lower in the Room task, preserving unrelated proposed-furniture behaviour. Forms use actual panel width and existing natural scroll regions; room frame height stays unchanged. Photo colour/texture hints remain per-value estimates. Website colours stay independent of chosen room materials. [Current evidence](../validation/RM-015AD.md); the completed queued-edit batch passed its settled root/build/read-only gates; see the linked receipt reconciliation.
+
+
+## Warm studio surfaces —RM-015BT
+
+Studio navigation controls, properties panels/fields and plan/cutaway frames consume shared surface tokens rather than independent whites/gray. Use tonal beige separation, readable cocoa text and existing pressed/focus/disabled distinctions. Both Medy composers use a translucent cream gradient, fine warm border and small inset highlight, with8px blur confined to the field. Preserve typography,44px targets, reserved Send space, keyboard/composition, responsive layout and actual room-finish colours. No header divider or new scene/filter/frame owner.

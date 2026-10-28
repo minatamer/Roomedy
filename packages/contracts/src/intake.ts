@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { materialPatternSchema } from './furniture-materials.js';
 import { POLICY } from './policy.js';
 import { finishSchema, idSchema, labelSchema } from './primitives.js';
 import {
@@ -71,6 +72,17 @@ const photoSurface = z.strictObject({
   color: photoSurfaceFact(surfaceColorSchema),
   texture: photoSurfaceFact(surfaceTextureSchema),
 });
+/** All populated values are estimates from this observation's photo; null stays independently unknown. */
+const photoObjectAppearance = z.strictObject({
+  status: z.literal('estimated'),
+  sourceId: idSchema,
+  bodyColor: surfaceColorSchema.nullable(),
+  bodyPattern: materialPatternSchema.nullable(),
+  softColor: surfaceColorSchema.nullable(),
+  softPattern: materialPatternSchema.nullable(),
+  frameColor: surfaceColorSchema.nullable(),
+  framePattern: materialPatternSchema.nullable(),
+});
 /** Untrusted adapter output. IDs below are temporary observation references, never canonical room IDs. */
 export const draftObservationSchema = z.strictObject({
   ref: idSchema,
@@ -87,6 +99,7 @@ export const draftObservationSchema = z.strictObject({
   poseEvidence: evidenceSchema,
   visibility: z.enum(['visible', 'partial', 'occluded', 'unsupported']),
   finish: finishSchema.nullable(),
+  appearance: photoObjectAppearance.optional(),
   width: candidateLength,
   depth: candidateLength,
   height: candidateLength,
@@ -184,6 +197,7 @@ const failureFields = [
   'projection',
   'sketch',
   'finish',
+  'appearance',
   'unknown',
 ] as const;
 export interface DraftHypothesisFailure {
@@ -293,6 +307,28 @@ export function parseDraftHypothesis(
     ]),
   ];
   for (const observation of parsed.data.observations) {
+    if (!allowed.has(observation.sourceId))
+      return reject('source-reference', 'sourceId');
+    if (observation.appearance) {
+      if (
+        observation.appearance.sourceId !== observation.sourceId ||
+        !allowed.has(observation.appearance.sourceId)
+      )
+        return reject('source-reference', 'appearance');
+      for (const [field, value] of Object.entries(observation.appearance)) {
+        if (field === 'status' || field === 'sourceId') continue;
+        const applicable =
+          observation.kind === 'furniture'
+            ? !field.startsWith('frame')
+            : observation.kind === 'door'
+              ? !field.startsWith('soft')
+              : observation.kind === 'window'
+                ? field.startsWith('frame')
+                : false;
+        if (value !== null && !applicable)
+          return reject('evidence', 'appearance');
+      }
+    }
     for (const [field, evidence] of [
       ['wall', 'wallEvidence'],
       ['mechanism', 'mechanismEvidence'],
@@ -313,7 +349,6 @@ export function parseDraftHypothesis(
     return reject('shape-evidence', 'shape');
   if (
     evidence.some((e) => e.sourceId !== null && !allowed.has(e.sourceId)) ||
-    parsed.data.observations.some((o) => !allowed.has(o.sourceId)) ||
     measurements.some((m) => m.sourceId !== null && !allowed.has(m.sourceId))
   )
     return reject('source-reference', 'sourceId');

@@ -15,6 +15,12 @@ import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import { validateRoom } from './commands.js';
 import { findCatalogueEntry } from './catalogue.js';
 import {
+  validateOfferFx,
+  offerMoney,
+  nativePaintPacks,
+  paintLineMoney,
+} from './estimate-fx.js';
+import {
   ceilQuantity,
   estimateMoney,
   estimateWallAreas,
@@ -43,7 +49,12 @@ export function calculateRoomEstimate(
     const room = validateRoom(rawRoom),
       parsed = estimateSettingsSchema.safeParse(rawSettings),
       offered = estimateOffersSchema.safeParse(rawOffers);
-    if (!room || !parsed.success || !offered.success)
+    if (
+      !room ||
+      !parsed.success ||
+      !offered.success ||
+      offered.data.some((offer) => !validateOfferFx(offer))
+    )
       return { ok: false, code: 'invalid-input' };
     const settings = parsed.data,
       offers = new Map(offered.data.map((offer) => [offer.id, offer]));
@@ -265,9 +276,7 @@ export function calculateRoomEstimate(
             category: 'floor',
             label: material.label,
             targets: floorTarget,
-            amountMinor: estimateMoney(
-              BigInt(packs) * BigInt(material.priceMinor),
-            ),
+            amountMinor: offerMoney(material, BigInt(packs)),
             quantity: quantity(packs, 'pack'),
             installed: floorInstalled,
             required: quantity(requiredNumerator, 'mm2', 10_000),
@@ -308,9 +317,7 @@ export function calculateRoomEstimate(
                 category: 'floor',
                 label: layer.label,
                 targets: floorTarget,
-                amountMinor: estimateMoney(
-                  BigInt(count) * BigInt(layer.priceMinor),
-                ),
+                amountMinor: offerMoney(layer, BigInt(count)),
                 quantity: quantity(count, 'pack'),
                 installed: floorInstalled,
                 required: floorInstalled,
@@ -357,9 +364,7 @@ export function calculateRoomEstimate(
                 category: 'floor',
                 label: trim.label,
                 targets: floorTarget,
-                amountMinor: estimateMoney(
-                  BigInt(count) * BigInt(trim.priceMinor),
-                ),
+                amountMinor: offerMoney(trim, BigInt(count)),
                 quantity: quantity(count, 'each'),
                 installed: quantity(length, 'mm'),
                 required: quantity(length, 'mm'),
@@ -525,7 +530,7 @@ export function calculateRoomEstimate(
       const result = paintPackPlan(
         group.requiredNumerator,
         group.source.coverageMm2PerLitre,
-        group.source.packs,
+        nativePaintPacks(group.source),
       );
       priced(
         group.source,
@@ -533,7 +538,7 @@ export function calculateRoomEstimate(
           category: 'walls',
           label: group.source.label,
           targets: group.targets,
-          amountMinor: result.priceMinor,
+          amountMinor: paintLineMoney(group.source, result.priceMinor),
           quantity: quantity(
             result.packs.reduce((sum, pack) => sum + pack.count, 0),
             'can',
@@ -616,7 +621,7 @@ export function calculateRoomEstimate(
             category: 'furniture',
             label: `${piece.label}: ${product.label}`,
             targets,
-            amountMinor: product.priceMinor,
+            amountMinor: offerMoney(product),
             quantity: quantity(1, 'each'),
             installed: quantity(1, 'each'),
             purchased: quantity(1, 'each'),
@@ -663,7 +668,7 @@ export function calculateRoomEstimate(
               category: 'furniture',
               label: `${piece.label}: ${part.label}`,
               targets,
-              amountMinor: part.priceMinor,
+              amountMinor: offerMoney(part),
               quantity: quantity(1, 'each'),
               purchased: quantity(1, 'each'),
               rule: 'One required/selected component not included in the main product.',
@@ -779,11 +784,8 @@ export function calculateRoomEstimate(
         amountQuantity === 0
           ? 0
           : Math.max(
-              source.minimumMinor,
-              estimateMoney(
-                BigInt(amountQuantity) * BigInt(source.priceMinor),
-                BigInt(divisor),
-              ),
+              offerMoney(source, 1n, 1n, 'minimum'),
+              offerMoney(source, BigInt(amountQuantity), BigInt(divisor)),
             );
       priced(source, {
         category: 'services',
@@ -832,7 +834,10 @@ export function calculateRoomEstimate(
           category: 'delivery',
           label: `${group.supplier}: delivery`,
           targets: roomTarget,
-          amountMinor: Math.max(fee.priceMinor, fee.minimumMinor),
+          amountMinor: Math.max(
+            offerMoney(fee),
+            offerMoney(fee, 1n, 1n, 'minimum'),
+          ),
           quantity: quantity(1, 'job'),
           rule: `One fee for this compatible supplier/order group. ${fee.includedWork}`,
         });

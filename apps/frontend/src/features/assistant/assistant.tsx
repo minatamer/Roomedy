@@ -1,9 +1,9 @@
+import { furnitureAppearanceSwatches } from '@roomedy/contracts/furniture-materials';
 import { featureLabel } from '@roomedy/spatial';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import Image from 'next/image';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import { findCatalogueEntry } from '@roomedy/spatial';
-import type { AssistantReply } from '@roomedy/contracts/assistant';
 import type { SessionSnapshot } from '../session/state';
 import { thumbnailUrl } from '../catalogue/catalogue';
 import { focusProperties } from '../room-editor/focus';
@@ -11,7 +11,11 @@ import { failureMessage, issueText } from '../room-editor/messages';
 import { PreviewChangeList } from '../room-editor/preview-change-list';
 import type { AssistantController } from './controller';
 import { MedyIcon } from './medy-icon';
-import { guidanceChoices, guidanceText } from './guidance';
+import { ThinkingStatus } from './thinking-status';
+import { ChatIcon } from './chat-icon';
+import { SurfacePreview } from './surface-preview';
+import { FINISH_COLORS } from '@roomedy/contracts/surfaces';
+import { guidanceChoices, guidanceMessage } from './guidance';
 import { RevealedText } from './revealed-text';
 import styles from './assistant.module.css';
 
@@ -54,48 +58,23 @@ export function Assistant({
     requestAnimationFrame(() =>
       composer.current?.focus({ preventScroll: true }),
     );
-  const focus = (id: string, question: AssistantReply['question'] = null) => {
-    if (question) session.cancelPreview();
+  const focus = (id: string) => {
     if (id === room.roomId) session.setPanel('room');
     else session.select(id);
     focusProperties(session, id === room.roomId ? undefined : id);
-    if (question)
-      requestAnimationFrame(() => {
-        const words: Record<string, string> = {
-          width: 'width',
-          depth: 'depth',
-          height: 'height',
-          wall: 'wall',
-          offset: 'distance along',
-          sill: 'height above',
-          mechanism: 'mechanism',
-          hinge: 'hinge',
-        };
-        const label = [
-          ...document.querySelectorAll<HTMLLabelElement>(
-            'aside[aria-label="Room properties"] label',
-          ),
-        ].find((l) =>
-          l.textContent
-            ?.toLowerCase()
-            .includes(words[question.field] ?? question.field),
-        );
-        const target =
-          label?.querySelector<HTMLElement>('input,select') ??
-          (label?.htmlFor ? document.getElementById(label.htmlFor) : null);
-        target?.focus({ preventScroll: true });
-        target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
   };
   const submit = () => void controller.submit();
   const latest = state.messages.at(-1),
     replyId = latest ? (latest.role === 'assistant' ? latest.id : null) : 0,
     guidance = latest?.guidance?.step ?? (!latest ? 'welcome' : null),
-    options = guidance
-      ? guidanceChoices(guidance, room, state.tourSeen)
-      : latest?.role === 'assistant'
-        ? latest.quickReplies
-        : [],
+    options =
+      preview?.source === 'assistant'
+        ? []
+        : guidance
+          ? guidanceChoices(guidance, room, state.tourSeen)
+          : latest?.role === 'assistant'
+            ? latest.quickReplies
+            : [],
     repliesReady =
       replyId !== null && revealedId === replyId && !tourActive && !state.busy;
   return (
@@ -110,16 +89,32 @@ export function Assistant({
             <MedyIcon />
             Medy
           </span>
-          <span className={styles.identity}>Your room, together.</span>
         </h2>
+        {state.mode === 'live' && (
+          <details className={styles.privacy}>
+            <summary aria-label="AI privacy information">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 11v6m0-10h.01" />
+              </svg>
+            </summary>
+            <p>Send shares this room and your message with the AI provider.</p>
+          </details>
+        )}
       </div>
-      {state.mode !== 'fake' && (
+      {state.mode !== 'fake' && state.mode !== 'live' && (
         <p className={styles.mode}>
-          {state.mode === 'live'
-            ? 'Send shares this room and your message with the AI provider.'
-            : state.mode === 'loading'
-              ? 'Checking assistant availability…'
-              : 'Assistant unavailable · manual editing is ready'}
+          {state.mode === 'loading'
+            ? 'Checking assistant availability…'
+            : 'Assistant unavailable · manual editing is ready'}
         </p>
       )}
       <div
@@ -134,7 +129,7 @@ export function Assistant({
           <div className={styles.welcome}>
             <RevealedText
               id={0}
-              text={guidanceText.welcome}
+              text={guidanceMessage('welcome', room)}
               ledger={controller.reveal}
               enabled={!tourActive}
               onComplete={setRevealedId}
@@ -147,6 +142,25 @@ export function Assistant({
               preview?.source === 'assistant' &&
               preview.identity.operationId === message.operationId;
           const shown = active ? preview.room : room;
+          const visualReply =
+            reply?.kind === 'proposal' ||
+            (reply?.kind === 'explanation' &&
+              (!!reply.objectIds.length ||
+                !!reply.catalogueIds.length ||
+                !!reply.checks.issues.length));
+          const prose =
+            message.role === 'assistant' &&
+            state.messages.at(-1)?.id === message.id ? (
+              <RevealedText
+                id={message.id}
+                text={message.text}
+                ledger={controller.reveal}
+                enabled={!tourActive}
+                onComplete={setRevealedId}
+              />
+            ) : (
+              <p>{message.text}</p>
+            );
           return (
             <article
               key={message.id}
@@ -155,27 +169,40 @@ export function Assistant({
                 message.role === 'user' ? 'Your request' : 'Medy response'
               }
             >
-              {message.role === 'assistant' &&
-              state.messages.at(-1)?.id === message.id ? (
-                <RevealedText
-                  id={message.id}
-                  text={message.text}
-                  ledger={controller.reveal}
-                  enabled={!tourActive}
-                  onComplete={setRevealedId}
-                />
+              {visualReply ? (
+                <details className={styles.responseNotes}>
+                  <summary>
+                    {active ? 'Why this change?' : 'Medy’s notes'}
+                  </summary>
+                  {prose}
+                </details>
               ) : (
-                <p>{message.text}</p>
+                prose
               )}
               {reply?.kind === 'proposal' && active && (
                 <p className={styles.note}>Preview</p>
+              )}
+              {active && (
+                <SurfacePreview current={room} proposed={preview.room} />
               )}
               {!!reply?.objectIds.length && (
                 <div className={styles.cards}>
                   {reply.objectIds.map((id) => {
                     const piece = shown.furniture.find((p) => p.id === id),
+                      before = room.furniture.find((p) => p.id === id),
                       feature = shown.room.features.find((f) => f.id === id);
                     if (id !== room.roomId && !piece && !feature) return null;
+                    const swatches =
+                      active && piece && before
+                        ? furnitureAppearanceSwatches(
+                            before,
+                            piece,
+                            findCatalogueEntry(
+                              piece.catalogueId,
+                              piece.catalogueVersion,
+                            )?.category ?? 'storage',
+                          )
+                        : null;
                     return (
                       <button
                         className={styles.objectCard}
@@ -210,6 +237,35 @@ export function Assistant({
                                 : 'Proposed'}
                             </small>
                           )}
+                          {active &&
+                            piece &&
+                            before &&
+                            (before.finish !== piece.finish ||
+                              JSON.stringify(before.materials) !==
+                                JSON.stringify(piece.materials)) && (
+                              <span className={styles.finishChange}>
+                                <i
+                                  style={{
+                                    background:
+                                      swatches?.before ??
+                                      FINISH_COLORS[before.finish],
+                                  }}
+                                />{' '}
+                                →{' '}
+                                <i
+                                  style={{
+                                    background:
+                                      swatches?.after ??
+                                      FINISH_COLORS[piece.finish],
+                                  }}
+                                />
+                                <small>
+                                  {before.finish !== piece.finish
+                                    ? `${piece.finish} preview`
+                                    : 'Material preview'}
+                                </small>
+                              </span>
+                            )}
                         </span>
                       </button>
                     );
@@ -249,13 +305,6 @@ export function Assistant({
                   })}
                 </div>
               )}
-              {reply?.question && (
-                <button
-                  onClick={() => focus(reply.question!.id, reply.question)}
-                >
-                  Review {reply.question.field}
-                </button>
-              )}
               {(reply?.control === 'position-lock' ||
                 reply?.control === 'rotation-lock') &&
                 reply.objectIds[0] && (
@@ -285,60 +334,67 @@ export function Assistant({
                   Undo {roomState.undoLabel ?? 'last change'}
                 </button>
               )}
-              {reply?.blockedIssue && (
-                <button
-                  className={styles.issue}
-                  onClick={() => {
-                    const ids = reply.blockedIssue!.objectIds,
-                      id =
-                        ids.find((id) =>
-                          room.room.features.some((f) => f.id === id),
-                        ) ??
-                        ids.find((id) =>
-                          room.furniture.some((p) => p.id === id),
-                        );
-                    if (id) focus(id);
-                  }}
-                >
-                  Proposed change blocked: {issueText(reply.blockedIssue)}
-                  {reply.blockedIssue.deficitMm === null
-                    ? ''
-                    : ` · ${reply.blockedIssue.deficitMm} mm deficit`}
-                </button>
-              )}
+              {reply?.blockedIssue &&
+                reply.blockedIssue.severity !== 'unassessed' && (
+                  <button
+                    className={styles.issue}
+                    onClick={() => {
+                      const ids = reply.blockedIssue!.objectIds,
+                        id =
+                          ids.find((id) =>
+                            room.room.features.some((f) => f.id === id),
+                          ) ??
+                          ids.find((id) =>
+                            room.furniture.some((p) => p.id === id),
+                          );
+                      if (id) focus(id);
+                    }}
+                  >
+                    Proposed change blocked: {issueText(reply.blockedIssue)}
+                    {reply.blockedIssue.deficitMm === null
+                      ? ''
+                      : ` · ${reply.blockedIssue.deficitMm} mm deficit`}
+                  </button>
+                )}
               {reply &&
                 message.operationId !== null &&
                 reply.kind === 'explanation' &&
-                reply.checks.issues.slice(0, 3).map((issue) => (
-                  <button
-                    key={issue.id}
-                    className={styles.issue}
-                    onClick={() => {
-                      const id = issue.objectIds.find(
-                        (id) =>
-                          room.furniture.some((p) => p.id === id) ||
-                          room.room.features.some((f) => f.id === id),
-                      );
-                      if (id) focus(id);
-                      else {
-                        session.setPanel('checks');
-                        focusProperties(session);
-                      }
-                    }}
-                  >
-                    {issueText(issue)}
-                    {issue.deficitMm === null
-                      ? ''
-                      : ` · ${issue.deficitMm} mm deficit`}
-                  </button>
-                ))}
+                reply.checks.issues
+                  .filter((issue) => issue.severity !== 'unassessed')
+                  .slice(0, 3)
+                  .map((issue) => (
+                    <button
+                      key={issue.id}
+                      className={styles.issue}
+                      onClick={() => {
+                        const id = issue.objectIds.find(
+                          (id) =>
+                            room.furniture.some((p) => p.id === id) ||
+                            room.room.features.some((f) => f.id === id),
+                        );
+                        if (id) focus(id);
+                        else {
+                          session.setPanel('checks');
+                          focusProperties(session);
+                        }
+                      }}
+                    >
+                      {issueText(issue)}
+                      {issue.deficitMm === null
+                        ? ''
+                        : ` · ${issue.deficitMm} mm deficit`}
+                    </button>
+                  ))}
               {reply?.kind === 'proposal' && active && (
                 <>
-                  <PreviewChangeList
-                    current={room}
-                    proposed={preview.room}
-                    className={styles.changeList}
-                  />
+                  <details className={styles.responseNotes}>
+                    <summary>Review every change</summary>
+                    <PreviewChangeList
+                      current={room}
+                      proposed={preview.room}
+                      className={styles.changeList}
+                    />
+                  </details>
                   <div
                     ref={proposalActions}
                     className={styles.proposalActions}
@@ -371,15 +427,7 @@ export function Assistant({
             </article>
           );
         })}
-        {state.busy && (
-          <div className={styles.progress} role="status">
-            <span aria-hidden="true" />
-            {state.stage === 'search'
-              ? 'Exploring the room…'
-              : 'Preparing a response…'}
-            <button onClick={() => controller.cancel()}>Cancel request</button>
-          </div>
-        )}
+        {state.busy && <ThinkingStatus />}
         <div ref={end} />
       </div>
       <form
@@ -397,7 +445,6 @@ export function Assistant({
             aria-hidden={!repliesReady || undefined}
             style={{ visibility: repliesReady ? 'visible' : 'hidden' }}
           >
-            <span className={styles.quickReplyLabel}>Quick replies</span>
             <div
               className={styles.goals}
               role="group"
@@ -428,6 +475,45 @@ export function Assistant({
                     focusComposer();
                   }}
                 >
+                  {'id' in option && (
+                    <span className={styles.choiceVisual} aria-hidden="true">
+                      {guidance === 'finishes' ? (
+                        <span className={styles.paletteSwatches}>
+                          {(
+                            option.colors ??
+                            (option.id === 'Warm & simple'
+                              ? ['clay', 'oak']
+                              : option.id === 'Light & airy'
+                                ? ['ivory', 'oak']
+                                : ['ivory', 'walnut'])
+                          ).map((finish) => (
+                            <i
+                              key={finish}
+                              style={{
+                                background: finish.startsWith('#')
+                                  ? finish
+                                  : FINISH_COLORS[
+                                      finish as keyof typeof FINISH_COLORS
+                                    ],
+                              }}
+                            />
+                          ))}
+                        </span>
+                      ) : (
+                        <ChatIcon
+                          kind={
+                            option.id === 'talk'
+                              ? 'talk'
+                              : option.id === 'finishes'
+                                ? 'walls'
+                                : option.id === 'checks'
+                                  ? 'work'
+                                  : 'room'
+                          }
+                        />
+                      )}
+                    </span>
+                  )}
                   <span className={styles.choiceLabel}>{option.label}</span>
                   <ChoiceArrow />
                 </button>

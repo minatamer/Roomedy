@@ -7,6 +7,7 @@ import { budgetOptions, budgetSummary } from './budget';
 import { costLineChanges } from './planning';
 import { roomWorkPlan } from './work-plan';
 import styles from './workspace.module.css';
+import { ChatIcon } from './chat-visuals';
 export function PlanCards({
   controller,
   state,
@@ -88,12 +89,13 @@ export function PlanCards({
               </strong>
             </p>
           </div>
-          <p>
-            {preview.after.unpricedCount} unresolved lines · allowances{' '}
-            {money(preview.after.allowanceMinor, estimate.locality.currency)}.{' '}
-            {preview.pricing.budgetMinor !== null &&
-              budgetSummary(preview.after, preview.pricing.budgetMinor)}
-          </p>
+          <div className={styles.factChips}>
+            <span>{preview.after.unpricedCount} unresolved lines</span>
+            <span>
+              Allowances{' '}
+              {money(preview.after.allowanceMinor, estimate.locality.currency)}
+            </span>
+          </div>
           <ul>
             {preview.tradeoffs.map((t) => (
               <li key={t}>{t}</li>
@@ -101,6 +103,9 @@ export function PlanCards({
           </ul>
           <details>
             <summary>Review removed and added cost lines</summary>
+            {preview.pricing.budgetMinor !== null && (
+              <p>{budgetSummary(preview.after, preview.pricing.budgetMinor)}</p>
+            )}
             <h4>Removed</h4>
             {lineList(changes!.removed)}
             <h4>Added</h4>
@@ -133,19 +138,73 @@ export function PlanCards({
       )}
       {budget !== null && !preview && (
         <section aria-label="Budget alternatives">
-          <h3>Ways to approach your budget</h3>
-          <p>{budgetSummary(estimate, budget)}</p>
+          <h3>
+            <ChatIcon kind="budget" /> Budget options
+          </h3>
+          <div className={styles.pricePair}>
+            <p>
+              Known costs
+              <strong>
+                {money(estimate.knownTotalMinor, estimate.locality.currency)}
+              </strong>
+            </p>
+            <p>
+              Your budget
+              <strong>{money(budget, estimate.locality.currency)}</strong>
+            </p>
+          </div>
+          <div className={styles.factChips}>
+            <span>
+              {estimate.unpricedCount
+                ? `${estimate.unpricedCount} unresolved · full budget unverified`
+                : 'All lines priced · planning estimate'}
+            </span>
+            <span>
+              Allowances{' '}
+              {money(estimate.allowanceMinor, estimate.locality.currency)}
+            </span>
+          </div>
+          <details>
+            <summary>Budget assumptions</summary>
+            <p>{budgetSummary(estimate, budget)}</p>
+          </details>
           {options.length ? (
             options.map((option) => (
               <article key={option.label}>
                 <h4>{option.label}</h4>
-                <strong>
-                  {money(
-                    option.estimate.knownTotalMinor,
-                    estimate.locality.currency,
-                  )}{' '}
-                  known costs
-                </strong>
+                <div
+                  className={styles.budgetBars}
+                  aria-label="Known cost comparison"
+                >
+                  <div>
+                    <span>Current</span>
+                    <div className={styles.amountTrack}>
+                      <span style={{ width: '100%' }} />
+                    </div>
+                    <strong>
+                      {money(
+                        estimate.knownTotalMinor,
+                        estimate.locality.currency,
+                      )}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>This option</span>
+                    <div className={styles.amountTrack}>
+                      <span
+                        style={{
+                          width: `${(option.estimate.knownTotalMinor / Math.max(1, estimate.knownTotalMinor)) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <strong>
+                      {money(
+                        option.estimate.knownTotalMinor,
+                        estimate.locality.currency,
+                      )}
+                    </strong>
+                  </div>
+                </div>
                 <p>
                   {money(
                     estimate.knownTotalMinor - option.estimate.knownTotalMinor,
@@ -188,44 +247,51 @@ export function PlanCards({
             ))
           ) : (
             <p>
-              No lower-cost compatible option is available among the recorded
-              products and reuse choices. Research another product or review
-              explicit scope; this does not prove that no other option exists.
+              No cheaper match in your recorded options. Find another product to
+              compare.
             </p>
           )}
         </section>
       )}
       {plan && (
         <section aria-label="Room work and shopping plan">
-          <h3>Your room work plan</h3>
-          <p>
-            A suggested sequence with checks before ordering. Confirm timing and
-            methods with the actual manufacturers and tradespeople.
+          <h3>
+            <ChatIcon kind="work" /> Your work plan
+          </h3>
+          <p className={styles.note}>
+            Suggested order · confirm methods and timing with your installer.
           </p>
-          <ol>
-            {plan.steps.map((step) => (
+          <ol className={styles.workSteps}>
+            {plan.steps.map((step, index) => (
               <li key={step.title}>
-                <h4>{step.title}</h4>
-                <p>{step.detail}</p>
-                <div className={styles.quick}>
-                  {step.targets.map((key) => (
-                    <button key={key} onClick={() => inspect(key)}>
-                      Show{' '}
-                      {key.startsWith('surface:')
-                        ? key.slice(8)
-                        : (room.furniture.find((p) => p.id === key)?.label ??
-                          'part')}{' '}
-                      in 3D ↗
-                    </button>
+                <details open={index === 0}>
+                  <summary>
+                    <span className={styles.stepNumber}>
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    {step.title}
+                  </summary>
+                  <p>{step.detail}</p>
+                  <div className={styles.quick}>
+                    {step.targets.map((key) => (
+                      <button key={key} onClick={() => inspect(key)}>
+                        Show{' '}
+                        {key.startsWith('surface:')
+                          ? key.slice(8)
+                          : (room.furniture.find((p) => p.id === key)?.label ??
+                            'part')}{' '}
+                        in 3D ↗
+                      </button>
+                    ))}
+                  </div>
+                  {step.sources.map((s) => (
+                    <p key={s.url}>
+                      <a href={s.url} target="_blank" rel="noopener noreferrer">
+                        {s.label} · product source ↗
+                      </a>
+                    </p>
                   ))}
-                </div>
-                {step.sources.map((s) => (
-                  <p key={s.url}>
-                    <a href={s.url} target="_blank" rel="noopener noreferrer">
-                      {s.label} · product source ↗
-                    </a>
-                  </p>
-                ))}
+                </details>
               </li>
             ))}
           </ol>

@@ -4,7 +4,11 @@ import {
   assistantJsonSchema,
 } from '@roomedy/contracts/assistant';
 import { operationInputSchema } from '@roomedy/contracts/operations';
-import { contextualQuickReplies, validateQuickReplies } from '@roomedy/spatial';
+import {
+  contextualQuickReplies,
+  validateQuickReplies,
+  LayoutSearch,
+} from '@roomedy/spatial';
 import { createAssistantHandler } from '../apps/backend/src/assistant/assistant.js';
 import { createResponsesProvider } from '../apps/backend/src/providers/responses.js';
 import { createRuntime } from '../apps/backend/src/runtime/create-runtime.js';
@@ -52,7 +56,23 @@ async function setup() {
           ),
     );
   });
-  const assistant = new AssistantController(session, { transport });
+  const assistant = new AssistantController(session, {
+    transport,
+    search: async (token, goal, scope) => {
+      const search = new LayoutSearch(
+        {
+          identity: token,
+          room: session.getSnapshot().workspace!.current,
+          goal,
+          seed: 42,
+          maxNodes: 2000,
+        },
+        scope,
+      );
+      while (!search.step()) {}
+      return search.finish();
+    },
+  });
   await vi.waitFor(() => expect(assistant.getSnapshot().mode).toBe('fake'));
   return {
     room,
@@ -106,6 +126,11 @@ describe('contextual suggested replies', () => {
     'execute javascript',
     'start a new room',
     'buy furniture',
+    'What measurements would help plan this room?',
+    'How wide is the room width?',
+    'Which physical facts are missing?',
+    'What is the window sill height?',
+    'Measure the desk first',
   ])('does not offer unsafe or unsupported model text: %s', (request) => {
     expect(
       validateQuickReplies(
@@ -138,6 +163,12 @@ describe('contextual suggested replies', () => {
           validateQuickReplies(room, sample, null).length === sample.length,
       ),
     ).toBe(true);
+    expect(
+      samples
+        .flat()
+        .map((reply) => `${reply.label} ${reply.request}`)
+        .join(' '),
+    ).not.toMatch(/measur|physical facts|survey/i);
     expect(
       contextualQuickReplies(room, 'Nothing has been applied yet.', null),
     ).not.toEqual(samples[3]);
@@ -228,7 +259,8 @@ it('accepts independent real Responses suggestions in the same strict stateless 
   expect(result.assistant?.summary).toBe(answer);
   expect(result.assistant?.suggestions?.map((s) => s.label)).toEqual([
     'Try a calm palette',
-    'Talk about materials',
+    'Add a work chair',
+    'Another layout idea',
   ]);
   expect(result.assistant?.actions).toBeNull();
   expect(room).toEqual(before);
@@ -277,12 +309,10 @@ it('simulates context changes through actual fake admission, sends a selected re
     );
     expect(s.session.getSnapshot().candidate).toBe(candidate);
     expect(s.assistant.apply().ok).toBe(true);
+    expect(s.session.getSnapshot().workspace!.history.entries).toHaveLength(1);
     expect(
-      s.assistant
-        .getSnapshot()
-        .messages.at(-1)!
-        .quickReplies.map((r) => r.label),
-    ).toContain('What could we try next?');
+      s.assistant.getSnapshot().messages.at(-1)!.quickReplies,
+    ).toHaveLength(3);
     expect(s.assistant.undo().ok).toBe(true);
     expect(s.session.getSnapshot().workspace!.current.furniture).toEqual(
       s.room.furniture,
@@ -373,6 +403,46 @@ it('replaces settled preview shortcuts with a cancellation receipt and rejects t
     expect(s.assistant.getSnapshot().messages.at(-1)).toBe(receipt);
     expect(s.assistant.cancel(operationId)).toBe(false);
     expect(s.assistant.getSnapshot().messages.at(-1)).toBe(receipt);
+  } finally {
+    s.close();
+  }
+});
+
+it('offers three useful choices and previews a missing chair only after its actual suggestion is selected', async () => {
+  const s = await setup();
+  try {
+    await s.assistant.submit('How can I make this work area more useful?');
+    const message = s.assistant.getSnapshot().messages.at(-1)!;
+    expect(message.quickReplies).toHaveLength(3);
+    const choice = message.quickReplies.find(
+      (reply) => reply.request === 'I need a chair',
+    );
+    expect(choice).toBeDefined();
+    expect(s.session.getSnapshot().workspace!.current).toEqual(s.room);
+    expect(s.session.getSnapshot().candidate).toBeNull();
+    const calls = s.transport.mock.calls.length;
+    await Promise.resolve();
+    expect(s.transport.mock.calls.length).toBe(calls);
+    s.assistant.chooseSuggestion(message.id, choice!);
+    await vi.waitFor(() =>
+      expect(s.session.getSnapshot().candidate?.source).toBe('assistant'),
+    );
+    expect(s.session.getSnapshot().workspace!.current).toEqual(s.room);
+    expect(
+      s.session
+        .getSnapshot()
+        .candidate!.room.furniture.some(
+          (piece) => piece.catalogueId === 'procedural-chair',
+        ),
+    ).toBe(true);
+    expect(s.assistant.apply().ok).toBe(true);
+    expect(s.session.getSnapshot().workspace!.current.furniture).toHaveLength(
+      2,
+    );
+    expect(s.assistant.undo().ok).toBe(true);
+    expect(s.session.getSnapshot().workspace!.current.furniture).toEqual(
+      s.room.furniture,
+    );
   } finally {
     s.close();
   }

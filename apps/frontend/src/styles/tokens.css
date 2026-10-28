@@ -9,6 +9,15 @@
   --line: #ddd2c1;
   --sage: #e7ddcc;
   --room-floor: #ddc6a2;
+  --surface-panel: linear-gradient(145deg, #f7ead6f2, #efdfc6ed);
+  --surface-control: linear-gradient(135deg, #f3e5cce0, #e5d0afbf);
+  --surface-control-hover: linear-gradient(135deg, #f8ecd5f5, #ead8b8e6);
+  --surface-border: #cdb89bcc;
+  --surface-selected: #dfc8a5;
+  --surface-field: linear-gradient(135deg, #fff2da66, #e8d4b333);
+  --surface-field-border: #bda480b3;
+  --surface-room: radial-gradient(ellipse at 50% 75%, #e6d1b0, #f1e2c8 76%);
+  --surface-highlight: #fff1d8b3;
   --radius: 24px;
   --shadow: 0 24px 70px #50392910;
   font-family: Arial, Helvetica, sans-serif;

@@ -33,14 +33,15 @@ export function costIntent(
     const currencies = text.match(/\b(?:EGP|USD|EUR|GBP|AED|SAR)\b/gi) ?? [];
     if (
       currencies.some((c) => c.toUpperCase() !== currency) ||
-      /[$€£]/.test(text)
+      /[€£]/.test(text) ||
+      (text.includes('$') && currency !== 'USD')
     )
       return {
         kind: 'clarify',
         message: `Use a budget in ${currency}. Change the estimate currency explicitly to plan in another currency; prices are never converted automatically.`,
       };
     const amount = text.match(
-      /(?:\b(?:under|below|budget(?: of| is|:)?|afford)\s*(?:EGP|USD|EUR|GBP|AED|SAR)?\s*)([0-9][0-9.,a-z]*)/i,
+      /(?:\b(?:under|below|budget(?: of| is|:)?|afford)\s*(?:EGP|USD|EUR|GBP|AED|SAR)?\s*\$?\s*)([0-9][0-9.,a-z]*)/i,
     )?.[1];
     if (
       !amount ||
@@ -48,7 +49,7 @@ export function costIntent(
     )
       return {
         kind: 'clarify',
-        message: `What is your room budget in ${currency}? For example, “keep this under 30,000 ${currency}”.`,
+        message: `What is your room budget in ${currency}? For example, “keep this under 3,000 ${currency}”.`,
       };
     const value = Number(amount.replaceAll(',', ''));
     const minor = Math.round(value * 100);

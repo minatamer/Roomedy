@@ -7,6 +7,7 @@ import type { RoomDocument } from '@roomedy/contracts/room';
 import { evaluateBatch } from '../commands.js';
 import type { CommandResult } from '../commands.js';
 import { wallMountedPose } from '../elevation.js';
+import { planningRoom } from '../planning.js';
 /** Scope is supplied by the application separately from untrusted tool/goal arguments. */
 export function scopeAllows(
   room: RoomDocument,
@@ -71,11 +72,22 @@ export function evaluateScopedBatch(
 ): CommandResult {
   if (!scopeAllows(room, actions, scope))
     return { ok: false, code: 'out-of-scope' };
-  return evaluateBatch(
+  const accepted = evaluateBatch(
     room,
     actions,
     'assistant',
     undefined,
     scope?.actionKinds.includes('finish') ? scope.targetIds : [],
   );
+  if (!accepted.ok) return accepted;
+  const projected = planningRoom(room);
+  if (projected === room) return accepted;
+  const evaluated = evaluateBatch(
+    projected,
+    actions,
+    'assistant',
+    undefined,
+    scope?.actionKinds.includes('finish') ? scope.targetIds : [],
+  );
+  return evaluated.ok ? { ...accepted, checks: evaluated.checks } : evaluated;
 }

@@ -1,12 +1,10 @@
-import { createRoomFixture } from '../fixtures/rooms';
+import { createManualRoom } from './manual-room';
 import { FINISH_PALETTE } from '../../catalogue/finishes';
 import type { RoomCondition } from './entry-state';
 
 /** Server-rendered authored choice context; never a visitor draft or controller. */
 export function EntryRoomPreview({ condition }: { condition: RoomCondition }) {
-  const room = createRoomFixture(
-    condition === 'furnished' ? 'sample' : condition,
-  );
+  const room = createManualRoom(condition);
   const width = room.room.width.value,
     depth = room.room.depth.value;
   if (width === null || depth === null) return null;
@@ -20,19 +18,10 @@ export function EntryRoomPreview({ condition }: { condition: RoomCondition }) {
         width={width}
         height={depth}
         rx="65"
-        fill="#e8d6b6"
+        fill={FINISH_PALETTE[room.room.floorFinish]}
         stroke="#9b7a56"
         strokeWidth="45"
       />
-      {Array.from({ length: Math.floor(depth / 400) }, (_, i) => (
-        <path
-          key={i}
-          d={`M30 ${(i + 1) * 400}H${width - 30}`}
-          stroke="#bea47f"
-          strokeWidth="12"
-          opacity="0.3"
-        />
-      ))}
       {room.room.features
         .filter(
           (f) =>
@@ -69,7 +58,11 @@ export function EntryRoomPreview({ condition }: { condition: RoomCondition }) {
               width={w}
               height={d}
               rx="55"
-              fill={FINISH_PALETTE[piece.finish]}
+              fill={
+                piece.materials?.bodyColor ??
+                piece.materials?.softColor ??
+                FINISH_PALETTE[piece.finish]
+              }
               stroke="#816346"
               strokeWidth="22"
             />
