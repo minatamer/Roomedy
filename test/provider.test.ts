@@ -378,6 +378,61 @@ it('cancels rejected HTTP/type/output/fragment streams and never retries', async
     expect(calls).toBe(1);
   }
 });
+it.each(['completed', 'timeout', 'cancelled'] as const)(
+  'uses the photo call budget past forty-five seconds and preserves real settlement: %s',
+  async (outcome) => {
+    vi.useFakeTimers();
+    let resolve: (response: Response) => void;
+    const fetcher = vi.fn<typeof fetch>(
+      () =>
+        new Promise((r) => {
+          resolve = r;
+        }),
+    );
+    const provider = createResponsesProvider(
+      'synthetic-key',
+      'fixture',
+      fetcher,
+    );
+    const parent = new AbortController();
+    try {
+      const call = provider.start(input(), parent.signal, 'photo');
+      let visible = false,
+        settled = false;
+      void call.result.then(() => {
+        visible = true;
+      });
+      void call.settled.then(() => {
+        settled = true;
+      });
+      await vi.advanceTimersByTimeAsync(POLICY.providerCallMs + 1);
+      expect(visible).toBe(false);
+      expect(settled).toBe(false);
+      if (outcome === 'completed') {
+        await vi.advanceTimersByTimeAsync(15_000);
+        resolve!(Response.json(completed));
+        expect(await call.result).toMatchObject({ kind: 'completed' });
+      } else {
+        if (outcome === 'cancelled') parent.abort();
+        else
+          await vi.advanceTimersByTimeAsync(
+            POLICY.recognitionProviderMs - POLICY.providerCallMs - 1,
+          );
+        expect(await call.result).toEqual({ kind: outcome });
+        expect(settled).toBe(false);
+        resolve!(Response.json(completed));
+      }
+      await call.settled;
+      expect(settled).toBe(true);
+      expect(fetcher).toHaveBeenCalledTimes(1);
+      expect(provider.meteredDispatches).toBe(1);
+      expect(POLICY.recognitionProviderMs).toBeLessThan(POLICY.recognitionMs);
+      expect(POLICY.recognitionMs).toBeLessThan(POLICY.operationBridgeMs);
+    } finally {
+      vi.useRealTimers();
+    }
+  },
+);
 it('returns an independent deadline even when fetch ignores abort, while exposing real settlement', async () => {
   vi.useFakeTimers();
   let resolve: (response: Response) => void;

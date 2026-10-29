@@ -4,6 +4,7 @@ import { POLICY } from '@roomedy/contracts/policy';
 import { BoundedBytes } from '@roomedy/contracts/bounded-bytes';
 import { projectProviderSchema } from './schema.js';
 import { ROOMEDY_MODEL } from './model.js';
+import { providerDeadlineMs } from './provider.js';
 import type {
   ProviderPort,
   ProviderRequest,
@@ -216,9 +217,10 @@ export function responseBody(input: ProviderRequest, model: string) {
     input.search &&
     (input.format.name !== 'room_sourcing_1' ||
       input.tools.length ||
-      !/^[A-Z]{2}$/.test(input.search.country) ||
-      !input.search.city.trim() ||
-      input.search.city.length > 80)
+      (input.search !== true &&
+        (!/^[A-Z]{2}$/.test(input.search.country) ||
+          !input.search.city.trim() ||
+          input.search.city.length > 80)))
   )
     throw new Error('provider-request');
   const tools = input.tools.map((tool) => {
@@ -252,11 +254,15 @@ export function responseBody(input: ProviderRequest, model: string) {
           {
             type: 'web_search',
             search_context_size: 'low',
-            user_location: {
-              type: 'approximate',
-              country: input.search.country,
-              city: input.search.city,
-            },
+            ...(input.search === true
+              ? {}
+              : {
+                  user_location: {
+                    type: 'approximate',
+                    country: input.search.country,
+                    city: input.search.city,
+                  },
+                }),
           },
         ]
       : tools,
@@ -394,7 +400,7 @@ export function createResponsesProvider(
     get meteredDispatches() {
       return dispatched;
     },
-    start(input, parent) {
+    start(input, parent, profile = 'interactive') {
       let body: string;
       try {
         body = responseBody(input, model);
@@ -422,7 +428,7 @@ export function createResponsesProvider(
       const timer = setTimeout(() => {
         controller.abort();
         finish({ kind: 'timeout' });
-      }, POLICY.providerCallMs);
+      }, providerDeadlineMs(profile));
       if (parent.aborted) {
         cancel();
         return { result, settled: Promise.resolve() };

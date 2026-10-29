@@ -73,6 +73,7 @@ export const POLICY = Object.freeze({
   admissionsPerWindow: 30,
   dispatchesPerWindow: 12,
   providerCallMs: 45_000,
+  recognitionProviderMs: 85_000,
   operationBridgeMs: 110_000,
   hostingRequestMs: 120_000,
   providerOutputTokens: 8192,

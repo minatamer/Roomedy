@@ -10,7 +10,10 @@ import {
 import { createRuntime } from '../apps/backend/src/runtime/create-runtime.js';
 import { parseRuntimeConfig } from '../apps/backend/src/config/runtime-config.js';
 import { createFakeProvider } from '../apps/backend/src/providers/provider.js';
-import type { ProviderOutcome } from '../apps/backend/src/providers/provider.js';
+import type {
+  ProviderOutcome,
+  ProviderPort,
+} from '../apps/backend/src/providers/provider.js';
 import {
   operationInput,
   operationResult,
@@ -20,6 +23,94 @@ import {
 } from './fixtures/operation.js';
 
 describe('content-bound boot admission', () => {
+  it.each(['completed', 'timeout'] as const)(
+    'gives admitted photos the same longer independent budget and retains unresolved ownership: %s',
+    async (outcome) => {
+      const input = await recognitionInput();
+      vi.useFakeTimers();
+      let resolve!: (outcome: ProviderOutcome) => void;
+      const pending = new Promise<ProviderOutcome>((r) => {
+        resolve = r;
+      });
+      const start = vi.fn<ProviderPort['start']>(() => ({
+        result: pending,
+        settled: pending.then(() => undefined),
+      }));
+      const runtime = createRuntime(
+        parseRuntimeConfig({ ROOMEDY_BRIDGE_SECRET: 'synthetic-private' }),
+        {
+          now: Date.now,
+          nextId: identityIds(),
+          log: vi.fn(),
+          provider: { kind: 'fake', meteredDispatches: 0, start },
+          handlers: {
+            'recognize-room': async (input, budget) => {
+              const result = await budget.call({
+                instructions: 'fixture',
+                input: [],
+                format: {
+                  name: 'fixture',
+                  schema: {
+                    type: 'object',
+                    properties: {},
+                    additionalProperties: false,
+                  },
+                },
+                tools: [],
+              });
+              return operationResult(input, result.kind);
+            },
+          },
+        },
+      );
+      try {
+        const grant = await runtime.operations.grant(
+          input,
+          null,
+          new AbortController().signal,
+        );
+        if (!('grant' in grant)) throw new Error('fixture-grant');
+        const result = runtime.operations.run(
+          input,
+          grant.grant,
+          new AbortController().signal,
+        );
+        let visible = false;
+        void result.then(() => {
+          visible = true;
+        });
+        await vi.advanceTimersByTimeAsync(POLICY.providerCallMs + 1);
+        expect(visible).toBe(false);
+        expect(start).toHaveBeenCalledTimes(1);
+        expect(start.mock.calls[0]![2]).toBe('photo');
+        if (outcome === 'completed') {
+          await vi.advanceTimersByTimeAsync(15_000);
+          resolve({ kind: 'completed', data: null, calls: [] });
+          expect(await result).toMatchObject({ kind: 'completed' });
+          await vi.advanceTimersByTimeAsync(0);
+          expect(runtime.operations.admission.snapshot().work).toBe(0);
+        } else {
+          await vi.advanceTimersByTimeAsync(
+            POLICY.recognitionProviderMs - POLICY.providerCallMs - 1,
+          );
+          expect(await result).toMatchObject({ kind: 'timeout' });
+          expect(runtime.operations.admission.snapshot().work).toBe(1);
+          resolve({ kind: 'unavailable' });
+          await vi.advanceTimersByTimeAsync(0);
+          expect(runtime.operations.admission.snapshot().work).toBe(1);
+          await vi.advanceTimersByTimeAsync(
+            POLICY.recognitionMs - POLICY.recognitionProviderMs,
+          );
+          expect(runtime.operations.admission.snapshot().work).toBe(0);
+        }
+        expect(runtime.operations.calls()).toBe(1);
+      } finally {
+        resolve({ kind: 'cancelled' });
+        runtime.operations.close();
+        vi.useRealTimers();
+      }
+    },
+  );
   it('retains consumed replay protection past TTL while remote work is unresolved', () => {
     let now = 0;
     const admission = new Admission(() => now, identityIds(), 1);

@@ -4,6 +4,8 @@ RM-008, 18 October 2026. [Ticket](../tickets/RM-008-build-shared-admission-and-b
 
 ## One admitted path
 
+29 October2026 RM-015CB photo deadline correction: the admitted operation owner selects `photo` only for `recognize-room`, passing that internal call profile to the provider port. One shared mapping supplies85s to both the transport timer and independent budget race; other operations retain45s. The profile is not a provider JSON field or visitor/model setting. The outer90s photo/110s bridge guards, current model/request quality and unresolved-work retirement/replay rules remain. The actual four-sample retest completes in45.973s in one provider round, beyond the former45s cutoff; this is one successful observation, not a provider latency guarantee. [Diagnosis and checks](../validation/RM-015CB.md).
+
 The browser uses fixed Next operations beneath `/api/roomedy/v1`; the private Express operations use `/v1`. Only GET health/ready/config and POST admission/recognize-room/assistant/sourcing exist. Methods, paths and queries are checked. Mutation JSON must have the configured exact public Origin and no cross-site fetch context; browser-chosen destinations/credentials are discarded. Next supplies its server-only bridge secret, checked privately using fixed-size digests and constant-time comparison. Blank identity fails closed. Blank committed examples contain no credential. This local shared-secret boundary does not establish hosted IAM; the public frontend/private authenticated backend deployment remains an external RM-014/020 prerequisite.
 
 Public capability/readiness schemas expose useful mode/limits without keys/model/private origin/account details. Owning handlers and matching provider kind must exist. Live availability additionally requires paid master, configured credentials/model, a Turnstile site key and a live verifier port. A fake verifier/provider cannot satisfy live readiness. Fresh development defaults remain fake/paid-off; the recognition and assistant handlers are now integrated. A failed live operation cannot switch to fake success.
@@ -23,7 +25,7 @@ The backend recomputes SHA-256 over strict request semantics including actual su
 | Grant ledger / lifetime | 256 records; 120 seconds, with active consumed protection retained until retirement |
 | Global process rates | 30 admission attempts and12 admitted operations per60-second window, shared across browser identities/tabs |
 | Challenge | 15-second visible deadline; at most2 unresolved verifier promises, including timed-out/aborted work |
-| Body / provider / operation / bridge / proposed host deadlines | 15s body;45s provider call;60s assistant or90s recognition;110s operation bridge;120s proposed hosting timeout |
+| Body / provider / operation / bridge / proposed host deadlines | 15s body;45s interactive or85s photo provider call;60s assistant or90s recognition;110s operation bridge;120s proposed hosting timeout |
 | Provider request | 10 MiB after conservative pre-serialization work/byte checking and actual encoding;100,000 nodes/depth24; schema64 KiB/depth10 |
 | Output | 1 MiB,4096 fragments,8192 output tokens |
 | Loop | At most4 rounds and16 total tool calls; one call at a time, no implicit retry |

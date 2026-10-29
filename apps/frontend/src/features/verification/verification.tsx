@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import Script from 'next/script';
 import { mountVerification } from './turnstile';
 import type { Turnstile } from './turnstile';
+import { loadVerificationScript } from './script';
 import {
   verificationSnapshot,
   serverVerificationSnapshot,
@@ -56,10 +56,13 @@ function VerificationDialog({ pending }: { pending: PendingVerification }) {
     };
   }, [pending]);
   useEffect(() => {
-    if (ready) return;
-    const timer = setTimeout(() => pending.finish(), 12_000);
-    return () => clearTimeout(timer);
-  }, [ready, pending]);
+    return loadVerificationScript(
+      document,
+      () => Boolean(window.turnstile),
+      () => setReady(true),
+      (reason) => pending.finish(undefined, reason),
+    );
+  }, [pending]);
   useEffect(() => {
     if (!ready || !container.current || !window.turnstile) return;
     const owned = dialog.current;
@@ -103,11 +106,6 @@ function VerificationDialog({ pending }: { pending: PendingVerification }) {
           Cancel
         </button>
       </div>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        onReady={() => setReady(true)}
-        onError={() => pending.finish()}
-      />
     </dialog>
   );
 }

@@ -7,6 +7,7 @@ import type { OperationInput } from '@roomedy/contracts/operations';
 import { safeErrorSchema, errorMessages } from '@roomedy/contracts/api';
 import { readOperationResponse } from '../session/operation-client';
 import { obtainAdmission } from '../session/admission-client';
+import { verificationFailureMessage } from '../verification/failure';
 
 export async function askAssistant(
   input: Extract<OperationInput, { kind: 'assistant' }>,
@@ -28,6 +29,9 @@ export async function askAssistant(
   const admission = await obtainAdmission(parsed, signal, (body) =>
     post('admission', body),
   );
+  const verificationFailure = verificationFailureMessage(admission);
+  if (verificationFailure)
+    return { ok: false as const, message: verificationFailure };
   const admissionError = safeErrorSchema.safeParse(admission);
   if (admissionError.success)
     return {

@@ -1,4 +1,5 @@
 import type { VerificationChallenge } from '@roomedy/contracts/operations';
+import type { VerificationFailure } from './failure';
 
 interface WidgetOptions {
   sitekey: string;
@@ -14,7 +15,7 @@ interface WidgetOptions {
   'response-field': false;
   callback(proof: string): void;
   'before-interactive-callback'(): void;
-  'error-callback'(): boolean;
+  'error-callback'(code?: string): boolean;
   'expired-callback'(): void;
   'timeout-callback'(): void;
   'unsupported-callback'(): void;
@@ -29,15 +30,16 @@ export function mountVerification(
   api: Turnstile,
   container: HTMLElement,
   challenge: VerificationChallenge,
-  finish: (proof?: string) => void,
+  finish: (proof?: string, failure?: VerificationFailure) => void,
   interact: () => void,
 ) {
   let active = true;
   let widget: string | null = null;
-  const complete = (proof?: string) => {
+  const complete = (proof?: string, failure?: VerificationFailure) => {
     if (!active) return;
     active = false;
-    finish(proof);
+    if (failure) finish(undefined, failure);
+    else finish(proof);
   };
   try {
     widget = api.render(container, {
@@ -56,16 +58,27 @@ export function mountVerification(
       'before-interactive-callback': () => {
         if (active) interact();
       },
-      'error-callback': () => {
-        complete();
+      'error-callback': (code) => {
+        complete(
+          undefined,
+          code === '200500'
+            ? 'script-load'
+            : code === '110500'
+              ? 'browser'
+              : ['110100', '110110', '110200', '400020', '400070'].includes(
+                    code ?? '',
+                  )
+                ? 'configuration'
+                : 'challenge',
+        );
         return true;
       },
-      'expired-callback': () => complete(),
-      'timeout-callback': () => complete(),
-      'unsupported-callback': () => complete(),
+      'expired-callback': () => complete(undefined, 'timeout'),
+      'timeout-callback': () => complete(undefined, 'timeout'),
+      'unsupported-callback': () => complete(undefined, 'browser'),
     });
   } catch {
-    complete();
+    complete(undefined, 'challenge');
   }
   return () => {
     active = false;

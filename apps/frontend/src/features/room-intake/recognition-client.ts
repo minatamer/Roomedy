@@ -1,4 +1,5 @@
 import { safeErrorSchema, errorMessages } from '@roomedy/contracts/api';
+import type { PublicConfig } from '@roomedy/contracts/api';
 import {
   admissionResultSchema,
   operationResultSchema,
@@ -7,9 +8,11 @@ import {
 import type { OperationResult } from '@roomedy/contracts/operations';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import { readOperationResponse as read } from '../session/operation-client';
+import { operationAvailability } from '../session/operation-client';
 export { operationAvailability as recognitionAvailability } from '../session/operation-client';
 import { releaseTransport } from '../session/release-client';
 import { obtainAdmission } from '../session/admission-client';
+import { verificationFailureMessage } from '../verification/failure';
 import type { ReviewController } from './review-controller';
 
 type Transport = typeof fetch;
@@ -17,6 +20,31 @@ export const FAKE_PROCESSING_PREVIEW_MS = 2800;
 interface ProcessingOptions {
   openStudio?: boolean;
   previewProcessing?: boolean;
+}
+/** Recheck on the deliberate action so a transient startup failure cannot strand intake. */
+export async function continueFromPhotos(
+  controller: ReviewController,
+  signal: AbortSignal,
+  options: {
+    onAvailability?: (config: PublicConfig | null) => void;
+    previewProcessing?: boolean;
+  } = {},
+  transport: Transport = fetch,
+) {
+  const config = await operationAvailability(signal, transport);
+  if (signal.aborted) return;
+  options.onAvailability?.(config);
+  if (!config?.capabilities.recognition) {
+    controller.notify(
+      'Photo processing could not connect. Your photos are still here; try Continue again, or build manually.',
+    );
+    return;
+  }
+  await draftFromPhotos(controller, transport, {
+    openStudio: true,
+    previewProcessing:
+      options.previewProcessing !== false && config.mode === 'fake',
+  });
 }
 async function previewProcessing(ms: number, signal: AbortSignal) {
   if (ms <= 0 || signal.aborted) return;
@@ -141,6 +169,11 @@ export async function draftFromPhotos(
       post('admission', body),
     );
     if (!current()) return;
+    const verificationFailure = verificationFailureMessage(admitted);
+    if (verificationFailure) {
+      finish(`${verificationFailure} Your photos are still here.`);
+      return;
+    }
     const failure = safeErrorSchema.safeParse(admitted);
     if (failure.success) {
       finish(errorMessages[failure.data.error.code]);
@@ -149,7 +182,7 @@ export async function draftFromPhotos(
     const grant = admissionResultSchema.safeParse(admitted);
     if (!grant.success || grant.data.kind !== 'granted') {
       finish(
-        'Photo processing needs verification that is unavailable here. Continue manually.',
+        'Verification did not complete. Your photos are still here; try Continue again.',
       );
       return;
     }

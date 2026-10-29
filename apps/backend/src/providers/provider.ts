@@ -1,6 +1,12 @@
 import type { JsonSchema } from './schema.js';
+import { POLICY } from '@roomedy/contracts/policy';
+/** Chosen by the admitted operation owner, never by visitor/model payloads. */
+export type ProviderCallProfile = 'interactive' | 'photo';
+export const providerDeadlineMs = (profile: ProviderCallProfile) =>
+  profile === 'photo' ? POLICY.recognitionProviderMs : POLICY.providerCallMs;
 export interface ProviderRequest {
-  search?: { country: string; city: string };
+  /** true searches without supplying a visitor location. */
+  search?: { country: string; city: string } | true;
   instructions: string;
   input: readonly Record<string, unknown>[];
   format: { name: string; schema: JsonSchema };
@@ -43,7 +49,11 @@ export interface ProviderCall {
 export interface ProviderPort {
   readonly kind: 'fake' | 'live';
   readonly meteredDispatches: number;
-  start(input: ProviderRequest, signal: AbortSignal): ProviderCall;
+  start(
+    input: ProviderRequest,
+    signal: AbortSignal,
+    profile?: ProviderCallProfile,
+  ): ProviderCall;
 }
 
 export function createFakeProvider(

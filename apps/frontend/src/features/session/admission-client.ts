@@ -4,6 +4,7 @@ import type {
   VerificationChallenge,
 } from '@roomedy/contracts/operations';
 import { requestVerification } from '../verification/state';
+import { VerificationFailureError } from '../verification/failure';
 
 /** A proof is requested only after server admission asks; one deliberate attempt, no retry. */
 export async function obtainAdmission(
@@ -30,7 +31,19 @@ export async function obtainAdmission(
     parsed.data.simulation
   )
     return first;
-  const proof = await verify(parsed.data.challenge, signal);
+  let proof: string | null;
+  try {
+    proof = await verify(parsed.data.challenge, signal);
+  } catch (error) {
+    signal.throwIfAborted();
+    if (!(error instanceof VerificationFailureError)) throw error;
+    return {
+      kind: 'verification',
+      state: 'failed',
+      simulation: false,
+      reason: error.reason,
+    };
+  }
   signal.throwIfAborted();
   if (!proof)
     return { kind: 'verification', state: 'failed', simulation: false };

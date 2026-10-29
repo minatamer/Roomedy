@@ -1,10 +1,14 @@
 import { it, expect, vi } from 'vitest';
 import { SessionController } from '../apps/frontend/src/features/session/controller.js';
 import { ReviewController } from '../apps/frontend/src/features/room-intake/review-controller.js';
-import { draftFromPhotos } from '../apps/frontend/src/features/room-intake/recognition-client.js';
+import {
+  draftFromPhotos,
+  continueFromPhotos,
+} from '../apps/frontend/src/features/room-intake/recognition-client.js';
 import { recognitionFixture } from '../apps/backend/src/recognition/fixtures.js';
 import type { OperationInput } from '@roomedy/contracts/operations';
 import { errorMessages } from '@roomedy/contracts/api';
+import { PUBLIC_LIMITS } from '@roomedy/contracts/policy';
 async function setup() {
   let id = 0,
     photo = 0,
@@ -78,6 +82,87 @@ function transport(reply?: (input: OperationInput) => Promise<Response>) {
     });
   });
 }
+it('rechecks failed availability on a new Continue and opens the same prepared photos after recovery', async () => {
+  const { review, session } = await setup();
+  const operation = transport();
+  let available = false;
+  const send = vi.fn<typeof fetch>(async (url, init) => {
+    if (String(url).endsWith('/config'))
+      return available
+        ? Response.json({
+            mode: 'fake',
+            capabilities: {
+              manual: true,
+              recognition: true,
+              assistant: true,
+              simulation: true,
+            },
+            limits: PUBLIC_LIMITS,
+          })
+        : Response.json({}, { status: 503 });
+    return operation(url, init);
+  });
+  const before = review.getSnapshot().photos;
+  const changed = vi.fn();
+  await continueFromPhotos(
+    review,
+    new AbortController().signal,
+    { onAvailability: changed, previewProcessing: false },
+    send,
+  );
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(operation).not.toHaveBeenCalled();
+  expect(review.getSnapshot().photos).toEqual(before);
+  expect(review.getSnapshot().message).toContain('try Continue again');
+  expect(changed).toHaveBeenCalledWith(null);
+  available = true;
+  await continueFromPhotos(
+    review,
+    new AbortController().signal,
+    { onAvailability: changed, previewProcessing: false },
+    send,
+  );
+  expect(operation).toHaveBeenCalledTimes(2);
+  expect(session.getSnapshot().phase).toBe('editor');
+  session.dispose();
+});
+it('cannot start photo admission after its availability owner is canceled even if fetch ignores abort', async () => {
+  const { review, session } = await setup();
+  const abort = new AbortController();
+  let resolve!: (response: Response) => void;
+  const send = vi.fn<typeof fetch>(
+    () =>
+      new Promise<Response>((done) => {
+        resolve = done;
+      }),
+  );
+  const changed = vi.fn();
+  const pending = continueFromPhotos(
+    review,
+    abort.signal,
+    { onAvailability: changed },
+    send,
+  );
+  abort.abort();
+  resolve(
+    Response.json({
+      mode: 'fake',
+      capabilities: {
+        manual: true,
+        recognition: true,
+        assistant: true,
+        simulation: true,
+      },
+      limits: PUBLIC_LIMITS,
+    }),
+  );
+  await pending;
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(changed).not.toHaveBeenCalled();
+  expect(review.getSnapshot().recognition).toBe('idle');
+  expect(review.getSnapshot().photos).toHaveLength(2);
+  session.dispose();
+});
 it('explicitly dispatches one admission/one operation, uses transient IDs and enters simulated rough2D review', async () => {
   const { review, session } = await setup(),
     send = transport();

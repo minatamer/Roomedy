@@ -1,8 +1,10 @@
 import type { VerificationChallenge } from '@roomedy/contracts/operations';
+import { VerificationFailureError } from './failure';
+import type { VerificationFailure } from './failure';
 
 export interface PendingVerification {
   readonly challenge: VerificationChallenge;
-  finish(proof?: string): void;
+  finish(proof?: string, failure?: VerificationFailure): void;
 }
 let pending: PendingVerification | null = null;
 const listeners = new Set<() => void>();
@@ -24,9 +26,9 @@ export function requestVerification(
   signal: AbortSignal,
 ): Promise<string | null> {
   if (signal.aborted || pending) return Promise.resolve(null);
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     let settled = false;
-    const finish = (proof?: string) => {
+    const finish = (proof?: string, failure?: VerificationFailure) => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
@@ -35,7 +37,8 @@ export function requestVerification(
         pending = null;
         publish();
       }
-      resolve(proof && proof.length <= 2048 ? proof : null);
+      if (failure) reject(new VerificationFailureError(failure));
+      else resolve(proof && proof.length <= 2048 ? proof : null);
     };
     const abort = () => finish();
     const timer = setTimeout(abort, 60_000);

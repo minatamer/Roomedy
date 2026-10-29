@@ -4,7 +4,10 @@ import Image from 'next/image';
 import { Brand } from '../landing/brand';
 import type { ReviewController } from './review-controller';
 import styles from './intake.module.css';
-import { draftFromPhotos, recognitionAvailability } from './recognition-client';
+import {
+  continueFromPhotos,
+  recognitionAvailability,
+} from './recognition-client';
 import { CaptureGuide } from './capture-guide';
 import { PhotoViewer } from './photo-viewer';
 import { PhotoProcessing } from './processing';
@@ -94,13 +97,39 @@ export function Intake({
   const [availability, setAvailability] = useState<
     PublicConfig | null | undefined
   >(undefined);
+  const availabilityRequest = useRef<AbortController | null>(null);
+  const [checkingAvailability, setCheckingAvailability] = useState(true);
   useEffect(() => {
     const abort = new AbortController();
+    availabilityRequest.current = abort;
     void recognitionAvailability(abort.signal).then((config) => {
-      if (!abort.signal.aborted) setAvailability(config);
+      if (!abort.signal.aborted) {
+        setAvailability(config);
+        setCheckingAvailability(false);
+        if (availabilityRequest.current === abort)
+          availabilityRequest.current = null;
+      }
     });
-    return () => abort.abort();
+    return () => {
+      abort.abort();
+      availabilityRequest.current?.abort();
+    };
   }, []);
+  const continuePhotos = async () => {
+    if (availabilityRequest.current) return;
+    const abort = new AbortController();
+    availabilityRequest.current = abort;
+    setCheckingAvailability(true);
+    try {
+      await continueFromPhotos(controller, abort.signal, {
+        onAvailability: setAvailability,
+      });
+    } finally {
+      if (!abort.signal.aborted) setCheckingAvailability(false);
+      if (availabilityRequest.current === abort)
+        availabilityRequest.current = null;
+    }
+  };
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     if (!processing) {
@@ -298,7 +327,7 @@ export function Intake({
                           <button
                             className="button primary"
                             disabled={
-                              !availability?.capabilities.recognition ||
+                              checkingAvailability ||
                               state.recognition !== 'idle' ||
                               state.photos.some((p) => p.status !== 'ready')
                             }
@@ -307,20 +336,17 @@ export function Intake({
                                 ? 'photo-transfer'
                                 : undefined
                             }
-                            aria-busy={state.recognition !== 'idle'}
-                            onClick={() =>
-                              void draftFromPhotos(controller, fetch, {
-                                openStudio: true,
-                                previewProcessing:
-                                  availability?.mode === 'fake',
-                              })
+                            aria-busy={
+                              checkingAvailability ||
+                              state.recognition !== 'idle'
                             }
+                            onClick={() => void continuePhotos()}
                           >
                             Continue <span aria-hidden="true">↗</span>
                           </button>
                         )}
                       </div>
-                      {availability?.mode === 'live' &&
+                      {availability?.mode !== 'fake' &&
                         state.photos.length > 0 && (
                           <p id="photo-transfer" className={styles.hint}>
                             Continue sends prepared photos to the AI provider.
@@ -330,8 +356,8 @@ export function Intake({
                       {availability !== undefined &&
                         !availability?.capabilities.recognition && (
                           <p className={styles.hint}>
-                            Photo processing is unavailable. Return to Room
-                            choices to build manually.
+                            Photo processing could not connect. Try Continue
+                            again, or return to Room choices to build manually.
                           </p>
                         )}
                       {state.message && (

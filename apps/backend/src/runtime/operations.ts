@@ -11,6 +11,7 @@ import type {
   ProviderRequest,
   ProviderOutcome,
 } from '../providers/provider.js';
+import { providerDeadlineMs } from '../providers/provider.js';
 import { Admission, inputDigest } from '../security/admission.js';
 import type { ChallengePort } from '../security/admission.js';
 import type { RuntimeConfig } from '../config/runtime-config.js';
@@ -251,8 +252,10 @@ export function createOperations(
         rounds++;
         calls++;
         let call;
+        const profile =
+          input.kind === 'recognize-room' ? 'photo' : 'interactive';
         try {
-          call = deps.provider!.start(request, controller.signal);
+          call = deps.provider!.start(request, controller.signal, profile);
         } catch {
           inCall = false;
           return { kind: 'malformed' };
@@ -277,7 +280,7 @@ export function createOperations(
             uncertain = true;
             r({ kind: 'timeout' });
             controller.abort();
-          }, POLICY.providerCallMs);
+          }, providerDeadlineMs(profile));
         });
         let outcome: ProviderOutcome;
         try {
