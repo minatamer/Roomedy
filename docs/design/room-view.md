@@ -1,5 +1,11 @@
 # Main-editor cutaway
 
+## Independent bedding materials —RM-048,29 October 2026
+
+Physical BoxPart roles/bounds and procedural geometry are unchanged. Shared furniturePartRole routes pillow meshes to the pillow material, the exposed mattress/sheet mesh to sheet, and the existing blanket mesh to duvet/cover; detail/seam material wins first. Editor and export use this same selector. Beds own two additional small material instances with the existing transitions and scene-owned samplers; non-beds alias the new slots to their current soft material and retain five unique owned materials. Disposal deduplicates aliases, including Strict Mode reuse. No new textures, shaders, lights, canvas, model or dependency.
+
+New nullable/omitted overrides preserve old soft/cover appearance. Fresh manual starts explicitly use plain warm bedding, while photos retain independent source-estimated parts and unknowns. Existing PDF material labels and JSON/GLB/OBJ paths inherit the shared fields/targets. Landing demonstration material batches remain independent and unchanged. [RM-048 evidence](../validation/RM-048.md).
+
 ## Furniture material ownership — RM-023,26October2026
 
 The pure contract resolver supplies identical material targets for live and exported furniture. Four small piece-owned frame/soft/blanket/metal materials borrow the existing scene’s local wood/plaster/fabric/smooth maps. Finite colour, texture and roughness/metalness transitions stop requesting frames after convergence. Layout re-entry after React Strict Mode cleanup marks owned resources for reuse; final cleanup remains idempotent within each lifetime. Prepared material copies retain original geometry, source textures and opening rigs; per-role targets preserve source hardware colour on Original. Screens/glass use their existing separate materials. Scene/export disposal never retires shared samplers or prepared cache geometry. No scene, shader or sampler allocation occurs per animation frame. [Actual checks/limits](../validation/RM-023.md).

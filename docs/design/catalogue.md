@@ -1,5 +1,11 @@
 # Roomedy catalogue and representation policy
 
+## Three bedding parts —RM-048,29 October 2026
+
+Beds support independent optional nullable pillowColor/pillowPattern, sheetColor/sheetPattern and existing coverColor/coverPattern. Pillow and sheet overrides fall back to legacy softColor/softPattern; missing cover fields keep their existing fallback. Explicit null clears an override without rewriting prior documents. Other furniture retains its body/soft/hardware roles and rejects bed-part commands. Fresh manual beds alone receive plain ivory pillows, linen-coloured sheets and a taupe cover. Photo/import/recovery values and physical catalogue geometry stay unchanged.
+
+Manual Materials & details offers separate Pillows, Sheets and Duvet / cover groups using the shared colour/pattern pickers. A chosen bedroom theme or explicit broad bedding change coordinates all three; a named-part Medy edit changes just that part. Photo capture reconciles each part per source and does not import manual defaults. Shared labels, colour swatches, project persistence and exports retain the independent values. [Evidence and limits](../validation/RM-048.md).
+
 ## Independent RGB and patterns — RM-015BY
 
 Furniture frame/case, soft parts and hardware accept independent six-digit RGB; neutral plain/wood/woven/stripes/checker/herringbone patterns do not embed a fixed colour. Actual chair/seating frames now expose their existing frame role. Lighting's solid photo colour maps to its hardware role. Door leaves and opening frames have separate optional colours/patterns; window glass, screens and protected doors retain their owners. Popular swatches and a shared Presets/Custom picker offer native selection, hex and numeric RGB0–255. Invalid drafts cannot apply; accepted changes persist and Undo atomically.

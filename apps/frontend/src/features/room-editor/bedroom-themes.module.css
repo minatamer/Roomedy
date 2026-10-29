@@ -1,0 +1,56 @@
+.themes {
+  padding-block: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.themes h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.themes p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.choices button {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 12px;
+  min-height: 106px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-control);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.choices button[aria-pressed='true'] {
+  border-color: var(--teal);
+  box-shadow: inset 0 0 0 1px var(--teal);
+}
+.choices button:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+.choices strong {
+  font-size: 13px;
+}
+.choices small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.swatches {
+  display: flex;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.swatches i {
+  flex: 1;
+}

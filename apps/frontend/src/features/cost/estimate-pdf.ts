@@ -12,6 +12,7 @@ import { POLICY } from '@roomedy/contracts/policy';
 import { calculateRoomEstimate } from '@roomedy/spatial';
 import { DesignExportError } from '../design-export/facts';
 import { roomWorkPlan } from './work-plan';
+import { readableEstimateNote } from './estimate-presentation';
 export interface EstimatePictures {
   overview: Uint8Array;
   plan: Uint8Array;
@@ -417,7 +418,9 @@ export async function estimatePdf(
     );
   for (const assumption of e.assumptions) para(assumption, 9, font, muted);
   para(
-    'This is a suggested sequence, not a site-specific installation method or schedule. Manufacturer requirements, drying/recoat/cure times, mounting, access, delivery and tradespeople must be confirmed. Source pages open separately; this PDF performs no research or purchasing.',
+    version.pricing.settings.demoScope === 'materials'
+      ? 'This is a furniture and finish-material shopping plan. Verify variants, quantities and checkout conditions with the supplier. Source pages open separately; this PDF performs no research or purchasing.'
+      : 'This is a suggested sequence, not a site-specific installation method or schedule. Manufacturer requirements, drying/recoat/cure times, mounting, access, delivery and tradespeople must be confirmed. Source pages open separately; this PDF performs no research or purchasing.',
     9,
     font,
     muted,
@@ -482,7 +485,9 @@ export async function estimatePdf(
             .join('; ')}`
         : '',
       rule,
-      ...notes.filter((note) => !sharedNotes.has(note)),
+      ...notes
+        .filter((note) => !sharedNotes.has(note))
+        .map(readableEstimateNote),
       notes.some((note) => sharedNotes.has(note))
         ? `Shared notes: ${notes
             .filter((note) => sharedNotes.has(note))
@@ -525,7 +530,8 @@ export async function estimatePdf(
     'Shared notes and evidence below apply only to the numbered references shown in the financial rows and product records. Sample links are discovery links, not evidence of the authored amount or stock. Dates are historical observations, not price guarantees.',
     9,
   );
-  for (const [text, id] of sharedNotes) para(`A${id}: ${text}`, 9);
+  for (const [text, id] of sharedNotes)
+    para(`A${id}: ${readableEstimateNote(text)}`, 9);
   for (const [text, id] of evidence) para(`E${id}: ${text}`, 9);
   for (const [text, id] of taxEvidence) para(`T${id}: ${text}`, 9);
   for (const offer of used) {
@@ -585,7 +591,11 @@ export async function estimatePdf(
     await yieldWork();
   }
   const plan = roomWorkPlan(version.room, version.pricing, e);
-  chapter('What to buy & the work ahead');
+  chapter(
+    version.pricing.settings.demoScope === 'materials'
+      ? 'Your shopping plan'
+      : 'What to buy & the work ahead',
+  );
   para(
     'Shopping quantities come from this saved calculation. Pack/can rounding and surplus are included in the itemized rows; do not apply waste again.',
     10,

@@ -1,6 +1,8 @@
 import {
   furnitureMaterialRoles,
   furnitureUpholsteryChoices,
+  bedroomTheme,
+  bedroomFurnitureMaterials,
 } from '@roomedy/contracts/furniture-materials';
 import { wallMountedPose } from './elevation.js';
 import {
@@ -77,7 +79,10 @@ export function preservesHardIssue(
   );
 }
 
-function diffRoom(before: RoomDocument, after: RoomDocument): CommandChange[] {
+export function diffRoom(
+  before: RoomDocument,
+  after: RoomDocument,
+): CommandChange[] {
   const changes: CommandChange[] = [];
   const compare = (
     id: string,
@@ -160,6 +165,7 @@ const estimated = (value: number, sourceId: string): Measurement => ({
   sourceId,
 });
 const nonspatial = new Set([
+  'set-bedroom-theme',
   'finish',
   'room-finish',
   'set-room-surface',
@@ -204,6 +210,42 @@ export function evaluateBatch(
   ]);
   const affected = new Set<string>();
   for (const action of actions) {
+    if (action.type === 'set-bedroom-theme') {
+      const theme = bedroomTheme(action.theme);
+      room.room = withRoomSurface(
+        withRoomSurface(room.room, {
+          surface: 'floor',
+          color: theme.floorColor,
+          texture: theme.floorTexture,
+        }),
+        {
+          surface: 'walls',
+          color: theme.wallColor,
+          texture: theme.wallTexture,
+        },
+      );
+      affected.add(room.roomId);
+      for (const piece of room.furniture) {
+        const entry = catalogue.find(
+          (entry) =>
+            entry.id === piece.catalogueId &&
+            entry.version === piece.catalogueVersion,
+        )!;
+        const detailed = supportsDimensions(entry, {
+          width: piece.dimensions.width.value ?? entry.size.width.default,
+          depth: piece.dimensions.depth.value ?? entry.size.depth.default,
+          height: piece.dimensions.height.value ?? entry.size.height.default,
+        });
+        if (entry.finishes.includes(theme.furnitureFinish))
+          piece.finish = theme.furnitureFinish;
+        piece.materials = {
+          ...piece.materials,
+          ...bedroomFurnitureMaterials(theme, entry, detailed),
+        };
+        affected.add(piece.id);
+      }
+      continue;
+    }
     if (action.type === 'add') {
       if (
         originalIds.has(action.furniture.id) ||
@@ -471,9 +513,9 @@ export function evaluateBatch(
       );
       if (!entry) return { ok: false, code: 'unsupported-variant' };
       const size = {
-        width: item.dimensions.width.value ?? 0,
-        depth: item.dimensions.depth.value ?? 0,
-        height: item.dimensions.height.value ?? 0,
+        width: item.dimensions.width.value ?? entry.size.width.default,
+        depth: item.dimensions.depth.value ?? entry.size.depth.default,
+        height: item.dimensions.height.value ?? entry.size.height.default,
       };
       const roles = furnitureMaterialRoles(
         entry,
@@ -488,6 +530,13 @@ export function evaluateBatch(
       )
         return { ok: false, code: 'unsupported-variant' };
       if (
+        ((m.coverColor !== undefined ||
+          m.coverPattern !== undefined ||
+          m.pillowColor !== undefined ||
+          m.pillowPattern !== undefined ||
+          m.sheetColor !== undefined ||
+          m.sheetPattern !== undefined) &&
+          (entry.category !== 'bed' || !roles.soft)) ||
         ((m.body !== undefined ||
           m.bodyColor !== undefined ||
           m.bodyPattern !== undefined) &&

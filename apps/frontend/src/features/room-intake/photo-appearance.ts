@@ -4,7 +4,10 @@ import type {
   FurnitureMaterials,
   OpeningMaterials,
 } from '@roomedy/contracts/furniture-materials';
-import { furnitureMaterialRoles } from '@roomedy/contracts/furniture-materials';
+import {
+  furnitureMaterialRoles,
+  BED_BEDDING_PARTS,
+} from '@roomedy/contracts/furniture-materials';
 import { findCatalogueEntry } from '@roomedy/spatial';
 
 /** Only agreement among visible facts becomes a material; conflicting views remain unassigned. */
@@ -15,6 +18,12 @@ export function photoAppearance(members: readonly DraftObservation[]) {
     'bodyPattern',
     'softColor',
     'softPattern',
+    'pillowColor',
+    'pillowPattern',
+    'sheetColor',
+    'sheetPattern',
+    'coverColor',
+    'coverPattern',
     'frameColor',
     'framePattern',
   ] as const) {
@@ -75,6 +84,16 @@ export function photoFurnitureMaterials(
       materials.softPattern = appearance.softPattern as NonNullable<
         FurnitureMaterials['softPattern']
       >;
+    if (entry.category === 'bed') {
+      for (const part of BED_BEDDING_PARTS) {
+        if (appearance[part.color])
+          materials[part.color] = appearance[part.color];
+        if (appearance[part.pattern])
+          materials[part.pattern] = appearance[part.pattern] as NonNullable<
+            FurnitureMaterials['softPattern']
+          >;
+      }
+    }
   }
   return Object.keys(materials).length ? materials : undefined;
 }

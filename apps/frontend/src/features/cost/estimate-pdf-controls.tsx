@@ -5,6 +5,7 @@ import type { EstimateVersion } from '@roomedy/contracts/project';
 import { startDesignExport } from '../design-export/job';
 import { DesignExportError, exportFailureText } from '../design-export/facts';
 import styles from './workspace.module.css';
+import { ensureEstimateSnapshot } from './versions';
 export function EstimatePdfControls({
   controller,
   selectedId,
@@ -135,22 +136,20 @@ export function EstimatePdfControls({
   };
   return (
     <section className={styles.pdfExport} aria-label="Estimate PDF export">
-      <div>
-        <h2>Estimate PDF</h2>
-        <p>
-          {selectedId
-            ? 'Room, itemized costs & work plan.'
-            : 'Select a saved version to export.'}
-        </p>
-      </div>
       <button
         ref={button}
-        disabled={!selectedId}
         onClick={() => {
           if (!controller.checkExpiry()) return;
+          const snapshot = selectedId
+            ? { ok: true as const, id: selectedId }
+            : ensureEstimateSnapshot(controller);
+          if (!snapshot.ok) {
+            setMessage(snapshot.reason);
+            return;
+          }
           const version = controller
             .getSnapshot()
-            .estimateVersions.find((v) => v.id === selectedId);
+            .estimateVersions.find((v) => v.id === snapshot.id);
           if (version && version.estimate.locality.currency !== 'USD') {
             setMessage(
               'This historical estimate is preserved in the editable project. Start and save a USD draft to export its financial PDF.',
@@ -163,6 +162,7 @@ export function EstimatePdfControls({
       >
         Download PDF
       </button>
+      {message && !chosen && <p role="status">{message}</p>}
       {chosen &&
         createPortal(
           <dialog
@@ -184,10 +184,6 @@ export function EstimatePdfControls({
               Includes this exact saved design, itemized costs, allowances,
               unpriced items, supplier links and the shopping/work plan. No
               prices are refreshed and no order is placed.
-            </p>
-            <p>
-              English Latin-font financial text is selectable. The room and plan
-              are images. Arabic/RTL PDF output is not supported yet.
             </p>
             <p role="status" aria-live="polite">
               {message}

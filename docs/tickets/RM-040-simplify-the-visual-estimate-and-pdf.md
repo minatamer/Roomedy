@@ -1,0 +1,12 @@
+# RM-040 — Make the estimate visual and PDF saving automatic
+
+Selected 29 October 2026 after RM-039. Owner rejects raw quantity/source prose and the version-name/save form, moves Estimate PDF out of the header into a clear chat shortcut and requires animated estimate/chat entry. [Allocation](../commit-plans/RM-038-040.md), [receipt](../validation/RM-038-040.md), [cost design](../design/plan-and-cost.md).
+
+Use a useful visual shopping estimate: actual USD subtotal/unpriced distinction, category cues, human quantities, real design thumbnails/swatches and compact item/source detail. No raw mm² fractions or long algorithm paragraphs in ordinary chat. Preserve source kinds, unresolved/allowance and checkout qualifiers, native/FX evidence and exact saved financial facts; presentation formatting must not change calculations, canonical notes or historical amounts. Apply the same human area formatting to generated PDF notes.
+
+Pin a clearly named cost-breakdown shortcut in chat, animate its review content, and provide Download PDF there. Remove header PDF and user-facing version-name/manual-save fields. Automatically label and freeze the exact current financial snapshot for PDF on explicit export; reuse an identical existing snapshot to avoid needless versions. Existing automatic draft recovery remains. Keep immutable prior records, four-version/size/lifecycle bounds, saved-version review and honest capacity errors; a compact optional Earlier estimates disclosure is sufficient. No automatic network/AI/reprice/export/purchase. Keep reviewed PDF preview/cancellation/exact saved room/source integrity and test actual generated PDF pages.
+
+Finish focused checks, actual interactive/responsive/PDF checks and read-only execution/validation loops until no actionable local finding remains. Run one settled batch root/both-build gate, recording any real exception. No paid/provider/env/restart/Chrome/delegation/Git/hosted action. Owner subjective/physical/private-photo acceptance remains pending.
+
+
+Local completion29October2026: implemented and revalidated with no remaining actionable local finding. 1408tests/92files covered; the unchanged release-copy5s timeout passes the full23-test file at CLI15s, without a default-root success claim. Both builds and actual native desktop/phone/short/phase/tour/camera/PDF checks pass. [Final evidence and limits](../validation/RM-038-040.md). Owner subjective/physical acceptance remains pending; no Git or hosted action.

@@ -5,6 +5,9 @@ import {
   furnitureMaterialRoles,
   furnitureMaterialTargets,
   furnitureUpholsteryChoices,
+  BEDROOM_THEMES,
+  bedroomFurnitureMaterials,
+  BED_BEDDING_PARTS,
 } from '@roomedy/contracts/furniture-materials';
 import type {
   FurnitureMaterials,
@@ -21,25 +24,70 @@ export function FurnitureMaterialControls({
   item: Furniture;
   onCommit: (materials: FurnitureMaterials) => string | null;
 }) {
+  const [themeError, setThemeError] = useState('');
   const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion);
   if (!entry) return null;
+  const detailed = supportsDimensions(entry, {
+    width: item.dimensions.width.value ?? entry.size.width.default,
+    depth: item.dimensions.depth.value ?? entry.size.depth.default,
+    height: item.dimensions.height.value ?? entry.size.height.default,
+  });
+  const selectedTheme =
+    BEDROOM_THEMES.find((theme) =>
+      Object.entries(bedroomFurnitureMaterials(theme, entry, detailed)).every(
+        ([key, value]) =>
+          item.materials?.[key as keyof FurnitureMaterials] === value,
+      ),
+    )?.id ?? '';
   return (
-    <details className={styles.advanced}>
-      <summary>
-        Materials & details <span>Make it your own</span>
-      </summary>
-      <MaterialForm
-        key={JSON.stringify([
-          item.id,
-          item.dimensions,
-          item.finish,
-          item.materials,
-        ])}
-        item={item}
-        entry={entry}
-        onCommit={onCommit}
-      />
-    </details>
+    <>
+      <label className={styles.section}>
+        Furniture theme
+        <select
+          value={selectedTheme}
+          onChange={(event) => {
+            const theme = BEDROOM_THEMES.find(
+              (theme) => theme.id === event.target.value,
+            );
+            if (theme)
+              setThemeError(
+                onCommit(bedroomFurnitureMaterials(theme, entry, detailed)) ??
+                  '',
+              );
+          }}
+        >
+          <option value="" disabled>
+            Choose a colour & texture preset
+          </option>
+          {BEDROOM_THEMES.map((theme) => (
+            <option key={theme.id} value={theme.id}>
+              {theme.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      {themeError && (
+        <p role="alert" className={styles.error}>
+          {themeError}
+        </p>
+      )}
+      <details className={styles.advanced}>
+        <summary>
+          Materials & details <span>Make it your own</span>
+        </summary>
+        <MaterialForm
+          key={JSON.stringify([
+            item.id,
+            item.dimensions,
+            item.finish,
+            item.materials,
+          ])}
+          item={item}
+          entry={entry}
+          onCommit={onCommit}
+        />
+      </details>
+    </>
   );
 }
 function MaterialForm({
@@ -52,9 +100,9 @@ function MaterialForm({
   onCommit: (materials: FurnitureMaterials) => string | null;
 }) {
   const detailed = supportsDimensions(entry, {
-    width: item.dimensions.width.value ?? 0,
-    depth: item.dimensions.depth.value ?? 0,
-    height: item.dimensions.height.value ?? 0,
+    width: item.dimensions.width.value ?? entry.size.width.default,
+    depth: item.dimensions.depth.value ?? entry.size.depth.default,
+    height: item.dimensions.height.value ?? entry.size.height.default,
   });
   const roles = furnitureMaterialRoles(entry, detailed);
   const [patch, setPatch] = useState<FurnitureMaterials>({}),
@@ -118,7 +166,8 @@ function MaterialForm({
             label="Frame pattern"
             value={
               (chosen.bodyPattern ??
-                (current.frame.surface === 'plaster'
+                (current.frame.surface === 'plaster' ||
+                current.frame.surface === 'paint'
                   ? 'smooth'
                   : current.frame.surface)) as MaterialPattern
             }
@@ -137,6 +186,13 @@ function MaterialForm({
                   upholstery: e.target
                     .value as FurnitureMaterials['upholstery'],
                   softPattern: null,
+                  ...(entry.category === 'bed'
+                    ? {
+                        coverPattern: null,
+                        pillowPattern: null,
+                        sheetPattern: null,
+                      }
+                    : {}),
                 })
               }
             >
@@ -147,27 +203,65 @@ function MaterialForm({
               ))}
             </select>
           </label>
-          <ColourPicker
-            label="Soft-part colour"
-            value={chosen.softColor ?? current.soft.color}
-            onChange={(softColor) => update({ softColor })}
-          />
-          <button
-            type="button"
-            disabled={!chosen.softColor}
-            onClick={() => update({ softColor: null })}
-          >
-            Use default colour
-          </button>
-          <PatternPicker
-            label="Soft-part pattern"
-            value={
-              (chosen.softPattern ?? current.soft.surface) as MaterialPattern
-            }
-            onChange={(softPattern) => update({ softPattern })}
-          />
+          {entry.category !== 'bed' && (
+            <>
+              <ColourPicker
+                label="Soft-part colour"
+                value={chosen.softColor ?? current.soft.color}
+                onChange={(softColor) => update({ softColor })}
+              />
+              <button
+                type="button"
+                disabled={!chosen.softColor}
+                onClick={() => update({ softColor: null })}
+              >
+                Use default colour
+              </button>
+              <PatternPicker
+                label="Soft-part pattern"
+                value={
+                  (chosen.softPattern ??
+                    current.soft.surface) as MaterialPattern
+                }
+                onChange={(softPattern) => update({ softPattern })}
+              />
+            </>
+          )}
         </>
       )}
+      {roles.soft &&
+        entry.category === 'bed' &&
+        BED_BEDDING_PARTS.map((part) => (
+          <section
+            key={part.target}
+            className={styles.section}
+            aria-label={part.label}
+          >
+            <h3>{part.label}</h3>
+            <ColourPicker
+              label={`${part.label} colour`}
+              value={chosen[part.color] ?? current[part.target].color}
+              onChange={(color) => update({ [part.color]: color })}
+            />
+            <PatternPicker
+              label={`${part.label} pattern`}
+              value={
+                (chosen[part.pattern] ??
+                  current[part.target].surface) as MaterialPattern
+              }
+              onChange={(pattern) => update({ [part.pattern]: pattern })}
+            />
+            <button
+              type="button"
+              disabled={!chosen[part.color] && !chosen[part.pattern]}
+              onClick={() =>
+                update({ [part.color]: null, [part.pattern]: null })
+              }
+            >
+              Reset {part.label.toLowerCase()} finish
+            </button>
+          </section>
+        ))}
       {roles.hardware && (
         <>
           <label>

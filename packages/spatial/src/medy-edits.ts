@@ -3,6 +3,7 @@ import {
   openingMaterialsSchema,
   MATERIAL_PATTERNS,
   furnitureMaterialsLabel,
+  BED_BEDDING_PARTS,
 } from '@roomedy/contracts/furniture-materials';
 import {
   featureLabel,
@@ -554,7 +555,10 @@ export function medyEdit(
   const requestedColors: string[] = words.match(/#[a-f0-9]{6}\b/g) ?? [];
   if (
     !requestedColors.length &&
-    (/\b(colou?r|paint)\b/.test(words) || target.kind === 'feature')
+    (/\b(colou?r|paint|pillows?|pillowcases?|sheets?|bedsheets?|duvets?|blankets?|covers?)\b/.test(
+      words,
+    ) ||
+      target.kind === 'feature')
   ) {
     for (const [name, color] of Object.entries(COLOUR_PRESETS))
       if (new RegExp(`\\b${name}\\b`).test(words)) requestedColors.push(color);
@@ -626,12 +630,40 @@ export function medyEdit(
         target.piece.catalogueVersion,
       );
       const soft =
-        /\b(soft|upholstery|bedding|shade)\b/.test(words) ||
+        /\b(soft|upholstery|bedding|shade|covers?|duvets?|blankets?|throw|pillows?|pillowcases?|sheets?|bedsheets?|mattress)\b/.test(
+          words,
+        ) ||
         (!/\b(frame|body|hardware|handles?)\b/.test(words) &&
           ['bed', 'chair', 'seating', 'lighting'].includes(
             entry?.category ?? '',
           ));
       const hardware = /\b(hardware|handles?)\b/.test(words);
+      const pillow =
+        entry?.category === 'bed' && /\b(pillows?|pillowcases?)\b/.test(words);
+      const sheet =
+        entry?.category === 'bed' &&
+        /\b(sheets?|bedsheets?|mattress)\b/.test(words);
+      const cover =
+        entry?.category === 'bed' &&
+        /\b(covers?|duvets?|blankets?|throw)\b/.test(
+          words.replace(
+            /\b(?:pillows? (?:cases?|covers?)|pillowcases?)\b/g,
+            '',
+          ),
+        );
+      if ([pillow, sheet, cover].filter(Boolean).length > 1)
+        return ask(
+          'Choose one bedding part per change. You can separate up to three changes with semicolons.',
+        );
+      const beddingPart = pillow
+        ? 'pillow'
+        : sheet
+          ? 'sheet'
+          : cover
+            ? 'cover'
+            : null;
+      const allBedding =
+        entry?.category === 'bed' && soft && !hardware && !beddingPart;
       const body = words.match(
         /\bframe material(?: to)? (auto|plain|wood|painted|metal)\b/,
       )?.[1];
@@ -646,16 +678,49 @@ export function medyEdit(
         : undefined;
       const parsed = furnitureMaterialsSchema.safeParse({
         ...(body ? { body, bodyPattern: null } : {}),
-        ...(cloth ? { upholstery: cloth, softPattern: null } : {}),
+        ...(cloth
+          ? {
+              upholstery: cloth,
+              softPattern: null,
+              ...(entry?.category === 'bed'
+                ? {
+                    pillowPattern: null,
+                    sheetPattern: null,
+                    coverPattern: null,
+                  }
+                : {}),
+            }
+          : {}),
         ...(metal ? { hardware: metal, hardwareColor: null } : {}),
         ...(color
           ? {
-              [hardware ? 'hardwareColor' : soft ? 'softColor' : 'bodyColor']:
-                color,
+              [hardware
+                ? 'hardwareColor'
+                : beddingPart
+                  ? `${beddingPart}Color`
+                  : soft
+                    ? 'softColor'
+                    : 'bodyColor']: color,
             }
           : {}),
+        ...(color && allBedding
+          ? Object.fromEntries(
+              BED_BEDDING_PARTS.map((part) => [part.color, color]),
+            )
+          : {}),
         ...(pattern && !hardware
-          ? { [soft ? 'softPattern' : 'bodyPattern']: pattern }
+          ? {
+              [beddingPart
+                ? `${beddingPart}Pattern`
+                : soft
+                  ? 'softPattern'
+                  : 'bodyPattern']: pattern,
+            }
+          : {}),
+        ...(pattern && allBedding
+          ? Object.fromEntries(
+              BED_BEDDING_PARTS.map((part) => [part.pattern, pattern]),
+            )
           : {}),
       });
       if (parsed.success) {
@@ -664,7 +729,12 @@ export function medyEdit(
           id: target.id,
           materials: parsed.data,
         });
-        return batch(`Change ${label} appearance`);
+        const partLabel = BED_BEDDING_PARTS.find(
+          (part) => part.color === `${beddingPart}Color`,
+        )?.label.toLowerCase();
+        return batch(
+          `Change ${label} ${partLabel ?? (allBedding ? 'bedding' : 'appearance')}`,
+        );
       }
     }
   }
@@ -691,14 +761,58 @@ export function medyEdit(
     const colors = words.match(/#[a-f0-9]{6}\b/g) ?? [];
     if (cloth.length > 1 || colors.length > 1)
       return ask('Choose one soft material and one colour for this piece.');
+    const bed =
+      findCatalogueEntry(
+        target.piece.catalogueId,
+        target.piece.catalogueVersion,
+      )?.category === 'bed';
     const parsed = furnitureMaterialsSchema.safeParse({
-      ...(body ? { body } : {}),
-      ...(cloth[0] ? { upholstery: cloth[0] } : {}),
-      ...(hardware ? { hardware } : {}),
+      ...(body
+        ? {
+            body,
+            ...(target.piece.materials?.bodyPattern
+              ? { bodyPattern: null }
+              : {}),
+          }
+        : {}),
+      ...(cloth[0]
+        ? {
+            upholstery: cloth[0],
+            ...(target.piece.materials?.softPattern
+              ? { softPattern: null }
+              : {}),
+            ...(bed
+              ? Object.fromEntries(
+                  BED_BEDDING_PARTS.filter(
+                    (part) =>
+                      target.piece.materials?.[part.pattern] !== undefined,
+                  ).map((part) => [part.pattern, null]),
+                )
+              : {}),
+          }
+        : {}),
+      ...(hardware
+        ? {
+            hardware,
+            ...(target.piece.materials?.hardwareColor
+              ? { hardwareColor: null }
+              : {}),
+          }
+        : {}),
       ...(/\b(?:default soft colou?r|soft colou?r(?: to)? default)\b/.test(
         words,
       )
-        ? { softColor: null }
+        ? {
+            softColor: null,
+            ...(bed
+              ? Object.fromEntries(
+                  BED_BEDDING_PARTS.filter(
+                    (part) =>
+                      target.piece.materials?.[part.color] !== undefined,
+                  ).map((part) => [part.color, null]),
+                )
+              : {}),
+          }
         : {}),
       ...(colors[0] && /\b(soft|upholstery|bedding|shade)\b/.test(words)
         ? { softColor: colors[0] }

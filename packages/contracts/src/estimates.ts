@@ -204,98 +204,110 @@ const targetSchema = z.discriminatedUnion('kind', [
   }),
   z.strictObject({ kind: z.literal('room'), id: idSchema }),
 ]);
-export const estimateSettingsSchema = z.strictObject({
-  roomId: idSchema,
-  locality: localitySchema,
-  floor: z.strictObject({
-    enabled: z.boolean(),
-    offerId: optionalOffer,
-    excludedMm2: z.number().int().min(0).max(400_000_000),
-    wasteBps: z.number().int().min(0).max(3000),
-    underlayOfferId: optionalOffer,
-    trimOfferId: optionalOffer,
-    trimLengthMm: z.number().int().min(0).max(100_000).nullable(),
-    retainTrim: z.boolean(),
-    preparation: z.enum(['assess', 'include', 'exclude']),
-  }),
-  walls: z
-    .array(
-      z.strictObject({
-        wall: wallSchema,
-        enabled: z.boolean(),
-        paintOfferId: optionalOffer,
-        coats: z.number().int().min(1).max(4),
-        primer: z.enum(['assess', 'include', 'exclude']),
-        primerOfferId: optionalOffer,
-        primerCoats: z.number().int().min(1).max(3),
-        substrate: z.enum(['unknown', 'sound-painted', 'new-plaster']),
-      }),
-    )
-    .length(4)
-    .refine((walls) => new Set(walls.map((wall) => wall.wall)).size === 4),
-  furniture: z
-    .array(
-      z.strictObject({
-        id: idSchema,
-        mode: z.enum(['reuse', 'buy']),
-        offerId: optionalOffer,
-        components: z
-          .array(
-            z.strictObject({
-              key: idSchema,
-              mode: z.enum(['reuse', 'buy']),
-              offerId: optionalOffer,
-            }),
-          )
-          .max(4)
-          .refine(
-            (parts) =>
-              new Set(parts.map((part) => part.key)).size === parts.length,
-          ),
-      }),
-    )
-    .max(40)
-    .refine(
-      (items) => new Set(items.map((item) => item.id)).size === items.length,
-    ),
-  services: z
-    .array(
-      z.strictObject({
-        scope: serviceScopeSchema.exclude(['delivery']),
-        enabled: z.boolean(),
-        offerId: optionalOffer,
-        /** Minutes for hourly services; each/job counts otherwise. Area/length derive from takeoff. */
-        quantity: z.number().int().min(0).max(100_000).nullable(),
-      }),
-    )
-    .max(10)
-    .refine(
-      (services) =>
-        new Set(services.map((service) => service.scope)).size ===
-        services.length,
-    ),
-  fulfilment: z.enum(['delivery', 'collection']),
-  deliveries: z
-    .array(z.strictObject({ group: idSchema, offerId: optionalOffer }))
-    .max(40)
-    .refine(
-      (groups) =>
-        new Set(groups.map((group) => group.group)).size === groups.length,
-    ),
-  allowances: z
-    .array(
-      z.strictObject({
-        id: idSchema,
-        label: labelSchema,
-        amountMinor: minor,
-        reason: text,
-      }),
-    )
-    .max(12)
-    .refine(
-      (items) => new Set(items.map((item) => item.id)).size === items.length,
-    ),
-});
+export const estimateSettingsSchema = z
+  .strictObject({
+    roomId: idSchema,
+    /** Explicit fresh demo scope; missing geometry uses disposable planning quantities. */
+    demoScope: z.literal('materials').optional(),
+    locality: localitySchema,
+    floor: z.strictObject({
+      enabled: z.boolean(),
+      offerId: optionalOffer,
+      excludedMm2: z.number().int().min(0).max(400_000_000),
+      wasteBps: z.number().int().min(0).max(3000),
+      underlayOfferId: optionalOffer,
+      trimOfferId: optionalOffer,
+      trimLengthMm: z.number().int().min(0).max(100_000).nullable(),
+      retainTrim: z.boolean(),
+      preparation: z.enum(['assess', 'include', 'exclude']),
+    }),
+    walls: z
+      .array(
+        z.strictObject({
+          wall: wallSchema,
+          enabled: z.boolean(),
+          paintOfferId: optionalOffer,
+          coats: z.number().int().min(1).max(4),
+          primer: z.enum(['assess', 'include', 'exclude']),
+          primerOfferId: optionalOffer,
+          primerCoats: z.number().int().min(1).max(3),
+          substrate: z.enum(['unknown', 'sound-painted', 'new-plaster']),
+        }),
+      )
+      .length(4)
+      .refine((walls) => new Set(walls.map((wall) => wall.wall)).size === 4),
+    furniture: z
+      .array(
+        z.strictObject({
+          id: idSchema,
+          mode: z.enum(['reuse', 'buy']),
+          offerId: optionalOffer,
+          components: z
+            .array(
+              z.strictObject({
+                key: idSchema,
+                mode: z.enum(['reuse', 'buy']),
+                offerId: optionalOffer,
+              }),
+            )
+            .max(4)
+            .refine(
+              (parts) =>
+                new Set(parts.map((part) => part.key)).size === parts.length,
+            ),
+        }),
+      )
+      .max(40)
+      .refine(
+        (items) => new Set(items.map((item) => item.id)).size === items.length,
+      ),
+    services: z
+      .array(
+        z.strictObject({
+          scope: serviceScopeSchema.exclude(['delivery']),
+          enabled: z.boolean(),
+          offerId: optionalOffer,
+          /** Minutes for hourly services; each/job counts otherwise. Area/length derive from takeoff. */
+          quantity: z.number().int().min(0).max(100_000).nullable(),
+        }),
+      )
+      .max(10)
+      .refine(
+        (services) =>
+          new Set(services.map((service) => service.scope)).size ===
+          services.length,
+      ),
+    fulfilment: z.enum(['delivery', 'collection']),
+    deliveries: z
+      .array(z.strictObject({ group: idSchema, offerId: optionalOffer }))
+      .max(40)
+      .refine(
+        (groups) =>
+          new Set(groups.map((group) => group.group)).size === groups.length,
+      ),
+    allowances: z
+      .array(
+        z.strictObject({
+          id: idSchema,
+          label: labelSchema,
+          amountMinor: minor,
+          reason: text,
+        }),
+      )
+      .max(12)
+      .refine(
+        (items) => new Set(items.map((item) => item.id)).size === items.length,
+      ),
+  })
+  .refine(
+    (settings) =>
+      !settings.demoScope ||
+      (settings.fulfilment === 'collection' &&
+        settings.floor.preparation === 'exclude' &&
+        settings.walls.every((wall) => wall.primer === 'exclude') &&
+        settings.services.every((service) => !service.enabled)),
+    'The simplified scope excludes installation, preparation, primer and delivery.',
+  );
 export const estimateQuantitySchema = z.strictObject({
   numerator: z.number().int().safe().min(0),
   denominator: z.number().int().safe().min(1),
@@ -374,3 +386,19 @@ export const estimateStateSchema = z.strictObject({
   budgetMinor: minor.nullable(),
 });
 export type EstimateState = z.infer<typeof estimateStateSchema>;
+
+/** Coarse demo shopping regions, not delivery or residence verification. */
+const EUROPE_SHOPPING =
+  'AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB NO CH IS LI'.split(
+    ' ',
+  );
+const MENA_SHOPPING = 'EG AE SA QA KW BH OM JO LB MA DZ TN'.split(' ');
+export function shoppingCountries(country: string): readonly string[] {
+  return country === 'ZZ'
+    ? ['US', ...EUROPE_SHOPPING, ...MENA_SHOPPING]
+    : EUROPE_SHOPPING.includes(country)
+      ? [...EUROPE_SHOPPING]
+      : MENA_SHOPPING.includes(country)
+        ? [...MENA_SHOPPING]
+        : [country];
+}

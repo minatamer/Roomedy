@@ -86,7 +86,7 @@ export function costIntent(
       : {
           kind: 'clarify',
           message:
-            'Choose a part in 3D, or name flooring, wall paint, moving or a furniture piece to research.',
+            'Choose Furniture, Flooring or Walls, or name the piece you want to research.',
         };
   }
   return { kind: 'explain' };

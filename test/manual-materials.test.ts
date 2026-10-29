@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { createFurnitureMaterials } from '../apps/frontend/src/features/room-view/furniture-material.js';
 import { roomDocumentSchema } from '@roomedy/contracts/room';
 import { PUBLIC_LIMITS } from '@roomedy/contracts/policy';
-import { roomSurface, FINISH_COLORS } from '@roomedy/contracts/surfaces';
+import { roomSurface } from '@roomedy/contracts/surfaces';
 import {
   furnitureMaterialRoles,
   furnitureMaterialTargets,
@@ -45,29 +45,48 @@ describe('plain fresh manual rooms', () => {
         room = createManualRoom(condition);
       expect(roomDocumentSchema.parse(room)).toEqual(room);
       expect(roomSurface(room.room, 'floor')).toEqual({
-        color: FINISH_COLORS.ivory,
-        texture: 'concrete',
+        color: '#b0b0ab',
+        texture: 'smooth',
       });
       expect(roomSurface(room.room, 'walls')).toEqual({
-        color: FINISH_COLORS.ivory,
+        color: '#f5f3ec',
         texture: 'smooth',
       });
       expect(
-        without(room.room, ['floorFinish', 'wallFinish', 'surfaces']),
+        without(room.room, [
+          'floorFinish',
+          'wallFinish',
+          'surfaces',
+          'features',
+        ]),
       ).toEqual(
-        without(authored.room, ['floorFinish', 'wallFinish', 'surfaces']),
+        without(authored.room, [
+          'floorFinish',
+          'wallFinish',
+          'surfaces',
+          'features',
+        ]),
+      );
+      expect(
+        room.room.features.map((feature) => without(feature, ['materials'])),
+      ).toEqual(
+        authored.room.features.map((feature) =>
+          without(feature, ['materials']),
+        ),
       );
       for (const [index, item] of room.furniture.entries()) {
         expect(without(item, ['finish', 'materials'])).toEqual(
           without(authored.furniture[index]!, ['finish', 'materials']),
         );
-        expect(item.finish).toBe('ivory');
         const entry = findCatalogueEntry(
             item.catalogueId,
             item.catalogueVersion,
           )!,
           roles = furnitureMaterialRoles(entry),
           targets = furnitureMaterialTargets(item, entry.category);
+        expect(item.finish).toBe(
+          ['wardrobe', 'storage'].includes(entry.category) ? 'walnut' : 'oak',
+        );
         if (roles.body)
           expect(targets.frame).toMatchObject({
             surface: 'smooth',
@@ -78,7 +97,12 @@ describe('plain fresh manual rooms', () => {
         if (roles.soft)
           expect(targets.soft).toMatchObject({
             surface: 'smooth',
-            color: FINISH_COLORS.ivory,
+            color:
+              entry.category === 'lighting'
+                ? '#d9c8af'
+                : entry.category === 'bed'
+                  ? '#e8ddca'
+                  : '#9ba99c',
             bumpScale: 0,
           });
       }
@@ -129,7 +153,12 @@ describe('plain fresh manual rooms', () => {
             colors.push(material.color.getHexString());
       });
       expect(colors.length).toBeGreaterThan(5);
-      expect(colors.every((color) => color === 'f3eee2')).toBe(true);
+      expect(colors).toContain('bd9064');
+      expect(colors).toContain('735243');
+      expect(colors).toEqual(
+        expect.arrayContaining(['f4f0e8', 'e8ddca', 'c4ac92']),
+      );
+      expect(colors).not.toContain('9ba99c');
     } finally {
       scene.dispose();
     }
@@ -167,12 +196,13 @@ describe('Medy recommends actual texture previews', () => {
       'Wood for the wardrobe',
     ]);
     expect(
-      guidanceChoices('finishes', room, false).map((choice) => choice.colors),
-    ).toEqual([
-      [FINISH_COLORS.ivory, FINISH_COLORS.oak],
-      [FINISH_COLORS.ivory, FINISH_COLORS.oak],
-      [FINISH_COLORS.ivory, FINISH_COLORS.oak],
-    ]);
+      guidanceChoices('themes', room, false)
+        .filter((choice) => choice.request)
+        .every(
+          (choice) =>
+            resolveMedyRequest(room, choice.request!, null)?.kind === 'edits',
+        ),
+    ).toBe(true);
     for (const option of options) {
       const reply = resolveMedyRequest(room, option.request, null);
       expect(reply?.kind).toBe('edits');
@@ -260,12 +290,12 @@ describe('Medy recommends actual texture previews', () => {
       assistant = new AssistantController(session, { transport });
     try {
       await vi.waitFor(() => expect(assistant.getSnapshot().mode).toBe('live'));
-      expect(guidanceMessage('welcome', room)).toMatch(/materials/);
+      expect(guidanceMessage('welcome', room)).toMatch(/one step/);
       expect(guidanceChoices('welcome', room, false)).toHaveLength(3);
-      assistant.chooseGuidance(0, 'materials');
+      assistant.chooseGuidance(0, 'get-started');
       const message = assistant.getSnapshot().messages.at(-1)!;
-      expect(message.text).toBe('Start with a finish you’d like to see.');
-      assistant.chooseGuidance(message.id, 'material-0');
+      expect(message.guidance?.step).toBe('themes');
+      assistant.chooseGuidance(message.id, 'theme-japandi');
       await vi.waitFor(() =>
         expect(session.getSnapshot().candidate).not.toBeNull(),
       );
@@ -286,7 +316,7 @@ describe('Medy recommends actual texture previews', () => {
       expect(
         roomSurface(session.getSnapshot().workspace!.current.room, 'floor')
           .texture,
-      ).toBe('concrete');
+      ).toBe('smooth');
       for (const label of ['Wood for the bed', 'Wood for the wardrobe']) {
         const current = session.getSnapshot().workspace!.current,
           option = roomMaterialOpportunities(current).find(

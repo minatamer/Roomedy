@@ -51,6 +51,7 @@ type Surface =
   | 'fabric'
   | 'plaster'
   | 'smooth'
+  | 'paint'
   | 'tile'
   | 'concrete'
   | 'stripes'
@@ -104,6 +105,7 @@ function proceduralPixels(kind: Surface) {
         if (x % 128 === 0 || joint === 0) value -= 28;
       }
       if (kind === 'smooth') value = 255;
+      if (kind === 'paint') value = 252 + n * 3;
       if (kind === 'concrete')
         value = 235 + n * 12 + Math.sin(u * 3) * Math.sin(v * 2) * 5;
       if (kind === 'tile') value = x % 64 < 2 || y % 64 < 2 ? 193 : 249 + n * 5;
@@ -176,6 +178,7 @@ function texture(kind: Surface, deferred = false) {
   map.colorSpace = SRGBColorSpace;
   if (kind === 'fabric') map.repeat.set(8, 8);
   if (kind === 'plaster') map.repeat.set(4, 4);
+  if (kind === 'paint') map.repeat.set(8, 8);
   map.needsUpdate = true;
   return map;
 }
@@ -218,10 +221,10 @@ export function createSurfaces(io: SurfaceIO = {}) {
   }
   let live = true;
   const patterns = new Map<
-    'stripes' | 'checker' | 'herringbone',
+    'paint' | 'stripes' | 'checker' | 'herringbone',
     DataTexture
   >();
-  const pattern = (kind: 'stripes' | 'checker' | 'herringbone') => {
+  const pattern = (kind: 'paint' | 'stripes' | 'checker' | 'herringbone') => {
     if (!live) return maps.smooth;
     let map = patterns.get(kind);
     if (!map) {
@@ -250,6 +253,9 @@ export function createSurfaces(io: SurfaceIO = {}) {
   const soft = new RoundedBoxGeometry(1, 1, 1, 1, 0.1);
   return {
     ...maps,
+    get paint() {
+      return pattern('paint');
+    },
     get stripes() {
       return pattern('stripes');
     },
@@ -293,7 +299,12 @@ export function createSurfaces(io: SurfaceIO = {}) {
   };
 }
 export type Surfaces = ReturnType<typeof createSurfaces>;
-export function roomSurfaceMap(surfaces: Surfaces, texture: SurfaceTexture) {
+export function roomSurfaceMap(
+  surfaces: Surfaces,
+  texture: SurfaceTexture,
+  painted = false,
+) {
+  if (texture === 'smooth' && painted) return surfaces.paint;
   return texture === 'planks'
     ? surfaces.floor
     : texture === 'carpet' || texture === 'linen'
@@ -365,7 +376,11 @@ export function setSurfaceMap(
 }
 
 /** Styling stays inside the authored outer size; original catalogue parts are untouched. */
-export function detailedParts(parts: BoxPart[], size: PhysicalSize): BoxPart[] {
+export function detailedParts(
+  parts: BoxPart[],
+  size: PhysicalSize,
+  softDetails = true,
+): BoxPart[] {
   const detailed = parts.flatMap((part) => {
     if (part.name === 'pillow')
       return [-1, 1].map((side) => ({
@@ -404,26 +419,31 @@ export function detailedParts(parts: BoxPart[], size: PhysicalSize): BoxPart[] {
     return [part];
   });
   // Raised piping/stitched channels remain inside the existing physical envelope.
-  const seams: BoxPart[] = detailed.flatMap((part) => {
-    if (!(
-      part.name.startsWith('pillow-') ||
-      part.name === 'blanket' ||
-      part.name === 'seat'
-    ))
-      return [];
-    return (part.name === 'blanket' ? [-0.3, 0, 0.3] : [0.43]).map(
-      (fraction) => ({
-        name: `${part.name}-seam-${fraction}`,
-        center: [
-          part.center[0],
-          Math.min(size.height - 1, part.center[1] + part.size[1] / 2 + 0.3),
-          part.center[2] + part.size[2] * fraction,
-        ] as const,
-        size: [part.size[0] * 0.9, 1.4, 1.4] as const,
-        role: 'soft' as const,
-      }),
-    );
-  });
+  const seams: BoxPart[] = softDetails
+    ? detailed.flatMap((part) => {
+        if (!(
+          part.name.startsWith('pillow-') ||
+          part.name === 'blanket' ||
+          part.name === 'seat'
+        ))
+          return [];
+        return (part.name === 'blanket' ? [-0.3, 0, 0.3] : [0.43]).map(
+          (fraction) => ({
+            name: `${part.name}-seam-${fraction}`,
+            center: [
+              part.center[0],
+              Math.min(
+                size.height - 1,
+                part.center[1] + part.size[1] / 2 + 0.3,
+              ),
+              part.center[2] + part.size[2] * fraction,
+            ] as const,
+            size: [part.size[0] * 0.9, 1.4, 1.4] as const,
+            role: 'detail' as const,
+          }),
+        );
+      })
+    : [];
   return [...detailed, ...seams];
 }
 

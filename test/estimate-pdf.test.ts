@@ -80,6 +80,34 @@ async function read(bytes: Uint8Array) {
   return { pdf, pages, text: pages.join('\n'), links };
 }
 describe('actual selectable itemized estimate PDF', () => {
+  it('renders human paint areas in the actual PDF without mutating the saved calculation', async () => {
+    const saved = version(),
+      before = JSON.stringify(saved);
+    const output = await read(await estimatePdf(saved, pictures));
+    expect(output.text).not.toMatch(/\d+\/1000000 m/);
+    expect(output.text).toMatch(/wall: [\d.,]+ m/);
+    expect(JSON.stringify(saved)).toBe(before);
+  });
+  it('exports a simple shopping plan without excluded delivery rows or installation steps', async () => {
+    const c = new SessionController(createRoomFixture('sample'));
+    try {
+      c.setDestination('cost', 'en-US');
+      expect(c.saveEstimate('Material shopping').ok).toBe(true);
+      const version = c.getSnapshot().estimateVersions[0]!;
+      const output = await read(await estimatePdf(version, pictures));
+      expect(output.text).toContain('Your shopping plan');
+      expect(output.text).toContain('Choose your wall paint');
+      expect(output.text).not.toContain('Prepare and paint');
+      expect(output.text).not.toContain('Clear and protect');
+      expect(output.text).not.toContain('service is explicitly excluded');
+      expect(
+        version.estimate.lines.every((line) => line.category !== 'delivery'),
+      ).toBe(true);
+      expect(output.text).toContain('USD');
+    } finally {
+      c.dispose();
+    }
+  });
   it('prints frozen USD equivalents with a dated reference link, and rejects a foreign-currency PDF', async () => {
     const v = structuredClone(version()),
       floor = v.pricing.offers.find(

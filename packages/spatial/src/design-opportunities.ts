@@ -23,7 +23,7 @@ export function roomMaterialOpportunities(
   room: RoomDocument,
 ): MaterialOpportunity[] {
   const options: MaterialOpportunity[] = [];
-  if (roomSurface(room.room, 'floor').texture === 'concrete')
+  if (['concrete', 'smooth'].includes(roomSurface(room.room, 'floor').texture))
     options.push({
       label: 'Try oak flooring',
       request: 'Change floor texture to wood planks in oak',
@@ -46,9 +46,9 @@ export function roomMaterialOpportunities(
     const roles = furnitureMaterialRoles(
         entry,
         supportsDimensions(entry, {
-          width: piece.dimensions.width.value ?? 0,
-          depth: piece.dimensions.depth.value ?? 0,
-          height: piece.dimensions.height.value ?? 0,
+          width: piece.dimensions.width.value ?? entry.size.width.default,
+          depth: piece.dimensions.depth.value ?? entry.size.depth.default,
+          height: piece.dimensions.height.value ?? entry.size.height.default,
         }),
       ),
       body = roles.body && piece.materials?.body === 'plain',

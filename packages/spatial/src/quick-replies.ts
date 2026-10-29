@@ -65,6 +65,7 @@ export function validateQuickReplies(
               'set-room-surface',
               'set-furniture-materials',
               'set-opening-materials',
+              'set-bedroom-theme',
             ].includes(action.type) ||
             (action.type === 'set-intent' &&
               (!manual.actions.some((item) => item.type === 'room-finish') ||

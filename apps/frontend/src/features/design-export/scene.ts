@@ -16,8 +16,15 @@ import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry, featureLabel } from '@roomedy/spatial';
 import { furnitureMaterialTargets } from '@roomedy/contracts/furniture-materials';
-import { furnitureMaterial } from '../room-view/furniture-material';
-import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
+import {
+  furnitureMaterial,
+  furniturePartRole,
+} from '../room-view/furniture-material';
+import {
+  roomSurface,
+  roomSurfaceDetail,
+  isEstimatedPlainSurface,
+} from '@roomedy/contracts/surfaces';
 import type { SurfaceTarget } from '@roomedy/contracts/surfaces';
 import {
   configureRoomSampler,
@@ -30,6 +37,7 @@ import {
   metres,
   piecePose,
   pieceRepresentation,
+  presentationRoom,
   wallBoxes,
 } from '../room-view/adapter';
 import type { Triple } from '../room-view/adapter';
@@ -107,10 +115,11 @@ export async function loadDesignAssets(
 }
 /** A read-only presentation of the same canonical adapter/representation geometry. */
 export function buildDesignScene(
-  room: RoomDocument,
+  input: RoomDocument,
   assets: ReadonlyMap<string, GLTF> = new Map(),
   surfaceIO: SurfaceIO = {},
 ) {
+  const room = presentationRoom(input);
   const root = new Group(),
     surfaces = createSurfaces(surfaceIO),
     unit = new BoxGeometry(1, 1, 1),
@@ -162,6 +171,7 @@ export function buildDesignScene(
           ? roomSurfaceMap(
               surfaces,
               roomSurface(room.room, target ?? 'walls').texture,
+              isEstimatedPlainSurface(room.room, target ?? 'walls'),
             )
           : role === 'soft'
             ? surfaces.fabric
@@ -459,8 +469,23 @@ export function buildDesignScene(
       const frame = furnitureMaterial(targets.frame, surfaces),
         soft = furnitureMaterial(targets.soft, surfaces),
         blanket = furnitureMaterial(targets.blanket, surfaces),
-        metal = furnitureMaterial(targets.metal, surfaces);
-      for (const owned of [frame, soft, blanket, metal]) materials.add(owned);
+        metal = furnitureMaterial(targets.metal, surfaces),
+        detail = furnitureMaterial(targets.detail, surfaces);
+      const bedding = targets.pillow !== targets.soft;
+      const pillow = bedding
+          ? furnitureMaterial(targets.pillow, surfaces)
+          : soft,
+        sheet = bedding ? furnitureMaterial(targets.sheet, surfaces) : soft;
+      const partMaterials = {
+        frame,
+        soft,
+        blanket,
+        pillow,
+        sheet,
+        metal,
+        detail,
+      };
+      for (const owned of Object.values(partMaterials)) materials.add(owned);
       const screen = material('#101820', 'metal');
       screen.roughness = 0.19;
       screen.metalness = 0.35;
@@ -472,6 +497,7 @@ export function buildDesignScene(
       for (const part of detailedParts(
         representation.parts,
         representation.footprint,
+        piece.materials?.upholstery !== 'plain',
       ))
         box(
           group,
@@ -482,13 +508,7 @@ export function buildDesignScene(
             ? windowGlass.mirror
             : part.name === 'tv-screen'
               ? screen
-              : part.name.startsWith('blanket')
-                ? blanket
-                : part.role === 'soft'
-                  ? soft
-                  : part.role === 'metal'
-                    ? metal
-                    : frame,
+              : partMaterials[furniturePartRole(part)],
           part.name === 'physical-bounds'
             ? unit
             : part.role === 'soft'

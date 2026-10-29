@@ -1,0 +1,12 @@
+# RM-033 — Expand Medy into Plan & cost
+
+Status: Complete locally,29 October2026; owner appearance/physical acceptance pending. Direct owner request and preceding AFK/recommended-choice authority select sequential implementation/validation of RM-033→RM-034→RM-035. [Batch plan/allocation](../commit-plans/RM-033-035.md), [receipt](../validation/RM-033-035.md), [visual authority](../references/LESSONS_FROM_VISUAL_FEEDBACK.md), [current workspace policy](../design/plan-and-cost.md).
+
+Replace the long dashboard with one device-filling expanded Medy chat. Reuse the Design brand size, transparent photographic background, warm panel, conversation typography, composer and capsule navigation language. No visible duplicate Plan & cost heading; retain an accessible page name. Put PDF access in the header beside the real project utilities. Remove the embedded room/camera/orbit/isolate controls. Existing design/project/cost identity, safe saved-currency handling, preview/Apply/Cancel/Undo, versions and frozen PDF jobs remain.
+
+Acceptance: finite right-to-left panel expansion when entering from any Design inspector; direct-link entry remains useful. One bounded scroll owner for conversation, reachable composer and header actions on desktop/phone/short screens. Keyboard Send/Shift+Enter/composition, focus, saved view and narrow navigation work. No global header divider or background change. No model call on navigation. Existing cost visuals remain useful inside chat. Validate this settled slice read-only before RM-034. Full required gate is once after the settled three-ticket batch; actual owner visual acceptance remains pending.
+
+No delegation, Chrome, owner-env change, new dependency/service/port, Git or hosted action. Preserve all76prior paths except allocated overlaps. User supersedes historical cost-page3D/dashboard instructions for this scope only.
+
+
+Complete locally:135focused tests/10files,1375tests/88files, standard root checks and both production builds pass. Actual desktop, framed phone/short, source dialogs/selection/Cancel/Apply/Undo, six-page USD PDF and exact editable-project round trip pass.46allocated paths,112dirty preserving69unallocated prior hashes; index empty, temporary route removed. Both original supervisors remain live-ready on4320/4321, separate from ClipBuilder. No provider/env/restart/Chrome/delegation/Git/hosted action; real product-photo quality and owner subjective/physical/private-photo acceptance remain pending.

@@ -1,0 +1,9 @@
+# RM-046 — Pin Export inside the Estimate conversation
+
+29 October 2026. Owner requests moving Estimate's header Export into the chat as a pinned shortcut with a pin icon, opening the same dialog. [Allocation](../commit-plans/RM-046.md), [receipt](../validation/RM-046.md). This supersedes RM-043's Estimate-header placement only; Design keeps its direct Export control.
+
+Status: **complete_local**.76reused regressions/five files, scoped formatting/lint, frontend types/seven boundaries/production build and actual desktop/phone/narrow/short/dialog/Escape/focus/scroll/Design-return checks pass. Owner subjective/physical acceptance stays pending.
+
+Place a persistent warm Export shortcut beside Cost breakdown in the chat heading, with a decorative pin icon, visible text and44px target. Keep it reachable as the transcript scrolls and when viewing breakdown/saved/legacy states. Wrap the chat heading cleanly on phones. Open the existing project action/export dialog through its existing handler; preserve formats, preparation/download/error/resource/expiry guards and accepted-room authority. Closing/Escape returns focus to the current visible trigger, using the chat shortcut in Estimate and header button in Design. Keep errors visible and Medy project commands working.
+
+Preserve all177 prior dirty paths/current services/env/other repos/hosted release. No provider, location permission, Chrome, delegation, Git mutation, manual restart, dependency or new port. Reuse project/export/lifecycle/phase regressions; do not write label/CSS mirror tests. Validate with scoped format/lint, frontend types/boundaries/build and actual desktop/phone/narrow/short shortcut/dialog/Escape/focus/scroll/Design-return checks. Root1416-test/both-build evidence from RM-045 remains the baseline; no redundant backend gate is selected for this presentation change. Owner subjective/physical acceptance remains pending.

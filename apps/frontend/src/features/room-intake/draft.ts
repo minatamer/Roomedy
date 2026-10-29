@@ -74,8 +74,12 @@ export function createDraft(
         width: unknown(),
         depth: unknown(),
         height: unknown(),
-        floorFinish: 'oak',
+        floorFinish: 'ivory',
         wallFinish: 'ivory',
+        surfaces: {
+          floor: emptySurfaceAppearance(),
+          walls: emptySurfaceAppearance(),
+        },
         features: [],
       },
       furniture: [],
@@ -616,7 +620,20 @@ export function adoptHypothesis(
     next.observations.push({ ...observation, ref });
     if (matches.length || contenders.length > 1) ambiguous.add(ref);
   }
-  for (const group of parsed.groups) {
+  const grouped = new Set(parsed.groups.flat());
+  const groups = [...parsed.groups];
+  for (const kind of ['door', 'window'] as const) {
+    const visible = parsed.observations.filter(
+      (o) =>
+        o.kind === kind &&
+        (o.visibility === 'visible' || o.visibility === 'partial'),
+    );
+    // One actually seen, ungrouped opening can stand alone. Multiple candidates
+    // remain unassigned rather than inventing an association or extra doorway.
+    if (visible.length === 1 && !grouped.has(visible[0]!.ref))
+      groups.push([visible[0]!.ref]);
+  }
+  for (const group of groups) {
     const observations = group
       .map((ref) => refs.get(ref))
       .filter((ref): ref is string => !!ref);

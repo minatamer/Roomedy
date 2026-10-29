@@ -14,6 +14,10 @@ import type {
   TourLayout,
 } from '../apps/frontend/src/features/assistant/tour-runtime.js';
 import {
+  tourWasOffered,
+  rememberTourOffer,
+} from '../apps/frontend/src/features/assistant/tour-preference.js';
+import {
   sameTourBox,
   tourPanels,
   tourPlacement,
@@ -22,6 +26,49 @@ import {
 } from '../apps/frontend/src/features/assistant/tour-layout.js';
 
 describe('fresh editor orientation without persistent tour authority', () => {
+  it('consumes the automatic offer once across phase visits and new rooms without changing project facts', () => {
+    const c = new SessionController(createRoomFixture('partial'));
+    try {
+      const before = c.getSnapshot(),
+        project = projectOf(before);
+      c.markTourOffered();
+      c.markTourOffered();
+      expect(automaticallyOfferTour(c.getSnapshot())).toBe(false);
+      expect(c.getSnapshot().workspace).toBe(before.workspace);
+      expect(projectOf(c.getSnapshot())).toEqual(project);
+      c.setDestination('cost', 'en-US');
+      c.setDestination('design');
+      expect(automaticallyOfferTour(c.getSnapshot())).toBe(false);
+      c.reset(createRoomFixture('empty'));
+      expect(automaticallyOfferTour(c.getSnapshot())).toBe(false);
+      expect(c.getSnapshot().undoLabel).toBeNull();
+    } finally {
+      c.dispose();
+    }
+  });
+  it('keeps only a UI preference and falls back safely when browser storage is blocked', () => {
+    const values = new Map<string, string>();
+    const store = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        values.set(key, value);
+      },
+    };
+    expect(tourWasOffered(store)).toBe(false);
+    rememberTourOffer(store);
+    expect(tourWasOffered(store)).toBe(true);
+    expect([...values.values()]).toEqual(['1']);
+    const blocked = {
+      getItem: () => {
+        throw new Error('blocked');
+      },
+      setItem: () => {
+        throw new Error('blocked');
+      },
+    };
+    expect(tourWasOffered(blocked)).toBe(false);
+    expect(() => rememberTourOffer(blocked)).not.toThrow();
+  });
   it('does not replay fresh-room onboarding for a new draft of an approved estimate', () => {
     const c = new SessionController(createRoomFixture('sample'));
     try {

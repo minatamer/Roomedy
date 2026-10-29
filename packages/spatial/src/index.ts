@@ -71,7 +71,11 @@ export {
   commandPayload,
   payloadDigest,
 } from './proposals.js';
-export type { CommandWorkspace, ApplyResult } from './proposals.js';
+export type {
+  CommandWorkspace,
+  ApplyResult,
+  FurnitureRefinement,
+} from './proposals.js';
 export { emptyHistory, pushHistory, popHistory, jsonBytes } from './history.js';
 export type { History, HistoryEntry } from './history.js';
 

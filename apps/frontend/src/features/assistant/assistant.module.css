@@ -441,19 +441,14 @@
 }
 .paletteSwatches {
   display: flex;
-  gap: 0;
+  width: 36px;
+  height: 26px;
+  border-radius: 6px;
+  overflow: hidden;
 }
 .paletteSwatches i {
   display: block;
-  width: 20px;
-  height: 26px;
-  border: 1px solid #79543820;
-  border-radius: 5px;
-  transform: rotate(-10deg);
-}
-.paletteSwatches i + i {
-  margin-left: -5px;
-  transform: rotate(12deg);
+  flex: 1;
 }
 .goals button {
   gap: 10px;

@@ -27,6 +27,7 @@ import { failureMessage } from '../room-editor/messages';
 import { guidanceChoices, guidanceMessage } from './guidance';
 import type { GuidanceStep } from './guidance';
 import { MessageReveal } from './message-reveal';
+import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
 
 export interface AssistantMessage {
   id: number;
@@ -45,6 +46,7 @@ interface Snapshot {
   readonly stage: 'idle' | 'search' | 'request';
   readonly mode: 'loading' | 'fake' | 'live' | 'unavailable';
   readonly tourSeen: boolean;
+  readonly themeId: BedroomThemeId | null;
 }
 interface Dependencies {
   transport?: typeof fetch;
@@ -66,6 +68,7 @@ export class AssistantController {
     stage: 'idle',
     mode: 'loading',
     tourSeen: false,
+    themeId: null,
   });
   readonly reveal = new MessageReveal();
   private live = true;
@@ -75,6 +78,19 @@ export class AssistantController {
   private pending: OperationIdentity | null = null;
   private configAbort = new AbortController();
   private transport: typeof fetch;
+  private guidedPreview: {
+    operationId: string;
+    from: GuidanceStep;
+    next: GuidanceStep;
+    themeId?: BedroomThemeId;
+  } | null = null;
+  private guideUndo: {
+    label: string;
+    step: GuidanceStep;
+    themeId: BedroomThemeId | null;
+    roomRevision: number;
+  } | null = null;
+  private noChangeOperation: string | null = null;
   constructor(
     readonly session: SessionController,
     private deps: Dependencies = {},
@@ -201,12 +217,20 @@ export class AssistantController {
     if (room && this.state.messages.length && this.session.canEdit())
       this.append(
         'assistant',
-        'That’s your room. Shall we find a design direction, or talk through what you’d like to change?',
+        'That’s your room. Let’s choose a theme and build a design around how you want to use it.',
         null,
         null,
         false,
         { step: 'welcome', roomRevision: room.roomRevision },
       );
+  }
+  private appendGuidance(step: GuidanceStep) {
+    const room = this.session.getSnapshot().workspace?.current;
+    if (room && this.live && this.session.canEdit())
+      this.append('assistant', guidanceMessage(step, room), null, null, false, {
+        step,
+        roomRevision: room.roomRevision,
+      });
   }
   chooseGuidance(messageId: number, choiceId: string) {
     const snapshot = this.session.getSnapshot(),
@@ -224,16 +248,49 @@ export class AssistantController {
       this.state.busy ||
       snapshot.comparison !== 'current' ||
       !room ||
-      !step ||
-      (last?.guidance && last.guidance.roomRevision !== room.roomRevision)
+      !step
     )
       return;
-    const choice = guidanceChoices(step, room, this.state.tourSeen).find(
-      (choice) => choice.id === choiceId,
-    );
+    if (last?.guidance && last.guidance.roomRevision !== room.roomRevision) {
+      if (choiceId === 'resume-guidance') this.appendGuidance(step);
+      return;
+    }
+    const choice = guidanceChoices(
+      step,
+      room,
+      this.state.tourSeen,
+      this.state.themeId,
+    ).find((choice) => choice.id === choiceId);
     if (!choice) return;
-    if (choice.request) void this.submit(choice.request);
-    else if (choice.next) {
+    if (choice.request) {
+      void this.submit(choice.request).then(() => {
+        if (!this.live || !choice.afterApply) return;
+        const current = this.session.getSnapshot();
+        const candidate = current.candidate;
+        const latest = this.state.messages.at(-1);
+        if (current.generation !== snapshot.generation) return;
+        if (
+          candidate?.source === 'assistant' &&
+          latest?.operationId === candidate.identity.operationId
+        )
+          this.guidedPreview = {
+            operationId: candidate.identity.operationId,
+            from: step,
+            next: choice.afterApply,
+            ...(choice.themeId ? { themeId: choice.themeId } : {}),
+          };
+        else if (
+          !candidate &&
+          latest?.operationId &&
+          latest.reply?.kind === 'explanation' &&
+          latest.operationId === this.noChangeOperation
+        ) {
+          this.noChangeOperation = null;
+          if (choice.themeId) this.publish({ themeId: choice.themeId });
+          this.appendGuidance(choice.afterApply);
+        }
+      });
+    } else if (choice.next) {
       this.append('user', choice.label);
       this.append(
         'assistant',
@@ -267,6 +324,29 @@ export class AssistantController {
     if (!this.live || !text || text.length > POLICY.visitorTextChars) return;
     const workspace = this.session.getSnapshot().workspace;
     if (!workspace || this.session.getSnapshot().phase !== 'editor') return;
+    this.noChangeOperation = null;
+    const guidedStart =
+      /^(?:let['’]?s get started|get started(?: with medy)?|help me get started|what can you do for me)[?.! ]*$/i.test(
+        text,
+      );
+    if (guidedStart) {
+      const current = this.session.getSnapshot();
+      if (
+        this.state.busy ||
+        current.comparison !== 'current' ||
+        !this.session.canEdit()
+      )
+        return;
+      this.publish({ draft: '' });
+      this.append('user', text);
+      if (current.candidate)
+        this.append(
+          'assistant',
+          'Apply or cancel the current preview first, then we can choose the next step.',
+        );
+      else this.appendGuidance(/^what/i.test(text) ? 'services' : 'themes');
+      return;
+    }
     const selectedId = this.session.getSnapshot().presentation.selectedId;
     const context = this.state.messages
       .map((m) => ({ role: m.role, text: m.text }))
@@ -353,6 +433,8 @@ export class AssistantController {
             ),
           );
         } else {
+          if (!prepared.changed)
+            this.noChangeOperation = manualToken.operationId;
           const summary = prepared.changed
             ? `Here’s the preview: ${prepared.label}. Take a look, then Apply if it’s right.`
             : 'That’s already how it’s set. What would you like to try next?';
@@ -594,6 +676,11 @@ export class AssistantController {
   }
   cancel(operationId?: string) {
     const candidate = this.session.getSnapshot().candidate;
+    const guide =
+      candidate &&
+      this.guidedPreview?.operationId === candidate.identity.operationId
+        ? this.guidedPreview
+        : null;
     if (
       operationId !== undefined &&
       (candidate?.source !== 'assistant' ||
@@ -601,8 +688,10 @@ export class AssistantController {
     )
       return false;
     this.session.cancelPreview();
+    this.guidedPreview = null;
     if (candidate?.source === 'assistant' && !this.state.busy)
       this.append('assistant', 'Preview cancelled. Your room is unchanged.');
+    if (guide) this.appendGuidance(guide.from);
     return true;
   }
   chooseSuggestion(messageId: number, suggestion: DesignSuggestion) {
@@ -630,6 +719,12 @@ export class AssistantController {
   }
   apply(operationId?: string) {
     const candidate = this.session.getSnapshot().candidate;
+    const guide =
+      candidate &&
+      this.guidedPreview?.operationId === candidate.identity.operationId
+        ? this.guidedPreview
+        : null;
+    const previousTheme = this.state.themeId;
     if (
       operationId !== undefined &&
       (candidate?.source !== 'assistant' ||
@@ -670,9 +765,23 @@ export class AssistantController {
         'assistant',
         'This proposal cannot be applied to the current room. Your room is unchanged.',
       );
+    if (result.ok && guide) {
+      this.guidedPreview = null;
+      this.guideUndo = {
+        label,
+        step: guide.from,
+        themeId: previousTheme,
+        roomRevision:
+          this.session.getSnapshot().workspace!.current.roomRevision,
+      };
+      if (guide.themeId) this.publish({ themeId: guide.themeId });
+      this.appendGuidance(guide.next);
+    }
     return result;
   }
   undo() {
+    const beforeRevision =
+      this.session.getSnapshot().workspace?.current.roomRevision;
     const label = this.session.getSnapshot().undoLabel,
       result = this.session.undo();
     this.append(
@@ -681,6 +790,16 @@ export class AssistantController {
         ? `Undid ${label ?? 'the last room change'}.`
         : 'There is no eligible room change to undo.',
     );
+    if (
+      result.ok &&
+      this.guideUndo?.label === label &&
+      this.guideUndo.roomRevision === beforeRevision
+    ) {
+      const guide = this.guideUndo;
+      this.guideUndo = null;
+      this.publish({ themeId: guide.themeId });
+      this.appendGuidance(guide.step);
+    }
     return result;
   }
   dispose() {
@@ -690,6 +809,9 @@ export class AssistantController {
     if (this.pending && this.session.isCurrent(this.pending))
       this.session.cancelPreview();
     this.pending = null;
+    this.guidedPreview = null;
+    this.guideUndo = null;
+    this.noChangeOperation = null;
     this.state = Object.freeze({
       draft: '',
       messages: [],
@@ -697,6 +819,7 @@ export class AssistantController {
       stage: 'idle',
       mode: 'unavailable',
       tourSeen: false,
+      themeId: null,
     });
     this.reveal.clear();
     this.listeners.clear();

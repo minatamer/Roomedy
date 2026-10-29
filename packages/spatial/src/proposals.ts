@@ -6,15 +6,20 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import {
   commandEnvelopeSchema,
   receiptSchema,
+  visitorBatchSchema,
 } from '@roomedy/contracts/commands';
-import type { CommandEnvelope, Receipt } from '@roomedy/contracts/commands';
+import type {
+  CommandEnvelope,
+  Receipt,
+  VisitorAction,
+} from '@roomedy/contracts/commands';
 import type { ActionScope, ProposalAction } from '@roomedy/contracts/commands';
 import { evaluateScopedBatch } from './search/scope.js';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import { idSchema, revisionSchema } from '@roomedy/contracts/primitives';
 import { checkRoom } from './checks.js';
-import { evaluateBatch, validateRoom } from './commands.js';
+import { evaluateBatch, validateRoom, diffRoom } from './commands.js';
 import type {
   CommandAuthority,
   CommandFailure,
@@ -98,11 +103,75 @@ function matches(
     command.identity.inputRevision === workspace.current.roomRevision
   );
 }
+/** Explicit inspector clicks only; never part of a model command payload. */
+export interface FurnitureRefinement {
+  id: string;
+  actions: VisitorAction[];
+}
+function furnitureTarget(action: VisitorAction): string | null {
+  switch (action.type) {
+    case 'move':
+    case 'rotate':
+    case 'resize':
+    case 'finish':
+    case 'set-size-estimate':
+    case 'set-furniture-materials':
+    case 'set-locks':
+    case 'set-preference':
+    case 'set-ownership':
+      return action.id;
+    case 'confirm-measurement':
+      return action.target.kind === 'furniture' ? action.target.id : null;
+    default:
+      return null;
+  }
+}
+function validateRefinements(raw: readonly FurnitureRefinement[]) {
+  if (!Array.isArray(raw) || raw.length > POLICY.actions) return null;
+  const result: FurnitureRefinement[] = [];
+  let count = 0;
+  for (const batch of raw) {
+    if (!batch || !idSchema.safeParse(batch.id).success) return null;
+    const parsed = visitorBatchSchema.safeParse(batch.actions);
+    if (
+      !parsed.success ||
+      parsed.data.some((action) => furnitureTarget(action) !== batch.id)
+    )
+      return null;
+    count += parsed.data.length;
+    if (count > POLICY.actions) return null;
+    result.push({ id: batch.id, actions: parsed.data });
+  }
+  return result;
+}
+function refineFurniture(
+  workspace: CommandWorkspace,
+  result: CommandResult,
+  batches: readonly FurnitureRefinement[],
+): CommandResult {
+  if (!result.ok || !batches.length) return result;
+  let current = result;
+  for (const batch of batches) {
+    if (!current.room.furniture.some((piece) => piece.id === batch.id))
+      return { ok: false, code: 'out-of-scope' };
+    const next = evaluateBatch(current.room, batch.actions, 'visitor');
+    if (!next.ok) return next;
+    current = next;
+  }
+  const changes = diffRoom(workspace.current, current.room);
+  return {
+    ...current,
+    changes,
+    affectedIds: changes.map((change) => change.id),
+    changed: changes.length > 0,
+  };
+}
 export function prepareCommand(
   workspace: CommandWorkspace,
   raw: unknown,
   authority: CommandAuthority,
   scope?: ActionScope,
+  refinements: readonly FurnitureRefinement[] = [],
 ): CommandResult {
   const parsed = commandEnvelopeSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, code: 'invalid-input' };
@@ -111,13 +180,17 @@ export function prepareCommand(
     parsed.data.commandSequence !== workspace.lastCommandSequence + 1
   )
     return { ok: false, code: 'stale' };
-  return authority === 'assistant'
-    ? evaluateScopedBatch(
-        workspace.current,
-        parsed.data.actions as ProposalAction[],
-        scope,
-      )
-    : evaluateBatch(workspace.current, parsed.data.actions, authority);
+  const batches = validateRefinements(refinements);
+  if (!batches) return { ok: false, code: 'invalid-input' };
+  const result =
+    authority === 'assistant'
+      ? evaluateScopedBatch(
+          workspace.current,
+          parsed.data.actions as ProposalAction[],
+          scope,
+        )
+      : evaluateBatch(workspace.current, parsed.data.actions, authority);
+  return refineFurniture(workspace, result, batches);
 }
 export type ApplyResult =
   | CommandFailure
@@ -135,6 +208,7 @@ export function applyCommand(
   authority: CommandAuthority,
   scope?: ActionScope,
   pricingBefore?: EstimateState,
+  refinements: readonly FurnitureRefinement[] = [],
 ): ApplyResult {
   if (
     pricingBefore &&
@@ -144,8 +218,12 @@ export function applyCommand(
     return { ok: false, code: 'invalid-input' };
   const parsed = commandEnvelopeSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, code: 'invalid-input' };
+  const batches = validateRefinements(refinements);
+  if (!batches) return { ok: false, code: 'invalid-input' };
   const command = parsed.data,
-    payload = commandPayload(command);
+    payload = batches.length
+      ? JSON.stringify(canonical({ command, refinements: batches }))
+      : commandPayload(command);
   if (
     command.identity.workspaceId !== workspace.workspaceId ||
     command.identity.generation !== workspace.generation ||
@@ -172,14 +250,13 @@ export function applyCommand(
     command.commandSequence !== workspace.lastCommandSequence + 1
   )
     return { ok: false, code: 'stale' };
-  const evaluation =
-    authority === 'assistant'
-      ? evaluateScopedBatch(
-          workspace.current,
-          command.actions as ProposalAction[],
-          scope,
-        )
-      : evaluateBatch(workspace.current, command.actions, authority);
+  const evaluation = prepareCommand(
+    workspace,
+    command,
+    authority,
+    scope,
+    batches,
+  );
   if (!evaluation.ok) return evaluation;
   if (
     evaluation.changed &&

@@ -13,6 +13,7 @@ import {
   roomMaterialOpportunities,
 } from './design-opportunities.js';
 import { findCatalogueEntry } from './catalogue.js';
+import { BEDROOM_THEMES } from '@roomedy/contracts/furniture-materials';
 
 export type MedyRequest = MedyEdit | { kind: 'control'; control: MedyControl };
 /** Shared application language policy. Models never call this with self-authored text. */
@@ -108,6 +109,19 @@ export function resolveMedyRequest(
   }
   const control = medyControl(words);
   if (control) return { kind: 'control', control };
+  const themeRequest =
+    /^(?:please )?(?:preview|try|use|choose|set|apply)(?: the)? (japandi|modern|scandinavian|earthy|industrial)(?: bedroom| room)? (?:theme|style|preset)(?: please)?[.!? ]*$/.exec(
+      words,
+    );
+  if (themeRequest) {
+    const theme = BEDROOM_THEMES.find((theme) => theme.id === themeRequest[1])!;
+    return {
+      kind: 'edits',
+      label: `${theme.name} bedroom theme`,
+      actions: [{ type: 'set-bedroom-theme', theme: theme.id }],
+      objectIds: [room.roomId, ...room.furniture.map((piece) => piece.id)],
+    };
+  }
   const targets = medyTargets(room, text, selectedId, context);
   if (
     /^(?:(?:can|could) you )?(?:select|focus|inspect|show me)\b/.test(words) &&
@@ -135,7 +149,7 @@ export function resolveMedyRequest(
       objectIds: [],
     };
   if (
-    /^(?:who are you|what(?:'s| is) your name|help|what can you do)[?.! ]*$/.test(
+    /^(?:who are you|what(?:'s| is) your name|help|what can you do(?: for me)?)[?.! ]*$/.test(
       plain,
     )
   )

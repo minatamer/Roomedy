@@ -1,0 +1,9 @@
+# RM-043 — New Room, Export and Estimate
+
+29 October 2026. Direct owner replaces Project and then specifies the final labels exactly: **New Room · Export · Estimate**. This latest instruction supersedes the intermediate two-menu version. [Allocation](../commit-plans/RM-043.md), [receipt](../validation/RM-043.md).
+
+Design has three project controls. New Room is a matching finite disclosure containing Import project and Start a new room. Export opens the existing format dialog directly. Estimate opens the existing cost conversation directly. The Estimate page shows only direct Export among project/history controls, with Back to Design available. Keep the one-word Estimate label and unchanged internal routes/state names. Undo remains Design's independent history utility.
+
+Preserve all file limits, decoding, import/reset confirmations, generation/revision/expiry/resource fences, Medy project commands, candidate/navigation authority, exports and the accepted room. Keep Escape/outside close and destination-correct dialog focus. Three44px controls fit the narrow header row, with Undo above and room tools below. No visible duplicate menu or extra click for Export/Estimate.
+
+Complete locally with RM-044. Native desktop/narrow/phone/short checks, safe reset Cancel/invalid import, direct Export/focus and direct Estimate/return pass. The earlier settled base passed1409 tests/92files with23release tests at CLI15s, root checks and both builds. The final two-file control amendment passes40 focused tests, scoped lint/frontend types/boundaries and a new frontend production build; earlier full-suite evidence is distinguished in the receipt. Preserve164 prior paths/RM-041/042,170dirty/index empty, current services/env/other repos/hosted state. No provider/Chrome/delegation/Git/manual restart/hosted action. Owner subjective/physical acceptance remains pending.

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import type { FormEvent } from 'react';
 import type { RoomEstimate } from '@roomedy/contracts/estimates';
 import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
@@ -12,17 +11,14 @@ export function VersionControls({
   estimate,
   selectedId,
   onView,
-  onDesign,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
   estimate: RoomEstimate;
   selectedId: string | null;
   onView: (id: string | null) => void;
-  onDesign: () => void;
 }) {
-  const [label, setLabel] = useState(''),
-    [message, setMessage] = useState(''),
+  const [message, setMessage] = useState(''),
     [compareId, setCompareId] = useState('');
   const [decision, setDecision] = useState<{
     id: string;
@@ -54,21 +50,7 @@ export function VersionControls({
         estimate,
       })
     : null;
-  const save = (event: FormEvent) => {
-    event.preventDefault();
-    const result = controller.saveEstimate(
-      label.trim() || `Version ${state.estimateVersions.length + 1}`,
-    );
-    setMessage(
-      result.ok
-        ? 'Saved in this session. Download the project to keep an editable copy.'
-        : result.reason,
-    );
-    if (result.ok) {
-      setLabel('');
-      onView(result.id);
-    }
-  };
+  if (!state.estimateVersions.length) return null;
   return (
     <section className={styles.versions} aria-label="Estimate versions">
       {selected && (
@@ -91,7 +73,7 @@ export function VersionControls({
         </div>
       )}
       <details>
-        <summary>Saved estimates · {state.estimateVersions.length}</summary>
+        <summary>Earlier estimates · {state.estimateVersions.length}</summary>
         <details>
           <summary>About saved estimates</summary>
           <p>
@@ -99,30 +81,6 @@ export function VersionControls({
             expire with this two-hour session; export the project to keep them.
           </p>
         </details>
-        {!selected && (
-          <form onSubmit={save} className={styles.form}>
-            <label>
-              Version name · optional
-              <input
-                value={label}
-                onChange={(e) => setLabel(e.target.value)}
-                maxLength={80}
-                placeholder={`Version ${state.estimateVersions.length + 1}`}
-              />
-            </label>
-            <p>
-              {state.cost && estimate.unpricedCount
-                ? `${estimate.unpricedCount} unresolved lines and all allowances will stay visible in this saved estimate.`
-                : 'Sample prices and allowances still need confirmation before ordering.'}
-            </p>
-            <button
-              disabled={!!state.candidate || state.estimateVersions.length >= 4}
-              type="submit"
-            >
-              Approve &amp; save planning estimate
-            </button>
-          </form>
-        )}
         {state.estimateVersions.map((version) => (
           <div key={version.id} className={styles.versionRow}>
             <div>
@@ -140,13 +98,13 @@ export function VersionControls({
             </div>
             <button
               disabled={!!state.candidate || selectedId === version.id}
-              aria-label={`View ${version.label} in 3D and estimate`}
+              aria-label={`View ${version.label} estimate`}
               onClick={() => {
                 setDecision(null);
                 onView(version.id);
               }}
             >
-              View saved 3D &amp; estimate
+              View saved estimate
             </button>
             <button
               disabled={!!state.candidate}
@@ -280,13 +238,6 @@ export function VersionControls({
             ))}
           </details>
         )}
-        <p>
-          Up to four versions, within the project size limit. This is tab
-          recovery, not a permanent library or an issuer-signed record.
-        </p>
-        <button onClick={onDesign}>
-          Open Design for project download or import ↗
-        </button>
         <p role="status">{message}</p>
       </details>
     </section>

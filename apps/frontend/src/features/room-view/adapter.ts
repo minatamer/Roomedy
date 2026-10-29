@@ -1,5 +1,9 @@
 import type { Furniture, RoomDocument, Feature } from '@roomedy/contracts/room';
-import { findCatalogueEntry, furnitureBottom } from '@roomedy/spatial';
+import {
+  findCatalogueEntry,
+  furnitureBottom,
+  planningRoom,
+} from '@roomedy/spatial';
 import { resolveRepresentation } from './representations/definitions';
 import {
   displayFurnitureSize,
@@ -85,6 +89,57 @@ export function displayRoom(doc: RoomDocument) {
     approximate: [doc.room.width, doc.room.depth, doc.room.height].some(
       (v) => v.status !== 'confirmed',
     ),
+  };
+}
+/** Disposable opening estimates in the existing display frame. Canonical facts stay unknown. */
+export function presentationRoom(doc: RoomDocument): RoomDocument {
+  if (
+    !doc.room.features.some(
+      (f) =>
+        f.wall === 'unknown' ||
+        [f.offset, f.width, f.height, f.sill].some((m) => m.value === null) ||
+        (f.kind === 'obstacle' && f.projection.value === null),
+    )
+  )
+    return doc;
+  const estimate = (value: number) => ({
+    value,
+    status: 'estimated' as const,
+    sourceId: 'display-estimate',
+  });
+  const projected = planningRoom({
+    ...doc,
+    room: {
+      ...doc.room,
+      width: doc.room.width.value === null ? estimate(4200) : doc.room.width,
+      depth: doc.room.depth.value === null ? estimate(4800) : doc.room.depth,
+      height: doc.room.height.value === null ? estimate(2600) : doc.room.height,
+    },
+  });
+  return {
+    ...doc,
+    room: {
+      ...doc.room,
+      features: projected.room.features.map((f, index): Feature => {
+        const original = doc.room.features[index]!;
+        if (f.kind === 'obstacle' || original.kind === 'obstacle') return f;
+        if (f.kind === 'door' && original.kind === 'door')
+          return {
+            ...f,
+            mechanism: original.mechanism,
+            mechanismProvenance: original.mechanismProvenance,
+            hinge: original.hinge,
+            hingeProvenance: original.hingeProvenance,
+          };
+        if (f.kind === 'window' && original.kind === 'window')
+          return {
+            ...f,
+            mechanism: original.mechanism,
+            mechanismProvenance: original.mechanismProvenance,
+          };
+        return f;
+      }),
+    },
   };
 }
 export function featureBox(doc: RoomDocument, f: Feature): SceneBox | null {

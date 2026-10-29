@@ -6,17 +6,13 @@ import {
 import type { Feature, RoomDocument } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
-import {
-  FINISH_PALETTE,
-  FINISH_PRESETS,
-  previewFinishPreset,
-} from '../catalogue/finishes';
 import type { SessionController } from '../session/controller';
 import { MeasurementField } from './measurements';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import styles from './editor.module.css';
 import { SurfaceControls } from './surface-controls';
+import { BedroomThemes } from './bedroom-themes';
 
 export function RoomPanel({
   controller,
@@ -152,6 +148,7 @@ export function RoomPanel({
             </button>
           </section>
         )}
+      <BedroomThemes controller={controller} room={room} />
       <SurfaceControls
         key={controller.getSnapshot().generation}
         room={room}
@@ -241,74 +238,6 @@ export function RoomPanel({
           ))}
         </div>
       </fieldset>
-      <div className={styles.section}>
-        <h3>Room palettes</h3>
-        <p className={styles.hint}>
-          Preview a palette for the room and compatible proposed furniture.
-          Owned finishes stay as recorded.
-        </p>
-        <div className={styles.presetList}>
-          {FINISH_PRESETS.map((preset) => (
-            <button
-              key={preset.id}
-              onClick={() => {
-                const next = previewFinishPreset(room, preset.id);
-                const actions: VisitorAction[] = [
-                  {
-                    type: 'room-finish',
-                    floorFinish: next.room.room.floorFinish,
-                    wallFinish: next.room.room.wallFinish,
-                  },
-                  {
-                    type: 'set-intent',
-                    intent: { ...room.intent, style: preset.id },
-                  },
-                  ...next.room.furniture
-                    .filter(
-                      (item, i) => item.finish !== room.furniture[i]!.finish,
-                    )
-                    .map((item) => ({
-                      type: 'finish' as const,
-                      id: item.id,
-                      finish: item.finish,
-                    })),
-                ];
-                if (actions.length > POLICY.actions) {
-                  controller.notify(
-                    'Too many pieces for one palette change. Change individual finishes instead.',
-                  );
-                  return;
-                }
-                const r = controller.prepareVisitorPreview(
-                  actions,
-                  'Apply room palette',
-                );
-                if (!r.ok)
-                  controller.notify(
-                    failureMessage(
-                      r,
-                      controller.getSnapshot().workspace?.current,
-                    ),
-                  );
-                else if (
-                  controller.getSnapshot().candidate &&
-                  next.unavailableIds.length
-                )
-                  controller.notify(
-                    `Palette preview. ${next.unavailableIds.length} incompatible ${next.unavailableIds.length === 1 ? 'piece keeps its' : 'pieces keep their'} current finish.`,
-                  );
-              }}
-            >
-              <span
-                className={styles.swatch}
-                style={{ background: FINISH_PALETTE[preset.floor] }}
-                aria-hidden="true"
-              />
-              {preset.label}
-            </button>
-          ))}
-        </div>
-      </div>
       <div className={styles.section}>
         <h3>Walls & openings</h3>
         <ul className={styles.inventory}>

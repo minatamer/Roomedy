@@ -5,8 +5,24 @@ import type {
 } from '@roomedy/contracts/sourcing';
 import type { CostDraft } from './state';
 import { findCatalogueEntry, calculateRoomEstimate } from '@roomedy/spatial';
-import { roomSurface } from '@roomedy/contracts/surfaces';
+import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import type { SessionController } from '../session/controller';
+import { shoppingCountries } from '@roomedy/contracts/estimates';
+import type { EstimateOffer } from '@roomedy/contracts/estimates';
+export function sourceSizeNeedsReview(
+  brief: SourcingBrief,
+  offer: EstimateOffer | null,
+) {
+  if (offer?.kind !== 'furniture') return false;
+  const size = offer.outerSizeMm;
+  return (
+    !size ||
+    !brief.size ||
+    (['width', 'depth', 'height'] as const).some(
+      (axis) => brief.size![axis] !== size[axis],
+    )
+  );
+}
 export function sourceOfferSelected(
   draft: CostDraft,
   brief: SourcingBrief,
@@ -43,6 +59,7 @@ export function selectOffer(
   candidate: SourcingCandidate,
   costRevision: number,
   roomRevision: number,
+  matchingWalls = false,
 ) {
   const state = controller.getSnapshot();
   if (
@@ -67,6 +84,29 @@ export function selectOffer(
     candidate,
   );
   if (!attached.ok) return attached;
+  if (
+    matchingWalls &&
+    brief.kind === 'paint' &&
+    brief.target.kind === 'surface' &&
+    brief.target.surface !== 'floor' &&
+    candidate.offer?.kind === 'paint'
+  ) {
+    const room = state.workspace.current,
+      surface = brief.target.surface;
+    const original = roomSurface(room.room, surface),
+      sheen = roomSurfaceDetail(room.room, surface).sheen;
+    for (const wall of attached.settings.walls) {
+      const finish = roomSurface(room.room, wall.wall);
+      if (
+        finish.color === original.color &&
+        finish.texture === original.texture &&
+        roomSurfaceDetail(room.room, wall.wall).sheen === sheen
+      ) {
+        wall.enabled = true;
+        wall.paintOfferId = candidate.offer.id;
+      }
+    }
+  }
   return controller.updateCost(attached.settings, attached.offers)
     ? { ok: true as const }
     : {
@@ -151,10 +191,14 @@ export function attachOffer(
   const fail = (reason: string) => ({ ok: false as const, reason });
   if (!offer || candidate.conditions !== 'standard')
     return fail(
-      'This is a research lead. Review the missing specification or enter a manual allowance.',
+      'This is a research lead. Review the source or try another product.',
     );
   if (
-    offer.market.country !== draft.settings.locality.country ||
+    !(offer.kind === 'service' || !draft.settings.demoScope
+      ? offer.market.country === draft.settings.locality.country
+      : shoppingCountries(draft.settings.locality.country).includes(
+          offer.market.country,
+        )) ||
     offer.market.currency !== draft.settings.locality.currency ||
     offer.availability === 'unavailable'
   )
@@ -201,7 +245,10 @@ export function attachOffer(
     target.kind === 'surface' &&
     target.surface === 'floor'
   ) {
-    if (!['planks', 'wood'].includes(roomSurface(room.room, 'floor').texture))
+    if (
+      draft.settings.demoScope !== 'materials' &&
+      !['planks', 'wood'].includes(roomSurface(room.room, 'floor').texture)
+    )
       return fail(
         'This click-floor system differs from the designed surface. Review the material in Design first.',
       );
@@ -234,7 +281,7 @@ export function attachOffer(
     target.scope !== 'delivery'
   ) {
     const service = settings.services.find((s) => s.scope === target.scope);
-    if (!service) return fail('Add this scope as a reviewed manual allowance.');
+    if (!service) return fail('This service is outside the current estimate.');
     service.enabled = true;
     service.offerId = offer.id;
     if (offer.basis === 'hour') service.quantity = null;

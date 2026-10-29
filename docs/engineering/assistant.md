@@ -1,5 +1,11 @@
 # Grounded assistant policy — RM-011
 
+## Visited tour and phase continuity —RM-038–040, 29 October 2026
+
+The automatic short orientation is offered once, including Skip/Escape, using a non-sensitive local UI preference and SessionController fallback. Explicit Medy Show me around remains available. The preference never enters project/recovery/provider/Undo data; a fresh room does not rearm it. This supersedes W's workspace-only automatic rearm policy below. Blocked storage still preserves the offer during the active session.
+
+Design and cost retain their local view state. The inactive design is hidden/inert with its same canvas paused and pointer/keyboard editing disabled; return resumes demand rendering and camera controls. Workspace disposal still retires resources. Cost research/location/PDF work cancels on leave. Cost prose reuses Medy's finite MessageReveal with bounded ephemeral monotonically identified messages; phase returns do not replay completed words or collide after transcript retirement. These IDs are excluded from project/provider data. [Checks](../validation/RM-038-040.md).
+
 ## Photo appearance and custom RGB — RM-015BY
 
 room-observations-7 asks for furniture body/soft colour and pattern, door leaf/trim and window frame appearance. Each known value is estimated with the observation's source ID; invalid source/part combinations, unknown pattern IDs, remote URLs and malformed RGB reject. Floor/wall facts remain independent and room-purpose-only. Appearance never grants measurement/command authority. medy-room-12 includes existing appearance facts and offers explicit RGB/hex/pattern requests through the visitor compiler. Numeric RGB is consumed as appearance before dimension parsing; invalid channels reply without changes. Combined material-plus-colour requests retain both choices, and an implicit bed/chair/seating colour targets soft parts. Door/window appearance is an appearance-only visitor action, permitted as a validated quick reply without expanding model action authority. Preview/Apply/Cancel/Undo and current-state fences remain.

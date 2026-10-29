@@ -15,7 +15,12 @@ import { RoomScene } from './scene';
 import type { CameraAction, SceneProps } from './scene';
 import type { CameraPose, CameraView } from './adapter';
 import { cameraViewPose } from './camera';
-import { displayRoom, featureBox, pieceRepresentation } from './adapter';
+import {
+  displayRoom,
+  featureBox,
+  pieceRepresentation,
+  presentationRoom,
+} from './adapter';
 import {
   hasIllustrativeSize,
   ILLUSTRATIVE_SIZE_NOTICE,
@@ -65,6 +70,7 @@ export type CutawayProps = Pick<
   placement: CataloguePlacement;
   onAddDesk: () => void;
   arranging: boolean;
+  active?: boolean;
   medyCamera?:
     (Extract<MedyControl, { type: 'camera' }> & { sequence: number }) | null;
   onMedyCamera?: (sequence: number) => void;
@@ -79,6 +85,7 @@ export default function Cutaway({
   placement,
   onAddDesk,
   arranging,
+  active = true,
   medyCamera,
   onMedyCamera,
   onCameraAvailability,
@@ -96,14 +103,14 @@ export default function Cutaway({
     onCameraAvailability?.(lost ? 'unavailable' : ready ? 'ready' : 'opening');
     return () => onCameraAvailability?.('opening');
   }, [lost, ready, onCameraAvailability]);
-  const moving = arranging && !readOnly && !lost;
+  const moving = active && arranging && !readOnly && !lost;
   const canvasRef = useRef<HTMLCanvasElement | null>(null),
     invalidateRef = useRef<() => void>(() => {});
   const invalidate = useCallback(() => invalidateRef.current(), []);
   const editing = useFloorEdit(
     controller,
     moving && ready && !lost,
-    ready && !lost,
+    active && ready && !lost,
     snap,
     canvasRef,
     invalidate,
@@ -121,7 +128,10 @@ export default function Cutaway({
     (loading: number, failed: number) => setAssets({ loading, failed }),
     [setAssets],
   );
-  const rendered = props.candidate ?? props.room;
+  const rendered = useMemo(
+    () => presentationRoom(props.candidate ?? props.room),
+    [props.candidate, props.room],
+  );
   const hasDesk = rendered.furniture.some(
     (piece) =>
       findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
@@ -275,7 +285,7 @@ export default function Cutaway({
           <ViewControls
             controller={controller}
             arranging={arranging}
-            ready={ready && !lost}
+            ready={active && ready && !lost}
             readOnly={readOnly}
             rotationLocked={!selectedPiece || selectedPiece.locks.rotation}
             onRotate={editing.rotate}
@@ -375,14 +385,18 @@ export default function Cutaway({
           </ViewControls>
         )}
       </div>
-      <div className={styles.viewport} data-mode={moving ? 'move' : 'explore'}>
+      <div
+        className={styles.viewport}
+        data-mode={moving ? 'move' : 'explore'}
+        data-paused={!active || undefined}
+      >
         {lost ? (
           fallback
         ) : (
           <GraphicsBoundary fallback={fallback} onFailure={onLost}>
             <Canvas
               className={styles.scene}
-              frameloop="demand"
+              frameloop={active ? 'demand' : 'never'}
               shadows={{ type: PCFShadowMap }}
               dpr={[1, 1.5]}
               camera={{ position: [7, 7, 9], near: 0.05, far: 200, fov: 50 }}
@@ -405,6 +419,7 @@ export default function Cutaway({
             >
               <RoomScene
                 {...props}
+                active={active}
                 placement={ready && !lost ? placement : undefined}
                 cameraAction={action}
                 cameraView={cameraView}

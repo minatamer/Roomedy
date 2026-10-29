@@ -965,3 +965,28 @@ describe('selection determines room interaction', () => {
     expect(arrangingSelection(s.getSnapshot())).toBe(false);
   });
 });
+
+it('keeps bounded cost-message reveal identities across phases and retires timelines with the room', () => {
+  const c = new SessionController(createRoomFixture('partial'));
+  try {
+    c.setDestination('cost', 'en-US');
+    c.costMessage('assistant', 'First answer');
+    const first = c.getSnapshot().cost!.messages[0]!;
+    expect(first.id).toBeDefined();
+    expect(c.costReveal.begin(first.id!, 100)).toBe(0);
+    c.setDestination('design');
+    c.setDestination('cost', 'en-US');
+    expect(c.costReveal.begin(first.id!, 500)).toBe(400);
+    for (let i = 0; i < 45; i++) c.costMessage('assistant', `Answer ${i}`);
+    const messages = c.getSnapshot().cost!.messages;
+    expect(messages).toHaveLength(40);
+    expect(new Set(messages.map((message) => message.id)).size).toBe(40);
+    expect(JSON.stringify(projectOf(c.getSnapshot()))).not.toContain(
+      'First answer',
+    );
+    expect(c.reset(createRoomFixture('empty'))).toBe(true);
+    expect(c.costReveal.begin(first.id!, 900)).toBe(0);
+  } finally {
+    c.dispose();
+  }
+});

@@ -32,7 +32,10 @@ import { findCatalogueEntry } from '@roomedy/spatial';
 import type { InstancedMesh, MeshBasicMaterial } from 'three';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { furnitureMaterialTargets } from '@roomedy/contracts/furniture-materials';
-import { createFurnitureMaterials } from './furniture-material';
+import {
+  createFurnitureMaterials,
+  furniturePartRole,
+} from './furniture-material';
 import { displayFurnitureSize } from '../catalogue/display-size';
 import {
   changedPieces,
@@ -41,6 +44,7 @@ import {
   metres,
   piecePose,
   pieceRepresentation,
+  presentationRoom,
   wallBoxes,
 } from './adapter';
 import type { CameraPose, CameraView, SceneBox, Triple } from './adapter';
@@ -58,7 +62,11 @@ import {
   surfaceProperties,
 } from './surfaces';
 import type { Surfaces } from './surfaces';
-import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
+import {
+  roomSurface,
+  roomSurfaceDetail,
+  isEstimatedPlainSurface,
+} from '@roomedy/contracts/surfaces';
 import type { SurfaceDetail, SurfaceTarget } from '@roomedy/contracts/surfaces';
 import { animateRoomMaterial } from './room-material';
 import {
@@ -97,6 +105,7 @@ export type CameraAction = {
   sequence: number;
 };
 export interface SceneProps {
+  active?: boolean;
   inspection?: Inspection | undefined;
   placement?: CataloguePlacement | undefined;
   room: RoomDocument;
@@ -310,6 +319,7 @@ function setCameraZoom(
 }
 
 function CameraRig({
+  active = true,
   inspection,
   room,
   cameraStateRef,
@@ -326,9 +336,13 @@ function CameraRig({
   | 'cameraFrame'
   | 'cameraView'
   | 'editing'
+  | 'active'
 >) {
   const { camera, size, invalidate, gl } = useThree();
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
+  useEffect(() => {
+    if (active) invalidate();
+  }, [active, invalidate]);
   const initialized = useRef(false),
     previousFit = useRef(1),
     lastAction = useRef(0);
@@ -547,6 +561,7 @@ function CameraRig({
   }, [cameraAction, act]);
   useEffect(() => {
     const canvas = gl.domElement;
+    if (!active) return;
     const key = (e: KeyboardEvent) => {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
       const kinds: Record<string, CameraAction['kind']> = {
@@ -675,7 +690,7 @@ function CameraRig({
         if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
       pointers.clear();
     };
-  }, [gl, camera, cameraView, act, begin, editing]);
+  }, [gl, camera, cameraView, act, begin, editing, active]);
   useFrame((_, delta) => {
     const c = controls.current;
     if (!c) return;
@@ -732,7 +747,7 @@ function CameraRig({
   return (
     <OrbitControls
       ref={controls}
-      enabled={cameraView === 'overview' && !editing.enabled}
+      enabled={active && cameraView === 'overview' && !editing.enabled}
       enableDamping
       dampingFactor={0.12}
       enablePan={false}
@@ -772,6 +787,7 @@ function Walls({
   const selectedMap = roomSurfaceMap(
     surfaces,
     roomSurface(room.room, wall).texture,
+    isEstimatedPlainSurface(room.room, wall),
   );
   const [initialMap] = useState(selectedMap);
   const targetColor = useMemo(() => new Color(color), [color]);
@@ -1374,7 +1390,11 @@ function Piece({
     h = metres(shownSize?.height ?? 250);
   const parts =
     representation.kind === 'procedural'
-      ? detailedParts(representation.parts, representation.footprint)
+      ? detailedParts(
+          representation.parts,
+          representation.footprint,
+          piece.materials?.upholstery !== 'plain',
+        )
       : [];
   const opening = furnitureOpening(piece);
   return (
@@ -1437,9 +1457,7 @@ function Piece({
                   : materials[
                       part.name === 'tv-screen'
                         ? 'screen'
-                        : part.name.startsWith('blanket')
-                          ? 'blanket'
-                          : part.role
+                        : furniturePartRole(part)
                     ]
               }
               position={
@@ -1503,9 +1521,11 @@ export function RoomScene(props: SceneProps) {
       props,
     desiredRoom = useMemo(
       () =>
-        roomWithWindowPreview(
-          candidate ?? room,
-          candidate ? null : props.editing.windowPreview,
+        presentationRoom(
+          roomWithWindowPreview(
+            candidate ?? room,
+            candidate ? null : props.editing.windowPreview,
+          ),
         ),
       [room, candidate, props.editing.windowPreview],
     );
@@ -1820,6 +1840,7 @@ export function RoomScene(props: SceneProps) {
         })}
       <CatalogueGhost placement={props.placement} />
       <CameraRig
+        active={props.active ?? true}
         room={candidate ?? room}
         inspection={props.inspection}
         cameraFrame={props.cameraFrame}

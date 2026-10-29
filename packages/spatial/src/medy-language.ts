@@ -100,7 +100,9 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
             ? 'storage|shelf|shelves|cabinet|nightstand|bedside'
             : category === 'wardrobe'
               ? 'wardrobe|closet'
-              : category;
+              : category === 'bed'
+                ? 'bed|pillow|pillowcase|sheet|bedsheet|duvet|blanket|bedding'
+                : category;
         return !!aliases && new RegExp(`\\b(${aliases})s?\\b`).test(t);
       });
   const targets: MedyTarget[] = pieces.map((piece) => ({

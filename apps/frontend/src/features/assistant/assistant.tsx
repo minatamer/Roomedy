@@ -16,6 +16,8 @@ import { ChatIcon } from './chat-icon';
 import { SurfacePreview } from './surface-preview';
 import { FINISH_COLORS } from '@roomedy/contracts/surfaces';
 import { guidanceChoices, guidanceMessage } from './guidance';
+import type { GuidanceChoice } from './guidance';
+import type { DesignSuggestion } from '@roomedy/contracts/assistant';
 import { RevealedText } from './revealed-text';
 import styles from './assistant.module.css';
 
@@ -67,14 +69,24 @@ export function Assistant({
   const latest = state.messages.at(-1),
     replyId = latest ? (latest.role === 'assistant' ? latest.id : null) : 0,
     guidance = latest?.guidance?.step ?? (!latest ? 'welcome' : null),
-    options =
+    staleGuidance =
+      !!latest?.guidance && latest.guidance.roomRevision !== room.roomRevision,
+    options: readonly (GuidanceChoice | DesignSuggestion)[] =
       preview?.source === 'assistant'
         ? []
-        : guidance
-          ? guidanceChoices(guidance, room, state.tourSeen)
-          : latest?.role === 'assistant'
-            ? latest.quickReplies
-            : [],
+        : staleGuidance
+          ? [
+              {
+                id: 'resume-guidance',
+                label: 'Continue designing',
+                icon: 'start',
+              },
+            ]
+          : guidance
+            ? guidanceChoices(guidance, room, state.tourSeen, state.themeId)
+            : latest?.role === 'assistant'
+              ? latest.quickReplies
+              : [],
     repliesReady =
       replyId !== null && revealedId === replyId && !tourActive && !state.busy;
   return (
@@ -458,7 +470,8 @@ export function Assistant({
                   disabled={
                     !repliesReady ||
                     roomState.comparison !== 'current' ||
-                    (latest?.guidance
+                    (latest?.guidance &&
+                    !('id' in option && option.id === 'resume-guidance')
                       ? latest.guidance.roomRevision !== room.roomRevision
                       : 'roomRevision' in option &&
                         option.roomRevision !== room.roomRevision)
@@ -477,16 +490,9 @@ export function Assistant({
                 >
                   {'id' in option && (
                     <span className={styles.choiceVisual} aria-hidden="true">
-                      {guidance === 'finishes' ? (
+                      {option.colors ? (
                         <span className={styles.paletteSwatches}>
-                          {(
-                            option.colors ??
-                            (option.id === 'Warm & simple'
-                              ? ['clay', 'oak']
-                              : option.id === 'Light & airy'
-                                ? ['ivory', 'oak']
-                                : ['ivory', 'walnut'])
-                          ).map((finish) => (
+                          {option.colors.map((finish) => (
                             <i
                               key={finish}
                               style={{
@@ -500,17 +506,7 @@ export function Assistant({
                           ))}
                         </span>
                       ) : (
-                        <ChatIcon
-                          kind={
-                            option.id === 'talk'
-                              ? 'talk'
-                              : option.id === 'finishes'
-                                ? 'walls'
-                                : option.id === 'checks'
-                                  ? 'work'
-                                  : 'room'
-                          }
-                        />
+                        <ChatIcon kind={option.icon ?? 'room'} />
                       )}
                     </span>
                   )}

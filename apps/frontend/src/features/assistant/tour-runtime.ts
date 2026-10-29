@@ -17,6 +17,7 @@ export function automaticallyOfferTour(
     | 'imported'
     | 'clientLoadFailure'
     | 'estimateVersions'
+    | 'tourOffered'
   >,
 ) {
   return (
@@ -25,7 +26,8 @@ export function automaticallyOfferTour(
     !state.recovered &&
     !state.imported &&
     state.estimateVersions.length === 0 &&
-    !state.clientLoadFailure
+    !state.clientLoadFailure &&
+    !state.tourOffered
   );
 }
 export type TourReading = {

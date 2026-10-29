@@ -3,6 +3,7 @@ import {
   estimateOffersSchema,
   estimateSettingsSchema,
   roomEstimateSchema,
+  shoppingCountries,
 } from '@roomedy/contracts/estimates';
 import type {
   EstimateLine,
@@ -12,6 +13,7 @@ import type {
   RoomEstimate,
 } from '@roomedy/contracts/estimates';
 import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
+import { planningRoom } from './planning.js';
 import { validateRoom } from './commands.js';
 import { findCatalogueEntry } from './catalogue.js';
 import {
@@ -46,16 +48,20 @@ export function calculateRoomEstimate(
   rawOffers: unknown,
 ): EstimateResult {
   try {
-    const room = validateRoom(rawRoom),
+    const acceptedRoom = validateRoom(rawRoom),
       parsed = estimateSettingsSchema.safeParse(rawSettings),
       offered = estimateOffersSchema.safeParse(rawOffers);
     if (
-      !room ||
+      !acceptedRoom ||
       !parsed.success ||
       !offered.success ||
       offered.data.some((offer) => !validateOfferFx(offer))
     )
       return { ok: false, code: 'invalid-input' };
+    const room =
+      parsed.data.demoScope === 'materials'
+        ? planningRoom(acceptedRoom)
+        : acceptedRoom;
     const settings = parsed.data,
       offers = new Map(offered.data.map((offer) => [offer.id, offer]));
     if (
@@ -72,6 +78,12 @@ export function calculateRoomEstimate(
         'Pack coverage, coats, yields, work rates and site conditions need supplier/site review. A priced estimate is not a fit or installation certification.',
         'Only enabled service scopes are included. Source age, availability and quantity uncertainty are separate.',
       ];
+    if (settings.demoScope === 'materials')
+      assumptions.unshift(
+        'Materials and furniture only. Installation, site preparation, primer, underlay, trims, delivery and logistics are excluded.',
+        'Selected replacement materials may differ from the rendered finish, which is unchanged.',
+        'Missing geometry uses editable planning estimates, never confirmed measurements.',
+      );
     const floorTarget: EstimateTarget[] = [
         { kind: 'surface', surface: 'floor' },
       ],
@@ -91,7 +103,11 @@ export function calculateRoomEstimate(
       if (found.market.currency !== settings.locality.currency)
         throw new Error('mixed-currency');
       if (
-        found.market.country !== settings.locality.country ||
+        !(kind === 'service' || !settings.demoScope
+          ? found.market.country === settings.locality.country
+          : shoppingCountries(settings.locality.country).includes(
+              found.market.country,
+            )) ||
         (kind === 'service' &&
           found.market.city.toLowerCase() !==
             settings.locality.city.toLowerCase()) ||
@@ -243,9 +259,9 @@ export function calculateRoomEstimate(
       floorArea === null ? null : quantity(floorArea, 'mm2');
     if (settings.floor.enabled) {
       const material = offer(settings.floor.offerId, 'floor');
-      const supportedFloor = ['wood', 'planks'].includes(
-        roomSurface(room.room, 'floor').texture,
-      );
+      const supportedFloor =
+        settings.demoScope === 'materials' ||
+        ['wood', 'planks'].includes(roomSurface(room.room, 'floor').texture);
       if (!supportedFloor) {
         missing(
           'floor',
@@ -288,7 +304,7 @@ export function calculateRoomEstimate(
           true,
         );
       }
-      if (supportedFloor) {
+      if (supportedFloor && settings.demoScope !== 'materials') {
         if (material?.underlay === 'integrated')
           included(
             'floor',
@@ -508,11 +524,14 @@ export function calculateRoomEstimate(
         );
       else if (selected.primer === 'include')
         addPaint('primer', selected.primerOfferId, selected.primerCoats);
-      else
+      else if (settings.demoScope !== 'materials')
         assumptions.push(
           `${selected.wall}: primer is explicitly excluded; verify the substrate/system before work.`,
         );
-      if (selected.substrate === 'unknown')
+      if (
+        selected.substrate === 'unknown' &&
+        settings.demoScope !== 'materials'
+      )
         assumptions.push(
           `${selected.wall}: substrate condition is unconfirmed; hidden repairs are outside the estimate.`,
         );
@@ -681,7 +700,8 @@ export function calculateRoomEstimate(
 
     for (const service of settings.services) {
       if (!service.enabled) {
-        assumptions.push(`${service.scope} service is explicitly excluded.`);
+        if (settings.demoScope !== 'materials')
+          assumptions.push(`${service.scope} service is explicitly excluded.`);
         continue;
       }
       if (
@@ -799,6 +819,7 @@ export function calculateRoomEstimate(
       });
     }
     for (const [groupId, group] of groups) {
+      if (settings.demoScope === 'materials') continue;
       if (settings.fulfilment === 'collection' || !group.required) {
         included(
           'delivery',

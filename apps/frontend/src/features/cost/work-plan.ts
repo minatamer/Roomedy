@@ -23,6 +23,68 @@ export function roomWorkPlan(
       )
       .slice(0, 4)
       .map((o) => ({ label: o.label, url: o.source.url! }));
+  const shopping = estimate.lines
+    .filter(
+      (l) =>
+        l.purchased &&
+        l.offerIds.length &&
+        l.category !== 'tax' &&
+        l.amountMinor !== 0,
+    )
+    .map((l) => ({
+      label: l.label,
+      quantity: l.quantity ?? l.purchased!,
+      purchased: l.purchased!,
+      packs: l.packs,
+      targets: l.targets,
+      offerIds: l.offerIds,
+    }));
+  if (pricing.settings.demoScope === 'materials') {
+    const steps: WorkStep[] = [
+      {
+        title: 'Review what is staying',
+        detail:
+          'Keep your retained pieces and finishes. New purchases use the quantities in this saved estimate; planning dimensions still need checking before ordering.',
+        targets: [],
+        sources: [],
+      },
+    ];
+    const buys = pricing.settings.furniture.filter(
+      (item) => item.mode === 'buy',
+    );
+    if (buys.length)
+      steps.push({
+        title: 'Choose your furniture',
+        detail:
+          'Compare the selected product size, finish and included components. Check stock and the full checkout price at the store.',
+        targets: buys.map((item) => item.id).slice(0, 8),
+        sources: source(['furniture', 'component']),
+      });
+    if (pricing.settings.floor.enabled)
+      steps.push({
+        title: 'Choose your flooring',
+        detail:
+          'Use the listed whole-pack quantity. Confirm the selected material and pack coverage; this is a material price, and your drawn finish is unchanged.',
+        targets: ['surface:floor'],
+        sources: source(['floor']),
+      });
+    const walls = pricing.settings.walls.filter((wall) => wall.enabled);
+    if (walls.length)
+      steps.push({
+        title: 'Choose your wall paint',
+        detail:
+          'Check the selected colour, sheen, coats and can quantities with the supplier. The estimate covers the selected finish material.',
+        targets: walls.map((wall) => `surface:${wall.wall}`),
+        sources: source(['paint']),
+      });
+    steps.push({
+      title: 'Review your shopping estimate',
+      detail: `${estimate.unpricedCount} unresolved lines still need a price or quantity. Sample amounts need supplier confirmation. Installation and delivery are outside this estimate; no order has been placed.`,
+      targets: [],
+      sources: [],
+    });
+    return { steps, shopping };
+  }
   const steps: WorkStep[] = [
     {
       title: 'Confirm the room and scope',
@@ -81,21 +143,5 @@ export function roomWorkPlan(
     targets: [],
     sources: [],
   });
-  const shopping = estimate.lines
-    .filter(
-      (l) =>
-        l.purchased &&
-        l.offerIds.length &&
-        l.category !== 'tax' &&
-        l.amountMinor !== 0,
-    )
-    .map((l) => ({
-      label: l.label,
-      quantity: l.quantity ?? l.purchased!,
-      purchased: l.purchased!,
-      packs: l.packs,
-      targets: l.targets,
-      offerIds: l.offerIds,
-    }));
   return { steps, shopping };
 }

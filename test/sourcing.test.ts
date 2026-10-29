@@ -1,4 +1,5 @@
 import { withRoomSurface } from '@roomedy/contracts/surfaces';
+import { shoppingCountries } from '@roomedy/contracts/estimates';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
 import { PUBLIC_LIMITS, POLICY, VERSIONS } from '@roomedy/contracts/policy';
@@ -103,6 +104,31 @@ const config = () => ({
   limits: PUBLIC_LIMITS,
 });
 describe('strict admitted source contracts and evidence', () => {
+  it('researches without a location hint when the visitor skips and retains real example source countries', async () => {
+    const requestInput = input();
+    requestInput.locality = {
+      country: 'ZZ',
+      city: 'No location shared',
+      currency: 'USD',
+    };
+    const request = sourcingRequest(requestInput);
+    const body = JSON.parse(responseBody(request, 'synthetic-model'));
+    expect(body.tools[0]).toEqual({
+      type: 'web_search',
+      search_context_size: 'low',
+    });
+    expect(body.tools[0]).not.toHaveProperty('user_location');
+    const data = JSON.parse(body.input[0].content[0].text);
+    expect(data.shoppingCountries).toContain('US');
+    expect(data.shoppingCountries).toContain('EG');
+    const reply = await fakeReply(requestInput);
+    expect(reply.candidates[0]!.offer!.market.country).toBe('US');
+    expect(
+      normalizeSourcing(requestInput, reply, undefined, true, 123, id)
+        .candidates[0]!.offer!.market.currency,
+    ).toBe('USD');
+  });
+
   it('rejects oversized local briefs safely before admission, without truncating constraints', () => {
     const room = createRoomFixture('sample');
     for (const key of [
@@ -283,7 +309,7 @@ describe('strict admitted source contracts and evidence', () => {
       normalized[2]!.offer!.deliveryGroup,
     );
   });
-  it('does not reuse another currency, market or service city and keeps unsupported fake markets as leads', async () => {
+  it('does not reuse another currency or service city and labels regional fake prices as authored', async () => {
     const i = input(),
       reply = await fakeReply(i);
     expect(reply.candidates[0]!.offer!.market.currency).toBe('USD');
@@ -296,7 +322,10 @@ describe('strict admitted source contracts and evidence', () => {
     expect((await fakeReply(i)).candidates[0]!.offer).toBeNull();
     i.locality.currency = 'USD';
     i.locality.city = 'Alexandria';
-    expect((await fakeReply(i)).candidates[0]!.offer).toBeNull();
+    expect((await fakeReply(i)).candidates[0]!.offer).toMatchObject({
+      market: { city: 'Alexandria', currency: 'USD' },
+      source: { kind: 'sample' },
+    });
     const service = input('service:moving'),
       s = await fakeReply(service);
     s.candidates[0]!.offer!.market.city = 'Alexandria';
@@ -340,7 +369,7 @@ describe('bounded existing Responses web-search wire', () => {
       countries.every(
         (country) =>
           JSON.stringify(country) ===
-          JSON.stringify({ type: 'string', enum: ['EG'] }),
+          JSON.stringify({ type: 'string', enum: shoppingCountries('EG') }),
       ),
     ).toBe(true);
   });
@@ -838,6 +867,66 @@ describe('selected prices and lifecycle', () => {
     expect((await old.result).ok).toBe(false);
     expect(c.getSnapshot().cost!.settings.floor.wasteBps).toBe(2000);
   });
+  it.each([
+    ['furniture', 'US'],
+    ['surface:floor', 'US'],
+    ['surface:north', 'US'],
+    ['service:moving', 'ZZ'],
+  ])(
+    'keeps %s research in market %s without rewriting historical settings',
+    async (target, expectedCountry) => {
+      const c = new SessionController(createRoomFixture('sample'));
+      controllers.push(c);
+      c.setDestination('cost', 'en-US');
+      const draft = c.getSnapshot().cost!;
+      expect(
+        c.updateCost({
+          ...draft.settings,
+          locality: {
+            country: 'ZZ',
+            city: 'No location shared',
+            currency: 'USD',
+          },
+        }),
+      ).toBe(true);
+      const before = JSON.stringify(c.getSnapshot().cost);
+      const room = c.getSnapshot().workspace!.current;
+      const key = target === 'furniture' ? room.furniture[0]!.id : target;
+      const brief = buildSourcingBrief(room, key)!;
+      const markets: string[] = [];
+      const transport: typeof fetch = async (url, init) => {
+        if (String(url).endsWith('/config')) return Response.json(config());
+        const body = JSON.parse(String(init?.body));
+        markets.push(body.input.locality.country);
+        if (String(url).endsWith('/admission'))
+          return Response.json({
+            kind: 'granted',
+            grant: 'grant',
+            expiresAt: 123,
+            simulation: true,
+          });
+        return Response.json({
+          identity: body.input.identity,
+          kind: 'completed',
+          draft: null,
+          simulation: true,
+          message: 'Review',
+          sourcing: { candidates: [], notes: [] },
+        });
+      };
+      const task = beginResearch(c, brief, transport)!;
+      const answer = await task.result;
+      expect(answer.ok).toBe(true);
+      if (!answer.ok) throw new Error(answer.message);
+      expect(markets).toEqual([expectedCountry, expectedCountry]);
+      expect(answer.input.locality).toEqual({
+        country: expectedCountry,
+        city: expectedCountry === 'US' ? 'United States' : 'No location shared',
+        currency: 'USD',
+      });
+      expect(JSON.stringify(c.getSnapshot().cost)).toBe(before);
+    },
+  );
   it('enforces a visible deadline even if config fetch ignores abort, and never resumes after disposal', async () => {
     vi.useFakeTimers();
     const c = new SessionController(createRoomFixture('sample'));
@@ -936,7 +1025,7 @@ describe('selected prices and lifecycle', () => {
       expect(result.ok).toBe(false);
       if (!result.ok) {
         expect(result.message).toContain('Your accepted prices are unchanged');
-        expect(result.message).toContain('manual allowance');
+        expect(result.message).toContain('try another store');
         expect(result.message).not.toContain('Server failure');
         if (kind === 'timeout') expect(result.message).toContain('time limit');
       }

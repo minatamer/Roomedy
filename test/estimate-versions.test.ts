@@ -4,6 +4,7 @@ import { createRoomFixture } from '../apps/frontend/src/features/session/fixture
 import {
   captureVersion,
   versionChanges,
+  ensureEstimateSnapshot,
 } from '../apps/frontend/src/features/cost/versions.js';
 import { pricingState } from '../apps/frontend/src/features/cost/state.js';
 import {
@@ -26,6 +27,27 @@ afterEach(() => {
   controllers.splice(0).forEach((c) => c.dispose());
 });
 describe('detached reviewed planning versions', () => {
+  it('automatically names a PDF snapshot and reuses identical inputs, including at capacity', () => {
+    const c = session(),
+      first = ensureEstimateSnapshot(c);
+    expect(first.ok).toBe(true);
+    if (!first.ok) return;
+    const record = c.getSnapshot().estimateVersions[0]!;
+    expect(record.label).toBe('Estimate 1');
+    expect(ensureEstimateSnapshot(c)).toEqual(first);
+    expect(c.getSnapshot().estimateVersions).toHaveLength(1);
+    for (let i = 2; i <= 4; i++)
+      expect(c.saveEstimate(`Earlier ${i}`).ok).toBe(true);
+    const last = c.getSnapshot().estimateVersions[3]!;
+    expect(ensureEstimateSnapshot(c)).toEqual({ ok: true, id: last.id });
+    const before = JSON.stringify(c.getSnapshot().estimateVersions);
+    const settings = structuredClone(c.getSnapshot().cost!.settings);
+    settings.floor.wasteBps += 100;
+    expect(c.updateCost(settings)).toBe(true);
+    expect(ensureEstimateSnapshot(c).ok).toBe(false);
+    expect(JSON.stringify(c.getSnapshot().estimateVersions)).toBe(before);
+    expect(c.getSnapshot().estimateVersions[0]).toBe(record);
+  });
   it('freezes dated USD conversion inputs across project import, recovery and later pricing edits', () => {
     const c = session(),
       draft = c.getSnapshot().cost!,

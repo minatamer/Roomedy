@@ -6,6 +6,74 @@
   color: #332e28;
   background: transparent;
 }
+.studio.costStudio {
+  height: 100svh;
+  min-height: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: clip;
+}
+.phaseStage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+.phaseStage > .workspace {
+  min-height: 0;
+  height: 100%;
+}
+.phaseStage [data-design-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.phaseStage[data-phase-moving='true'][data-destination='cost'] > .workspace {
+  animation: leaveDesign 850ms ease both;
+}
+@keyframes leaveDesign {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+.phaseStage[data-phase-moving='true'][data-destination='cost'] .panel {
+  animation: leavePanelContents 160ms ease-out both;
+}
+@keyframes leavePanelContents {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.phaseStage[data-phase-moving='true'] {
+  overflow: clip;
+}
+.costLayer {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  min-height: 0;
+  z-index: 8;
+  bottom: auto;
+  height: calc(100svh - var(--phase-top, 70px));
+}
+.costLayer[data-cost-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.costStudio .costLayer {
+  height: 100%;
+}
+.costNav {
+  justify-self: end;
+  margin-right: 4px;
+}
 .studio button:where(:not(:global(.glass-control))),
 .expired button {
   min-height: 44px;
@@ -80,6 +148,9 @@
 }
 .headerActions button {
   min-width: 44px;
+}
+.headerActions > button[hidden]:global(.glass-control) {
+  display: none;
 }
 .workspace {
   position: relative;
@@ -845,6 +916,9 @@
   .header {
     padding-left: 16px;
   }
+  .headerActions .undoLabel {
+    display: none;
+  }
   .canvasColumn {
     padding-inline: 16px;
   }
@@ -888,7 +962,10 @@
     min-height: 70px;
     padding: 10px 0;
     gap: 8px 12px;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .header > div:first-child {
+    grid-column: 1 / span 2;
   }
   .header :global(.brand) {
     font-size: 22px;
@@ -900,14 +977,13 @@
     height: 22px;
   }
   .headerActions {
-    grid-column: 2;
-    grid-row: 1;
-    align-items: center;
-    gap: clamp(6px, 2vw, 10px);
-    position: relative;
-    margin-right: var(--header-inset);
+    display: contents;
   }
   .headerActions > button:global(.glass-control) {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    margin-right: var(--header-inset);
     display: grid;
     place-items: center;
     width: 44px;
@@ -917,8 +993,9 @@
     line-height: 1;
   }
   .headerActions .projectMenu > summary {
+    width: 100%;
     height: 44px;
-    padding: 0 clamp(12px, 3vw, 16px);
+    padding: 0 8px;
     align-content: center;
     font-size: 12px;
     line-height: 1.25;
@@ -932,11 +1009,45 @@
     display: none;
   }
   .projectMenu {
-    position: static;
+    grid-column: 1;
+    grid-row: 2;
+    margin-left: var(--header-inset);
+  }
+  .projectMenu.exportControl {
+    grid-column: 2;
+    margin-left: 0;
+  }
+  .projectMenu.estimateControl {
+    grid-column: 3;
+    margin-left: 0;
+    margin-right: var(--header-inset);
+  }
+  .exportControl > button:global(.glass-control),
+  .estimateControl > button:global(.glass-control) {
+    width: 100%;
+    padding-inline: 8px;
+    justify-content: center;
+  }
+  .costStudio .projectMenu.exportControl {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    margin-left: 0;
+    margin-right: var(--header-inset);
   }
   .projectOptions {
+    left: 0;
+    right: auto;
+  }
+  .exportControl .projectOptions {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+  .costStudio .exportControl .projectOptions {
     left: auto;
     right: 0;
+    transform: none;
     transform-origin: top right;
   }
   .workspace {
@@ -946,8 +1057,13 @@
   }
   .toolRail {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
     width: 100%;
+  }
+  .costNav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-inline: var(--header-inset);
   }
   .toolRail button {
     min-width: 44px;
@@ -1196,21 +1312,6 @@
 .materialDetails summary {
   cursor: pointer;
   padding-block: 10px;
-}
-
-@media (max-width: 600px) {
-  .headerActions {
-    width: 146px;
-    flex-wrap: wrap;
-  }
-  .headerActions > button.costLink:global(.glass-control) {
-    width: 100%;
-    flex-basis: 100%;
-    height: 44px;
-    padding: 8px 14px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
 }
 
 .panel select option {

@@ -7,9 +7,17 @@ import {
   surfaceProperties,
 } from './surfaces';
 import type { Surfaces } from './surfaces';
+import type { BoxPart } from './representations/definitions';
 
 type Targets = ReturnType<typeof furnitureMaterialTargets>;
-const roles = ['frame', 'soft', 'blanket', 'metal'] as const;
+/** Geometry stays soft/bevelled while its bedding material is independently editable. */
+export function furniturePartRole(part: Pick<BoxPart, 'name' | 'role'>) {
+  if (part.role === 'detail') return 'detail';
+  if (part.name.startsWith('blanket')) return 'blanket';
+  if (part.name.startsWith('pillow')) return 'pillow';
+  if (part.name === 'mattress') return 'sheet';
+  return part.role;
+}
 
 export function furnitureMaterial(
   target: FurnitureMaterialTarget,
@@ -24,13 +32,29 @@ export function furnitureMaterial(
   });
 }
 
-/** One piece owns four small materials; samplers belong to the existing scene. */
+/** Only beds add two part materials; samplers belong to the existing scene. */
 export function createFurnitureMaterials(initial: Targets, surfaces: Surfaces) {
+  const bedding = initial.pillow !== initial.soft;
+  const roles = bedding
+    ? ([
+        'frame',
+        'soft',
+        'blanket',
+        'pillow',
+        'sheet',
+        'metal',
+        'detail',
+      ] as const)
+    : (['frame', 'soft', 'blanket', 'metal', 'detail'] as const);
+  const soft = furnitureMaterial(initial.soft, surfaces);
   const materials = {
     frame: furnitureMaterial(initial.frame, surfaces),
-    soft: furnitureMaterial(initial.soft, surfaces),
+    soft,
+    pillow: bedding ? furnitureMaterial(initial.pillow, surfaces) : soft,
+    sheet: bedding ? furnitureMaterial(initial.sheet, surfaces) : soft,
     blanket: furnitureMaterial(initial.blanket, surfaces),
     metal: furnitureMaterial(initial.metal, surfaces),
+    detail: furnitureMaterial(initial.detail, surfaces),
   };
   const blends = Object.fromEntries(
     roles.map((role) => [role, createSurfaceBlend(materials[role])]),
@@ -45,7 +69,7 @@ export function createFurnitureMaterials(initial: Targets, surfaces: Surfaces) {
     choose(next: Targets) {
       // React may re-enter the same layout owner after its Strict Mode cleanup.
       if (retired)
-        for (const material of Object.values(materials))
+        for (const material of new Set(Object.values(materials)))
           material.needsUpdate = true;
       retired = false;
       targets = next;
@@ -78,7 +102,8 @@ export function createFurnitureMaterials(initial: Targets, surfaces: Surfaces) {
     dispose() {
       if (retired) return;
       retired = true;
-      for (const material of Object.values(materials)) material.dispose();
+      for (const material of new Set(Object.values(materials)))
+        material.dispose();
     },
   };
 }

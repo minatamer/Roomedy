@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import type { RefObject } from 'react';
 import { POLICY } from '@roomedy/contracts/policy';
 import type { Project } from '@roomedy/contracts/project';
 import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
@@ -62,10 +63,16 @@ function readFile(file: File, signal: AbortSignal): Promise<string> {
 export function ProjectControls({
   controller,
   onNewRoom,
+  onPlanCost,
+  planning = false,
+  planningExportRef,
   registerMedy,
 }: {
   controller: SessionController;
   onNewRoom: () => void;
+  onPlanCost: () => void;
+  planning?: boolean;
+  planningExportRef?: RefObject<HTMLButtonElement | null>;
   registerMedy?: (
     handler:
       | ((
@@ -80,6 +87,7 @@ export function ProjectControls({
     menuMotion = useRef<ReturnType<typeof createProjectMenuMotion> | null>(
       null,
     ),
+    exportButton = useRef<HTMLButtonElement>(null),
     input = useRef<HTMLInputElement>(null),
     readRelease = useRef<(() => void) | null>(null),
     downloadRelease = useRef<(() => void) | null>(null),
@@ -89,6 +97,7 @@ export function ProjectControls({
     mounted = useRef(false);
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState(''),
+    [exportMessage, setExportMessage] = useState(''),
     [exporting, setExporting] = useState(false),
     [requestedFormat, setRequestedFormat] =
       useState<Extract<MedyControl, { type: 'project' }>['format']>(null),
@@ -102,6 +111,9 @@ export function ProjectControls({
       dialog.current.showModal();
   }, [decision]);
   useEffect(() => {
+    setMenuOpen(false);
+  }, [planning, setMenuOpen]);
+  useEffect(() => {
     mounted.current = true;
     const motion =
       menu.current && menuPanel.current
@@ -109,7 +121,7 @@ export function ProjectControls({
         : null;
     menuMotion.current = motion;
     const outside = (e: PointerEvent) => {
-      if (dialog.current?.open) return;
+      if (document.querySelector('dialog[open]')) return;
       if (e.target instanceof Node && !menu.current?.contains(e.target))
         setMenuOpen(false);
     };
@@ -140,10 +152,12 @@ export function ProjectControls({
         setDecision(null);
         if (
           kind === 'import' &&
+          !planning &&
           menu.current?.open &&
           menuPanel.current?.inert === false
         )
           input.current?.focus();
+        else if (planning) planningExportRef?.current?.focus();
         else menu.current?.querySelector('summary')?.focus();
       }
     });
@@ -257,7 +271,7 @@ export function ProjectControls({
     if (!controller.checkExpiry()) return;
     const text = exportProject(controller.getSnapshot());
     if (!text) {
-      setMessage(
+      setExportMessage(
         'This room could not be exported within the project limit. Your room is unchanged.',
       );
       return;
@@ -291,7 +305,7 @@ export function ProjectControls({
       }, 1000);
     } catch {
       release();
-      setMessage('The download could not start. Your room is unchanged.');
+      setExportMessage('The download could not start. Your room is unchanged.');
     }
   };
   useEffect(() => {
@@ -307,6 +321,7 @@ export function ProjectControls({
           summary: 'This room has expired. Open a new room to continue.',
         };
       if (control.action === 'new') {
+        setMenuOpen(true);
         reviewDecision('reset');
         return {
           ok: true,
@@ -323,6 +338,8 @@ export function ProjectControls({
             'Choose your saved project. I’ll ask before replacing this room.',
         };
       }
+      setMenuOpen(false);
+      setExportMessage('');
       setRequestedFormat(control.format);
       setExporting(true);
       return {
@@ -338,6 +355,7 @@ export function ProjectControls({
     <>
       <details
         ref={menu}
+        hidden={planning}
         className={styles.projectMenu}
         onKeyDown={(e) => {
           if (e.key === 'Escape' && menu.current?.open) {
@@ -356,25 +374,11 @@ export function ProjectControls({
             else if (menu.current) menu.current.open = !menu.current.open;
           }}
         >
-          Project
+          New Room
         </summary>
         <div ref={menuPanel} className={styles.projectOptions}>
-          <p>
-            Take your Current design with you. An editable project also includes
-            draft prices, source evidence and saved estimates; photos, chat and
-            Undo are excluded.
-          </p>
+          <p>Open a saved Roomedy project or start a fresh room.</p>
           <div className={styles.projectFileActions}>
-            <button
-              className={styles.beige}
-              disabled={busy}
-              onClick={() => {
-                setRequestedFormat(null);
-                setExporting(true);
-              }}
-            >
-              Export
-            </button>
             <label className={styles.projectImport}>
               Import project
               <input
@@ -391,29 +395,68 @@ export function ProjectControls({
                 }}
               />
             </label>
+            <button
+              className={styles.primary}
+              onClick={() => reviewDecision('reset')}
+            >
+              Start a new room
+            </button>
           </div>
           <p id={fileHintId}>Roomedy project · up to 1 MiB</p>
           {busy && <p role="status">Reading project…</p>}
           {message && <p role="alert">{message}</p>}
-          <hr />
-          <button
-            className={styles.primary}
-            onClick={() => reviewDecision('reset')}
-          >
-            Start a new room
-          </button>
         </div>
       </details>
+      <div
+        hidden={planning && !exportMessage}
+        className={`${styles.projectMenu} ${styles.exportControl}`}
+      >
+        {!planning && (
+          <button
+            ref={exportButton}
+            className="glass-control"
+            disabled={busy}
+            onClick={() => {
+              setMenuOpen(false);
+              setExportMessage('');
+              setRequestedFormat(null);
+              setExporting(true);
+            }}
+          >
+            Export
+          </button>
+        )}
+        {exportMessage && (
+          <div className={styles.projectOptions} role="alert">
+            {exportMessage}
+          </div>
+        )}
+      </div>
+      {!planning && (
+        <div className={`${styles.projectMenu} ${styles.estimateControl}`}>
+          <button
+            className="glass-control"
+            disabled={busy || !!controller.getSnapshot().candidate}
+            onClick={() => {
+              setMenuOpen(false);
+              onPlanCost();
+            }}
+          >
+            Estimate
+          </button>
+        </div>
+      )}
       {exporting && (
         <ExportDialog
           controller={controller}
           onClose={() => {
             setExporting(false);
-            requestAnimationFrame(() =>
-              menu.current
-                ?.querySelector('summary')
-                ?.focus({ preventScroll: true }),
-            );
+            requestAnimationFrame(() => {
+              const trigger = planning
+                ? planningExportRef?.current
+                : exportButton.current;
+              trigger?.focus({ preventScroll: true });
+            });
           }}
           onProject={download}
           onDownload={downloadBlob}

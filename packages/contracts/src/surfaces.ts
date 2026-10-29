@@ -24,7 +24,7 @@ export const SURFACE_TEXTURES = {
   tile: 'Tile',
   concrete: 'Concrete',
   carpet: 'Carpet',
-  smooth: 'Smooth paint',
+  smooth: 'Plain',
   plaster: 'Plaster',
   wood: 'Wood panels',
   linen: 'Linen',
@@ -44,6 +44,7 @@ const WALL_TEXTURES = [
 export const WALLS = ['north', 'east', 'south', 'west'] as const;
 export const SURFACE_OPTIONS = {
   floor: [
+    'smooth',
     'planks',
     'tile',
     'concrete',
@@ -149,11 +150,17 @@ export function roomSurface(room: SurfaceRoom, target: SurfaceTarget) {
     color: (
       appearance?.color.value ??
       inherited?.color.value ??
+      (target === 'floor' && appearance?.color.status === 'unknown'
+        ? '#b0b0ab'
+        : undefined) ??
       FINISH_COLORS[target === 'floor' ? room.floorFinish : room.wallFinish]
     ).toLowerCase(),
     texture:
       appearance?.texture.value ??
       inherited?.texture.value ??
+      (target === 'floor' && appearance?.texture.status === 'unknown'
+        ? 'smooth'
+        : undefined) ??
       ((target === 'floor' ? 'planks' : 'plaster') as SurfaceTexture),
   };
 }
@@ -166,6 +173,17 @@ export function roomSurfaceDetail(
     (target !== 'floor' ? room.surfaces?.walls?.detail : undefined) ??
     DEFAULT_SURFACE_DETAIL
   );
+}
+/** Fine paint relief is presentation of an estimated smooth finish, never a new colour/pattern fact. */
+export function isEstimatedPlainSurface(
+  room: SurfaceRoom,
+  target: SurfaceTarget,
+) {
+  const local = room.surfaces?.[target]?.texture;
+  const inherited =
+    target === 'floor' ? undefined : room.surfaces?.walls?.texture;
+  const fact = local?.value ? local : (inherited ?? local);
+  return fact?.status === 'estimated' && fact.value === 'smooth';
 }
 export type SurfacePatch = {
   surface: SurfaceTarget;

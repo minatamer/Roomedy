@@ -34,6 +34,7 @@ import type {
   CommandResult,
   CommandFailure,
   ApplyResult,
+  FurnitureRefinement,
 } from '@roomedy/spatial';
 import { ResourceRegistry } from './effects';
 import { initialPresentation } from './state';
@@ -44,6 +45,9 @@ import type { EstimateVersion, Recovery } from '@roomedy/contracts/project';
 import { validateProject, projectOf } from './project';
 import { captureVersion, freezeVersion } from '../cost/versions';
 import { clearanceNotice } from './clearance';
+import { changeShoppingLocality, shoppingLocality } from '../cost/journey';
+import { shoppingCountry } from '../cost/shopping-countries';
+import { MessageReveal } from '../assistant/message-reveal';
 
 interface Dependencies {
   now?: () => number;
@@ -54,9 +58,12 @@ interface AssistantPreview {
   command: CommandEnvelope;
   scope: ActionScope | undefined;
   authority: 'assistant' | 'visitor';
+  refinements?: FurnitureRefinement[];
   label: string;
 }
 export class SessionController {
+  readonly costReveal = new MessageReveal();
+  private costMessageId = 0;
   private state: SessionSnapshot;
   private readonly now: () => number;
   private readonly id: () => string;
@@ -88,8 +95,10 @@ export class SessionController {
     const createdAt = this.now();
     this.state = Object.freeze({
       phase: room ? 'editor' : 'entry',
+      tourOffered: false,
       destination: 'design',
       cost: null,
+      shoppingLocation: null,
       costProposal: null,
       estimateVersions: Object.freeze([]),
       generation: 0,
@@ -118,6 +127,10 @@ export class SessionController {
     });
   }
   getSnapshot = (): SessionSnapshot => this.state;
+  markTourOffered() {
+    if (this.active() && this.state.workspace && !this.state.tourOffered)
+      this.publish({ tourOffered: true });
+  }
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
     return () => {
@@ -132,6 +145,9 @@ export class SessionController {
       };
     this.state = Object.freeze({
       ...this.state,
+      ...(change.generation !== undefined || change.cost === null
+        ? { shoppingLocation: null }
+        : {}),
       ...('message' in change ? { messageKind: 'notice' as const } : {}),
       ...change,
     });
@@ -199,12 +215,14 @@ export class SessionController {
   }
   private retire(phase: 'expired' | 'disposed') {
     this.clearMessageTimer();
+    this.costReveal.clear();
     // Fence identity and accepted semantics BEFORE aborting/revoking resources.
     this.state = Object.freeze({
       ...this.state,
       phase,
       destination: 'design',
       cost: null,
+      shoppingLocation: null,
       costProposal: null,
       estimateVersions: Object.freeze([]),
       generation: this.state.generation + 1,
@@ -337,10 +355,12 @@ export class SessionController {
         )
       : null;
     const createdAt = options?.createdAt ?? this.now();
+    this.costReveal.clear();
     this.state = Object.freeze({
       ...this.state,
       generation,
       workspace,
+      shoppingLocation: null,
       pending: null,
       candidate: null,
       phase: room ? 'editor' : 'entry',
@@ -501,7 +521,7 @@ export class SessionController {
     if (this.state.persistence !== status && this.state.phase !== 'disposed')
       this.publish({ persistence: status });
   }
-  setDestination(destination: ProjectDestination): boolean {
+  setDestination(destination: ProjectDestination, locale?: string): boolean {
     if (!this.active() || !this.state.workspace) return false;
     if (this.state.candidate) {
       this.notify('Apply or Cancel the preview before changing project phase.');
@@ -512,7 +532,9 @@ export class SessionController {
     this.publish({
       destination,
       comparison: 'current',
-      cost: this.state.cost ?? createCostDraft(this.state.workspace.current),
+      cost:
+        this.state.cost ??
+        createCostDraft(this.state.workspace.current, locale),
     });
     return true;
   }
@@ -557,6 +579,45 @@ export class SessionController {
       ),
       pricing,
     ).ok;
+  }
+  chooseShoppingLocation(
+    country: string,
+    method: 'browser' | 'skip' | 'chat' | 'manual',
+    generation: number,
+    costRevision: number,
+    shoppingLabel?: string,
+  ): boolean {
+    if (
+      !this.canEdit() ||
+      !this.state.cost ||
+      this.state.pending ||
+      this.state.destination !== 'cost' ||
+      this.state.candidate ||
+      this.state.generation !== generation ||
+      this.state.cost.revision !== costRevision ||
+      this.state.cost.settings.locality.currency !== 'USD' ||
+      !/^[A-Z]{2}$/.test(country) ||
+      (method === 'manual' && !shoppingCountry(country)) ||
+      (shoppingLabel !== undefined &&
+        (method !== 'chat' ||
+          !shoppingLabel.trim() ||
+          shoppingLabel.length > 80)) ||
+      (method === 'skip' ? country !== 'ZZ' : country === 'ZZ')
+    )
+      return false;
+    const locality = shoppingLocality(country);
+    if (shoppingLabel !== undefined) locality.city = shoppingLabel;
+    const existing = this.state.cost.settings.locality;
+    if (
+      existing.country !== locality.country ||
+      existing.city !== locality.city ||
+      existing.currency !== locality.currency
+    ) {
+      const changed = changeShoppingLocality(this.state.cost, locality);
+      if (!this.updateCost(changed.settings, changed.offers)) return false;
+    }
+    this.publish({ shoppingLocation: { country, method } });
+    return true;
   }
   prepareCostProposal(
     pricing: EstimateState,
@@ -702,6 +763,7 @@ export class SessionController {
     const messages = [
       ...this.state.cost.messages,
       {
+        id: ++this.costMessageId,
         role,
         text: text.trim(),
         ...(cards.length ? { lineIds: cards } : {}),
@@ -714,6 +776,9 @@ export class SessionController {
         .byteLength > 131072
     )
       messages.shift();
+    this.costReveal.retain(
+      messages.map((message, index) => message.id ?? -index - 1),
+    );
     this.publish({ cost: { ...this.state.cost, messages } });
     return true;
   }
@@ -853,8 +918,13 @@ export class SessionController {
     if (!token) return { ok: false, code: 'stale' };
     this.visitorPreview = { token, actions: structuredClone(actions), label };
     this.publish({
-      candidate: { identity: token, room: result.room, checks: result.checks },
-      message: 'Preview ready. Apply or cancel the palette change.',
+      candidate: {
+        identity: token,
+        room: result.room,
+        checks: result.checks,
+        label,
+      },
+      message: 'Preview ready. Apply or cancel the appearance change.',
     });
     return { ok: true };
   }
@@ -868,7 +938,20 @@ export class SessionController {
   cancelPreview() {
     if (!this.active()) return;
     this.cancelWork();
-    this.publish({ message: 'Preview cancelled.' });
+    const selected = this.state.presentation.selectedId;
+    const remains =
+      this.state.workspace &&
+      [
+        ...this.state.workspace.current.furniture,
+        ...this.state.workspace.current.room.features,
+      ].some((item) => item.id === selected);
+    this.publish({
+      presentation: {
+        ...this.state.presentation,
+        selectedId: remains ? selected : null,
+      },
+      message: 'Preview cancelled.',
+    });
   }
   private envelope(actions: VisitorAction[]) {
     const workspace = this.state.workspace!;
@@ -1069,6 +1152,51 @@ export class SessionController {
       objectIds: evaluated.affectedIds,
     };
   }
+  /** Furniture form clicks refine the pending preview, never the accepted room. */
+  refineAssistantFurniture(
+    id: string,
+    actions: VisitorAction[],
+    operationId: string,
+  ): { ok: true; changed: boolean } | CommandFailure {
+    const preview = this.assistantPreview,
+      candidate = this.state.candidate;
+    if (
+      !this.canEdit() ||
+      !this.state.workspace ||
+      !preview ||
+      candidate?.source !== 'assistant' ||
+      candidate.identity.operationId !== operationId ||
+      !this.isCurrent(preview.token)
+    )
+      return { ok: false, code: 'stale' };
+    const refinements = [
+      ...(preview.refinements ?? []),
+      { id, actions: structuredClone(actions) },
+    ];
+    const evaluated = prepareCommand(
+      this.state.workspace,
+      preview.command,
+      preview.authority,
+      preview.scope,
+      refinements,
+    );
+    if (!evaluated.ok) return evaluated;
+    if (JSON.stringify(evaluated.room) === JSON.stringify(candidate.room))
+      return { ok: true, changed: false };
+    preview.refinements = refinements;
+    preview.label = 'Edited room design';
+    this.publish({
+      candidate: {
+        ...candidate,
+        label: preview.label,
+        room: evaluated.room,
+        checks: evaluated.checks,
+      },
+      message:
+        'Preview updated. Apply changes to keep it, or Cancel to discard.',
+    });
+    return { ok: true, changed: true };
+  }
   applyAssistantPreview():
     | {
         ok: true;
@@ -1088,7 +1216,10 @@ export class SessionController {
       preview.authority,
       preview.scope,
       this.state.cost ? pricingState(this.state.cost) : undefined,
+      preview.refinements,
     );
+    if (result.ok && result.status === 'unchanged' && this.assistantPreview)
+      this.cancelWork();
     const committed = this.commitCommand(
       preview.command,
       preview.label,

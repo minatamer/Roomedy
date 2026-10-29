@@ -1,3 +1,4 @@
+import { simpleEstimateInputs } from './journey';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type {
   EstimateOffer,
@@ -18,6 +19,7 @@ import {
 } from '@roomedy/spatial';
 
 export interface CostMessage {
+  id?: number;
   lineIds?: string[];
   roomRevision: number;
   costRevision: number;
@@ -31,12 +33,19 @@ export interface CostDraft extends EstimateState {
   offers: EstimateOffer[];
   messages: CostMessage[];
 }
-export function createCostDraft(room: RoomDocument): CostDraft {
+export function createCostDraft(
+  room: RoomDocument,
+  locale?: string,
+): CostDraft {
   return {
     revision: 0,
     roomRevision: room.roomRevision,
-    settings: defaultEstimateSettings(room),
-    offers: sampleEstimateOffers(),
+    ...(locale === undefined
+      ? {
+          settings: defaultEstimateSettings(room),
+          offers: sampleEstimateOffers(),
+        }
+      : simpleEstimateInputs(room)),
     budgetMinor: null,
     messages: [],
   };
@@ -44,7 +53,9 @@ export function createCostDraft(room: RoomDocument): CostDraft {
 /** Reconcile only membership. A changed design never silently selects a different product. */
 export function reconcileCost(room: RoomDocument, draft: CostDraft): CostDraft {
   if (draft.roomRevision === room.roomRevision) return draft;
-  const defaults = defaultEstimateSettings(room);
+  const defaults = draft.settings.demoScope
+    ? simpleEstimateInputs(room, draft.settings.locality).settings
+    : defaultEstimateSettings(room);
   return {
     ...draft,
     revision: draft.revision + 1,
@@ -151,13 +162,13 @@ export function explainCost(
       .slice(0, 4)
       .map(
         (line) =>
-          `${line.label}: ${line.amountMinor === null ? 'needs a price or measurement' : money(line.amountMinor, estimate.locality.currency)}. ${line.rule}`,
+          `${line.label}: ${line.amountMinor === null ? 'price or quantity unavailable' : money(line.amountMinor, estimate.locality.currency)}. ${line.rule}`,
       )
       .join('\n\n') +
       (lines.length
         ? `\n\n${lines.filter((l) => l.amountMinor === null).length} unresolved lines in this scope. Review the breakdown for every included item, source and allowance.`
         : '') ||
-    'Choose a cost line to explore its quantities and assumptions. You can edit scope below, or return to Design for measurements and finishes.'
+    'Choose a cost line to explore its quantities and assumptions. Choose Furniture, Flooring or Walls, or return to Design for the room’s finishes.'
   );
 }
 

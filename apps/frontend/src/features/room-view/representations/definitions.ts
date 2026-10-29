@@ -12,7 +12,7 @@ export interface BoxPart {
   name: string;
   center: readonly [number, number, number];
   size: readonly [number, number, number];
-  role: 'frame' | 'soft' | 'metal';
+  role: 'frame' | 'soft' | 'metal' | 'detail';
 }
 export type Representation =
   | {
@@ -197,8 +197,32 @@ export function proceduralParts(
     box('bottom', 0, t / 2, 0, w, t, d);
     box('top', 0, h - t / 2, 0, w, t, d);
     box('back', 0, h / 2, -d / 2 + t / 2, w - 2 * t, h - 2 * t, t);
+    if (
+      mechanism === 'drawer' ||
+      mechanism === 'hinged' ||
+      mechanism === 'sliding'
+    )
+      box(
+        'panel-reveal',
+        0,
+        h / 2,
+        d / 2 - 27,
+        w - 2 * t,
+        h - 2 * t,
+        4,
+        'detail',
+      );
     if (category === 'storage' && mechanism === 'hinged') {
-      box('door--1', 0, h / 2, d / 2 - 12, w - 2 * t, h - 2 * t, 24);
+      const reveal = Math.min(8, (w - 2 * t) / 10, (h - 2 * t) / 10);
+      box(
+        'door--1',
+        0,
+        h / 2,
+        d / 2 - 12,
+        w - 2 * t - 2 * reveal,
+        h - 2 * t - 2 * reveal,
+        24,
+      );
     } else if (
       mechanism !== 'drawer' &&
       (category === 'wardrobe' || mechanism === 'hinged')

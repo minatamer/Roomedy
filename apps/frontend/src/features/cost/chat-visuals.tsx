@@ -121,7 +121,7 @@ export function CostLineCards({
                 )
               }
             >
-              Locate in room ↗
+              See related costs
             </button>
           )}
         </article>

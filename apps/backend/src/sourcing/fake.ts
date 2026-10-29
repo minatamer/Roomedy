@@ -1,6 +1,7 @@
 import { sourcingBriefSchema } from '@roomedy/contracts/sourcing';
 import { localitySchema } from '@roomedy/contracts/estimates';
 import { sampleEstimateOffers } from '@roomedy/spatial';
+import { shoppingCountries } from '@roomedy/contracts/estimates';
 import type {
   ProviderRequest,
   ProviderOutcome,
@@ -27,10 +28,25 @@ export async function sourcingFakeResponse(
     l = localitySchema.safeParse((raw as Record<string, unknown>).locality);
   if (!b.success || !l.success) return { kind: 'malformed' };
   const brief = b.data,
-    locality = l.data;
+    locality =
+      l.data.country === 'ZZ'
+        ? { ...l.data, country: 'US', city: 'Example shopping market' }
+        : l.data;
+  const ikeaRegion =
+    locality.country === 'US'
+      ? 'us/en'
+      : shoppingCountries(locality.country).includes('DE')
+        ? 'gb/en'
+        : 'eg/en';
+  const photos: Record<string, string> = {
+    bed: 'https://www.ikea.com/us/en/images/products/kleppstad-bed-frame-white-vissle-beige__1035340_pe840527_s5.jpg',
+    wardrobe:
+      'https://www.ikea.com/us/en/images/products/kleppstad-wardrobe-with-3-doors-white__0753594_pe748782_s5.jpg',
+    desk: 'https://www.ikea.com/us/en/images/products/micke-desk-white__0736018_pe740345_s5.jpg',
+  };
   const url =
     brief.kind === 'furniture'
-      ? `https://www.ikea.com/eg/en/search/?q=${encodeURIComponent(brief.category ?? brief.label)}`
+      ? `https://www.ikea.com/${ikeaRegion}/search/?q=${encodeURIComponent(brief.category ?? brief.label)}`
       : brief.kind === 'paint' || brief.kind === 'primer'
         ? 'https://www.jotun.com/eg-en/decorative/interior'
         : `https://www.google.com/search?q=${encodeURIComponent(`${brief.label} ${locality.city} ${locality.country}`)}`;
@@ -42,13 +58,9 @@ export async function sourcingFakeResponse(
         (o.kind !== 'service' ||
           (brief.target.kind === 'service' && o.scope === brief.target.scope)),
     ) ?? null;
-  if (
-    offer &&
-    (locality.country !== offer.market.country ||
-      locality.city.toLowerCase() !== offer.market.city.toLowerCase() ||
-      locality.currency !== offer.market.currency)
-  )
-    offer = null;
+  if (offer && locality.currency === 'USD')
+    offer = { ...offer, market: { ...locality } };
+  else offer = null;
   if (
     offer?.kind === 'furniture' &&
     brief.size &&
@@ -65,9 +77,13 @@ export async function sourcingFakeResponse(
   if ((offer?.kind === 'paint' || offer?.kind === 'primer') && brief.colour)
     offer = { ...offer, colour: brief.colour };
   const first = {
-    label: `Authored ${brief.label} option`,
+    label: `Example ${brief.label} option`.slice(0, 96),
     match: offer ? 'similar' : 'lead',
     url,
+    imageUrl:
+      brief.kind === 'furniture'
+        ? (photos[brief.category ?? ''] ?? null)
+        : null,
     evidence:
       'Authored example; use this link to research actual products and prices.',
     conditions: offer ? 'standard' : 'unknown',
@@ -97,6 +113,18 @@ export async function sourcingFakeResponse(
         priceMinor: offer.priceMinor + 10000,
       },
     });
+  candidates.push({
+    label: `Explore more ${brief.label.toLowerCase()} options`.slice(0, 96),
+    match: 'lead',
+    url: shoppingCountries(locality.country).includes('EG')
+      ? `https://www.noon.com/egypt-en/search/?q=${encodeURIComponent(brief.label)}`
+      : `https://www.amazon.${shoppingCountries(locality.country).includes('DE') ? 'co.uk' : 'com'}/s?k=${encodeURIComponent(brief.label)}`,
+    imageUrl: null,
+    evidence: 'Discovery link only. No price, stock or delivery was checked.',
+    conditions: 'unknown',
+    differences: ['Review the current store listing.'],
+    offer: null,
+  });
   return {
     kind: 'completed',
     data: {

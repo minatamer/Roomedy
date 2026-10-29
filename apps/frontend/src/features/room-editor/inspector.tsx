@@ -3,7 +3,7 @@ import { FurnitureMaterialControls } from './furniture-material-controls';
 import { MountControls } from './mount-controls';
 import { useId, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { Feature, Furniture } from '@roomedy/contracts/room';
+import type { Feature, Furniture, RoomDocument } from '@roomedy/contracts/room';
 import type { VisitorAction } from '@roomedy/contracts/commands';
 import { POLICY } from '@roomedy/contracts/policy';
 import {
@@ -16,18 +16,25 @@ import {
   applyOpeningSizePreset,
 } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
-import { MeasurementField, measurementLabel } from './measurements';
+import {
+  MeasurementField,
+  MeasurementInput,
+  measurementLabel,
+} from './measurements';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import styles from './editor.module.css';
+import furnitureStyles from './furniture-inspector.module.css';
 import { FurnitureSizeForm } from './furniture-size-form';
 
 function PositionForm({
-  controller,
   item,
+  room,
+  onEdit,
 }: {
-  controller: SessionController;
   item: Furniture;
+  room: RoomDocument;
+  onEdit: SessionController['dispatch'];
 }) {
   const signature = `${item.id}/${item.pose.centerX}/${item.pose.centerZ}`;
   const errorId = useId();
@@ -71,21 +78,17 @@ function PositionForm({
             return;
           }
         }
-        const result = controller.dispatch(
+        const result = onEdit(
           [
             {
               type: 'move',
               id: item.id,
               pose: placementTarget(
-                wallMountedPose(
-                  controller.getSnapshot().workspace!.current,
-                  item,
-                  {
-                    ...item.pose,
-                    centerX: Number(form.x),
-                    centerZ: Number(form.z),
-                  },
-                ),
+                wallMountedPose(room, item, {
+                  ...item.pose,
+                  centerX: Number(form.x),
+                  centerZ: Number(form.z),
+                }),
               ),
             },
           ],
@@ -94,12 +97,7 @@ function PositionForm({
         setForm((f) => ({
           ...f,
           field: 'position',
-          error: result.ok
-            ? ''
-            : failureMessage(
-                result,
-                controller.getSnapshot().workspace?.current,
-              ),
+          error: result.ok ? '' : failureMessage(result, room),
         }));
         if (!result.ok) xRef.current?.focus();
       }}
@@ -177,18 +175,21 @@ export function FurnitureInspector({
   controller,
   item,
   openingPreview,
+  room = controller.getSnapshot().workspace!.current,
+  onEdit,
 }: {
   controller: SessionController;
   item: Furniture;
+  room?: RoomDocument;
+  onEdit?: SessionController['dispatch'] | undefined;
   openingPreview?: ReactNode;
 }) {
   const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion)!;
   const run = (actions: VisitorAction[], label: string) => {
-    const r = controller.dispatch(actions, label);
-    if (!r.ok)
-      controller.notify(
-        failureMessage(r, controller.getSnapshot().workspace?.current),
-      );
+    const r = onEdit
+      ? onEdit(actions, label)
+      : controller.dispatch(actions, label);
+    if (!r.ok) controller.notify(failureMessage(r, room));
     return r;
   };
   const size = {
@@ -197,7 +198,7 @@ export function FurnitureInspector({
     height: item.dimensions.height.value ?? 0,
   };
   return (
-    <>
+    <div className={furnitureStyles.inspector}>
       <div className={styles.panelTitle}>
         <p className={styles.eyebrow}>{entry.category}</p>
         <h2 id={`properties-${item.id}`} tabIndex={-1}>
@@ -206,9 +207,12 @@ export function FurnitureInspector({
       </div>
       {openingPreview}
 
+      <h3 className={furnitureStyles.groupHeading}>Size & placement</h3>
       <MountControls
         key={`${item.id}/${item.pose.bottomY}`}
         controller={controller}
+        room={room}
+        onEdit={run}
         item={item}
       />
       <FurnitureSizeForm
@@ -216,13 +220,12 @@ export function FurnitureInspector({
         item={item}
         onCommit={(action) => {
           const r = run([action], 'Change size estimate');
-          return r.ok
-            ? null
-            : failureMessage(r, controller.getSnapshot().workspace?.current);
+          return r.ok ? null : failureMessage(r, room);
         }}
       >
         {(customSize) => (
           <>
+            <h3 className={furnitureStyles.groupHeading}>Appearance</h3>
             <div className={styles.section}>
               <label>
                 Piece finish
@@ -261,17 +264,12 @@ export function FurnitureInspector({
                   [{ type: 'set-furniture-materials', id: item.id, materials }],
                   'Change piece materials',
                 );
-                return result.ok
-                  ? null
-                  : failureMessage(
-                      result,
-                      controller.getSnapshot().workspace?.current,
-                    );
+                return result.ok ? null : failureMessage(result, room);
               }}
             />
             <details className={styles.advanced}>
               <summary>
-                Advanced <span>Measurements, position & locks</span>
+                Advanced settings <span>Exact size, position & protection</span>
               </summary>
               <p className={styles.dimensionSummary}>
                 {(['width', 'depth', 'height'] as const).map((axis, index) => (
@@ -365,11 +363,13 @@ export function FurnitureInspector({
                   set.
                 </p>
               </div>
-              <PositionForm controller={controller} item={item} />
+              <PositionForm room={room} onEdit={run} item={item} />
               <MountControls
                 key={`${item.id}/${item.pose.bottomY}`}
                 advanced
                 controller={controller}
+                room={room}
+                onEdit={run}
                 item={item}
               />
               <div className={styles.section}>
@@ -380,10 +380,23 @@ export function FurnitureInspector({
                 </p>
                 <div className={styles.measurementGrid}>
                   {(['width', 'depth', 'height'] as const).map((field) => (
-                    <MeasurementField
+                    <MeasurementInput
                       key={field}
-                      controller={controller}
-                      target={{ kind: 'furniture', id: item.id, field }}
+                      onCommit={(value) => {
+                        const result = run(
+                          [
+                            {
+                              type: 'confirm-measurement',
+                              target: { kind: 'furniture', id: item.id, field },
+                              value,
+                            },
+                          ],
+                          value === null
+                            ? `Mark ${field} unknown`
+                            : `Confirm ${field}`,
+                        );
+                        return result.ok ? null : failureMessage(result, room);
+                      }}
                       measurement={item.dimensions[field]}
                       label={field[0]!.toUpperCase() + field.slice(1)}
                       max={POLICY.furnitureEdgeMm}
@@ -409,7 +422,7 @@ export function FurnitureInspector({
           </>
         )}
       </FurnitureSizeForm>
-    </>
+    </div>
   );
 }
 

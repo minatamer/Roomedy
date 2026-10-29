@@ -80,6 +80,12 @@ const photoObjectAppearance = z.strictObject({
   bodyPattern: materialPatternSchema.nullable(),
   softColor: surfaceColorSchema.nullable(),
   softPattern: materialPatternSchema.nullable(),
+  pillowColor: surfaceColorSchema.nullable().optional(),
+  pillowPattern: materialPatternSchema.nullable().optional(),
+  sheetColor: surfaceColorSchema.nullable().optional(),
+  sheetPattern: materialPatternSchema.nullable().optional(),
+  coverColor: surfaceColorSchema.nullable().optional(),
+  coverPattern: materialPatternSchema.nullable().optional(),
   frameColor: surfaceColorSchema.nullable(),
   framePattern: materialPatternSchema.nullable(),
 });
@@ -321,7 +327,9 @@ export function parseDraftHypothesis(
           observation.kind === 'furniture'
             ? !field.startsWith('frame')
             : observation.kind === 'door'
-              ? !field.startsWith('soft')
+              ? !['soft', 'cover', 'pillow', 'sheet'].some((part) =>
+                  field.startsWith(part),
+                )
               : observation.kind === 'window'
                 ? field.startsWith('frame')
                 : false;

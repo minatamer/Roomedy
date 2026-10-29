@@ -33,29 +33,94 @@ async function setup(mode: 'fake' | 'live' = 'fake') {
   return { session, assistant, transport, close: () => session.dispose() };
 }
 
-describe('progressive Medy welcome shared by fake and live mode', () => {
+describe('guided Medy room design shared by fake and live mode', () => {
+  it('does not advance the journey when a requested addition fails or is unavailable', async () => {
+    const room = commandRoom([piece('desk')]);
+    const session = new SessionController(room);
+    const transport = vi.fn<typeof fetch>(async () =>
+      Response.json({
+        mode: 'fake',
+        capabilities: {
+          manual: true,
+          recognition: false,
+          assistant: false,
+          simulation: true,
+        },
+        limits: PUBLIC_LIMITS,
+      }),
+    );
+    const assistant = new AssistantController(session, { transport });
+    try {
+      await vi.waitFor(() =>
+        expect(assistant.getSnapshot().mode).toBe('unavailable'),
+      );
+      assistant.chooseGuidance(0, 'services');
+      assistant.chooseGuidance(
+        assistant.getSnapshot().messages.at(-1)!.id,
+        'start-furniture',
+      );
+      assistant.chooseGuidance(
+        assistant.getSnapshot().messages.at(-1)!.id,
+        'add-0',
+      );
+      await Promise.resolve();
+      expect(
+        assistant
+          .getSnapshot()
+          .messages.some((message) => message.guidance?.step === 'openings'),
+      ).toBe(false);
+      expect(session.getSnapshot().workspace!.current).toEqual(room);
+      expect(session.getSnapshot().candidate).toBeNull();
+      expect(transport).toHaveBeenCalledTimes(1);
+    } finally {
+      session.dispose();
+    }
+  });
+  it('Show me around invokes the real tour control without an assistant operation', async () => {
+    const session = new SessionController(commandRoom([piece('desk')]));
+    const control = vi.fn(async () => ({ ok: true, summary: 'Tour opened.' }));
+    const transport = vi.fn<typeof fetch>(async () =>
+      Response.json({
+        mode: 'fake',
+        capabilities: {
+          manual: true,
+          recognition: true,
+          assistant: true,
+          simulation: true,
+        },
+        limits: PUBLIC_LIMITS,
+      }),
+    );
+    const assistant = new AssistantController(session, { control, transport });
+    try {
+      await vi.waitFor(() => expect(assistant.getSnapshot().mode).toBe('fake'));
+      assistant.chooseGuidance(0, 'tour');
+      await vi.waitFor(() =>
+        expect(control).toHaveBeenCalledExactlyOnceWith({ type: 'tour' }),
+      );
+      expect(transport).toHaveBeenCalledTimes(1);
+      expect(session.getSnapshot().candidate).toBeNull();
+    } finally {
+      session.dispose();
+    }
+  });
   it.each(['fake', 'live'] as const)(
-    'layers app-owned choices in %s without a request or room mutation',
+    'offers useful app-owned branches in %s without a provider call or room mutation',
     async (mode) => {
       const s = await setup(mode),
         before = s.session.getSnapshot().workspace;
       try {
         s.assistant.draft('Keep my unfinished thought');
-        s.assistant.chooseGuidance(0, 'direction');
-        const direction = s.assistant.getSnapshot().messages.at(-1)!;
-        expect(direction.guidance?.step).toBe('direction');
-        expect(direction.reply).toBeNull();
-        s.assistant.chooseGuidance(0, 'talk');
-        s.assistant.chooseGuidance(direction.id, 'not-an-action');
-        expect(s.assistant.getSnapshot().messages.at(-1)).toBe(direction);
-        s.assistant.chooseGuidance(direction.id, 'finishes');
-        const finishes = s.assistant.getSnapshot().messages.at(-1)!;
-        expect(finishes.guidance?.step).toBe('finishes');
-        expect(
-          guidanceChoices('finishes', before!.current, false),
-        ).toHaveLength(3);
-        s.assistant.chooseGuidance(direction.id, 'layout');
-        expect(s.assistant.getSnapshot().messages.at(-1)).toBe(finishes);
+        s.assistant.chooseGuidance(0, 'get-started');
+        const themes = s.assistant.getSnapshot().messages.at(-1)!;
+        expect(themes.guidance?.step).toBe('themes');
+        s.assistant.chooseGuidance(0, 'services');
+        s.assistant.chooseGuidance(themes.id, 'unknown');
+        expect(s.assistant.getSnapshot().messages.at(-1)).toBe(themes);
+        s.assistant.chooseGuidance(themes.id, 'more-themes');
+        expect(s.assistant.getSnapshot().messages.at(-1)?.guidance?.step).toBe(
+          'themes-2',
+        );
         expect(s.assistant.getSnapshot().draft).toBe(
           'Keep my unfinished thought',
         );
@@ -66,92 +131,126 @@ describe('progressive Medy welcome shared by fake and live mode', () => {
       }
     },
   );
-  it('opens a free-text conversation, suppresses a completed tour and keeps all branches bounded', async () => {
+  it('offers distinct welcome roles and a complete optional path with at most three choices', async () => {
     const s = await setup(),
       room = s.session.getSnapshot().workspace!.current;
     try {
-      expect(guidanceChoices('welcome', room, false)).toHaveLength(3);
-      s.assistant.completeTour();
-      expect(
-        guidanceChoices(
-          'welcome',
-          room,
-          s.assistant.getSnapshot().tourSeen,
-        ).some((c) => c.id === 'tour'),
-      ).toBe(false);
-      s.assistant.chooseGuidance(0, 'tour');
-      expect(s.assistant.getSnapshot().messages).toHaveLength(0);
-      s.assistant.chooseGuidance(0, 'talk');
-      expect(s.assistant.getSnapshot().messages.at(-1)?.text).toBe(
-        guidanceText.talk,
+      const welcome = guidanceChoices('welcome', room, false);
+      expect(welcome.map((choice) => choice.id)).toEqual([
+        'tour',
+        'get-started',
+        'services',
+      ]);
+      expect(new Set(welcome.map((choice) => choice.icon)).size).toBe(3);
+      s.assistant.chooseGuidance(0, 'get-started');
+      for (const id of [
+        'more-themes',
+        'more-themes',
+        'keep-plain',
+        'keep-furniture',
+        'continue-layout',
+        'keep-layout',
+      ]) {
+        const last = s.assistant.getSnapshot().messages.at(-1)!;
+        s.assistant.chooseGuidance(last.id, id);
+      }
+      expect(s.assistant.getSnapshot().messages.at(-1)?.guidance?.step).toBe(
+        'done',
       );
       for (const step of [
         'welcome',
-        'direction',
+        'themes',
+        'themes-2',
+        'themes-3',
+        'services',
+        'furniture',
+        'openings',
         'layout',
-        'finishes',
-        'talk',
+        'done',
       ] as const)
         expect(guidanceChoices(step, room, false).length).toBeLessThanOrEqual(
           3,
         );
-      expect(guidanceChoices('talk', room, false)).toEqual([]);
+      expect(s.transport).toHaveBeenCalledTimes(1);
+      expect(s.session.getSnapshot().workspace!.current).toBe(room);
     } finally {
       s.close();
     }
   });
-  it('uses the existing exact-edit preview and one Undo for a finish leaf', async () => {
+  it('previews a theme, advances only after Apply, and restores the guide and room with Undo', async () => {
     const s = await setup(),
       before = s.session.getSnapshot().workspace!.current;
     try {
-      s.assistant.chooseGuidance(0, 'direction');
+      s.assistant.chooseGuidance(0, 'get-started');
       s.assistant.chooseGuidance(
         s.assistant.getSnapshot().messages.at(-1)!.id,
-        'finishes',
+        'theme-japandi',
       );
-      s.assistant.chooseGuidance(
-        s.assistant.getSnapshot().messages.at(-1)!.id,
-        'Calm & focused',
-      );
-      await vi.waitFor(() =>
-        expect(s.session.getSnapshot().candidate).not.toBeNull(),
-      );
+      await Promise.resolve();
+      expect(s.session.getSnapshot().candidate).not.toBeNull();
       expect(s.session.getSnapshot().workspace!.current).toBe(before);
+      expect(s.assistant.getSnapshot().messages.at(-1)?.guidance).toBeNull();
       expect(s.assistant.apply().ok).toBe(true);
+      expect(s.assistant.getSnapshot().messages.at(-1)?.guidance?.step).toBe(
+        'furniture',
+      );
+      expect(s.assistant.getSnapshot().themeId).toBe('japandi');
       expect(s.assistant.undo().ok).toBe(true);
+      expect(s.assistant.getSnapshot().messages.at(-1)?.guidance?.step).toBe(
+        'themes',
+      );
+      expect(s.assistant.getSnapshot().themeId).toBeNull();
       expect(s.session.getSnapshot().workspace!.current.furniture).toEqual(
         before.furniture,
       );
+      const last = s.assistant.getSnapshot().messages.at(-1)!;
+      s.assistant.chooseGuidance(last.id, 'theme-modern');
+      await Promise.resolve();
+      expect(s.assistant.cancel()).toBe(true);
+      expect(s.assistant.getSnapshot().messages.at(-1)?.guidance?.step).toBe(
+        'themes',
+      );
+      expect(s.session.getSnapshot().workspace!.current.furniture).toEqual(
+        before.furniture,
+      );
+      expect(s.transport).toHaveBeenCalledTimes(1);
     } finally {
       s.close();
     }
   });
-  it('offers two useful next steps after completing a requested tour, once', async () => {
+  it('introduces capabilities from typed chat and suppresses a completed tour once', async () => {
     const s = await setup();
     try {
-      s.assistant.chooseGuidance(0, 'direction');
+      await s.assistant.submit('What can you do for me?');
+      expect(s.assistant.getSnapshot().messages.at(-1)?.guidance?.step).toBe(
+        'services',
+      );
+      await s.assistant.submit('Let’s get started');
+      expect(s.assistant.getSnapshot().messages.at(-1)?.guidance?.step).toBe(
+        'themes',
+      );
       s.assistant.completeTour();
-      const reply = s.assistant.getSnapshot().messages.at(-1)!;
-      expect(reply.guidance?.step).toBe('welcome');
+      const last = s.assistant.getSnapshot().messages.at(-1)!;
       expect(
         guidanceChoices(
-          reply.guidance!.step,
+          'welcome',
           s.session.getSnapshot().workspace!.current,
           true,
         ),
       ).toHaveLength(2);
       s.assistant.completeTour();
-      expect(s.assistant.getSnapshot().messages.at(-1)).toBe(reply);
+      expect(s.assistant.getSnapshot().messages.at(-1)).toBe(last);
+      expect(s.transport).toHaveBeenCalledTimes(1);
     } finally {
       s.close();
     }
   });
-  it('rejects stale revision, Before and retired choices', async () => {
+  it('rejects stale revision, Before and retired guidance choices', async () => {
     const s = await setup();
-    s.assistant.chooseGuidance(0, 'direction');
+    s.assistant.chooseGuidance(0, 'get-started');
     const message = s.assistant.getSnapshot().messages.at(-1)!;
     s.session.setComparison('before');
-    s.assistant.chooseGuidance(message.id, 'layout');
+    s.assistant.chooseGuidance(message.id, 'theme-japandi');
     expect(s.assistant.getSnapshot().messages.at(-1)).toBe(message);
     s.session.setComparison('current');
     expect(
@@ -161,14 +260,21 @@ describe('progressive Medy welcome shared by fake and live mode', () => {
       ).ok,
     ).toBe(true);
     expect(s.session.applyVisitorPreview().ok).toBe(true);
-    s.assistant.chooseGuidance(message.id, 'finishes');
+    s.assistant.chooseGuidance(message.id, 'theme-japandi');
     expect(s.assistant.getSnapshot().messages.at(-1)).toBe(message);
+    const current = s.session.getSnapshot().workspace!.current;
+    s.assistant.chooseGuidance(message.id, 'resume-guidance');
+    expect(s.assistant.getSnapshot().messages.at(-1)?.guidance).toEqual({
+      step: 'themes',
+      roomRevision: current.roomRevision,
+    });
+    expect(s.session.getSnapshot().workspace!.current).toBe(current);
+    expect(s.session.getSnapshot().candidate).toBeNull();
     s.close();
-    s.assistant.chooseGuidance(0, 'direction');
+    s.assistant.chooseGuidance(0, 'get-started');
     expect(s.assistant.getSnapshot().messages).toHaveLength(0);
   });
 });
-
 describe('finite word reveal timelines', () => {
   it('preserves exact whitespace and bounds even the longest allowed reply', () => {
     for (const text of [

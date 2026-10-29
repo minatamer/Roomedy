@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import type { Furniture } from '@roomedy/contracts/room';
+import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
 import {
   placementTarget,
@@ -16,10 +16,14 @@ export function MountControls({
   controller,
   item,
   advanced = false,
+  room: editRoom,
+  onEdit,
 }: {
   controller: SessionController;
   item: Furniture;
   advanced?: boolean;
+  room?: RoomDocument;
+  onEdit?: SessionController['dispatch'];
 }) {
   const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion);
   const bottom = furnitureBottom(item);
@@ -29,9 +33,10 @@ export function MountControls({
     errorId = useId();
   if (!entry?.placement || entry.placement === 'floor') return null;
   const apply = (pose: Furniture['pose']) => {
-    const room = controller.getSnapshot().workspace?.current;
+    const room = editRoom ?? controller.getSnapshot().workspace?.current;
     if (!room) return;
-    const result = controller.dispatch(
+    const dispatch = onEdit ?? controller.dispatch.bind(controller);
+    const result = dispatch(
       [
         {
           type: 'move',

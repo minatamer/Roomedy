@@ -6,6 +6,38 @@ import type { RoomDocument } from '@roomedy/contracts/room';
 import { calculateRoomEstimate } from '@roomedy/spatial';
 import { VERSIONS } from '@roomedy/contracts/policy';
 import { costLineChanges } from './planning';
+import type { SessionController } from '../session/controller';
+import { pricingState } from './state';
+
+/** Explicit PDF action freezes the current estimate without a user-facing naming/save step. */
+export function ensureEstimateSnapshot(
+  controller: SessionController,
+): { ok: true; id: string } | { ok: false; reason: string } {
+  const state = controller.getSnapshot();
+  if (
+    !controller.checkExpiry() ||
+    !controller.canEdit() ||
+    !state.workspace ||
+    !state.cost ||
+    state.candidate ||
+    state.pending ||
+    state.cost.settings.locality.currency !== 'USD'
+  )
+    return {
+      ok: false,
+      reason: 'Resolve the current preview and review a USD estimate first.',
+    };
+  const room = JSON.stringify(state.workspace.current),
+    pricing = JSON.stringify(pricingState(state.cost));
+  const existing = state.estimateVersions.findLast(
+    (version) =>
+      JSON.stringify(version.room) === room &&
+      JSON.stringify(version.pricing) === pricing,
+  );
+  return existing
+    ? { ok: true, id: existing.id }
+    : controller.saveEstimate(`Estimate ${state.estimateVersions.length + 1}`);
+}
 export function freezeVersion(version: EstimateVersion): EstimateVersion {
   const copy = estimateVersionSchema.parse(version);
   const freeze = (v: unknown): void => {

@@ -11,6 +11,7 @@ import { finishSchema, idSchema, revisionSchema } from './primitives.js';
 import {
   openingMaterialsSchema,
   furnitureMaterialsSchema,
+  bedroomThemeIdSchema,
 } from './furniture-materials.js';
 import {
   roomDocumentSchema,
@@ -71,6 +72,10 @@ export const proposalActionSchema = z.discriminatedUnion('type', [
   }),
 ]);
 export const visitorActionSchema = z.discriminatedUnion('type', [
+  z.strictObject({
+    type: z.literal('set-bedroom-theme'),
+    theme: bedroomThemeIdSchema,
+  }),
   z.strictObject({
     type: z.literal('set-opening-materials'),
     id: idSchema,

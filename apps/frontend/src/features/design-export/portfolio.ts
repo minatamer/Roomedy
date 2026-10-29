@@ -11,7 +11,11 @@ import {
   projectedLabelVisible,
 } from '@roomedy/spatial';
 import { FINISH_PALETTE } from '../catalogue/finishes';
-import { featureBox, displayRoom } from '../room-view/adapter';
+import {
+  featureBox,
+  displayRoom,
+  presentationRoom,
+} from '../room-view/adapter';
 import { DesignExportError, measurement, portfolioFacts } from './facts';
 import type { RoomPicture } from './capture';
 type Context = CanvasRenderingContext2D;
@@ -153,7 +157,7 @@ function swatch(
   );
 }
 export function drawPortfolioPlan(c: Context, project: Project) {
-  const room = project.current,
+  const room = presentationRoom(project.current),
     b = displayRoom(room),
     width = b.width * 1000,
     depth = b.depth * 1000,

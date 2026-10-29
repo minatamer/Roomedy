@@ -1,0 +1,7 @@
+# RM-047 — Match Estimate chat edges to Design controls
+
+29 October 2026. Owner requests equal left/right outer padding around Estimate's chat, matching the Design control inset in the supplied screenshot. Design's spacing must remain unchanged. [Allocation](../commit-plans/RM-047.md), [receipt](../validation/RM-047.md).
+
+Status: **complete_local**. Scoped CSS formatting/whitespace and frontend build pass. Actual desktop/phone/narrow/short measurements confirm equal edges, unchanged returning Design and functional pinned Export. Owner subjective/physical acceptance stays pending.
+
+Scope the change to CostWorkspace's outer main wrapper:20px per side on desktop and16px at1100px or below, matching existing Design canvas/control padding. Keep current vertical padding, device-height fit, internal reading/composer widths, pinned Export, scrolling and actual measured phase animation. No Design/editor/runtime/data/API change. Verify exact outer edges, narrow/phone/short fit, pinned dialog and phase return against the unchanged Design controls. Reuse actual measurements and the recent RM-046 gate; no mirror/unit/backend tests for this CSS-only adjustment. Scoped formatting, frontend build and native checks suffice. Preserve180 prior dirty paths/current services/env/other repos/hosted release; no provider/location permission/Chrome/delegation/Git/manual restart/dependency/new port. Owner subjective/physical acceptance remains pending.

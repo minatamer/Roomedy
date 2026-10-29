@@ -20,6 +20,7 @@ import type { TourViewport } from './tour-layout';
 import { watchTourTarget } from './tour-runtime';
 import type { TourLayout } from './tour-runtime';
 import styles from './tour.module.css';
+import { rememberTourOffer } from './tour-preference';
 const steps = [
   {
     target: 'canvas',
@@ -146,7 +147,11 @@ export function AssistantTour({
     displayed = useRef<TourLayout | null>(null);
   useEffect(() => {
     onActivityChange?.(open);
-  }, [open, onActivityChange]);
+    if (open) {
+      controller.markTourOffered();
+      rememberTourOffer();
+    }
+  }, [open, onActivityChange, controller]);
   useEffect(() => {
     registerMedy?.(() => {
       opener.current =

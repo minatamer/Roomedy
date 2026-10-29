@@ -1,5 +1,15 @@
 # Layout and useful space
 
+## Shared studio phase surface —RM-038–040, 29 October 2026
+
+Design and Plan & cost share the same header, logo size and continuous background. Project uses two rows: Export / Plan & cost, then Import project / Start a new room. Cost retains a clear Back to Design action; PDF belongs in chat. Keep both view states after the first cost visit, with one connected, physically sized canvas paused/inert while cost is settled. Cancel inactive research/location/export work.
+
+The actual chat panel transforms from measured properties bounds to full stage width over 650ms, then its content fades in through 850ms. Return fades content before contracting; rapid reversal starts from current geometry/opacity. Resize and workspace teardown settle/cancel the finite owner. Destination heading receives focus only after inertness is released. Phone panels outside the visible room use a bounded lower-panel origin. Cost uses the remaining viewport stage height, with clipping that cannot be scrolled by inner category links. These selected phase/chat animations remain enabled; no OS/browser setting changes. [Native evidence](../validation/RM-038-040.md).
+
+## Furniture preview editing — RM-036
+
+A furniture card opens the same real Size/Appearance inspector for accepted pieces and pending assistant pieces. Common size presets, finish/theme and mounting controls are grouped; detailed materials, exact measurements/position and ownership/preferences/locks remain reachable in collapsed sections. A pending assistant selection says Editing preview and keeps Apply changes, Cancel and Back to Medy reachable outside its scroll owner. Explicit manual edits are disposable until Apply; never auto-accept a proposal on inspection. Preserve normal accepted editing, Before/other-preview restrictions, measurements/locks and canonical visitor commands. This supersedes the old all-candidate read-only furniture gate only.
+
 ## Plain room, visible material choices — RM-015BX
 
 Use the existing Medy welcome and three-choice shelf to introduce materials in fresh plain rooms. Explore materials opens actual floor/bed/storage requests; do not add a separate static tutorial, warning or extra panel. The room remains plain until a selected request is previewed and explicitly applied. General advice also includes a real material option; preserve selection/reveal, current-message fences and responsive composer. [Evidence](../validation/RM-015BX.md).

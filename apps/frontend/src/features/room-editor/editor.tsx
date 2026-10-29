@@ -1,4 +1,5 @@
 import { CostWorkspace } from '../cost/workspace';
+import { usePhaseMotion } from './use-phase-motion';
 import { destinationHref, projectDestination } from '../cost/navigation';
 import type { ProjectDestination } from '../cost/navigation';
 import { featureLabel } from '@roomedy/spatial';
@@ -9,6 +10,7 @@ import { AssistantController } from '../assistant/controller';
 import { Assistant } from '../assistant/assistant';
 import { AssistantTour } from '../assistant/tour';
 import { automaticallyOfferTour } from '../assistant/tour-runtime';
+import { tourWasOffered } from '../assistant/tour-preference';
 import type { CameraPose } from '../room-view/adapter';
 import {
   Component,
@@ -43,6 +45,7 @@ import { PreviewChangeList } from './preview-change-list';
 import { CataloguePlacement } from './catalogue-placement';
 import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
+import furnitureStyles from './furniture-inspector.module.css';
 import { FrameControls, ViewControls } from './view-controls';
 import { activeRoomTool, arrangingSelection } from './selection-actions';
 import { furnitureOpening, featureOpening } from '../room-view/articulation';
@@ -135,11 +138,26 @@ export function Editor({
   }, [controller, state.comparison]);
   const setRoomView = (view: 'plan' | 'cutaway') =>
     controller.setRoomView(view);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const phaseStage = useRef<HTMLElement>(null),
+    propertiesRef = useRef<HTMLElement>(null),
+    costPanelRef = useRef<HTMLElement>(null);
+  const [costReadOnly, setCostReadOnly] = useState(false);
+  const { capture: capturePhase, ...phaseMotion } = usePhaseMotion(
+    state.destination,
+    phaseStage,
+    propertiesRef,
+    costPanelRef,
+    headingRef,
+    state.workspace?.workspaceId,
+  );
+
   const workspaceId = state.workspace?.workspaceId;
   useEffect(() => {
     const sync = () => {
       const next = projectDestination(window.location.search);
-      if (!controller.setDestination(next))
+      capturePhase();
+      if (!controller.setDestination(next, navigator.language))
         window.history.replaceState(
           window.history.state,
           '',
@@ -152,10 +170,12 @@ export function Editor({
     sync();
     window.addEventListener('popstate', sync);
     return () => window.removeEventListener('popstate', sync);
-  }, [controller, workspaceId]);
+  }, [controller, workspaceId, capturePhase]);
   const navigate = (destination: ProjectDestination) => {
+    if (destination === controller.getSnapshot().destination) return;
     placement.cancel();
-    if (!controller.setDestination(destination)) return;
+    capturePhase();
+    if (!controller.setDestination(destination, navigator.language)) return;
     window.history.pushState(
       window.history.state,
       '',
@@ -175,6 +195,7 @@ export function Editor({
       ) => MedyControlResult)
     | null
   >(null);
+  const costExportButton = useRef<HTMLButtonElement>(null);
   const tourControl = useRef<(() => void) | null>(null);
   const registerProject = useMemo(
     () => (handler: typeof projectControl.current) => {
@@ -213,8 +234,9 @@ export function Editor({
     [],
   );
   const [assistant, setAssistant] = useState<AssistantController | null>(null);
-  const [tourActive, setTourActive] = useState(() =>
-    automaticallyOfferTour(state),
+  const [tourPreference] = useState(tourWasOffered);
+  const [tourActive, setTourActive] = useState(
+    () => automaticallyOfferTour(state) && !tourPreference,
   );
   useEffect(() => {
     let live = true,
@@ -237,7 +259,6 @@ export function Editor({
     [workspaceId],
   );
   const [replacementId, setReplacementId] = useState<string | null>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
@@ -461,6 +482,12 @@ export function Editor({
           : 'Current is unchanged. Apply or Cancel beside the room before editing these preview values.';
   const item = shownRoom.furniture.find((f) => f.id === view.selectedId),
     feature = shownRoom.room.features.find((f) => f.id === view.selectedId);
+  const editingAssistantFurniture =
+    !!item &&
+    !before &&
+    !state.clientLoadFailure &&
+    state.candidate?.source === 'assistant' &&
+    view.panel === 'inspector';
   const openingContext = JSON.stringify([
     state.generation,
     workspace.workspaceId,
@@ -550,18 +577,11 @@ export function Editor({
       }}
     />
   );
-  if (state.destination === 'cost' && state.cost)
-    return (
-      <CostWorkspace
-        key={workspace.workspaceId}
-        controller={controller}
-        state={state}
-        placement={placement}
-        onDesign={() => navigate('design')}
-      />
-    );
   return (
-    <div className={styles.studio} data-room-tour-root>
+    <div
+      className={`${styles.studio} ${state.destination === 'cost' ? styles.costStudio : ''}`}
+      data-room-tour-root
+    >
       <header className={styles.header}>
         <div
           onClickCapture={(e) => {
@@ -578,16 +598,29 @@ export function Editor({
             key={workspace.workspaceId}
             controller={controller}
             onNewRoom={onBack}
+            onPlanCost={() => navigate('cost')}
+            planning={state.destination === 'cost'}
+            planningExportRef={costExportButton}
             registerMedy={registerProject}
           />
           <button
             className="glass-control"
             data-room-target="history"
+            hidden={state.destination === 'cost'}
             aria-disabled={
-              !state.undoLabel || before || state.clientLoadFailure
+              !state.undoLabel ||
+              before ||
+              state.clientLoadFailure ||
+              (state.destination === 'cost' && costReadOnly)
             }
             onClick={() => {
-              if (!state.undoLabel || before || state.clientLoadFailure) return;
+              if (
+                !state.undoLabel ||
+                before ||
+                state.clientLoadFailure ||
+                (state.destination === 'cost' && costReadOnly)
+              )
+                return;
               const r = assistant ? assistant.undo() : controller.undo();
               if (!r.ok)
                 controller.notify(
@@ -603,173 +636,183 @@ export function Editor({
           >
             ↶ <span className={styles.undoLabel}>Undo</span>
           </button>
-          <button
-            className={`glass-control ${styles.costLink}`}
-            onClick={() => navigate('cost')}
-          >
-            Plan &amp; cost →
-          </button>
         </div>
-        <nav
-          className={styles.toolRail}
-          aria-label="Room tools"
-          data-tool={activeTool ?? undefined}
-        >
-          {panels.map((panel) => (
+        {state.destination === 'cost' ? (
+          <div className={styles.costNav}>
             <button
-              key={panel.id}
-              hidden={panel.id === 'checks'}
-              aria-pressed={activeTool === panel.id}
-              onClick={() => open(panel.id)}
+              className="glass-control"
+              onClick={() => navigate('design')}
             >
-              <span className={styles.toolLabel}>
-                <RoomToolIcon panel={panel.id} />
-                {panel.label}
-              </span>
-            </button>
-          ))}
-          <AssistantTour
-            key={workspace.workspaceId}
-            controller={controller}
-            autoStart={automaticallyOfferTour(state)}
-            hideReplay
-            registerMedy={registerTour}
-            onActivityChange={setTourActive}
-            onComplete={() => assistant?.completeTour()}
-          />
-        </nav>
-      </header>
-      <main id="main-content" className={styles.workspace}>
-        <h1 ref={headingRef} tabIndex={-1} className={styles.announcement}>
-          Room editor
-        </h1>
-        <section
-          className={styles.canvasColumn}
-          aria-label={before ? 'Before room' : 'Current room'}
-          data-room-target="canvas"
-        >
-          <div
-            hidden
-            className={styles.comparison}
-            role="group"
-            aria-label="Compare arrangement"
-            data-room-target="comparison"
-          >
-            <button
-              aria-pressed={before}
-              aria-disabled={!!state.candidate}
-              onClick={() => controller.setComparison('before')}
-            >
-              Before
-            </button>
-            <button
-              aria-pressed={!before}
-              aria-disabled={!!state.candidate}
-              onClick={() => controller.setComparison('current')}
-            >
-              Current
+              ← Back to Design
             </button>
           </div>
-          {state.clientLoadFailure && (
-            <div className={styles.lifecycleNotice} role="alert">
-              <p>
-                Some editor tools couldn’t load. Export your layout before
-                reloading; photos and unfinished changes won’t be kept.
-              </p>
-              <button onClick={() => window.location.reload()}>
-                Reload editor
+        ) : (
+          <nav
+            className={styles.toolRail}
+            aria-label="Room tools"
+            data-tool={activeTool ?? undefined}
+          >
+            {panels.map((panel) => (
+              <button
+                key={panel.id}
+                hidden={panel.id === 'checks'}
+                aria-pressed={activeTool === panel.id}
+                onClick={() => open(panel.id)}
+              >
+                <span className={styles.toolLabel}>
+                  <RoomToolIcon panel={panel.id} />
+                  {panel.label}
+                </span>
+              </button>
+            ))}
+            <AssistantTour
+              key={workspace.workspaceId}
+              controller={controller}
+              autoStart={automaticallyOfferTour(state) && !tourPreference}
+              hideReplay
+              registerMedy={registerTour}
+              onActivityChange={setTourActive}
+              onComplete={() => assistant?.completeTour()}
+            />
+          </nav>
+        )}
+      </header>
+      <main
+        id="main-content"
+        ref={phaseStage}
+        className={styles.phaseStage}
+        data-destination={state.destination}
+        data-phase-moving={phaseMotion.moving || undefined}
+      >
+        <div
+          className={styles.workspace}
+          data-design-hidden={
+            (state.destination === 'cost' && !phaseMotion.moving) || undefined
+          }
+          aria-hidden={state.destination === 'cost'}
+          inert={state.destination === 'cost' || phaseMotion.moving}
+        >
+          <h1 ref={headingRef} tabIndex={-1} className={styles.announcement}>
+            Room editor
+          </h1>
+          <section
+            className={styles.canvasColumn}
+            aria-label={before ? 'Before room' : 'Current room'}
+            data-room-target="canvas"
+          >
+            <div
+              hidden
+              className={styles.comparison}
+              role="group"
+              aria-label="Compare arrangement"
+              data-room-target="comparison"
+            >
+              <button
+                aria-pressed={before}
+                aria-disabled={!!state.candidate}
+                onClick={() => controller.setComparison('before')}
+              >
+                Before
+              </button>
+              <button
+                aria-pressed={!before}
+                aria-disabled={!!state.candidate}
+                onClick={() => controller.setComparison('current')}
+              >
+                Current
               </button>
             </div>
-          )}
-          {state.expiresSoon && (
-            <div className={styles.lifecycleNotice} role="status">
-              This room expires in under five minutes. Export to keep your
-              layout.
-            </div>
-          )}
-          {state.persistence === 'memory-only' && (
-            <div className={styles.lifecycleNotice} role="status">
-              Recovery is unavailable. Export to keep this layout.
-            </div>
-          )}
-
-          <div className={controlsStyles.viewStage}>
-            {roomView === 'plan' ? (
-              <div className={controlsStyles.stage}>
-                <div ref={planToolsMotion} className="motion-surface">
-                  <ViewControls
-                    controller={controller}
-                    arranging={arranging}
-                    readOnly={readOnly || !!adding}
-                    rotationLocked={!item || item.locks.rotation}
-                    onRotate={rotatePlanSelection}
-                    snap={view.snap}
-                    onSnap={(snap) => controller.setView({ snap })}
-                    onZoom={(direction) =>
-                      controller.setView({ zoom: view.zoom + direction * 0.2 })
-                    }
-                    zoomOutDisabled={view.zoom <= 0.6}
-                    zoomInDisabled={view.zoom >= 3}
-                    onFit={() =>
-                      controller.setView({ zoom: 1, panX: 0, panZ: 0 })
-                    }
-                  >
-                    <div
-                      className={`${controlsStyles.tools} ${controlsStyles.directions}`}
-                      role="group"
-                      aria-label="Pan plan"
-                    >
-                      {(
-                        [
-                          ['left', '←', -250, 0],
-                          ['right', '→', 250, 0],
-                          ['up', '↑', 0, -250],
-                          ['down', '↓', 0, 250],
-                        ] as const
-                      ).map(([label, text, x, z]) => (
-                        <button
-                          key={label}
-                          aria-label={`Pan ${label}`}
-                          onClick={() =>
-                            controller.setView({
-                              panX: view.panX + x,
-                              panZ: view.panZ + z,
-                            })
-                          }
-                        >
-                          {text}
-                        </button>
-                      ))}
-                    </div>
-                  </ViewControls>
-                </div>
-                <PlanView
-                  controller={controller}
-                  state={state}
-                  placement={placement}
-                  arranging={arranging}
-                />
+            {state.clientLoadFailure && (
+              <div className={styles.lifecycleNotice} role="alert">
+                <p>
+                  Some editor tools couldn’t load. Export your layout before
+                  reloading; photos and unfinished changes won’t be kept.
+                </p>
+                <button onClick={() => window.location.reload()}>
+                  Reload editor
+                </button>
               </div>
-            ) : (
-              <CutawayBoundary
-                onFailure={() => controller.clientPartFailed()}
-                fallback={
-                  <div className={controlsStyles.stage}>
-                    <p role="status">
-                      The cutaway could not load. Continue editing in the plan.
-                    </p>
-                    <PlanView
+            )}
+            {state.expiresSoon && (
+              <div className={styles.lifecycleNotice} role="status">
+                This room expires in under five minutes. Export to keep your
+                layout.
+              </div>
+            )}
+            {state.persistence === 'memory-only' && (
+              <div className={styles.lifecycleNotice} role="status">
+                Recovery is unavailable. Export to keep this layout.
+              </div>
+            )}
+
+            <div className={controlsStyles.viewStage}>
+              {roomView === 'plan' ? (
+                <div className={controlsStyles.stage}>
+                  <div ref={planToolsMotion} className="motion-surface">
+                    <ViewControls
                       controller={controller}
-                      state={state}
                       arranging={arranging}
-                    />
+                      readOnly={readOnly || !!adding}
+                      rotationLocked={!item || item.locks.rotation}
+                      onRotate={rotatePlanSelection}
+                      snap={view.snap}
+                      onSnap={(snap) => controller.setView({ snap })}
+                      onZoom={(direction) =>
+                        controller.setView({
+                          zoom: view.zoom + direction * 0.2,
+                        })
+                      }
+                      zoomOutDisabled={view.zoom <= 0.6}
+                      zoomInDisabled={view.zoom >= 3}
+                      onFit={() =>
+                        controller.setView({ zoom: 1, panX: 0, panZ: 0 })
+                      }
+                    >
+                      <div
+                        className={`${controlsStyles.tools} ${controlsStyles.directions}`}
+                        role="group"
+                        aria-label="Pan plan"
+                      >
+                        {(
+                          [
+                            ['left', '←', -250, 0],
+                            ['right', '→', 250, 0],
+                            ['up', '↑', 0, -250],
+                            ['down', '↓', 0, 250],
+                          ] as const
+                        ).map(([label, text, x, z]) => (
+                          <button
+                            key={label}
+                            aria-label={`Pan ${label}`}
+                            onClick={() =>
+                              controller.setView({
+                                panX: view.panX + x,
+                                panZ: view.panZ + z,
+                              })
+                            }
+                          >
+                            {text}
+                          </button>
+                        ))}
+                      </div>
+                    </ViewControls>
                   </div>
-                }
-              >
-                <Suspense
+                  <PlanView
+                    controller={controller}
+                    state={state}
+                    placement={placement}
+                    arranging={arranging}
+                  />
+                </div>
+              ) : (
+                <CutawayBoundary
+                  onFailure={() => controller.clientPartFailed()}
                   fallback={
                     <div className={controlsStyles.stage}>
-                      <p role="status">Opening the cutaway…</p>
+                      <p role="status">
+                        The cutaway could not load. Continue editing in the
+                        plan.
+                      </p>
                       <PlanView
                         controller={controller}
                         state={state}
@@ -778,359 +821,484 @@ export function Editor({
                     </div>
                   }
                 >
-                  <Cutaway
-                    key={workspace.workspaceId}
-                    room={before ? workspace.baseline : room}
-                    cameraFrame={comparisonFrame(workspace)}
-                    candidate={state.candidate?.room}
-                    checks={shownChecks}
-                    selectedId={view.selectedId}
-                    openingId={openingIsOpen ? view.selectedId : null}
-                    onSelect={(id) => controller.select(id)}
-                    cameraStateRef={cameraStateRef}
-                    openedAt={cutawayOpenedAt}
-                    onPlan={() => setRoomView('plan')}
-                    controller={controller}
-                    readOnly={readOnly || !!adding}
-                    placement={placement}
-                    onAddDesk={() => open('catalogue', 'desk')}
-                    snap={view.snap}
-                    arranging={arranging}
-                    medyCamera={
-                      medyCamera?.workspaceId === workspaceId
-                        ? medyCamera
-                        : null
+                  <Suspense
+                    fallback={
+                      <div className={controlsStyles.stage}>
+                        <p role="status">Opening the cutaway…</p>
+                        <PlanView
+                          controller={controller}
+                          state={state}
+                          arranging={arranging}
+                        />
+                      </div>
                     }
-                    onMedyCamera={consumeCamera}
-                    onCameraAvailability={updateCameraAvailability}
+                  >
+                    <Cutaway
+                      key={workspace.workspaceId}
+                      active={
+                        state.destination === 'design' || phaseMotion.moving
+                      }
+                      room={before ? workspace.baseline : room}
+                      cameraFrame={comparisonFrame(workspace)}
+                      candidate={state.candidate?.room}
+                      checks={shownChecks}
+                      selectedId={view.selectedId}
+                      openingId={openingIsOpen ? view.selectedId : null}
+                      onSelect={(id) => controller.select(id)}
+                      cameraStateRef={cameraStateRef}
+                      openedAt={cutawayOpenedAt}
+                      onPlan={() => setRoomView('plan')}
+                      controller={controller}
+                      readOnly={readOnly || !!adding}
+                      placement={placement}
+                      onAddDesk={() => open('catalogue', 'desk')}
+                      snap={view.snap}
+                      arranging={arranging}
+                      medyCamera={
+                        medyCamera?.workspaceId === workspaceId
+                          ? medyCamera
+                          : null
+                      }
+                      onMedyCamera={consumeCamera}
+                      onCameraAvailability={updateCameraAvailability}
+                    />
+                  </Suspense>
+                </CutawayBoundary>
+              )}
+              {frameControls}
+            </div>
+            <CataloguePlacementHint placement={placement} />
+            {state.candidate && state.candidate.source !== 'assistant' && (
+              <div
+                className={styles.previewActions}
+                ref={previewRef}
+                data-room-target="preview"
+              >
+                <div>
+                  <p>
+                    {state.candidate.label ?? 'Appearance change'} · Preview
+                  </p>
+                  <PreviewChangeList
+                    current={room}
+                    proposed={state.candidate.room}
+                    className={styles.changeList}
                   />
-                </Suspense>
-              </CutawayBoundary>
-            )}
-            {frameControls}
-          </div>
-          <CataloguePlacementHint placement={placement} />
-          {state.candidate && state.candidate.source !== 'assistant' && (
-            <div
-              className={styles.previewActions}
-              ref={previewRef}
-              data-room-target="preview"
-            >
-              <div>
-                <p>{state.candidate.label ?? 'Palette change'} · Preview</p>
-                <PreviewChangeList
-                  current={room}
-                  proposed={state.candidate.room}
-                  className={styles.changeList}
-                />
-              </div>
-              <button
-                className={styles.primary}
-                onClick={() => {
-                  const r = controller.applyVisitorPreview();
-                  if (!r.ok)
-                    controller.notify(
-                      failureMessage(
-                        r,
-                        controller.getSnapshot().workspace?.current,
-                      ),
-                    );
-                  else
+                </div>
+                <button
+                  className={styles.primary}
+                  onClick={() => {
+                    const r = controller.applyVisitorPreview();
+                    if (!r.ok)
+                      controller.notify(
+                        failureMessage(
+                          r,
+                          controller.getSnapshot().workspace?.current,
+                        ),
+                      );
+                    else
+                      requestAnimationFrame(() =>
+                        headingRef.current?.focus({ preventScroll: true }),
+                      );
+                  }}
+                >
+                  Apply changes
+                </button>
+                <button
+                  onClick={() => {
+                    controller.cancelPreview();
                     requestAnimationFrame(() =>
                       headingRef.current?.focus({ preventScroll: true }),
                     );
-                }}
-              >
-                Apply palette
-              </button>
-              <button
-                onClick={() => {
-                  controller.cancelPreview();
-                  requestAnimationFrame(() =>
-                    headingRef.current?.focus({ preventScroll: true }),
-                  );
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-          {view.selectedId && (
-            <button
-              className={styles.mobileReturn}
-              onClick={() => open('inspector')}
-            >
-              {item?.label ?? (feature ? featureLabel(feature) : 'Selection')} ·
-              Edit properties ↗
-            </button>
-          )}
-          <p
-            role="status"
-            aria-live="polite"
-            className={
-              !state.message || state.messageKind === 'confirmation'
-                ? styles.announcement
-                : styles.roomNotice
-            }
-          >
-            {state.message}
-          </p>
-        </section>
-        <aside
-          className={`${styles.panel} ${view.panel === 'assistant' ? styles.assistantPanel : ''}`}
-          data-room-target="properties"
-          tabIndex={-1}
-          aria-label="Room properties"
-        >
-          <div ref={panelMotion} className="motion-surface">
-            <div className="motion-flow">
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+            {view.selectedId && (
               <button
                 className={styles.mobileReturn}
-                onClick={() => {
-                  headingRef.current?.focus({ preventScroll: true });
-                  headingRef.current?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                  });
-                }}
+                onClick={() => open('inspector')}
               >
-                ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
+                {item?.label ?? (feature ? featureLabel(feature) : 'Selection')}{' '}
+                · Edit properties ↗
               </button>
-              {view.panel === 'assistant' &&
-                (readOnly && !state.candidate ? (
-                  <section
-                    className={`${styles.section} ${styles.readOnlyAssistant}`}
+            )}
+            <p
+              role="status"
+              aria-live="polite"
+              className={
+                !state.message || state.messageKind === 'confirmation'
+                  ? styles.announcement
+                  : styles.roomNotice
+              }
+            >
+              {state.message}
+            </p>
+          </section>
+          <aside
+            ref={propertiesRef}
+            className={`${styles.panel} ${view.panel === 'assistant' ? styles.assistantPanel : ''} ${editingAssistantFurniture ? furnitureStyles.previewPanel : ''}`}
+            data-room-target="properties"
+            tabIndex={-1}
+            aria-label="Room properties"
+          >
+            <div
+              className={`${furnitureStyles.body} ${editingAssistantFurniture ? 'roomedy-scroll' : ''}`}
+            >
+              <div ref={panelMotion} className="motion-surface">
+                <div className="motion-flow">
+                  <button
+                    className={styles.mobileReturn}
+                    onClick={() => {
+                      headingRef.current?.focus({ preventScroll: true });
+                      headingRef.current?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                      });
+                    }}
                   >
-                    <h2>Roomedy assistant</h2>
-                    <p>{inspectionReason}</p>
-                    {before && (
-                      <button
-                        onClick={() => controller.setComparison('current')}
+                    ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
+                  </button>
+                  {view.panel === 'assistant' &&
+                    (readOnly && !state.candidate ? (
+                      <section
+                        className={`${styles.section} ${styles.readOnlyAssistant}`}
                       >
-                        Return to Current
+                        <h2>Roomedy assistant</h2>
+                        <p>{inspectionReason}</p>
+                        {before && (
+                          <button
+                            onClick={() => controller.setComparison('current')}
+                          >
+                            Return to Current
+                          </button>
+                        )}
+                      </section>
+                    ) : assistant ? (
+                      <Assistant
+                        controller={assistant}
+                        roomState={state}
+                        tourActive={tourActive}
+                      />
+                    ) : (
+                      <p role="status">Opening assistant…</p>
+                    ))}
+                  {view.panel === 'inventory' && (
+                    <>
+                      <div className={styles.panelTitle}>
+                        <p className={styles.eyebrow}>In your room</p>
+                        <h2 tabIndex={-1}>Furniture</h2>
+                      </div>
+                      {shownRoom.furniture.length ? (
+                        <ul className={styles.inventory}>
+                          {shownRoom.furniture.map((piece) => {
+                            const entry = findCatalogueEntry(
+                              piece.catalogueId,
+                              piece.catalogueVersion,
+                            );
+                            return (
+                              <li key={piece.id}>
+                                <button
+                                  onClick={() => {
+                                    controller.select(piece.id);
+                                    focusProperties(controller, piece.id);
+                                  }}
+                                >
+                                  {entry && (
+                                    <Image
+                                      src={thumbnailUrl(entry)}
+                                      width={96}
+                                      height={72}
+                                      alt=""
+                                      unoptimized
+                                    />
+                                  )}
+                                  <strong>{piece.label}</strong>
+                                  <span>
+                                    {piece.dimensions.width.value ?? '?'} ×{' '}
+                                    {piece.dimensions.depth.value ?? '?'} mm ·{' '}
+                                    {piece.ownership === 'owned'
+                                      ? 'Owned'
+                                      : 'Proposed'}
+                                  </span>
+                                  <span>
+                                    {piece.preference === 'keep'
+                                      ? 'Keep'
+                                      : piece.preference === 'replace'
+                                        ? 'May replace'
+                                        : 'Flexible'}
+                                    {piece.locks.position
+                                      ? ' · Position locked'
+                                      : ''}
+                                  </span>
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : (
+                        <p>Add your first piece from the curated catalogue.</p>
+                      )}
+                      <button
+                        className={styles.primary}
+                        disabled={readOnly}
+                        onClick={() => open('catalogue')}
+                      >
+                        Add a piece
                       </button>
-                    )}
-                  </section>
-                ) : assistant ? (
-                  <Assistant
-                    controller={assistant}
-                    roomState={state}
-                    tourActive={tourActive}
-                  />
-                ) : (
-                  <p role="status">Opening assistant…</p>
-                ))}
-              {view.panel === 'inventory' && (
-                <>
-                  <div className={styles.panelTitle}>
-                    <p className={styles.eyebrow}>In your room</p>
-                    <h2 tabIndex={-1}>Furniture</h2>
-                  </div>
-                  {shownRoom.furniture.length ? (
-                    <ul className={styles.inventory}>
-                      {shownRoom.furniture.map((piece) => {
-                        const entry = findCatalogueEntry(
-                          piece.catalogueId,
-                          piece.catalogueVersion,
-                        );
-                        return (
-                          <li key={piece.id}>
-                            <button
-                              onClick={() => {
-                                controller.select(piece.id);
-                                focusProperties(controller, piece.id);
-                              }}
-                            >
-                              {entry && (
-                                <Image
-                                  src={thumbnailUrl(entry)}
-                                  width={96}
-                                  height={72}
-                                  alt=""
-                                  unoptimized
-                                />
-                              )}
-                              <strong>{piece.label}</strong>
-                              <span>
-                                {piece.dimensions.width.value ?? '?'} ×{' '}
-                                {piece.dimensions.depth.value ?? '?'} mm ·{' '}
-                                {piece.ownership === 'owned'
-                                  ? 'Owned'
-                                  : 'Proposed'}
-                              </span>
-                              <span>
-                                {piece.preference === 'keep'
-                                  ? 'Keep'
-                                  : piece.preference === 'replace'
-                                    ? 'May replace'
-                                    : 'Flexible'}
-                                {piece.locks.position
-                                  ? ' · Position locked'
-                                  : ''}
-                              </span>
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  ) : (
-                    <p>Add your first piece from the curated catalogue.</p>
+                    </>
                   )}
+                  {view.panel === 'inspector' &&
+                  readOnly &&
+                  !editingAssistantFurniture ? (
+                    <section className={styles.section}>
+                      <p className={styles.eyebrow}>
+                        {before ? 'Before inspection' : 'Read-only inspection'}
+                      </p>
+                      <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
+                        {shownRoom.furniture.find(
+                          (p) => p.id === view.selectedId,
+                        )?.label ??
+                          (feature ? featureLabel(feature) : undefined) ??
+                          'Room'}
+                      </h2>
+                      <p>{inspectionReason}</p>
+                      {(() => {
+                        const piece = shownRoom.furniture.find(
+                          (p) => p.id === view.selectedId,
+                        );
+                        return piece ? (
+                          <p>
+                            {piece.dimensions.width.value ?? '?'} ×{' '}
+                            {piece.dimensions.depth.value ?? '?'} ×{' '}
+                            {piece.dimensions.height.value ?? '?'} mm ·{' '}
+                            {piece.ownership === 'owned' ? 'Owned' : 'Proposed'}{' '}
+                            · Similar representation
+                          </p>
+                        ) : null;
+                      })()}
+                      {before && (
+                        <button
+                          onClick={() => controller.setComparison('current')}
+                        >
+                          Return to Current
+                        </button>
+                      )}
+                    </section>
+                  ) : (
+                    view.panel === 'inspector' &&
+                    (item ? (
+                      <>
+                        {editingAssistantFurniture && (
+                          <p className={furnitureStyles.previewNote}>
+                            Editing preview · not applied
+                          </p>
+                        )}
+                        <FurnitureInspector
+                          key={`${item.id}/${editingAssistantFurniture ? state.candidate!.identity.operationId : 'current'}`}
+                          controller={controller}
+                          room={shownRoom}
+                          onEdit={
+                            editingAssistantFurniture
+                              ? (actions) =>
+                                  controller.refineAssistantFurniture(
+                                    item.id,
+                                    actions,
+                                    state.candidate!.identity.operationId,
+                                  )
+                              : undefined
+                          }
+                          item={item}
+                          openingPreview={openingPreview}
+                        />
+                      </>
+                    ) : feature ? (
+                      <FeatureInspector
+                        controller={controller}
+                        feature={feature}
+                        openingPreview={openingPreview}
+                      />
+                    ) : (
+                      <>
+                        <h2 tabIndex={-1}>Select a piece</h2>
+                        <p>Choose furniture or an opening in the plan.</p>
+                        <button onClick={() => open('inventory')}>
+                          Show furniture
+                        </button>
+                      </>
+                    ))
+                  )}
+                  {view.panel === 'catalogue' &&
+                    (readOnly ? (
+                      <section className={styles.section}>
+                        <h2 tabIndex={-1}>Choose a piece</h2>
+                        <p>{inspectionReason}</p>
+                        {before ? (
+                          <button
+                            onClick={() => controller.setComparison('current')}
+                          >
+                            Return to Current
+                          </button>
+                        ) : (
+                          state.candidate && (
+                            <button onClick={() => controller.cancelPreview()}>
+                              Cancel preview & choose a piece
+                            </button>
+                          )
+                        )}
+                      </section>
+                    ) : (
+                      <CataloguePanel
+                        key={replacementId ?? `add-${catalogueCategory}`}
+                        placement={placement}
+                        initialCategory={catalogueCategory}
+                        controller={controller}
+                        room={room}
+                        replacement={
+                          room.furniture.find((f) => f.id === replacementId) ??
+                          null
+                        }
+                        onDone={() => setReplacementId(null)}
+                        onReplaceSelected={
+                          item ? () => setReplacementId(item.id) : undefined
+                        }
+                      />
+                    ))}
+                  {view.panel === 'room' &&
+                    (readOnly ? (
+                      <section className={styles.section}>
+                        <p className={styles.eyebrow}>
+                          {before
+                            ? 'Before inspection'
+                            : state.candidate
+                              ? 'Preview inspection'
+                              : 'Room inspection'}
+                        </p>
+                        <h2 tabIndex={-1}>
+                          {before ? 'Before room' : 'Room inspection'}
+                        </h2>
+                        <p>
+                          {shownRoom.room.width.value ?? '?'} ×{' '}
+                          {shownRoom.room.depth.value ?? '?'} ×{' '}
+                          {shownRoom.room.height.value ?? '?'} mm
+                        </p>
+                        <p>
+                          Floor:{' '}
+                          {
+                            SURFACE_TEXTURES[
+                              roomSurface(shownRoom.room, 'floor').texture
+                            ]
+                          }{' '}
+                          · {roomSurface(shownRoom.room, 'floor').color}. Walls:{' '}
+                          {
+                            SURFACE_TEXTURES[
+                              roomSurface(shownRoom.room, 'walls').texture
+                            ]
+                          }{' '}
+                          · {roomSurface(shownRoom.room, 'walls').color}.
+                        </p>
+                        <p>{inspectionReason}</p>
+                        {before && (
+                          <button
+                            onClick={() => controller.setComparison('current')}
+                          >
+                            Return to Current
+                          </button>
+                        )}
+                      </section>
+                    ) : (
+                      <RoomPanel controller={controller} room={room} />
+                    ))}
+                  {view.panel === 'checks' && (
+                    <ChecksPanel
+                      controller={controller}
+                      room={shownRoom}
+                      checks={shownChecks}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+            {editingAssistantFurniture && (
+              <div
+                className={furnitureStyles.decisions}
+                role="group"
+                aria-label="Review edited preview"
+              >
+                <div>
                   <button
                     className={styles.primary}
-                    disabled={readOnly}
-                    onClick={() => open('catalogue')}
+                    onClick={() => {
+                      const result = assistant
+                        ? assistant.apply(state.candidate!.identity.operationId)
+                        : controller.applyAssistantPreview();
+                      if (!result.ok)
+                        controller.notify(failureMessage(result, room));
+                      else focusProperties(controller, item!.id);
+                    }}
                   >
-                    Add a piece
+                    Apply changes
                   </button>
-                </>
-              )}
-              {view.panel === 'inspector' && readOnly ? (
-                <section className={styles.section}>
-                  <p className={styles.eyebrow}>
-                    {before ? 'Before inspection' : 'Read-only inspection'}
-                  </p>
-                  <h2 tabIndex={-1} id={`properties-${view.selectedId}`}>
-                    {shownRoom.furniture.find((p) => p.id === view.selectedId)
-                      ?.label ??
-                      (feature ? featureLabel(feature) : undefined) ??
-                      'Room'}
-                  </h2>
-                  <p>{inspectionReason}</p>
-                  {(() => {
-                    const piece = shownRoom.furniture.find(
-                      (p) => p.id === view.selectedId,
+                  <button
+                    onClick={() => {
+                      if (assistant)
+                        assistant.cancel(state.candidate!.identity.operationId);
+                      else controller.cancelPreview();
+                      controller.setPanel('assistant');
+                      focusProperties(controller);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <button
+                  className={furnitureStyles.back}
+                  onClick={() => {
+                    controller.setPanel('assistant');
+                    focusProperties(controller);
+                  }}
+                >
+                  Back to Medy
+                </button>
+              </div>
+            )}
+          </aside>
+        </div>
+        {state.cost &&
+          (state.destination === 'cost' || phaseMotion.present) && (
+            <div
+              className={styles.costLayer}
+              data-cost-hidden={
+                (state.destination === 'design' && !phaseMotion.moving) ||
+                undefined
+              }
+              aria-hidden={state.destination !== 'cost'}
+              inert={state.destination !== 'cost' || phaseMotion.moving}
+            >
+              <CostWorkspace
+                key={workspace.workspaceId}
+                controller={controller}
+                state={state}
+                onDesign={() => navigate('design')}
+                exportButtonRef={costExportButton}
+                onExport={() => {
+                  const result = projectControl.current?.({
+                    type: 'project',
+                    action: 'export',
+                    format: null,
+                  });
+                  if (!result?.ok)
+                    controller.notify(
+                      result?.summary ??
+                        'Export is still opening. Try again in a moment.',
                     );
-                    return piece ? (
-                      <p>
-                        {piece.dimensions.width.value ?? '?'} ×{' '}
-                        {piece.dimensions.depth.value ?? '?'} ×{' '}
-                        {piece.dimensions.height.value ?? '?'} mm ·{' '}
-                        {piece.ownership === 'owned' ? 'Owned' : 'Proposed'} ·
-                        Similar representation
-                      </p>
-                    ) : null;
-                  })()}
-                  {before && (
-                    <button onClick={() => controller.setComparison('current')}>
-                      Return to Current
-                    </button>
-                  )}
-                </section>
-              ) : (
-                view.panel === 'inspector' &&
-                (item ? (
-                  <FurnitureInspector
-                    controller={controller}
-                    item={item}
-                    openingPreview={openingPreview}
-                  />
-                ) : feature ? (
-                  <FeatureInspector
-                    controller={controller}
-                    feature={feature}
-                    openingPreview={openingPreview}
-                  />
-                ) : (
-                  <>
-                    <h2 tabIndex={-1}>Select a piece</h2>
-                    <p>Choose furniture or an opening in the plan.</p>
-                    <button onClick={() => open('inventory')}>
-                      Show furniture
-                    </button>
-                  </>
-                ))
-              )}
-              {view.panel === 'catalogue' &&
-                (readOnly ? (
-                  <section className={styles.section}>
-                    <h2 tabIndex={-1}>Choose a piece</h2>
-                    <p>{inspectionReason}</p>
-                    {before ? (
-                      <button
-                        onClick={() => controller.setComparison('current')}
-                      >
-                        Return to Current
-                      </button>
-                    ) : (
-                      state.candidate && (
-                        <button onClick={() => controller.cancelPreview()}>
-                          Cancel preview & choose a piece
-                        </button>
-                      )
-                    )}
-                  </section>
-                ) : (
-                  <CataloguePanel
-                    key={replacementId ?? `add-${catalogueCategory}`}
-                    placement={placement}
-                    initialCategory={catalogueCategory}
-                    controller={controller}
-                    room={room}
-                    replacement={
-                      room.furniture.find((f) => f.id === replacementId) ?? null
-                    }
-                    onDone={() => setReplacementId(null)}
-                    onReplaceSelected={
-                      item ? () => setReplacementId(item.id) : undefined
-                    }
-                  />
-                ))}
-              {view.panel === 'room' &&
-                (readOnly ? (
-                  <section className={styles.section}>
-                    <p className={styles.eyebrow}>
-                      {before
-                        ? 'Before inspection'
-                        : state.candidate
-                          ? 'Preview inspection'
-                          : 'Room inspection'}
-                    </p>
-                    <h2 tabIndex={-1}>
-                      {before ? 'Before room' : 'Room inspection'}
-                    </h2>
-                    <p>
-                      {shownRoom.room.width.value ?? '?'} ×{' '}
-                      {shownRoom.room.depth.value ?? '?'} ×{' '}
-                      {shownRoom.room.height.value ?? '?'} mm
-                    </p>
-                    <p>
-                      Floor:{' '}
-                      {
-                        SURFACE_TEXTURES[
-                          roomSurface(shownRoom.room, 'floor').texture
-                        ]
-                      }{' '}
-                      · {roomSurface(shownRoom.room, 'floor').color}. Walls:{' '}
-                      {
-                        SURFACE_TEXTURES[
-                          roomSurface(shownRoom.room, 'walls').texture
-                        ]
-                      }{' '}
-                      · {roomSurface(shownRoom.room, 'walls').color}.
-                    </p>
-                    <p>{inspectionReason}</p>
-                    {before && (
-                      <button
-                        onClick={() => controller.setComparison('current')}
-                      >
-                        Return to Current
-                      </button>
-                    )}
-                  </section>
-                ) : (
-                  <RoomPanel controller={controller} room={room} />
-                ))}
-              {view.panel === 'checks' && (
-                <ChecksPanel
-                  controller={controller}
-                  room={shownRoom}
-                  checks={shownChecks}
-                />
-              )}
+                }}
+                panelRef={costPanelRef}
+                onReadOnlyChange={setCostReadOnly}
+              />
             </div>
-          </div>
-        </aside>
+          )}
       </main>
     </div>
   );

@@ -5,6 +5,7 @@ import {
   estimateOfferSchema,
   serviceScopeSchema,
   sourceUrlSchema,
+  shoppingCountries,
 } from './estimates.js';
 export const sourcingTargetSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('furniture'), id: idSchema }),
@@ -52,6 +53,7 @@ export const sourcingCandidateSchema = z.strictObject({
   label: labelSchema,
   match: z.enum(['similar', 'custom', 'lead']),
   url: sourceUrlSchema,
+  imageUrl: sourceUrlSchema.nullable().optional(),
   evidence: z.string().trim().min(1).max(400),
   conditions: z.enum(['standard', 'conditional', 'from', 'unknown']),
   differences: z.array(z.string().min(1).max(240)).max(4),
@@ -86,7 +88,10 @@ export const sourcingReplyJsonSchema = (country?: string) => {
         Object.hasOwn(properties, 'country') &&
         Object.hasOwn(properties, 'currency')
       )
-        properties.country = { type: 'string', enum: [country] };
+        properties.country = {
+          type: 'string',
+          enum: shoppingCountries(country),
+        };
       if (Array.isArray(object.required))
         object.required = object.required.filter((key) => key !== 'fx');
     }
@@ -95,3 +100,9 @@ export const sourcingReplyJsonSchema = (country?: string) => {
   nativeOnly(schema);
   return schema;
 };
+
+/** Optional display media never authorizes a fetch from the backend or a price. */
+export function safeProductImage(raw: unknown): string | null {
+  const parsed = sourceUrlSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
+}

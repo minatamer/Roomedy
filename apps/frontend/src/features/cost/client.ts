@@ -7,11 +7,13 @@ import type { OperationInput } from '@roomedy/contracts/operations';
 import { safeErrorSchema, errorMessages } from '@roomedy/contracts/api';
 import { readOperationResponse } from '../session/operation-client';
 import { obtainAdmission } from '../session/admission-client';
+import { verificationFailureMessage } from '../verification/failure';
 import { operationAvailability } from '../session/operation-client';
 import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
 import type { SessionController } from '../session/controller';
 import type { SourcingBrief } from '@roomedy/contracts/sourcing';
 import { sourcingBriefSchema } from '@roomedy/contracts/sourcing';
+import { researchLocality } from './journey';
 
 /** One explicit foreground operation; visible retirement does not await an untrusted transport. */
 export function beginResearch(
@@ -37,7 +39,10 @@ export function beginResearch(
     kind: 'sourcing',
     identity: token,
     costRevision: state.cost.revision,
-    locality: state.cost.settings.locality,
+    locality: researchLocality(
+      state.cost.settings.locality,
+      brief.target.kind !== 'service',
+    ),
     brief,
   });
   const abort = new AbortController();
@@ -61,7 +66,7 @@ export function beginResearch(
     abort.abort();
     stop({
       ok: false,
-      message: 'Research took too long. You can continue with manual prices.',
+      message: 'Research took too long. Your current estimate is unchanged.',
     });
   }, POLICY.operationBridgeMs);
   const result = (async () => {
@@ -72,7 +77,7 @@ export function beginResearch(
           return {
             ok: false as const,
             message:
-              'Research is unavailable here. Enter a manual price or allowance.',
+              'Research is unavailable here. You can continue with your current choices.',
           };
         const answer = await researchProducts(input, abort.signal, transport);
         if (answer.ok && answer.simulation !== (config.mode === 'fake'))
@@ -126,12 +131,14 @@ export async function researchProducts(
   const admission = await obtainAdmission(parsed, signal, (body) =>
     post('admission', body),
   );
+  const verificationFailure = verificationFailureMessage(admission);
+  if (verificationFailure) return fail(verificationFailure);
   const error = safeErrorSchema.safeParse(admission);
   if (error.success) return fail(errorMessages[error.data.error.code]);
   const grant = admissionResultSchema.safeParse(admission);
   if (!grant.success || grant.data.kind !== 'granted')
     return fail(
-      'Research verification is unavailable. You can enter a manual price.',
+      'Research verification is unavailable. Your current estimate is unchanged.',
     );
   const raw = await post('sourcing', {
     input: parsed,
@@ -147,15 +154,15 @@ export async function researchProducts(
   ) {
     if (result.data.kind === 'timeout')
       return fail(
-        'Research reached its time limit. Your accepted prices are unchanged. Try a specific product or supplier page, or enter a manual allowance.',
+        'Research reached its time limit. Your accepted prices are unchanged. Try a specific product or supplier page, or try another store.',
       );
     if (result.data.kind === 'refused')
       return fail(
-        'This research request could not be answered. Your accepted prices are unchanged. Try another product or enter a manual allowance.',
+        'This research request could not be answered. Your accepted prices are unchanged. Try another product or try another store.',
       );
     if (result.data.kind === 'malformed')
       return fail(
-        'The source response could not be verified. Your accepted prices are unchanged. Try a specific variant or enter a manual allowance.',
+        'The source response could not be verified. Your accepted prices are unchanged. Try a specific variant or try another store.',
       );
   }
   if (

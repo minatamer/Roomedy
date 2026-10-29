@@ -1,5 +1,47 @@
 # Lessons from the owner's visual feedback
 
+## Treat bedding as three parts —29 October 2026
+
+The owner rejects green/teal fresh-manual bed linen and asks for independently coloured pillows, sheets and duvet/cover in every path. Use plain warm ivory/linen/taupe for new manual rooms, preserving recorded choices. Give the manual editor three clearly labelled RGB/pattern groups. Medy must target the named part, preserve the others and keep combined changes in one reviewed transaction. Photo estimates must inspect each visible part independently; a white pillow cannot whiten the duvet, and a visible cover cannot supply a hidden sheet colour. Preserve legacy fallbacks and make renderer/export results agree. [RM-048](../tickets/RM-048-control-bed-bedding-parts.md), [evidence](../validation/RM-048.md). Actual model/subjective photo accuracy remains separate from wiring and synthetic checks.
+
+## Give Estimate the control inset —29 October 2026
+
+The owner rejects a chat surface touching both page edges. Match Design controls' outer side spacing on both sides of Estimate's chat:20px desktop,16px at1100px or below. Scope the padding to Estimate's wrapper, preserving Design and its return geometry. Keep device-height fit and the internal reading/composer layout. [RM-047](../tickets/RM-047-inset-the-estimate-chat.md), [evidence](../validation/RM-047.md).
+
+## Pin Export with the Estimate conversation —29 October 2026
+
+The owner moves Estimate's Export from the site header into the chat as a pinned shortcut with a pin icon. Keep it beside Cost breakdown in the fixed chat heading, reachable while the transcript scrolls, with visible text and a44px target. Preserve the exact export dialog/formats and destination-correct focus return. Design's direct Export remains; this supersedes only the earlier Estimate-header placement. [RM-046](../tickets/RM-046-pin-export-in-estimate-chat.md), [evidence](../validation/RM-046.md).
+
+## Plain chat status and a permission-free shopping choice —29 October 2026
+
+The owner rejects boxed research Thinking and its Cancel research CTA. Pending research uses the same bare spinner/text treatment as a normal chat, while existing cancellation/deadline/lifecycle owners continue behind it. US stores are the deliberate default for furniture, flooring and wall paint, independent of browser language or inferred residence. Keep explicit choices and historical financial records intact. Offer a complete alphabetical native country dropdown inside the chat so location permission is optional. Changing the country keeps keyboard focus in the dropdown; the explicit continuation button advances the conversation. [RM-045](../tickets/RM-045-simplify-research-and-choose-shopping-country.md), [evidence](../validation/RM-045.md). This supersedes RM-037's unknown fresh-market/no-dropdown requirement only; coordinate privacy and USD/source safeguards remain.
+
+## Direct room controls and a committed animation handoff —29 October 2026
+
+The owner’s final exact header instruction is New Room · Export · Estimate. New Room holds Import/Start a new room; Export and Estimate open directly. Estimate keeps only Export among project/history controls plus Back to Design. This supersedes the intermediate two-menu version. Preserve file/confirmation/resource authority, focus and narrow44px targets. The reported return stutter exposed premature animation-fill retirement before React hid the retiring layer; retain its terminal pose until the layout handoff, then release before paint. [RM-043](../tickets/RM-043-split-the-project-menus.md), [RM-044](../tickets/RM-044-smooth-the-return-to-design.md), [evidence](../validation/RM-043.md). Physical frame timing and owner aesthetic acceptance remain separate.
+
+## Center the loading identity —29 October 2026
+
+The owner rejects plain top-left “Opening your room” text. Initial room-module/session fallbacks share one centered responsive Roomedy mark/wordmark with a small continuous warm spinner beneath it and a visually hidden status. Retailor RTL-098 is read-only reference for composition, not new brand or runtime authority. Use real pending work only, with immediate readiness retirement and no minimum wait or extra request. Keep actual photo-processing stages/errors and the landing house-preparation loader distinct. [RM-042](../tickets/RM-042-center-the-room-loading-screen.md), [native evidence](../validation/RM-042.md).
+
+## One tour, continuous studio and visual estimates —29 October 2026
+
+The owner rejects automatic orientation on every Design/Plan & cost return. Offer once and preserve deliberate Medy replay. Returning to the room must restore direct orbit/zoom without a 2D/3D workaround. Show the actual properties column expanding left over the room, then fade cost content; reverse smoothly and restore keyboard focus after completion.
+
+Project owns Export / Plan & cost and Import / Start a new room in two rows. Keep cost breakdown/PDF in chat, with clear visual categories/items and readable areas. Automatically name/freeze reviewed PDF snapshots; do not ask users to manage version names. Preserve source, unresolved-cost, immutable history and cancellation safeguards behind the simpler presentation. [Selected batch and evidence](../validation/RM-038-040.md).
+
+## Explain shopping choices and ask before location — 29 October 2026
+
+RM-037: remove the guessed-country/USD status line. Language is not location evidence. Offer a visual optional browser location choice inside Medy's chat, explain the benefit simply, preserve a useful skip and show permission/reload help only on the relevant failure. Keep coordinates within the browser and use only a coarse shopping country. After the choice, use explained visual starting cards and specific action labels; users should understand what each choice will do. Preserve USD/source conversion evidence and avoid duplicate welcome shortcuts. [Ticket](../tickets/RM-037-offer-location-and-guide-cost-start.md), [receipt](../validation/RM-037.md).
+
+## Furniture cards must lead to editable settings —29 October2026
+
+The owner rejects a pending Medy card opening only Read-only inspection and explicitly asks to restore complete manual furniture settings with useful common/advanced grouping. The controls still exist: the blanket pending-candidate gate caused the dead end. RM-036 therefore stages explicit furniture form clicks into the assistant preview, preserving its final Apply/Cancel and one Undo, rather than silently accepting the whole proposal or losing the user’s settings. The original model scope remains separate from explicit visitor authority. Keep common Size/Appearance visible, detailed controls collapsed and preview decisions in reach. Implementation authority is distinct from final owner aesthetic/physical acceptance.
+
+## Expand the same Medy conversation for costs —29 October2026
+
+Current owner rejects the long cost dashboard and duplicated heading, inconsistent header/background, embedded3D/camera controls and dense locality/preparation forms. [RM-033–035](../commit-plans/RM-033-035.md) makes cost a device-filling expansion of the same Medy panel: warm continuous header/capsule controls, pinned reachable composer, inline visual furniture/floor/wall steps and reviewed full estimate at the end. PDF belongs in the header. Browser-locale region is a coarse automatic hint, USD stays fixed, product photos/source links are explicit research results and leaving-store links use a themed dialog. Preserve actual source/price/unknown/financial history and visitor review. AFK autonomy selects recommendations, not subjective visual acceptance.
+
 ## Capture photographed appearance; edit colour independently —28 October2026
 
 Plain defaults belong only to fresh manual rooms. Photographs should retain editable estimates of visible furniture, wall/floor and door/window-frame colours and patterns. Patterns must be separable from RGB, with popular presets plus Custom hex/native/RGB0–255 controls. Do not tint glass or replace visible photo colours with a six-name palette. Ambiguity remains unknown and never interrupts design for measurements. [RM-015BY](../tickets/RM-015BY-capture-photo-appearance-and-edit-rgb-patterns.md).

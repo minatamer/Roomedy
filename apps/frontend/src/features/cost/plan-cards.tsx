@@ -8,6 +8,7 @@ import { costLineChanges } from './planning';
 import { roomWorkPlan } from './work-plan';
 import styles from './workspace.module.css';
 import { ChatIcon } from './chat-visuals';
+import { ExternalLink } from './external-link';
 export function PlanCards({
   controller,
   state,
@@ -54,7 +55,7 @@ export function PlanCards({
             .slice(0, 1)
             .map((t) => (
               <button key={targetKey(t)} onClick={() => inspect(targetKey(t))}>
-                Show part in 3D ↗
+                See related costs
               </button>
             ))}
         </li>
@@ -280,15 +281,15 @@ export function PlanCards({
                           ? key.slice(8)
                           : (room.furniture.find((p) => p.id === key)?.label ??
                             'part')}{' '}
-                        in 3D ↗
+                        costs
                       </button>
                     ))}
                   </div>
                   {step.sources.map((s) => (
                     <p key={s.url}>
-                      <a href={s.url} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink url={s.url}>
                         {s.label} · product source ↗
-                      </a>
+                      </ExternalLink>
                     </p>
                   ))}
                 </details>

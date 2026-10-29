@@ -101,6 +101,13 @@ describe('photo appearance is independent of geometry and six named finishes', (
     expect(parseDraftHypothesis(raw, ['photo'])).not.toBeNull();
     expect(photoOpeningMaterials([opening])).toEqual({ frameColor: '#eeeeee' });
   });
+  it('accepts legacy appearance without cover fields and rejects cover evidence on an opening', () => {
+    const raw = recognitionFixture('unknown-hinge', ['photo']);
+    expect(parseDraftHypothesis(raw, ['photo'])).not.toBeNull();
+    const opening = raw.observations.find((o) => o.kind === 'door')!;
+    opening.appearance = { ...opening.appearance!, coverColor: '#426b95' };
+    expect(parseDraftHypothesis(raw, ['photo'])).toBeNull();
+  });
   it('preserves deliberate visitor material choices when recognition repeats', () => {
     let n = 0;
     const raw = bedroomExample([{ id: 'photo', purpose: 'room' }]);

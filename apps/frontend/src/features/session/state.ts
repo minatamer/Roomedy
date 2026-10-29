@@ -34,6 +34,12 @@ export interface PhotoNotes {
   readonly simulated: boolean;
 }
 export interface SessionSnapshot {
+  readonly tourOffered: boolean;
+  /** Session-only shopping choice; coordinates never enter session state. */
+  readonly shoppingLocation: {
+    country: string;
+    method: 'browser' | 'skip' | 'chat' | 'manual';
+  } | null;
   readonly destination: ProjectDestination;
   readonly cost: CostDraft | null;
   readonly costProposal: CostProposal | null;

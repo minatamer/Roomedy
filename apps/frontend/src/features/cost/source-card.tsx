@@ -1,21 +1,59 @@
 import type { SourcingReply } from '@roomedy/contracts/sourcing';
+import { safeProductImage } from '@roomedy/contracts/sourcing';
+import Image from 'next/image';
+import { useState } from 'react';
 import { money } from './state';
 import { OfferVisual } from './chat-visuals';
+import { ExternalLink } from './external-link';
 import styles from './workspace.module.css';
+
+function ProductMedia({
+  candidate,
+  simulation,
+}: {
+  candidate: SourcingReply['candidates'][number];
+  simulation: boolean;
+}) {
+  const [failed, setFailed] = useState(false);
+  const src = safeProductImage(candidate.imageUrl);
+  if (!src || failed)
+    return (
+      <div className={styles.productFallback}>
+        <OfferVisual offer={candidate.offer} />
+      </div>
+    );
+  return (
+    <ExternalLink url={candidate.url} className={styles.productImage}>
+      <Image
+        src={src}
+        alt={`${candidate.label} · ${simulation ? 'illustrative product photo' : 'source product photo'}`}
+        unoptimized
+        width={640}
+        height={440}
+        loading="lazy"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        onError={() => setFailed(true)}
+      />
+    </ExternalLink>
+  );
+}
 export function SourceCard({
   candidate,
   simulation,
+  matchingWalls = false,
   selected,
   disabled,
-  onInspect,
+  needsSizeReview = false,
   onSelect,
   onReview,
 }: {
   candidate: SourcingReply['candidates'][number];
   simulation: boolean;
+  matchingWalls?: boolean;
   selected: boolean;
   disabled: boolean;
-  onInspect: () => void;
+  needsSizeReview?: boolean;
   onSelect: () => void;
   onReview: () => void;
 }) {
@@ -29,8 +67,21 @@ export function SourceCard({
             ? 'planning allowance'
             : `${candidate.conditions} price`}
       </p>
-      <h3>{candidate.label}</h3>
-      <OfferVisual offer={candidate.offer} />
+      <ProductMedia
+        key={candidate.imageUrl ?? 'none'}
+        candidate={candidate}
+        simulation={simulation}
+      />
+      <h3>
+        <ExternalLink url={candidate.url} className={styles.productTitle}>
+          {candidate.label}
+        </ExternalLink>
+      </h3>
+      {simulation && candidate.imageUrl && (
+        <p className={styles.note}>
+          Illustrative photo · example amount and size
+        </p>
+      )}
       {candidate.offer && (
         <strong>
           {'packs' in candidate.offer
@@ -42,6 +93,11 @@ export function SourceCard({
                 .join(' · ')
             : `${money(candidate.offer.priceMinor, candidate.offer.market.currency)} ${candidate.offer.kind === 'service' ? `/ ${candidate.offer.basis}` : candidate.offer.kind === 'floor' ? '/ pack' : '/ item'}`}
         </strong>
+      )}
+      {candidate.offer?.kind === 'floor' && (
+        <p className={styles.note}>
+          Replacement material price. Your drawn finish stays unchanged.
+        </p>
       )}
       {candidate.offer && (
         <div className={styles.factChips}>
@@ -160,27 +216,31 @@ export function SourceCard({
             <li key={note}>{note}</li>
           ))}
         </ul>
-        <a href={candidate.url} target="_blank" rel="noopener noreferrer">
+        <ExternalLink url={candidate.url}>
           {simulation ? 'Explore source ↗' : 'Read cited source ↗'}
-        </a>
+        </ExternalLink>
       </details>
       <div className={styles.actions}>
-        <button onClick={onInspect}>Locate in room ↗</button>
         {candidate.offer && (
           <button
             className={styles.primary}
-            disabled={disabled || selected}
-            onClick={onSelect}
+            disabled={
+              disabled ||
+              selected ||
+              (candidate.offer.kind === 'furniture' &&
+                !candidate.offer.outerSizeMm)
+            }
+            onClick={needsSizeReview ? onReview : onSelect}
           >
-            {selected ? 'Selected' : 'Use this price'}
+            {selected
+              ? 'Selected'
+              : needsSizeReview
+                ? 'Review size & price'
+                : matchingWalls && candidate.offer.kind === 'paint'
+                  ? 'Use for matching walls'
+                  : 'Use this price'}
           </button>
         )}
-        {candidate.offer?.kind === 'furniture' &&
-          candidate.offer.outerSizeMm && (
-            <button disabled={disabled} onClick={onReview}>
-              Preview size &amp; price
-            </button>
-          )}
       </div>
     </article>
   );
