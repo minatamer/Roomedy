@@ -6,12 +6,13 @@ if (release && !/^[a-f0-9]{64}$/.test(release))
 const selected = process.env.ROOMEDY_BUILD_DIR;
 if (selected && !/^\.next-release-[ab]$/.test(selected))
   throw new Error('invalid-build-directory');
+const development = process.env.NODE_ENV === 'development';
 
 const config: NextConfig = {
-  distDir:
-    process.env.NODE_ENV === 'development'
-      ? '.next-dev'
-      : (selected ?? '.next'),
+  distDir: development ? '.next-dev' : (selected ?? '.next'),
+  ...(development
+    ? { experimental: { turbopackFileSystemCacheForDev: false } }
+    : {}),
   output: 'standalone',
   outputFileTracingRoot: fileURLToPath(new URL('../../', import.meta.url)),
   env: { NEXT_PUBLIC_ROOMEDY_RELEASE_ID: release },

@@ -22,7 +22,7 @@ Verify ports **4321** (backend) and **4320** (frontend) are free or belong to th
 
 After `pnpm build`, `pnpm test:smoke` briefly verifies both owned local apps and their fixed bridge, then cleans up. It refuses occupied ports and forces fake/paid-off independently of manual configuration.
 
-Use `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:boundaries`, `pnpm test:unit`, `pnpm build`, or `pnpm check` for the settled full no-key gate. Tests force fake/paid-off before imports and deny external network. Development hot reload uses separate `.next-dev` output; production uses `.next`.
+Use `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:boundaries`, `pnpm test:unit`, `pnpm build`, or `pnpm check` for the settled full no-key gate. Tests force fake/paid-off before imports and deny external network. Development uses separate `.next-dev` output with persistent Turbopack filesystem caching disabled; in-memory hot reload stays active. Production keeps its existing bundler, caching and `.next` output. [RM-041 restart/reload evidence](docs/validation/RM-041.md).
 
 - [Backend setup](apps/backend/README.md) and [frontend setup](apps/frontend/README.md)
 - [Detailed blueprint](docs/ROOMEDY.md) and [documentation map](docs/README.md)
