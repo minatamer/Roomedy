@@ -5,6 +5,7 @@ import { createManualRoom } from '../session/entry/manual-room';
 import type { SessionController } from '../session/controller';
 import { createGuestSession } from '../session/lifecycle';
 import { RecoveryChoice } from '../session/entry/recovery-choice';
+import { RoomLoading } from '../session/entry/room-loading';
 import { Editor } from './editor';
 
 export default function EditorEntry({
@@ -47,8 +48,6 @@ export default function EditorEntry({
   return controller ? (
     <Editor controller={controller} onBack={onBack} condition={condition} />
   ) : (
-    <main id="main-content">
-      <p role="status">Opening your room…</p>
-    </main>
+    <RoomLoading />
   );
 }

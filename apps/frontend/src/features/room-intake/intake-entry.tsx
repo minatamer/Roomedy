@@ -4,6 +4,7 @@ import type { RoomCondition } from '../session/entry/entry-state';
 import type { SessionController } from '../session/controller';
 import { createGuestSession } from '../session/lifecycle';
 import { RecoveryChoice } from '../session/entry/recovery-choice';
+import { RoomLoading } from '../session/entry/room-loading';
 import { Editor } from '../room-editor/editor';
 import { ReviewController } from './review-controller';
 import { Intake } from './intake';
@@ -106,8 +107,6 @@ export default function IntakeEntry({
   return owned ? (
     <Workspace {...owned} condition={condition} onBack={onBack} />
   ) : (
-    <main id="main-content" className={`${styles.intake} ${styles.main}`}>
-      <p role="status">Opening your room…</p>
-    </main>
+    <RoomLoading />
   );
 }

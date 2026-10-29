@@ -1,0 +1,58 @@
+.loading {
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 32px 24px;
+  color: var(--ink);
+  background: radial-gradient(
+    ellipse at 50% 44%,
+    var(--paper),
+    var(--ivory) 58%,
+    var(--sage)
+  );
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.identity :global(.brand) {
+  font-size: clamp(42px, 9vw, 68px);
+  letter-spacing: -0.055em;
+  gap: clamp(12px, 2vw, 17px);
+}
+.identity svg {
+  width: 0.95em;
+  height: 0.95em;
+  flex-shrink: 0;
+}
+.progress {
+  display: grid;
+  place-items: center;
+}
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 2.5px solid var(--line);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+}
+.status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

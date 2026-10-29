@@ -8,21 +8,14 @@ import { useSurfaceMotion } from '../../room-editor/use-surface-motion';
 import { Brand } from '../../landing/brand';
 import { entryHref, entryReducer } from './entry-state';
 import type { EntryState, RoomCondition } from './entry-state';
+import { RoomLoading } from './room-loading';
 const EditorEntry = dynamic(() => import('../../room-editor/editor-entry'), {
   ssr: false,
-  loading: () => (
-    <main id="main-content">
-      <p role="status">Opening your room…</p>
-    </main>
-  ),
+  loading: () => <RoomLoading />,
 });
 const IntakeEntry = dynamic(() => import('../../room-intake/intake-entry'), {
   ssr: false,
-  loading: () => (
-    <main id="main-content">
-      <p role="status">Opening your room…</p>
-    </main>
-  ),
+  loading: () => <RoomLoading />,
 });
 const conditions: readonly {
   id: RoomCondition;
