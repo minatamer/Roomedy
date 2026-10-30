@@ -3,6 +3,8 @@ import type { EstimateVersion } from '@roomedy/contracts/project';
 import { CALCULATION_VERSION } from '@roomedy/contracts/estimates';
 import type { EstimateState, RoomEstimate } from '@roomedy/contracts/estimates';
 import type { RoomDocument } from '@roomedy/contracts/room';
+import { roomDocumentSchema } from '@roomedy/contracts/room';
+import { estimateStateSchema } from '@roomedy/contracts/estimates';
 import { calculateRoomEstimate } from '@roomedy/spatial';
 import { VERSIONS } from '@roomedy/contracts/policy';
 import { costLineChanges } from './planning';
@@ -27,8 +29,14 @@ export function ensureEstimateSnapshot(
       ok: false,
       reason: 'Resolve the current preview and review a USD estimate first.',
     };
-  const room = JSON.stringify(state.workspace.current),
-    pricing = JSON.stringify(pricingState(state.cost));
+  // Saved versions are schema-normalized. Compare current inputs in that same
+  // order so a semantically identical manual room does not consume another slot.
+  const room = JSON.stringify(
+      roomDocumentSchema.parse(state.workspace.current),
+    ),
+    pricing = JSON.stringify(
+      estimateStateSchema.parse(pricingState(state.cost)),
+    );
   const existing = state.estimateVersions.findLast(
     (version) =>
       JSON.stringify(version.room) === room &&

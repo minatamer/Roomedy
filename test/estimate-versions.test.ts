@@ -27,6 +27,18 @@ afterEach(() => {
   controllers.splice(0).forEach((c) => c.dispose());
 });
 describe('detached reviewed planning versions', () => {
+  it('reuses a PDF snapshot across phase changes when manual object keys differ from saved schema order', () => {
+    const { furniture, ...rest } = createRoomFixture('sample');
+    const c = new SessionController({ furniture, ...rest });
+    controllers.push(c);
+    c.setDestination('cost');
+    const first = ensureEstimateSnapshot(c);
+    expect(first.ok).toBe(true);
+    c.setDestination('design');
+    for (let i = 0; i < 5; i++)
+      expect(ensureEstimateSnapshot(c)).toEqual(first);
+    expect(c.getSnapshot().estimateVersions).toHaveLength(1);
+  });
   it('automatically names a PDF snapshot and reuses identical inputs, including at capacity', () => {
     const c = session(),
       first = ensureEstimateSnapshot(c);
