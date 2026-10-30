@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import type { FormEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { Furniture } from '@roomedy/contracts/room';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { VisitorAction } from '@roomedy/contracts/commands';
@@ -111,14 +111,17 @@ export function FurnitureSizeForm({
   item,
   onCommit,
   children,
+  resetKey = 0,
 }: {
+  resetKey?: number;
   item: Furniture;
   onCommit: (action: VisitorAction) => string | null;
-  children: (customSize: ReactNode) => ReactNode;
+  children: (customSize: ReactNode, presetSize: ReactNode) => ReactNode;
 }) {
   const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion)!;
   const presets = furnitureSizePresets(entry);
   const signature = JSON.stringify([
+    resetKey,
     item.id,
     item.catalogueId,
     item.ownership,
@@ -130,51 +133,33 @@ export function FurnitureSizeForm({
     error: '',
     field: '',
     mode: 'preset' as 'preset' | 'custom',
+    touched: false,
   });
   if (form.signature !== signature)
     setForm({
+      ...form,
       signature,
-      values:
-        Number(form.values.width) === item.dimensions.width.value &&
-        Number(form.values.depth) === item.dimensions.depth.value &&
-        (form.values.height === undefined ||
-          Number(form.values.height) === item.dimensions.height.value)
-          ? form.values
-          : sizeInputValues(item.dimensions, presets),
+      values: sizeInputValues(item.dimensions, presets),
       error: '',
       field: '',
-      mode: form.mode,
+      touched: false,
     });
+  const errorId = useId();
   const presetRef = useRef<HTMLFormElement>(null),
-    customRef = useRef<HTMLFormElement>(null),
-    errorId = useId();
-  const changed = (['width', 'depth', 'height'] as const).some(
-    (axis) =>
-      form.values[axis] !== undefined &&
-      Number(form.values[axis]) !== item.dimensions[axis].value,
-  );
-  const submit = (e: FormEvent<HTMLFormElement>, mode: 'preset' | 'custom') => {
-    e.preventDefault();
-    const ref = mode === 'preset' ? presetRef : customRef;
-    const focusField = (field: string) =>
-      ref.current
-        ?.querySelector<HTMLElement>(
-          mode === 'preset' ? 'select' : `[name="${field}"]`,
-        )
-        ?.focus();
-    const result = parseSizeInput(
-      form.values,
-      entry,
-      item.ownership === 'owned',
-    );
+    customRef = useRef<HTMLFormElement>(null);
+  const parsed = parseSizeInput(form.values, entry, item.ownership === 'owned');
+  const invalid = form.touched && (!parsed.ok || !!form.error);
+  const change = (values: SizeInputValues, mode: 'preset' | 'custom') => {
+    const result = parseSizeInput(values, entry, item.ownership === 'owned');
     if (!result.ok) {
-      setForm((f) => ({
-        ...f,
+      setForm({
+        signature,
+        values,
         error: result.message,
         field: result.field,
         mode,
-      }));
-      focusField(result.field);
+        touched: true,
+      });
       return;
     }
     const error = onCommit({
@@ -183,13 +168,14 @@ export function FurnitureSizeForm({
       ...result.size,
       overrideSizeLock: true,
     });
-    setForm((f) => ({
-      ...f,
+    setForm({
+      signature,
+      values,
       error: error ?? '',
       field: error ? 'width' : '',
       mode,
-    }));
-    if (error) focusField('width');
+      touched: true,
+    });
   };
   const error = (mode: 'preset' | 'custom') =>
     form.error &&
@@ -203,7 +189,11 @@ export function FurnitureSizeForm({
       className={styles.section}
       ref={customRef}
       noValidate
-      onSubmit={(e) => submit(e, 'custom')}
+      data-inspector-invalid={(invalid && form.mode === 'custom') || undefined}
+      onSubmit={(event) => {
+        event.preventDefault();
+        change(form.values, 'custom');
+      }}
     >
       <h3>Size estimate</h3>
       <FurnitureSizeFields
@@ -216,63 +206,48 @@ export function FurnitureSizeForm({
         presentation="dimensions"
         onChange={(values) => {
           const { height, ...other } = values;
-          setForm((f) => ({
-            ...f,
-            values:
-              f.values.height === undefined &&
+          change(
+            form.values.height === undefined &&
               height === String(item.dimensions.height.value ?? '')
-                ? other
-                : values,
-            error: '',
-            field: '',
-            mode: 'custom',
-          }));
+              ? other
+              : values,
+            'custom',
+          );
         }}
         errorField={form.mode === 'custom' ? form.field : ''}
         errorId={errorId}
       />
       <p className={styles.hint}>
-        Estimates stay approximate. Confirm measured values below. Applying a
-        size leaves its protection settings unchanged.
+        Estimates stay approximate. Confirm measured values in Advanced. Size
+        edits leave protection settings unchanged.
       </p>
       {error('custom')}
-      <button type="submit" disabled={!changed}>
-        Apply custom size
-      </button>
     </form>
   );
-  return (
-    <>
-      {presets.length > 0 && (
-        <form
-          className={styles.section}
-          ref={presetRef}
-          noValidate
-          onSubmit={(e) => submit(e, 'preset')}
-        >
-          <FurnitureSizeFields
-            entry={entry}
-            values={form.values}
-            presentation="preset"
-            onChange={(values) =>
-              setForm((f) => ({
-                ...f,
-                values,
-                error: '',
-                field: '',
-                mode: 'preset',
-              }))
-            }
-            errorField={form.mode === 'preset' ? form.field : ''}
-            errorId={errorId}
-          />
-          {error('preset')}
-          {changed && form.values.preset && (
-            <button type="submit">Apply size</button>
-          )}
-        </form>
-      )}
-      {children(customSize)}
-    </>
-  );
+  const presetSize =
+    presets.length > 0 ? (
+      <form
+        className={styles.section}
+        ref={presetRef}
+        noValidate
+        data-inspector-invalid={
+          (invalid && form.mode === 'preset') || undefined
+        }
+        onSubmit={(event) => {
+          event.preventDefault();
+          change(form.values, 'preset');
+        }}
+      >
+        <FurnitureSizeFields
+          entry={entry}
+          values={form.values}
+          presentation="preset"
+          onChange={(values) => change(values, 'preset')}
+          errorField={form.mode === 'preset' ? form.field : ''}
+          errorId={errorId}
+        />
+        {error('preset')}
+      </form>
+    ) : null;
+  return <>{children(customSize, presetSize)}</>;
 }

@@ -1,5 +1,8 @@
 import { CostWorkspace } from '../cost/workspace';
 import { usePhaseMotion } from './use-phase-motion';
+import { useViewMorph } from './use-view-morph';
+import { planBox } from '../plan-view/adapter';
+import morphStyles from './view-morph.module.css';
 import { destinationHref, projectDestination } from '../cost/navigation';
 import type { ProjectDestination } from '../cost/navigation';
 import { featureLabel } from '@roomedy/spatial';
@@ -17,6 +20,7 @@ import {
   lazy,
   Suspense,
   useEffect,
+  useCallback,
   useMemo,
   useRef,
   useState,
@@ -46,6 +50,7 @@ import { CataloguePlacement } from './catalogue-placement';
 import { CataloguePlacementHint } from './catalogue-placement-ui';
 import styles from './editor.module.css';
 import furnitureStyles from './furniture-inspector.module.css';
+import { focusInvalidInspector } from './inspector-tabs';
 import { FrameControls, ViewControls } from './view-controls';
 import { activeRoomTool, arrangingSelection } from './selection-actions';
 import { furnitureOpening, featureOpening } from '../room-view/articulation';
@@ -122,9 +127,7 @@ export function Editor({
     placement.getEntry,
   );
   const [catalogueCategory, setCatalogueCategory] = useState('all');
-  const [cutawayOpenedAt, setCutawayOpenedAt] = useState(() =>
-    performance.now(),
-  );
+  const [cutawayOpenedAt] = useState(() => performance.now());
   const panelMotion = useSurfaceMotion(
     `${state.workspace?.workspaceId ?? 'opening'}:${state.presentation.panel}:${state.presentation.panel === 'inspector' ? state.presentation.selectedId : ''}:${state.comparison}`,
   );
@@ -136,8 +139,13 @@ export function Editor({
   useEffect(() => {
     if (state.comparison === 'before') controller.setComparison('current');
   }, [controller, state.comparison]);
-  const setRoomView = (view: 'plan' | 'cutaway') =>
-    controller.setRoomView(view);
+  const setRoomView = useCallback(
+    (view: 'plan' | 'cutaway') => {
+      placement.cancel();
+      controller.setRoomView(view);
+    },
+    [placement, controller],
+  );
   const headingRef = useRef<HTMLHeadingElement>(null);
   const phaseStage = useRef<HTMLElement>(null),
     propertiesRef = useRef<HTMLElement>(null),
@@ -220,11 +228,36 @@ export function Editor({
   const cameraAvailability = useRef<'opening' | 'ready' | 'unavailable'>(
     'opening',
   );
+  const planLayer = useRef<HTMLDivElement>(null),
+    cutawayLayer = useRef<HTMLDivElement>(null);
+  const viewBox = useMemo(() => {
+    const workspace = state.workspace;
+    if (!workspace) return { x: -500, z: -500, width: 5200, depth: 5800 };
+    const projected =
+      state.comparison === 'before'
+        ? workspace.baseline
+        : (state.candidate?.room ?? workspace.current);
+    return planBox(projected, state.presentation, comparisonFrame(workspace));
+  }, [state.workspace, state.comparison, state.candidate, state.presentation]);
+  const viewMorph = useViewMorph(
+    roomView,
+    workspaceId,
+    viewBox,
+    state.destination === 'design' && state.phase === 'editor',
+    planLayer,
+    cutawayLayer,
+  );
+  useEffect(() => {
+    if (viewMorph.failed && roomView === 'cutaway')
+      controller.setRoomView('plan');
+  }, [viewMorph.failed, roomView, controller]);
+  const onViewAvailability = viewMorph.onAvailability;
   const updateCameraAvailability = useMemo(
     () => (availability: typeof cameraAvailability.current) => {
       cameraAvailability.current = availability;
+      onViewAvailability(availability);
     },
-    [],
+    [onViewAvailability],
   );
   const consumeCamera = useMemo(
     () => (sequence: number) =>
@@ -264,7 +297,12 @@ export function Editor({
     headingRef.current?.focus({ preventScroll: true });
   }, [state.phase, workspaceId, state.destination]);
   useEffect(() => {
-    if (!state.candidate || state.candidate.source === 'assistant') return;
+    if (
+      !state.candidate ||
+      state.candidate.source === 'assistant' ||
+      state.candidate.source === 'inspector'
+    )
+      return;
     const target = previewRef.current;
     target
       ?.querySelector<HTMLButtonElement>('button')
@@ -293,9 +331,8 @@ export function Editor({
       };
       switch (control.type) {
         case 'view':
-          if (control.view === 'cutaway') setCutawayOpenedAt(performance.now());
           setMedyCamera(null);
-          controller.setRoomView(control.view);
+          setRoomView(control.view);
           return done(
             control.view === 'plan'
               ? 'Here’s your 2D plan.'
@@ -371,8 +408,7 @@ export function Editor({
                   : 'That viewpoint needs a known room frame and doorway position. We can use Overview meanwhile.',
             };
           if (view.roomView !== 'cutaway') {
-            setCutawayOpenedAt(performance.now());
-            controller.setRoomView('cutaway');
+            setRoomView('cutaway');
           }
           setMedyCamera({
             ...control,
@@ -437,7 +473,7 @@ export function Editor({
           };
       }
     };
-  }, [controller, placement, workspaceId]);
+  }, [controller, placement, workspaceId, setRoomView]);
   if (!workspace)
     return (
       <main id="main-content" className={styles.expired}>
@@ -488,6 +524,16 @@ export function Editor({
     !state.clientLoadFailure &&
     state.candidate?.source === 'assistant' &&
     view.panel === 'inspector';
+  const editingManualInspector =
+    !before &&
+    !state.clientLoadFailure &&
+    (!state.candidate || state.candidate.source === 'inspector');
+  const showInspectorFooter =
+    editingAssistantFurniture ||
+    (editingManualInspector &&
+      (view.panel === 'room' ||
+        (view.panel === 'inspector' && !!(item || feature)))) ||
+    state.candidate?.source === 'inspector';
   const openingContext = JSON.stringify([
     state.generation,
     workspace.workspaceId,
@@ -572,7 +618,6 @@ export function Editor({
     <FrameControls
       view={roomView}
       onView={(next) => {
-        if (next === 'cutaway') setCutawayOpenedAt(performance.now());
         setRoomView(next);
       }}
     />
@@ -745,176 +790,198 @@ export function Editor({
               </div>
             )}
 
-            <div className={controlsStyles.viewStage}>
-              {roomView === 'plan' ? (
-                <div className={controlsStyles.stage}>
-                  <div ref={planToolsMotion} className="motion-surface">
-                    <ViewControls
-                      controller={controller}
-                      arranging={arranging}
-                      readOnly={readOnly || !!adding}
-                      rotationLocked={!item || item.locks.rotation}
-                      onRotate={rotatePlanSelection}
-                      snap={view.snap}
-                      onSnap={(snap) => controller.setView({ snap })}
-                      onZoom={(direction) =>
-                        controller.setView({
-                          zoom: view.zoom + direction * 0.2,
-                        })
-                      }
-                      zoomOutDisabled={view.zoom <= 0.6}
-                      zoomInDisabled={view.zoom >= 3}
-                      onFit={() =>
-                        controller.setView({ zoom: 1, panX: 0, panZ: 0 })
-                      }
-                    >
-                      <div
-                        className={`${controlsStyles.tools} ${controlsStyles.directions}`}
-                        role="group"
-                        aria-label="Pan plan"
-                      >
-                        {(
-                          [
-                            ['left', '←', -250, 0],
-                            ['right', '→', 250, 0],
-                            ['up', '↑', 0, -250],
-                            ['down', '↓', 0, 250],
-                          ] as const
-                        ).map(([label, text, x, z]) => (
-                          <button
-                            key={label}
-                            aria-label={`Pan ${label}`}
-                            onClick={() =>
-                              controller.setView({
-                                panX: view.panX + x,
-                                panZ: view.panZ + z,
-                              })
-                            }
-                          >
-                            {text}
-                          </button>
-                        ))}
-                      </div>
-                    </ViewControls>
-                  </div>
-                  <PlanView
+            <div
+              className={controlsStyles.viewStage}
+              data-view-transition={
+                viewMorph.moving
+                  ? 'moving'
+                  : !viewMorph.ready && !viewMorph.failed
+                    ? 'warming'
+                    : 'settled'
+              }
+              data-requested-view={roomView}
+              aria-busy={
+                viewMorph.moving ||
+                (!viewMorph.ready &&
+                  roomView === 'cutaway' &&
+                  !viewMorph.failed)
+              }
+            >
+              <div
+                ref={planLayer}
+                className={`${controlsStyles.stage} ${morphStyles.planLayer}`}
+                data-view-layer="2d"
+                inert={!viewMorph.planInteractive}
+                aria-hidden={!viewMorph.planInteractive || undefined}
+              >
+                <div ref={planToolsMotion} className="motion-surface">
+                  <ViewControls
                     controller={controller}
-                    state={state}
-                    placement={placement}
                     arranging={arranging}
-                  />
-                </div>
-              ) : (
-                <CutawayBoundary
-                  onFailure={() => controller.clientPartFailed()}
-                  fallback={
-                    <div className={controlsStyles.stage}>
-                      <p role="status">
-                        The cutaway could not load. Continue editing in the
-                        plan.
-                      </p>
-                      <PlanView
-                        controller={controller}
-                        state={state}
-                        arranging={arranging}
-                      />
-                    </div>
-                  }
-                >
-                  <Suspense
-                    fallback={
-                      <div className={controlsStyles.stage}>
-                        <p role="status">Opening the cutaway…</p>
-                        <PlanView
-                          controller={controller}
-                          state={state}
-                          arranging={arranging}
-                        />
-                      </div>
+                    readOnly={readOnly || !!adding}
+                    rotationLocked={!item || item.locks.rotation}
+                    onRotate={rotatePlanSelection}
+                    snap={view.snap}
+                    onSnap={(snap) => controller.setView({ snap })}
+                    onZoom={(direction) =>
+                      controller.setView({
+                        zoom: view.zoom + direction * 0.2,
+                      })
+                    }
+                    zoomOutDisabled={view.zoom <= 0.6}
+                    zoomInDisabled={view.zoom >= 3}
+                    onFit={() =>
+                      controller.setView({ zoom: 1, panX: 0, panZ: 0 })
                     }
                   >
-                    <Cutaway
-                      key={workspace.workspaceId}
-                      active={
-                        state.destination === 'design' || phaseMotion.moving
-                      }
-                      room={before ? workspace.baseline : room}
-                      cameraFrame={comparisonFrame(workspace)}
-                      candidate={state.candidate?.room}
-                      checks={shownChecks}
-                      selectedId={view.selectedId}
-                      openingId={openingIsOpen ? view.selectedId : null}
-                      onSelect={(id) => controller.select(id)}
-                      cameraStateRef={cameraStateRef}
-                      openedAt={cutawayOpenedAt}
-                      onPlan={() => setRoomView('plan')}
-                      controller={controller}
-                      readOnly={readOnly || !!adding}
-                      placement={placement}
-                      onAddDesk={() => open('catalogue', 'desk')}
-                      snap={view.snap}
-                      arranging={arranging}
-                      medyCamera={
-                        medyCamera?.workspaceId === workspaceId
-                          ? medyCamera
-                          : null
-                      }
-                      onMedyCamera={consumeCamera}
-                      onCameraAvailability={updateCameraAvailability}
-                    />
-                  </Suspense>
-                </CutawayBoundary>
-              )}
+                    <div
+                      className={`${controlsStyles.tools} ${controlsStyles.directions}`}
+                      role="group"
+                      aria-label="Pan plan"
+                    >
+                      {(
+                        [
+                          ['left', '←', -250, 0],
+                          ['right', '→', 250, 0],
+                          ['up', '↑', 0, -250],
+                          ['down', '↓', 0, 250],
+                        ] as const
+                      ).map(([label, text, x, z]) => (
+                        <button
+                          key={label}
+                          aria-label={`Pan ${label}`}
+                          onClick={() =>
+                            controller.setView({
+                              panX: view.panX + x,
+                              panZ: view.panZ + z,
+                            })
+                          }
+                        >
+                          {text}
+                        </button>
+                      ))}
+                    </div>
+                  </ViewControls>
+                </div>
+                <PlanView
+                  active={viewMorph.planInteractive}
+                  controller={controller}
+                  state={state}
+                  placement={placement}
+                  arranging={arranging}
+                />
+              </div>
+              <CutawayBoundary
+                onFailure={() => {
+                  viewMorph.onAvailability('unavailable');
+                  controller.clientPartFailed();
+                }}
+                fallback={null}
+              >
+                <Suspense fallback={null}>
+                  <Cutaway
+                    key={workspace.workspaceId}
+                    layerRef={cutawayLayer}
+                    layerClassName={morphStyles.cutawayLayer}
+                    viewBridge={viewMorph.bridge}
+                    interactive={viewMorph.cutawayInteractive}
+                    active={
+                      (state.destination === 'design' || phaseMotion.moving) &&
+                      (!viewMorph.ready ||
+                        roomView === 'cutaway' ||
+                        viewMorph.moving)
+                    }
+                    room={before ? workspace.baseline : room}
+                    cameraFrame={comparisonFrame(workspace)}
+                    candidate={state.candidate?.room}
+                    checks={shownChecks}
+                    selectedId={view.selectedId}
+                    openingId={openingIsOpen ? view.selectedId : null}
+                    onSelect={(id) => controller.select(id)}
+                    cameraStateRef={cameraStateRef}
+                    openedAt={cutawayOpenedAt}
+                    onPlan={() => setRoomView('plan')}
+                    controller={controller}
+                    readOnly={readOnly || !!adding}
+                    placement={placement}
+                    onAddDesk={() => open('catalogue', 'desk')}
+                    snap={view.snap}
+                    arranging={arranging}
+                    medyCamera={
+                      medyCamera?.workspaceId === workspaceId
+                        ? medyCamera
+                        : null
+                    }
+                    onMedyCamera={consumeCamera}
+                    onCameraAvailability={updateCameraAvailability}
+                  />
+                </Suspense>
+              </CutawayBoundary>
               {frameControls}
+              {viewMorph.failed && (
+                <p className={morphStyles.failure} role="status">
+                  The 3D view is unavailable here. You can keep using your 2D
+                  plan.
+                </p>
+              )}
+              {!viewMorph.ready &&
+                !viewMorph.failed &&
+                roomView === 'cutaway' && (
+                  <p className={morphStyles.status} role="status">
+                    Preparing 3D. Your plan remains available.
+                  </p>
+                )}
             </div>
             <CataloguePlacementHint placement={placement} />
-            {state.candidate && state.candidate.source !== 'assistant' && (
-              <div
-                className={styles.previewActions}
-                ref={previewRef}
-                data-room-target="preview"
-              >
-                <div>
-                  <p>
-                    {state.candidate.label ?? 'Appearance change'} · Preview
-                  </p>
-                  <PreviewChangeList
-                    current={room}
-                    proposed={state.candidate.room}
-                    className={styles.changeList}
-                  />
-                </div>
-                <button
-                  className={styles.primary}
-                  onClick={() => {
-                    const r = controller.applyVisitorPreview();
-                    if (!r.ok)
-                      controller.notify(
-                        failureMessage(
-                          r,
-                          controller.getSnapshot().workspace?.current,
-                        ),
-                      );
-                    else
+            {state.candidate &&
+              state.candidate.source !== 'assistant' &&
+              state.candidate.source !== 'inspector' && (
+                <div
+                  className={styles.previewActions}
+                  ref={previewRef}
+                  data-room-target="preview"
+                >
+                  <div>
+                    <p>
+                      {state.candidate.label ?? 'Appearance change'} · Preview
+                    </p>
+                    <PreviewChangeList
+                      current={room}
+                      proposed={state.candidate.room}
+                      className={styles.changeList}
+                    />
+                  </div>
+                  <button
+                    className={styles.primary}
+                    onClick={() => {
+                      const r = controller.applyVisitorPreview();
+                      if (!r.ok)
+                        controller.notify(
+                          failureMessage(
+                            r,
+                            controller.getSnapshot().workspace?.current,
+                          ),
+                        );
+                      else
+                        requestAnimationFrame(() =>
+                          headingRef.current?.focus({ preventScroll: true }),
+                        );
+                    }}
+                  >
+                    Apply changes
+                  </button>
+                  <button
+                    onClick={() => {
+                      controller.cancelPreview();
                       requestAnimationFrame(() =>
                         headingRef.current?.focus({ preventScroll: true }),
                       );
-                  }}
-                >
-                  Apply changes
-                </button>
-                <button
-                  onClick={() => {
-                    controller.cancelPreview();
-                    requestAnimationFrame(() =>
-                      headingRef.current?.focus({ preventScroll: true }),
-                    );
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
             {view.selectedId && (
               <button
                 className={styles.mobileReturn}
@@ -938,13 +1005,13 @@ export function Editor({
           </section>
           <aside
             ref={propertiesRef}
-            className={`${styles.panel} ${view.panel === 'assistant' ? styles.assistantPanel : ''} ${editingAssistantFurniture ? furnitureStyles.previewPanel : ''}`}
+            className={`${styles.panel} ${view.panel === 'assistant' ? styles.assistantPanel : ''} ${showInspectorFooter ? furnitureStyles.previewPanel : ''}`}
             data-room-target="properties"
             tabIndex={-1}
             aria-label="Room properties"
           >
             <div
-              className={`${furnitureStyles.body} ${editingAssistantFurniture ? 'roomedy-scroll' : ''}`}
+              className={`${furnitureStyles.body} ${showInspectorFooter ? 'roomedy-scroll' : ''}`}
             >
               <div ref={panelMotion} className="motion-surface">
                 <div className="motion-flow">
@@ -1051,7 +1118,8 @@ export function Editor({
                   )}
                   {view.panel === 'inspector' &&
                   readOnly &&
-                  !editingAssistantFurniture ? (
+                  !editingAssistantFurniture &&
+                  !editingManualInspector ? (
                     <section className={styles.section}>
                       <p className={styles.eyebrow}>
                         {before ? 'Before inspection' : 'Read-only inspection'}
@@ -1107,7 +1175,8 @@ export function Editor({
                                     actions,
                                     state.candidate!.identity.operationId,
                                   )
-                              : undefined
+                              : (actions, label) =>
+                                  controller.previewInspector(actions, label)
                           }
                           item={item}
                           openingPreview={openingPreview}
@@ -1115,7 +1184,12 @@ export function Editor({
                       </>
                     ) : feature ? (
                       <FeatureInspector
+                        key={`${feature.id}/${state.inspectorReset ?? 0}`}
                         controller={controller}
+                        room={shownRoom}
+                        onEdit={(actions, label) =>
+                          controller.previewInspector(actions, label)
+                        }
                         feature={feature}
                         openingPreview={openingPreview}
                       />
@@ -1166,7 +1240,7 @@ export function Editor({
                       />
                     ))}
                   {view.panel === 'room' &&
-                    (readOnly ? (
+                    (readOnly && !editingManualInspector ? (
                       <section className={styles.section}>
                         <p className={styles.eyebrow}>
                           {before
@@ -1208,7 +1282,13 @@ export function Editor({
                         )}
                       </section>
                     ) : (
-                      <RoomPanel controller={controller} room={room} />
+                      <RoomPanel
+                        controller={controller}
+                        room={shownRoom}
+                        onEdit={(actions, label) =>
+                          controller.previewInspector(actions, label)
+                        }
+                      />
                     ))}
                   {view.panel === 'checks' && (
                     <ChecksPanel
@@ -1220,48 +1300,68 @@ export function Editor({
                 </div>
               </div>
             </div>
-            {editingAssistantFurniture && (
-              <div
+            {showInspectorFooter && (
+              <footer
                 className={furnitureStyles.decisions}
-                role="group"
-                aria-label="Review edited preview"
+                aria-label="Settings changes"
               >
+                <p className={furnitureStyles.previewNote}>
+                  {state.candidate
+                    ? 'Previewing unsaved changes'
+                    : 'Changes are up to date'}
+                </p>
                 <div>
                   <button
                     className={styles.primary}
+                    disabled={
+                      !state.candidate ||
+                      (state.candidate.source !== 'inspector' &&
+                        !editingAssistantFurniture)
+                    }
                     onClick={() => {
-                      const result = assistant
-                        ? assistant.apply(state.candidate!.identity.operationId)
-                        : controller.applyAssistantPreview();
+                      if (focusInvalidInspector(propertiesRef.current)) {
+                        controller.notify(
+                          'Complete the highlighted field before applying.',
+                        );
+                        return;
+                      }
+                      const result = editingAssistantFurniture
+                        ? assistant
+                          ? assistant.apply(
+                              state.candidate!.identity.operationId,
+                            )
+                          : controller.applyAssistantPreview()
+                        : controller.applyInspectorChanges();
                       if (!result.ok)
                         controller.notify(failureMessage(result, room));
-                      else focusProperties(controller, item!.id);
                     }}
                   >
                     Apply changes
                   </button>
                   <button
                     onClick={() => {
-                      if (assistant)
-                        assistant.cancel(state.candidate!.identity.operationId);
-                      else controller.cancelPreview();
+                      if (editingAssistantFurniture) {
+                        const result = controller.resetAssistantRefinements();
+                        if (!result.ok)
+                          controller.notify(failureMessage(result, room));
+                      } else controller.resetInspectorChanges();
+                    }}
+                  >
+                    Reset changes
+                  </button>
+                </div>
+                {editingAssistantFurniture && (
+                  <button
+                    className={furnitureStyles.back}
+                    onClick={() => {
                       controller.setPanel('assistant');
                       focusProperties(controller);
                     }}
                   >
-                    Cancel
+                    Back to Medy
                   </button>
-                </div>
-                <button
-                  className={furnitureStyles.back}
-                  onClick={() => {
-                    controller.setPanel('assistant');
-                    focusProperties(controller);
-                  }}
-                >
-                  Back to Medy
-                </button>
-              </div>
+                )}
+              </footer>
             )}
           </aside>
         </div>

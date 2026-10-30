@@ -4,11 +4,13 @@
     "noEmit": true,
     "lib": ["ES2023", "DOM"],
     "module": "ESNext",
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "jsx": "preserve"
   },
   "include": [
     "**/*.ts",
     "../vitest.config.ts",
+    "../apps/frontend/node_modules/next/types/global.d.ts",
     "../scripts/measure-performance.ts"
   ]
 }

@@ -14,6 +14,8 @@ import {
 } from '@roomedy/contracts/surfaces';
 import type { SurfaceTarget, SurfaceDetail } from '@roomedy/contracts/surfaces';
 import styles from './editor.module.css';
+import { focusInvalidInspector } from './inspector-tabs';
+import layout from './appearance-controls.module.css';
 
 type Apply = (actions: VisitorAction[], label: string) => string | null;
 function SurfaceForm({
@@ -37,9 +39,50 @@ function SurfaceForm({
   const [detail, setDetail] = useState(() => ({
     ...roomSurfaceDetail(room.room, target),
   }));
+  const signature = JSON.stringify([
+    current,
+    roomSurfaceDetail(room.room, target),
+  ]);
+  const [source, setSource] = useState(signature);
+  if (source !== signature) {
+    setSource(signature);
+    setColor(current.color);
+    setHex(current.color);
+    setTexture(current.texture);
+    setDetail({ ...roomSurfaceDetail(room.room, target) });
+  }
+  function preview(
+    next: {
+      hex?: string;
+      texture?: typeof texture;
+      detail?: SurfaceDetail;
+    } = {},
+  ) {
+    const colour = next.hex ?? hex;
+    const nextDetail = next.detail ?? detail;
+    if (
+      !surfaceColorSchema.safeParse(colour).success ||
+      !surfaceDetailSchema.safeParse(nextDetail).success
+    )
+      return;
+    const change = changedRoomSurface(room.room, target, {
+      color: colour,
+      texture: next.texture ?? texture,
+      detail: nextDetail,
+    });
+    setError(
+      change
+        ? (onApply(
+            [{ type: 'set-room-surface', ...change }],
+            `Change ${target} finish`,
+          ) ?? '')
+        : '',
+    );
+  }
   const updateDetail = (next: SurfaceDetail) => {
     setDetail(next);
     setError('');
+    preview({ detail: next });
   };
   const name =
     target === 'walls'
@@ -63,7 +106,13 @@ function SurfaceForm({
   return (
     <form
       noValidate
-      className={styles.surfaceForm}
+      data-inspector-invalid={
+        !validColor ||
+        !surfaceDetailSchema.safeParse(detail).success ||
+        !!error ||
+        undefined
+      }
+      className={`${styles.surfaceForm} ${layout.group}`}
       onSubmit={(event) => {
         event.preventDefault();
         if (!validColor) {
@@ -96,55 +145,65 @@ function SurfaceForm({
         );
       }}
     >
-      <h3>{name}</h3>
-      <div
-        className={styles.surfacePreview}
-        data-texture={texture}
-        style={{ backgroundColor: color }}
-        role="img"
-        aria-label={`${name}: ${color}, ${SURFACE_TEXTURES[texture]}`}
-      />
       <ColourPicker
         label={`${name} colour`}
+        displayLabel="Colour"
         value={hex}
         onChange={(value) => {
           setHex(value);
           if (surfaceColorSchema.safeParse(value).success) setColor(value);
           setError('');
+          preview({ hex: value });
         }}
       />
-      {colorEvidence?.status === 'estimated' && (
+      {(colorEvidence?.status === 'estimated' ||
+        textureEvidence?.status === 'estimated') && (
         <p className={styles.hint}>
-          Colour estimated from photos; lighting can affect it.
+          Appearance estimated from photos; lighting can affect colours.
         </p>
       )}
-      {colorEvidence?.status === 'unknown' && (
-        <p className={styles.hint}>Default colour.</p>
-      )}
-      <div
-        className={styles.materialChoices}
-        role="group"
-        aria-label={`${name} materials`}
-      >
-        {SURFACE_OPTIONS[target].map((value) => (
-          <button
-            type="button"
-            key={value}
-            aria-pressed={texture === value}
-            className={styles.materialChoice}
-            data-texture={value}
-            onClick={() => setTexture(value)}
-          >
+      <details className={layout.disclosure}>
+        <summary>
+          Material
+          <span className={layout.materialSummary}>
             <span
+              className={`${styles.surfacePreview} ${layout.swatch}`}
+              data-texture={texture}
               style={{ backgroundColor: color }}
-              data-texture={value}
-              aria-hidden="true"
+              role="img"
+              aria-label={`${name}: ${color}, ${SURFACE_TEXTURES[texture]}`}
             />
-            {SURFACE_TEXTURES[value]}
-          </button>
-        ))}
-      </div>
-      <details className={styles.materialDetails}>
+            {SURFACE_TEXTURES[texture]}
+          </span>
+        </summary>
+        <div
+          className={styles.materialChoices}
+          role="group"
+          aria-label={`${name} materials`}
+        >
+          {SURFACE_OPTIONS[target].map((value) => (
+            <button
+              type="button"
+              key={value}
+              aria-pressed={texture === value}
+              className={styles.materialChoice}
+              data-texture={value}
+              onClick={() => {
+                setTexture(value);
+                preview({ texture: value });
+              }}
+            >
+              <span
+                style={{ backgroundColor: color }}
+                data-texture={value}
+                aria-hidden="true"
+              />
+              {SURFACE_TEXTURES[value]}
+            </button>
+          ))}
+        </div>
+      </details>
+      <details className={`${styles.materialDetails} ${layout.disclosure}`}>
         <summary>Pattern &amp; finish</summary>
         <div className={styles.twoFields}>
           {(['repeatWidthMm', 'repeatHeightMm'] as const).map((field) => (
@@ -213,24 +272,11 @@ function SurfaceForm({
           </label>
         </div>
       </details>
-      {textureEvidence?.status === 'estimated' && (
-        <p className={styles.hint}>Texture estimated from photos.</p>
-      )}
-      {textureEvidence?.status === 'unknown' && (
-        <p className={styles.hint}>Default texture.</p>
-      )}
       {error && (
         <p id={id} role="alert" className={styles.surfaceError}>
           {error}
         </p>
       )}
-      <button
-        type="submit"
-        aria-describedby={error ? id : undefined}
-        disabled={!validColor || patch === null}
-      >
-        Apply {name.toLowerCase()} finish
-      </button>
     </form>
   );
 }
@@ -242,13 +288,21 @@ export function SurfaceControls({
   onApply: Apply;
 }) {
   const [target, setTarget] = useState<SurfaceTarget>('walls');
+  const root = useRef<HTMLDivElement>(null);
   return (
-    <div className={styles.surfaceControls}>
+    <div
+      className={`${styles.surfaceControls} ${layout.stack} ${layout.surface}`}
+      ref={root}
+    >
       <label>
-        Customize surface
+        Surface
         <select
+          aria-label="Customize surface"
           value={target}
-          onChange={(event) => setTarget(event.target.value as SurfaceTarget)}
+          onChange={(event) => {
+            if (!focusInvalidInspector(root.current))
+              setTarget(event.target.value as SurfaceTarget);
+          }}
         >
           <option value="floor">Floor</option>
           <option value="walls">All walls</option>
@@ -261,7 +315,7 @@ export function SurfaceControls({
         </select>
       </label>
       <SurfaceForm
-        key={`${room.roomId}:${target}:${JSON.stringify(room.room.surfaces)}:${room.room.floorFinish}:${room.room.wallFinish}`}
+        key={`${room.roomId}:${target}`}
         room={room}
         target={target}
         onApply={onApply}

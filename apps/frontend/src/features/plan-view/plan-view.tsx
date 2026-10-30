@@ -24,12 +24,18 @@ import type { SessionSnapshot } from '../session/state';
 import { comparisonFrame } from '../session/state';
 import { FINISH_PALETTE } from '../catalogue/finishes';
 import {
+  furnitureMaterialTargets,
+  furnitureMaterialRoles,
+} from '@roomedy/contracts/furniture-materials';
+import type { FurnitureMaterialTarget } from '@roomedy/contracts/furniture-materials';
+import {
   displayFurnitureSize,
   hasIllustrativeSize,
   ILLUSTRATIVE_SIZE_NOTICE,
 } from '../catalogue/display-size';
 import previewStyles from '../room-view/room-view.module.css';
-import { roomSurface } from '@roomedy/contracts/surfaces';
+import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
+import type { SurfaceTexture } from '@roomedy/contracts/surfaces';
 import { failureMessage } from '../room-editor/messages';
 import {
   nudgePosition,
@@ -75,7 +81,104 @@ type WindowGesture = Pick<
 type Ghost = { id: string; x: number; z: number };
 const noSubscribe = () => () => {};
 const noEntry = () => null;
-function OrientedFootprint({
+function PlanMaterialRect({
+  id,
+  material,
+  part,
+  x,
+  y,
+  width,
+  height,
+  repeatWidth = 160,
+  repeatHeight = 160,
+  direction = 0,
+}: {
+  id: string;
+  material: Pick<FurnitureMaterialTarget, 'color'> & {
+    surface: FurnitureMaterialTarget['surface'] | SurfaceTexture;
+  };
+  part: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  repeatWidth?: number;
+  repeatHeight?: number;
+  direction?: number;
+}) {
+  const patterned = !['smooth', 'plaster', 'paint', 'concrete'].includes(
+    material.surface,
+  );
+  return (
+    <g
+      data-plan-part={part}
+      data-pattern={material.surface}
+      pointerEvents="none"
+    >
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rx={24}
+        fill={material.color}
+        stroke="#5d514760"
+        strokeWidth={10}
+      />
+      {patterned && (
+        <>
+          <defs>
+            <pattern
+              id={id}
+              width={repeatWidth}
+              height={repeatHeight}
+              viewBox="0 0 160 160"
+              preserveAspectRatio="none"
+              patternTransform={`rotate(${direction * 90})`}
+              patternUnits="userSpaceOnUse"
+            >
+              <g fill="#302b25" stroke="#302b25" strokeWidth="8">
+                {material.surface === 'checker' ? (
+                  <>
+                    <rect width="80" height="80" />
+                    <rect x="80" y="80" width="80" height="80" />
+                  </>
+                ) : material.surface === 'stripes' ? (
+                  <path d="M20 0v160M80 0v160M140 0v160" />
+                ) : material.surface === 'herringbone' ? (
+                  <path d="m0 0 80 80-80 80m80-160 80 80-80 80" fill="none" />
+                ) : material.surface === 'wood' ||
+                  material.surface === 'planks' ? (
+                  <path
+                    d="M0 20q80-30 160 0M0 80q80 30 160 0M0 140q80-30 160 0"
+                    fill="none"
+                  />
+                ) : material.surface === 'tile' ? (
+                  <rect width="160" height="160" fill="none" />
+                ) : (
+                  <path
+                    d="M0 40h160M0 120h160M40 0v160M120 0v160"
+                    fill="none"
+                  />
+                )}
+              </g>
+            </pattern>
+          </defs>
+          <rect
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            rx={24}
+            fill={`url(#${id})`}
+            opacity={material.surface === 'fabric' ? 0.12 : 0.22}
+          />
+        </>
+      )}
+    </g>
+  );
+}
+export function OrientedFootprint({
   item,
   selected,
 }: {
@@ -83,6 +186,7 @@ function OrientedFootprint({
   selected: boolean;
 }) {
   const quarter = useRef(item.pose.quarterTurns);
+  const materialId = useId();
   const [angle, setAngle] = useState(item.pose.quarterTurns * 90);
   useLayoutEffect(() => {
     const difference = ((item.pose.quarterTurns - quarter.current + 6) % 4) - 2;
@@ -93,6 +197,11 @@ function OrientedFootprint({
     w = size?.width ?? item.dimensions.width.value,
     d = size?.depth ?? item.dimensions.depth.value;
   if (w === null || d === null) return null;
+  const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion);
+  const materials = entry
+    ? furnitureMaterialTargets(item, entry.category)
+    : null;
+  const soft = entry && furnitureMaterialRoles(entry).soft;
   return (
     <g className={styles.pieceFootprint} transform={`rotate(${angle})`}>
       <rect
@@ -113,6 +222,74 @@ function OrientedFootprint({
         strokeWidth={selected ? 35 : 14}
         strokeDasharray={hasIllustrativeSize(item) ? '50 35' : undefined}
       />
+      {materials && (
+        <>
+          <PlanMaterialRect
+            id={`${materialId}-frame`}
+            material={materials.frame}
+            part="frame"
+            x={-w * 0.48}
+            y={-d * 0.48}
+            width={w * 0.96}
+            height={d * 0.96}
+          />
+          {entry?.category === 'bed' ? (
+            <>
+              <PlanMaterialRect
+                id={`${materialId}-sheet`}
+                material={materials.sheet}
+                part="sheets"
+                x={-w * 0.45}
+                y={-d * 0.45}
+                width={w * 0.9}
+                height={d * 0.9}
+              />
+              <PlanMaterialRect
+                id={`${materialId}-cover`}
+                material={materials.blanket}
+                part="duvet"
+                x={-w * 0.44}
+                y={-d * 0.1}
+                width={w * 0.88}
+                height={d * 0.54}
+              />
+              {[-1, 1].map((side) => (
+                <PlanMaterialRect
+                  key={side}
+                  id={`${materialId}-pillow-${side}`}
+                  material={materials.pillow}
+                  part="pillow"
+                  x={side < 0 ? -w * 0.39 : w * 0.05}
+                  y={-d * 0.39}
+                  width={w * 0.34}
+                  height={d * 0.17}
+                />
+              ))}
+            </>
+          ) : entry?.category === 'tv' ? (
+            <rect
+              x={-w * 0.43}
+              y={-d * 0.28}
+              width={w * 0.86}
+              height={d * 0.56}
+              fill="#282b2a"
+              pointerEvents="none"
+            />
+          ) : (
+            soft && (
+              <PlanMaterialRect
+                id={`${materialId}-soft`}
+                material={materials.soft}
+                part="upholstery"
+                x={-w * 0.42}
+                y={-d * 0.4}
+                width={w * 0.84}
+                height={d * 0.8}
+              />
+            )
+          )}
+        </>
+      )}
       <path
         d={
           d < 250
@@ -184,11 +361,13 @@ export function PlanView({
   state,
   placement,
   arranging = true,
+  active = true,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
   placement?: CataloguePlacement;
   arranging?: boolean;
+  active?: boolean;
 }) {
   const adding = useSyncExternalStore(
     placement?.subscribe ?? noSubscribe,
@@ -203,7 +382,11 @@ export function PlanView({
   const [windowGhost, setWindowGhost] = useState<WindowPosition | null>(null);
   const before = state.comparison === 'before',
     readOnly =
-      before || !!state.candidate || state.clientLoadFailure || !!adding;
+      !active ||
+      before ||
+      !!state.candidate ||
+      state.clientLoadFailure ||
+      !!adding;
   const ghost = readOnly || !arranging ? null : movementGhost;
   const canonicalRoom = before
     ? state.workspace!.baseline
@@ -221,7 +404,7 @@ export function PlanView({
   const renderedBox = useRef(targetBox);
   useEffect(() => {
     const element = svg.current;
-    if (!placement || !element) return;
+    if (!active || !placement || !element) return;
     return placement.registerTarget({
       element,
       point: (client) =>
@@ -231,7 +414,7 @@ export function PlanView({
           renderedBox.current,
         ),
     });
-  }, [placement]);
+  }, [placement, active]);
   useEffect(() => {
     const from = renderedBox.current;
     const to = {
@@ -250,7 +433,7 @@ export function PlanView({
     const started = performance.now();
     let frame = 0;
     const advance = (time: number) => {
-      const progress = Math.min(1, (time - started) / 180),
+      const progress = active ? Math.min(1, (time - started) / 180) : 1,
         ease = 1 - (1 - progress) ** 3;
       const next = {
         x: from.x + (to.x - from.x) * ease,
@@ -264,7 +447,7 @@ export function PlanView({
     };
     frame = requestAnimationFrame(advance);
     return () => cancelAnimationFrame(frame);
-  }, [targetBox.x, targetBox.z, targetBox.width, targetBox.depth]);
+  }, [targetBox.x, targetBox.z, targetBox.width, targetBox.depth, active]);
   const width = room.room.width.value ?? 4200,
     depth = room.room.depth.value ?? 4800;
   const point = (event: PointerEvent) => {
@@ -342,7 +525,7 @@ export function PlanView({
     };
   }, [controller]);
   useEffect(() => {
-    if (!arranging) {
+    if (!arranging || !active) {
       const current = gesture.current;
       gesture.current = null;
       if (current?.target.hasPointerCapture(current.pointerId))
@@ -356,7 +539,7 @@ export function PlanView({
         live = false;
       };
     }
-  }, [arranging]);
+  }, [arranging, active]);
   const windowDown = (event: PointerEvent<SVGGElement>, feature: Feature) => {
     if (
       feature.kind === 'obstacle' ||
@@ -607,14 +790,23 @@ export function PlanView({
             controller.select(null);
         }}
       >
-        <rect
-          x={0}
-          y={0}
-          width={width}
-          height={depth}
-          fill={roomSurface(room.room, 'floor').color}
-          opacity=".24"
-        />
+        <g opacity=".24">
+          <PlanMaterialRect
+            id={`${descriptionId}-floor`}
+            part="floor"
+            material={{
+              color: roomSurface(room.room, 'floor').color,
+              surface: roomSurface(room.room, 'floor').texture,
+            }}
+            x={0}
+            y={0}
+            width={width}
+            height={depth}
+            repeatWidth={roomSurfaceDetail(room.room, 'floor').repeatWidthMm}
+            repeatHeight={roomSurfaceDetail(room.room, 'floor').repeatHeightMm}
+            direction={roomSurfaceDetail(room.room, 'floor').direction}
+          />
+        </g>
         <rect
           x={0}
           y={0}
@@ -1076,7 +1268,9 @@ export function PlanView({
               : state.clientLoadFailure
                 ? 'Editor load failed · Export your layout or reload to continue'
                 : state.candidate
-                  ? 'Preview only · Ghosts mark current positions · Cancel to edit by hand'
+                  ? state.candidate.source === 'inspector'
+                    ? 'Previewing your changes · Apply or Reset in settings'
+                    : 'Preview only · Ghosts mark current positions · Cancel to edit by hand'
                   : arranging
                     ? 'Drag to place · arrow keys to nudge · dimensions in mm'
                     : 'Select a piece to inspect · arrow keys pan · dimensions in mm'}

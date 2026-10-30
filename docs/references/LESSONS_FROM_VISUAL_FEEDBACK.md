@@ -1,5 +1,19 @@
 # Lessons from the owner's visual feedback
 
+## Keep settings related and aligned —30 October2026
+
+The owner still finds furniture settings overwhelming when each control repeats its part name or related fields inherit separate section margins. Give each part one short heading and keep its colour/material/pattern controls together. Use concise visible labels with full-context accessible names. Pair preset selectors and collapse optional pattern/Room preset grids behind readable current-value rows. Align colour swatch/Hex and RGB field edges by explicitly owning their margins, rather than shrinking44px targets. Check Room and opening controls too, including keyboard and incomplete-input focus. Preserve live previews and sticky Apply/Reset. [RM-051](../tickets/RM-051-organize-furniture-and-room-settings.md), [evidence](../validation/RM-051.md).
+
+## Preview settings before saving —30 October2026
+
+The owner wants every valid furniture/room setting reflected immediately in both views, then one sticky Apply changes / Reset changes decision. Apply saves the recent draft; Reset restores the last applied state. Keep accepted recovery/export/history/money unchanged during exploration, retain one Undo per Apply and preserve the existing assistant proposal scope. Use Furniture Appearance/Size/Advanced and Room Finishes/Layout/Openings tabs instead of stacking every section. Retain inputs across tabs and reveal incomplete fields when Apply is attempted. Test ordinary untouched forms too: an empty patch must not be treated as invalid. Verify real selected-tab hover contrast and narrow viewport sticky behavior, not just CSS declarations. The2D plan must depict actual bedding/soft-part appearance rather than one frame-colour rectangle. [RM-050](../tickets/RM-050-preview-inspector-edits-with-sticky-actions.md), [evidence](../validation/RM-050.md).
+
+## Recovery should feel like part of Roomedy —30 October2026
+
+Owner follow-up: primary and secondary recovery actions must share internal typography, padding, label alignment and icon placement. Keep both labels left aligned and their same-size stroke icons trailing; distinguish importance through surface colour/border, not inconsistent font weights or an icon on the opposite side.
+
+The owner rejects the saved-room dialog's plain text and browser-default tiny buttons. Recovery is outside the studio wrapper, so studio-scoped action rules cannot style it. Give it a small dedicated warm surface, decorative room mark, clear saved-room title and proper44px-or-larger capsule actions. Make Continue the primary/default choice and a fresh manual/photo start secondary; explain tab replacement without a dense warning card. Keep native modality, described copy, keyboard/Escape behavior and actual storage callbacks. [RM-049](../tickets/RM-049-refine-saved-room-dialog.md), [evidence](../validation/RM-049.md).
+
 ## Treat bedding as three parts —29 October 2026
 
 The owner rejects green/teal fresh-manual bed linen and asks for independently coloured pillows, sheets and duvet/cover in every path. Use plain warm ivory/linen/taupe for new manual rooms, preserving recorded choices. Give the manual editor three clearly labelled RGB/pattern groups. Medy must target the named part, preserve the others and keep combined changes in one reviewed transaction. Photo estimates must inspect each visible part independently; a white pillow cannot whiten the duvet, and a visible cover cannot supply a hidden sheet colour. Preserve legacy fallbacks and make renderer/export results agree. [RM-048](../tickets/RM-048-control-bed-bedding-parts.md), [evidence](../validation/RM-048.md). Actual model/subjective photo accuracy remains separate from wiring and synthetic checks.
@@ -94,12 +108,12 @@ The owner asked to learn from four referenced Retailor chats because repeated vi
 
 `read_thread` was called for all four tasks, their identities were read and feedback histories were paginated. Some very large turns exceeded the tool's size limit even at one turn. The missing human messages for **Run final manual test locally** and **Run app and review visuals** were read from the local history files for those exact referenced task IDs. Only relevant user-visible feedback/outcomes inform this document; injected repository/skill text and model reasoning are not owner feedback. Screenshot attachments were not visually re-inspected, so a bare “remove this” is not used to invent a specific visual diagnosis. Historical agent claims and audit reports are attributed evidence, not reproduced Roomedy results.
 
-| Source | Referenced chat | Feedback period / contribution |
-| --- | --- | --- |
-| T1 | [Run final manual test locally](thread://01a148cf-f24c-72d1-b0ba-9149694f0287?hostId=local) | 17 October: short useful copy, reachable actions, hot reload, real recognition misses, private decision logs and explicit public/private release choices |
-| T2 | [Run app and review visuals](thread://01a143b0-2c61-7200-a67e-01063bad74b8?hostId=local) | 16 October: composer/layout defects, concise labels, sample plus upload tests, quiet verification, functionality-preserving and demo-sized audits |
-| T3 | [Visual feedback v2](thread://01a13e80-4505-7162-9b36-da7e24e6df08?hostId=local) | 15–16 October: upload versus processing, panel geometry, tours, touch affordances, validation, consistency and brittle historical-proof tests |
-| T4 | [Visual feedback](thread://01a13966-5351-7773-a0cc-0786942d172d?hostId=local) | 14–15 October: unwanted copy, palette scope, stable typography, representative previews, reset races and recurring responsive corrections |
+| Source | Referenced chat                                                                             | Feedback period / contribution                                                                                                                           |
+| ------ | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T1     | [Run final manual test locally](thread://01a148cf-f24c-72d1-b0ba-9149694f0287?hostId=local) | 17 October: short useful copy, reachable actions, hot reload, real recognition misses, private decision logs and explicit public/private release choices |
+| T2     | [Run app and review visuals](thread://01a143b0-2c61-7200-a67e-01063bad74b8?hostId=local)    | 16 October: composer/layout defects, concise labels, sample plus upload tests, quiet verification, functionality-preserving and demo-sized audits        |
+| T3     | [Visual feedback v2](thread://01a13e80-4505-7162-9b36-da7e24e6df08?hostId=local)            | 15–16 October: upload versus processing, panel geometry, tours, touch affordances, validation, consistency and brittle historical-proof tests            |
+| T4     | [Visual feedback](thread://01a13966-5351-7773-a0cc-0786942d172d?hostId=local)               | 14–15 October: unwanted copy, palette scope, stable typography, representative previews, reset races and recurring responsive corrections                |
 
 All sources concern another repository. Its navy/lime palette, commerce, checkout, generated logos, marketing video, database/storage exceptions, runtime flags, funded limits, manual pass and Git/security/cloud permissions do **not** transfer. Roomedy keeps its selected palette, similar furniture models, optional short tour, semantic export/import, authored manual sample and rough-2D-before-main-editor-3D flow. Routine implementation choices within that scope do not require new approval; a material new product feature does.
 
@@ -259,35 +273,35 @@ Separate public frontend visibility, private backend identity, paid enablement, 
 
 Turn IDs identify the exact source context; chat links above open the referenced tasks. Descriptions below summarize owner feedback rather than importing its product details.
 
-| Evidence | Source / turn | Observation informing the rule |
-| --- | --- | --- |
-| E01 | T4 `01a13977-2bf0-7923-915d-55bf0cb9d371`, `01a13ae4-cf2b-7001-8d92-f16b04b45aa3` | Requested plain **Edit**, removal of repeated copy and removal of a repo-specific export control |
-| E02 | T4 `01a139fc-f3d5-7db2-93dd-e9facf71fa59`, `01a13c18-3b82-7cb1-ad77-8963ce33c276` | Wanted consistent platform colour, then clarified chosen merchant palettes must stay independent |
-| E03 | T4 `01a13a42-5bd1-70e3-b987-4b29c013efae`; T3 `01a13fa1-ad62-78a2-af58-0647d6714dfa` | Typography changed on refresh; browser icons needed contrast without changing the website mark |
-| E04 | T3 `01a13f17-5de2-7d20-9308-a75ade87e286`, `01a1416e-60d0-7cb1-b917-91cfbd0d31d5` | Content area was too small; expanded chat should overlay rather than shrink preview again |
-| E05 | T4 `01a13af4-9ecf-7312-b101-2019ad46b389`; T2 `01a14460-018e-7381-8d95-7ab85cbe18a6` | Progress/preview geometry drifted; fixed rows created accidental empty areas |
-| E06 | T4 `01a139b3-86a7-7601-8c46-93a822b4c3d6`, `01a13a89-92c6-7a62-8a85-e1b89e40ad10` | Landing previews hid the real layouts; template views lacked meaningful distinction |
-| E07 | T3 `01a13f47-c58d-71b2-9ed8-96e32107c3ca`, `01a13f4f-8af5-7963-b184-dd76438e6d15`; T4 `01a13c3f-c7a9-7263-8ecf-5091d189a494` | Cluttered forms, unclear field errors and a switch that did not actually change data |
-| E08 | T1 `01a148f7-9182-78a1-8912-2f3dccdd101f`, `01a1490a-d4fe-7132-a87f-606fa897cfc6` | Action/footer alignment, long scroll to proceed and insufficient border padding |
-| E09 | T2 `01a14404-da19-72d0-95de-505585191129`, `01a14417-86e7-7b22-a9fb-919364c8c3c4` | Composer should stay visible; send button and scrollbar overlapped; footer wasted space |
-| E10 | T4 `01a13a22-9f95-7561-b4e7-91301a24d489`; T1 `01a148d5-8156-7860-9507-a5145f160cd7` | Wanted smooth navigation and hero/CTA entrance motion |
-| E11 | T3 `01a1406d-85f1-75a3-a796-bce7435538ea`, `01a13ede-b723-7233-aee9-89ba04ab6f04` | Continuous loading motion and assistant text that becomes noticeable without restarting repeatedly |
-| E12 | T3 `01a14047-709f-7a32-ac54-70f892f50997`, later `01a1412d-339b-7280-8bf0-8e732204f4df` | Tour timing, readiness, Start/Skip and simultaneous card/target reveal needed correction |
-| E13 | T1 `01a148f3-ba1f-7eb1-9e03-8e1940679dac`, `01a1490c-61a5-71b3-90db-ac57a5ea5667` | Repeated status variants and meaningless processing slogans were explicitly rejected |
-| E14 | T3 `01a13f37-abcb-7c11-8276-a4eaa54d4458` | Enter/send and useful fake chat were missing; development-example CTA was unwanted |
-| E15 | T2 `01a14485-2523-75e1-b69f-bf76ba22def0`, `01a144db-94d4-7453-b10b-15b3d01db8f1` | Asked for useful friendly real assistant tests, quiet verification and clickable thumbnail cards |
-| E16 | T3 `01a13eba-98c3-7b01-92fb-7db5eab03b94`, later `01a140e0-2c75-7351-82a3-83c6b56f4bc3` | Clarified upload checks versus explicit processing and correction in draft review |
-| E17 | T3 `01a13feb-498d-7930-8727-117304bea59f`; T2 `01a14485-2523-75e1-b69f-bf76ba22def0` | Explicitly required visitors' own uploads and tests through the upload path, beyond samples |
-| E18 | T3 `01a13ef1-ff9c-72c2-9b81-3e80eed541a1`, `01a14121-b6aa-75a2-bd0f-133ba5bbd562` | Controls must match visible preview capabilities; hover/focus border geometry was wrong |
-| E19 | T1 `01a14920-1334-7fe2-be0b-e8e092e48f45`, `01a14956-d41f-7df0-aa1a-5af0119c7e9e` | Real grouping misses were confused with failure; owner expected manual correction instead of returning to upload |
-| E20 | T1 `01a14923-1bd8-78f3-8a3d-eda5abdc2ba5`, `01a1493b-c2ef-7ae3-a0a1-975ca566928c` | Asked for diagnostic decisions in backend only and meaningful repeated-view test cases |
-| E21 | T4 `01a1398c-5e21-7331-b203-4f23c6e73c8a` | Reset followed by sample could restore stale data or produce duplicate warnings |
-| E22 | T4 `01a13aff-2fd3-7ae3-bda2-9611156afcb3`; T2 `01a14518-53ab-7bb2-9368-32aac5c90003` | Wanted actual full-flow visual inspection and ordered representative screenshots |
-| E23 | T1 `01a148ec-883f-76f2-a54f-5b8f6f625561`, `01a148e6-3cb5-7482-8277-c7e601ca6cd3`; T2 `01a143ee-4b89-7981-a003-db2c5fcdc9c2` | Wanted hot reload and temporary batching of tests during rapid visual edits |
-| E24 | T3 `01a14198-b4cd-7b32-be1e-6d2a8d9bbe5f` | Supplied failing deterministic preflight test assumed historical image evidence was always fresh |
-| E25 | T2 `01a1452f-a1fe-7e61-8143-978b6ed65dee` | Required repeated quality/security work with functionality unchanged and explicitly warned not to overengineer the demo |
-| E26 | T1 `01a14975-cbfe-7b40-a1b4-9711721c77cd`, `01a1499d-e231-7683-be6e-0967ae544cfd`, `01a149dd-566c-73c0-a3ef-e2d2f46f62aa` | Confusion between public frontend/private backend, paid state and temporary DNS/proxy steps |
-| E27 | T4 `01a139da-481b-7f62-89d7-3b21aab256d8`, `01a139c7-23fc-7d21-b735-0dd0e11fb000`; T3 `01a140f6-6b53-7ec2-8868-b2c3c18d09bb` | Logo directions and hero-film treatment were scoped discussions/selections for Retailor, not general authority to add those features elsewhere |
+| Evidence | Source / turn                                                                                                                | Observation informing the rule                                                                                                                 |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| E01      | T4 `01a13977-2bf0-7923-915d-55bf0cb9d371`, `01a13ae4-cf2b-7001-8d92-f16b04b45aa3`                                            | Requested plain **Edit**, removal of repeated copy and removal of a repo-specific export control                                               |
+| E02      | T4 `01a139fc-f3d5-7db2-93dd-e9facf71fa59`, `01a13c18-3b82-7cb1-ad77-8963ce33c276`                                            | Wanted consistent platform colour, then clarified chosen merchant palettes must stay independent                                               |
+| E03      | T4 `01a13a42-5bd1-70e3-b987-4b29c013efae`; T3 `01a13fa1-ad62-78a2-af58-0647d6714dfa`                                         | Typography changed on refresh; browser icons needed contrast without changing the website mark                                                 |
+| E04      | T3 `01a13f17-5de2-7d20-9308-a75ade87e286`, `01a1416e-60d0-7cb1-b917-91cfbd0d31d5`                                            | Content area was too small; expanded chat should overlay rather than shrink preview again                                                      |
+| E05      | T4 `01a13af4-9ecf-7312-b101-2019ad46b389`; T2 `01a14460-018e-7381-8d95-7ab85cbe18a6`                                         | Progress/preview geometry drifted; fixed rows created accidental empty areas                                                                   |
+| E06      | T4 `01a139b3-86a7-7601-8c46-93a822b4c3d6`, `01a13a89-92c6-7a62-8a85-e1b89e40ad10`                                            | Landing previews hid the real layouts; template views lacked meaningful distinction                                                            |
+| E07      | T3 `01a13f47-c58d-71b2-9ed8-96e32107c3ca`, `01a13f4f-8af5-7963-b184-dd76438e6d15`; T4 `01a13c3f-c7a9-7263-8ecf-5091d189a494` | Cluttered forms, unclear field errors and a switch that did not actually change data                                                           |
+| E08      | T1 `01a148f7-9182-78a1-8912-2f3dccdd101f`, `01a1490a-d4fe-7132-a87f-606fa897cfc6`                                            | Action/footer alignment, long scroll to proceed and insufficient border padding                                                                |
+| E09      | T2 `01a14404-da19-72d0-95de-505585191129`, `01a14417-86e7-7b22-a9fb-919364c8c3c4`                                            | Composer should stay visible; send button and scrollbar overlapped; footer wasted space                                                        |
+| E10      | T4 `01a13a22-9f95-7561-b4e7-91301a24d489`; T1 `01a148d5-8156-7860-9507-a5145f160cd7`                                         | Wanted smooth navigation and hero/CTA entrance motion                                                                                          |
+| E11      | T3 `01a1406d-85f1-75a3-a796-bce7435538ea`, `01a13ede-b723-7233-aee9-89ba04ab6f04`                                            | Continuous loading motion and assistant text that becomes noticeable without restarting repeatedly                                             |
+| E12      | T3 `01a14047-709f-7a32-ac54-70f892f50997`, later `01a1412d-339b-7280-8bf0-8e732204f4df`                                      | Tour timing, readiness, Start/Skip and simultaneous card/target reveal needed correction                                                       |
+| E13      | T1 `01a148f3-ba1f-7eb1-9e03-8e1940679dac`, `01a1490c-61a5-71b3-90db-ac57a5ea5667`                                            | Repeated status variants and meaningless processing slogans were explicitly rejected                                                           |
+| E14      | T3 `01a13f37-abcb-7c11-8276-a4eaa54d4458`                                                                                    | Enter/send and useful fake chat were missing; development-example CTA was unwanted                                                             |
+| E15      | T2 `01a14485-2523-75e1-b69f-bf76ba22def0`, `01a144db-94d4-7453-b10b-15b3d01db8f1`                                            | Asked for useful friendly real assistant tests, quiet verification and clickable thumbnail cards                                               |
+| E16      | T3 `01a13eba-98c3-7b01-92fb-7db5eab03b94`, later `01a140e0-2c75-7351-82a3-83c6b56f4bc3`                                      | Clarified upload checks versus explicit processing and correction in draft review                                                              |
+| E17      | T3 `01a13feb-498d-7930-8727-117304bea59f`; T2 `01a14485-2523-75e1-b69f-bf76ba22def0`                                         | Explicitly required visitors' own uploads and tests through the upload path, beyond samples                                                    |
+| E18      | T3 `01a13ef1-ff9c-72c2-9b81-3e80eed541a1`, `01a14121-b6aa-75a2-bd0f-133ba5bbd562`                                            | Controls must match visible preview capabilities; hover/focus border geometry was wrong                                                        |
+| E19      | T1 `01a14920-1334-7fe2-be0b-e8e092e48f45`, `01a14956-d41f-7df0-aa1a-5af0119c7e9e`                                            | Real grouping misses were confused with failure; owner expected manual correction instead of returning to upload                               |
+| E20      | T1 `01a14923-1bd8-78f3-8a3d-eda5abdc2ba5`, `01a1493b-c2ef-7ae3-a0a1-975ca566928c`                                            | Asked for diagnostic decisions in backend only and meaningful repeated-view test cases                                                         |
+| E21      | T4 `01a1398c-5e21-7331-b203-4f23c6e73c8a`                                                                                    | Reset followed by sample could restore stale data or produce duplicate warnings                                                                |
+| E22      | T4 `01a13aff-2fd3-7ae3-bda2-9611156afcb3`; T2 `01a14518-53ab-7bb2-9368-32aac5c90003`                                         | Wanted actual full-flow visual inspection and ordered representative screenshots                                                               |
+| E23      | T1 `01a148ec-883f-76f2-a54f-5b8f6f625561`, `01a148e6-3cb5-7482-8277-c7e601ca6cd3`; T2 `01a143ee-4b89-7981-a003-db2c5fcdc9c2` | Wanted hot reload and temporary batching of tests during rapid visual edits                                                                    |
+| E24      | T3 `01a14198-b4cd-7b32-be1e-6d2a8d9bbe5f`                                                                                    | Supplied failing deterministic preflight test assumed historical image evidence was always fresh                                               |
+| E25      | T2 `01a1452f-a1fe-7e61-8143-978b6ed65dee`                                                                                    | Required repeated quality/security work with functionality unchanged and explicitly warned not to overengineer the demo                        |
+| E26      | T1 `01a14975-cbfe-7b40-a1b4-9711721c77cd`, `01a1499d-e231-7683-be6e-0967ae544cfd`, `01a149dd-566c-73c0-a3ef-e2d2f46f62aa`    | Confusion between public frontend/private backend, paid state and temporary DNS/proxy steps                                                    |
+| E27      | T4 `01a139da-481b-7f62-89d7-3b21aab256d8`, `01a139c7-23fc-7d21-b735-0dd0e11fb000`; T3 `01a140f6-6b53-7ec2-8868-b2c3c18d09bb` | Logo directions and hero-film treatment were scoped discussions/selections for Retailor, not general authority to add those features elsewhere |
 
 Additional inspected project records, used only for concrete engineering examples:
 
@@ -300,16 +314,13 @@ All twenty tickets retain their IDs and dependency order. The [queue's guideline
 
 The [feature/review checklist](../design/REVIEW_CHECKLIST.md) is used throughout implementation and again at RM-015. No extra service, account, paid feature, test waiver, product design or release approval is created by this document. The owner has approved the revised plan and guidelines and authorized only step-six RM-000 documentation/ticket commits. No implementation, app run, paid request or deployment is authorized by that approval.
 
-
 ## Direct Roomedy space review —19 October2026
 
 The owner explicitly requested an all-page review after seeing dead empty areas and vertical stacking despite spare side width (and the reverse). [RM-015K](../tickets/RM-015K-review-and-rebalance-page-layouts.md) owns this correction before the joint visual session. Use [permanent layout rules](../design/layout.md): spend width/height on existing real tasks, room controls, grounded cards and usable conversation; preserve readable text and intentional breathing room without filler. Check actual room-column width, short-height flow, field/action reachability and tours on resize. A large viewport screenshot alone is insufficient. Actual owner visual approval remains pending. This later direct authority supersedes historical checkpoint wording above only for the named correction.
 
-
 ## Direct landing visual feedback —19 October2026
 
 The owner rejected the boring small landing, Sample room/Apply/Undo control card and tiny step list, and selected **a room assembles, rotates and opens up as you scroll**. [RM-015L](../tickets/RM-015L-create-a-scroll-driven-furniture-landing.md) owns full-size meaningful chapters, research-backed motivation, final CTA, centered footer without domain and matching opaque beige browser/search/Apple icons. The palette, logo and brown dot are explicitly liked and must stay. Authored marketing art is not a live room; remove faux editor controls, not actual editor features. Keep normal scroll and readable content/CTA; no fabricated designer-adoption, price savings or customer statistics. [Primary research](landing-research-2026-10-19.md) records dispositions and limits; actual visual result approval remains pending.
-
 
 ## Direct full-room and startup feedback —19 October2026
 
@@ -329,7 +340,6 @@ The owner says the white background feels empty and wants an engaging furniture/
 
 The owner reiterates smoothness/performance as a continuing priority during O. Richer imagery must stay locally compressed and bounded, reuse existing frame/measurement ownership and preserve measured motion rather than adding perpetual effects or suppressing animation.
 
-
 ## Lag before lighting and centered cue —19October2026
 
 Owner reports the new photographic background is very laggy and says fix that before warm dynamic interior lighting. P reduces one redundant photo and full-screen filters/masks/crossfade, batches reads before writes and preserves room motion/liked warm copy. Callback samples cannot overrule actual experience. Keep Q lighting held. Owner also asks why the house appears late: actual readiness precedes reveal, no arbitrary timer; shorten fade/deprioritize decorative fetch without revealing unfinished graphics. Center the entire Explore the room arrow/label across the hero, with safe normal-flow short/phone behavior.
@@ -345,7 +355,6 @@ The owner's immediate follow-up retains the liked initial text fade. Start that 
 ## Demo dead space and shared atmosphere —19 October2026
 
 The owner rejects the first demo screen’s large unused lower area and explicitly extends the instruction to the whole flow: dynamically use width/height for meaningful content, never filler. [R](../tickets/RM-015R-fill-demo-flow-with-useful-adaptive-content.md) supersedes K’s small top-aligned entry. Use actual fixture plan previews and the existing local photograph to explain choices at an appropriate scale; rearrange on tall tablets and narrow/short screens. Let prepared photos reclaim the empty upload area, keep compact actions at content height, and inspect every existing review/editor panel before changing it. Reuse the landing photo without its house or scrolling effects; a static warm background supports task surfaces without adding continuous rendering work. Preserve state, honest measurements, motion and real controls. Actual visual acceptance remains pending; Q lighting stays held.
-
 
 R header refinement: source Back to home uses the landing CTA’s warm frosted gradient, highlight/border/shadow,8px blur and220ms hover/focus. The condition-step Back moves into that header position, with accessible Back to room choices; linked brand remains home. No floating heading Back row or duplicate navigation control. Blur is confined to the small existing header target; the route photo remains static/unblurred. Verify source and condition phone/short fit and preserve real reducer/focus behavior.
 
@@ -373,17 +382,18 @@ The owner reports an oak-only cabinet after photo entry and requires every infer
 
 Owner explicitly wants local product/service discovery where useful but always USD equivalents in the application and PDFs. A USD default alone is insufficient: active foreign-currency controls and native-price research prose violate this feedback. Use dated reference conversion, preserve source and fit uncertainty, and never relabel an immutable old amount. Thoroughly test actual CPQ, PDF/export/import, useful responsive states and failures; fix/retest/document confirmed issues. Save many labelled screenshots and final PDF/project artifacts in a Desktop review folder for the owner's return. Real tests are authorized without a fixed budget, used economically. No routine questions while AFK. [RM-031](../tickets/RM-031-review-live-cpq-and-usd-sourcing.md).
 
-
 ## Visual chat over repeated prose — 28 October 2026
 
 Owner: “there is too much yapping and it breaks our aesthetic” and requests visual, interactive content for both CPQ and Medy, citing Choreograph. Remove redundant surrounding text. Prefer genuine financial/object/finish/work cards with meaningful actions; disclose supporting evidence rather than deleting distinct qualifications. Product icons/swatch previews cannot invent supplier photos, size fit or budget completeness. Keep Roomedy warm glass/cocoa styling and explicit reviewed changes. See RM-032.
-
 
 ## Larger room, fixed-left hero and a building-house loader —28 October2026
 
 Owner explicitly removes the centered-text/leftward intro, asks for the earlier larger room and a gentle glide to the side opposite the copy, and supplies a wireframe Cartier animal as loading-animation inspiration. Use an original small assembling house in Roomedy colours, not that brand logo. Show it only for actual pending work, with immediate feedback and no artificial loading hold. Preserve phone readability, real finishing/wall motion and CPQ story. RM-015BS supersedes earlier desktop full-wall-fit and center-to-left instructions for this named correction.
 
-
 ## One warm studio palette —28 October2026
 
 Owner identifies white left buttons, a beige Medy panel, white composer and gray viewport as conflicting. Prefer one warm beige family with tonal separation and a softly glossy/translucent chat field, using Roomedy's actual colour theme. Shared semantic surface tokens should replace independent hard-coded neutrals. Keep text/selected/focus contrast, physical finish colours and the existing room/chat behavior. RM-015BT records the local correction.
+
+## Align the camera before changing representation —30 October2026
+
+Owner requests a fast smooth3D→overhead→2D and inverse rather than an instant mode swap or repeated cutaway loader. Match the actual panned/zoomed SVG frame, flatten perspective continuously, then crossfade only once north-up overhead is reached. Keep normal Doorway pace separate. Preserve a single warmed canvas and prior camera controls; pause it in idle2D. Test actual short-screen frame rectangles as well as mathematical endpoints: RM-052 found and corrected19px of short-desktop vertical misalignment. Owner aesthetic/physical pacing still needs review.

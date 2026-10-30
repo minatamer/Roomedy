@@ -1,15 +1,5 @@
 .themes {
-  padding-block: 16px;
-  border-bottom: 1px solid var(--line);
-}
-.themes h3 {
-  margin: 0 0 6px;
-  font-size: 16px;
-}
-.themes p {
-  margin: 0 0 12px;
-  color: var(--muted);
-  font-size: 13px;
+  min-width: 0;
 }
 .choices {
   display: grid;

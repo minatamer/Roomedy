@@ -6,6 +6,7 @@ import {
 import { MATERIAL_PATTERNS } from '@roomedy/contracts/furniture-materials';
 import type { MaterialPattern } from '@roomedy/contracts/furniture-materials';
 import styles from './colour-picker.module.css';
+import layout from './appearance-controls.module.css';
 
 const PRESETS: Readonly<Record<string, string>> = Object.fromEntries(
   Object.entries(COLOUR_PRESETS).map(([name, hex]) => [
@@ -18,10 +19,12 @@ const channels = (hex: string) =>
 
 export function ColourPicker({
   label,
+  displayLabel = label,
   value,
   onChange,
 }: {
   label: string;
+  displayLabel?: string;
   value: string;
   onChange: (value: string) => void;
 }) {
@@ -41,8 +44,8 @@ export function ColourPicker({
     onChange(hex);
   };
   return (
-    <fieldset className={styles.picker}>
-      <legend>{label}</legend>
+    <fieldset className={styles.picker} aria-label={label}>
+      <legend>{displayLabel}</legend>
       <div
         className={styles.tabs}
         role="tablist"
@@ -71,7 +74,12 @@ export function ColourPicker({
           </button>
         ))}
       </div>
-      <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-${tab}`}>
+      <div
+        id={`${id}-panel`}
+        role="tabpanel"
+        aria-labelledby={`${id}-${tab}`}
+        className={styles.content}
+      >
         {tab === 'presets' ? (
           <div className={styles.swatches}>
             {Object.entries(PRESETS).map(([name, hex]) => (
@@ -155,16 +163,22 @@ export function ColourPicker({
 
 export function PatternPicker({
   label,
+  displayLabel = label,
+  collapsible = false,
   value,
   onChange,
 }: {
   label: string;
+  displayLabel?: string;
+  collapsible?: boolean;
   value: MaterialPattern;
   onChange: (value: MaterialPattern) => void;
 }) {
-  return (
-    <fieldset className={styles.picker}>
-      <legend>{label}</legend>
+  const picker = (
+    <fieldset className={styles.picker} aria-label={label}>
+      <legend className={collapsible ? styles.hidden : undefined}>
+        {displayLabel}
+      </legend>
       <div className={styles.patterns}>
         {Object.entries(MATERIAL_PATTERNS).map(([pattern, name]) => (
           <button
@@ -179,5 +193,15 @@ export function PatternPicker({
         ))}
       </div>
     </fieldset>
+  );
+  return collapsible ? (
+    <details className={layout.disclosure}>
+      <summary>
+        {displayLabel} <span>{MATERIAL_PATTERNS[value]}</span>
+      </summary>
+      {picker}
+    </details>
+  ) : (
+    picker
   );
 }

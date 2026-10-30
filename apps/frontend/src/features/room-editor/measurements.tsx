@@ -28,6 +28,8 @@ export function MeasurementField({
   label,
   min = 1,
   max,
+  onEdit,
+  live = false,
 }: {
   controller: SessionController;
   target: Target;
@@ -35,6 +37,8 @@ export function MeasurementField({
   label: string;
   min?: number;
   max: number;
+  onEdit?: SessionController['dispatch'];
+  live?: boolean;
 }) {
   return (
     <MeasurementInput
@@ -42,8 +46,9 @@ export function MeasurementField({
       label={label}
       min={min}
       max={max}
+      live={live}
       onCommit={(value) => {
-        const result = controller.dispatch(
+        const result = (onEdit ?? controller.dispatch.bind(controller))(
           [{ type: 'confirm-measurement', target, value }],
           value === null
             ? `Mark ${label.toLowerCase()} unknown`
@@ -62,17 +67,25 @@ export function MeasurementInput({
   min = 1,
   max,
   onCommit,
+  live = false,
 }: {
   measurement: Measurement;
   label: string;
   min?: number;
   max: number;
   onCommit: (value: number | null) => string | null;
+  live?: boolean;
 }) {
   const id = useId(),
     input = useRef<HTMLInputElement>(null);
   const committed = measurement.value?.toString() ?? '';
   const [form, setForm] = useState({ committed, value: committed, error: '' });
+  const [touched, setTouched] = useState(false);
+  const valid =
+    form.value.trim() !== '' &&
+    Number.isInteger(Number(form.value)) &&
+    Number(form.value) >= min &&
+    Number(form.value) <= max;
   if (form.committed !== committed)
     setForm({ committed, value: committed, error: '' });
   const apply = (value: number | null) => {
@@ -84,6 +97,9 @@ export function MeasurementInput({
     <form
       className={styles.measurement}
       noValidate
+      data-inspector-invalid={
+        (live && touched && (!valid || !!form.error)) || undefined
+      }
       onSubmit={(event) => {
         event.preventDefault();
         const n = Number(form.value);
@@ -110,13 +126,24 @@ export function MeasurementInput({
           min={min}
           max={max}
           value={form.value}
-          onChange={(e) =>
-            setForm((f) => ({ ...f, value: e.target.value, error: '' }))
-          }
+          onChange={(e) => {
+            const value = e.target.value;
+            setTouched(true);
+            setForm((f) => ({ ...f, value, error: '' }));
+            const n = Number(value);
+            if (
+              live &&
+              value.trim() &&
+              Number.isInteger(n) &&
+              n >= min &&
+              n <= max
+            )
+              apply(n);
+          }}
           aria-invalid={!!form.error}
           aria-describedby={`${id}-evidence${form.error ? ` ${id}-error` : ''}`}
         />
-        <button type="submit">Confirm</button>
+        {!live && <button type="submit">Confirm</button>}
       </div>
       <p id={`${id}-evidence`} className={styles.hint}>
         Current:{' '}

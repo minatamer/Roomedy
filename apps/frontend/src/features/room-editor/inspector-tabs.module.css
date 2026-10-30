@@ -1,0 +1,41 @@
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  padding: 4px;
+  margin: 12px 0 18px;
+  border: 1px solid var(--surface-border);
+  border-radius: 26px;
+  background: var(--surface-field);
+}
+.tabs button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 9px 5px;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  font-size: 12px;
+}
+.tabs button[aria-selected='true'],
+.tabs button[aria-selected='true']:hover:not(:disabled) {
+  background: var(--teal);
+  color: var(--paper);
+  box-shadow: 0 2px 8px #50392918;
+}
+.tabs button:focus-visible {
+  outline-offset: -3px;
+}
+.panel {
+  --settings-section-gap: 16px;
+  --settings-section-padding: 16px;
+  min-width: 0;
+}
+.panel > :first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.panel[hidden] {
+  display: none;
+}

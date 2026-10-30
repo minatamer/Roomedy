@@ -1,5 +1,17 @@
 # Layout and useful space
 
+## Settings density and input alignment —RM-051,30 October2026
+
+Keep related settings12px apart and group boundaries16px apart, using scoped shared appearance styles. Reset ordinary fieldset/label/input margins inside colour controls so the44px swatch and Hex field align at both edges; RGB fields share44px height, equal widths and8px gaps. Pair Base finish and Theme above a clear Frame group. Use one heading per part and concise visible Colour/Material labels, retaining full-context accessible names. Patterns use a44px expandable row with their current value; Room theme/material options follow the same convention. The selected Room material retains a compact swatch. Keep source-aware photo notes and every supported control.
+
+Inspector tab contents reduce their inherited section spacing to16px and remove empty leading borders/padding; unrelated views retain the previous defaults. Preserve common colour access, keyboard/native disclosure behavior, incomplete-input focus and the existing sticky Apply/Reset footer at desktop/phone/narrow/short sizes. [Ticket](../tickets/RM-051-organize-furniture-and-room-settings.md), [native checks](../validation/RM-051.md).
+
+## Live tabbed settings —RM-050,30 October2026
+
+Furniture uses Appearance / Size / Advanced and Room uses Finishes / Layout / Openings, with labelled keyboard-operable tabs and preserved form state. Common appearance and size controls remain visible inside their section; uncommon protection/measurement details stay in Advanced. All valid changes preview immediately in the shared2D/3D candidate. Keep active tabs and focus stable through RGB input, Apply and Reset; incomplete fields remain visible on return and block saving with a focused explanation.
+
+The properties body owns bounded scrolling; Apply changes / Reset changes sit in a warm footer outside it. Desktop/short panels keep both44px targets reachable. In stacked narrow layout, permit the outer panel overflow needed for its sticky footer to follow the viewport while its body keeps independent scrolling. Do not add page-wide fixed actions or cover the canvas. Selected cocoa tabs must retain contrast on hover. Reset means since the last Apply, or manual refinements since the original Medy proposal. [Ticket](../tickets/RM-050-preview-inspector-edits-with-sticky-actions.md), [actual native evidence](../validation/RM-050.md). This supersedes RM-036's per-form Apply and old stacked group presentation.
+
 ## Shared studio phase surface —RM-038–040, 29 October 2026
 
 Design and Plan & cost share the same header, logo size and continuous background. Project uses two rows: Export / Plan & cost, then Import project / Start a new room. Cost retains a clear Back to Design action; PDF belongs in chat. Keep both view states after the first cost visit, with one connected, physically sized canvas paused/inert while cost is settled. Cancel inactive research/location/export work.
@@ -237,3 +249,9 @@ Put useful independent Walls/Floor forms near the top of Room, with small textur
 ## Warm studio surfaces —RM-015BT
 
 Studio navigation controls, properties panels/fields and plan/cutaway frames consume shared surface tokens rather than independent whites/gray. Use tonal beige separation, readable cocoa text and existing pressed/focus/disabled distinctions. Both Medy composers use a translucent cream gradient, fine warm border and small inset highlight, with8px blur confined to the field. Preserve typography,44px targets, reserved Send space, keyboard/composition, responsive layout and actual room-finish colours. No header divider or new scene/filter/frame owner.
+
+## RM-052 aligned view transition —30 October2026
+
+Keep both representations in the same sized editor frame. A520ms finite reversible owner spends70% moving the saved3D camera to exact north-up overhead and30% blending to the SVG; reverse reveals aligned3D before returning to its saved pose. Derive orthographic framing from the actual planBox and centred-meet letterboxing, including pan/zoom/aspect. Blend normalized projection matrices to avoid a perspective snap; room heights/materials stay real and the plan stays schematic. Shared grid tracks and short-screen vertical centering align actual SVG/canvas rectangles.
+
+Retain one lazy canvas, physically sized and rendering only for cold preparation, visible3D or a finite flight. The usable plan remains during genuine preparation; normal toggles have no cutaway spinner. Disabled layers are inert and unregister gesture/placement targets. Reversals, workspace/phase changes and resize retire or retarget the finite owner; normal camera journey pace, drafts and history remain. [Native and mathematical evidence](../validation/RM-052.md).

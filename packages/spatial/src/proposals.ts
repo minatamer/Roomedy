@@ -166,12 +166,48 @@ function refineFurniture(
     changed: changes.length > 0,
   };
 }
+/** Local visitor transactions only; these batches are never accepted from model payloads. */
+function validateVisitorEdits(raw: readonly VisitorAction[][]) {
+  if (!Array.isArray(raw) || raw.length > POLICY.actions * POLICY.actions)
+    return null;
+  const batches: VisitorAction[][] = [];
+  let count = 0;
+  for (const batch of raw) {
+    const parsed = visitorBatchSchema.safeParse(batch);
+    if (!parsed.success) return null;
+    count += parsed.data.length;
+    if (count > POLICY.actions * POLICY.actions) return null;
+    batches.push(parsed.data);
+  }
+  return jsonBytes(batches) <= POLICY.receiptBytes ? batches : null;
+}
+function refineVisitor(
+  workspace: CommandWorkspace,
+  result: CommandResult,
+  batches: readonly VisitorAction[][],
+): CommandResult {
+  if (!result.ok || !batches.length) return result;
+  let current = result;
+  for (const batch of batches) {
+    const next = evaluateBatch(current.room, batch, 'visitor');
+    if (!next.ok) return next;
+    current = next;
+  }
+  const changes = diffRoom(workspace.current, current.room);
+  return {
+    ...current,
+    changes,
+    affectedIds: changes.map((change) => change.id),
+    changed: changes.length > 0,
+  };
+}
 export function prepareCommand(
   workspace: CommandWorkspace,
   raw: unknown,
   authority: CommandAuthority,
   scope?: ActionScope,
   refinements: readonly FurnitureRefinement[] = [],
+  visitorEdits: readonly VisitorAction[][] = [],
 ): CommandResult {
   const parsed = commandEnvelopeSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, code: 'invalid-input' };
@@ -182,6 +218,10 @@ export function prepareCommand(
     return { ok: false, code: 'stale' };
   const batches = validateRefinements(refinements);
   if (!batches) return { ok: false, code: 'invalid-input' };
+  const edits = validateVisitorEdits(visitorEdits);
+  if (!edits) return { ok: false, code: 'invalid-input' };
+  if (edits.length && (authority !== 'visitor' || scope || batches.length))
+    return { ok: false, code: 'out-of-scope' };
   const result =
     authority === 'assistant'
       ? evaluateScopedBatch(
@@ -190,7 +230,11 @@ export function prepareCommand(
           scope,
         )
       : evaluateBatch(workspace.current, parsed.data.actions, authority);
-  return refineFurniture(workspace, result, batches);
+  return refineVisitor(
+    workspace,
+    refineFurniture(workspace, result, batches),
+    edits,
+  );
 }
 export type ApplyResult =
   | CommandFailure
@@ -209,6 +253,7 @@ export function applyCommand(
   scope?: ActionScope,
   pricingBefore?: EstimateState,
   refinements: readonly FurnitureRefinement[] = [],
+  visitorEdits: readonly VisitorAction[][] = [],
 ): ApplyResult {
   if (
     pricingBefore &&
@@ -220,10 +265,16 @@ export function applyCommand(
   if (!parsed.success) return { ok: false, code: 'invalid-input' };
   const batches = validateRefinements(refinements);
   if (!batches) return { ok: false, code: 'invalid-input' };
+  const edits = validateVisitorEdits(visitorEdits);
+  if (!edits) return { ok: false, code: 'invalid-input' };
+  if (edits.length && (authority !== 'visitor' || scope || batches.length))
+    return { ok: false, code: 'out-of-scope' };
   const command = parsed.data,
-    payload = batches.length
-      ? JSON.stringify(canonical({ command, refinements: batches }))
-      : commandPayload(command);
+    payload = edits.length
+      ? JSON.stringify(canonical({ command, visitorEdits: edits }))
+      : batches.length
+        ? JSON.stringify(canonical({ command, refinements: batches }))
+        : commandPayload(command);
   if (
     command.identity.workspaceId !== workspace.workspaceId ||
     command.identity.generation !== workspace.generation ||
@@ -256,6 +307,7 @@ export function applyCommand(
     authority,
     scope,
     batches,
+    edits,
   );
   if (!evaluation.ok) return evaluation;
   if (

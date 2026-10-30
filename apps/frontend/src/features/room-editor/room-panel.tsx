@@ -13,17 +13,20 @@ import { focusProperties } from './focus';
 import styles from './editor.module.css';
 import { SurfaceControls } from './surface-controls';
 import { BedroomThemes } from './bedroom-themes';
+import { InspectorTabs } from './inspector-tabs';
 
 export function RoomPanel({
   controller,
   room,
+  onEdit = controller.previewInspector.bind(controller),
 }: {
   controller: SessionController;
   room: RoomDocument;
+  onEdit?: SessionController['dispatch'];
 }) {
   const photoNotes = controller.getSnapshot().photoNotes;
   const run = (actions: VisitorAction[], label: string) => {
-    const r = controller.dispatch(actions, label);
+    const r = onEdit(actions, label);
     if (!r.ok)
       controller.notify(
         failureMessage(r, controller.getSnapshot().workspace?.current),
@@ -92,10 +95,7 @@ export function RoomPanel({
       }
       feature = placed;
     }
-    const r = controller.dispatch(
-      [{ type: 'add-feature', feature }],
-      'Add room feature',
-    );
+    const r = onEdit([{ type: 'add-feature', feature }], 'Add room feature');
     if (r.ok) {
       controller.select(feature.id);
       focusProperties(controller, feature.id);
@@ -107,10 +107,10 @@ export function RoomPanel({
   return (
     <>
       <div className={styles.panelTitle}>
-        <p className={styles.eyebrow}>
-          {photoNotes?.simulated ? 'Example room' : 'Your starting point'}
-        </p>
-        <h2 tabIndex={-1}>Room & intention</h2>
+        {photoNotes?.simulated && (
+          <p className={styles.eyebrow}>Example room</p>
+        )}
+        <h2 tabIndex={-1}>Your room</h2>
       </div>
       {photoNotes &&
         (photoNotes.outline !== 'rectangle' ||
@@ -148,132 +148,176 @@ export function RoomPanel({
             </button>
           </section>
         )}
-      <BedroomThemes controller={controller} room={room} />
-      <SurfaceControls
-        key={controller.getSnapshot().generation}
-        room={room}
-        onApply={(actions, label) => {
-          const result = controller.dispatch(actions, label);
-          return result.ok
-            ? null
-            : failureMessage(
-                result,
-                controller.getSnapshot().workspace?.current,
-              );
-        }}
+      <InspectorTabs
+        resetKey={controller.getSnapshot().inspectorReset ?? 0}
+        label="Room settings"
+        sections={[
+          {
+            id: 'finishes',
+            label: 'Finishes',
+            content: (
+              <>
+                <BedroomThemes
+                  controller={controller}
+                  room={room}
+                  onEdit={onEdit}
+                />
+                <SurfaceControls
+                  key={controller.getSnapshot().generation}
+                  room={room}
+                  onApply={(actions, label) => {
+                    const result = onEdit(actions, label);
+                    return result.ok
+                      ? null
+                      : failureMessage(
+                          result,
+                          controller.getSnapshot().workspace?.current,
+                        );
+                  }}
+                />
+              </>
+            ),
+          },
+          {
+            id: 'layout',
+            label: 'Layout',
+            content: (
+              <>
+                <div className={styles.section}>
+                  <label>
+                    Starting condition
+                    <select
+                      value={room.intent.condition}
+                      onChange={(event) => {
+                        const condition = event.target.value;
+                        if (
+                          condition === 'empty' ||
+                          condition === 'partial' ||
+                          condition === 'furnished'
+                        )
+                          run(
+                            [
+                              {
+                                type: 'set-intent',
+                                intent: { ...room.intent, condition },
+                              },
+                            ],
+                            'Update starting condition',
+                          );
+                      }}
+                    >
+                      <option value="empty">Empty room</option>
+                      <option value="partial">Partly furnished</option>
+                      <option value="furnished">Furnished</option>
+                    </select>
+                  </label>
+                </div>
+                <div className={styles.section}>
+                  <h3>Room measurements</h3>
+                  <div className={styles.measurementGrid}>
+                    {(['width', 'depth', 'height'] as const).map((field) => (
+                      <MeasurementField
+                        live
+                        onEdit={onEdit}
+                        key={field}
+                        controller={controller}
+                        target={{ kind: 'room', id: room.roomId, field }}
+                        label={field[0]!.toUpperCase() + field.slice(1)}
+                        measurement={room.room[field]}
+                        max={POLICY.roomEdgeMm}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <fieldset className={styles.section}>
+                  <legend>Make room for</legend>
+                  <div className={styles.goalFields}>
+                    {(['sleep', 'work', 'storage', 'open-space'] as const).map(
+                      (goal) => (
+                        <label key={goal} className={styles.checkLabel}>
+                          <input
+                            type="checkbox"
+                            checked={room.intent.goals.includes(goal)}
+                            onChange={(e) =>
+                              run(
+                                [
+                                  {
+                                    type: 'set-intent',
+                                    intent: {
+                                      ...room.intent,
+                                      goals: e.target.checked
+                                        ? [...room.intent.goals, goal]
+                                        : room.intent.goals.filter(
+                                            (g) => g !== goal,
+                                          ),
+                                    },
+                                  },
+                                ],
+                                'Update room goals',
+                              )
+                            }
+                          />
+                          {goal === 'open-space'
+                            ? 'Open space'
+                            : goal[0]!.toUpperCase() + goal.slice(1)}
+                        </label>
+                      ),
+                    )}
+                  </div>
+                </fieldset>
+              </>
+            ),
+          },
+          {
+            id: 'openings',
+            label: 'Openings',
+            content: (
+              <>
+                <div className={styles.section}>
+                  <h3>Walls & openings</h3>
+                  <ul className={styles.inventory}>
+                    {room.room.features.map((feature) => (
+                      <li key={feature.id}>
+                        <button
+                          onClick={() => {
+                            controller.select(feature.id);
+                            focusProperties(controller, feature.id);
+                          }}
+                        >
+                          {featureLabel(feature)} · {feature.wall}
+                          <span>
+                            {feature.width.value ?? '?'} mm ·{' '}
+                            {feature.wallProvenance.status} wall
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className={styles.actionRow}>
+                    <button onClick={() => addFeature('door')}>Add door</button>
+                    <button onClick={() => addFeature('door', 'bathroom')}>
+                      Add bathroom door
+                    </button>
+                    <button onClick={() => addFeature('window')}>
+                      Add window
+                    </button>
+                    <button onClick={() => addFeature('door', 'balcony')}>
+                      Add balcony doors
+                    </button>
+                    <button onClick={() => addFeature('obstacle')}>
+                      Add obstacle
+                    </button>
+                  </div>
+                  <p className={styles.hint}>
+                    New features use estimated sizes. Choose their wall in
+                    settings.
+                  </p>
+                </div>
+              </>
+            ),
+          },
+        ]}
       />
-      <div className={styles.section}>
-        <label>
-          Starting condition
-          <select
-            value={room.intent.condition}
-            onChange={(event) => {
-              const condition = event.target.value;
-              if (
-                condition === 'empty' ||
-                condition === 'partial' ||
-                condition === 'furnished'
-              )
-                run(
-                  [
-                    {
-                      type: 'set-intent',
-                      intent: { ...room.intent, condition },
-                    },
-                  ],
-                  'Update starting condition',
-                );
-            }}
-          >
-            <option value="empty">Empty room</option>
-            <option value="partial">Partly furnished</option>
-            <option value="furnished">Furnished</option>
-          </select>
-        </label>
-      </div>
-      <div className={styles.section}>
-        <h3>Room measurements</h3>
-        <div className={styles.measurementGrid}>
-          {(['width', 'depth', 'height'] as const).map((field) => (
-            <MeasurementField
-              key={field}
-              controller={controller}
-              target={{ kind: 'room', id: room.roomId, field }}
-              label={field[0]!.toUpperCase() + field.slice(1)}
-              measurement={room.room[field]}
-              max={POLICY.roomEdgeMm}
-            />
-          ))}
-        </div>
-      </div>
-      <fieldset className={styles.section}>
-        <legend>Make room for</legend>
-        <div className={styles.goalFields}>
-          {(['sleep', 'work', 'storage', 'open-space'] as const).map((goal) => (
-            <label key={goal} className={styles.checkLabel}>
-              <input
-                type="checkbox"
-                checked={room.intent.goals.includes(goal)}
-                onChange={(e) =>
-                  run(
-                    [
-                      {
-                        type: 'set-intent',
-                        intent: {
-                          ...room.intent,
-                          goals: e.target.checked
-                            ? [...room.intent.goals, goal]
-                            : room.intent.goals.filter((g) => g !== goal),
-                        },
-                      },
-                    ],
-                    'Update room goals',
-                  )
-                }
-              />
-              {goal === 'open-space'
-                ? 'Open space'
-                : goal[0]!.toUpperCase() + goal.slice(1)}
-            </label>
-          ))}
-        </div>
-      </fieldset>
-      <div className={styles.section}>
-        <h3>Walls & openings</h3>
-        <ul className={styles.inventory}>
-          {room.room.features.map((feature) => (
-            <li key={feature.id}>
-              <button
-                onClick={() => {
-                  controller.select(feature.id);
-                  focusProperties(controller, feature.id);
-                }}
-              >
-                {featureLabel(feature)} · {feature.wall}
-                <span>
-                  {feature.width.value ?? '?'} mm ·{' '}
-                  {feature.wallProvenance.status} wall
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-        <div className={styles.actionRow}>
-          <button onClick={() => addFeature('door')}>Add door</button>
-          <button onClick={() => addFeature('door', 'bathroom')}>
-            Add bathroom door
-          </button>
-          <button onClick={() => addFeature('window')}>Add window</button>
-          <button onClick={() => addFeature('door', 'balcony')}>
-            Add balcony doors
-          </button>
-          <button onClick={() => addFeature('obstacle')}>Add obstacle</button>
-        </div>
-        <p className={styles.hint}>
-          New features start with estimated sizes and an unknown wall. Review
-          each physical fact.
-        </p>
-      </div>
     </>
   );
 }

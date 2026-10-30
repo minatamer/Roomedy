@@ -1,0 +1,9 @@
+# RM-051 — Organize furniture and room settings
+
+**Complete locally —30 October2026.** Owner aesthetic/physical acceptance remains pending.
+
+30 October2026. Direct owner asks for modest layout cleanup: aligned colour/hex/RGB inputs, less space within related controls, clearer subtitles and less redundant text in Furniture and Room. Preserve the existing tabs, every supported setting and immediate candidate/Apply/Reset behavior.
+
+Use scoped CSS to prevent general inspector margins overriding colour-picker fields. Keep44px controls and equal aligned rows at desktop/phone/narrow/short sizes. Group Frame, Upholstery/Bedding, individual bed parts and Hardware with one short heading each. Use concise visible Colour/Material labels with full-context accessible names. Patterns and room theme choices may be collapsed with useful current-value summaries; common colours and material choices remain discoverable. Remove repeated default-value/target captions while preserving photo estimate context and all underlying evidence.
+
+Keep inputs mounted and callbacks/data validation unchanged. Verify actual manual furniture/bed/wardrobe and Room finishes/layout/openings, keyboard/focus, live preview/Apply/Reset/Undo and narrow sticky-footer/scroll behavior. Reuse40 existing inspector/preview/command regressions, scoped format/lint, frontend/test type checks, boundaries and frontend production build. Do not create tests that mirror CSS or run unrelated backend/provider/full suites for this presentation-only change. Read-only final scope review; no paid/provider/env/Chrome/delegation/service restart/new dependency/Git/hosted/ClipBuilder action. Preserve all prior work; owner aesthetic/physical acceptance remains pending. [Allocation](../commit-plans/RM-051.md), [receipt](../validation/RM-051.md).

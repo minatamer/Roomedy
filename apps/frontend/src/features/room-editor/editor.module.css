@@ -436,9 +436,9 @@
   margin: 9px 0 13px;
 }
 .section {
-  margin-top: 24px;
+  margin-top: var(--settings-section-gap, 24px);
   border-top: 1px solid #e4ded5;
-  padding-top: 22px;
+  padding-top: var(--settings-section-padding, 22px);
 }
 .section:first-child {
   border: 0;

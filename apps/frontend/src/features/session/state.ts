@@ -22,7 +22,7 @@ export interface Presentation {
 /** A renderer projection is never an independently editable room. */
 export interface CandidateProjection {
   readonly identity: OperationIdentity;
-  readonly source?: 'visitor' | 'assistant' | 'cost';
+  readonly source?: 'visitor' | 'assistant' | 'cost' | 'inspector';
   readonly label?: string;
   readonly room: RoomDocument;
   readonly checks: CheckFacts;
@@ -34,6 +34,8 @@ export interface PhotoNotes {
   readonly simulated: boolean;
 }
 export interface SessionSnapshot {
+  /** Transient form reset identity, never saved/project data. */
+  readonly inspectorReset?: number;
   readonly tourOffered: boolean;
   /** Session-only shopping choice; coordinates never enter session state. */
   readonly shoppingLocation: {

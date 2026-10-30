@@ -4,20 +4,34 @@ import { roomSurface, FINISH_COLORS } from '@roomedy/contracts/surfaces';
 import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
 import styles from './bedroom-themes.module.css';
+import layout from './appearance-controls.module.css';
 
 export function BedroomThemes({
   controller,
   room,
+  onEdit,
 }: {
   controller: SessionController;
   room: RoomDocument;
+  onEdit?: SessionController['dispatch'];
 }) {
   const floor = roomSurface(room.room, 'floor');
   const walls = roomSurface(room.room, 'walls');
+  const selectedTheme = BEDROOM_THEMES.find(
+    (theme) =>
+      floor.color === theme.floorColor &&
+      floor.texture === theme.floorTexture &&
+      walls.color === theme.wallColor &&
+      walls.texture === theme.wallTexture,
+  );
   return (
-    <section className={styles.themes} aria-label="Bedroom themes">
-      <h3>Bedroom theme</h3>
-      <p>Preview colours and textures together.</p>
+    <details
+      className={`${styles.themes} ${layout.disclosure}`}
+      aria-label="Bedroom themes"
+    >
+      <summary>
+        Room theme <span>{selectedTheme?.name ?? 'Custom'}</span>
+      </summary>
       <div className={styles.choices}>
         {BEDROOM_THEMES.map((theme) => (
           <button
@@ -31,7 +45,9 @@ export function BedroomThemes({
               walls.texture === theme.wallTexture
             }
             onClick={() => {
-              const result = controller.prepareVisitorPreview(
+              const result = (
+                onEdit ?? controller.prepareVisitorPreview.bind(controller)
+              )(
                 [{ type: 'set-bedroom-theme', theme: theme.id }],
                 `${theme.name} bedroom theme`,
               );
@@ -53,6 +69,6 @@ export function BedroomThemes({
           </button>
         ))}
       </div>
-    </section>
+    </details>
   );
 }

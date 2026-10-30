@@ -60,6 +60,7 @@ export type CutawayProps = Pick<
   | 'onSelect'
   | 'cameraFrame'
   | 'openingId'
+  | 'viewBridge'
 > & {
   cameraStateRef: MutableRefObject<CameraPose | null>;
   onPlan: () => void;
@@ -71,6 +72,9 @@ export type CutawayProps = Pick<
   onAddDesk: () => void;
   arranging: boolean;
   active?: boolean;
+  interactive?: boolean;
+  layerRef?: MutableRefObject<HTMLDivElement | null>;
+  layerClassName?: string | undefined;
   medyCamera?:
     (Extract<MedyControl, { type: 'camera' }> & { sequence: number }) | null;
   onMedyCamera?: (sequence: number) => void;
@@ -86,6 +90,9 @@ export default function Cutaway({
   onAddDesk,
   arranging,
   active = true,
+  interactive = true,
+  layerRef,
+  layerClassName = '',
   medyCamera,
   onMedyCamera,
   onCameraAvailability,
@@ -101,16 +108,19 @@ export default function Cutaway({
   );
   useEffect(() => {
     onCameraAvailability?.(lost ? 'unavailable' : ready ? 'ready' : 'opening');
-    return () => onCameraAvailability?.('opening');
   }, [lost, ready, onCameraAvailability]);
-  const moving = active && arranging && !readOnly && !lost;
+  useEffect(
+    () => () => onCameraAvailability?.('opening'),
+    [onCameraAvailability],
+  );
+  const moving = active && interactive && arranging && !readOnly && !lost;
   const canvasRef = useRef<HTMLCanvasElement | null>(null),
     invalidateRef = useRef<() => void>(() => {});
   const invalidate = useCallback(() => invalidateRef.current(), []);
   const editing = useFloorEdit(
     controller,
     moving && ready && !lost,
-    active && ready && !lost,
+    active && interactive && ready && !lost,
     snap,
     canvasRef,
     invalidate,
@@ -219,7 +229,7 @@ export default function Cutaway({
     }));
   };
   useEffect(() => {
-    if (!medyCamera || (!ready && !lost)) return;
+    if (!medyCamera || (!ready && !lost) || !interactive) return;
     let live = true;
     queueMicrotask(() => {
       if (!live) return;
@@ -251,11 +261,25 @@ export default function Cutaway({
     return () => {
       live = false;
     };
-  }, [medyCamera, ready, lost, editing, views, onMedyCamera, controller]);
+  }, [
+    medyCamera,
+    ready,
+    lost,
+    interactive,
+    editing,
+    views,
+    onMedyCamera,
+    controller,
+  ]);
   return (
     <div
-      className={`${styles.wrap} ${controlsStyles.stage}`}
+      ref={layerRef}
+      className={`${styles.wrap} ${controlsStyles.stage} ${layerClassName}`}
       data-inspection={props.inspection ? 'true' : undefined}
+      data-view-bridge={props.viewBridge ? 'true' : undefined}
+      data-view-layer={props.viewBridge ? '3d' : undefined}
+      inert={!interactive}
+      aria-hidden={!interactive || undefined}
     >
       <div ref={toolsMotion} className="motion-surface">
         {props.inspection ? (
@@ -420,7 +444,10 @@ export default function Cutaway({
               <RoomScene
                 {...props}
                 active={active}
-                placement={ready && !lost ? placement : undefined}
+                interactive={interactive}
+                placement={
+                  ready && !lost && interactive ? placement : undefined
+                }
                 cameraAction={action}
                 cameraView={cameraView}
                 editing={editing}
@@ -431,7 +458,7 @@ export default function Cutaway({
             </Canvas>
           </GraphicsBoundary>
         )}
-        {!ready && !lost && (
+        {!ready && !lost && !props.viewBridge && (
           <p role="status" className={styles.loading}>
             Opening the cutaway…
           </p>

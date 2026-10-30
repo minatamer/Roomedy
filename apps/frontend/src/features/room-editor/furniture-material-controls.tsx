@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import type { Furniture } from '@roomedy/contracts/room';
 import {
   furnitureMaterialsSchema,
@@ -16,13 +17,16 @@ import type {
 import { findCatalogueEntry, supportsDimensions } from '@roomedy/spatial';
 import { ColourPicker, PatternPicker } from './colour-picker';
 import styles from './editor.module.css';
+import layout from './appearance-controls.module.css';
 
 export function FurnitureMaterialControls({
   item,
   onCommit,
+  finishControl,
 }: {
   item: Furniture;
   onCommit: (materials: FurnitureMaterials) => string | null;
+  finishControl?: ReactNode;
 }) {
   const [themeError, setThemeError] = useState('');
   const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion);
@@ -41,52 +45,48 @@ export function FurnitureMaterialControls({
     )?.id ?? '';
   return (
     <>
-      <label className={styles.section}>
-        Furniture theme
-        <select
-          value={selectedTheme}
-          onChange={(event) => {
-            const theme = BEDROOM_THEMES.find(
-              (theme) => theme.id === event.target.value,
-            );
-            if (theme)
-              setThemeError(
-                onCommit(bedroomFurnitureMaterials(theme, entry, detailed)) ??
-                  '',
+      <div className={finishControl ? layout.presets : layout.group}>
+        {finishControl}
+        <label>
+          Theme
+          <select
+            aria-label="Furniture theme"
+            value={selectedTheme}
+            onChange={(event) => {
+              const theme = BEDROOM_THEMES.find(
+                (theme) => theme.id === event.target.value,
               );
-          }}
-        >
-          <option value="" disabled>
-            Choose a colour & texture preset
-          </option>
-          {BEDROOM_THEMES.map((theme) => (
-            <option key={theme.id} value={theme.id}>
-              {theme.name}
+              if (theme)
+                setThemeError(
+                  onCommit(bedroomFurnitureMaterials(theme, entry, detailed)) ??
+                    '',
+                );
+            }}
+          >
+            <option value="" disabled>
+              Choose a theme
             </option>
-          ))}
-        </select>
-      </label>
+            {BEDROOM_THEMES.map((theme) => (
+              <option key={theme.id} value={theme.id}>
+                {theme.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       {themeError && (
         <p role="alert" className={styles.error}>
           {themeError}
         </p>
       )}
-      <details className={styles.advanced}>
-        <summary>
-          Materials & details <span>Make it your own</span>
-        </summary>
+      <div>
         <MaterialForm
-          key={JSON.stringify([
-            item.id,
-            item.dimensions,
-            item.finish,
-            item.materials,
-          ])}
+          key={item.id}
           item={item}
           entry={entry}
           onCommit={onCommit}
         />
-      </details>
+      </div>
     </>
   );
 }
@@ -107,19 +107,30 @@ function MaterialForm({
   const roles = furnitureMaterialRoles(entry, detailed);
   const [patch, setPatch] = useState<FurnitureMaterials>({}),
     [error, setError] = useState('');
+  const signature = JSON.stringify([item.materials, item.finish]);
+  const [base, setBase] = useState(signature);
+  if (base !== signature) {
+    setBase(signature);
+    setPatch({});
+  }
   const chosen = { ...item.materials, ...patch };
   const current = furnitureMaterialTargets(
     { ...item, materials: chosen },
     entry.category,
   );
   const update = (next: FurnitureMaterials) => {
-    setPatch((p) => ({ ...p, ...next }));
-    setError('');
+    const draft = { ...patch, ...next };
+    setPatch(draft);
+    const parsed = furnitureMaterialsSchema.safeParse(draft);
+    setError(parsed.success ? (onCommit(parsed.data) ?? '') : '');
   };
-  const valid = furnitureMaterialsSchema.safeParse(patch).success;
+  const valid =
+    Object.keys(patch).length === 0 ||
+    furnitureMaterialsSchema.safeParse(patch).success;
   return (
     <form
-      className={styles.section}
+      className={layout.stack}
+      data-inspector-invalid={!valid || !!error || undefined}
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
@@ -129,13 +140,15 @@ function MaterialForm({
       }}
     >
       {!detailed && (
-        <p className={styles.hint}>Simple shape - frame appearance</p>
+        <p className={styles.hint}>Simple shape · frame appearance</p>
       )}
       {roles.body && (
-        <>
+        <section className={layout.group} aria-label="Frame appearance">
+          <h3>Frame</h3>
           <label>
-            Frame material
+            Material
             <select
+              aria-label="Frame material"
               value={chosen.body ?? 'auto'}
               onChange={(e) =>
                 update({
@@ -145,7 +158,7 @@ function MaterialForm({
               }
             >
               {Object.entries({
-                auto: 'Follow piece finish',
+                auto: 'Follow base finish',
                 plain: 'Plain matte',
                 wood: 'Wood grain',
                 painted: 'Painted',
@@ -159,11 +172,14 @@ function MaterialForm({
           </label>
           <ColourPicker
             label="Frame colour"
+            displayLabel="Colour"
             value={chosen.bodyColor ?? current.frame.color}
             onChange={(bodyColor) => update({ bodyColor })}
           />
           <PatternPicker
             label="Frame pattern"
+            displayLabel="Pattern"
+            collapsible
             value={
               (chosen.bodyPattern ??
                 (current.frame.surface === 'plaster' ||
@@ -173,13 +189,24 @@ function MaterialForm({
             }
             onChange={(bodyPattern) => update({ bodyPattern })}
           />
-        </>
+        </section>
       )}
       {roles.soft && (
-        <>
+        <section
+          className={layout.group}
+          aria-label={
+            entry.category === 'bed'
+              ? 'Bedding appearance'
+              : 'Upholstery appearance'
+          }
+        >
+          <h3>{entry.category === 'bed' ? 'Bedding' : 'Upholstery'}</h3>
           <label>
-            {entry.category === 'bed' ? 'Bedding material' : 'Upholstery'}
+            Material
             <select
+              aria-label={
+                entry.category === 'bed' ? 'Bedding material' : 'Upholstery'
+              }
               value={chosen.upholstery ?? 'linen'}
               onChange={(e) =>
                 update({
@@ -203,70 +230,80 @@ function MaterialForm({
               ))}
             </select>
           </label>
-          {entry.category !== 'bed' && (
+          {entry.category === 'bed' ? (
+            BED_BEDDING_PARTS.map((part) => (
+              <section
+                key={part.target}
+                className={layout.group}
+                aria-label={part.label}
+              >
+                <h3>{part.label}</h3>
+                <ColourPicker
+                  label={`${part.label} colour`}
+                  displayLabel="Colour"
+                  value={chosen[part.color] ?? current[part.target].color}
+                  onChange={(color) => update({ [part.color]: color })}
+                />
+                <PatternPicker
+                  label={`${part.label} pattern`}
+                  displayLabel="Pattern"
+                  collapsible
+                  value={
+                    (chosen[part.pattern] ??
+                      current[part.target].surface) as MaterialPattern
+                  }
+                  onChange={(pattern) => update({ [part.pattern]: pattern })}
+                />
+                <button
+                  type="button"
+                  className={layout.reset}
+                  aria-label={`Reset ${part.label.toLowerCase()} finish`}
+                  disabled={!chosen[part.color] && !chosen[part.pattern]}
+                  onClick={() =>
+                    update({ [part.color]: null, [part.pattern]: null })
+                  }
+                >
+                  Reset finish
+                </button>
+              </section>
+            ))
+          ) : (
             <>
               <ColourPicker
                 label="Soft-part colour"
+                displayLabel="Colour"
                 value={chosen.softColor ?? current.soft.color}
                 onChange={(softColor) => update({ softColor })}
               />
-              <button
-                type="button"
-                disabled={!chosen.softColor}
-                onClick={() => update({ softColor: null })}
-              >
-                Use default colour
-              </button>
               <PatternPicker
                 label="Soft-part pattern"
+                displayLabel="Pattern"
+                collapsible
                 value={
                   (chosen.softPattern ??
                     current.soft.surface) as MaterialPattern
                 }
                 onChange={(softPattern) => update({ softPattern })}
               />
+              <button
+                type="button"
+                className={layout.reset}
+                disabled={!chosen.softColor}
+                onClick={() => update({ softColor: null })}
+              >
+                Use default colour
+              </button>
             </>
           )}
-        </>
+        </section>
       )}
-      {roles.soft &&
-        entry.category === 'bed' &&
-        BED_BEDDING_PARTS.map((part) => (
-          <section
-            key={part.target}
-            className={styles.section}
-            aria-label={part.label}
-          >
-            <h3>{part.label}</h3>
-            <ColourPicker
-              label={`${part.label} colour`}
-              value={chosen[part.color] ?? current[part.target].color}
-              onChange={(color) => update({ [part.color]: color })}
-            />
-            <PatternPicker
-              label={`${part.label} pattern`}
-              value={
-                (chosen[part.pattern] ??
-                  current[part.target].surface) as MaterialPattern
-              }
-              onChange={(pattern) => update({ [part.pattern]: pattern })}
-            />
-            <button
-              type="button"
-              disabled={!chosen[part.color] && !chosen[part.pattern]}
-              onClick={() =>
-                update({ [part.color]: null, [part.pattern]: null })
-              }
-            >
-              Reset {part.label.toLowerCase()} finish
-            </button>
-          </section>
-        ))}
       {roles.hardware && (
-        <>
+        <section className={layout.group} aria-label="Hardware appearance">
+          <h3>Hardware</h3>
           <label>
-            Hardware
+            Finish
             <select
+              aria-label="Hardware"
               value={chosen.hardware ?? 'original'}
               onChange={(e) =>
                 update({
@@ -284,14 +321,12 @@ function MaterialForm({
           </label>
           <ColourPicker
             label="Hardware colour"
+            displayLabel="Colour"
             value={chosen.hardwareColor ?? current.metal.color}
             onChange={(hardwareColor) => update({ hardwareColor })}
           />
-        </>
+        </section>
       )}
-      <button type="submit" className={styles.primary} disabled={!valid}>
-        Apply materials
-      </button>
       {error && <p role="alert">{error}</p>}
     </form>
   );

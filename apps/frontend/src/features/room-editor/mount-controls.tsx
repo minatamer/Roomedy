@@ -18,17 +18,31 @@ export function MountControls({
   advanced = false,
   room: editRoom,
   onEdit,
+  live = false,
 }: {
   controller: SessionController;
   item: Furniture;
   advanced?: boolean;
   room?: RoomDocument;
   onEdit?: SessionController['dispatch'];
+  live?: boolean;
 }) {
   const entry = findCatalogueEntry(item.catalogueId, item.catalogueVersion);
   const bottom = furnitureBottom(item);
   const [value, setValue] = useState(String(bottom ?? ''));
   const [error, setError] = useState('');
+  const [source, setSource] = useState(String(bottom ?? ''));
+  const [touched, setTouched] = useState(false);
+  if (source !== String(bottom ?? '')) {
+    setSource(String(bottom ?? ''));
+    setValue(String(bottom ?? ''));
+  }
+  const valid =
+    value.trim() !== '' &&
+    Number.isFinite(Number(value)) &&
+    Number(value) >= 0 &&
+    Number(value) <= POLICY.roomEdgeMm &&
+    Number.isInteger(Number(value) * 2);
   const input = useRef<HTMLInputElement>(null),
     errorId = useId();
   if (!entry?.placement || entry.placement === 'floor') return null;
@@ -53,6 +67,9 @@ export function MountControls({
       <form
         className={styles.section}
         noValidate
+        data-inspector-invalid={
+          (live && touched && (!valid || !!error)) || undefined
+        }
         onSubmit={(e) => {
           e.preventDefault();
           const number = Number(value);
@@ -83,16 +100,29 @@ export function MountControls({
             value={value}
             onChange={(e) => {
               setValue(e.target.value);
+              setTouched(true);
               setError('');
+              const next = Number(e.target.value);
+              if (
+                live &&
+                e.target.value.trim() &&
+                Number.isFinite(next) &&
+                next >= 0 &&
+                next <= POLICY.roomEdgeMm &&
+                Number.isInteger(next * 2)
+              )
+                apply({ ...item.pose, bottomY: next });
             }}
             aria-invalid={!!error}
             aria-describedby={error ? errorId : undefined}
             disabled={item.locks.position}
           />
         </label>
-        <button type="submit" disabled={item.locks.position}>
-          Apply mounting height
-        </button>
+        {!live && (
+          <button type="submit" disabled={item.locks.position}>
+            Apply mounting height
+          </button>
+        )}
         {error && (
           <p id={errorId} role="alert" className={styles.error}>
             {error}

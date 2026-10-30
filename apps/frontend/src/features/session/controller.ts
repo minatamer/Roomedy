@@ -48,6 +48,7 @@ import { clearanceNotice } from './clearance';
 import { changeShoppingLocality, shoppingLocality } from '../cost/journey';
 import { shoppingCountry } from '../cost/shopping-countries';
 import { MessageReveal } from '../assistant/message-reveal';
+import { appendInspectorEdits } from './inspector-draft';
 
 interface Dependencies {
   now?: () => number;
@@ -87,6 +88,8 @@ export class SessionController {
     token: OperationIdentity;
     actions: VisitorAction[];
     label: string;
+    inspector?: boolean;
+    edits?: VisitorAction[][];
   } | null = null;
 
   constructor(room?: RoomDocument, dependencies: Dependencies = {}) {
@@ -199,12 +202,17 @@ export class SessionController {
     this.retire('expired');
   }
   private cancelWork() {
+    const inspectorReset =
+      this.state.candidate?.source === 'inspector'
+        ? ((this.state.inspectorReset ?? 0) + 1) % 1_000_000
+        : (this.state.inspectorReset ?? 0);
     this.costPreview = null;
     this.visitorPreview = null;
     this.assistantPreview = null;
     this.lastAssistant = null;
     this.state = Object.freeze({
       ...this.state,
+      inspectorReset,
       pending: null,
       candidate: null,
       costProposal: null,
@@ -860,6 +868,13 @@ export class SessionController {
     });
   }
   setPanel(panel: Panel) {
+    if (
+      this.state.candidate?.source === 'inspector' &&
+      (panel === 'assistant' || panel === 'catalogue')
+    ) {
+      this.notify('Apply or reset your changes before opening another task.');
+      return;
+    }
     if (this.active())
       this.publish({ presentation: { ...this.state.presentation, panel } });
   }
@@ -903,10 +918,109 @@ export class SessionController {
       'visitor',
     );
   }
+  previewInspector(
+    actions: VisitorAction[],
+    label: string,
+  ): { ok: true; changed: boolean } | CommandFailure {
+    if (
+      !this.canEdit() ||
+      !this.state.workspace ||
+      this.state.destination !== 'design' ||
+      (this.state.candidate && this.state.candidate.source !== 'inspector')
+    )
+      return { ok: false, code: 'stale' };
+    const existing = this.visitorPreview?.inspector
+      ? this.visitorPreview
+      : null;
+    if (existing && !this.isCurrent(existing.token))
+      return { ok: false, code: 'stale' };
+    const batches = appendInspectorEdits(
+      existing ? [existing.actions, ...(existing.edits ?? [])] : [],
+      actions,
+    );
+    if (!batches.length || batches.length > POLICY.actions * POLICY.actions)
+      return { ok: false, code: 'capacity' };
+    const first = batches[0]!;
+    const edits = batches.slice(1);
+    const evaluated = prepareCommand(
+      this.state.workspace,
+      this.envelope(first),
+      'visitor',
+      undefined,
+      [],
+      edits,
+    );
+    if (!evaluated.ok) return evaluated;
+    if (!evaluated.changed) {
+      if (existing) this.resetInspectorChanges();
+      return { ok: true, changed: false };
+    }
+    const token = existing?.token ?? this.beginOperation();
+    if (!token) return { ok: false, code: 'stale' };
+    this.visitorPreview = {
+      token,
+      actions: first,
+      edits,
+      label: 'Update room settings',
+      inspector: true,
+    };
+    this.publish({
+      candidate: {
+        identity: token,
+        source: 'inspector',
+        room: evaluated.room,
+        checks: evaluated.checks,
+        label,
+      },
+      message: 'Previewing changes. Apply changes to save.',
+      messageKind: 'confirmation',
+    });
+    return { ok: true, changed: true };
+  }
+  applyInspectorChanges(): { ok: true; changed: boolean } | CommandFailure {
+    const preview = this.visitorPreview;
+    if (
+      !this.canEdit() ||
+      !this.state.workspace ||
+      this.state.candidate?.source !== 'inspector' ||
+      !preview?.inspector ||
+      !this.isCurrent(preview.token)
+    )
+      return { ok: false, code: 'stale' };
+    const command = this.envelope(preview.actions);
+    const result = applyCommand(
+      this.state.workspace,
+      command,
+      'visitor',
+      undefined,
+      this.state.cost ? pricingState(this.state.cost) : undefined,
+      [],
+      preview.edits,
+    );
+    return this.commitCommand(command, preview.label, result);
+  }
+  resetInspectorChanges() {
+    if (
+      !this.active() ||
+      (this.state.candidate && this.state.candidate.source !== 'inspector')
+    )
+      return;
+    const hadDraft = this.state.candidate?.source === 'inspector';
+    if (hadDraft) this.cancelWork();
+    this.publish({
+      inspectorReset: hadDraft
+        ? (this.state.inspectorReset ?? 0)
+        : ((this.state.inspectorReset ?? 0) + 1) % 1_000_000,
+      message: 'Changes reset to the last applied design.',
+      messageKind: 'confirmation',
+    });
+  }
   prepareVisitorPreview(
     actions: VisitorAction[],
     label: string,
   ): { ok: true } | { ok: false; code: string } {
+    if (this.state.candidate?.source === 'inspector')
+      return { ok: false, code: 'stale' };
     const result = this.previewVisitor(actions);
     if (!result.ok) return result;
     if (!result.changed) {
@@ -975,6 +1089,8 @@ export class SessionController {
     actions: VisitorAction[],
     label: string,
   ): { ok: true; changed: boolean } | CommandFailure {
+    if (this.state.candidate?.source === 'inspector')
+      return { ok: false, code: 'stale' };
     if (!this.canEdit() || !this.state.workspace)
       return { ok: false, code: 'stale' };
     const command = this.envelope(actions);
@@ -1169,10 +1285,13 @@ export class SessionController {
       !this.isCurrent(preview.token)
     )
       return { ok: false, code: 'stale' };
-    const refinements = [
-      ...(preview.refinements ?? []),
-      { id, actions: structuredClone(actions) },
-    ];
+    const refinements = structuredClone(preview.refinements ?? []);
+    const last = refinements.at(-1);
+    if (last?.id === id) {
+      const merged = appendInspectorEdits([last.actions], actions);
+      if (merged.length === 1) last.actions = merged[0]!;
+      else refinements.push({ id, actions: structuredClone(actions) });
+    } else refinements.push({ id, actions: structuredClone(actions) });
     const evaluated = prepareCommand(
       this.state.workspace,
       preview.command,
@@ -1196,6 +1315,36 @@ export class SessionController {
         'Preview updated. Apply changes to keep it, or Cancel to discard.',
     });
     return { ok: true, changed: true };
+  }
+  resetAssistantRefinements(): { ok: true; changed: boolean } | CommandFailure {
+    const preview = this.assistantPreview;
+    if (
+      !this.canEdit() ||
+      !this.state.workspace ||
+      !preview ||
+      this.state.candidate?.source !== 'assistant' ||
+      !this.isCurrent(preview.token)
+    )
+      return { ok: false, code: 'stale' };
+    const result = prepareCommand(
+      this.state.workspace,
+      preview.command,
+      preview.authority,
+      preview.scope,
+    );
+    if (!result.ok) return result;
+    preview.refinements = [];
+    this.publish({
+      candidate: {
+        ...this.state.candidate,
+        room: result.room,
+        checks: result.checks,
+      },
+      inspectorReset: ((this.state.inspectorReset ?? 0) + 1) % 1_000_000,
+      message: 'Manual changes reset to the original proposal.',
+      messageKind: 'confirmation',
+    });
+    return { ok: true, changed: result.changed };
   }
   applyAssistantPreview():
     | {
@@ -1231,6 +1380,11 @@ export class SessionController {
     return { ...committed, receipt: result.receipt, status: result.status };
   }
   undo(): { ok: true } | { ok: false; code: string } {
+    if (this.state.candidate?.source === 'inspector') {
+      if (!this.canEdit()) return { ok: false, code: 'stale' };
+      this.resetInspectorChanges();
+      return { ok: true };
+    }
     if (!this.canEdit() || !this.state.workspace)
       return { ok: false, code: 'stale' };
     if (
@@ -1281,6 +1435,10 @@ export class SessionController {
     return { ok: true };
   }
   beginOperation(): OperationIdentity | null {
+    if (this.state.candidate?.source === 'inspector') {
+      this.notify('Apply or reset your changes before starting another task.');
+      return null;
+    }
     if (!this.canEdit() || !this.state.workspace) return null;
     this.cancelWork();
     const workspace = this.state.workspace;

@@ -86,6 +86,13 @@ import {
 import { OpeningMotion, useOpeningMotion } from './opening-motion';
 import { cabinetDoorRig } from './articulation-model';
 import { balconyDoorPanels, balconyPanelMotion } from './opening-parts';
+import {
+  applyViewCamera,
+  captureViewCamera,
+  viewMorphFrame,
+} from './view-morph';
+import type { ViewBridge, SavedViewCamera } from './view-morph';
+import type { PerspectiveCamera } from 'three';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 
 export type CameraAction = {
@@ -106,6 +113,8 @@ export type CameraAction = {
 };
 export interface SceneProps {
   active?: boolean;
+  interactive?: boolean;
+  viewBridge?: ViewBridge | undefined;
   inspection?: Inspection | undefined;
   placement?: CataloguePlacement | undefined;
   room: RoomDocument;
@@ -320,6 +329,8 @@ function setCameraZoom(
 
 function CameraRig({
   active = true,
+  interactive = true,
+  viewBridge,
   inspection,
   room,
   cameraStateRef,
@@ -337,9 +348,16 @@ function CameraRig({
   | 'cameraView'
   | 'editing'
   | 'active'
+  | 'interactive'
+  | 'viewBridge'
 >) {
   const { camera, size, invalidate, gl } = useThree();
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
+  const savedView = useRef<SavedViewCamera | null>(null);
+  useLayoutEffect(
+    () => viewBridge?.attachInvalidator(invalidate),
+    [viewBridge, invalidate],
+  );
   useEffect(() => {
     if (active) invalidate();
   }, [active, invalidate]);
@@ -555,13 +573,18 @@ function CameraRig({
     [camera, room, cameraView, cameraFrame, fit, begin],
   );
   useEffect(() => {
-    if (!cameraAction || lastAction.current === cameraAction.sequence) return;
+    if (
+      !interactive ||
+      !cameraAction ||
+      lastAction.current === cameraAction.sequence
+    )
+      return;
     lastAction.current = cameraAction.sequence;
     act(cameraAction.kind);
-  }, [cameraAction, act]);
+  }, [cameraAction, act, interactive]);
   useEffect(() => {
     const canvas = gl.domElement;
-    if (!active) return;
+    if (!active || !interactive) return;
     const key = (e: KeyboardEvent) => {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
       const kinds: Record<string, CameraAction['kind']> = {
@@ -690,10 +713,65 @@ function CameraRig({
         if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
       pointers.clear();
     };
-  }, [gl, camera, cameraView, act, begin, editing, active]);
+  }, [gl, camera, cameraView, act, begin, editing, active, interactive]);
   useFrame((_, delta) => {
     const c = controls.current;
     if (!c) return;
+    if (viewBridge && (camera as PerspectiveCamera).isPerspectiveCamera) {
+      const amount = viewBridge.timeline.amount;
+      if (amount > 0 || viewBridge.timeline.moving || savedView.current) {
+        const perspective = camera as PerspectiveCamera;
+        if (!savedView.current) {
+          c.enableDamping = false;
+          if (cameraView === 'overview') c.update();
+          savedView.current = captureViewCamera(
+            perspective,
+            c.target,
+            cameraView,
+            fit,
+          );
+        }
+        c.enabled = false;
+        desired.current = null;
+        applyViewCamera(
+          perspective,
+          c.target,
+          savedView.current,
+          amount,
+          viewBridge.box,
+          size,
+          displayRoom(room).height,
+        );
+        viewBridge.onFrame(amount);
+        if (process.env.NODE_ENV === 'development') {
+          const bounds = displayRoom(room);
+          gl.domElement.setAttribute(
+            'data-roomedy-view-morph',
+            JSON.stringify({
+              amount,
+              ...viewMorphFrame(amount),
+              position: camera.position.toArray(),
+              floor: [
+                [0, 0],
+                [bounds.width, 0],
+                [bounds.width, bounds.depth],
+                [0, bounds.depth],
+              ].map(([x, z]) =>
+                new Vector3(x!, 0, z!).project(camera).toArray(),
+              ),
+            }),
+          );
+        }
+        if (amount !== 0 || viewBridge.timeline.moving) return;
+        savedView.current = null;
+        c.enableDamping = true;
+        c.enabled =
+          active &&
+          interactive &&
+          cameraView === 'overview' &&
+          !editing.enabled;
+      } else viewBridge.onFrame(0);
+    }
     const next = desired.current;
     if (next) {
       next.elapsed += Math.min(delta, 0.05);
@@ -747,7 +825,9 @@ function CameraRig({
   return (
     <OrbitControls
       ref={controls}
-      enabled={active && cameraView === 'overview' && !editing.enabled}
+      enabled={
+        active && interactive && cameraView === 'overview' && !editing.enabled
+      }
       enableDamping
       dampingFactor={0.12}
       enablePan={false}
@@ -1841,6 +1921,8 @@ export function RoomScene(props: SceneProps) {
       <CatalogueGhost placement={props.placement} />
       <CameraRig
         active={props.active ?? true}
+        interactive={props.interactive ?? true}
+        viewBridge={props.viewBridge}
         room={candidate ?? room}
         inspection={props.inspection}
         cameraFrame={props.cameraFrame}

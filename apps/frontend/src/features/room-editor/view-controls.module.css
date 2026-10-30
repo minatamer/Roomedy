@@ -28,6 +28,7 @@
   border-color: #aa9274;
 }
 .viewStage {
+  isolation: isolate;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -43,6 +44,16 @@
   grid-template-rows: subgrid;
   grid-area: 1 / 1 / -1 / -1;
   gap: inherit;
+}
+.viewStage::before {
+  content: '';
+  grid-area: 2 / 1;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 18px;
+  background: var(--surface-room);
+  pointer-events: none;
+  z-index: -1;
 }
 .frameControls {
   position: relative;
@@ -107,6 +118,9 @@
       gap: 20px;
     }
     .frameControls {
+      grid-area: 1 / 2;
+    }
+    .viewStage::before {
       grid-area: 1 / 2;
     }
     .stage {
