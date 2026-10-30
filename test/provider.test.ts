@@ -378,9 +378,16 @@ it('cancels rejected HTTP/type/output/fragment streams and never retries', async
     expect(calls).toBe(1);
   }
 });
-it.each(['completed', 'timeout', 'cancelled'] as const)(
-  'uses the photo call budget past forty-five seconds and preserves real settlement: %s',
-  async (outcome) => {
+it.each(
+  (['photo', 'sourcing'] as const).flatMap((profile) =>
+    (['completed', 'timeout', 'cancelled'] as const).map((outcome) => ({
+      profile,
+      outcome,
+    })),
+  ),
+)(
+  'uses the $profile call budget past forty-five seconds and preserves real settlement: $outcome',
+  async ({ profile, outcome }) => {
     vi.useFakeTimers();
     let resolve: (response: Response) => void;
     const fetcher = vi.fn<typeof fetch>(
@@ -396,7 +403,7 @@ it.each(['completed', 'timeout', 'cancelled'] as const)(
     );
     const parent = new AbortController();
     try {
-      const call = provider.start(input(), parent.signal, 'photo');
+      const call = provider.start(input(), parent.signal, profile);
       let visible = false,
         settled = false;
       void call.result.then(() => {
@@ -416,7 +423,11 @@ it.each(['completed', 'timeout', 'cancelled'] as const)(
         if (outcome === 'cancelled') parent.abort();
         else
           await vi.advanceTimersByTimeAsync(
-            POLICY.recognitionProviderMs - POLICY.providerCallMs - 1,
+            (profile === 'photo'
+              ? POLICY.recognitionProviderMs
+              : POLICY.sourcingProviderMs) -
+              POLICY.providerCallMs -
+              1,
           );
         expect(await call.result).toEqual({ kind: outcome });
         expect(settled).toBe(false);
@@ -428,11 +439,45 @@ it.each(['completed', 'timeout', 'cancelled'] as const)(
       expect(provider.meteredDispatches).toBe(1);
       expect(POLICY.recognitionProviderMs).toBeLessThan(POLICY.recognitionMs);
       expect(POLICY.recognitionMs).toBeLessThan(POLICY.operationBridgeMs);
+      expect(POLICY.sourcingProviderMs).toBeLessThan(POLICY.sourcingMs);
+      expect(POLICY.sourcingMs).toBeLessThan(POLICY.operationBridgeMs);
     } finally {
       vi.useRealTimers();
     }
   },
 );
+it('bounds optional sourcing media separately while retaining actual transport ownership', async () => {
+  vi.useFakeTimers();
+  let resolve: (response: Response) => void;
+  const provider = createResponsesProvider(
+    'synthetic-key',
+    'fixture',
+    () =>
+      new Promise((r) => {
+        resolve = r;
+      }),
+  );
+  try {
+    const call = provider.start(
+      input(),
+      new AbortController().signal,
+      'sourcing-media',
+    );
+    let settled = false;
+    void call.settled.then(() => {
+      settled = true;
+    });
+    await vi.advanceTimersByTimeAsync(POLICY.sourcingMediaMs);
+    expect(await call.result).toEqual({ kind: 'timeout' });
+    expect(settled).toBe(false);
+    resolve!(Response.json(completed));
+    await call.settled;
+    expect(settled).toBe(true);
+    expect(provider.meteredDispatches).toBe(1);
+  } finally {
+    vi.useRealTimers();
+  }
+});
 it('returns an independent deadline even when fetch ignores abort, while exposing real settlement', async () => {
   vi.useFakeTimers();
   let resolve: (response: Response) => void;

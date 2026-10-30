@@ -228,13 +228,6 @@
   }
 }
 
-.research {
-  margin: 18px 0;
-  padding: 18px;
-  border: 1px solid #dfd1bd;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #fffcf6, #ede2d1a0);
-}
 .researchPending {
   margin: 18px 0;
 }
@@ -242,7 +235,6 @@
   margin: 0;
   color: var(--muted);
 }
-.research > p,
 .sourceCards > p {
   font-size: 14px;
   line-height: 1.7;
@@ -298,11 +290,6 @@
   background: #715139;
   color: #fff8ec;
   border-color: #715139;
-}
-@media (max-width: 600px) {
-  .research {
-    padding: 16px;
-  }
 }
 .planCards {
   max-width: 720px;
@@ -478,7 +465,7 @@
   height: 20px;
   flex-shrink: 0;
 }
-.research > [role='status']:empty {
+.marketStatus:empty {
   display: none;
 }
 .offerVisual {
@@ -731,31 +718,6 @@
   flex-shrink: 0;
   flex-wrap: wrap;
 }
-.headingActions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-left: auto;
-}
-.page .pinnedShortcut {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 12px;
-  font-size: 12px;
-  white-space: nowrap;
-}
-.headingActions summary {
-  padding: 0;
-}
-.page .textAction {
-  background: transparent;
-  border: 0;
-  border-radius: 16px;
-  padding: 8px 12px;
-  font-size: 12px;
-}
 .transcript {
   flex: 1;
   min-height: 0;
@@ -996,22 +958,6 @@
   object-fit: contain;
 }
 
-.productFallback {
-  width: 100%;
-  aspect-ratio: 4/3;
-  max-height: 260px;
-  display: grid;
-  background: #f5f1e8;
-  border-radius: 15px;
-  overflow: hidden;
-}
-.productFallback .offerVisual {
-  margin: 0;
-  height: 100%;
-  min-height: 0;
-  border: 0;
-  border-radius: 0;
-}
 .page .productImage {
   max-height: 260px;
 }
@@ -1493,4 +1439,164 @@
     min-height: 32px;
     height: 32px;
   }
+}
+
+.marketResearch {
+  margin: 22px 0;
+}
+.marketHeading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.marketHeading > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.marketHeading h3 {
+  margin: 0 0 5px;
+  font-size: 22px;
+  font-weight: 500;
+}
+.marketHeading p,
+.marketStatus,
+.marketFailure p {
+  margin: 0;
+  color: #806c58;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.marketStatus:not(:empty) {
+  margin-bottom: 14px;
+}
+.marketGroup {
+  margin: 18px 0;
+}
+.marketGroup > h3 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #806c58;
+  font-weight: 600;
+}
+.marketItem,
+.marketFailure {
+  border: 1px solid var(--surface-border);
+  background: var(--surface-control);
+  border-radius: 18px;
+  padding: 12px 16px;
+  margin: 10px 0;
+  animation: marketReveal 220ms ease-out both;
+}
+.marketItem > summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+}
+.marketItem > summary::-webkit-details-marker {
+  display: none;
+}
+.page .marketItem > summary > span {
+  display: inline;
+  float: none;
+  margin: 0;
+  flex: 1;
+  font-size: 17px;
+}
+.marketItem > summary > small {
+  color: #806c58;
+  font-size: 12px;
+}
+.marketItem > summary::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  margin: 0 3px 4px;
+}
+.marketItem[open] > summary::after {
+  transform: rotate(225deg);
+  margin-top: 6px;
+}
+.marketItem[open] > summary {
+  margin-bottom: 12px;
+}
+.marketItem > button {
+  margin-top: 12px;
+}
+.marketItem .sourceCards article {
+  background: var(--surface-panel);
+  padding: 16px;
+  gap: 10px;
+}
+.marketWaiting {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #806c58;
+  font-size: 14px;
+}
+.marketWaiting span {
+  font-size: 12px;
+}
+.marketFailure h4 {
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+.marketFailure button {
+  margin-top: 10px;
+}
+@keyframes marketReveal {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (max-width: 600px) {
+  .marketItem,
+  .marketFailure {
+    padding: 10px 12px;
+  }
+  .page .marketItem > summary > span {
+    font-size: 15px;
+  }
+  .marketItem > summary {
+    gap: 8px;
+  }
+}
+@media (max-width: 480px) {
+  .page .choices button {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 7px 4px;
+    text-align: center;
+  }
+  .choices button > span:first-of-type {
+    flex: 0;
+    min-width: 0;
+  }
+  .choices svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.sourceCards .discoveryLead {
+  gap: 8px;
+  padding: 14px 16px;
+  background: transparent;
+}
+.sourceCards .discoveryLead h3 {
+  font-size: 15px;
 }

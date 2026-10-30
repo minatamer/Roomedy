@@ -3,6 +3,7 @@ import {
   safeProductImage,
   sourcingReplySchema,
 } from '@roomedy/contracts/sourcing';
+import { readSearchAction } from '../apps/backend/src/providers/web-search.js';
 import { VERSIONS } from '@roomedy/contracts/policy';
 import { sourcingInputSchema } from '@roomedy/contracts/operations';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
@@ -66,6 +67,189 @@ function fixture(country = 'DE') {
   return { input, reply, url, imageUrl };
 }
 describe('bounded product photos and regional source evidence', () => {
+  it('does not promote model-authored FX into either an offer or a display listing', () => {
+    const { input, reply, url } = fixture();
+    const c = reply.candidates[0]!;
+    c.offer!.fx = {
+      currency: 'EGP',
+      usdPerUnit: '0.02',
+      date: '2026-10-30',
+      observedAt: 123,
+      url: 'https://fx.example/rate',
+      inputs: [{ key: 'price', minor: 1000 }],
+    };
+    c.listing = {
+      priceMinor: 200,
+      currency: 'USD',
+      country: 'FR',
+      unit: 'pack',
+      volumeMl: null,
+      observedAt: 123,
+    };
+    const a = normalizeSourcing(
+      input,
+      reply,
+      { calls: 1, opened: [url], sources: [] },
+      false,
+      124,
+      () => 'offer',
+    );
+    expect(a.candidates[0]!.offer).toBeNull();
+    expect(a.candidates[0]!.listing).toBeNull();
+  });
+
+  it('uses canonical image results only for their exact product page, independently of quote opening', () => {
+    const { input, reply, url, imageUrl } = fixture();
+    reply.candidates[0]!.imageUrl = null;
+    const evidence = {
+      calls: 0,
+      opened: [url],
+      sources: [] as string[],
+      images: [] as { imageUrl: string; sourceUrl: string; caption: string }[],
+    };
+    expect(
+      readSearchAction(
+        {
+          type: 'web_search_call',
+          id: 'images',
+          status: 'completed',
+          action: { type: 'search', query: 'flooring' },
+          results: [
+            {
+              type: 'image_result',
+              image_url: imageUrl,
+              source_website_url: url,
+              thumbnail_url: 'https://thumbnail.example/image.jpg',
+              caption: 'This product',
+            },
+          ],
+        },
+        evidence,
+      ),
+    ).toBe(true);
+    expect(
+      normalizeSourcing(input, reply, evidence, false, 124, () => 'offer')
+        .candidates[0]!.imageUrl,
+    ).toBe(imageUrl);
+    evidence.opened = [];
+    expect(
+      normalizeSourcing(input, reply, evidence, false, 124, () => 'offer')
+        .candidates[0]!.imageUrl,
+    ).toBe(imageUrl);
+    evidence.opened = [url];
+    evidence.images[0]!.sourceUrl = 'https://merchant.example/other';
+    expect(
+      normalizeSourcing(input, reply, evidence, false, 124, () => 'offer')
+        .candidates[0]!.imageUrl,
+    ).toBeNull();
+  });
+  it('retains a valid USD listing for discovery without authorizing an estimate offer', () => {
+    const { input, reply, url } = fixture();
+    const c = reply.candidates[0]!;
+    c.offer = null;
+    c.match = 'lead';
+    c.listing = {
+      priceMinor: 4299,
+      currency: 'USD',
+      country: 'FR',
+      unit: 'pack',
+      volumeMl: null,
+      observedAt: 123,
+    };
+    const a = normalizeSourcing(
+      input,
+      reply,
+      { calls: 1, opened: [url], sources: [] },
+      false,
+      124,
+      () => 'offer',
+    );
+    expect(a.candidates[0]!.offer).toBeNull();
+    expect(a.candidates[0]!.listing!.priceMinor).toBe(4299);
+    expect(
+      normalizeSourcing(
+        input,
+        reply,
+        { calls: 1, opened: [], sources: [] },
+        false,
+        124,
+        () => 'offer',
+      ).candidates[0]!.listing,
+    ).toBeNull();
+  });
+
+  it('shows a cited merchant comparison price without authorizing an unopened quote', () => {
+    const { input, reply, url, imageUrl } = fixture('US');
+    reply.candidates[0]!.listing = {
+      priceMinor: 4299,
+      currency: 'USD',
+      country: 'US',
+      unit: 'pack',
+      volumeMl: null,
+      observedAt: 123,
+    };
+    const candidate = normalizeSourcing(
+      input,
+      reply,
+      {
+        calls: 1,
+        opened: [],
+        sources: [url],
+        images: [{ imageUrl, sourceUrl: url, caption: 'Actual product' }],
+      },
+      false,
+      124,
+      () => 'offer',
+    ).candidates[0]!;
+    expect(candidate.listing?.priceMinor).toBe(4299);
+    expect(candidate.imageUrl).toBe(imageUrl);
+    expect(candidate.offer).toBeNull();
+    expect(
+      normalizeSourcing(
+        input,
+        reply,
+        { calls: 1, opened: [], sources: [] },
+        false,
+        124,
+        () => 'offer',
+      ).candidates[0]!.listing,
+    ).toBeNull();
+  });
+  it('matches attributed product links for comparison while keeping variant and quote opening checks strict', () => {
+    const { input, reply, url, imageUrl } = fixture();
+    const c = reply.candidates[0]!;
+    c.listing = {
+      priceMinor: 4299,
+      currency: 'USD',
+      country: 'FR',
+      unit: 'pack',
+      volumeMl: null,
+      observedAt: 123,
+    };
+    const tracked =
+      'https://www.merchant.example/product/?MERCH=REC-_-related&utm_source=search';
+    const result = normalizeSourcing(
+      input,
+      reply,
+      { calls: 2, opened: [tracked], sources: [tracked] },
+      false,
+      124,
+      () => 'offer',
+    ).candidates[0]!;
+    expect(result.listing?.priceMinor).toBe(4299);
+    expect(result.imageUrl).toBe(imageUrl);
+    expect(result.offer).toBeNull();
+    expect(
+      normalizeSourcing(
+        input,
+        reply,
+        { calls: 2, opened: [], sources: [url + '?variant=other'] },
+        false,
+        124,
+        () => 'offer',
+      ).candidates[0]!.listing,
+    ).toBeNull();
+  });
   it('offers size review only when a product changes a known axis or fills an unknown one', () => {
     const room = createRoomFixture('sample'),
       draft = createCostDraft(room, 'en-US');
@@ -117,7 +301,7 @@ describe('bounded product photos and regional source evidence', () => {
     delete reply.candidates[0]!.imageUrl;
     expect(sourcingReplySchema.safeParse(reply).success).toBe(true);
   });
-  it('only exposes live merchant media from an opened non-discovery product page', () => {
+  it('exposes cited product media while retaining the opened-page requirement for estimate offers', () => {
     const { input, reply, url, imageUrl } = fixture();
     const unopened = normalizeSourcing(
       input,
@@ -127,7 +311,7 @@ describe('bounded product photos and regional source evidence', () => {
       124,
       () => 'price',
     );
-    expect(unopened.candidates[0]!.imageUrl).toBeNull();
+    expect(unopened.candidates[0]!.imageUrl).toBe(imageUrl);
     expect(unopened.candidates[0]!.offer).toBeNull();
     const opened = normalizeSourcing(
       input,

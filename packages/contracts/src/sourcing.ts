@@ -6,6 +6,7 @@ import {
   serviceScopeSchema,
   sourceUrlSchema,
   shoppingCountries,
+  quoteCurrencySchema,
 } from './estimates.js';
 export const sourcingTargetSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('furniture'), id: idSchema }),
@@ -49,16 +50,39 @@ export const sourcingBriefSchema = z
               brief.size === null,
     'The brief must match its selected target role.',
   );
+/** Observed listing information alone cannot be selected as a project estimate offer. */
+export const sourcingListingSchema = z.strictObject({
+  priceMinor: z.number().int().min(1).max(1_000_000_000),
+  currency: quoteCurrencySchema,
+  country: z.string().regex(/^[A-Z]{2}$/),
+  unit: z.enum(['item', 'pack', 'can', 'hour', 'job', 'm2', 'm', 'each']),
+  volumeMl: z.number().int().min(1).max(100_000).nullable(),
+  observedAt: z.number().int().min(0).max(8_640_000_000_000_000).nullable(),
+});
 export const sourcingCandidateSchema = z.strictObject({
   label: labelSchema,
   match: z.enum(['similar', 'custom', 'lead']),
   url: sourceUrlSchema,
   imageUrl: sourceUrlSchema.nullable().optional(),
+  listing: sourcingListingSchema.nullable().optional(),
   evidence: z.string().trim().min(1).max(400),
   conditions: z.enum(['standard', 'conditional', 'from', 'unknown']),
   differences: z.array(z.string().min(1).max(240)).max(4),
   offer: estimateOfferSchema.nullable(),
 });
+/** Operation-local photo lookup; never persisted or accepted as price evidence. */
+export const productImagesSchema = z.strictObject({
+  images: z
+    .array(
+      z.strictObject({
+        url: sourceUrlSchema,
+        imageUrl: sourceUrlSchema.nullable(),
+      }),
+    )
+    .max(3),
+});
+export const productImagesJsonSchema = () =>
+  z.toJSONSchema(productImagesSchema);
 export const sourcingReplySchema = z.strictObject({
   candidates: z.array(sourcingCandidateSchema).max(3),
   notes: z.array(z.string().min(1).max(240)).max(6),
@@ -67,7 +91,10 @@ export type SourcingTarget = z.infer<typeof sourcingTargetSchema>;
 export type SourcingBrief = z.infer<typeof sourcingBriefSchema>;
 export type SourcingCandidate = z.infer<typeof sourcingCandidateSchema>;
 export type SourcingReply = z.infer<typeof sourcingReplySchema>;
-export const sourcingReplyJsonSchema = (country?: string) => {
+export const sourcingReplyJsonSchema = (
+  country?: string,
+  kind?: SourcingBrief['kind'],
+) => {
   if (country !== undefined && !/^[A-Z]{2}$/.test(country))
     throw new Error('invalid-source-country');
   const schema = z.toJSONSchema(sourcingReplySchema);
@@ -79,9 +106,38 @@ export const sourcingReplyJsonSchema = (country?: string) => {
       return;
     }
     const object = node as Record<string, unknown>;
+    for (const union of ['anyOf', 'oneOf']) {
+      const branches = object[union];
+      if (
+        kind &&
+        Array.isArray(branches) &&
+        branches.every(
+          (branch) =>
+            branch &&
+            typeof branch === 'object' &&
+            branch.properties &&
+            typeof branch.properties === 'object' &&
+            branch.properties.kind &&
+            branch.properties.pricing,
+        )
+      ) {
+        object[union] = branches.filter((branch) => {
+          const role = branch.properties.kind;
+          return role.const === kind || role.enum?.includes(kind);
+        });
+      }
+    }
     if (object.properties && typeof object.properties === 'object') {
       const properties = object.properties as Record<string, unknown>;
       delete properties.fx;
+      if (kind && properties.kind && typeof properties.kind === 'object') {
+        const role = properties.kind as Record<string, unknown>;
+        if (
+          role.const === kind ||
+          (Array.isArray(role.enum) && role.enum.includes(kind))
+        )
+          properties.kind = { type: 'string', const: kind };
+      }
       // Research only this requested market. Unsupported-market pages must remain leads.
       if (
         country &&

@@ -3,7 +3,6 @@ import { safeProductImage } from '@roomedy/contracts/sourcing';
 import Image from 'next/image';
 import { useState } from 'react';
 import { money } from './state';
-import { OfferVisual } from './chat-visuals';
 import { ExternalLink } from './external-link';
 import styles from './workspace.module.css';
 
@@ -16,12 +15,7 @@ function ProductMedia({
 }) {
   const [failed, setFailed] = useState(false);
   const src = safeProductImage(candidate.imageUrl);
-  if (!src || failed)
-    return (
-      <div className={styles.productFallback}>
-        <OfferVisual offer={candidate.offer} />
-      </div>
-    );
+  if (!src || failed) return null;
   return (
     <ExternalLink url={candidate.url} className={styles.productImage}>
       <Image
@@ -58,20 +52,36 @@ export function SourceCard({
   onReview: () => void;
 }) {
   return (
-    <article>
+    <article
+      aria-label={candidate.label}
+      className={!candidate.imageUrl ? styles.discoveryLead : undefined}
+    >
       <p className={styles.eyebrow}>
-        {candidate.match} ·{' '}
+        {candidate.match === 'lead'
+          ? candidate.listing
+            ? 'store option'
+            : 'discovery link'
+          : candidate.match}{' '}
+        ·{' '}
         {!candidate.offer
-          ? 'unpriced lead'
+          ? candidate.listing
+            ? candidate.conditions === 'conditional'
+              ? 'conditional price · check terms'
+              : candidate.conditions === 'from'
+                ? 'starting price · check variant'
+                : 'listed price · details to confirm'
+            : 'more stores to check'
           : candidate.offer.pricing === 'allowance'
             ? 'planning allowance'
             : `${candidate.conditions} price`}
       </p>
-      <ProductMedia
-        key={candidate.imageUrl ?? 'none'}
-        candidate={candidate}
-        simulation={simulation}
-      />
+      {candidate.imageUrl && (
+        <ProductMedia
+          key={candidate.imageUrl ?? 'none'}
+          candidate={candidate}
+          simulation={simulation}
+        />
+      )}
       <h3>
         <ExternalLink url={candidate.url} className={styles.productTitle}>
           {candidate.label}
@@ -93,6 +103,24 @@ export function SourceCard({
                 .join(' · ')
             : `${money(candidate.offer.priceMinor, candidate.offer.market.currency)} ${candidate.offer.kind === 'service' ? `/ ${candidate.offer.basis}` : candidate.offer.kind === 'floor' ? '/ pack' : '/ item'}`}
         </strong>
+      )}
+      {!candidate.offer && candidate.listing && (
+        <>
+          <strong>
+            {candidate.conditions === 'from' ? 'From ' : ''}
+            {money(
+              candidate.listing.priceMinor,
+              candidate.listing.currency,
+            )} /{' '}
+            {candidate.listing.volumeMl
+              ? `${candidate.listing.volumeMl / 1000} L`
+              : candidate.listing.unit}
+          </strong>
+          <p className={styles.note}>
+            Store price found. Product specifications need confirmation before
+            adding it to the estimate.
+          </p>
+        </>
       )}
       {candidate.offer?.kind === 'floor' && (
         <p className={styles.note}>

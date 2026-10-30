@@ -33,6 +33,7 @@ export function CostWorkspace({
   exportButtonRef,
   panelRef,
   onReadOnlyChange,
+  researchTransport,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
@@ -41,6 +42,7 @@ export function CostWorkspace({
   exportButtonRef: RefObject<HTMLButtonElement | null>;
   panelRef?: RefObject<HTMLElement | null>;
   onReadOnlyChange?: (readOnly: boolean) => void;
+  researchTransport?: typeof fetch;
 }) {
   const [viewingId, setViewingId] = useState<string | null>(null);
   const [review, setReview] = useState(false);
@@ -50,6 +52,7 @@ export function CostWorkspace({
   const [input, setInput] = useState('');
   const [budget, setBudget] = useState<number | null>(null);
   const [work, setWork] = useState(false);
+  const [researchBusy, setResearchBusy] = useState(false);
   const saved = state.estimateVersions.find((v) => v.id === viewingId);
   useEffect(() => {
     onReadOnlyChange?.(!!saved);
@@ -142,7 +145,8 @@ export function CostWorkspace({
     );
   };
   const ask = (text: string) => {
-    if (!text.trim() || !estimate || !controller.checkExpiry()) return;
+    if (!text.trim() || !estimate || researchBusy || !controller.checkExpiry())
+      return;
     if (state.candidate) {
       controller.notify(
         'Apply or Cancel the preview before starting another request.',
@@ -262,62 +266,6 @@ export function CostWorkspace({
             <h2 className={assistant.name} data-cost-focus tabIndex={-1}>
               <MedyIcon /> Medy
             </h2>
-            <div className={styles.headingActions}>
-              <details className={assistant.privacy}>
-                <summary aria-label="AI privacy information">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" />
-                    <path
-                      d="M12 11v6M12 7v1"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                  </svg>
-                </summary>
-                <p>
-                  In AI mode, finding products shares the selected item’s size,
-                  finishes, shopping region and your preferences with the
-                  provider.
-                </p>
-              </details>
-              <button
-                ref={exportButtonRef}
-                className={`glass-control ${styles.pinnedShortcut}`}
-                title="Pinned shortcut"
-                onClick={onExport}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M8 3h8M9 3v6l-3 4v2h12v-2l-3-4V3M12 15v6" />
-                </svg>
-                <span>Export</span>
-              </button>
-              <button
-                className={styles.textAction}
-                onClick={() => {
-                  if (saved) setViewingId(null);
-                  if (saved || review) openSection('welcome');
-                  else openBreakdown();
-                }}
-              >
-                {review || saved ? 'Back to chat' : 'Cost breakdown'}
-              </button>
-            </div>
           </div>
           <div
             className={`${styles.transcript} roomedy-scroll`}
@@ -492,6 +440,7 @@ export function CostWorkspace({
                         section={section}
                         controller={controller}
                         state={state}
+                        researchBusy={researchBusy}
                         onContinue={openSection}
                         onResearch={(key, query, matchingWalls) => {
                           setSelected(key);
@@ -507,8 +456,9 @@ export function CostWorkspace({
                   </div>
                   {!saved && (
                     <Research
-                      key={section}
                       requestRef={research}
+                      onBusyChange={setResearchBusy}
+                      transport={researchTransport}
                       onDesign={onDesign}
                       controller={controller}
                       state={state}
@@ -549,52 +499,75 @@ export function CostWorkspace({
               <div ref={logEnd} />
             </div>
           </div>
-          {!saved && !legacy && (
-            <div className={styles.chatFooter}>
-              {!state.candidate && (
-                <div
-                  className={`${assistant.goals} ${styles.choices}`}
-                  role="group"
-                  aria-label="Planning choices"
+          <div className={styles.chatFooter}>
+            <div
+              className={`${assistant.goals} ${styles.choices}`}
+              role="group"
+              aria-label="Planning shortcuts"
+            >
+              <button
+                className="glass-control"
+                disabled={!!state.candidate}
+                onClick={() => {
+                  if (saved) setViewingId(null);
+                  if (saved || review) openSection('welcome');
+                  else openBreakdown();
+                }}
+              >
+                <ChatIcon kind="budget" />
+                <span>
+                  {review || saved ? 'Back to chat' : 'Cost breakdown'}
+                </span>
+                <span className={assistant.choiceArrow} aria-hidden="true">
+                  →
+                </span>
+              </button>
+              <button
+                className="glass-control"
+                disabled={
+                  !!saved || legacy || researchBusy || !!state.candidate
+                }
+                onClick={() => {
+                  if (!controller.checkExpiry()) return;
+                  controller.costMessage(
+                    'visitor',
+                    'Find market options for my room.',
+                  );
+                  void research.current?.('all', '');
+                }}
+              >
+                <ChatIcon kind="search" />
+                <span>Find options</span>
+                <span className={assistant.choiceArrow} aria-hidden="true">
+                  →
+                </span>
+              </button>
+              <button
+                ref={exportButtonRef}
+                className={`glass-control ${styles.pinnedShortcut}`}
+                title="Pinned shortcut"
+                onClick={onExport}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
                 >
-                  <button
-                    className="glass-control"
-                    onClick={() => openBreakdown()}
-                  >
-                    <ChatIcon kind="budget" />
-                    <span>Cost breakdown</span>
-                    <span className={assistant.choiceArrow} aria-hidden="true">
-                      →
-                    </span>
-                  </button>
-                  {section !== 'welcome' &&
-                    (
-                      [
-                        ['Choose furniture', 'furniture', 'furniture'],
-                        ['Plan flooring', 'floor', 'floor'],
-                        ['Choose wall paint', 'walls', 'walls'],
-                      ] as const
-                    )
-                      .filter(([, target]) => target !== section)
-                      .slice(0, 2)
-                      .map(([label, target, icon]) => (
-                        <button
-                          key={target}
-                          className="glass-control"
-                          onClick={() => openSection(target)}
-                        >
-                          <ChatIcon kind={icon} />
-                          <span>{label}</span>
-                          <span
-                            className={assistant.choiceArrow}
-                            aria-hidden="true"
-                          >
-                            →
-                          </span>
-                        </button>
-                      ))}
-                </div>
-              )}
+                  <path d="M8 3h8M9 3v6l-3 4v2h12v-2l-3-4V3M12 15v6" />
+                </svg>
+                <span>Export</span>
+                <span className={assistant.choiceArrow} aria-hidden="true">
+                  →
+                </span>
+              </button>
+            </div>
+            {!saved && !legacy && (
               <form
                 className={`${assistant.composer} ${styles.costComposer}`}
                 onSubmit={submit}
@@ -622,7 +595,12 @@ export function CostWorkspace({
                   <button
                     className={assistant.sendButton}
                     aria-label="Send cost message"
-                    disabled={!input.trim() || !estimate || !!state.candidate}
+                    disabled={
+                      !input.trim() ||
+                      !estimate ||
+                      !!state.candidate ||
+                      researchBusy
+                    }
                     type="submit"
                   >
                     <svg
@@ -641,8 +619,8 @@ export function CostWorkspace({
                   </button>
                 </div>
               </form>
-            </div>
-          )}
+            )}
+          </div>
           <p role="status" className={styles.status}>
             {state.message}
           </p>

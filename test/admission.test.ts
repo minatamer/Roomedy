@@ -1,6 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import { POLICY } from '@roomedy/contracts/policy';
+import { buildSourcingBrief } from '../apps/frontend/src/features/cost/brief.js';
+import type { OperationInput } from '@roomedy/contracts/operations';
+import type { OperationHandler } from '../apps/backend/src/runtime/operations.js';
 import { BoundedBytes } from '@roomedy/contracts/bounded-bytes';
 import { decodeInput } from '@roomedy/contracts/intake';
 import {
@@ -23,10 +26,38 @@ import {
 } from './fixtures/operation.js';
 
 describe('content-bound boot admission', () => {
-  it.each(['completed', 'timeout'] as const)(
-    'gives admitted photos the same longer independent budget and retains unresolved ownership: %s',
-    async (outcome) => {
-      const input = await recognitionInput();
+  it.each(
+    (['recognize-room', 'sourcing'] as const).flatMap((kind) =>
+      (['completed', 'timeout'] as const).map((outcome) => ({ kind, outcome })),
+    ),
+  )(
+    'gives admitted $kind its longer independent budget and retains unresolved ownership: $outcome',
+    async ({ kind, outcome }) => {
+      const ordinary = operationInput();
+      const input: OperationInput =
+        kind === 'recognize-room'
+          ? await recognitionInput()
+          : {
+              ...operationVersions,
+              kind: 'sourcing',
+              identity: ordinary.identity,
+              costRevision: 0,
+              locality: {
+                country: 'US',
+                city: 'United States',
+                currency: 'USD',
+              },
+              brief: buildSourcingBrief(
+                ordinary.room,
+                ordinary.room.furniture[0]!.id,
+              )!,
+            };
+      const callMs =
+        kind === 'recognize-room'
+          ? POLICY.recognitionProviderMs
+          : POLICY.sourcingProviderMs;
+      const overallMs =
+        kind === 'recognize-room' ? POLICY.recognitionMs : POLICY.sourcingMs;
       vi.useFakeTimers();
       let resolve!: (outcome: ProviderOutcome) => void;
       const pending = new Promise<ProviderOutcome>((r) => {
@@ -44,7 +75,7 @@ describe('content-bound boot admission', () => {
           log: vi.fn(),
           provider: { kind: 'fake', meteredDispatches: 0, start },
           handlers: {
-            'recognize-room': async (input, budget) => {
+            [kind]: (async (input, budget) => {
               const result = await budget.call({
                 instructions: 'fixture',
                 input: [],
@@ -59,7 +90,7 @@ describe('content-bound boot admission', () => {
                 tools: [],
               });
               return operationResult(input, result.kind);
-            },
+            }) satisfies OperationHandler,
           },
         },
       );
@@ -82,7 +113,9 @@ describe('content-bound boot admission', () => {
         await vi.advanceTimersByTimeAsync(POLICY.providerCallMs + 1);
         expect(visible).toBe(false);
         expect(start).toHaveBeenCalledTimes(1);
-        expect(start.mock.calls[0]![2]).toBe('photo');
+        expect(start.mock.calls[0]![2]).toBe(
+          kind === 'recognize-room' ? 'photo' : 'sourcing',
+        );
         if (outcome === 'completed') {
           await vi.advanceTimersByTimeAsync(15_000);
           resolve({ kind: 'completed', data: null, calls: [] });
@@ -90,17 +123,13 @@ describe('content-bound boot admission', () => {
           await vi.advanceTimersByTimeAsync(0);
           expect(runtime.operations.admission.snapshot().work).toBe(0);
         } else {
-          await vi.advanceTimersByTimeAsync(
-            POLICY.recognitionProviderMs - POLICY.providerCallMs - 1,
-          );
+          await vi.advanceTimersByTimeAsync(callMs - POLICY.providerCallMs - 1);
           expect(await result).toMatchObject({ kind: 'timeout' });
           expect(runtime.operations.admission.snapshot().work).toBe(1);
           resolve({ kind: 'unavailable' });
           await vi.advanceTimersByTimeAsync(0);
           expect(runtime.operations.admission.snapshot().work).toBe(1);
-          await vi.advanceTimersByTimeAsync(
-            POLICY.recognitionMs - POLICY.recognitionProviderMs,
-          );
+          await vi.advanceTimersByTimeAsync(overallMs - callMs);
           expect(runtime.operations.admission.snapshot().work).toBe(0);
         }
         expect(runtime.operations.calls()).toBe(1);

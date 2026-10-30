@@ -1,4 +1,4 @@
-import { readSearchAction } from './web-search.js';
+import { readSearchAction, evidenceUrl } from './web-search.js';
 import type { SearchEvidence } from './web-search.js';
 import { POLICY } from '@roomedy/contracts/policy';
 import { BoundedBytes } from '@roomedy/contracts/bounded-bytes';
@@ -22,7 +22,10 @@ export type ProviderShapeFailure =
   | 'content'
   | 'json'
   | 'usage';
-type ShapeReporter = (stage: ProviderShapeFailure) => void;
+type ShapeReporter = (
+  stage: ProviderShapeFailure,
+  observations?: number,
+) => void;
 function functionItem(
   item: Record<string, unknown>,
   tools?: readonly string[],
@@ -215,12 +218,18 @@ export function responseBody(input: ProviderRequest, model: string) {
     throw new Error('provider-request');
   if (
     input.search &&
-    (input.format.name !== 'room_sourcing_1' ||
+    ((input.format.name !== 'room_sourcing_1' &&
+      !(input.imageSearch && input.format.name === 'room_product_images_1')) ||
       input.tools.length ||
       (input.search !== true &&
         (!/^[A-Z]{2}$/.test(input.search.country) ||
           !input.search.city.trim() ||
           input.search.city.length > 80)))
+  )
+    throw new Error('provider-request');
+  if (
+    input.imageSearch &&
+    (!input.search || input.format.name !== 'room_product_images_1')
   )
     throw new Error('provider-request');
   const tools = input.tools.map((tool) => {
@@ -243,8 +252,13 @@ export function responseBody(input: ProviderRequest, model: string) {
     input: input.input,
     store: false,
     include: input.search
-      ? ['reasoning.encrypted_content', 'web_search_call.action.sources']
+      ? [
+          'reasoning.encrypted_content',
+          'web_search_call.action.sources',
+          'web_search_call.results',
+        ]
       : ['reasoning.encrypted_content'],
+    ...(input.search ? { reasoning: { effort: 'low' } } : {}),
     background: false,
     stream: false,
     parallel_tool_calls: false,
@@ -253,7 +267,11 @@ export function responseBody(input: ProviderRequest, model: string) {
       ? [
           {
             type: 'web_search',
-            search_context_size: 'low',
+            search_context_size: 'medium',
+            search_content_types: input.imageSearch
+              ? ['image']
+              : ['text', 'image'],
+            image_settings: { max_results: 3, caption: true },
             ...(input.search === true
               ? {}
               : {
@@ -266,7 +284,9 @@ export function responseBody(input: ProviderRequest, model: string) {
           },
         ]
       : tools,
-    ...(input.search ? { max_tool_calls: 4 } : {}),
+    ...(input.search
+      ? { max_tool_calls: input.imageSearch ? 4 : POLICY.sourcingSearchCalls }
+      : {}),
     tool_choice: input.search ? 'required' : tools.length ? 'auto' : 'none',
     text: {
       format: {
@@ -320,8 +340,12 @@ function decodePayload(
   report: ShapeReporter | undefined,
   search: boolean,
 ): ProviderOutcome {
-  const invalid = (stage: ProviderShapeFailure): ProviderOutcome => {
-    report?.(stage);
+  const invalid = (
+    stage: ProviderShapeFailure,
+    observations?: number,
+  ): ProviderOutcome => {
+    if (observations === undefined) report?.(stage);
+    else report?.(stage, observations);
     return { kind: 'malformed' };
   };
   if (!object(raw)) return invalid('envelope');
@@ -329,9 +353,13 @@ function decodePayload(
   if (
     raw.status !== 'completed' ||
     !Array.isArray(raw.output) ||
-    raw.output.length > POLICY.toolCalls + 4
+    raw.output.length >
+      (search ? POLICY.sourcingActionItems * 4 + 4 : POLICY.toolCalls + 4)
   )
-    return invalid('envelope');
+    return invalid(
+      'envelope',
+      Array.isArray(raw.output) ? raw.output.length : 0,
+    );
   let text = '';
   const searchEvidence: SearchEvidence = { calls: 0, opened: [], sources: [] };
   const calls: Extract<ProviderOutcome, { kind: 'completed' }>['calls'] = [];
@@ -339,8 +367,24 @@ function decodePayload(
   for (const item of raw.output) {
     if (!object(item)) return invalid('envelope');
     if (item.type === 'web_search_call') {
-      if (!search || !readSearchAction(item, searchEvidence))
-        return invalid('envelope');
+      if (!search || ++searchEvidence.calls > POLICY.sourcingActionItems)
+        return invalid('envelope', searchEvidence.calls);
+      // Optional search metadata can fail independently of another store.
+      // Only a fully parsed completed action contributes page/image evidence.
+      const action: SearchEvidence = { calls: 0, opened: [], sources: [] };
+      if (readSearchAction(item, action)) {
+        searchEvidence.opened.push(...action.opened);
+        searchEvidence.sources.push(...action.sources);
+        if (action.images) {
+          const images = (searchEvidence.images ??= []);
+          images.push(
+            ...action.images.slice(
+              0,
+              POLICY.sourcingSearchCalls * 3 - images.length,
+            ),
+          );
+        }
+      }
       continue;
     }
     if (item.type === 'reasoning') {
@@ -367,6 +411,22 @@ function decodePayload(
         if (part.type === 'refusal') return { kind: 'refused' };
         if (part.type !== 'output_text' || typeof part.text !== 'string')
           return invalid('content');
+        if (
+          search &&
+          Array.isArray(part.annotations) &&
+          part.annotations.length <= 40
+        ) {
+          for (const citation of part.annotations) {
+            if (
+              object(citation) &&
+              citation.type === 'url_citation' &&
+              typeof citation.url === 'string'
+            ) {
+              const url = evidenceUrl(citation.url);
+              if (url) searchEvidence.sources.push(url);
+            }
+          }
+        }
         text += part.text;
       }
     } else return invalid('envelope');

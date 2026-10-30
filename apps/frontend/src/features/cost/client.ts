@@ -14,6 +14,9 @@ import type { SessionController } from '../session/controller';
 import type { SourcingBrief } from '@roomedy/contracts/sourcing';
 import { sourcingBriefSchema } from '@roomedy/contracts/sourcing';
 import { researchLocality } from './journey';
+type ResearchResponse =
+  | Awaited<ReturnType<typeof researchProducts>>
+  | { ok: false; message: string; retired: true };
 
 /** One explicit foreground operation; visible retirement does not await an untrusted transport. */
 export function beginResearch(
@@ -46,18 +49,15 @@ export function beginResearch(
     brief,
   });
   const abort = new AbortController();
-  let stop: (
-    value: Awaited<ReturnType<typeof researchProducts>>,
-  ) => void = () => {};
-  const stopped = new Promise<Awaited<ReturnType<typeof researchProducts>>>(
-    (resolve) => {
-      stop = resolve;
-    },
-  );
+  let stop: (value: ResearchResponse) => void = () => {};
+  const stopped = new Promise<ResearchResponse>((resolve) => {
+    stop = resolve;
+  });
   const cancel = () => {
     abort.abort();
     stop({
       ok: false,
+      retired: true,
       message: 'Research cancelled. Your accepted prices are unchanged.',
     });
   };
@@ -99,6 +99,7 @@ export function beginResearch(
       )
         return {
           ok: false as const,
+          retired: true,
           message: 'This research belongs to an earlier design or cost scope.',
         };
       controller.completeOperation(token, () => {});

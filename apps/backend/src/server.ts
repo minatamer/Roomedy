@@ -1,3 +1,4 @@
+import { createProductImageLookup } from './sourcing/product-images.js';
 import { createSourcingHandler } from './sourcing/sourcing.js';
 import { createExchangeRates } from './sourcing/exchange-rates.js';
 import sharp from 'sharp';
@@ -54,6 +55,22 @@ try {
               : 'decode',
             sourcingIssues,
           }),
+        (counts) => {
+          for (const [stage, outcome, observations] of [
+            ['decode', 'completed', counts.listings],
+            ['prepare', 'completed', counts.priced],
+            ['prepare', 'incomplete', counts.unverified],
+            ['provider', 'completed', counts.calls],
+          ] as const)
+            log({
+              code: 'sourcing-decision',
+              reference: randomUUID(),
+              stage,
+              outcome,
+              observations,
+            });
+        },
+        config.mode === 'live' ? createProductImageLookup() : undefined,
       ),
     },
     ...(config.mode === 'fake'
@@ -69,13 +86,14 @@ try {
             process.env.OPENAI_API_KEY!.trim(),
             undefined,
             undefined,
-            (providerShape) =>
+            (providerShape, observations) =>
               log({
                 code: 'provider-rejected',
                 reference: randomUUID(),
                 stage: 'provider',
                 outcome: 'malformed',
                 providerShape,
+                ...(observations === undefined ? {} : { observations }),
               }),
           ),
           challenge: createTurnstileChallenge(

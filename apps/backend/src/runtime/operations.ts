@@ -20,6 +20,7 @@ import { safeError } from '../http/errors.js';
 
 export interface OperationBudget {
   readonly signal: AbortSignal;
+  readonly remainingMs?: number;
   call(request: ProviderRequest): Promise<ProviderOutcome>;
 }
 export type OperationHandler = (
@@ -233,12 +234,25 @@ export function createOperations(
       },
       input.kind === 'recognize-room'
         ? POLICY.recognitionMs
-        : POLICY.assistantMs,
+        : input.kind === 'sourcing'
+          ? POLICY.sourcingMs
+          : POLICY.assistantMs,
     );
     jobs.add(cancel);
     client.addEventListener('abort', cancel, { once: true });
     const budget: OperationBudget = {
       signal: controller.signal,
+      get remainingMs() {
+        return Math.max(
+          0,
+          (input.kind === 'sourcing'
+            ? POLICY.sourcingMs
+            : input.kind === 'recognize-room'
+              ? POLICY.recognitionMs
+              : POLICY.assistantMs) -
+            (deps.now() - startedAt),
+        );
+      },
       async call(request) {
         if (controller.signal.aborted) return { kind: 'cancelled' };
         if (
@@ -253,7 +267,13 @@ export function createOperations(
         calls++;
         let call;
         const profile =
-          input.kind === 'recognize-room' ? 'photo' : 'interactive';
+          input.kind === 'recognize-room'
+            ? 'photo'
+            : input.kind === 'sourcing'
+              ? request.imageSearch
+                ? 'sourcing-media'
+                : 'sourcing'
+              : 'interactive';
         try {
           call = deps.provider!.start(request, controller.signal, profile);
         } catch {

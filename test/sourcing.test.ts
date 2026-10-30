@@ -104,6 +104,442 @@ const config = () => ({
   limits: PUBLIC_LIMITS,
 });
 describe('strict admitted source contracts and evidence', () => {
+  it('bounds search output independently while accepting interleaved reasoning across multiple stores', () => {
+    const output = Array.from(
+      { length: POLICY.sourcingSearchCalls },
+      (_, i) => [
+        {
+          type: 'reasoning',
+          id: `r${i}a`,
+          encrypted_content: 'synthetic',
+          summary: [],
+        },
+        {
+          type: 'web_search_call',
+          id: `w${i}`,
+          status: 'completed',
+          action: { type: 'search', query: 'product' },
+        },
+        {
+          type: 'reasoning',
+          id: `r${i}b`,
+          encrypted_content: 'synthetic',
+          summary: [],
+        },
+      ],
+    ).flat();
+    const raw = {
+      status: 'completed',
+      output: [
+        ...output,
+        {
+          type: 'message',
+          content: [
+            { type: 'output_text', text: '{"candidates":[],"notes":[]}' },
+          ],
+        },
+      ],
+    };
+    expect(decodeResponse(raw, [], undefined, true).kind).toBe('completed');
+    expect(
+      decodeResponse(
+        {
+          ...raw,
+          output: [
+            ...raw.output,
+            ...Array.from({ length: 70 }, () => raw.output[0]),
+          ],
+        },
+        [],
+        undefined,
+        true,
+      ).kind,
+    ).toBe('malformed');
+  });
+
+  it('preserves successful search evidence after failed/incomplete store tool outcomes', () => {
+    const url = 'https://merchant.example/exact';
+    const result = decodeResponse(
+      {
+        status: 'completed',
+        output: [
+          {
+            type: 'web_search_call',
+            id: 'blocked',
+            status: 'failed',
+            action: { type: 'open_page', url: 'https://blocked.example/item' },
+          },
+          { type: 'web_search_call', id: 'partial', status: 'incomplete' },
+          {
+            type: 'web_search_call',
+            id: 'images',
+            status: 'completed',
+            results: [
+              { url: 'https://merchant.example/text-only-result' },
+              {
+                type: 'image_result',
+                image_url: 'https://cdn.example/product.jpg',
+                source_website_url: url,
+              },
+            ],
+          },
+          {
+            type: 'web_search_call',
+            id: 'opened',
+            status: 'completed',
+            action: { type: 'open_page', url },
+          },
+          {
+            type: 'message',
+            content: [
+              { type: 'output_text', text: '{"candidates":[],"notes":[]}' },
+            ],
+          },
+        ],
+      },
+      [],
+      undefined,
+      true,
+    );
+    expect(result.kind).toBe('completed');
+    if (result.kind !== 'completed') throw new Error('decode');
+    expect(result.search!.opened).toEqual([url]);
+    expect(result.search!.calls).toBe(4);
+    expect(result.search!.images).toHaveLength(1);
+  });
+
+  it('keeps a real opened-page listing price when incomplete pack specification prevents estimate selection', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    reply.candidates = [candidate];
+    candidate.url = 'https://merchant.example/product';
+    candidate.offer!.source.url = candidate.url;
+    if (candidate.offer!.kind !== 'floor') throw new Error('floor fixture');
+    candidate.offer!.coverageMm2 = 0;
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+    )(i, {
+      signal: new AbortController().signal,
+      call: async () => ({
+        kind: 'completed',
+        calls: [],
+        data: reply,
+        search: { calls: 2, opened: [candidate.url], sources: [] },
+      }),
+    });
+    expect(result.kind).toBe('completed');
+    expect(result.sourcing!.candidates[0]).toMatchObject({
+      offer: null,
+      listing: {
+        currency: 'USD',
+        priceMinor: candidate.offer!.priceMinor,
+        unit: 'pack',
+        observedAt: 123,
+      },
+    });
+    expect(operationResultSchema.safeParse(result).success).toBe(true);
+  });
+  it.each(['exact', 'mapped', 'other-product', 'unavailable'] as const)(
+    'enriches missing photos once without changing comparison prices: %s',
+    async (mode) => {
+      const i = input(),
+        reply = await fakeReply(i),
+        candidate = reply.candidates[0]!;
+      const url = 'https://merchant.example/product',
+        image = 'https://cdn.example/product.jpg';
+      reply.candidates = [
+        {
+          ...candidate,
+          url,
+          imageUrl: null,
+          offer: null,
+          listing: {
+            priceMinor: 4299,
+            currency: 'USD',
+            country: 'AE',
+            unit: 'pack',
+            volumeMl: null,
+            observedAt: null,
+          },
+        },
+      ];
+      let calls = 0;
+      const result = await createSourcingHandler(
+        false,
+        () => 123,
+        id,
+      )(i, {
+        signal: new AbortController().signal,
+        remainingMs: 60_000,
+        call: async (request) => {
+          if (++calls === 1)
+            return {
+              kind: 'completed',
+              data: reply,
+              calls: [],
+              search: { calls: 2, opened: [], sources: [url] },
+            };
+          const body = JSON.parse(responseBody(request, 'synthetic-model'));
+          expect(body.tools[0].search_content_types).toEqual(['image']);
+          expect(body.max_tool_calls).toBe(4);
+          expect(request.format.name).toBe('room_product_images_1');
+          if (mode === 'unavailable') return { kind: 'unavailable' };
+          return {
+            kind: 'completed',
+            calls: [],
+            data: {
+              images:
+                mode === 'mapped' || mode === 'other-product'
+                  ? [{ url, imageUrl: image }]
+                  : [],
+            },
+            search: {
+              calls: 1,
+              opened: [],
+              sources: [],
+              images:
+                mode === 'mapped'
+                  ? []
+                  : [
+                      {
+                        sourceUrl:
+                          mode === 'exact'
+                            ? url
+                            : 'https://merchant.example/other',
+                        imageUrl: image,
+                        caption: 'Product photo',
+                      },
+                    ],
+            },
+          };
+        },
+      });
+      expect(calls).toBe(2);
+      expect(result.kind).toBe('completed');
+      expect(result.sourcing!.candidates[0]!.listing?.priceMinor).toBe(4299);
+      expect(result.sourcing!.candidates[0]!.offer).toBeNull();
+      expect(result.sourcing!.candidates[0]!.imageUrl).toBe(
+        mode === 'exact' || mode === 'mapped' ? image : null,
+      );
+    },
+  );
+  it('skips optional media when the owning operation has too little time left', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    const url = 'https://merchant.example/product';
+    reply.candidates = [
+      {
+        ...candidate,
+        url,
+        imageUrl: null,
+        offer: null,
+        listing: {
+          priceMinor: 4299,
+          currency: 'USD',
+          country: 'AE',
+          unit: 'pack',
+          volumeMl: null,
+          observedAt: null,
+        },
+      },
+    ];
+    const call = vi.fn(async () => ({
+      kind: 'completed' as const,
+      calls: [],
+      data: reply,
+      search: { calls: 1, opened: [], sources: [url] },
+    }));
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+    )(i, { signal: new AbortController().signal, remainingMs: 20_000, call });
+    expect(result.kind).toBe('completed');
+    expect(call).toHaveBeenCalledOnce();
+  });
+  it('keeps an independent valid listing when a separate quote cites another page', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    candidate.url = 'https://merchant.example/product';
+    candidate.offer!.source.url = 'https://merchant.example/other';
+    candidate.listing = {
+      priceMinor: 4299,
+      currency: 'USD',
+      country: 'AE',
+      unit: 'pack',
+      volumeMl: null,
+      observedAt: null,
+    };
+    reply.candidates = [candidate];
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+    )(i, {
+      signal: new AbortController().signal,
+      remainingMs: 20_000,
+      call: async () => ({
+        kind: 'completed',
+        calls: [],
+        data: reply,
+        search: { calls: 2, opened: [candidate.url], sources: [] },
+      }),
+    });
+    expect(result.kind).toBe('completed');
+    expect(result.sourcing!.candidates[0]!.listing?.priceMinor).toBe(4299);
+    expect(result.sourcing!.candidates[0]!.offer).toBeNull();
+  });
+  it('replaces a model page URL with actual product metadata without changing prices or extra paid rounds', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    candidate.url = 'https://merchant.example/product';
+    candidate.imageUrl = candidate.url;
+    candidate.offer!.source.url = candidate.url;
+    reply.candidates = [candidate];
+    const image = vi.fn<(url: string, signal: AbortSignal) => Promise<string>>(
+      async () => 'https://cdn.example/actual-product.jpg',
+    );
+    if (candidate.offer!.kind !== 'floor') throw new Error('floor fixture');
+    const call = vi.fn(async () => ({
+      kind: 'completed' as const,
+      calls: [],
+      data: reply,
+      search: { calls: 2, opened: [candidate.url], sources: [] },
+    }));
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+      undefined,
+      undefined,
+      undefined,
+      image,
+    )(i, { signal: new AbortController().signal, remainingMs: 60_000, call });
+    expect(result.kind).toBe('completed');
+    expect(call).toHaveBeenCalledOnce();
+    expect(image.mock.calls[0]?.[0]).toBe(candidate.url);
+    expect(result.sourcing!.candidates[0]!.imageUrl).toBe(
+      'https://cdn.example/actual-product.jpg',
+    );
+    expect(result.sourcing!.candidates[0]!.listing?.priceMinor).toBe(
+      candidate.offer!.priceMinor,
+    );
+  });
+  it('assigns application-owned quote IDs before strict validation without repairing money', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    reply.candidates = [candidate];
+    candidate.offer!.id = 'invalid model identifier';
+    candidate.offer!.supplierId = 'invalid supplier identifier';
+    candidate.offer!.deliveryGroup = 'invalid delivery identifier';
+    const result = await createSourcingHandler(
+      true,
+      () => 123,
+      id,
+    )(i, {
+      signal: new AbortController().signal,
+      call: async () => ({ kind: 'completed', calls: [], data: reply }),
+    });
+    expect(result.kind).toBe('completed');
+    expect(result.sourcing!.candidates[0]!.offer).not.toBeNull();
+    expect(result.sourcing!.candidates[0]!.offer!.id).toMatch(/^sourcing_/);
+  });
+
+  it('preserves schema-valid product links and valid siblings when one offer has invalid money', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      good = structuredClone(reply.candidates[0]!);
+    good.url = 'https://merchant.example/good';
+    good.offer!.source.url = good.url;
+    const bad = structuredClone(good);
+    bad.url = 'https://merchant.example/unpriced';
+    bad.offer!.source.url = bad.url;
+    if ('priceMinor' in bad.offer!) bad.offer!.priceMinor = -1;
+    else throw new Error('expected floor fixture');
+    const invalid = vi.fn();
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+      undefined,
+      invalid,
+    )(i, {
+      signal: new AbortController().signal,
+      call: async () => ({
+        kind: 'completed',
+        calls: [],
+        data: { ...reply, candidates: [bad, good] },
+        search: { calls: 2, opened: [bad.url, good.url], sources: [] },
+      }),
+    });
+    expect(result.kind).toBe('completed');
+    expect(result.sourcing!.candidates).toHaveLength(2);
+    expect(result.sourcing!.candidates[0]).toMatchObject({
+      url: bad.url,
+      offer: null,
+      match: 'lead',
+    });
+    expect(result.sourcing!.candidates[1]!.offer).not.toBeNull();
+    expect(invalid).toHaveBeenCalledOnce();
+    expect(operationResultSchema.safeParse(result).success).toBe(true);
+  });
+  it('never preserves an unsafe URL when recovering a valid sibling', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      good = reply.candidates[0]!;
+    const result = await createSourcingHandler(
+      true,
+      () => 123,
+      id,
+    )(i, {
+      signal: new AbortController().signal,
+      call: async () => ({
+        kind: 'completed',
+        calls: [],
+        data: {
+          ...reply,
+          candidates: [{ ...good, url: 'javascript:bad' }, good],
+        },
+      }),
+    });
+    expect(result.kind).toBe('completed');
+    expect(result.sourcing!.candidates).toHaveLength(1);
+    expect(result.sourcing!.candidates[0]!.url).toBe(good.url);
+  });
+  it.each(['surface:floor', 'surface:north'] as const)(
+    'requests only the selected offer role for %s without relaxing local validation',
+    (key) => {
+      const i = input(key),
+        wire = JSON.parse(responseBody(sourcingRequest(i), 'synthetic-model'))
+          .text.format.schema;
+      const roles: string[] = [];
+      const visit = (x: unknown) => {
+        if (!x || typeof x !== 'object') return;
+        if (Array.isArray(x)) {
+          x.forEach(visit);
+          return;
+        }
+        const n = x as Record<string, unknown>;
+        if (n.properties && typeof n.properties === 'object') {
+          const kind = (n.properties as Record<string, unknown>).kind as
+            { enum?: string[] } | undefined;
+          if (kind?.enum && 'pricing' in n.properties) roles.push(...kind.enum);
+        }
+        Object.values(n).forEach(visit);
+      };
+      visit(wire);
+      expect(roles.length).toBeGreaterThan(0);
+      expect(new Set(roles)).toEqual(new Set([i.brief.kind]));
+    },
+  );
+
   it('researches without a location hint when the visitor skips and retains real example source countries', async () => {
     const requestInput = input();
     requestInput.locality = {
@@ -115,7 +551,9 @@ describe('strict admitted source contracts and evidence', () => {
     const body = JSON.parse(responseBody(request, 'synthetic-model'));
     expect(body.tools[0]).toEqual({
       type: 'web_search',
-      search_context_size: 'low',
+      search_context_size: 'medium',
+      search_content_types: ['text', 'image'],
+      image_settings: { max_results: 3, caption: true },
     });
     expect(body.tools[0]).not.toHaveProperty('user_location');
     const data = JSON.parse(body.input[0].content[0].text);
@@ -373,7 +811,7 @@ describe('bounded existing Responses web-search wire', () => {
       ),
     ).toBe(true);
   });
-  it('emits one fixed strict foreground request, max4 built-in calls and no room command tools', () => {
+  it('emits one fixed strict foreground request, bounded built-in calls and no room command tools', () => {
     const body = JSON.parse(
       responseBody(sourcingRequest(input()), 'synthetic-model'),
     );
@@ -382,13 +820,15 @@ describe('bounded existing Responses web-search wire', () => {
       stream: false,
       background: false,
       parallel_tool_calls: false,
-      max_tool_calls: 4,
+      max_tool_calls: POLICY.sourcingSearchCalls,
       tool_choice: 'required',
     });
     expect(body.tools).toEqual([
       {
         type: 'web_search',
-        search_context_size: 'low',
+        search_context_size: 'medium',
+        search_content_types: ['text', 'image'],
+        image_settings: { max_results: 3, caption: true },
         user_location: { type: 'approximate', country: 'EG', city: 'Cairo' },
       },
     ]);
@@ -411,7 +851,7 @@ describe('bounded existing Responses web-search wire', () => {
       ),
     ).toThrow();
   });
-  it('admits bounded open/search metadata only for sourcing and rejects unknown/extra/over-budget tools', () => {
+  it('admits bounded search metadata only for sourcing without trusting unknown fields or over-budget tools', () => {
     const url = 'https://merchant.example/product',
       raw = {
         status: 'completed',
@@ -458,11 +898,11 @@ describe('bounded existing Responses web-search wire', () => {
     ).toBe(false);
     expect(
       readSearchAction({ ...raw.output[0], endpoint: url }, evidence),
-    ).toBe(false);
+    ).toBe(true);
     const many = {
       ...raw,
       output: [
-        ...Array.from({ length: 5 }, (_, i) => ({
+        ...Array.from({ length: POLICY.sourcingActionItems + 1 }, (_, i) => ({
           ...raw.output[0],
           id: `ws${i}`,
         })),
@@ -470,6 +910,93 @@ describe('bounded existing Responses web-search wire', () => {
       ],
     };
     expect(decodeResponse(many, [], undefined, true).kind).toBe('malformed');
+  });
+  it('keeps successful products when unused search metadata is nullable or malformed', () => {
+    const url = 'https://merchant.example/product';
+    const result = decodeResponse(
+      {
+        status: 'completed',
+        output: [
+          {
+            type: 'web_search_call',
+            id: 'search',
+            status: 'completed',
+            action: {
+              type: 'search',
+              query: null,
+              queries: null,
+              sources: null,
+              metadata: { unused: true },
+            },
+          },
+          {
+            type: 'web_search_call',
+            id: 'bad',
+            status: 'completed',
+            action: { type: 'unsupported', url: 'https://bad.example/product' },
+            results: [
+              {
+                type: 'image_result',
+                image_url: 'https://bad.example/photo.jpg',
+                source_website_url: url,
+              },
+            ],
+          },
+          {
+            type: 'web_search_call',
+            id: 'open',
+            status: 'completed',
+            action: { type: 'open_page', url, optional_metadata: null },
+          },
+          {
+            type: 'message',
+            content: [
+              { type: 'output_text', text: '{"candidates":[],"notes":[]}' },
+            ],
+          },
+        ],
+      },
+      [],
+      undefined,
+      true,
+    );
+    expect(result).toMatchObject({
+      kind: 'completed',
+      search: { calls: 3, opened: [url], sources: [url] },
+    });
+    if (result.kind !== 'completed') throw new Error(result.kind);
+    expect(result.search?.images).toBeUndefined();
+  });
+  it('uses safe API citations as display evidence without claiming the page was opened', () => {
+    const url = 'https://merchant.example/product';
+    const result = decodeResponse(
+      {
+        status: 'completed',
+        output: [
+          {
+            type: 'message',
+            content: [
+              {
+                type: 'output_text',
+                text: '{"candidates":[],"notes":[]}',
+                annotations: [
+                  { type: 'url_citation', url },
+                  { type: 'url_citation', url: 'https://127.0.0.1/private' },
+                  { type: 'other', url: 'https://other.example/' },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      [],
+      undefined,
+      true,
+    );
+    expect(result).toMatchObject({
+      kind: 'completed',
+      search: { sources: [url], opened: [] },
+    });
   });
   it('uses injected fixed fetch once, with no retry or actual metered endpoint request', async () => {
     let attempts = 0;
@@ -520,6 +1047,7 @@ describe('server-owned USD sourcing equivalents', () => {
         .offer,
     ).toBeNull();
     candidate.url = 'javascript:PRIVATE_SOURCE_TEXT';
+    reply.candidates = [candidate]; // All-invalid metadata must still reject the response.
     const invalid = vi.fn<(issues: { code: string; path: string }[]) => void>();
     const result = await createSourcingHandler(
       false,
@@ -606,7 +1134,7 @@ describe('server-owned USD sourcing equivalents', () => {
       () => Date.UTC(2026, 9, 28, 12),
       id,
       lookup,
-    )(i, { signal: abort.signal, call });
+    )(i, { signal: abort.signal, remainingMs: 20_000, call });
     return { result, lookup, call };
   }
   it('prices an opened local offer in USD, keeps exact source inputs and removes native-price prose', async () => {

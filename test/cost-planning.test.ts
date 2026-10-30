@@ -485,3 +485,23 @@ describe('computed budgets and typed planning tools', () => {
     ).toBe(true);
   });
 });
+
+describe('collective market requests', () => {
+  it('routes whole-room research through the shared market action while keeping target searches specific', () => {
+    const room = createRoomFixture('sample');
+    expect(
+      costIntent('Find options for my whole room', room, 'USD', null),
+    ).toMatchObject({ kind: 'research', key: 'all' });
+    expect(
+      costIntent('Find all paint options', room, 'USD', null),
+    ).toMatchObject({ kind: 'research', key: 'surface:north' });
+    expect(
+      costIntent(
+        `Find options for ${room.furniture[0]!.label}`,
+        room,
+        'USD',
+        null,
+      ),
+    ).toMatchObject({ kind: 'research', key: room.furniture[0]!.id });
+  });
+});

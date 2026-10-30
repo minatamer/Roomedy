@@ -67,6 +67,13 @@ export function costIntent(
   )
     return { kind: 'work' };
   if (/find|research|buy online|similar|shop for|look for/.test(lower)) {
+    if (
+      /\b(?:everything|whole room|entire room|all (?:items|products|furniture|of (?:this|these|the above)))\b/.test(
+        lower,
+      ) &&
+      !room.furniture.some((piece) => lower.includes(piece.label.toLowerCase()))
+    )
+      return { kind: 'research', key: 'all', query: text.slice(0, 240) };
     const piece = room.furniture.find((p) =>
       lower.includes(p.label.toLowerCase()),
     );

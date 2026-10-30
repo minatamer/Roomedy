@@ -1,12 +1,21 @@
 import type { JsonSchema } from './schema.js';
 import { POLICY } from '@roomedy/contracts/policy';
 /** Chosen by the admitted operation owner, never by visitor/model payloads. */
-export type ProviderCallProfile = 'interactive' | 'photo';
+export type ProviderCallProfile =
+  'interactive' | 'photo' | 'sourcing' | 'sourcing-media';
 export const providerDeadlineMs = (profile: ProviderCallProfile) =>
-  profile === 'photo' ? POLICY.recognitionProviderMs : POLICY.providerCallMs;
+  profile === 'photo'
+    ? POLICY.recognitionProviderMs
+    : profile === 'sourcing-media'
+      ? POLICY.sourcingMediaMs
+      : profile === 'sourcing'
+        ? POLICY.sourcingProviderMs
+        : POLICY.providerCallMs;
 export interface ProviderRequest {
   /** true searches without supplying a visitor location. */
   search?: { country: string; city: string } | true;
+  /** Internal product-media enrichment only; never accepted from visitors. */
+  imageSearch?: true;
   instructions: string;
   input: readonly Record<string, unknown>[];
   format: { name: string; schema: JsonSchema };
@@ -28,7 +37,12 @@ export type ProviderOutcome = (
       calls: { name: string; callId: string; arguments: unknown }[];
       /** Bounded replay items for this operation only; never returned to the browser. */
       continuation?: Record<string, unknown>[];
-      search?: { calls: number; opened: string[]; sources: string[] };
+      search?: {
+        calls: number;
+        opened: string[];
+        sources: string[];
+        images?: { imageUrl: string; sourceUrl: string; caption: string }[];
+      };
     }
   | {
       kind:

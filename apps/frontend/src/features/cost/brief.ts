@@ -3,6 +3,10 @@ import type { RoomDocument } from '@roomedy/contracts/room';
 import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import { findCatalogueEntry } from '@roomedy/spatial';
 import { serviceScopeSchema } from '@roomedy/contracts/estimates';
+import {
+  furnitureMaterialRoles,
+  furnitureMaterialTargets,
+} from '@roomedy/contracts/furniture-materials';
 function parseBrief(raw: unknown) {
   const result = sourcingBriefSchema.safeParse(raw);
   return result.success ? result.data : null;
@@ -17,6 +21,25 @@ export function buildSourcingBrief(
   if (piece) {
     const entry = findCatalogueEntry(piece.catalogueId, piece.catalogueVersion);
     if (!entry) return null;
+    const targets = furnitureMaterialTargets(piece, entry.category);
+    const roles = furnitureMaterialRoles(entry);
+    const parts = [
+      `frame ${targets.frame.color} ${targets.frame.surface}`,
+      ...(roles.soft
+        ? entry.category === 'bed'
+          ? [
+              `pillows ${targets.pillow.color} ${targets.pillow.surface}`,
+              `sheets ${targets.sheet.color} ${targets.sheet.surface}`,
+              `cover ${targets.blanket.color} ${targets.blanket.surface}`,
+            ]
+          : [`upholstery ${targets.soft.color} ${targets.soft.surface}`]
+        : []),
+      ...(roles.hardware
+        ? [
+            `hardware ${targets.metal.color} ${piece.materials?.hardware ?? 'original'}`,
+          ]
+        : []),
+    ];
     return parseBrief({
       target: { kind: 'furniture', id: piece.id },
       kind: 'furniture',
@@ -27,7 +50,7 @@ export function buildSourcingBrief(
         depth: piece.dimensions.depth.value,
         height: piece.dimensions.height.value,
       },
-      appearance: `${piece.finish}; ${JSON.stringify(piece.materials ?? {})}. Similar representation, not an identified SKU.`,
+      appearance: `${piece.finish}; body ${piece.materials?.body ?? 'auto'}; fabric ${piece.materials?.upholstery ?? 'linen'}; ${parts.join('; ')}. Similar representation, not an identified SKU.`,
       colour: null,
       query,
     });

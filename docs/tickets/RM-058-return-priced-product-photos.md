@@ -1,0 +1,13 @@
+# RM-058 — Return priced product photos for the whole room
+
+30 October2026. Complete locally; direct owner explicitly authorizes paid testing while fixing and requires a complete real furnished US manual-path evaluation. [27-path allocation](../commit-plans/RM-058.md), [receipt](../validation/RM-058.md).
+
+- Build the most furnished option through the normal manual UI and choose United States. Run Find options through every item, including explicit continuation. Repair/retest actual failures; do not substitute synthetic or one-item evidence for this matrix.
+- Search multiple useful US merchants; prioritize actual product pages with current standard prices and product pictures, using reasonable similar alternatives when exact appearance cannot be found. No sample-specific or hardcoded SKU/price/image rules.
+- Enable official bounded image/text evidence where supported, attach pictures to their actual product source pages and verify native images load. Both picture and title open the same existing themed leaving-store dialog, including fallback media. Preserve safe URLs and truthful failures; never invent values to satisfy coverage.
+- Diagnose invalid quotes and research timeouts, including app-owned metadata and operation-owned deadlines. Strict financial/source/opened-page/size/USD/FX/lifecycle guards stay. No automatic paid retry or unbounded fan-out.
+- Record target-by-target real price/photo/merchant/click evidence, provider rounds/timings, focused regressions, native responsive controls and final root checks/both builds. Owner aesthetic/physical and future merchant checkout/stock quality remain separate.
+
+Preserve49 prior changes/current supervisors/normal env/ClipBuilder and HEAD9653cf0. No Chrome/delegation/new dependency/service/port/Git/hosted action. No manual restart is authorized: automatic approval review rejected the proposed backend diagnostic restart before execution; continue on existing services and normal code-watch updates only. Actual successful full matrix, rather than optimistic completion, owns acceptance.
+
+Completion: actual seven-target US matrix returns12 priced products/12 loaded photos; all24 photo/title store actions match and restore focus.133 focused checks,1533tests/97files with established release split, root code gates and both builds pass.40paid operations/48rounds were used across all diagnostics; the owner now stops further paid testing because credit use was excessive. No further paid test without fresh explicit authorization. See the receipt for exact outcomes, bounded public metadata transport, discovery-only URL matching, preserved quote guards and remaining merchant/physical limits.

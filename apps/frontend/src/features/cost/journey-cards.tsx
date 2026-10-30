@@ -17,12 +17,14 @@ export function JourneyCards({
   state,
   onResearch,
   onContinue,
+  researchBusy = false,
 }: {
   section: CostSection;
   controller: SessionController;
   state: SessionSnapshot;
   onResearch: (key: string, query: string, matchingWalls?: boolean) => void;
   onContinue: (section: CostSection) => void;
+  researchBusy?: boolean;
 }) {
   const room = state.workspace!.current,
     draft = state.cost!;
@@ -167,7 +169,7 @@ export function JourneyCards({
                     Keep this piece
                   </button>
                   <button
-                    disabled={!!state.candidate}
+                    disabled={!!state.candidate || researchBusy}
                     onClick={() => onResearch(piece.id, '')}
                   >
                     Find options
@@ -239,7 +241,7 @@ export function JourneyCards({
                 </button>
               ))}
               <button
-                disabled={!!state.candidate}
+                disabled={!!state.candidate || researchBusy}
                 onClick={() =>
                   onResearch(
                     section === 'floor' ? 'surface:floor' : 'surface:north',
