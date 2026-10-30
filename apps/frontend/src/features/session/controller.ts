@@ -894,6 +894,7 @@ export class SessionController {
     this.publish({
       presentation: {
         ...next,
+        snap: true,
         zoom: Math.max(0.6, Math.min(3, next.zoom)),
         panX: Math.max(
           -POLICY.roomEdgeMm,

@@ -1,3 +1,5 @@
+import { usePropertiesDrawer } from './use-properties-drawer';
+import drawerStyles from './properties-drawer.module.css';
 import { CostWorkspace } from '../cost/workspace';
 import { usePhaseMotion } from './use-phase-motion';
 import { useViewMorph } from './use-view-morph';
@@ -52,7 +54,11 @@ import styles from './editor.module.css';
 import furnitureStyles from './furniture-inspector.module.css';
 import { focusInvalidInspector } from './inspector-tabs';
 import { FrameControls, ViewControls } from './view-controls';
-import { activeRoomTool, arrangingSelection } from './selection-actions';
+import {
+  activeRoomTool,
+  arrangingSelection,
+  canUndo,
+} from './selection-actions';
 import { furnitureOpening, featureOpening } from '../room-view/articulation';
 import { OpeningPreview } from './opening-preview';
 import controlsStyles from './view-controls.module.css';
@@ -132,6 +138,7 @@ export function Editor({
     `${state.workspace?.workspaceId ?? 'opening'}:${state.presentation.panel}:${state.presentation.panel === 'inspector' ? state.presentation.selectedId : ''}:${state.comparison}`,
   );
   const roomView = state.presentation.roomView;
+  useEffect(() => controller.setView({ snap: true }), [controller]);
   const arranging = arrangingSelection(state);
   const [opening, setOpening] = useState({ context: '', open: false });
   const planToolsMotion = useSurfaceMotion(`${roomView}:${arranging}`);
@@ -150,11 +157,32 @@ export function Editor({
   const phaseStage = useRef<HTMLElement>(null),
     propertiesRef = useRef<HTMLElement>(null),
     costPanelRef = useRef<HTMLElement>(null);
-  const [costReadOnly, setCostReadOnly] = useState(false);
+  const {
+    compact: compactTools,
+    expanded: toolsOpen,
+    modal: modalTools,
+    open: openTools,
+    close: closeTools,
+    trigger: toolsTrigger,
+    panelId: toolsPanelId,
+  } = usePropertiesDrawer(
+    `${state.generation}:${state.workspace?.workspaceId ?? 'opening'}`,
+    state.destination === 'design' && state.phase === 'editor',
+    propertiesRef,
+    headingRef,
+  );
+  const openDrawer = openTools;
+  const presentTourTarget = useCallback(
+    (target: 'canvas' | 'assistant' | 'history' | null) => {
+      if (target === 'assistant' || target === null) openTools();
+      else closeTools(false);
+    },
+    [openTools, closeTools],
+  );
   const { capture: capturePhase, ...phaseMotion } = usePhaseMotion(
     state.destination,
     phaseStage,
-    propertiesRef,
+    compactTools && !toolsOpen ? toolsTrigger : propertiesRef,
     costPanelRef,
     headingRef,
     state.workspace?.workspaceId,
@@ -328,6 +356,7 @@ export function Editor({
         setCatalogueCategory('all');
         setReplacementId(null);
         controller.setPanel(panel);
+        openDrawer();
       };
       switch (control.type) {
         case 'view':
@@ -434,8 +463,8 @@ export function Editor({
               : 'Selection cleared. You can look around the room.',
           );
         case 'snap':
-          controller.setView({ snap: control.enabled });
-          return done(`Placement snap is ${control.enabled ? 'on' : 'off'}.`);
+          controller.setView({ snap: true });
+          return done('Placement snapping stays on to keep items aligned.');
         case 'select':
           if (control.id === room.roomId) openPanel('room');
           else controller.select(control.id);
@@ -473,7 +502,7 @@ export function Editor({
           };
       }
     };
-  }, [controller, placement, workspaceId, setRoomView]);
+  }, [controller, placement, workspaceId, setRoomView, openDrawer]);
   if (!workspace)
     return (
       <main id="main-content" className={styles.expired}>
@@ -607,6 +636,19 @@ export function Editor({
     window.confirm(
       'Leave this room? Photos and unfinished changes will be lost. Export first to keep a copy.',
     );
+  const undo = () => {
+    const current = controller.getSnapshot();
+    if (!canUndo(current)) return;
+    placement.cancel();
+    const result =
+      current.candidate?.source === 'inspector'
+        ? controller.undo()
+        : assistant
+          ? assistant.undo()
+          : controller.undo();
+    if (!result.ok)
+      controller.notify(failureMessage(result, current.workspace?.current));
+  };
   const panels: { id: Panel; label: string }[] = [
     { id: 'inventory', label: 'Furniture' },
     { id: 'room', label: 'Room' },
@@ -627,7 +669,7 @@ export function Editor({
       className={`${styles.studio} ${state.destination === 'cost' ? styles.costStudio : ''}`}
       data-room-tour-root
     >
-      <header className={styles.header}>
+      <header className={styles.header} inert={modalTools}>
         <div
           onClickCapture={(e) => {
             if (!leave()) {
@@ -638,51 +680,7 @@ export function Editor({
         >
           <Brand />
         </div>
-        <div className={styles.headerActions}>
-          <ProjectControls
-            key={workspace.workspaceId}
-            controller={controller}
-            onNewRoom={onBack}
-            onPlanCost={() => navigate('cost')}
-            planning={state.destination === 'cost'}
-            planningExportRef={costExportButton}
-            registerMedy={registerProject}
-          />
-          <button
-            className="glass-control"
-            data-room-target="history"
-            hidden={state.destination === 'cost'}
-            aria-disabled={
-              !state.undoLabel ||
-              before ||
-              state.clientLoadFailure ||
-              (state.destination === 'cost' && costReadOnly)
-            }
-            onClick={() => {
-              if (
-                !state.undoLabel ||
-                before ||
-                state.clientLoadFailure ||
-                (state.destination === 'cost' && costReadOnly)
-              )
-                return;
-              const r = assistant ? assistant.undo() : controller.undo();
-              if (!r.ok)
-                controller.notify(
-                  failureMessage(
-                    r,
-                    controller.getSnapshot().workspace?.current,
-                  ),
-                );
-            }}
-            aria-label={
-              state.undoLabel ? `Undo: ${state.undoLabel}` : 'Undo last change'
-            }
-          >
-            ↶ <span className={styles.undoLabel}>Undo</span>
-          </button>
-        </div>
-        {state.destination === 'cost' ? (
+        {state.destination === 'cost' && (
           <div className={styles.costNav}>
             <button
               className="glass-control"
@@ -691,35 +689,6 @@ export function Editor({
               ← Back to Design
             </button>
           </div>
-        ) : (
-          <nav
-            className={styles.toolRail}
-            aria-label="Room tools"
-            data-tool={activeTool ?? undefined}
-          >
-            {panels.map((panel) => (
-              <button
-                key={panel.id}
-                hidden={panel.id === 'checks'}
-                aria-pressed={activeTool === panel.id}
-                onClick={() => open(panel.id)}
-              >
-                <span className={styles.toolLabel}>
-                  <RoomToolIcon panel={panel.id} />
-                  {panel.label}
-                </span>
-              </button>
-            ))}
-            <AssistantTour
-              key={workspace.workspaceId}
-              controller={controller}
-              autoStart={automaticallyOfferTour(state) && !tourPreference}
-              hideReplay
-              registerMedy={registerTour}
-              onActivityChange={setTourActive}
-              onComplete={() => assistant?.completeTour()}
-            />
-          </nav>
         )}
       </header>
       <main
@@ -743,6 +712,8 @@ export function Editor({
           <section
             className={styles.canvasColumn}
             aria-label={before ? 'Before room' : 'Current room'}
+            inert={modalTools}
+            aria-hidden={modalTools || undefined}
             data-room-target="canvas"
           >
             <div
@@ -808,6 +779,23 @@ export function Editor({
               }
             >
               <div
+                key="project-actions"
+                className={`${controlsStyles.projectRail} ${styles.projectRail}`}
+                role="group"
+                aria-label="Project actions"
+              >
+                <ProjectControls
+                  key={workspace.workspaceId}
+                  controller={controller}
+                  onNewRoom={onBack}
+                  onPlanCost={() => navigate('cost')}
+                  planning={state.destination === 'cost'}
+                  planningExportRef={costExportButton}
+                  registerMedy={registerProject}
+                />
+              </div>
+              <div
+                key="plan-view"
                 ref={planLayer}
                 className={`${controlsStyles.stage} ${morphStyles.planLayer}`}
                 data-view-layer="2d"
@@ -821,8 +809,8 @@ export function Editor({
                     readOnly={readOnly || !!adding}
                     rotationLocked={!item || item.locks.rotation}
                     onRotate={rotatePlanSelection}
-                    snap={view.snap}
-                    onSnap={(snap) => controller.setView({ snap })}
+                    onUndo={undo}
+                    historyTarget={viewMorph.planInteractive}
                     onZoom={(direction) =>
                       controller.setView({
                         zoom: view.zoom + direction * 0.2,
@@ -906,6 +894,7 @@ export function Editor({
                     placement={placement}
                     onAddDesk={() => open('catalogue', 'desk')}
                     snap={view.snap}
+                    onUndo={undo}
                     arranging={arranging}
                     medyCamera={
                       medyCamera?.workspaceId === workspaceId
@@ -1005,28 +994,75 @@ export function Editor({
           </section>
           <aside
             ref={propertiesRef}
+            id={toolsPanelId}
+            data-drawer-open={toolsOpen ? 'true' : 'false'}
+            inert={compactTools && !toolsOpen}
+            aria-hidden={(compactTools && !toolsOpen) || undefined}
+            role={modalTools ? 'dialog' : undefined}
+            aria-modal={modalTools || undefined}
             className={`${styles.panel} ${view.panel === 'assistant' ? styles.assistantPanel : ''} ${showInspectorFooter ? furnitureStyles.previewPanel : ''}`}
             data-room-target="properties"
             tabIndex={-1}
             aria-label="Room properties"
           >
+            <div className={drawerStyles.heading}>
+              <button
+                className={`glass-control ${drawerStyles.close}`}
+                data-drawer-close
+                aria-label="Back to room — close tools"
+                onClick={() => closeTools()}
+              >
+                Back to room
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m9 5 7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+            {state.destination === 'design' && (
+              <nav
+                className={styles.toolRail}
+                aria-label="Room tools"
+                data-tool={activeTool ?? undefined}
+              >
+                {panels.map((panel) => (
+                  <button
+                    key={panel.id}
+                    hidden={panel.id === 'checks'}
+                    aria-pressed={activeTool === panel.id}
+                    onClick={() => open(panel.id)}
+                  >
+                    <span className={styles.toolLabel}>
+                      <RoomToolIcon panel={panel.id} />
+                      {panel.label}
+                    </span>
+                  </button>
+                ))}
+                <AssistantTour
+                  key={workspace.workspaceId}
+                  controller={controller}
+                  autoStart={automaticallyOfferTour(state) && !tourPreference}
+                  hideReplay
+                  registerMedy={registerTour}
+                  onActivityChange={setTourActive}
+                  onTargetChange={presentTourTarget}
+                  onComplete={() => assistant?.completeTour()}
+                />
+              </nav>
+            )}
             <div
-              className={`${furnitureStyles.body} ${showInspectorFooter ? 'roomedy-scroll' : ''}`}
+              className={`${furnitureStyles.body} ${styles.panelBody} ${showInspectorFooter ? 'roomedy-scroll' : ''}`}
+              data-properties-scroll
             >
               <div ref={panelMotion} className="motion-surface">
                 <div className="motion-flow">
-                  <button
-                    className={styles.mobileReturn}
-                    onClick={() => {
-                      headingRef.current?.focus({ preventScroll: true });
-                      headingRef.current?.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start',
-                      });
-                    }}
-                  >
-                    ↑ Back to {roomView === 'plan' ? 'plan' : 'room'}
-                  </button>
                   {view.panel === 'assistant' &&
                     (readOnly && !state.candidate ? (
                       <section
@@ -1364,6 +1400,29 @@ export function Editor({
               </footer>
             )}
           </aside>
+          <button
+            ref={toolsTrigger}
+            className={`glass-control ${drawerStyles.launcher}`}
+            data-modal-open={modalTools || undefined}
+            inert={modalTools}
+            aria-hidden={modalTools || undefined}
+            aria-label={
+              toolsOpen
+                ? 'Close Furniture, Room and Medy'
+                : 'Open Furniture, Room and Medy'
+            }
+            aria-expanded={toolsOpen}
+            aria-controls={toolsPanelId}
+            onClick={() => {
+              if (toolsOpen) closeTools();
+              else {
+                placement.cancel();
+                openTools();
+              }
+            }}
+          >
+            <MedyIcon />
+          </button>
         </div>
         {state.cost &&
           (state.destination === 'cost' || phaseMotion.present) && (
@@ -1395,7 +1454,6 @@ export function Editor({
                     );
                 }}
                 panelRef={costPanelRef}
-                onReadOnlyChange={setCostReadOnly}
               />
             </div>
           )}

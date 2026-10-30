@@ -6,7 +6,8 @@
   max-height: none;
   gap: 12px;
 }
-@media (min-width: 900px) and (min-height: 600px),
+@media (min-width: 960px) and (min-height: 540px),
+  (min-width: 900px) and (min-height: 600px),
   (min-width: 760px) and (min-height: 801px) {
   .assistant {
     height: 100cqh;
@@ -325,17 +326,21 @@
   gap: 16px;
 }
 @media (max-width: 759px), (max-width: 899px) and (max-height: 800px) {
-  .assistant {
-    height: min(740px, calc(100svh - 80px));
-    min-height: 380px;
-  }
+  .assistant,
   .assistant:has(.welcome) {
-    height: auto;
+    height: calc(100cqh - 60px);
     min-height: 0;
   }
+  .messages,
   .messages:has(.welcome) {
-    flex: none;
+    flex: 1;
+    min-height: 48px;
+  }
+  .quickReplies {
     min-height: 0;
+  }
+  .composer .quickReplies .goals {
+    max-height: min(174px, max(48px, calc(100cqh - 350px)));
   }
   .composer {
     padding-bottom: 8px;
@@ -561,4 +566,40 @@
 .composer textarea::placeholder {
   color: var(--muted);
   opacity: 1;
+}
+
+@media (max-width: 1199px) {
+  .assistant,
+  .assistant:has(.welcome) {
+    height: 100cqh;
+    min-height: 0;
+  }
+  .messages,
+  .messages:has(.welcome) {
+    min-height: 48px;
+    flex: 1;
+  }
+  .quickReplies {
+    min-height: 0;
+  }
+  .composer .quickReplies .goals {
+    max-height: min(174px, max(48px, calc(100cqh - 350px)));
+  }
+}
+@container (height < 340px) {
+  .assistant {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    gap: 8px;
+  }
+  .assistant .heading {
+    flex-shrink: 0;
+  }
+  .assistant .messages {
+    min-height: 32px;
+  }
+  .assistant .composer textarea {
+    min-height: 48px;
+    height: 48px;
+  }
 }

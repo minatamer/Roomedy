@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { canUndo } from '../apps/frontend/src/features/room-editor/selection-actions.js';
 import { createRequire } from 'node:module';
 import { OrientedFootprint } from '../apps/frontend/src/features/plan-view/plan-view.js';
 import { createManualRoom } from '../apps/frontend/src/features/session/entry/manual-room.js';
@@ -61,6 +62,39 @@ afterEach(() => {
 });
 
 describe('disposable inspector changes', () => {
+  it('enables Undo for a first unsaved preview without consuming accepted history', () => {
+    const { c } = setup();
+    const accepted = c.getSnapshot().workspace;
+    expect(canUndo(c.getSnapshot())).toBe(false);
+    c.previewInspector([color('#928374')], 'Colour');
+    expect(c.getSnapshot().undoLabel).toBeNull();
+    expect(canUndo(c.getSnapshot())).toBe(true);
+    expect(c.undo().ok).toBe(true);
+    expect(c.getSnapshot().candidate).toBeNull();
+    expect(c.getSnapshot().workspace).toBe(accepted);
+    expect(canUndo(c.getSnapshot())).toBe(false);
+    expect(c.applyInspectorChanges().ok).toBe(false);
+  });
+  it('undoes a pending preview before the preceding accepted transaction', () => {
+    const { c } = setup();
+    const original = c.getSnapshot().workspace!.current;
+    c.previewInspector([color('#aabbcc')], 'Colour');
+    c.applyInspectorChanges();
+    const accepted = c.getSnapshot().workspace;
+    c.previewInspector([color('#665544')], 'Colour');
+    expect(canUndo(c.getSnapshot())).toBe(true);
+    c.undo();
+    expect(c.getSnapshot().workspace).toBe(accepted);
+    expect(c.getSnapshot().workspace!.history.entries).toHaveLength(1);
+    expect(canUndo(c.getSnapshot())).toBe(true);
+    c.undo();
+    expect(c.getSnapshot().workspace!.current.furniture).toEqual(
+      original.furniture,
+    );
+    expect(c.getSnapshot().workspace!.history.entries).toHaveLength(0);
+    expect(canUndo(c.getSnapshot())).toBe(false);
+  });
+
   it('does not block Apply for untouched furniture or opening appearance patches', () => {
     const room = createManualRoom('partial');
     const bed = room.furniture.find(

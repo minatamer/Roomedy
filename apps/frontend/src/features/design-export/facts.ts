@@ -7,7 +7,7 @@ export const EXPORT_FORMATS = [
     kind: 'pdf',
     title: 'PDF portfolio',
     extension: '.pdf',
-    text: 'A designed book of room views, your plan, finishes and furniture.',
+    text: 'Room views, finishes and furniture. Includes costs and shopping details after Estimate.',
   },
   {
     kind: 'glb',

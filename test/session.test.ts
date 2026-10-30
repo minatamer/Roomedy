@@ -140,7 +140,7 @@ describe('deliberate selected furniture actions', () => {
         original.current.furniture,
       );
       s.setRoomView(view === 'plan' ? 'cutaway' : 'plan');
-      expect(s.getSnapshot().presentation.snap).toBe(false);
+      expect(s.getSnapshot().presentation.snap).toBe(true);
     },
   );
 

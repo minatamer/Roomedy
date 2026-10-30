@@ -68,6 +68,7 @@ export type CutawayProps = Pick<
   controller: SessionController;
   readOnly: boolean;
   snap: boolean;
+  onUndo?: (() => void) | undefined;
   placement: CataloguePlacement;
   onAddDesk: () => void;
   arranging: boolean;
@@ -86,6 +87,7 @@ export default function Cutaway({
   controller,
   readOnly,
   snap,
+  onUndo,
   placement,
   onAddDesk,
   arranging,
@@ -313,11 +315,9 @@ export default function Cutaway({
             readOnly={readOnly}
             rotationLocked={!selectedPiece || selectedPiece.locks.rotation}
             onRotate={editing.rotate}
-            snap={snap}
-            onSnap={(snap) => {
-              editing.cancel();
-              controller.setView({ snap });
-            }}
+            onUndo={onUndo}
+            beforeUndo={editing.cancel}
+            historyTarget={active && interactive}
             beforeDelete={editing.cancel}
             onZoom={(direction) => command(direction === -1 ? 'out' : 'in')}
             onFit={() => command('reset')}

@@ -1,9 +1,13 @@
+import { COMPACT_PROPERTIES, OPEN_PROPERTIES } from './properties-drawer';
 import type { SessionController } from '../session/controller';
 
 /** Panel transitions announce their new task without taking focus from plan gestures. */
 export function focusProperties(controller: SessionController, id?: string) {
   const expected = controller.getSnapshot();
   if (!expected.workspace) return;
+  document
+    .querySelector<HTMLElement>('aside[aria-label="Room properties"]')
+    ?.dispatchEvent(new Event(OPEN_PROPERTIES));
   requestAnimationFrame(() => {
     const current = controller.getSnapshot();
     if (
@@ -23,13 +27,10 @@ export function focusProperties(controller: SessionController, id?: string) {
           'aside[aria-label="Room properties"]',
         ));
     target?.focus({ preventScroll: true });
-    target?.scrollIntoView({
-      behavior: 'smooth',
-      block: window.matchMedia(
-        '(max-width:759px), (max-width:899px) and (max-height:800px)',
-      ).matches
-        ? 'start'
-        : 'nearest',
-    });
+    if (window.matchMedia(COMPACT_PROPERTIES).matches)
+      target
+        ?.closest<HTMLElement>('[data-properties-scroll]')
+        ?.scrollTo({ top: 0, behavior: 'smooth' });
+    else target?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 }

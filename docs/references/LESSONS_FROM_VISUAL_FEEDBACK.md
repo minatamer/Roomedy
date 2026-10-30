@@ -1,5 +1,11 @@
 # Lessons from the owner's visual feedback
 
+## Prove the whole market flow and bound paid tests —30 October2026
+
+One successful bed lookup did not validate furniture, flooring and walls. Test the full requested manual condition and region, verify real prices and loaded photos, then click pictures as well as titles. A complete quote and an observed comparison price are different: missing coverage/fit/tax must not erase a valid store listing. Model-copied image URLs can be missing or even point to HTML; actual page metadata is a reliable bounded fallback. Normalize harmless attribution only for discovery identity, retaining variant and financial-source checks.
+
+Forty paid operations/48rounds across RM-058 diagnostics were excessive. Stop after systemic failures, inspect content-free counts and offline regressions first, then use a small explicit final matrix and targeted retests. The owner now stops further paid testing: use existing evidence and local checks; require fresh explicit authorization before another paid test. Do not silently disable the owner's live app or alter credentials/env. [Actual matrix, costs ledger and limits](../validation/RM-058.md).
+
 ## Keep settings related and aligned —30 October2026
 
 The owner still finds furniture settings overwhelming when each control repeats its part name or related fields inherit separate section margins. Give each part one short heading and keep its colour/material/pattern controls together. Use concise visible labels with full-context accessible names. Pair preset selectors and collapse optional pattern/Room preset grids behind readable current-value rows. Align colour swatch/Hex and RGB field edges by explicitly owning their margins, rather than shrinking44px targets. Check Room and opening controls too, including keyboard and incomplete-input focus. Preserve live previews and sticky Apply/Reset. [RM-051](../tickets/RM-051-organize-furniture-and-room-settings.md), [evidence](../validation/RM-051.md).
@@ -397,3 +403,31 @@ Owner identifies white left buttons, a beige Medy panel, white composer and gray
 ## Align the camera before changing representation —30 October2026
 
 Owner requests a fast smooth3D→overhead→2D and inverse rather than an instant mode swap or repeated cutaway loader. Match the actual panned/zoomed SVG frame, flatten perspective continuously, then crossfade only once north-up overhead is reached. Keep normal Doorway pace separate. Preserve a single warmed canvas and prior camera controls; pause it in idle2D. Test actual short-screen frame rectangles as well as mathematical endpoints: RM-052 found and corrected19px of short-desktop vertical misalignment. Owner aesthetic/physical pacing still needs review.
+
+## Fill editor height and use the control column —30 October2026
+
+Owner wants the room frame aligned with the Furniture/Room/Medy switch and New Room/Export/Estimate/Undo moved from above the frame into a coherent group with the left editing controls. Match actual internal button typography, dimensions and alignment. Use the spare rail area by placing the group after existing controls, not at the bottom. Preserve room width, responsive reachability, original project/dialog/Undo authority and view/phase transitions. RM-053 delivers the selected layout; owner aesthetic/physical acceptance remains pending.
+
+## Join the tabs to their content and emphasize Estimate —30 October2026
+
+Owner likes the fuller-height studio and asks for one card containing the tab switch and right column while conserving the design. Use the real card/scroll structure with inset capsule tabs, not a disconnected background illusion. Then the owner prioritizes fixed-on snapping with no toggle, working Undo in its former place, and three full-width project rows. Final order is New Room/Export/Estimate; give Estimate established primary styling and a useful calculator icon. Use SVG chevrons rather than a typographic down-arrow. Undo should enable for unsaved previews when the controller supports it, preserving accepted history until the next Undo. RM-054/055 preserve prior authority, responsiveness and motion. Owner aesthetic/physical acceptance remains pending.
+
+## RM-056 — Align adjacent surfaces at every breakpoint
+
+Header actions above an inset card should share its edge rather than use an independent tiny margin. Match desktop and mobile inset rules; verify actual DOM edges and natural header wrapping.
+
+## RM-057 — Collective discovery should preserve usable work
+
+A room-level Find action should cover distinct items/finishes and show category/item progress, while preserving source review and accepted prices. Bound serial work and make continuation explicit. One malformed optional price must not erase valid links/siblings; unverified details stay unpriced. Keep persistent Export beside composer shortcuts instead of duplicating heading actions. Verify narrow labels inside each button, beyond checking document overflow alone.
+
+## RM-059 — Give the compact room its own row
+
+Owner tablet/phone feedback prioritizes the editor before controls, with Furniture/Room/Medy available through a floating AI icon. Use the actual retained properties card as the drawer so collapsing it preserves drafts, chat and live previews. Tablet should keep the room usable beside a nonmodal overlay; phone should use the whole viewport with an obvious fixed close row. Keep manual selection/drag separate from explicit Edit properties navigation. Check tours as well as ordinary controls: a full-screen drawer can obscure a canvas spotlight even when its geometry is correct. Coordinate the existing tour targets with drawer presentation, then verify resize, focus return, sticky Apply/Reset and2D/3D/Estimate return without paid requests. Physical touch/software-keyboard behavior remains an owner-device check.
+
+## RM-060 — Recommend a richer export and connect it
+
+Owner asks PDF to encourage Estimate before exporting so the file includes actual planning detail. Keep a clear design-only bypass and route the recommendation to the existing flow. The later PDF action must actually include the current Estimate; guidance alone cannot improve an unchanged design-only generator. Reuse the existing reviewed report and snapshot authority. Repeated native exports exposed semantically identical manual input objects with different key order, so canonicalize through existing schemas before matching snapshots instead of consuming the four saved-version slots. Preserve honest missing prices and avoid automatic research during export.
+
+## RM-061 — Reorder while preserving the liked gap
+
+Owner likes the existing spacing and wants New Room/Export/Estimate before editing controls. Measure actual button edges, transfer separator padding instead of inventing a new gap, and align keyboard order. Check menu direction after moving its trigger toward the top. Retained view layers also own imperative opacity: stable sibling identities and stacking prevent a moved action wrapper inheriting an old view's hidden style during hot reload. Preserve compact editor-first layout.

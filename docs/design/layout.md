@@ -1,5 +1,9 @@
 # Layout and useful space
 
+## Real market cards —RM-058,30 October2026
+
+Lead with priced pictured products; compact other priced links and collapse secondary unpriced stores. A missing photo is never a giant search placeholder or a generic room block pretending to be a product picture. Both picture and title use the existing themed leaving-store dialog and restore the exact invoking control. Comparison listing prices stay visible when incomplete quote specifications block estimate use; keep that distinction concise. Retrieve real image metadata from bounded public product pages, without hardcoded assets. Actual US five-furniture/floor/paint results and responsive evidence are in[RM-058](../validation/RM-058.md).
+
 ## Settings density and input alignment —RM-051,30 October2026
 
 Keep related settings12px apart and group boundaries16px apart, using scoped shared appearance styles. Reset ordinary fieldset/label/input margins inside colour controls so the44px swatch and Hex field align at both edges; RGB fields share44px height, equal widths and8px gaps. Pair Base finish and Theme above a clear Frame group. Use one heading per part and concise visible Colour/Material labels, retaining full-context accessible names. Patterns use a44px expandable row with their current value; Room theme/material options follow the same convention. The selected Room material retains a compact swatch. Keep source-aware photo notes and every supported control.
@@ -255,3 +259,41 @@ Studio navigation controls, properties panels/fields and plan/cutaway frames con
 Keep both representations in the same sized editor frame. A520ms finite reversible owner spends70% moving the saved3D camera to exact north-up overhead and30% blending to the SVG; reverse reveals aligned3D before returning to its saved pose. Derive orthographic framing from the actual planBox and centred-meet letterboxing, including pan/zoom/aspect. Blend normalized projection matrices to avoid a perspective snap; room heights/materials stay real and the plan stays schematic. Shared grid tracks and short-screen vertical centering align actual SVG/canvas rectangles.
 
 Retain one lazy canvas, physically sized and rendering only for cold preparation, visible3D or a finite flight. The usable plan remains during genuine preparation; normal toggles have no cutaway spinner. Disabled layers are inert and unregister gesture/placement targets. Reversals, workspace/phase changes and resize retire or retarget the finite owner; normal camera journey pace, drafts and history remain. [Native and mathematical evidence](../validation/RM-052.md).
+
+## RM-053 full-height Design frame —30 October2026
+
+On desktop at least960px wide and540px high, Design's main stage rises61px into the previous empty header middle cell: room frame top7px matches the Furniture/Room/Medy rail, while the properties panel stays at68px. Both2D and3D share grid tracks and the same full-height frame; header hit testing is confined to its real logo/navigation targets. Keep existing room width and physical camera/view math. Estimate's header, full chat and pinned Export remain.
+
+New Room/Export/Estimate/Undo form a2×2 group after the editing controls in the190px rail, using the same44px targets,11px typography,8px/6px padding and10px corners. Do not bottom-pin the group; remaining space stays flexible. Only unusually long camera controls scroll within a viewport-bounded rail, leaving project actions reachable. Narrow/very-short layouts place the same group above the room in natural flow. Preserve a single ProjectControls owner across modes/phases. Menus open into available space above the group; native dialogs and Escape restore their visible trigger. Estimate export errors remain outside the hidden Design subtree. [Actual checks](../validation/RM-053.md). This supersedes RM-043's Design-header action placement only.
+
+## RM-054/055 unified properties and action hierarchy —30 October2026
+
+Move the real Furniture/Room/Medy navigation into the properties aside: one warm18px outer card shares the room frame's desktop top/bottom. Keep its original capsule, selected thumb, icons and44px buttons inset8px. Tabs stay outside a dedicated content scroller; existing content starts near its previous location. Inspector Apply/Reset remain in the card footer. Medy uses the body's own size container; mobile card height accounts for its navigation and Back to plan row, with a bounded choice shelf so the composer fits. Narrow/very-short pages retain ordinary document flow. The phase animator measures the actual whole card, not a separate visual overlay.
+
+Snap is always enabled in session presentation; hide its toggle rather than losing actual placement alignment. Preserve exact authoritative dimensions and internal precision helpers. Undo now occupies the former Snap slot beside Delete in2D/3D. Eligibility includes a disposable inspector preview even without accepted history: first Undo discards only that preview, following Undo uses accepted history. Active-view-only tour targeting avoids a hidden layer. New Room/Export/Estimate stack full width, with consistent16px SVG icons and a real chevron, and Estimate uses the established primary cocoa treatment. Preserve project guards and one stable owner. This supersedes RM-053's2×2 group and former separate header tabs. [Card evidence](../validation/RM-054.md), [controls evidence](../validation/RM-055.md).
+
+## RM-056 — Estimate return edge
+
+Estimate Back to Design ends at the same right edge as its chat card:20px inset above1100px,16px at or below. Natural mobile header keeps its second row and uses that same16px inset. Design and phase geometry remain.
+
+## RM-057 — Market results and persistent actions
+
+Estimate heading contains Medy only. A persistent three-shortcut row above the composer holds Cost breakdown (Back to chat during review/history), Find options and pinned Export last/right, including legacy/saved states. Below480px use consistent icon-above-label controls to fit narrow widths. Group market results by Furniture/Flooring/Wall paint, then expandable item comparisons. Progress is plain chat status; individual Find actions disable while busy. Preserve source/size review, external-dialog focus and readable unpriced leads.
+
+## RM-059 — Editor-first compact studio
+
+Below1200px, Design follows header → full-width room frame → editing controls → project actions, with16px side insets. Retain the same mounted2D/3D scene and control owners. Tablet controls share the row where space permits; phone groups stack with44px targets. Desktop keeps the existing full-height three-column composition.
+
+The actual joined Furniture/Room/Medy card becomes a retained sliding drawer. Its64px cocoa Medy launcher stays at the bottom right. At600–1199px, the420px card overlays the right side without resizing the room or locking the page. Below600px, or below960px with height under500px, the card covers the viewport, including safe-area spacing. Back to room stays above its fixed tabs; existing inspector Apply/Reset stays in its footer. Phone focus stays inside, background controls become inert, and scroll styles/focus restore on collapse, resize or retirement. Software-keyboard geometry follows visualViewport without changing browser zoom.
+
+Collapse preserves the current tab, local form draft, chat and live preview. Explicit Edit properties/assistant navigation opens the drawer; selection and dragging alone leave the room available. Tour canvas/history steps collapse the drawer and the assistant step opens it, restoring Medy on completion. Compact Estimate motion measures the visible launcher when tools are closed; phase navigation retires drawer presentation without adding/remounting a canvas. [Ticket](../tickets/RM-059-open-room-tools-in-a-responsive-drawer.md), [evidence and physical-device limits](../validation/RM-059.md).
+
+## RM-060 — Bring Estimate into the PDF
+
+Choosing PDF without an available USD Estimate draft changes the existing export modal to a warm recommendation: Visit Estimate is primary; Export design only preserves the original portfolio. Back to formats restores PDF focus, while Close/Escape returns to Export. Keep the short-screen modal scrollable. No document capture or download starts before that choice.
+
+After Estimate work is available, the ordinary PDF action freezes/reuses the current reviewed inputs and uses the existing detailed report with room/plan, itemized costs, source evidence and shopping plan. Imported/recovered USD drafts follow the same path. Use existing currency, pending-preview, snapshot, cancellation and output bounds. Schema-normalized input comparison prevents unchanged manual object-key order from consuming another saved-version slot. Visiting Estimate alone never discovers prices; only its existing selected scope and known/unknown source records enter the report. No paid research or source refresh runs during export. [Evidence](../validation/RM-060.md).
+
+## RM-061 — Put project actions before editing controls
+
+New Room/Export/Estimate come first in the desktop rail, retaining their full-width styling and y68 start below the logo. Editing controls follow with the same28px actual button separation; the divider/padding transfers between the groups. Compact screens keep the editor first, then project actions, then controls, preserving29px between groups. DOM/keyboard order matches project-before-controls. The single ProjectControls owner stays; stable wrapper keys avoid inherited imperative view-opacity styles during hot reload. The top menu opens downward, and short desktop editing controls retain bounded scrolling. [Evidence](../validation/RM-061.md).

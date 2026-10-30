@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import type { RefObject } from 'react';
+import { createPortal } from 'react-dom';
 import { POLICY } from '@roomedy/contracts/policy';
 import type { Project } from '@roomedy/contracts/project';
 import type { MedyControl, MedyControlResult } from '@roomedy/spatial';
@@ -22,6 +23,36 @@ type Decision = {
   versions: object;
 };
 
+function ProjectActionIcon({
+  kind,
+}: {
+  kind: 'new' | 'export' | 'estimate' | 'chevron' | 'arrow';
+}) {
+  const paths = {
+    new: 'M4 3h12v14H4zM10 7v6M7 10h6',
+    export: 'M10 13V3M6 7l4-4 4 4M4 12v5h12v-5',
+    estimate:
+      'M5 2.5h10v15H5zM7.5 5.5h5M7.5 9h1M11.5 9h1M7.5 12h1M11.5 12h1M7.5 15h1M11.5 15h1',
+    chevron: 'm5 8 5 5 5-5',
+    arrow: 'M3 10h13M11 5l5 5-5 5',
+  };
+  return (
+    <svg
+      className={`${styles.projectIcon} ${kind === 'chevron' ? styles.projectChevron : ''}`}
+      viewBox="0 0 20 20"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={paths[kind]} />
+    </svg>
+  );
+}
 function readFile(file: File, signal: AbortSignal): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -367,14 +398,18 @@ export function ProjectControls({
         }}
       >
         <summary
-          className="glass-control"
+          className={styles.projectTrigger}
           onClick={(event) => {
             event.preventDefault();
             if (menuMotion.current) menuMotion.current.toggle();
             else if (menu.current) menu.current.open = !menu.current.open;
           }}
         >
-          New Room
+          <span className={styles.projectLabel}>
+            <ProjectActionIcon kind="new" />
+            New Room
+          </span>
+          <ProjectActionIcon kind="chevron" />
         </summary>
         <div ref={menuPanel} className={styles.projectOptions}>
           <p>Open a saved Roomedy project or start a fresh room.</p>
@@ -407,14 +442,11 @@ export function ProjectControls({
           {message && <p role="alert">{message}</p>}
         </div>
       </details>
-      <div
-        hidden={planning && !exportMessage}
-        className={`${styles.projectMenu} ${styles.exportControl}`}
-      >
+      <div hidden={planning && !exportMessage} className={styles.projectMenu}>
         {!planning && (
           <button
             ref={exportButton}
-            className="glass-control"
+            className={styles.projectTrigger}
             disabled={busy}
             onClick={() => {
               setMenuOpen(false);
@@ -423,29 +455,44 @@ export function ProjectControls({
               setExporting(true);
             }}
           >
-            Export
+            <span className={styles.projectLabel}>
+              <ProjectActionIcon kind="export" />
+              Export
+            </span>
           </button>
         )}
-        {exportMessage && (
+        {exportMessage && !planning && (
           <div className={styles.projectOptions} role="alert">
             {exportMessage}
           </div>
         )}
       </div>
       {!planning && (
-        <div className={`${styles.projectMenu} ${styles.estimateControl}`}>
+        <div className={styles.projectMenu}>
           <button
-            className="glass-control"
+            className={`${styles.projectTrigger} ${styles.estimateTrigger}`}
             disabled={busy || !!controller.getSnapshot().candidate}
             onClick={() => {
               setMenuOpen(false);
               onPlanCost();
             }}
           >
-            Estimate
+            <span className={styles.projectLabel}>
+              <ProjectActionIcon kind="estimate" />
+              Estimate
+            </span>
+            <ProjectActionIcon kind="arrow" />
           </button>
         </div>
       )}
+      {planning &&
+        exportMessage &&
+        createPortal(
+          <div className={styles.projectMessage} role="alert">
+            {exportMessage}
+          </div>,
+          document.body,
+        )}
       {exporting && (
         <ExportDialog
           controller={controller}
@@ -460,6 +507,10 @@ export function ProjectControls({
           }}
           onProject={download}
           onDownload={downloadBlob}
+          onEstimate={() => {
+            setExporting(false);
+            onPlanCost();
+          }}
           requestedFormat={requestedFormat}
         />
       )}

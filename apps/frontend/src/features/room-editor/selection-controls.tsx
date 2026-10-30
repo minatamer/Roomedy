@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
 import styles from './selection-controls.module.css';
-import { deleteSelection } from './selection-actions';
+import { canUndo, deleteSelection } from './selection-actions';
 
 export function DeleteSelectionButton({
   controller,
@@ -77,27 +77,67 @@ export function DeleteSelectionButton({
   );
 }
 
-export function SnapToggle({
-  checked,
-  onChange,
+export function UndoSelectionButton({
+  controller,
+  onUndo,
+  beforeUndo,
+  historyTarget = true,
 }: {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
+  controller: SessionController;
+  onUndo?: (() => void) | undefined;
+  beforeUndo?: (() => void) | undefined;
+  historyTarget?: boolean;
 }) {
+  const state = useSyncExternalStore(
+    controller.subscribe,
+    controller.getSnapshot,
+    controller.getSnapshot,
+  );
+  const label =
+    state.candidate?.source === 'inspector'
+      ? 'Undo preview changes'
+      : state.undoLabel
+        ? `Undo: ${state.undoLabel}`
+        : 'Undo last change';
   return (
     <button
       type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-label="Snap placement"
-      title="Align moves to the placement grid"
-      className={styles.snapToggle}
-      onClick={() => onChange(!checked)}
+      data-room-target={historyTarget ? 'history' : undefined}
+      aria-label={label}
+      title={canUndo(state) ? label : 'No changes to undo yet'}
+      disabled={!canUndo(state)}
+      className={styles.undoButton}
+      onClick={() => {
+        if (!canUndo(controller.getSnapshot())) return;
+        beforeUndo?.();
+        if (onUndo) onUndo();
+        else {
+          const result = controller.undo();
+          if (!result.ok)
+            controller.notify(
+              failureMessage(
+                result,
+                controller.getSnapshot().workspace?.current,
+              ),
+            );
+        }
+      }}
     >
-      Snap
-      <span className={styles.track} aria-hidden="true">
-        <span />
-      </span>
+      <svg
+        viewBox="0 0 20 20"
+        width="16"
+        height="16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        aria-hidden="true"
+      >
+        <path
+          d="M7 4 3 8l4 4M3 8h8a5 5 0 0 1 0 10"
+          transform="translate(0 -2)"
+        />
+      </svg>
+      Undo
     </button>
   );
 }

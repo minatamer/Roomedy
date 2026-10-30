@@ -1,0 +1,63 @@
+.launcher:global(.glass-control),
+.heading {
+  display: none;
+}
+@media (max-width: 1199px) {
+  .launcher:global(.glass-control) {
+    position: fixed;
+    z-index: 65;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    border: 1px solid #fff4df;
+    border-radius: 50%;
+    background: #70523b;
+    color: #fff6e6;
+    box-shadow:
+      0 6px 24px #49362238,
+      inset 0 0 0 5px #fff0dc15;
+    transition:
+      transform 200ms ease,
+      background 200ms ease;
+  }
+  .launcher:global(.glass-control):hover {
+    background: #513d2d;
+    transform: translateY(-2px);
+  }
+  .launcher:global(.glass-control):focus-visible {
+    outline: 3px solid #956444;
+    outline-offset: 4px;
+  }
+  .launcher:global(.glass-control) > svg {
+    width: 28px;
+    height: 28px;
+  }
+  .launcher:global(.glass-control)[data-modal-open='true'] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .heading {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 10px 12px 0;
+  }
+  .close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .close svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+}

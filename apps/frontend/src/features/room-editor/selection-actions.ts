@@ -1,6 +1,17 @@
 import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 
+/** A disposable inspector preview is undoable even before the first Apply. */
+export function canUndo(state: SessionSnapshot): boolean {
+  return (
+    state.phase === 'editor' &&
+    !!state.workspace &&
+    state.comparison === 'current' &&
+    !state.clientLoadFailure &&
+    (state.candidate?.source === 'inspector' || !!state.undoLabel)
+  );
+}
+
 /** The header follows the visible inspector context, without owning panel state. */
 export function activeRoomTool(
   state: SessionSnapshot,

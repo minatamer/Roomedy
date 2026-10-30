@@ -39,6 +39,26 @@ afterEach(() => {
 
 describe('catalogue additions use the shared command authority', () => {
   it.each(['plan', 'cutaway'] as const)(
+    'keeps session snapping enabled for placement in %s',
+    (view) => {
+      const { session, placement } = setup(view);
+      const accepted = session.getSnapshot().workspace;
+      expect(session.getSnapshot().presentation.snap).toBe(true);
+      session.setView({ snap: false, zoom: 1.8 });
+      expect(session.getSnapshot().presentation.snap).toBe(true);
+      expect(session.getSnapshot().presentation.zoom).toBe(1.8);
+      expect(session.getSnapshot().workspace).toBe(accepted);
+      placement.start(desk);
+      placement.move({ x: 1987, z: 2233 });
+      expect(placement.getSnapshot()!.item.pose).toMatchObject({
+        centerX: 2000,
+        centerZ: 2250,
+      });
+      expect(session.getSnapshot().workspace).toBe(accepted);
+    },
+  );
+
+  it.each(['plan', 'cutaway'] as const)(
     'suggests inward wardrobe facing in %s until explicit rotation, then preserves the visitor choice',
     (view) => {
       const { session, placement } = setup(view);

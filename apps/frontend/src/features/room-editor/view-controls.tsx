@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import type { SessionController } from '../session/controller';
-import { DeleteSelectionButton, SnapToggle } from './selection-controls';
+import {
+  DeleteSelectionButton,
+  UndoSelectionButton,
+} from './selection-controls';
 import styles from './view-controls.module.css';
 
 export function ViewControls({
@@ -10,8 +13,9 @@ export function ViewControls({
   readOnly,
   rotationLocked,
   onRotate,
-  snap,
-  onSnap,
+  onUndo,
+  beforeUndo,
+  historyTarget = true,
   onZoom,
   onFit,
   zoomOutDisabled = false,
@@ -25,8 +29,9 @@ export function ViewControls({
   readOnly: boolean;
   rotationLocked: boolean;
   onRotate: (direction: -1 | 1) => void;
-  snap: boolean;
-  onSnap: (snap: boolean) => void;
+  onUndo?: (() => void) | undefined;
+  beforeUndo?: (() => void) | undefined;
+  historyTarget?: boolean;
   onZoom: (direction: -1 | 1) => void;
   onFit: () => void;
   zoomOutDisabled?: boolean;
@@ -80,7 +85,12 @@ export function ViewControls({
           disabled={!ready || readOnly}
           beforeDelete={() => beforeDelete?.()}
         />
-        <SnapToggle checked={snap} onChange={onSnap} />
+        <UndoSelectionButton
+          controller={controller}
+          onUndo={onUndo}
+          beforeUndo={beforeUndo}
+          historyTarget={historyTarget}
+        />
       </div>
     </div>
   );

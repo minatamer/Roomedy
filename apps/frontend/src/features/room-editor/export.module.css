@@ -86,7 +86,68 @@
 .actions {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 24px;
+}
+.promptIcon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 20px;
+  border: 1px solid #d8c5a8;
+  border-radius: 18px;
+  background: #e8d6b744;
+  color: #78553d;
+}
+.promptIcon svg {
+  width: 28px;
+  height: 28px;
+}
+.includes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+}
+.includes span {
+  border: 1px solid #d8c9b5;
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #6c5845;
+  font-size: 12px;
+}
+.promptActions {
+  display: grid;
+  gap: 10px;
+}
+.dialog .promptActions button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  width: 100%;
+  border: 1px solid #cbb89e;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: #fffaf18f;
+  color: #43352a;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+}
+.dialog .promptActions .primary {
+  background: #70523b;
+  border-color: #70523b;
+  color: #fffaf1;
+}
+.dialog .promptActions button:hover {
+  background: #f0e0c8;
+}
+.dialog .promptActions .primary:hover {
+  background: #513d2d;
 }
 .dialog .actions button {
   min-height: 44px;

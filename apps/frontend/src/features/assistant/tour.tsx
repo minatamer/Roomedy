@@ -116,6 +116,7 @@ export function AssistantTour({
   hideReplay = false,
   registerMedy,
   onActivityChange,
+  onTargetChange,
   onComplete,
 }: {
   controller: SessionController;
@@ -123,6 +124,7 @@ export function AssistantTour({
   hideReplay?: boolean;
   registerMedy?: (start: (() => void) | null) => void;
   onActivityChange?: (active: boolean) => void;
+  onTargetChange?: (target: 'canvas' | 'assistant' | 'history' | null) => void;
   onComplete?: () => void;
 }) {
   const [mounted, setMounted] = useState(false),
@@ -145,6 +147,16 @@ export function AssistantTour({
     stopScroll = useRef(() => {}),
     opener = useRef<HTMLElement | null>(null),
     displayed = useRef<TourLayout | null>(null);
+  const presentedTarget = useRef(false);
+  useLayoutEffect(() => {
+    if (open) {
+      presentedTarget.current = true;
+      onTargetChange?.(steps[pending ?? index ?? 0]!.target);
+    } else if (presentedTarget.current) {
+      presentedTarget.current = false;
+      onTargetChange?.(null);
+    }
+  }, [open, pending, index, onTargetChange]);
   useEffect(() => {
     onActivityChange?.(open);
     if (open) {
@@ -236,7 +248,7 @@ export function AssistantTour({
         : replayButton?.hidden
           ? root?.querySelector<HTMLElement>('h1[tabindex]')
           : replayButton;
-      target?.focus({ preventScroll: true });
+      requestAnimationFrame(() => target?.focus({ preventScroll: true }));
     };
   }, [mounted, open, close]);
   const visible = open && (index === null || !!layout);
