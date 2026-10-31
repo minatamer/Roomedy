@@ -7,6 +7,7 @@ import {
   sourceUrlSchema,
   shoppingCountries,
   quoteCurrencySchema,
+  listedCoverageSchema,
 } from './estimates.js';
 export const sourcingTargetSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('furniture'), id: idSchema }),
@@ -58,6 +59,7 @@ export const sourcingListingSchema = z.strictObject({
   unit: z.enum(['item', 'pack', 'can', 'hour', 'job', 'm2', 'm', 'each']),
   volumeMl: z.number().int().min(1).max(100_000).nullable(),
   observedAt: z.number().int().min(0).max(8_640_000_000_000_000).nullable(),
+  ...listedCoverageSchema.shape,
 });
 export const sourcingCandidateSchema = z.strictObject({
   label: labelSchema,

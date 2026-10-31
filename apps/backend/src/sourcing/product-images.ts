@@ -4,12 +4,18 @@ import { request } from 'node:https';
 import type { RequestOptions } from 'node:https';
 import { safeProductImage } from '@roomedy/contracts/sourcing';
 import { evidenceUrl } from '../providers/web-search.js';
+import { productMaterialsFromHtml } from './product-materials.js';
+import type { ProductMaterialFacts } from './product-materials.js';
+export interface ProductPageFacts extends ProductMaterialFacts {
+  imageUrl: string | null;
+}
 
 const MAX_HTML = 512 * 1024;
 export type ProductImageLookup = (
   url: string,
   signal: AbortSignal,
-) => Promise<string | null>;
+  context?: { kind: string; country: string },
+) => Promise<string | ProductPageFacts | null>;
 type Address = { address: string; family: number };
 type Resolve = (host: string) => Promise<Address[]>;
 type Read = (
@@ -92,7 +98,12 @@ export function productImageFromHtml(html: string, page: URL) {
   return null;
 }
 /** No redirects, cookies, authentication, proxy or connection reuse; TLS keeps the merchant hostname. */
-const readPinned: Read = (url, address, signal) =>
+const readPinned = (
+  url: URL,
+  address: string,
+  signal: AbortSignal,
+  material = false,
+): Promise<string | null> =>
   new Promise((resolve) => {
     let done = false,
       html = '',
@@ -139,12 +150,25 @@ const readPinned: Read = (url, address, signal) =>
         bytes += chunk.length;
         if (++fragments > 128 || bytes > MAX_HTML) {
           response.destroy();
-          finish(null);
+          finish(
+            material
+              ? (
+                  html +
+                  decoder.decode(
+                    chunk.subarray(
+                      0,
+                      Math.max(0, MAX_HTML - (bytes - chunk.length)),
+                    ),
+                    { stream: true },
+                  )
+                ).slice(0, MAX_HTML)
+              : null,
+          );
           return;
         }
         html += decoder.decode(chunk, { stream: true });
         const image = productImageFromHtml(html, url);
-        if (image || /<\/head\s*>/i.test(html)) {
+        if (!material && (image || /<\/head\s*>/i.test(html))) {
           response.destroy();
           finish(html);
         }
@@ -161,7 +185,20 @@ export function createProductImageLookup(
   resolve: Resolve = (host) => lookup(host, { all: true, family: 4 }),
   read: Read = readPinned,
 ): ProductImageLookup {
-  return async (raw, parent) => {
+  return createLookup(resolve, read, false);
+}
+export function createProductPageLookup(
+  resolve: Resolve = (host) => lookup(host, { all: true, family: 4 }),
+  read?: Read,
+): ProductImageLookup {
+  return createLookup(resolve, read, true);
+}
+function createLookup(
+  resolve: Resolve,
+  read: Read | undefined,
+  materials: boolean,
+): ProductImageLookup {
+  return async (raw, parent, context) => {
     const safe = safeProductImage(raw);
     if (!safe || parent.aborted) return null;
     const url = new URL(safe);
@@ -186,8 +223,28 @@ export function createProductImageLookup(
           )
         )
           return null;
-        const html = await read(url, addresses[0]!.address, signal);
-        return !signal.aborted && html ? productImageFromHtml(html, url) : null;
+        const html = read
+          ? await read(url, addresses[0]!.address, signal)
+          : await readPinned(
+              url,
+              addresses[0]!.address,
+              signal,
+              materials &&
+                ['floor', 'paint', 'primer'].includes(context?.kind ?? ''),
+            );
+        return !signal.aborted && html
+          ? materials
+            ? {
+                imageUrl: productImageFromHtml(html, url),
+                ...productMaterialsFromHtml(
+                  html,
+                  url,
+                  context?.kind ?? '',
+                  context?.country ?? 'ZZ',
+                ),
+              }
+            : productImageFromHtml(html, url)
+          : null;
       })().catch(() => null);
       return await Promise.race([work, aborted]);
     } finally {

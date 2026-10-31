@@ -1,4 +1,4 @@
-import { createProductImageLookup } from './sourcing/product-images.js';
+import { createProductPageLookup } from './sourcing/product-images.js';
 import { createSourcingHandler } from './sourcing/sourcing.js';
 import { createExchangeRates } from './sourcing/exchange-rates.js';
 import sharp from 'sharp';
@@ -70,7 +70,7 @@ try {
               observations,
             });
         },
-        config.mode === 'live' ? createProductImageLookup() : undefined,
+        config.mode === 'live' ? createProductPageLookup() : undefined,
       ),
     },
     ...(config.mode === 'fake'

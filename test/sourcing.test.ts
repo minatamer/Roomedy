@@ -208,40 +208,243 @@ describe('strict admitted source contracts and evidence', () => {
     expect(result.search!.images).toHaveLength(1);
   });
 
-  it('keeps a real opened-page listing price when incomplete pack specification prevents estimate selection', async () => {
+  it.each([0, 5000, 10_000_000_000])(
+    'keeps a real opened-page listing price when incomplete pack coverage %s prevents quote selection',
+    async (invalidCoverage) => {
+      const i = input(),
+        reply = await fakeReply(i),
+        candidate = reply.candidates[0]!;
+      reply.candidates = [candidate];
+      candidate.url = 'https://merchant.example/product';
+      candidate.offer!.source.url = candidate.url;
+      if (candidate.offer!.kind !== 'floor') throw new Error('floor fixture');
+      candidate.offer!.coverageMm2 = invalidCoverage;
+      const result = await createSourcingHandler(
+        false,
+        () => 123,
+        id,
+      )(i, {
+        signal: new AbortController().signal,
+        call: async () => ({
+          kind: 'completed',
+          calls: [],
+          data: reply,
+          search: { calls: 2, opened: [candidate.url], sources: [] },
+        }),
+      });
+      expect(result.kind).toBe('completed');
+      expect(result.sourcing!.candidates[0]).toMatchObject({
+        offer: null,
+        listing: {
+          currency: 'USD',
+          priceMinor: candidate.offer!.priceMinor,
+          unit: 'pack',
+          observedAt: 123,
+        },
+      });
+      expect(operationResultSchema.safeParse(result).success).toBe(true);
+    },
+  );
+  it('supplements real listing coverage from the existing page lookup without changing price or adding AI requests', async () => {
     const i = input(),
       reply = await fakeReply(i),
       candidate = reply.candidates[0]!;
     reply.candidates = [candidate];
     candidate.url = 'https://merchant.example/product';
-    candidate.offer!.source.url = candidate.url;
-    if (candidate.offer!.kind !== 'floor') throw new Error('floor fixture');
-    candidate.offer!.coverageMm2 = 0;
+    candidate.offer = null;
+    candidate.listing = {
+      priceMinor: 4299,
+      currency: 'USD',
+      country: i.locality.country,
+      unit: 'pack',
+      volumeMl: null,
+      observedAt: null,
+    };
+    const call = vi.fn(async () => ({
+      kind: 'completed' as const,
+      calls: [],
+      data: reply,
+      search: { calls: 8, opened: [candidate.url], sources: [] },
+    }));
+    const page = vi.fn(async () => ({
+      imageUrl: 'https://cdn.example/product.jpg',
+      coverageMm2: 2_600_000,
+    }));
     const result = await createSourcingHandler(
       false,
       () => 123,
       id,
+      undefined,
+      undefined,
+      undefined,
+      page,
+    )(i, { signal: new AbortController().signal, call });
+    expect(result.sourcing!.candidates[0]!.listing).toMatchObject({
+      priceMinor: 4299,
+      coverageMm2: 2_600_000,
+    });
+    expect(call).toHaveBeenCalledOnce();
+    expect(page).toHaveBeenCalledOnce();
+  });
+  it('retains a real paint can size and per-coat yield while preserving a valid price', async () => {
+    const i = input('surface:north'),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    reply.candidates = [candidate];
+    candidate.url = 'https://merchant.example/paint';
+    candidate.offer = null;
+    candidate.listing = {
+      priceMinor: 5600,
+      currency: 'USD',
+      country: i.locality.country,
+      unit: 'can',
+      volumeMl: null,
+      observedAt: null,
+    };
+    const call = vi.fn(async () => ({
+      kind: 'completed' as const,
+      calls: [],
+      data: reply,
+      search: { calls: 8, opened: [candidate.url], sources: [] },
+    }));
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+      undefined,
+      undefined,
+      undefined,
+      async () => ({
+        imageUrl: 'https://cdn.example/paint.jpg',
+        volumeMl: 2500,
+        coverageMm2PerLitre: 8_000_000,
+      }),
+    )(i, { signal: new AbortController().signal, call });
+    expect(result.sourcing!.candidates[0]!.listing).toMatchObject({
+      priceMinor: 5600,
+      volumeMl: 2500,
+      coverageMm2PerLitre: 8_000_000,
+    });
+    expect(call).toHaveBeenCalledOnce();
+  });
+  it('ignores an invalid page volume independently while retaining valid page coverage and price', async () => {
+    const i = input('surface:north'),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    reply.candidates = [candidate];
+    candidate.url = 'https://merchant.example/paint';
+    candidate.offer = null;
+    candidate.listing = {
+      priceMinor: 5600,
+      currency: 'USD',
+      country: i.locality.country,
+      unit: 'can',
+      volumeMl: 5000,
+      observedAt: null,
+    };
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+      undefined,
+      undefined,
+      undefined,
+      async () => ({
+        imageUrl: 'https://cdn.example/a.jpg',
+        volumeMl: 0,
+        coverageMm2PerLitre: 9_000_000,
+      }),
     )(i, {
       signal: new AbortController().signal,
       call: async () => ({
         kind: 'completed',
         calls: [],
         data: reply,
-        search: { calls: 2, opened: [candidate.url], sources: [] },
+        search: { calls: 8, opened: [candidate.url], sources: [] },
       }),
     });
-    expect(result.kind).toBe('completed');
-    expect(result.sourcing!.candidates[0]).toMatchObject({
-      offer: null,
-      listing: {
-        currency: 'USD',
-        priceMinor: candidate.offer!.priceMinor,
-        unit: 'pack',
-        observedAt: 123,
-      },
+    expect(result.sourcing!.candidates[0]!.listing).toMatchObject({
+      priceMinor: 5600,
+      volumeMl: 5000,
+      coverageMm2PerLitre: 9_000_000,
     });
-    expect(operationResultSchema.safeParse(result).success).toBe(true);
   });
+  it('retires a conflicting full quote while retaining the page material facts and listed price', async () => {
+    const i = input(),
+      reply = await fakeReply(i),
+      candidate = reply.candidates[0]!;
+    reply.candidates = [candidate];
+    candidate.url = 'https://merchant.example/floor';
+    candidate.offer!.source.url = candidate.url;
+    if (candidate.offer?.kind !== 'floor') throw Error('floor fixture');
+    const expectedPrice = candidate.offer.priceMinor;
+    const result = await createSourcingHandler(
+      false,
+      () => 123,
+      id,
+      undefined,
+      undefined,
+      undefined,
+      async () => ({
+        imageUrl: 'https://cdn.example/a.jpg',
+        coverageMm2: 3_000_000,
+      }),
+    )(i, {
+      signal: new AbortController().signal,
+      call: async () => ({
+        kind: 'completed',
+        calls: [],
+        data: reply,
+        search: { calls: 8, opened: [candidate.url], sources: [] },
+      }),
+    });
+    const found = result.sourcing!.candidates[0]!;
+    expect(found.offer).toBeNull();
+    expect(found.listing).toMatchObject({
+      priceMinor: expectedPrice,
+      coverageMm2: 3_000_000,
+    });
+    expect(found.differences.join(' ')).toContain('differ from the full quote');
+  });
+  it.each([2_200_000, 0])(
+    'retains independent listing coverage when valid and never erases a valid price for bad coverage: %s',
+    async (coverageMm2) => {
+      const i = input(),
+        reply = await fakeReply(i),
+        candidate = reply.candidates[0]!;
+      candidate.url = 'https://merchant.example/product';
+      candidate.offer!.source.url = candidate.url;
+      if (candidate.offer!.kind !== 'floor') throw Error('fixture');
+      candidate.offer!.coverageMm2 = 0;
+      candidate.listing = {
+        priceMinor: 4299,
+        currency: 'USD',
+        country: i.locality.country,
+        unit: 'pack',
+        volumeMl: null,
+        observedAt: null,
+        coverageMm2,
+      };
+      reply.candidates = [candidate];
+      const result = await createSourcingHandler(
+        false,
+        () => 123,
+        id,
+      )(i, {
+        signal: new AbortController().signal,
+        call: async () => ({
+          kind: 'completed',
+          calls: [],
+          data: reply,
+          search: { calls: 2, opened: [candidate.url], sources: [] },
+        }),
+      });
+      const found = result.sourcing!.candidates[0]!;
+      expect(found.offer).toBeNull();
+      expect(found.listing?.priceMinor).toBe(4299);
+      expect(found.listing?.coverageMm2).toBe(coverageMm2 || undefined);
+    },
+  );
   it.each(['exact', 'mapped', 'other-product', 'unavailable'] as const)(
     'enriches missing photos once without changing comparison prices: %s',
     async (mode) => {

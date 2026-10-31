@@ -5,6 +5,7 @@ import type { ClientRequest, IncomingMessage } from 'node:http';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   createProductImageLookup,
+  createProductPageLookup,
   productImageFromHtml,
   publicProductAddress,
 } from '../apps/backend/src/sourcing/product-images.js';
@@ -166,6 +167,34 @@ function wire(status = 200, type = 'text/html', chunks = [html]) {
   return () => options;
 }
 describe('pinned HTTPS transport', () => {
+  it('reads material specifications after head image metadata in the same pinned request', async () => {
+    wire(200, 'text/html', [
+      html + '</head><body>',
+      `<script type="application/ld+json">${JSON.stringify({ '@type': 'Product', url: page.href, additionalProperty: [{ name: 'Coverage per box', value: '2.2 m²' }] })}</script></body>`,
+    ]);
+    expect(
+      await createProductPageLookup(publicDns)(
+        page.href,
+        new AbortController().signal,
+        { kind: 'floor', country: 'US' },
+      ),
+    ).toEqual({
+      imageUrl: 'https://cdn.example/product.jpg?a=1&b=2',
+      coverageMm2: 2_200_000,
+    });
+    expect(request).toHaveBeenCalledOnce();
+  });
+  it('retains bounded head metadata when a material page body exceeds the read limit', async () => {
+    wire(200, 'text/html', [html + '</head>', 'x'.repeat(512 * 1024 + 1)]);
+    expect(
+      await createProductPageLookup(publicDns)(
+        page.href,
+        new AbortController().signal,
+        { kind: 'floor', country: 'US' },
+      ),
+    ).toEqual({ imageUrl: 'https://cdn.example/product.jpg?a=1&b=2' });
+    expect(request).toHaveBeenCalledOnce();
+  });
   it('pins DNS with normal TLS, no redirects/authentication/proxy/reused connection and bounded headers', async () => {
     const options = wire();
     expect(

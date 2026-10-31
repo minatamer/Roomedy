@@ -44,9 +44,24 @@ export async function sourcingFakeResponse(
       'https://www.ikea.com/us/en/images/products/kleppstad-wardrobe-with-3-doors-white__0753594_pe748782_s5.jpg',
     desk: 'https://www.ikea.com/us/en/images/products/micke-desk-white__0736018_pe740345_s5.jpg',
   };
+  // Real destinations for playful US examples, never merchant quotes or fit evidence.
+  const ikeaProducts: Record<string, string> = {
+    bed: 'kleppstad-bed-frame-white-vissle-beige-00492682',
+    desk: 'micke-desk-white-80213074',
+    chair: 'flintan-office-chair-black-90489029',
+    wardrobe: 'kleppstad-wardrobe-with-3-doors-white-20441757',
+    storage: 'billy-bookcase-white-50522040',
+    mirror: 'nissedal-mirror-white-90503775',
+    seating: 'glostad-loveseat-knisa-dark-gray-70489011',
+    table: 'lack-side-table-white-30449908',
+    lighting: 'tertial-work-lamp-dark-gray-20355434',
+  };
+  const product = brief.category && ikeaProducts[brief.category];
   const url =
     brief.kind === 'furniture'
-      ? `https://www.ikea.com/${ikeaRegion}/search/?q=${encodeURIComponent(brief.category ?? brief.label)}`
+      ? ikeaRegion === 'us/en' && product
+        ? `https://www.ikea.com/us/en/p/${product}/`
+        : `https://www.ikea.com/${ikeaRegion}/search/?q=${encodeURIComponent(brief.category ?? brief.label)}`
       : brief.kind === 'paint' || brief.kind === 'primer'
         ? 'https://www.jotun.com/eg-en/decorative/interior'
         : `https://www.google.com/search?q=${encodeURIComponent(`${brief.label} ${locality.city} ${locality.country}`)}`;
@@ -88,7 +103,9 @@ export async function sourcingFakeResponse(
       'Authored example; use this link to research actual products and prices.',
     conditions: offer ? 'standard' : 'unknown',
     differences: [
-      'A generic room representation is not an exact merchant product.',
+      brief.kind === 'furniture'
+        ? 'IKEA reference only. The example price and dimensions do not describe the linked product.'
+        : 'A generic room representation is not an exact merchant product.',
     ],
     offer,
   };
