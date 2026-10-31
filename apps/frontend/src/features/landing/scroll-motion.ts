@@ -40,7 +40,8 @@ const smooth = (value: number, from: number, to: number) => {
 export function roomChoreography(value: number) {
   const progress = boundedProgress(value);
   return {
-    rotation: smooth(progress, 0.28, 0.5),
+    // The starting-point chapter ends at 0.15: turn with that first scroll too.
+    rotation: smooth(progress, 0, 0.5),
     opening: 1 - smooth(progress, 0.74, 0.98),
   };
 }
@@ -58,9 +59,51 @@ export function advanceScroll(current: number, target: number, delta: number) {
 export interface ScrollTarget {
   progress: number;
   visible: boolean;
+  compact?: LandingCompactLayout | undefined;
   wake?: () => void;
   prepared?: boolean;
   publish?: (progress: number) => void;
+}
+
+export interface LandingCompactLayout {
+  center: number;
+  zoom: number;
+}
+
+/** The hero slot is measured relative to its chapter, so scrolling cannot move it. */
+export function landingCompactLayout(
+  width: number,
+  height: number,
+  slotTop: number,
+  slotHeight: number,
+): LandingCompactLayout | undefined {
+  if (
+    ![width, height, slotTop, slotHeight].every(Number.isFinite) ||
+    width <= 0 ||
+    height <= 0 ||
+    slotHeight <= 0 ||
+    !(
+      width <= 600 ||
+      (height > 600 && (width <= 1100 || width / height <= 1.4))
+    )
+  )
+    return undefined;
+  return {
+    center: Math.max(0.5, Math.min(0.82, (slotTop + slotHeight / 2) / height)),
+    zoom: 1.45 - 0.6 * smooth(width / height, 0.8, 1.4),
+  };
+}
+
+/** One reversible move into the device center; subsequent chapters never refit the room. */
+export function landingCompactPose(
+  value: number,
+  layout: LandingCompactLayout,
+) {
+  const centered = smooth(boundedProgress(value), 0, 0.13);
+  return {
+    center: layout.center + (0.5 - layout.center) * centered,
+    zoom: layout.zoom,
+  };
 }
 
 /** Full-viewport composition: perspective changes remain continuous on resize/reverse. */

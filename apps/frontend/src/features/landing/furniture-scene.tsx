@@ -24,6 +24,7 @@ import {
   advanceScroll,
   roomChoreography,
   landingFraming,
+  landingCompactPose,
   landingPixelRatio,
   landingFurniture,
   landingFurniturePose,
@@ -44,6 +45,34 @@ import {
   watchLandingShaders,
 } from './finish-materials';
 import { landingFinishState, landingPaintStroke } from './finish-motion';
+
+/** Imperative lens fitting belongs to the canvas-owned Three camera, outside React state. */
+function frameLandingCamera(
+  camera: PerspectiveCamera,
+  room: Group,
+  point: Vector3,
+  compact: { center: number; zoom: number; amount: number },
+  ratio: number,
+  shift: number,
+  progress: number,
+) {
+  camera.zoom = 1;
+  camera.aspect = ratio;
+  camera.clearViewOffset();
+  camera.updateMatrixWorld();
+  let offsetX = (-shift * ratio) / 2,
+    offsetY = 0;
+  if (compact.amount > 0) {
+    room.updateWorldMatrix(true, false);
+    point.set(0, 0.6, 0).applyMatrix4(room.matrixWorld).project(camera);
+    const pose = landingCompactPose(progress, compact);
+    camera.zoom = 1 + (pose.zoom - 1) * compact.amount;
+    offsetX += ((point.x * pose.zoom * ratio) / 2 - offsetX) * compact.amount;
+    offsetY =
+      ((1 - pose.center * 2 - point.y * pose.zoom) / 2) * compact.amount;
+  }
+  camera.setViewOffset(ratio, 1, offsetX, offsetY, ratio, 1);
+}
 
 type FurnitureMaterials = {
   wood: MeshStandardMaterial;
@@ -137,6 +166,7 @@ function Choreography({
     prepared = useRef(false),
     firstFrame = useRef(true),
     aspect = useRef(Math.max(0.1, size.width / Math.max(1, size.height))),
+    compactFrame = useRef({ center: 0.5, zoom: 1, amount: 0 }),
     probe = useRef({
       previous: 0,
       moving: false,
@@ -234,7 +264,8 @@ function Choreography({
       };
     }, []),
     { surfaces, materials } = resources,
-    lookAt = useMemo(() => new Vector3(), []);
+    lookAt = useMemo(() => new Vector3(), []),
+    focusPoint = useMemo(() => new Vector3(), []);
   const present = useCallback(
     (progress: number, intro: number, ratio: number) => {
       if (!room.current || !furniture.current) return;
@@ -264,17 +295,18 @@ function Choreography({
       lookAt.set(...framing.lookAt);
       camera.lookAt(lookAt);
       if (camera instanceof PerspectiveCamera)
-        camera.setViewOffset(
+        frameLandingCamera(
+          camera,
+          room.current,
+          focusPoint,
+          compactFrame.current,
           ratio,
-          1,
-          (-framing.shift * ratio) / 2,
-          0,
-          ratio,
-          1,
+          framing.shift,
+          progress,
         );
       targetRef.current.publish?.(progress);
     },
-    [camera, lookAt, targetRef],
+    [camera, lookAt, focusPoint, targetRef],
   );
   useEffect(() => {
     const control = targetRef.current;
@@ -327,6 +359,10 @@ function Choreography({
       warm: () => {
         const started = performance.now();
         displayed.current = targetRef.current.progress;
+        const compact = targetRef.current.compact;
+        compactFrame.current = compact
+          ? { ...compact, amount: 1 }
+          : { center: 0.5, zoom: 1, amount: 0 };
         present(displayed.current, 0, aspect.current);
         gl.render(scene, camera);
         warmMs = performance.now() - started;
@@ -429,10 +465,25 @@ function Choreography({
       (1 - Math.exp(-Math.min(dt, 0.05) * 12));
     if (Math.abs(targetAspect - aspect.current) < 0.0001)
       aspect.current = targetAspect;
+    const compact = targetRef.current.compact,
+      desired = compact
+        ? { ...compact, amount: 1 }
+        : { center: 0.5, zoom: 1, amount: 0 };
+    let movingFocus = false;
+    for (const key of ['center', 'zoom', 'amount'] as const) {
+      const gap = desired[key] - compactFrame.current[key];
+      if (Math.abs(gap) < 0.0001) compactFrame.current[key] = desired[key];
+      else {
+        compactFrame.current[key] +=
+          gap * (1 - Math.exp(-Math.min(dt, 0.05) * 12));
+        movingFocus = true;
+      }
+    }
     present(displayed.current, 1 - (1 - entrance.current) ** 3, aspect.current);
     const active =
       Math.abs(displayed.current - targetRef.current.progress) > 0.0001 ||
       entrance.current < 1 ||
+      movingFocus ||
       Math.abs(aspect.current - targetAspect) > 0.0001;
     if (process.env.NODE_ENV === 'development') {
       const now = performance.now(),
@@ -461,6 +512,11 @@ function Choreography({
         JSON.stringify({
           progress: Math.round(displayed.current * 1000) / 1000,
           active,
+          compactCenter: targetRef.current.compact
+            ? landingCompactPose(displayed.current, targetRef.current.compact)
+                .center
+            : null,
+          opticalZoom: camera instanceof PerspectiveCamera ? camera.zoom : 1,
           prepared: prepared.current,
           entrance: Math.round(entrance.current * 1000) / 1000,
           preparationMs: record.preparationMs,

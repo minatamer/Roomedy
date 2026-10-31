@@ -5,6 +5,8 @@ import { landingSurfaces } from '../apps/frontend/src/features/landing/finish-mo
 import {
   advanceScroll,
   landingFraming,
+  landingCompactLayout,
+  landingCompactPose,
   landingPixelRatio,
   landingFurniture,
   landingFurniturePose,
@@ -88,6 +90,89 @@ describe('scroll-driven room presentation', () => {
 });
 
 describe('full-viewport landing framing', () => {
+  it('uses only the hero slot for compact composition and preserves wide desktop/short landscape', () => {
+    for (const [w, h] of [
+      [320, 568],
+      [390, 844],
+      [768, 1024],
+      [1024, 768],
+      [1366, 1024],
+    ]) {
+      const layout = landingCompactLayout(w!, h!, h! * 0.45, h! * 0.35)!;
+      expect(layout.center).toBeGreaterThan(0.5);
+      expect(layout.center).toBeLessThanOrEqual(0.82);
+      expect(layout.zoom).toBeGreaterThanOrEqual(0.85);
+      expect(layout.zoom).toBeLessThanOrEqual(1.45);
+    }
+    for (const [w, h] of [
+      [1366, 768],
+      [1280, 600],
+      [844, 390],
+      [1920, 1080],
+    ])
+      expect(landingCompactLayout(w!, h!, 200, 250)).toBeUndefined();
+    expect(landingCompactLayout(NaN, 844, 200, 250)).toBeUndefined();
+    expect(landingCompactLayout(390, 0, 200, 250)).toBeUndefined();
+    expect(landingCompactLayout(390, 844, 0, 0)).toBeUndefined();
+  });
+  it('centers once during the first scroll and never changes center or lens between later chapters', () => {
+    const layout = landingCompactLayout(390, 844, 350, 350)!;
+    let prior = landingCompactPose(0, layout).center;
+    expect(prior).toBe(layout.center);
+    for (let i = 0; i <= 1000; i++) {
+      const p = i / 1000,
+        pose = landingCompactPose(p, layout);
+      expect(pose.zoom).toBe(layout.zoom);
+      expect(pose.center).toBeLessThanOrEqual(prior + 0.000001);
+      expect(Math.abs(pose.center - prior)).toBeLessThan(0.004);
+      if (p >= 0.13) expect(pose.center).toBe(0.5);
+      expect(landingCompactPose(p, layout).center).toBeCloseTo(
+        landingCompactPose(1 - (1 - p), layout).center,
+        12,
+      );
+      prior = pose.center;
+    }
+    expect(landingCompactPose(NaN, layout)).toEqual(
+      landingCompactPose(0, layout),
+    );
+  });
+  it('keeps the projected room anchor at the device center through the story with a constant compact lens', () => {
+    for (const [w, h] of [
+      [320, 568],
+      [390, 844],
+      [768, 1024],
+      [1024, 768],
+    ]) {
+      const aspect = w! / h!,
+        layout = landingCompactLayout(w!, h!, h! * 0.4, h! * 0.4)!;
+      for (const p of [0, 0.07, 0.15, 0.31, 0.49, 0.65, 0.82, 0.9, 1]) {
+        const f = landingFraming(p, aspect),
+          camera = new PerspectiveCamera(38, aspect, 0.1, 80),
+          anchor = new Vector3(0, 0.6, 0)
+            .multiplyScalar(f.scale)
+            .applyAxisAngle(new Vector3(0, 1, 0), f.turn),
+          pose = landingCompactPose(p, layout);
+        camera.position.set(...f.camera);
+        camera.lookAt(new Vector3(...f.lookAt));
+        camera.updateMatrixWorld();
+        const projected = anchor.clone().project(camera);
+        camera.zoom = pose.zoom;
+        camera.setViewOffset(
+          aspect,
+          1,
+          (projected.x * pose.zoom * aspect) / 2,
+          (1 - pose.center * 2 - projected.y * pose.zoom) / 2,
+          aspect,
+          1,
+        );
+        const centered = anchor.project(camera);
+        expect(centered.x).toBeCloseTo(0, 8);
+        expect(centered.y).toBeCloseTo(1 - pose.center * 2, 8);
+        expect(centered.z).toBeGreaterThan(-1);
+        expect(centered.z).toBeLessThan(1);
+      }
+    }
+  });
   it('keeps framing finite and continuous across scroll, reversal and viewport ratios', () => {
     for (const aspect of [0, NaN, Infinity, 0.35, 0.8, 1.3, 1.8, 4]) {
       let prior = landingFraming(0, aspect);

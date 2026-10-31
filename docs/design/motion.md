@@ -1,5 +1,21 @@
 # Roomedy motion and product-language policy
 
+## Stable compact hero and centered story —RM-083,31 October2026
+
+Supersede RM-082 copy-following clear-space bands and per-pose zoom. The compact hero uses actual text, an aria-hidden room slot, then the existing Swipe up to explore control. Measure that slot relative to the hero, so ordinary scrolling cannot alter its geometry. Tablets explicitly use the swipe cue. Keep every original word and typography rule. Later story chapters use normal vertical spacing; remove the38svh/44svh reservations and tablet corner cue. Lighter warm gradients retain a transparent view through copy.
+
+The existing scene interpolates once from the hero position to normalized device center0.5 over progress0–0.13, then keeps that anchor while the original camera/orbit/finish/furniture/wall animation plays. Lens zoom is fixed per viewport shape,0.85–1.45, with no text/chapter/pose-dependent adjustment. A stable room anchor replaces per-pose bounds fitting. Existing frame easing handles actual resize/cold preparation/reversal and settles to idle. Wide desktop remains unchanged; short landscape retains usable side composition. No new frame owner, timer, model, service or canonical room/price action. [Evidence](../validation/RM-083.md).
+
+## Compact room visibility and copy-owned fade —RM-082,31 October2026
+
+On phones and compact/tall tablets, the warm soft fade belongs to the actual copy element, so its absolute pseudo-element grows with wrapped headings, body, cards and CTA. Retire the full-section veil for ordinary compact story chapters. Keep the existing distinct Why/invitation treatment. Stack compact copy below the room, with the tablet scroll cue beside the CTA; short landscape keeps a side composition. Normal wide desktop composition is unchanged.
+
+The existing scroll/resize owner measures visible copy and header clearance, observing copy size as well as chapter height. A presentation-only normalized band feeds the existing prepared scene. Project eight useful room corners, including the actual upright-wall height, and fit them using bounded0.2–1.65 optical zoom/view offset. Keep a90percent width/height margin; decorative fully lowered wall tips can crop like the existing desktop composition. Easing and wake/idle retirement share the original useFrame owner, including cold preparation and resize/reverse. Put imperative lens changes in the canvas-owned Three adapter, not React state; no new frame loop, timer, canvas, request, geometry or canonical room/price action. [Evidence](../validation/RM-082.md).
+
+31 October2026 [RM-063](../tickets/RM-063-keep-estimate-panel-height-and-embed-header.md) makes the actual desktop Estimate card retain the Design properties card's top7px, viewport bottom and height through horizontal expansion/contraction. Roomedy and Back to Design sit inside the settled card. The existing Design header remains painted/in place while that card moves; its inaccessible/hidden embedded counterpart takes over only after the measured animation settles, with exact logo coordinates and retained heading/focus. No new animation owner or timer; original650ms geometry/850ms entering content/150ms exiting fade and interruption/resize handoff remain. Compact drawer geometry stays separate; the Estimate header matches the compact Design logo. [Actual geometry and limits](../validation/RM-063.md).
+
+31 October2026 [RM-062](../tickets/RM-062-animate-the-first-landing-scroll.md) removes the static hero-to-starting-point interval: the existing smooth orbit now spans progress0–0.50 rather than0.28–0.50. Coupled camera lift and room turn visibly respond through the first0–0.15 chapter (10.52degrees of room turn). Exact hero and0.50-onward poses remain, as do later furniture/paint/floor/wall schedules, first-ready entrance, reverse/retargeting and demand-frame sleep. No separate idle loop or new presentation owner. [Actual checks and limits](../validation/RM-062.md).
+
 19 October 2026. Direct owner priority: animations are the highest interaction priority throughout Roomedy, especially in 3D. The pre-review revision queue extends through RM-015O; the owner selected a scroll-driven assembling/rotating/opening furniture landing. Actual owner visual acceptance remains pending.
 
 ## Choreography

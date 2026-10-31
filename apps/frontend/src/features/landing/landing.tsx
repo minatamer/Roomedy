@@ -54,6 +54,11 @@ export function Landing() {
                   Start designing <span aria-hidden="true">↗</span>
                 </Link>
               </div>
+              <div
+                className={styles.heroRoomSpace}
+                data-landing-room-space
+                aria-hidden="true"
+              />
               <SectionScroll className={styles.scrollCue} target="how-it-works">
                 <span className={styles.cueMouse}>
                   <svg viewBox="0 0 24 34" fill="none" aria-hidden="true">

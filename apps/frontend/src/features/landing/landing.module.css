@@ -170,6 +170,9 @@
     opacity: var(--copy-opacity, 1);
   }
 }
+.heroRoomSpace {
+  display: none;
+}
 .hero h1 {
   font-size: clamp(48px, 5.6vw, 88px);
   line-height: 1.02;
@@ -806,9 +809,6 @@
     padding: 85px 24px 44px;
     align-items: flex-start;
   }
-  .chapter:not(.hero):not(.why):not(.invitation) {
-    padding-top: 38svh;
-  }
   .copy {
     max-width: 100%;
   }
@@ -961,6 +961,84 @@
     grid-row: auto;
   }
 }
+/* Keep the room clear; this veil grows with the actual wrapped copy. */
+@media (max-width: 1100px), (max-aspect-ratio: 7/5) and (min-height: 601px) {
+  .chapter:not(.why):not(.invitation)::before {
+    display: none;
+  }
+  .copy {
+    isolation: isolate;
+  }
+  .cueMouse {
+    display: none;
+  }
+  .cueTouch {
+    display: inline-flex;
+  }
+  .copy::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -32px -40px;
+    pointer-events: none;
+    background: linear-gradient(90deg, #efe1ca99, #efe1ca73 60%, #efe1ca30);
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent,
+        #000 32px,
+        #000 calc(100% - 32px),
+        transparent
+      ),
+      linear-gradient(
+        to right,
+        transparent,
+        #000 40px,
+        #000 calc(100% - 40px),
+        transparent
+      );
+    mask-composite: intersect;
+  }
+}
+@media (max-width: 600px),
+  (max-width: 1100px) and (min-height: 601px),
+  (max-aspect-ratio: 7/5) and (min-height: 601px) {
+  .chapter {
+    padding-inline: clamp(24px, 6vw, 60px);
+  }
+  .chapter:not(.hero) {
+    padding-block: 90px 50px;
+  }
+  .copy,
+  .hero .copy {
+    width: min(540px, 100%);
+    max-width: 100%;
+  }
+  .hero {
+    display: grid;
+    grid-template-rows: auto minmax(220px, 1fr) auto;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 16px;
+    padding-top: 100px;
+    padding-bottom: 24px;
+  }
+  .heroRoomSpace {
+    display: block;
+    min-height: 220px;
+    pointer-events: none;
+  }
+  .hero .scrollCue {
+    justify-self: center;
+    margin-top: 0;
+  }
+  .cueMouse {
+    display: none;
+  }
+  .cueTouch {
+    display: inline-flex;
+  }
+}
 @media (max-height: 600px) {
   .chapter {
     padding-block: 90px 35px;
@@ -982,11 +1060,24 @@
     font-size: 40px;
   }
 }
+@media (max-width: 600px) and (max-height: 600px) {
+  .hero {
+    justify-content: stretch;
+    padding-top: 90px;
+  }
+}
+@media (min-width: 601px) and (max-width: 1100px) and (max-height: 600px) {
+  .copy,
+  .hero .copy {
+    width: min(480px, 51vw);
+    max-width: 51vw;
+  }
+}
 
 .houseLoader {
   position: absolute;
   left: calc(50% + var(--room-shift, 0%));
-  top: 48%;
+  top: var(--room-center, 48%);
   width: 116px;
   transform: translate(-50%, -50%);
   color: #67462e;

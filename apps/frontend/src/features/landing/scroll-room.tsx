@@ -4,7 +4,12 @@ import type { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import type { ScrollTarget } from './scroll-motion';
-import { landingChapterProgress, landingFraming } from './scroll-motion';
+import {
+  landingChapterProgress,
+  landingFraming,
+  landingCompactLayout,
+  landingCompactPose,
+} from './scroll-motion';
 import { HouseLoader } from './house-loader';
 import styles from './landing.module.css';
 import {
@@ -54,6 +59,9 @@ export function ScrollRoom() {
       (element) => ({ element, y: '', opacity: '' }),
     );
     const quote = journey.querySelector<HTMLElement>('[data-landing-estimate]'),
+      heroSpace = journey.querySelector<HTMLElement>(
+        '[data-landing-room-space]',
+      ),
       finish = quote?.querySelector<HTMLElement>('[data-example-finish]'),
       floor = quote?.querySelector<HTMLElement>('[data-example-floor]'),
       total = quote?.querySelector<HTMLElement>('[data-example-total]'),
@@ -103,17 +111,33 @@ export function ScrollRoom() {
           const bounds = chapter.element.getBoundingClientRect();
           return {
             chapter,
+            top: bounds.top,
             distance:
               (bounds.top + Math.min(bounds.height, height) / 2 - height / 2) /
               Math.max(1, height),
             offset: bounds.top - rect.top,
           };
         });
+      const slot = heroSpace?.getBoundingClientRect();
       aspect = document.documentElement.clientWidth / Math.max(1, height);
+      target.current.compact = slot
+        ? landingCompactLayout(
+            window.innerWidth,
+            height,
+            slot.top - (positions[0]?.top ?? 0),
+            slot.height,
+          )
+        : undefined;
       target.current.progress = landingChapterProgress(
         -rect.top,
         positions.map(({ offset }) => offset),
       );
+      if (target.current.compact)
+        element.style.setProperty(
+          '--room-center',
+          `${landingCompactPose(target.current.progress, target.current.compact).center * 100}%`,
+        );
+      else element.style.removeProperty('--room-center');
       const transform = `translate3d(0, ${target.current.progress * -36}px, 0)`;
       if (photo.current && transform !== photoTransform) {
         photo.current.style.transform = transform;
@@ -145,7 +169,12 @@ export function ScrollRoom() {
     observer.observe(element);
     const resize = new ResizeObserver(schedule);
     resize.observe(journey);
-    for (const chapter of chapters) resize.observe(chapter.element);
+    if (heroSpace) resize.observe(heroSpace);
+    for (const chapter of chapters) {
+      resize.observe(chapter.element);
+      if (chapter.element.firstElementChild)
+        resize.observe(chapter.element.firstElementChild);
+    }
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     measure();
