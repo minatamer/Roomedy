@@ -7,7 +7,7 @@ import { readSearchAction } from '../apps/backend/src/providers/web-search.js';
 import { VERSIONS } from '@roomedy/contracts/policy';
 import { sourcingInputSchema } from '@roomedy/contracts/operations';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
-import { createCostDraft } from '../apps/frontend/src/features/cost/state.js';
+import { sampleEstimateOffers } from '@roomedy/spatial';
 import { buildSourcingBrief } from '../apps/frontend/src/features/cost/brief.js';
 import {
   normalizeSourcing,
@@ -18,8 +18,7 @@ import { sourcingFakeResponse } from '../apps/backend/src/sourcing/fake.js';
 import { shoppingLocality } from '../apps/frontend/src/features/cost/journey.js';
 
 function fixture(country = 'DE') {
-  const room = createRoomFixture('sample'),
-    draft = createCostDraft(room, `en-${country}`);
+  const room = createRoomFixture('sample');
   const input = sourcingInputSchema.parse({
     schemaVersion: VERSIONS.schema,
     catalogueVersion: VERSIONS.catalogue,
@@ -39,7 +38,7 @@ function fixture(country = 'DE') {
   const url = 'https://merchant.example/product',
     imageUrl = 'https://cdn.example/product.jpg';
   const offer = {
-    ...draft.offers.find((o) => o.kind === 'floor')!,
+    ...sampleEstimateOffers().find((o) => o.kind === 'floor')!,
     market: { country: 'FR', city: 'Paris', currency: 'USD' as const },
     source: {
       kind: 'sourced' as const,
@@ -67,6 +66,53 @@ function fixture(country = 'DE') {
   return { input, reply, url, imageUrl };
 }
 describe('bounded product photos and regional source evidence', () => {
+  it('retains three independent product choices without promoting an unopened price into an estimate offer', () => {
+    const { input, reply, url } = fixture();
+    const first = reply.candidates[0]!;
+    const candidates = [0, 1, 2].map((index) => {
+      const productUrl = `${url}/${index}`;
+      return {
+        ...structuredClone(first),
+        url: productUrl,
+        listing: {
+          priceMinor: 4200 + index * 100,
+          currency: 'USD' as const,
+          country: 'FR',
+          unit: 'pack' as const,
+          volumeMl: null,
+          observedAt: 123,
+        },
+        offer: {
+          ...first.offer!,
+          source: { ...first.offer!.source, url: productUrl },
+        },
+      };
+    });
+    const checked = sourcingReplySchema.parse({ candidates, notes: [] });
+    let id = 0;
+    const result = normalizeSourcing(
+      input,
+      checked,
+      {
+        calls: 3,
+        opened: candidates.slice(0, 2).map((c) => c.url),
+        sources: candidates.map((c) => c.url),
+      },
+      false,
+      124,
+      () => `offer_${++id}`,
+    );
+    expect(result.candidates).toHaveLength(3);
+    expect(result.candidates.map((c) => c.listing?.priceMinor)).toEqual([
+      4200, 4300, 4400,
+    ]);
+    expect(result.candidates.map((c) => !!c.offer)).toEqual([
+      true,
+      true,
+      false,
+    ]);
+    expect(result.candidates[2]!.imageUrl).toBe(first.imageUrl);
+  });
   it('does not promote model-authored FX into either an offer or a display listing', () => {
     const { input, reply, url } = fixture();
     const c = reply.candidates[0]!;
@@ -251,11 +297,10 @@ describe('bounded product photos and regional source evidence', () => {
     ).toBeNull();
   });
   it('offers size review only when a product changes a known axis or fills an unknown one', () => {
-    const room = createRoomFixture('sample'),
-      draft = createCostDraft(room, 'en-US');
+    const room = createRoomFixture('sample');
     const piece = room.furniture[0]!,
       brief = buildSourcingBrief(room, piece.id)!;
-    const offer = draft.offers.find(
+    const offer = sampleEstimateOffers().find(
       (o) => o.kind === 'furniture' && o.category === 'bed',
     );
     if (offer?.kind !== 'furniture' || !brief.size) throw new Error('fixture');

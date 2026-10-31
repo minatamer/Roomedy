@@ -4,6 +4,49 @@ import type {
   RoomEstimate,
 } from '@roomedy/contracts/estimates';
 import { quantity } from './state';
+import type { RoomDocument } from '@roomedy/contracts/room';
+import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
+
+/** Merge identical unresolved paint rows for reading only; financial lines stay intact. */
+export function displayEstimateLines(
+  lines: EstimateLine[],
+  room: RoomDocument,
+) {
+  const groups = new Map<string, EstimateLine[]>();
+  for (const line of lines) {
+    const target = line.targets[0];
+    const key =
+      line.category === 'walls' &&
+      line.pricing === 'unpriced' &&
+      / wall paint$/.test(line.label) &&
+      line.targets.length === 1 &&
+      target?.kind === 'surface' &&
+      target.surface !== 'floor'
+        ? JSON.stringify([
+            roomSurface(room.room, target.surface),
+            roomSurfaceDetail(room.room, target.surface).sheen,
+          ])
+        : line.id;
+    groups.set(key, [...(groups.get(key) ?? []), line]);
+  }
+  return [...groups.values()].map((group) =>
+    group.length === 1
+      ? group[0]!
+      : {
+          ...group[0]!,
+          label:
+            group.length === 4
+              ? 'Paint for all four walls'
+              : `Paint for ${group.length} matching walls`,
+          targets: group.flatMap((line) => line.targets),
+          notes: group.flatMap((line) => [
+            line.label,
+            line.rule,
+            ...line.notes,
+          ]),
+        },
+  );
+}
 
 export function paintCoverage(note: string) {
   const match =
@@ -81,6 +124,8 @@ export function estimateGroups(estimate: RoomEstimate) {
   });
 }
 export function lineSummary(line: EstimateLine) {
+  if (line.pricing === 'listed')
+    return 'Selected listing price × quantity. Confirm fit and coverage before ordering.';
   return {
     floor: 'Whole packs for the floor in your plan.',
     walls: 'Paint for your walls, rounded to whole cans.',

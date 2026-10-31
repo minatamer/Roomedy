@@ -8,6 +8,7 @@ import {
   calculateRoomEstimate,
 } from '@roomedy/spatial';
 import type { SessionSnapshot } from './state';
+import { selectedPricesValid } from '../cost/listed-prices';
 
 export type ProjectFailure =
   | 'too-large'
@@ -75,7 +76,9 @@ export function validateProject(input: unknown): Result<Project> {
   const cost = parsed.data.cost;
   if (
     cost &&
-    !calculateRoomEstimate(parsed.data.current, cost.settings, cost.offers).ok
+    (!selectedPricesValid(parsed.data.current, cost) ||
+      !calculateRoomEstimate(parsed.data.current, cost.settings, cost.offers)
+        .ok)
   )
     return { ok: false, code: 'invalid-project' };
   for (const version of parsed.data.versions) {
@@ -87,6 +90,7 @@ export function validateProject(input: unknown): Result<Project> {
       version.pricing.offers,
     );
     if (
+      !selectedPricesValid(version.room, version.pricing) ||
       !result.ok ||
       JSON.stringify(result.estimate) !== JSON.stringify(version.estimate)
     )
@@ -138,6 +142,9 @@ export function projectOf(state: SessionSnapshot): Project | null {
           settings: state.cost.settings,
           offers: state.cost.offers,
           budgetMinor: state.cost.budgetMinor,
+          ...(state.cost.productChoices
+            ? { productChoices: state.cost.productChoices }
+            : {}),
         }
       : null,
     versions: state.estimateVersions,

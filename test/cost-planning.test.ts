@@ -489,6 +489,17 @@ describe('computed budgets and typed planning tools', () => {
 describe('collective market requests', () => {
   it('routes whole-room research through the shared market action while keeping target searches specific', () => {
     const room = createRoomFixture('sample');
+    for (const text of [
+      'Find market options for my room.',
+      'Find options for my room',
+      'Find options',
+      'find market options!',
+    ])
+      expect(costIntent(text, room, 'USD', room.furniture[0]!.id)).toEqual({
+        kind: 'research',
+        key: 'all',
+        query: '',
+      });
     expect(
       costIntent('Find options for my whole room', room, 'USD', null),
     ).toMatchObject({ kind: 'research', key: 'all' });

@@ -1,10 +1,10 @@
 import type { RoomDocument } from '@roomedy/contracts/room';
-import type { EstimateSettings } from '@roomedy/contracts/estimates';
+import type {
+  EstimateOffer,
+  EstimateSettings,
+} from '@roomedy/contracts/estimates';
 import { shoppingCountries } from '@roomedy/contracts/estimates';
-import {
-  defaultEstimateSettings,
-  sampleEstimateOffers,
-} from '@roomedy/spatial';
+import { defaultEstimateSettings } from '@roomedy/spatial';
 import type { CostDraft } from './state';
 import { shoppingCountry } from './shopping-countries';
 
@@ -36,35 +36,35 @@ export function researchLocality(
 export function simpleEstimateInputs(
   room: RoomDocument,
   locality: EstimateSettings['locality'] = shoppingLocality(),
-) {
+): { settings: EstimateSettings; offers: EstimateOffer[] } {
   const settings = defaultEstimateSettings(room);
   settings.locality = { ...locality };
   settings.demoScope = 'materials';
   settings.floor.preparation = 'exclude';
   settings.floor.enabled = false;
   settings.floor.offerId = null;
+  settings.floor.underlayOfferId = null;
+  settings.floor.trimOfferId = null;
   settings.floor.retainTrim = true;
   settings.walls.forEach((wall) => {
+    wall.paintOfferId = null;
     wall.primer = 'exclude';
+    wall.primerOfferId = null;
   });
   settings.services.forEach((service) => {
     service.enabled = false;
+    service.offerId = null;
   });
   settings.fulfilment = 'collection';
+  settings.deliveries = [];
   settings.furniture.forEach((item) => {
-    if (item.mode === 'reuse')
-      item.components.forEach((part) => {
-        part.mode = 'reuse';
-      });
+    item.offerId = null;
+    item.components.forEach((part) => {
+      part.offerId = null;
+      if (item.mode === 'reuse') part.mode = 'reuse';
+    });
   });
-  const offers = sampleEstimateOffers().map((offer) => ({
-    ...offer,
-    market:
-      settings.locality.country === 'ZZ'
-        ? { ...offer.market }
-        : { ...settings.locality },
-  }));
-  return { settings, offers };
+  return { settings, offers: [] };
 }
 export function costSectionRequest(text: string): CostSection | null {
   const t = text
@@ -82,7 +82,7 @@ export function costSectionRequest(text: string): CostSection | null {
         ? 'floor'
         : 'walls';
   if (
-    /^(?:show |review |see |open )?(?:my |the |full )?(?:estimate|breakdown|summary|all costs)$/.test(
+    /^(?:(?:show|review|see|open)(?: me)? )?(?:(?:my|the|your) )?(?:full )?(?:estimate|(?:cost )?breakdown|summary|all costs)$/.test(
       t,
     )
   )

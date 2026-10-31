@@ -3,10 +3,25 @@ import {
   reconcileCost,
   validatedCost,
   pricingState,
+  money,
+  hasChosenPrices,
 } from '../cost/state';
-import { estimateStateSchema } from '@roomedy/contracts/estimates';
+import {
+  estimateStateSchema,
+  selectedTakeoffSchema,
+} from '@roomedy/contracts/estimates';
 import { idSchema } from '@roomedy/contracts/primitives';
 import type { EstimateState } from '@roomedy/contracts/estimates';
+import { productChoicesSchema } from '@roomedy/contracts/estimates';
+import type { ProductChoice } from '@roomedy/contracts/estimates';
+import {
+  allProductsChosen,
+  currentProductChoices,
+  productChoiceScope,
+  choiceOfferActive,
+} from '../cost/product-choices';
+import { marketTargets, marketTargetForKey } from '../cost/market-research';
+import { selectedPriceInputs } from '../cost/listed-prices';
 import type { ProjectDestination } from '../cost/navigation';
 import type {
   OperationIdentity,
@@ -65,6 +80,9 @@ interface AssistantPreview {
 export class SessionController {
   readonly costReveal = new MessageReveal();
   private costMessageId = 0;
+  private lastChoiceCompletion = '';
+  private lastGuideCompletion = '';
+  private lastPriceRepair = '';
   private state: SessionSnapshot;
   private readonly now: () => number;
   private readonly id: () => string;
@@ -550,6 +568,146 @@ export class SessionController {
     settings: unknown,
     offers: unknown = this.state.cost?.offers,
   ): boolean {
+    const parsed = estimateStateSchema.shape.settings.safeParse(settings);
+    if (
+      !parsed.success ||
+      (parsed.data.selectedPrices &&
+        JSON.stringify(parsed.data.selectedPrices) !==
+          JSON.stringify(this.state.cost?.settings.selectedPrices ?? []))
+    )
+      return false;
+    if (this.state.cost?.settings.selectedPrices)
+      parsed.data.selectedPrices = structuredClone(
+        this.state.cost.settings.selectedPrices,
+      );
+    return this.writeCost(parsed.data, offers, this.state.cost?.productChoices);
+  }
+  /** Only the explicit product action can author these preferences. */
+  chooseCostProduct(
+    settings: unknown,
+    offers: unknown,
+    input: unknown,
+    costRevision: number,
+    roomRevision: number,
+    announceCompletion = true,
+  ) {
+    return this.chooseCostProducts(
+      settings,
+      offers,
+      [input],
+      costRevision,
+      roomRevision,
+      announceCompletion,
+    );
+  }
+  /** One explicit visitor action, one validated financial transaction and Undo. */
+  chooseCostProducts(
+    settings: unknown,
+    offers: unknown,
+    input: unknown,
+    costRevision: number,
+    roomRevision: number,
+    announceCompletion = true,
+  ) {
+    const state = this.state;
+    if (
+      !this.canEdit() ||
+      !state.workspace ||
+      !state.cost ||
+      state.destination !== 'cost' ||
+      state.pending ||
+      state.candidate ||
+      state.cost.revision !== costRevision ||
+      state.workspace.current.roomRevision !== roomRevision
+    )
+      return false;
+    const parsed = productChoicesSchema.safeParse(input);
+    if (
+      !parsed.success ||
+      !parsed.data.length ||
+      parsed.data.some(
+        (choice) =>
+          choice.scope !==
+          productChoiceScope(state.workspace!.current, state.cost!, choice.key),
+      )
+    )
+      return false;
+    if (
+      parsed.data.every(
+        (choice) =>
+          JSON.stringify(
+            state.cost!.productChoices?.find((item) => item.key === choice.key),
+          ) === JSON.stringify(choice),
+      )
+    )
+      return true;
+    if (!allProductsChosen(state.workspace.current, state.cost))
+      this.lastChoiceCompletion = '';
+    const keys = new Set(
+      marketTargets(state.workspace.current).map((target) => target.key),
+    );
+    const replaced = new Set(parsed.data.map((choice) => choice.key));
+    const choices = [
+      ...(state.cost.productChoices ?? []).filter(
+        (item) => !replaced.has(item.key) && keys.has(item.key),
+      ),
+      ...parsed.data,
+    ];
+    if (!this.writeCost(settings, offers, choices)) return false;
+    if (announceCompletion) this.announceChosenProducts();
+    return true;
+  }
+  completeProductChoices(passId: number) {
+    const state = this.state;
+    if (
+      !Number.isSafeInteger(passId) ||
+      passId < 1 ||
+      !this.canEdit() ||
+      state.destination !== 'cost' ||
+      state.pending ||
+      state.candidate ||
+      !state.workspace ||
+      !state.cost ||
+      !allProductsChosen(state.workspace.current, state.cost)
+    )
+      return false;
+    const key = JSON.stringify([
+      state.generation,
+      state.workspace.workspaceId,
+      passId,
+    ]);
+    if (key === this.lastGuideCompletion) return false;
+    if (!this.announceChosenProducts(true)) return false;
+    this.lastGuideCompletion = key;
+    return true;
+  }
+  private announceChosenProducts(force = false) {
+    const current = this.state;
+    if (
+      current.workspace &&
+      current.cost &&
+      allProductsChosen(current.workspace.current, current.cost)
+    ) {
+      const key = JSON.stringify([
+        current.generation,
+        current.workspace.workspaceId,
+        current.cost.revision,
+        currentProductChoices(current.workspace.current, current.cost),
+      ]);
+      if (force || key !== this.lastChoiceCompletion) {
+        if (this.postCostBreakdown(true)) {
+          this.lastChoiceCompletion = key;
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  private writeCost(
+    settings: unknown,
+    offers: unknown,
+    productChoices?: ProductChoice[],
+  ): boolean {
     if (
       !this.canEdit() ||
       !this.state.workspace ||
@@ -557,7 +715,21 @@ export class SessionController {
       this.state.candidate
     )
       return false;
-    const cost = validatedCost(this.state.workspace.current, settings, offers);
+    const parsed = estimateStateSchema.shape.settings.safeParse(settings);
+    if (!parsed.success) return false;
+    const prices = selectedPriceInputs(this.state.workspace.current, {
+      settings: parsed.data,
+      offers: [],
+      budgetMinor: null,
+      ...(productChoices ? { productChoices } : {}),
+    });
+    if (prices.length) parsed.data.selectedPrices = prices;
+    else delete parsed.data.selectedPrices;
+    const cost = validatedCost(
+      this.state.workspace.current,
+      parsed.data,
+      offers,
+    );
     if (!cost) {
       this.notify(
         'Review the estimate units, products and currency before applying.',
@@ -566,6 +738,9 @@ export class SessionController {
     }
     const pricing = {
       ...pricingState(cost),
+      ...(productChoices?.length
+        ? { productChoices: structuredClone(productChoices) }
+        : {}),
       budgetMinor:
         cost.settings.locality.currency ===
         this.state.cost.settings.locality.currency
@@ -587,6 +762,134 @@ export class SessionController {
       ),
       pricing,
     ).ok;
+  }
+  /** Upgrade an existing working selection once; saved snapshots remain immutable. */
+  repairSelectedPrices() {
+    const state = this.state;
+    if (
+      !state.cost ||
+      !state.workspace ||
+      state.destination !== 'cost' ||
+      state.pending ||
+      state.candidate
+    )
+      return false;
+    const repairKey = JSON.stringify([
+      state.generation,
+      state.workspace.workspaceId,
+      state.cost.productChoices,
+      'whole-room-takeoff-2',
+    ]);
+    if (repairKey === this.lastPriceRepair) return false;
+    const prices = selectedPriceInputs(state.workspace.current, state.cost);
+    const settings = structuredClone(state.cost.settings);
+    for (const choice of currentProductChoices(
+      state.workspace.current,
+      state.cost,
+    )) {
+      if (
+        !choice.offerId ||
+        !choiceOfferActive(choice, state.cost) ||
+        !marketTargetForKey(state.workspace.current, choice.key)
+          ?.matchingWalls ||
+        !state.cost.offers.some(
+          (offer) =>
+            offer.id === choice.offerId &&
+            offer.kind === 'paint' &&
+            offer.source.url === choice.url,
+        )
+      )
+        continue;
+      for (const wall of settings.walls) {
+        if (
+          wall.enabled &&
+          wall.paintOfferId === null &&
+          marketTargetForKey(state.workspace.current, `surface:${wall.wall}`)
+            ?.key === choice.key
+        )
+          wall.paintOfferId = choice.offerId;
+      }
+    }
+    if (
+      JSON.stringify(prices) ===
+        JSON.stringify(state.cost.settings.selectedPrices ?? []) &&
+      JSON.stringify(settings) === JSON.stringify(state.cost.settings)
+    )
+      return false;
+    if (!this.writeCost(settings, state.cost.offers, state.cost.productChoices))
+      return false;
+    this.lastPriceRepair = repairKey;
+    this.announceChosenProducts();
+    return true;
+  }
+  setSelectedQuantity(key: string, quantity: number, revision: number) {
+    const state = this.state;
+    if (
+      !state.cost ||
+      !state.workspace ||
+      state.destination !== 'cost' ||
+      state.pending ||
+      state.candidate ||
+      state.cost.revision !== revision ||
+      !Number.isSafeInteger(quantity) ||
+      quantity < 1 ||
+      quantity > 100_000
+    )
+      return false;
+    const settings = structuredClone(state.cost.settings);
+    const price = settings.selectedPrices?.find((price) => price.key === key);
+    if (
+      !price ||
+      price.unit === 'm2' ||
+      price.targets.some((target) => target.kind === 'furniture')
+    )
+      return false;
+    price.quantity = quantity;
+    price.quantityConfirmed = true;
+    if (price.takeoff) price.takeoff.mode = 'manual';
+    if (!this.writeCost(settings, state.cost.offers, state.cost.productChoices))
+      return false;
+    this.announceChosenProducts();
+    return true;
+  }
+  setSelectedTakeoff(
+    key: string,
+    updates: { coverageMm2?: number; volumeMl?: number; automatic?: boolean },
+    revision: number,
+  ) {
+    const state = this.state;
+    if (
+      !state.cost ||
+      !state.workspace ||
+      state.destination !== 'cost' ||
+      state.pending ||
+      state.candidate ||
+      state.cost.revision !== revision
+    )
+      return false;
+    const settings = structuredClone(state.cost.settings),
+      price = settings.selectedPrices?.find((price) => price.key === key);
+    if (!price?.takeoff) return false;
+    const takeoff = price.takeoff;
+    if (updates.coverageMm2 !== undefined) {
+      if (takeoff.kind === 'floor') takeoff.coverageMm2 = updates.coverageMm2;
+      else takeoff.coverageMm2PerLitre = updates.coverageMm2;
+      takeoff.coverageSource = 'visitor';
+    }
+    if (updates.volumeMl !== undefined) {
+      if (takeoff.kind !== 'paint') return false;
+      takeoff.volumeMl = updates.volumeMl;
+      takeoff.volumeSource = 'visitor';
+    }
+    if (updates.automatic) {
+      takeoff.mode = 'automatic';
+      price.quantityConfirmed = false;
+    }
+    if (!selectedTakeoffSchema.safeParse(takeoff).success) return false;
+    if (!this.writeCost(settings, state.cost.offers, state.cost.productChoices))
+      return false;
+    this.announceChosenProducts();
+    return true;
   }
   chooseShoppingLocation(
     country: string,
@@ -650,6 +953,27 @@ export class SessionController {
       label.length > 120
     )
       return { ok: false, code: 'invalid-input' };
+    // Product preferences are visitor-owned; a pricing proposal cannot add/change them.
+    if (
+      parsed.data.settings.selectedPrices &&
+      JSON.stringify(parsed.data.settings.selectedPrices) !==
+        JSON.stringify(this.state.cost.settings.selectedPrices ?? [])
+    )
+      return { ok: false, code: 'invalid-input' };
+    if (this.state.cost.settings.selectedPrices)
+      parsed.data.settings.selectedPrices = structuredClone(
+        this.state.cost.settings.selectedPrices,
+      );
+    if (
+      parsed.data.productChoices &&
+      JSON.stringify(parsed.data.productChoices) !==
+        JSON.stringify(this.state.cost.productChoices ?? [])
+    )
+      return { ok: false, code: 'invalid-input' };
+    if (this.state.cost.productChoices)
+      parsed.data.productChoices = structuredClone(
+        this.state.cost.productChoices,
+      );
     const command = actions.length
       ? this.envelope(structuredClone(actions))
       : null;
@@ -660,6 +984,11 @@ export class SessionController {
     const room = evaluation?.ok
       ? evaluation.room
       : this.state.workspace.current;
+    if (parsed.data.settings.selectedPrices)
+      parsed.data.settings.selectedPrices = selectedPriceInputs(
+        room,
+        parsed.data,
+      );
     const before = calculateRoomEstimate(
         this.state.workspace.current,
         this.state.cost.settings,
@@ -732,6 +1061,37 @@ export class SessionController {
       ).ok
     )
       return { ok: false, code: 'invalid-input' };
+    // An explicit fit-and-price Apply can rebind the same already chosen product
+    // to its newly accepted dimensions. Ordinary design changes cannot do this.
+    const priorChoices = currentProductChoices(
+      this.state.workspace.current,
+      this.state.cost,
+    );
+    let reboundChoice = false;
+    if (preview.pricing.productChoices)
+      preview.pricing.productChoices = preview.pricing.productChoices.map(
+        (choice) => {
+          if (
+            priorChoices.some(
+              (prior) => JSON.stringify(prior) === JSON.stringify(choice),
+            ) &&
+            !choiceOfferActive(choice, this.state.cost!) &&
+            choiceOfferActive(choice, preview.pricing)
+          ) {
+            const scope = productChoiceScope(room, preview.pricing, choice.key);
+            if (scope) {
+              reboundChoice = true;
+              return { ...choice, scope };
+            }
+          }
+          return choice;
+        },
+      );
+    if (preview.pricing.settings.selectedPrices)
+      preview.pricing.settings.selectedPrices = selectedPriceInputs(
+        room,
+        preview.pricing,
+      );
     const financialChange =
       JSON.stringify(preview.pricing) !==
       JSON.stringify(pricingState(this.state.cost));
@@ -747,17 +1107,69 @@ export class SessionController {
       this.cancelPreview();
       return { ok: true, changed: false };
     }
-    return this.commitCommand(
+    const committed = this.commitCommand(
       { commandId },
       preview.label,
       result,
       preview.pricing,
     );
+    if (committed.ok && reboundChoice) this.announceChosenProducts();
+    return committed;
   }
   costMessage(role: 'visitor' | 'assistant', text: string, lineIds?: string[]) {
+    return this.appendCostMessage(role, text, lineIds);
+  }
+  /** Local calculation reply; provider mode never changes this command. */
+  costBreakdown() {
+    return this.postCostBreakdown(false);
+  }
+  private postCostBreakdown(completed: boolean) {
+    if (
+      !this.active() ||
+      this.state.destination !== 'cost' ||
+      this.state.candidate ||
+      !this.state.workspace ||
+      !this.state.cost ||
+      this.state.cost.settings.locality.currency !== 'USD' ||
+      this.state.cost.roomRevision !== this.state.workspace.current.roomRevision
+    )
+      return false;
+    const result = calculateRoomEstimate(
+      this.state.workspace.current,
+      this.state.cost.settings,
+      this.state.cost.offers,
+    );
+    if (!result.ok) return false;
+    const estimate = result.estimate;
+    if (
+      !completed &&
+      !hasChosenPrices(estimate, this.state.cost.offers) &&
+      !currentProductChoices(this.state.workspace.current, this.state.cost)
+        .length
+    )
+      return this.appendCostMessage(
+        'assistant',
+        'Let’s find options for your furniture, flooring and walls first. Choose products and use their prices, then I can put your estimate together.',
+        undefined,
+        'find-options',
+      );
+    return this.appendCostMessage(
+      'assistant',
+      `${completed ? 'You’ve chosen a product for every item. ' : ''}Here’s your cost breakdown: ${money(estimate.knownTotalMinor, 'USD')} ${estimate.complete ? 'planning total' : 'known subtotal'}.${estimate.unpricedCount ? ' Choose products for the items that still need a price.' : ''}${estimate.lines.some((line) => line.pricing === 'listed') ? ' Listed prices are included provisionally; review quantities, coverage and fit before exporting.' : ''} Open an item for its quantities and sources.`,
+      undefined,
+      completed ? 'selection-summary' : 'breakdown',
+    );
+  }
+  private appendCostMessage(
+    role: 'visitor' | 'assistant',
+    text: string,
+    lineIds?: string[],
+    kind?: 'breakdown' | 'find-options' | 'selection-summary',
+  ) {
     if (
       !this.active() ||
       !this.state.cost ||
+      this.state.destination !== 'cost' ||
       !text.trim() ||
       text.length > 4000
     )
@@ -774,6 +1186,7 @@ export class SessionController {
         id: ++this.costMessageId,
         role,
         text: text.trim(),
+        ...(kind && role === 'assistant' ? { kind } : {}),
         ...(cards.length ? { lineIds: cards } : {}),
         roomRevision: this.state.cost.roomRevision,
         costRevision: this.state.cost.revision,

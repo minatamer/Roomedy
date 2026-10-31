@@ -4,10 +4,47 @@ import {
   readableEstimateNote,
   humanQuantity,
   estimateGroups,
+  displayEstimateLines,
 } from '../apps/frontend/src/features/cost/estimate-presentation.js';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { createCostDraft } from '../apps/frontend/src/features/cost/state.js';
 import { calculateRoomEstimate } from '@roomedy/spatial';
+import { createManualRoom } from '../apps/frontend/src/features/session/entry/manual-room.js';
+import { simpleEstimateInputs } from '../apps/frontend/src/features/cost/journey.js';
+
+it('summarizes matching unpriced paint while preserving every wall and canonical price unknown', () => {
+  const room = createManualRoom('partial');
+  const check = (count: number) => {
+    const draft = simpleEstimateInputs(room),
+      result = calculateRoomEstimate(room, draft.settings, draft.offers);
+    if (!result.ok) throw Error(result.code);
+    const before = JSON.stringify(result.estimate),
+      paint = result.estimate.lines.filter((line) => line.category === 'walls'),
+      display = displayEstimateLines(paint, room);
+    expect(paint).toHaveLength(4);
+    expect(display).toHaveLength(count);
+    expect(
+      new Set(
+        display.flatMap((line) => line.targets).map((t) => JSON.stringify(t)),
+      ),
+    ).toEqual(
+      new Set(
+        paint.flatMap((line) => line.targets).map((t) => JSON.stringify(t)),
+      ),
+    );
+    expect(display.every((line) => line.amountMinor === null)).toBe(true);
+    expect(JSON.stringify(result.estimate)).toBe(before);
+  };
+  check(1);
+  const base = room.room.surfaces!.walls!;
+  if (base.color.status === 'unknown')
+    throw Error('Expected the manual wall colour');
+  room.room.surfaces!.east = {
+    ...structuredClone(base),
+    color: { ...base.color, value: '#123456' },
+  };
+  check(2);
+});
 it('formats real paint coverage into readable wall/area/coat facts without changing original evidence', () => {
   const note = 'north: 2 paint coat(s); 10020000/1000000 m² net.';
   expect(paintCoverage(note)).toEqual({

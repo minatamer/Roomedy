@@ -112,6 +112,8 @@ export function versionChanges(
     reasons.push(
       'Recorded products, rates, tax treatment, delivery or source evidence changed.',
     );
+  if (JSON.stringify(a.productChoices) !== JSON.stringify(b.productChoices))
+    reasons.push('Selected products changed.');
   const changes = costLineChanges(before.estimate, after.estimate);
   if (changes.removed.length || changes.added.length)
     reasons.push(

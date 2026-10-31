@@ -57,6 +57,30 @@ export function marketTargets(room: RoomDocument): MarketTarget[] {
   return targets;
 }
 
+/** A wall request belongs to its complete matching-finish group. */
+export function marketTargetForKey(room: RoomDocument, key: string) {
+  const targets = marketTargets(room),
+    direct = targets.find((target) => target.key === key);
+  if (direct) return direct;
+  const wall = WALLS.find((wall) => key === `surface:${wall}`);
+  if (!wall) return null;
+  const signature = (surface: (typeof WALLS)[number]) =>
+    JSON.stringify([
+      roomSurface(room.room, surface),
+      roomSurfaceDetail(room.room, surface).sheen,
+    ]);
+  return (
+    targets.find((target) => {
+      const item = target.brief.target;
+      return (
+        item.kind === 'surface' &&
+        item.surface !== 'floor' &&
+        signature(item.surface) === signature(wall)
+      );
+    }) ?? null
+  );
+}
+
 /** One visitor-selected finite batch. Each target retains the existing one-operation owner. */
 export function runMarketResearch(
   controller: SessionController,

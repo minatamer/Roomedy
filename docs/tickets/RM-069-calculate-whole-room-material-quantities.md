@@ -1,0 +1,5 @@
+# RM-069 — Calculate whole-room flooring packs and paint cans
+
+31 October2026. Complete locally. Owner points out that one pack/can does not estimate the whole room. Calculate whole packs/cans automatically from measurements, relevant waste/coats, coverage and can size. Deduct wall openings once and group matching walls before rounding. Use actual product data when available; missing specifications use clearly disclosed editable planning assumptions, not invented merchant evidence. Allow manual quantity override and return to automatic. Keep existing explicit overrides, quoted-price/FX/fit boundaries, Undo, current repair, saved history and common chat/PDF totals. No extra research or paid test.
+
+[Exact allocation](../commit-plans/RM-069.md), [receipt](../validation/RM-069.md). Focused math/source/persistence regressions, actual offline fake/simulated-real mobile/desktop/PDF checks, settled repository gate and read-only review. Preserve63prior dirty paths outside overlaps, current services/env, next-env and e53a612/empty index. No restart/Git/deploy/dependency/delegation. Owner physical/merchant/subjective acceptance remains pending.

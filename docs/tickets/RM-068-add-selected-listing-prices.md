@@ -1,0 +1,7 @@
+# RM-068 — Add selected prices to category totals and PDF
+
+31 October2026. Complete locally. Owner’s selected products have visible prices but the estimate shows0and7unpriced lines. Count selected listing prices as provisional planning amounts, retaining clear quantity/fit/source/conditions disclosures. Confirmed quotes remain separate; missing prices still stay unknown. No invented dimensions, coverage, currency conversion or silent room edits.
+
+Use one estimator for displayed category/subtotal, automatic chat and frozen PDF. One shared-wall choice is not four duplicate purchases. Unit-priced furniture sums one unit per chosen piece; known area prices use actual planning takeoff. Unknown pack/can quantities start at one selected unit with clear review/edit controls. Changes/replacements/Undo/recovery/export must remain consistent. Repair prior selected USD references in the current working draft without another research call; do not mutate saved versions. Preserve app-owned price/choice identity and current scope, model guards, bounded records/history/project/versions, completion/no-duplicate behavior and both modes.
+
+[Allocation](../commit-plans/RM-068.md), [receipt](../validation/RM-068.md). Focused calculation/persistence/PDF cases and native offline fake/simulated-live reproduction, totals/quantity/repair/Undo/export, then root gate/review. No paid/live-provider test, env/manual restart/Chrome/delegation/dependency/Git/deploy action; owner aesthetic/physical/merchant/live quality acceptance remains separate.

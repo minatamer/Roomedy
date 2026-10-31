@@ -17,6 +17,7 @@ export type CostIntent =
   | { kind: 'work' }
   | { kind: 'explain' }
   | { kind: 'clarify'; message: string };
+export const FIND_OPTIONS_MESSAGE = 'Find market options for my room.';
 /** A deliberately small, typed local tool router; money is always calculated by the engine. */
 export function costIntent(
   text: string,
@@ -25,6 +26,12 @@ export function costIntent(
   selected: string | null,
 ): CostIntent {
   const lower = text.toLowerCase();
+  if (
+    /^find (?:market )?options(?: for (?:my|the) room)?[.!?]*$/.test(
+      lower.trim(),
+    )
+  )
+    return { kind: 'research', key: 'all', query: '' };
   if (
     /\b(?:budget|under|below|afford)\b|save money/.test(lower) ||
     (/\bcheaper\b/.test(lower) &&

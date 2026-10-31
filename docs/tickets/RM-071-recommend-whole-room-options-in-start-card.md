@@ -1,0 +1,3 @@
+# RM-071 — Recommend finding options for the whole room
+
+31 October2026. Complete locally. The owner finds the pinned Find options shortcut easy to miss and requests the same recommendation inside the interactive welcome card. Add a prominent recommended whole-room action, explain furniture/flooring/wall scope and retain the three individual category choices. Explicit click sends the normal Find options visitor message through the existing shared command; no automatic research on load or new research authority. Same behavior in real/fake mode with existing busy/candidate/expiry guards. Preserve RM-070 chat isolation/retention, current services/env and all prior work. [Allocation](../commit-plans/RM-071.md), [receipt](../validation/RM-071.md).

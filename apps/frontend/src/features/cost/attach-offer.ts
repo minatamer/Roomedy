@@ -7,8 +7,242 @@ import type { CostDraft } from './state';
 import { findCatalogueEntry, calculateRoomEstimate } from '@roomedy/spatial';
 import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import type { SessionController } from '../session/controller';
-import { shoppingCountries } from '@roomedy/contracts/estimates';
+import {
+  shoppingCountries,
+  productChoiceSchema,
+} from '@roomedy/contracts/estimates';
 import type { EstimateOffer } from '@roomedy/contracts/estimates';
+import { sourcingCandidateSchema } from '@roomedy/contracts/sourcing';
+import { productChoiceScope, currentProductChoices } from './product-choices';
+import { money } from './state';
+import { marketTargets } from './market-research';
+
+export function productChosen(
+  room: RoomDocument,
+  draft: CostDraft,
+  brief: SourcingBrief,
+  candidate: SourcingCandidate,
+) {
+  const key =
+    brief.target.kind === 'furniture'
+      ? brief.target.id
+      : brief.target.kind === 'surface'
+        ? `surface:${brief.target.surface}`
+        : '';
+  return currentProductChoices(room, draft).some(
+    (choice) =>
+      choice.key === key &&
+      choice.url === candidate.url &&
+      choice.offerId === (candidate.offer?.id ?? null) &&
+      choice.label === candidate.label,
+  );
+}
+/** A preference is not a quote. Apply a price only through the unchanged quote guards. */
+export function chooseProduct(
+  controller: SessionController,
+  brief: SourcingBrief,
+  raw: SourcingCandidate,
+  costRevision: number,
+  roomRevision: number,
+  simulation: boolean,
+  matchingWalls = false,
+  announceCompletion = true,
+) {
+  if (brief.target.kind === 'service' || brief.kind === 'primer')
+    return selectOffer(
+      controller,
+      brief,
+      raw,
+      costRevision,
+      roomRevision,
+      matchingWalls,
+    );
+  const state = controller.getSnapshot();
+  if (
+    !state.workspace ||
+    !state.cost ||
+    state.destination !== 'cost' ||
+    state.pending ||
+    state.candidate ||
+    state.cost.revision !== costRevision ||
+    state.workspace.current.roomRevision !== roomRevision
+  )
+    return {
+      ok: false as const,
+      reason: 'These options belong to an earlier design or estimate.',
+    };
+  const prepared = prepareProductChoice(
+    state.workspace.current,
+    state.cost,
+    brief,
+    raw,
+    simulation,
+    matchingWalls,
+  );
+  if (!prepared.ok) return prepared;
+  return controller.chooseCostProduct(
+    prepared.settings,
+    prepared.offers,
+    prepared.choice,
+    costRevision,
+    roomRevision,
+    announceCompletion,
+  )
+    ? { ok: true as const }
+    : {
+        ok: false as const,
+        reason:
+          'Resolve the current preview or refresh these options before choosing.',
+      };
+}
+/** Prepare a preference without changing a session; shared by manual and explicit batch choice. */
+export function prepareProductChoice(
+  room: RoomDocument,
+  draft: CostDraft,
+  brief: SourcingBrief,
+  raw: SourcingCandidate,
+  simulation: boolean,
+  matchingWalls = false,
+) {
+  const fail = (reason: string) => ({ ok: false as const, reason });
+  if (brief.target.kind === 'service' || brief.kind === 'primer')
+    return fail('Choose this quote individually.');
+  const candidate = sourcingCandidateSchema.safeParse(raw);
+  if (!candidate.success) return fail('This product needs a valid source.');
+  const key =
+    brief.target.kind === 'furniture'
+      ? brief.target.id
+      : `surface:${brief.target.surface}`;
+  const target = marketTargets(room).find((target) => target.key === key);
+  if (
+    !target ||
+    JSON.stringify({ ...target.brief, query: '' }) !==
+      JSON.stringify({ ...brief, query: '' })
+  )
+    return fail(
+      'This product target has changed. Find options for the current item.',
+    );
+  const c = candidate.data;
+  const attached = attachOffer(room, draft, brief, c);
+  const settings = attached.ok
+    ? attached.settings
+    : structuredClone(draft.settings);
+  const selectedTarget = brief.target;
+  const wallSurface =
+    selectedTarget.kind === 'surface' && selectedTarget.surface !== 'floor'
+      ? selectedTarget.surface
+      : null;
+  const walls = wallSurface
+    ? settings.walls.filter(
+        (wall) =>
+          wall.wall === wallSurface ||
+          ((matchingWalls || target.matchingWalls) &&
+            roomSurface(room.room, wall.wall).color ===
+              roomSurface(room.room, wallSurface).color &&
+            roomSurface(room.room, wall.wall).texture ===
+              roomSurface(room.room, wallSurface).texture &&
+            roomSurfaceDetail(room.room, wall.wall).sheen ===
+              roomSurfaceDetail(room.room, wallSurface).sheen),
+      )
+    : [];
+  if (!attached.ok) {
+    if (brief.target.kind === 'furniture') {
+      const id = brief.target.id;
+      const item = settings.furniture.find((item) => item.id === id)!;
+      item.mode = 'buy';
+      item.offerId = null;
+      item.components.forEach((part) => {
+        part.mode = 'buy';
+        part.offerId = null;
+      });
+    } else if (brief.target.surface === 'floor') {
+      settings.floor.enabled = true;
+      settings.floor.offerId = null;
+    }
+  }
+  for (const wall of walls) {
+    wall.enabled = true;
+    wall.paintOfferId = attached.ok ? c.offer!.id : null;
+  }
+  const referencePrice = c.listing
+    ? `${money(c.listing.priceMinor, c.listing.currency)} / ${c.listing.volumeMl ? `${c.listing.volumeMl / 1000} L` : c.listing.unit}`
+    : c.offer && 'packs' in c.offer
+      ? c.offer.packs
+          .map(
+            (pack) =>
+              `${pack.volumeMl / 1000} L: ${money(pack.priceMinor, c.offer!.market.currency)}`,
+          )
+          .join(' · ')
+      : c.offer
+        ? `${money(c.offer.priceMinor, c.offer.market.currency)} / ${c.offer.kind === 'floor' ? 'pack' : c.offer.kind === 'service' ? c.offer.basis : 'item'}`
+        : null;
+  const quotedPrice = referencePrice
+    ? `${c.conditions === 'from' ? 'From ' : c.conditions === 'conditional' ? 'Conditional ' : ''}${referencePrice}`
+    : null;
+  const parsedChoice = productChoiceSchema.safeParse({
+    key,
+    scope: productChoiceScope(room, draft, key),
+    label: c.label,
+    url: c.url,
+    imageUrl: c.imageUrl ?? null,
+    simulation,
+    offerId: c.offer?.id ?? null,
+    quotedPrice,
+    ...(c.listing
+      ? {
+          listingPrice: {
+            priceMinor: c.listing.priceMinor,
+            currency: c.listing.currency,
+            country: c.listing.country,
+            unit: c.listing.unit,
+            volumeMl: c.listing.volumeMl,
+            unavailable: c.offer?.availability === 'unavailable',
+            coverageMm2:
+              c.listing.coverageMm2 ??
+              (c.offer?.kind === 'floor' && c.offer.source.url === c.url
+                ? c.offer.coverageMm2
+                : null),
+            coverageMm2PerLitre:
+              c.listing.coverageMm2PerLitre ??
+              (c.offer?.kind === 'paint' && c.offer.source.url === c.url
+                ? c.offer.coverageMm2PerLitre
+                : null),
+          },
+        }
+      : c.offer
+        ? {
+            listingPrice: {
+              priceMinor:
+                'packs' in c.offer
+                  ? c.offer.packs[0]!.priceMinor
+                  : c.offer.priceMinor,
+              currency: c.offer.market.currency,
+              country: c.offer.market.country,
+              unit:
+                c.offer.kind === 'floor'
+                  ? ('pack' as const)
+                  : 'packs' in c.offer
+                    ? ('can' as const)
+                    : ('item' as const),
+              volumeMl: 'packs' in c.offer ? c.offer.packs[0]!.volumeMl : null,
+              unavailable: c.offer.availability === 'unavailable',
+              coverageMm2:
+                c.offer.kind === 'floor' ? c.offer.coverageMm2 : null,
+              coverageMm2PerLitre:
+                c.offer.kind === 'paint' ? c.offer.coverageMm2PerLitre : null,
+            },
+          }
+        : {}),
+  });
+  if (!parsedChoice.success)
+    return fail('This product needs a current price and source.');
+  return {
+    ok: true as const,
+    settings,
+    offers: attached.ok ? attached.offers : draft.offers,
+    choice: parsedChoice.data,
+  };
+}
 export function sourceSizeNeedsReview(
   brief: SourcingBrief,
   offer: EstimateOffer | null,

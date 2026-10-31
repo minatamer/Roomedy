@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateRoomEstimate } from '@roomedy/spatial';
+import { calculateRoomEstimate, sampleEstimateOffers } from '@roomedy/spatial';
 import { estimateSettingsSchema } from '@roomedy/contracts/estimates';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { SessionController } from '../apps/frontend/src/features/session/controller.js';
@@ -47,6 +47,10 @@ describe('guided materials and furniture journey', () => {
   });
   it('clears incompatible prices on a legacy market correction while retaining regional choices in simple scope', () => {
     const draft = createCostDraft(createRoomFixture('sample'), 'de-DE');
+    draft.offers = sampleEstimateOffers().map((offer) => ({
+      ...offer,
+      market: draft.settings.locality,
+    }));
     const initial = changeShoppingLocality(draft, shoppingLocality('DE'));
     draft.settings = initial.settings;
     draft.offers = initial.offers;
@@ -82,7 +86,8 @@ describe('guided materials and furniture journey', () => {
       const brief = buildSourcingBrief(room, 'surface:floor')!;
       const draft = c.getSnapshot().cost!;
       const offer = {
-        ...draft.offers.find((o) => o.kind === 'floor')!,
+        ...sampleEstimateOffers().find((o) => o.kind === 'floor')!,
+        market: draft.settings.locality,
         id: 'new-floor',
       };
       const candidate: SourcingCandidate = {
@@ -180,16 +185,23 @@ describe('guided materials and furniture journey', () => {
     expect(fresh.settings.walls.every((w) => w.primer === 'exclude')).toBe(
       true,
     );
+    expect(fresh.offers).toEqual([]);
     expect(
-      fresh.offers.every(
-        (o) =>
-          o.source.kind === 'sample' &&
-          o.market.country === 'US' &&
-          o.market.currency === 'USD',
+      fresh.settings.walls.every(
+        (wall) => wall.paintOfferId === null && wall.primerOfferId === null,
+      ),
+    ).toBe(true);
+    expect(
+      fresh.settings.furniture.every(
+        (item) =>
+          item.offerId === null &&
+          item.components.every((part) => part.offerId === null),
       ),
     ).toBe(true);
     const result = calculateRoomEstimate(room, fresh.settings, fresh.offers);
     if (!result.ok) throw new Error(result.code);
+    expect(result.estimate.knownTotalMinor).toBe(0);
+    expect(result.estimate.unpricedCount).toBeGreaterThan(0);
     expect(
       result.estimate.lines.some((l) =>
         /underlay|primer|assessment|preparation|trim|delivery/i.test(l.label),
@@ -206,6 +218,10 @@ describe('guided materials and furniture journey', () => {
     room.room.depth = { value: null, status: 'unknown', sourceId: null };
     const before = JSON.stringify(room),
       draft = createCostDraft(room, 'en-US');
+    draft.offers = sampleEstimateOffers().map((offer) => ({
+      ...offer,
+      market: draft.settings.locality,
+    }));
     draft.settings.floor.enabled = true;
     draft.settings.floor.offerId = 'sample-floor-oak';
     const result = calculateRoomEstimate(room, draft.settings, draft.offers);
@@ -272,7 +288,8 @@ describe('guided materials and furniture journey', () => {
       const draft = c.getSnapshot().cost!,
         brief = buildSourcingBrief(room, 'surface:north')!;
       const offer = {
-        ...draft.offers.find((o) => o.kind === 'paint')!,
+        ...sampleEstimateOffers().find((o) => o.kind === 'paint')!,
+        market: draft.settings.locality,
         id: 'chosen-paint',
       };
       const candidate: SourcingCandidate = {

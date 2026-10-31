@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { Ref } from 'react';
+import type { Ref, RefObject } from 'react';
 import type { SessionController } from '../session/controller';
 import type { SessionSnapshot } from '../session/state';
 import { buildSourcingBrief } from './brief';
@@ -13,17 +13,28 @@ import { beginResearch } from './client';
 import {
   MARKET_BATCH_SIZE,
   marketTargets,
+  marketTargetForKey,
   runMarketResearch,
 } from './market-research';
-import type { MarketTarget, MarketUpdate } from './market-research';
+import type { MarketTarget } from './market-research';
+import { useCostConversationState } from './conversation';
+import type { MarketEntry } from './conversation';
 import {
   reviewSourceSize,
-  selectOffer,
+  productChosen,
   sourceOfferSelected,
   sourceSizeNeedsReview,
 } from './attach-offer';
-import { SourceCard } from './source-card';
-import { ExternalLink } from './external-link';
+import { SourceCard, productChoices } from './source-card';
+import { ProductCarousel } from './product-carousel';
+import { currentProductChoices, allProductsChosen } from './product-choices';
+import {
+  INITIAL_PRODUCT_GUIDE,
+  guideView,
+  chooseRemainingProducts,
+  chooseGuidedProduct,
+} from './selection-guide';
+import type { GuideAction } from './selection-guide';
 import { ChatIcon } from './chat-visuals';
 import styles from './workspace.module.css';
 
@@ -53,14 +64,6 @@ export function ResearchProgress({
   );
 }
 
-interface MarketEntry {
-  target: MarketTarget;
-  update: MarketUpdate;
-  roomRevision: number;
-  costRevision: number;
-  generation: number;
-  workspaceId: string;
-}
 export function Research({
   controller,
   state,
@@ -69,6 +72,8 @@ export function Research({
   requestRef,
   onBusyChange,
   transport,
+  resultsRef,
+  guideRef,
 }: {
   controller: SessionController;
   state: SessionSnapshot;
@@ -76,6 +81,8 @@ export function Research({
   onDesign: () => void;
   onBusyChange?: (busy: boolean) => void;
   transport?: typeof fetch | undefined;
+  resultsRef?: RefObject<HTMLElement | null>;
+  guideRef?: Ref<(action: GuideAction, request?: string) => void>;
   requestRef?: Ref<
     (
       key: string,
@@ -88,22 +95,56 @@ export function Research({
   const room = state.workspace!.current,
     draft = state.cost!;
   const [busy, setBusy] = useState(false),
-    [message, setMessage] = useState('');
-  const [entries, setEntries] = useState<MarketEntry[]>([]);
-  const [remaining, setRemaining] = useState<MarketTarget[]>([]);
+    [message, setMessage] = useCostConversationState(controller, 'message');
+  const [entries, setEntries] = useCostConversationState(controller, 'entries');
+  const [storedGuide, setGuide] = useCostConversationState(controller, 'guide');
+  const guide = storedGuide ?? INITIAL_PRODUCT_GUIDE;
+  const [, setResearchAfter] = useCostConversationState(
+    controller,
+    'researchAfter',
+  );
+  const [remaining, setRemaining] = useCostConversationState(
+    controller,
+    'remaining',
+  );
   const [progress, setProgress] = useState('');
   const statusRef = useRef<HTMLParagraphElement>(null),
-    sectionRef = useRef<HTMLElement>(null);
+    localSectionRef = useRef<HTMLElement>(null),
+    sectionRef = resultsRef ?? localSectionRef;
   const task = useRef<ReturnType<typeof runMarketResearch> | null>(null),
-    live = useRef(true);
+    live = useRef(true),
+    pendingBatch = useRef<MarketTarget[]>([]),
+    pendingAll = useRef(false);
   useEffect(() => {
     live.current = true;
     return () => {
       live.current = false;
-      task.current?.cancel();
+      if (task.current) {
+        task.current.cancel();
+        setEntries((previous) =>
+          previous.map((entry) =>
+            entry.update.kind === 'finding'
+              ? {
+                  ...entry,
+                  update: {
+                    kind: 'answer',
+                    answer: {
+                      ok: false,
+                      retired: true,
+                      message:
+                        'Search paused. Find options for this item when you’re ready.',
+                    },
+                  },
+                }
+              : entry,
+          ),
+        );
+        if (pendingAll.current) setRemaining(pendingBatch.current);
+        setMessage('Search paused. Your found options and choices are saved.');
+      }
       onBusyChange?.(false);
     };
-  }, [onBusyChange]);
+  }, [onBusyChange, setEntries, setRemaining, setMessage]);
   useEffect(() => {
     if (state.destination === 'cost') return;
     task.current?.cancel();
@@ -123,12 +164,19 @@ export function Research({
         });
     });
     return () => cancelAnimationFrame(frame);
-  }, [busy]);
+  }, [busy, sectionRef]);
   const fresh = (entry: MarketEntry) =>
     entry.generation === state.generation &&
     entry.workspaceId === state.workspace?.workspaceId &&
     entry.roomRevision === room.roomRevision &&
     entry.costRevision === draft.revision;
+  const say = useCallback(
+    (text: string) => {
+      if (controller.costMessage('assistant', text))
+        setResearchAfter(controller.getSnapshot().cost!.messages.at(-1)!.id!);
+    },
+    [controller, setResearchAfter],
+  );
   const start = useCallback(
     async (
       requestedKey: string,
@@ -136,7 +184,7 @@ export function Research({
       usePrimer = false,
       matchingWalls = false,
     ) => {
-      if (task.current) return;
+      if (!live.current || task.current) return;
       const current = controller.getSnapshot();
       if (!current.workspace || !current.cost || current.destination !== 'cost')
         return;
@@ -153,9 +201,12 @@ export function Research({
             brief: { ...target.brief, query: preferences },
           }));
       } else {
+        const grouped = !usePrimer
+          ? marketTargetForKey(current.workspace.current, requestedKey)
+          : null;
         const brief = buildSourcingBrief(
           current.workspace.current,
-          requestedKey,
+          grouped?.key ?? requestedKey,
           preferences,
           usePrimer,
         );
@@ -167,9 +218,9 @@ export function Research({
         }
         targets = [
           {
-            key: requestedKey,
+            key: grouped?.key ?? requestedKey,
             brief,
-            label: brief.label,
+            label: grouped?.label ?? brief.label,
             group:
               brief.kind === 'furniture'
                 ? 'Furniture'
@@ -178,16 +229,35 @@ export function Research({
                   : brief.kind === 'service'
                     ? 'Services'
                     : 'Wall paint',
-            matchingWalls,
+            matchingWalls: grouped?.matchingWalls ?? matchingWalls,
           },
         ];
       }
       if (!targets.length) return;
       if (requestedKey === 'all') setEntries([]);
+      setGuide((previous) =>
+        requestedKey === 'all' || previous?.stage === 'done'
+          ? {
+              stage: 'ready',
+              key: all ? null : targets[0]!.key,
+              reviewedKeys: [],
+            }
+          : {
+              ...(previous ?? INITIAL_PRODUCT_GUIDE),
+              stage: 'ready',
+              key: all ? null : targets[0]!.key,
+              reviewedKeys: (previous?.reviewedKeys ?? []).filter(
+                (key) => all || key !== targets[0]!.key,
+              ),
+            },
+      );
       setMessage('');
       setBusy(true);
       onBusyChange?.(true);
-      let index = 0;
+      let index = 0,
+        choicesFound = 0;
+      pendingBatch.current = targets;
+      pendingAll.current = all;
       const running = runMarketResearch(
         controller,
         targets,
@@ -198,7 +268,16 @@ export function Research({
             setProgress(
               `Finding ${index} of ${Math.min(targets.length, MARKET_BATCH_SIZE)} · ${target.label}`,
             );
+          } else if (
+            update.answer.ok &&
+            productChoices(update.answer.reply.candidates).length
+          ) {
+            choicesFound++;
           }
+          if (update.kind === 'answer')
+            pendingBatch.current = pendingBatch.current.filter(
+              (item) => item.key !== target.key,
+            );
           setEntries((previous) => [
             ...previous.filter((entry) => entry.target.key !== target.key),
             {
@@ -217,11 +296,44 @@ export function Research({
       try {
         const result = await running.result;
         if (!live.current || task.current !== running) return;
-        setRemaining(all && !result.cancelled ? result.remaining : []);
-        if (result.cancelled)
+        setRemaining(
+          all
+            ? result.remaining
+            : result.cancelled
+              ? remaining
+              : remaining.filter((target) => target.key !== targets[0]!.key),
+        );
+        if (result.cancelled) {
           setMessage('Search stopped. Your accepted prices are unchanged.');
-        else if (result.remaining.length && !all)
+          setEntries((previous) =>
+            previous.map((entry) =>
+              entry.update.kind === 'finding'
+                ? {
+                    ...entry,
+                    update: {
+                      kind: 'answer',
+                      answer: {
+                        ok: false,
+                        retired: true,
+                        message:
+                          'Search stopped. Try this item again when you’re ready.',
+                      },
+                    },
+                  }
+                : entry,
+            ),
+          );
+        } else if (result.remaining.length && !all)
           setMessage('Finish the current preview before finding options.');
+        if (!result.cancelled) {
+          say(
+            result.remaining.length && all
+              ? `Options for the first ${Math.min(targets.length, MARKET_BATCH_SIZE)} items are ready. There ${result.remaining.length === 1 ? 'is 1 more item' : `are ${result.remaining.length} more items`} to find. Continue the search, or start choosing from the ready options one item at a time.`
+              : choicesFound
+                ? 'Your options are ready. We’ll choose one item at a time: furniture first, then flooring and paint. Choose each product with me, or let me choose the rest from the closest priced matches. Then I’ll show your cost breakdown and help you export it.'
+                : 'The search is finished, but these items still need suitable options. Let’s review them one at a time; I won’t choose an unsupported product for you.',
+          );
+        }
       } catch {
         if (live.current)
           setMessage(
@@ -230,6 +342,7 @@ export function Research({
       } finally {
         if (task.current === running) {
           task.current = null;
+          pendingBatch.current = [];
           if (live.current) {
             setBusy(false);
             onBusyChange?.(false);
@@ -237,31 +350,221 @@ export function Research({
         }
       }
     },
-    [controller, remaining, onBusyChange, transport],
+    [
+      controller,
+      remaining,
+      onBusyChange,
+      transport,
+      setMessage,
+      setEntries,
+      setRemaining,
+      setGuide,
+      say,
+    ],
   );
+  const view = guideView(room, draft, entries, guide);
+  const refreshEntries = (before: SessionSnapshot, revision: number) =>
+    setEntries((previous) =>
+      previous.map((entry) =>
+        entry.costRevision === before.cost?.revision &&
+        entry.roomRevision === before.workspace?.current.roomRevision &&
+        entry.generation === before.generation &&
+        entry.workspaceId === before.workspace?.workspaceId
+          ? { ...entry, costRevision: revision }
+          : entry,
+      ),
+    );
+  const act = (action: GuideAction, request?: string) => {
+    if (busy || task.current || state.candidate || !controller.checkExpiry())
+      return;
+    const before = controller.getSnapshot();
+    if (
+      before.destination !== 'cost' ||
+      before.pending ||
+      before.candidate ||
+      !before.cost ||
+      !before.workspace
+    )
+      return;
+    if (action === 'next' && view.stage === 'ready') action = 'start';
+    if (
+      !controller.costMessage(
+        'visitor',
+        request ??
+          (action === 'auto'
+            ? 'Choose the rest for me.'
+            : action === 'next'
+              ? 'Next item.'
+              : action === 'review'
+                ? 'Review my choices.'
+                : 'Let’s start choosing.'),
+      )
+    )
+      return;
+    const freshPass =
+      action === 'review' ||
+      !guide.passId ||
+      (guide.stage === 'done' && view.stage === 'ready');
+    const passId = freshPass
+      ? controller.getSnapshot().cost!.messages.at(-1)!.id!
+      : guide.passId!;
+    const reviewedKeys = freshPass ? [] : (guide.reviewedKeys ?? []);
+    const pass = { ...guide, stage: 'choosing' as const, passId, reviewedKeys };
+    const currentView = guideView(room, draft, entries, pass);
+    if (action === 'auto') {
+      if (allProductsChosen(before.workspace.current, before.cost)) {
+        setGuide({
+          ...pass,
+          stage: 'done',
+          key: null,
+          reviewedKeys: marketTargets(room).map((target) => target.key),
+        });
+        controller.completeProductChoices(passId);
+        return;
+      }
+      const result = chooseRemainingProducts(controller, entries, false);
+      if (result.ok) {
+        refreshEntries(before, result.revision);
+        const current = controller.getSnapshot();
+        if (allProductsChosen(current.workspace!.current, current.cost!)) {
+          setGuide({
+            ...pass,
+            stage: 'done',
+            key: null,
+            reviewedKeys: marketTargets(room).map((target) => target.key),
+          });
+          controller.completeProductChoices(passId);
+          setMessage('');
+          return;
+        }
+        const missing = marketTargets(current.workspace!.current).find(
+          (target) =>
+            !currentProductChoices(
+              current.workspace!.current,
+              current.cost!,
+            ).some((choice) => choice.key === target.key),
+        );
+        setGuide({
+          ...pass,
+          stage: 'choosing',
+          key: missing?.key ?? currentView.active?.key ?? null,
+          reviewedKeys: currentProductChoices(
+            current.workspace!.current,
+            current.cost!,
+          ).map((choice) => choice.key),
+        });
+        say(
+          `I chose ${result.selected.length} ${result.selected.length === 1 ? 'product' : 'products'} from the supported priced options. Some items still need your choice or better options. Let’s review ${missing?.label ?? 'the next item'} together.`,
+        );
+      } else {
+        setGuide({
+          ...pass,
+          stage: 'choosing',
+          key: currentView.active?.key ?? null,
+        });
+        say(result.reason);
+      }
+      return;
+    }
+    const target =
+      action === 'review'
+        ? currentView.queue[0]
+        : action === 'next'
+          ? currentView.next
+          : currentView.active;
+    if (!target) {
+      if (currentView.complete) {
+        setGuide({ ...pass, stage: 'done', key: null });
+        controller.completeProductChoices(passId);
+      } else {
+        setGuide({ ...pass, stage: 'ready', key: null });
+        say(
+          'Some items still need a choice or more options. We can review them together, or you can ask me to choose from the supported options we already found.',
+        );
+      }
+      return;
+    }
+    setGuide({ ...pass, stage: 'choosing', key: target.key });
+    setMessage('');
+    say(
+      `${action === 'next' && currentView.active && !currentView.reviewed.has(currentView.active.key) ? `We’ll leave ${currentView.active.label} for later. ` : ''}${action === 'start' || action === 'review' ? 'Let’s look at' : 'Next,'} ${target.label}. ${target.group === 'Wall paint' && target.label === 'All walls' ? 'One paint choice covers all four matching walls. ' : ''}Compare these options and choose one, or ask me to choose the rest for you.`,
+    );
+  };
   useImperativeHandle(requestRef, () => start, [start]);
+  useImperativeHandle(guideRef, () => act);
   if (!message && !entries.length && !busy) return null;
+  if (view.stage === 'done' && view.complete && !busy) return null;
+  const chosen = currentProductChoices(room, draft);
   return (
     <section
       ref={sectionRef}
+      tabIndex={-1}
       className={styles.marketResearch}
       aria-label="Product options"
     >
-      <div className={styles.marketHeading}>
-        <ChatIcon kind="search" />
-        <div>
-          <h3>Market options</h3>
-          <p>
-            Compare products for your design. Choose a price when you’re ready.
-          </p>
-        </div>
-      </div>
-      {busy && (
+      {busy ? (
         <div className={styles.researchPending}>
           <p role="status" className={styles.thinking}>
             <span aria-hidden="true" />
             {progress || 'Finding options…'}
           </p>
+        </div>
+      ) : view.stage === 'ready' ? (
+        <div className={styles.guideIntro}>
+          <p>
+            {entries.some(fresh)
+              ? `${view.available.length} ${view.available.length === 1 ? 'item is' : 'items are'} ready to review. We’ll keep just one item in view.`
+              : 'These options need refreshing for your current design.'}
+          </p>
+          <div className={styles.actions}>
+            {entries.some(fresh) ? (
+              <>
+                <button
+                  className="glass-control"
+                  onClick={() => act('start')}
+                  disabled={!!state.candidate}
+                >
+                  Start choosing →
+                </button>
+                <button
+                  className="glass-control"
+                  onClick={() => act('auto')}
+                  disabled={!!state.candidate}
+                >
+                  Choose for me
+                </button>
+              </>
+            ) : (
+              <button
+                className="glass-control"
+                onClick={() => void start('all', '')}
+                disabled={!!state.candidate}
+              >
+                Find current options →
+              </button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className={styles.marketHeading}>
+          <ChatIcon kind="search" />
+          <div>
+            <h3>{view.active?.label ?? 'Choose your next product'}</h3>
+            <p>
+              Item{' '}
+              {view.queue.findIndex(
+                (target) => target.key === view.active?.key,
+              ) + 1}{' '}
+              of {view.queue.length} · {view.active?.group}
+            </p>
+            <p className={styles.choiceProgress} aria-live="polite">
+              {
+                view.targets.filter((target) => view.reviewed.has(target.key))
+                  .length
+              }{' '}
+              of {marketTargets(room).length} choices completed
+            </p>
+          </div>
         </div>
       )}
       <p
@@ -275,9 +578,46 @@ export function Research({
       {message.includes('in Design') && (
         <button onClick={onDesign}>Review this piece in Design ↗</button>
       )}
+      {!busy &&
+        view.stage === 'choosing' &&
+        view.active &&
+        !entries.some((entry) => entry.target.key === view.active!.key) && (
+          <div className={styles.guideIntro}>
+            <p>
+              We still need options for {view.active.label} before choosing this
+              product.
+            </p>
+            <button
+              className="glass-control"
+              disabled={!!state.candidate}
+              onClick={() => {
+                if (
+                  !controller.costMessage(
+                    'visitor',
+                    `Find options for ${view.active!.label}.`,
+                  )
+                )
+                  return;
+                setResearchAfter(
+                  controller.getSnapshot().cost!.messages.at(-1)!.id!,
+                );
+                void start(view.active!.key, '');
+              }}
+            >
+              Find options for this item →
+            </button>
+          </div>
+        )}
       {(['Furniture', 'Flooring', 'Wall paint', 'Services'] as const).map(
         (group) => {
-          const items = entries.filter((entry) => entry.target.group === group);
+          const items =
+            !busy && view.stage === 'choosing'
+              ? entries.filter(
+                  (entry) =>
+                    entry.target.group === group &&
+                    entry.target.key === view.active?.key,
+                )
+              : [];
           if (!items.length) return null;
           return (
             <section
@@ -285,8 +625,7 @@ export function Research({
               className={styles.marketGroup}
               aria-label={`${group} market options`}
             >
-              <h3>{group}</h3>
-              {items.map((entry, itemIndex) => {
+              {items.map((entry) => {
                 const { target, update } = entry;
                 if (update.kind === 'finding')
                   return (
@@ -318,29 +657,20 @@ export function Research({
                     </article>
                   );
                 const reply = answer.reply,
-                  products = reply.candidates
-                    .filter((candidate) => candidate.offer || candidate.listing)
-                    .sort(
-                      (a, b) => Number(!!b.imageUrl) - Number(!!a.imageUrl),
-                    ),
-                  leads = reply.candidates.filter(
-                    (candidate) => !candidate.offer && !candidate.listing,
-                  ),
+                  products = productChoices(reply.candidates),
                   isFresh = fresh(entry);
                 return (
-                  <details
+                  <article
                     className={styles.marketItem}
                     key={target.key}
-                    open={items.length === 1 || itemIndex === 0}
+                    aria-label={`${target.label} options`}
                   >
-                    <summary>
-                      <span>{target.label}</span>
-                      <small>
-                        {!isFresh
-                          ? 'Earlier design or estimate'
-                          : `${products.length} ${products.length === 1 ? 'product' : 'products'}`}
-                      </small>
-                    </summary>
+                    <h4 className={styles.srOnly}>{target.label} options</h4>
+                    {chosen.some((choice) => choice.key === target.key) && (
+                      <p className={styles.note}>
+                        Keep this product to continue, or choose another option.
+                      </p>
+                    )}
                     {answer.simulation && (
                       <p className={styles.note}>
                         Example options · illustrative prices, not live store
@@ -353,85 +683,96 @@ export function Research({
                         store.
                       </p>
                     )}
-                    <div className={styles.sourceCards}>
-                      {products.map((candidate, index) => (
-                        <SourceCard
-                          key={`${candidate.url}:${index}`}
-                          candidate={candidate}
-                          simulation={answer.simulation}
-                          matchingWalls={target.matchingWalls}
-                          selected={
-                            !!candidate.offer &&
-                            sourceOfferSelected(
-                              draft,
-                              target.brief,
-                              candidate.offer.id,
-                            )
-                          }
-                          disabled={!isFresh || busy || !!state.candidate}
-                          needsSizeReview={sourceSizeNeedsReview(
-                            target.brief,
-                            candidate.offer,
-                          )}
-                          onSelect={() => {
-                            if (!isFresh) return;
-                            const applied = selectOffer(
-                              controller,
-                              target.brief,
-                              candidate,
-                              entry.costRevision,
-                              entry.roomRevision,
-                              target.matchingWalls,
-                            );
-                            if (applied.ok) {
-                              const revision =
-                                controller.getSnapshot().cost!.revision;
-                              setEntries((previous) =>
-                                previous.map((item) =>
-                                  item.costRevision === entry.costRevision &&
-                                  item.roomRevision === entry.roomRevision &&
-                                  item.generation === entry.generation &&
-                                  item.workspaceId === entry.workspaceId
-                                    ? { ...item, costRevision: revision }
-                                    : item,
-                                ),
-                              );
-                              requestAnimationFrame(() =>
-                                statusRef.current?.focus({
-                                  preventScroll: true,
-                                }),
-                              );
+                    {!!products.length && (
+                      <ProductCarousel label={target.label}>
+                        {products.map((candidate, index) => (
+                          <SourceCard
+                            key={`${candidate.url}:${index}`}
+                            candidate={candidate}
+                            confirmSelection
+                            simulation={answer.simulation}
+                            matchingWalls={target.matchingWalls}
+                            chooseLabel={
+                              target.group === 'Wall paint'
+                                ? target.label === 'All walls'
+                                  ? 'Choose paint for all walls'
+                                  : target.matchingWalls
+                                    ? 'Choose paint for these walls'
+                                    : 'Choose this paint'
+                                : 'Choose this product'
                             }
-                            setMessage(
-                              applied.ok
-                                ? 'Price selected. Unresolved extras stay in the breakdown.'
-                                : applied.reason,
-                            );
-                          }}
-                          onReview={() => {
-                            if (!isFresh) return;
-                            const result = reviewSourceSize(
-                              controller,
+                            selected={
+                              target.brief.target.kind === 'service' ||
+                              target.brief.kind === 'primer'
+                                ? !!candidate.offer &&
+                                  sourceOfferSelected(
+                                    draft,
+                                    target.brief,
+                                    candidate.offer.id,
+                                  )
+                                : productChosen(
+                                    room,
+                                    draft,
+                                    target.brief,
+                                    candidate,
+                                  )
+                            }
+                            disabled={!isFresh || busy || !!state.candidate}
+                            needsSizeReview={sourceSizeNeedsReview(
                               target.brief,
-                              candidate,
-                              entry.costRevision,
-                              entry.roomRevision,
-                            );
-                            setMessage(
-                              result.ok
-                                ? 'Preview ready · review the room and costs before Apply.'
-                                : result.reason,
-                            );
-                            if (result.ok)
-                              onInspect(
-                                target.brief.target.kind === 'furniture'
-                                  ? target.brief.target.id
-                                  : null,
+                              candidate.offer,
+                            )}
+                            onSelect={() => {
+                              if (!isFresh) return;
+                              const before = controller.getSnapshot();
+                              const kept = productChosen(
+                                room,
+                                draft,
+                                target.brief,
+                                candidate,
                               );
-                          }}
-                        />
-                      ))}
-                    </div>
+                              const applied = chooseGuidedProduct(
+                                controller,
+                                entries,
+                                entry,
+                                candidate,
+                                guide,
+                              );
+                              if (applied.ok) {
+                                refreshEntries(before, applied.revision);
+                                setGuide(applied.guide);
+                                setMessage('');
+                                if (applied.complete) return;
+                                say(
+                                  `${kept ? 'Kept' : 'Added'} ${candidate.label} in your estimate. ${applied.next ? `Next, ${applied.next.label}. Choose one of these options, or let me choose the rest.` : 'Some items still need your choice or more options.'}`,
+                                );
+                              } else setMessage(applied.reason);
+                            }}
+                            onReview={() => {
+                              if (!isFresh) return;
+                              const result = reviewSourceSize(
+                                controller,
+                                target.brief,
+                                candidate,
+                                entry.costRevision,
+                                entry.roomRevision,
+                              );
+                              setMessage(
+                                result.ok
+                                  ? 'Preview ready · review the room and costs before Apply.'
+                                  : result.reason,
+                              );
+                              if (result.ok)
+                                onInspect(
+                                  target.brief.target.kind === 'furniture'
+                                    ? target.brief.target.id
+                                    : null,
+                                );
+                            }}
+                          />
+                        ))}
+                      </ProductCarousel>
+                    )}
                     <button
                       className="glass-control"
                       disabled={busy || !!state.candidate}
@@ -448,18 +789,6 @@ export function Research({
                     >
                       Find more for this item
                     </button>
-                    {!!leads.length && (
-                      <details className={styles.sourceEvidence}>
-                        <summary>Other stores to check</summary>
-                        {leads.map((candidate) => (
-                          <p key={candidate.url}>
-                            <ExternalLink url={candidate.url}>
-                              {candidate.label}
-                            </ExternalLink>
-                          </p>
-                        ))}
-                      </details>
-                    )}
                     {!!reply.notes.length && (
                       <details className={styles.sourceEvidence}>
                         <summary>Research notes</summary>
@@ -468,7 +797,7 @@ export function Research({
                         ))}
                       </details>
                     )}
-                  </details>
+                  </article>
                 );
               })}
             </section>

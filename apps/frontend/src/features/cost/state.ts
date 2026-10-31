@@ -1,4 +1,5 @@
 import { simpleEstimateInputs } from './journey';
+import { currentProductChoices } from './product-choices';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type {
   EstimateOffer,
@@ -20,6 +21,7 @@ import {
 
 export interface CostMessage {
   id?: number;
+  kind?: 'breakdown' | 'find-options' | 'selection-summary';
   lineIds?: string[];
   roomRevision: number;
   costRevision: number;
@@ -32,6 +34,32 @@ export interface CostDraft extends EstimateState {
   settings: EstimateSettings;
   offers: EstimateOffer[];
   messages: CostMessage[];
+}
+/** Only chosen/manual prices establish a subtotal; seeded examples never do. */
+export function hasChosenPrices(
+  estimate: RoomEstimate,
+  offers: EstimateOffer[],
+) {
+  const byId = new Map(offers.map((offer) => [offer.id, offer]));
+  let chosen = false;
+  for (const line of estimate.lines) {
+    if (line.amountMinor === null || line.pricing === 'included') continue;
+    const sources = line.offerIds.flatMap((id) => byId.get(id) ?? []);
+    if (
+      sources.some(
+        (offer) => offer.source.kind === 'sample' && !offer.source.url,
+      )
+    )
+      return false;
+    if (
+      sources.length ||
+      line.pricing === 'manual' ||
+      line.pricing === 'listed' ||
+      line.pricing === 'allowance'
+    )
+      chosen = true;
+  }
+  return chosen;
 }
 export function createCostDraft(
   room: RoomDocument,
@@ -56,12 +84,25 @@ export function reconcileCost(room: RoomDocument, draft: CostDraft): CostDraft {
   const defaults = draft.settings.demoScope
     ? simpleEstimateInputs(room, draft.settings.locality).settings
     : defaultEstimateSettings(room);
+  const choices = currentProductChoices(room, draft);
   return {
     ...draft,
     revision: draft.revision + 1,
     roomRevision: room.roomRevision,
     settings: {
       ...draft.settings,
+      ...(draft.settings.selectedPrices
+        ? {
+            selectedPrices: draft.settings.selectedPrices.filter((price) =>
+              choices.some(
+                (choice) =>
+                  choice.key === price.key &&
+                  choice.scope === price.scope &&
+                  choice.url === price.url,
+              ),
+            ),
+          }
+        : {}),
       roomId: room.roomId,
       furniture: room.furniture.map(
         (piece) =>
@@ -98,6 +139,7 @@ export function pricingState(draft: CostDraft): EstimateState {
     settings: draft.settings,
     offers: draft.offers,
     budgetMinor: draft.budgetMinor,
+    ...(draft.productChoices ? { productChoices: draft.productChoices } : {}),
   };
 }
 export function targetKey(target: EstimateTarget) {

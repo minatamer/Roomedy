@@ -585,6 +585,50 @@ it('scoped mixed add/move/finish and a coordinated swap create one atomic Undo e
   }).toEqual(room);
   session.dispose();
 });
+it('keeps Estimate messages and drafts out of Design chat and provider context across returns', async () => {
+  const s = await setup();
+  try {
+    await s.assistant.submit('Explain the room checks');
+    const design = s.assistant.getSnapshot().messages;
+    s.session.setDestination('cost', 'en-US');
+    s.session.costMessage('visitor', 'ESTIMATE_ONLY_PRIVATE_MARKER');
+    await s.assistant.submit('This Design request must stay inactive');
+    expect(s.assistant.getSnapshot().messages).toBe(design);
+    const cost = s.session.getSnapshot().cost!.messages;
+    s.session.setDestination('design');
+    expect(
+      s.session.costMessage('assistant', 'Inactive Estimate response'),
+    ).toBe(false);
+    await s.assistant.submit('Explain the room checks');
+    expect(s.session.getSnapshot().cost!.messages).toBe(cost);
+    expect(JSON.stringify(s.assistant.getSnapshot().messages)).not.toContain(
+      'ESTIMATE_ONLY_PRIVATE_MARKER',
+    );
+    for (const [, init] of s.transport.mock.calls)
+      if (init?.body)
+        expect(String(init.body)).not.toContain('ESTIMATE_ONLY_PRIVATE_MARKER');
+    s.session.setDestination('cost');
+    expect(s.session.getSnapshot().cost!.messages).toBe(cost);
+    expect(s.runtime.meteredDispatches()).toBe(0);
+  } finally {
+    s.close();
+  }
+});
+it('does not append Estimate Undo actions to the Design chat', async () => {
+  const s = await setup();
+  try {
+    await s.assistant.submit('Explain the room checks');
+    const design = s.assistant.getSnapshot().messages;
+    s.session.setDestination('cost', 'en-US');
+    const settings = structuredClone(s.session.getSnapshot().cost!.settings);
+    settings.floor.wasteBps = 2000;
+    s.session.updateCost(settings);
+    expect(s.assistant.undo().ok).toBe(true);
+    expect(s.assistant.getSnapshot().messages).toBe(design);
+  } finally {
+    s.close();
+  }
+});
 it('keeps bounded conversation/context and never includes private photos or prior tool payloads', async () => {
   const s = await setup();
   for (let i = 0; i < POLICY.contextTurns + 5; i++)

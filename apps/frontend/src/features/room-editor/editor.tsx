@@ -664,32 +664,39 @@ export function Editor({
       }}
     />
   );
+  const projectBrand = (
+    <div
+      onClickCapture={(e) => {
+        if (!leave()) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+    >
+      <Brand />
+    </div>
+  );
+  const costNavigation = (
+    <div className={styles.costNav}>
+      <button className="glass-control" onClick={() => navigate('design')}>
+        ← Back to Design
+      </button>
+    </div>
+  );
+  const embeddedChrome = state.destination === 'cost' && !phaseMotion.moving;
   return (
     <div
       className={`${styles.studio} ${state.destination === 'cost' ? styles.costStudio : ''}`}
       data-room-tour-root
+      data-phase-moving={phaseMotion.moving || undefined}
     >
-      <header className={styles.header} inert={modalTools}>
-        <div
-          onClickCapture={(e) => {
-            if (!leave()) {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }}
-        >
-          <Brand />
-        </div>
-        {state.destination === 'cost' && (
-          <div className={styles.costNav}>
-            <button
-              className="glass-control"
-              onClick={() => navigate('design')}
-            >
-              ← Back to Design
-            </button>
-          </div>
-        )}
+      <header
+        className={styles.header}
+        aria-hidden={embeddedChrome || undefined}
+        inert={modalTools || embeddedChrome}
+      >
+        {projectBrand}
+        {state.destination === 'cost' && costNavigation}
       </header>
       <main
         id="main-content"
@@ -1454,6 +1461,17 @@ export function Editor({
                     );
                 }}
                 panelRef={costPanelRef}
+                header={
+                  <header
+                    className={`${styles.header} ${styles.embeddedHeader}`}
+                    data-phase-moving={phaseMotion.moving || undefined}
+                    aria-hidden={!embeddedChrome || undefined}
+                    inert={!embeddedChrome}
+                  >
+                    {projectBrand}
+                    {costNavigation}
+                  </header>
+                }
               />
             </div>
           )}

@@ -70,6 +70,12 @@
 .costStudio .costLayer {
   height: 100%;
 }
+.costStudio .phaseStage {
+  margin-top: -61px;
+}
+.costStudio:not([data-phase-moving='true']) > .header {
+  visibility: hidden;
+}
 .costNav {
   grid-column: 3;
   justify-self: end;
@@ -1269,7 +1275,7 @@
   .assistantPanel > .panelBody {
     container-type: size;
   }
-  .studio:not(.costStudio) .phaseStage {
+  .studio .phaseStage {
     margin-top: -61px;
   }
   .studio:not(.costStudio) .workspace > .panel {
@@ -1374,12 +1380,12 @@
     min-height: 100svh;
     overflow: visible;
   }
-  .studio:not(.costStudio) > .header {
+  .studio > .header {
     min-height: 68px;
     padding: 10px 16px;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
   }
-  .studio:not(.costStudio) .header :global(.brand) {
+  .studio .header :global(.brand) {
     margin-left: 0;
   }
   .studio:not(.costStudio) .phaseStage {
@@ -1452,5 +1458,38 @@
     background: #f4e6ce;
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Keep the painted logo still while the real card expands underneath it. */
+.studio .embeddedHeader {
+  min-height: 52px;
+  padding: 0 0 0 19px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  flex-shrink: 0;
+}
+.embeddedHeader .costNav {
+  grid-column: 2;
+  grid-row: 1;
+  margin-inline-end: 19px;
+}
+.embeddedHeader[data-phase-moving='true'] {
+  visibility: hidden;
+}
+@media (max-width: 1199px) {
+  .studio > .header > div:first-child,
+  .studio .embeddedHeader > div:first-child {
+    grid-column: 1;
+  }
+  .studio > .header > .costNav {
+    grid-column: 2;
+    grid-row: 1;
+    margin-inline-end: 0;
+  }
+  .studio .embeddedHeader {
+    padding: 0 0 0 15px;
+  }
+  .embeddedHeader .costNav {
+    margin-inline-end: 15px;
   }
 }

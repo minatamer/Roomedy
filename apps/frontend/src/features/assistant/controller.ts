@@ -121,6 +121,7 @@ export class AssistantController {
     for (const listener of this.listeners) listener();
   }
   draft(text: string) {
+    if (this.session.getSnapshot().destination !== 'design') return;
     this.publish({ draft: text.slice(0, POLICY.visitorTextChars) });
   }
   private append(
@@ -247,6 +248,7 @@ export class AssistantController {
       !this.session.canEdit() ||
       this.state.busy ||
       snapshot.comparison !== 'current' ||
+      snapshot.destination !== 'design' ||
       !room ||
       !step
     )
@@ -323,7 +325,12 @@ export class AssistantController {
     const text = value.trim();
     if (!this.live || !text || text.length > POLICY.visitorTextChars) return;
     const workspace = this.session.getSnapshot().workspace;
-    if (!workspace || this.session.getSnapshot().phase !== 'editor') return;
+    if (
+      !workspace ||
+      this.session.getSnapshot().phase !== 'editor' ||
+      this.session.getSnapshot().destination !== 'design'
+    )
+      return;
     this.noChangeOperation = null;
     const guidedStart =
       /^(?:let['’]?s get started|get started(?: with medy)?|help me get started|what can you do for me)[?.! ]*$/i.test(
@@ -675,6 +682,7 @@ export class AssistantController {
     }
   }
   cancel(operationId?: string) {
+    if (this.session.getSnapshot().destination !== 'design') return false;
     const candidate = this.session.getSnapshot().candidate;
     const guide =
       candidate &&
@@ -701,6 +709,7 @@ export class AssistantController {
       !this.session.canEdit() ||
       this.state.busy ||
       last?.id !== messageId ||
+      this.session.getSnapshot().destination !== 'design' ||
       !last.quickReplies.includes(suggestion) ||
       !workspace ||
       workspace.current.roomRevision !== suggestion.roomRevision ||
@@ -718,6 +727,8 @@ export class AssistantController {
     void this.submit(suggestion.request);
   }
   apply(operationId?: string) {
+    if (this.session.getSnapshot().destination !== 'design')
+      return { ok: false as const, code: 'stale' as const };
     const candidate = this.session.getSnapshot().candidate;
     const guide =
       candidate &&
@@ -780,6 +791,8 @@ export class AssistantController {
     return result;
   }
   undo() {
+    if (this.session.getSnapshot().destination !== 'design')
+      return this.session.undo();
     const beforeRevision =
       this.session.getSnapshot().workspace?.current.roomRevision;
     const label = this.session.getSnapshot().undoLabel,

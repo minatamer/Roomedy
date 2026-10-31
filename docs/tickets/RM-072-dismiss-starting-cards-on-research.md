@@ -1,0 +1,3 @@
+# RM-072 — Retire starting choices after Find all options
+
+31 October2026. Complete locally. The owner sees the interactive starting cards still below pending/completed product research. Hide the completed starting step immediately when the normal Find options request is accepted, leaving chronological chat progress/results and pinned actions. Keep it hidden through error/cancellation and ordinary same-session Design return; a fresh room still has onboarding. Retain explicit category guidance and existing research/session/source/math/selection/PDF authority. [Allocation](../commit-plans/RM-072.md), [receipt](../validation/RM-072.md). No paid/provider test, environment/service/Git/deploy action.

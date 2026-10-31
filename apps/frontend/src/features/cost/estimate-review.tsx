@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useId } from 'react';
 import type { EstimateOffer, RoomEstimate } from '@roomedy/contracts/estimates';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import { roomSurface } from '@roomedy/contracts/surfaces';
@@ -12,6 +13,7 @@ import {
   paintCoverage,
   readableEstimateNote,
   lineSummary,
+  displayEstimateLines,
 } from './estimate-presentation';
 import { money } from './state';
 import type { ReactNode } from 'react';
@@ -23,14 +25,31 @@ export function EstimateReview({
   offers,
   materialsOnly,
   download,
+  onChooseProducts,
+  hasOptions = false,
 }: {
   estimate: RoomEstimate;
   room: RoomDocument;
   offers: EstimateOffer[];
   materialsOnly: boolean;
   download: ReactNode;
+  onChooseProducts?: () => void;
+  hasOptions?: boolean;
 }) {
-  const groups = estimateGroups(estimate);
+  const id = useId(),
+    groups = estimateGroups(estimate).map((group) => {
+      const displayLines = displayEstimateLines(group.lines, room);
+      return {
+        ...group,
+        displayLines,
+        choicesToPrice: displayLines.filter((line) => line.amountMinor === null)
+          .length,
+      };
+    }),
+    choicesToPrice = groups.reduce(
+      (sum, group) => sum + group.choicesToPrice,
+      0,
+    );
   return (
     <section
       className={styles.estimateReview}
@@ -41,9 +60,11 @@ export function EstimateReview({
           <p className={styles.eyebrow}>Your shopping estimate</p>
           <h2>{money(estimate.knownTotalMinor, 'USD')}</h2>
           <p>
-            {!estimate.complete
+            {estimate.unpricedCount
               ? 'Known subtotal · some items still need a price'
-              : 'Planning total · confirm before ordering'}
+              : !estimate.complete
+                ? 'Listed-price subtotal · review quantities and fit'
+                : 'Planning total · confirm before ordering'}
           </p>
         </div>
         <span className={styles.estimateEmblem}>
@@ -55,12 +76,12 @@ export function EstimateReview({
         {groups.map((group) => (
           <a
             key={group.category}
-            href={`#estimate-${group.category}`}
+            href={`#${id}-estimate-${group.category}`}
             onClick={(event) => {
               event.preventDefault();
               event.currentTarget
                 .closest('section')
-                ?.querySelector(`#estimate-${group.category}`)
+                ?.querySelector(`[id="${id}-estimate-${group.category}"]`)
                 ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }}
           >
@@ -79,18 +100,26 @@ export function EstimateReview({
               {group.label}
               <strong>{money(group.known, 'USD')}</strong>
               {group.unpriced > 0 && (
-                <small>{group.unpriced} still to price</small>
+                <small>{group.choicesToPrice} still to price</small>
               )}
             </span>
           </a>
         ))}
       </div>
       {estimate.unpricedCount > 0 && (
-        <p className={styles.estimateNotice}>
-          The subtotal excludes {estimate.unpricedCount} unpriced{' '}
-          {estimate.unpricedCount === 1 ? 'item' : 'items'}. Choose products to
-          complete those prices.
-        </p>
+        <div className={styles.estimateNotice}>
+          <p>
+            Choose products to complete your estimate. {choicesToPrice}{' '}
+            {choicesToPrice === 1 ? 'choice still needs' : 'choices still need'}{' '}
+            a price.
+          </p>
+          {onChooseProducts && (
+            <button className="glass-control" onClick={onChooseProducts}>
+              {hasOptions ? 'Choose products' : 'Find options'}{' '}
+              <span aria-hidden="true">→</span>
+            </button>
+          )}
+        </div>
       )}
       {materialsOnly && (
         <p className={styles.note}>
@@ -101,7 +130,7 @@ export function EstimateReview({
       {groups.map((group) => (
         <section
           key={group.category}
-          id={`estimate-${group.category}`}
+          id={`${id}-estimate-${group.category}`}
           className={styles.estimateCategory}
         >
           <div className={styles.cardTop}>
@@ -111,8 +140,15 @@ export function EstimateReview({
               {group.unpriced > 0 ? ' + unpriced' : ''}
             </strong>
           </div>
+          {group.category === 'walls' && (
+            <p className={styles.categoryGuide}>
+              {group.choicesToPrice > 0
+                ? 'Choose paint for each included wall finish. Matching walls share the paint and can quantity.'
+                : 'Paint covers every included matching wall, rounded up to whole cans.'}
+            </p>
+          )}
           <div className={styles.estimateItems}>
-            {group.lines.map((line) => {
+            {group.displayLines.map((line) => {
               const target = line.targets.find((t) => t.kind === 'furniture'),
                 piece =
                   target?.kind === 'furniture'
@@ -131,6 +167,7 @@ export function EstimateReview({
               const pricing = {
                 sample: 'Example price',
                 sourced: 'Store price',
+                listed: 'Listed price · review details',
                 manual: 'Entered price',
                 allowance: 'Allowance',
                 included: 'Already included',
@@ -166,17 +203,20 @@ export function EstimateReview({
                       )}
                     </div>
                     <div>
-                      <h4>{line.label}</h4>
+                      <h4>
+                        {line.label[0]!.toUpperCase() + line.label.slice(1)}
+                      </h4>
                       <p>
-                        {line.pricing === 'included'
-                          ? 'No new purchase'
-                          : humanQuantity(line.quantity)}{' '}
-                        · {pricing}
+                        {line.pricing === 'unpriced'
+                          ? 'Choose a priced product to add this cost'
+                          : line.pricing === 'included'
+                            ? 'No new purchase'
+                            : `${humanQuantity(line.quantity)}${line.category === 'walls' && line.targets.length === 4 ? ' · All four walls' : ''} · ${pricing}`}
                       </p>
                     </div>
                     <strong>
                       {line.amountMinor === null
-                        ? 'Not priced'
+                        ? 'Price pending'
                         : money(line.amountMinor, 'USD')}
                     </strong>
                   </div>

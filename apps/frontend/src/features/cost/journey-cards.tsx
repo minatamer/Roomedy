@@ -16,6 +16,7 @@ export function JourneyCards({
   controller,
   state,
   onResearch,
+  onFindOptions,
   onContinue,
   researchBusy = false,
 }: {
@@ -23,6 +24,7 @@ export function JourneyCards({
   controller: SessionController;
   state: SessionSnapshot;
   onResearch: (key: string, query: string, matchingWalls?: boolean) => void;
+  onFindOptions: () => void;
   onContinue: (section: CostSection) => void;
   researchBusy?: boolean;
 }) {
@@ -40,9 +42,29 @@ export function JourneyCards({
       >
         <h3>What would you like to start with?</h3>
         <p>
-          Pick one. I’ll guide you through the choices, then bring the costs
-          together.
+          Find options for the whole room, or start with one part. I’ll help you
+          choose, then bring the costs together.
         </p>
+        <div className={styles.wholeRoomStart}>
+          <span className={styles.startVisual}>
+            <ChatIcon kind="search" />
+          </span>
+          <div className={styles.wholeRoomCopy}>
+            <span>Recommended</span>
+            <h4>Find options for the whole room</h4>
+            <p>
+              Compare furniture, flooring and wall paint together, then choose
+              your favourites for the estimate.
+            </p>
+          </div>
+          <button
+            className="glass-control"
+            disabled={!!state.candidate || researchBusy}
+            onClick={onFindOptions}
+          >
+            Find all options <span aria-hidden="true">→</span>
+          </button>
+        </div>
         <div className={styles.startGrid}>
           {(
             [

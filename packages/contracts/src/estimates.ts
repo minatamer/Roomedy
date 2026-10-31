@@ -204,12 +204,75 @@ const targetSchema = z.discriminatedUnion('kind', [
   }),
   z.strictObject({ kind: z.literal('room'), id: idSchema }),
 ]);
+export const listedCoverageSchema = z.strictObject({
+  coverageMm2: z
+    .number()
+    .int()
+    .min(10_000)
+    .max(1_000_000_000)
+    .nullable()
+    .optional(),
+  coverageMm2PerLitre: z
+    .number()
+    .int()
+    .min(10_000)
+    .max(1_000_000_000)
+    .nullable()
+    .optional(),
+});
+export const selectedTakeoffSchema = z.discriminatedUnion('kind', [
+  z.strictObject({
+    kind: z.literal('floor'),
+    mode: z.enum(['automatic', 'manual']),
+    coverageMm2: z.number().int().min(10_000).max(1_000_000_000),
+    coverageSource: z.enum(['product', 'planning', 'visitor']),
+  }),
+  z.strictObject({
+    kind: z.literal('paint'),
+    mode: z.enum(['automatic', 'manual']),
+    coverageMm2PerLitre: z.number().int().min(10_000).max(1_000_000_000),
+    coverageSource: z.enum(['product', 'planning', 'visitor']),
+    volumeMl: z.number().int().min(1).max(100_000),
+    volumeSource: z.enum(['product', 'planning', 'visitor']),
+  }),
+]);
+export type SelectedTakeoff = z.infer<typeof selectedTakeoffSchema>;
+/** Editable planning assumptions, not merchant specifications. Matches existing authored examples. */
+export const LISTED_PLANNING_COVERAGE = {
+  floorMm2: 2_200_000,
+  paintMm2PerLitre: 10_000_000,
+  canMl: 5000,
+} as const;
+export const selectedPriceSchema = z.strictObject({
+  key: z.string().min(1).max(96),
+  scope: z.string().min(1).max(2048),
+  label: labelSchema,
+  url: sourceUrlSchema,
+  simulation: z.boolean(),
+  unitPriceMinor: unitPrice,
+  unit: z.enum(['each', 'pack', 'can', 'm2']),
+  quantity: z.number().int().min(1).max(100_000),
+  quantityConfirmed: z.boolean(),
+  qualifier: z.string().max(200),
+  targets: z.array(targetSchema).min(1).max(4),
+  takeoff: selectedTakeoffSchema.optional(),
+});
+export type SelectedPrice = z.infer<typeof selectedPriceSchema>;
 export const estimateSettingsSchema = z
   .strictObject({
     roomId: idSchema,
     /** Explicit fresh demo scope; missing geometry uses disposable planning quantities. */
     demoScope: z.literal('materials').optional(),
     locality: localitySchema,
+    /** Visitor-selected listing prices; provisional until fit and coverage are reviewed. */
+    selectedPrices: z
+      .array(selectedPriceSchema)
+      .max(45)
+      .refine(
+        (prices) =>
+          new Set(prices.map((price) => price.key)).size === prices.length,
+      )
+      .optional(),
     floor: z.strictObject({
       enabled: z.boolean(),
       offerId: optionalOffer,
@@ -329,12 +392,14 @@ export const estimateLineSchema = z.strictObject({
   pricing: z.enum([
     'sample',
     'sourced',
+    'listed',
     'manual',
     'allowance',
     'included',
     'unpriced',
   ]),
   amountMinor: minor.nullable(),
+  productKey: z.string().min(1).max(96).optional(),
   quantity: estimateQuantitySchema.nullable(),
   installed: estimateQuantitySchema.nullable(),
   required: estimateQuantitySchema.nullable(),
@@ -380,10 +445,41 @@ export type RoomEstimate = z.infer<typeof roomEstimateSchema>;
 export type EstimateQuantity = z.infer<typeof estimateQuantitySchema>;
 export type EstimateTarget = z.infer<typeof targetSchema>;
 /** Accepted financial inputs, shared with the bounded room Undo history. */
+export const productChoiceSchema = z.strictObject({
+  key: z.string().min(1).max(96),
+  scope: z.string().min(1).max(2048),
+  label: labelSchema,
+  url: sourceUrlSchema,
+  imageUrl: sourceUrlSchema.nullable(),
+  simulation: z.boolean(),
+  offerId: optionalOffer,
+  /** Legacy display reference; recognized USD formats can be upgraded in the working draft. */
+  quotedPrice: z.string().min(1).max(200).nullable(),
+  listingPrice: z
+    .strictObject({
+      priceMinor: unitPrice,
+      currency: quoteCurrencySchema,
+      country: z.string().regex(/^[A-Z]{2}$/),
+      unit: z.enum(['item', 'pack', 'can', 'hour', 'job', 'm2', 'm', 'each']),
+      volumeMl: z.number().int().min(1).max(1_000_000).nullable(),
+      unavailable: z.boolean(),
+      ...listedCoverageSchema.shape,
+    })
+    .optional(),
+});
+export type ProductChoice = z.infer<typeof productChoiceSchema>;
+export const productChoicesSchema = z
+  .array(productChoiceSchema)
+  .max(45)
+  .refine(
+    (choices) =>
+      new Set(choices.map((choice) => choice.key)).size === choices.length,
+  );
 export const estimateStateSchema = z.strictObject({
   settings: estimateSettingsSchema,
   offers: estimateOffersSchema,
   budgetMinor: minor.nullable(),
+  productChoices: productChoicesSchema.optional(),
 });
 export type EstimateState = z.infer<typeof estimateStateSchema>;
 

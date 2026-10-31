@@ -14,6 +14,7 @@ import type {
 } from '@roomedy/contracts/estimates';
 import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import { planningRoom } from './planning.js';
+import { selectedTakeoff } from './selected-takeoff.js';
 import { validateRoom } from './commands.js';
 import { findCatalogueEntry } from './catalogue.js';
 import {
@@ -147,7 +148,120 @@ export function calculateRoomEstimate(
       targets: EstimateTarget[],
       reason: string,
       installed: EstimateQuantity | null = null,
+      primary = false,
     ) {
+      const selected =
+        primary && settings.locality.currency === 'USD'
+          ? settings.selectedPrices?.find(
+              (price) =>
+                price.targets.some((target) =>
+                  targets.some(
+                    (t) => JSON.stringify(t) === JSON.stringify(target),
+                  ),
+                ) &&
+                price.targets.every((target) =>
+                  target.kind === 'furniture'
+                    ? settings.furniture.some(
+                        (item) => item.id === target.id && item.mode === 'buy',
+                      )
+                    : target.kind === 'surface' &&
+                      (target.surface === 'floor'
+                        ? settings.floor.enabled
+                        : settings.walls.some(
+                            (wall) =>
+                              wall.wall === target.surface && wall.enabled,
+                          )),
+                ),
+            )
+          : undefined;
+      if (selected) {
+        const existing = lines.find((line) => line.productKey === selected.key);
+        if (existing) return existing;
+        let numerator = selected.quantity,
+          denominator = 1;
+        const takeoff = selected.takeoff
+          ? selectedTakeoff(room, settings, selected)
+          : null;
+        if (selected.takeoff && !takeoff)
+          return emit({
+            category,
+            label,
+            targets: selected.targets,
+            pricing: 'unpriced',
+            amountMinor: null,
+            quantityStatus: 'incomplete',
+            rule: 'Confirm room measurements and opening sizes before calculating whole-room materials.',
+          });
+        if (takeoff) numerator = takeoff.count;
+        if (selected.unit === 'm2') {
+          const area =
+            category === 'floor'
+              ? room.room.width.value === null || room.room.depth.value === null
+                ? null
+                : room.room.width.value * room.room.depth.value -
+                  settings.floor.excludedMm2
+              : selected.targets.reduce<number | null>((sum, target) => {
+                  const wall =
+                    target.kind === 'surface' &&
+                    estimateWallAreas(room).find(
+                      (wall) => wall.wall === target.surface,
+                    );
+                  return sum === null || !wall || wall.netMm2 === null
+                    ? null
+                    : sum + wall.netMm2;
+                }, 0);
+          if (area === null || area <= 0)
+            return emit({
+              category,
+              label,
+              targets,
+              pricing: 'unpriced',
+              amountMinor: null,
+              rule: 'Confirm the surface area before applying its listed rate.',
+              quantityStatus: 'incomplete',
+            });
+          numerator = area;
+          denominator = 1_000_000;
+        }
+        return emit({
+          category,
+          label: selected.label,
+          targets: selected.targets,
+          pricing: 'listed',
+          productKey: selected.key,
+          amountMinor: estimateMoney(
+            BigInt(selected.unitPriceMinor) * BigInt(numerator),
+            BigInt(denominator),
+          ),
+          quantity:
+            selected.unit === 'm2'
+              ? quantity(numerator, 'mm2')
+              : quantity(numerator, selected.unit),
+          installed: takeoff?.installed ?? null,
+          required: takeoff?.required ?? null,
+          purchased: takeoff?.purchased ?? null,
+          quantityStatus:
+            takeoff || selected.quantityConfirmed ? 'estimated' : 'incomplete',
+          rule: takeoff
+            ? `${takeoff.rule} ${numerator} × USD ${(selected.unitPriceMinor / 100).toFixed(2)} listed unit price.`
+            : `${numerator}/${denominator} ${selected.unit} × USD ${(selected.unitPriceMinor / 100).toFixed(2)} listed unit price, rounded once.`,
+          notes: [
+            `${selected.simulation ? 'Example' : 'Store'} listed price; confirm fit, variant, tax, delivery and availability. ${selected.qualifier}`.trim(),
+            ...(takeoff
+              ? takeoff.notes
+              : [
+                  selected.unit === 'm2'
+                    ? 'Net surface area only; waste, coats and preparation are not included in this listed rate.'
+                    : selected.quantityConfirmed
+                      ? 'Visitor-entered quantity; supplier coverage and fit still need confirmation.'
+                      : 'One selected unit. Review and edit the quantity; this does not confirm full-room coverage.',
+                ]),
+            'Product source is recorded with your selected product.',
+          ]
+            .slice(0, 8)
+            .map((note) => note.slice(0, 240)),
+        });
+      }
       return emit({
         category,
         label,
@@ -269,6 +383,7 @@ export function calculateRoomEstimate(
           floorTarget,
           'This finish needs a specific supplier/manual work quote. Click-floor pack rules cannot price this system.',
           floorInstalled,
+          true,
         );
         floorArea = null;
       } else if (!material || floorArea === null)
@@ -278,6 +393,7 @@ export function calculateRoomEstimate(
           floorTarget,
           'Choose an applicable floor product and confirm room width/depth.',
           floorInstalled,
+          true,
         );
       else {
         const requiredNumerator =
@@ -451,6 +567,8 @@ export function calculateRoomEstimate(
           `${selected.wall} wall finish`,
           targets,
           'Panels, fabric and other wall systems need a specific supplier/manual quote. Paint yield cannot price this finish.',
+          null,
+          true,
         );
         continue;
       }
@@ -466,6 +584,8 @@ export function calculateRoomEstimate(
             `${selected.wall} wall ${kind}`,
             targets,
             `Choose an applicable ${kind} product with per-coat coverage and pack prices.`,
+            null,
+            kind === 'paint',
           );
           return;
         }
@@ -480,6 +600,8 @@ export function calculateRoomEstimate(
             `${selected.wall} wall paint variant`,
             targets,
             'The selected paint colour/sheen does not match the accepted design. Review the variant before pricing.',
+            null,
+            true,
           );
           return;
         }
@@ -493,6 +615,8 @@ export function calculateRoomEstimate(
             `${selected.wall} wall tint quote`,
             targets,
             'A researched base-price offer does not confirm the cost of the chosen tint. Select a priced variant or explicit allowance.',
+            null,
+            true,
           );
           return;
         }
@@ -603,6 +727,8 @@ export function calculateRoomEstimate(
           `Purchase ${piece.label}`,
           targets,
           'Select an applicable product/variant or enter a supplier allowance.',
+          null,
+          true,
         );
         assemblyCount = null;
         continue;
@@ -632,6 +758,8 @@ export function calculateRoomEstimate(
           `Review ${piece.label} product size`,
           targets,
           'Product dimensions differ or are missing. Review a normal design replacement/size proposal before attaching this price.',
+          null,
+          true,
         );
       else
         priced(
@@ -901,8 +1029,12 @@ export function calculateRoomEstimate(
       ),
       taxMinor: sum((line) => line.category === 'tax'),
       knownTotalMinor,
-      totalMinor: unpricedCount ? null : knownTotalMinor,
-      complete: unpricedCount === 0,
+      totalMinor:
+        unpricedCount || lines.some((line) => line.pricing === 'listed')
+          ? null
+          : knownTotalMinor,
+      complete:
+        unpricedCount === 0 && !lines.some((line) => line.pricing === 'listed'),
       unpricedCount,
       assumptions: assumptions.slice(0, 32),
     });
