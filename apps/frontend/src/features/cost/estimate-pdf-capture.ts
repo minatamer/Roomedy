@@ -2,8 +2,17 @@ import type { ExportPort } from '../design-export/job';
 import { captureRoomPictures } from '../design-export/capture';
 import { captureEstimatePlan } from '../design-export/portfolio';
 import { DesignExportError } from '../design-export/facts';
+import { captureProductPhotos } from './product-photos';
+import { currentProductChoices } from './product-choices';
 /** One finite existing renderer and the shared plan projection, always from port.project. */
 export async function captureEstimatePictures(port: ExportPort) {
+  const photos = captureProductPhotos(
+    port.estimate
+      ? currentProductChoices(port.estimate.room, port.estimate.pricing)
+      : [],
+    port.signal,
+    port.check,
+  ).catch(() => []);
   const captured = await captureRoomPictures(
     port.project.current,
     port.signal,
@@ -26,7 +35,9 @@ export async function captureEstimatePictures(port: ExportPort) {
     port.check();
     const overview = new Uint8Array(await blob.arrayBuffer());
     const plan = await captureEstimatePlan(port.project, port.check);
-    return { overview, plan, simplified: captured.simplified };
+    const products = await photos;
+    port.check();
+    return { overview, plan, products, simplified: captured.simplified };
   } finally {
     captured.dispose();
   }

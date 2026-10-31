@@ -9,9 +9,11 @@ import { ensureEstimateSnapshot } from './versions';
 export function EstimatePdfControls({
   controller,
   selectedId,
+  label = 'Download PDF',
 }: {
   controller: SessionController;
   selectedId: string | null;
+  label?: string;
 }) {
   const [chosen, setChosen] = useState<EstimateVersion | null>(null),
     [busy, setBusy] = useState(false),
@@ -160,7 +162,7 @@ export function EstimatePdfControls({
           }
         }}
       >
-        Download PDF
+        {label}
       </button>
       {message && !chosen && <p role="status">{message}</p>}
       {chosen &&
@@ -181,9 +183,10 @@ export function EstimatePdfControls({
               {new Date(chosen.savedAt).toLocaleString('en-GB')}
             </p>
             <p>
-              Includes this exact saved design, itemized costs, allowances,
-              unpriced items, supplier links and the shopping/work plan. No
-              prices are refreshed and no order is placed.
+              Includes this exact saved design, your selected products, itemized
+              costs, allowances, unpriced items, supplier links and the
+              shopping/work plan. No prices are refreshed and no order is
+              placed.
             </p>
             <p role="status" aria-live="polite">
               {message}

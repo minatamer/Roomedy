@@ -4,6 +4,9 @@ import { pathToFileURL } from 'node:url';
 import type * as PdfLib from '../apps/frontend/node_modules/pdf-lib';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { SessionController } from '../apps/frontend/src/features/session/controller.js';
+import { createManualRoom } from '../apps/frontend/src/features/session/entry/manual-room.js';
+import { marketTargets } from '../apps/frontend/src/features/cost/market-research.js';
+import { chooseProduct } from '../apps/frontend/src/features/cost/attach-offer.js';
 import {
   estimatePdf,
   estimateQuantityText,
@@ -80,6 +83,328 @@ async function read(bytes: Uint8Array) {
   return { pdf, pages, text: pages.join('\n'), links };
 }
 describe('actual selectable itemized estimate PDF', () => {
+  it('keeps an unpriced selected link as a reference without claiming a quote or listing rate', async () => {
+    const c = new SessionController(createManualRoom('partial'));
+    try {
+      c.setDestination('cost', 'en-US');
+      const s = c.getSnapshot(),
+        target = marketTargets(s.workspace!.current)[0]!;
+      expect(
+        chooseProduct(
+          c,
+          target.brief,
+          {
+            label: 'Unpriced selected reference',
+            url: 'https://merchant.example/reference',
+            imageUrl: null,
+            offer: null,
+            listing: null,
+            conditions: 'standard',
+            match: 'similar',
+            differences: [],
+            evidence: 'Specific product page, no verified price',
+          },
+          s.cost!.revision,
+          s.workspace!.current.roomRevision,
+          false,
+        ).ok,
+      ).toBe(true);
+      expect(c.saveEstimate('Reference only').ok).toBe(true);
+      const saved = c.getSnapshot().estimateVersions[0]!,
+        before = JSON.stringify(saved),
+        output = await read(await estimatePdf(saved, pictures));
+      expect(output.text).toContain('Selected reference');
+      expect(output.text).toContain('Price needs review');
+      expect(output.text).toContain('Review price or fit');
+      expect(output.links).toContain('https://merchant.example/reference');
+      expect(saved.estimate.knownTotalMinor).toBe(0);
+      expect(JSON.stringify(saved)).toBe(before);
+    } finally {
+      c.dispose();
+    }
+  });
+  it.each([false, true])(
+    'uses the current downloadable PDF layout for selected products (simulation: %s)',
+    async (simulation) => {
+      const c = new SessionController(createManualRoom('partial'));
+      try {
+        c.setDestination('cost', 'en-US');
+        for (const target of marketTargets(
+          c.getSnapshot().workspace!.current,
+        )) {
+          const s = c.getSnapshot(),
+            kind = target.brief.kind;
+          expect(
+            chooseProduct(
+              c,
+              target.brief,
+              {
+                label: target.label + ' selected product',
+                url: 'https://merchant.example/' + target.key,
+                imageUrl: null,
+                evidence: 'Offline published listing fixture',
+                offer: null,
+                conditions: 'standard',
+                match: 'similar',
+                differences: [],
+                listing: {
+                  priceMinor: 10000,
+                  currency: 'USD',
+                  country: 'US',
+                  unit:
+                    kind === 'floor'
+                      ? 'pack'
+                      : kind === 'paint'
+                        ? 'can'
+                        : 'item',
+                  volumeMl: kind === 'paint' ? 2500 : null,
+                  observedAt: 123,
+                },
+              },
+              s.cost!.revision,
+              s.workspace!.current.roomRevision,
+              simulation,
+              target.matchingWalls,
+            ).ok,
+          ).toBe(true);
+        }
+        expect(c.saveEstimate('Priced room').ok).toBe(true);
+        const saved = c.getSnapshot().estimateVersions[0]!,
+          before = JSON.stringify(saved);
+        expect(saved.estimate.unpricedCount).toBe(0);
+        expect(saved.estimate.complete).toBe(false);
+        const output = await read(await estimatePdf(saved, pictures));
+        expect(output.text).toContain('All selected items have a price.');
+        expect(output.text).toContain(
+          'Measurements, coverage or product details still need review.',
+        );
+        expect(output.text).not.toContain('0 unpriced');
+        expect(output.text).not.toContain('0 unresolved');
+        if (simulation) expect(output.text).toContain('authored examples');
+        else expect(output.text).not.toContain('authored examples');
+        expect(output.text).not.toContain('Sample amounts need');
+        expect(output.text).toContain('Product checks');
+        expect(output.text.replace(/\s+/g, ' ')).toContain(
+          'Paint: colour, sheen & coats.',
+        );
+        expect(output.text).toContain('HOW THE TOTAL IS BUILT');
+        expect(output.text).toContain('BEFORE YOU ORDER');
+        expect(output.text).not.toContain('Your shopping plan');
+        expect(output.pdf.getPageCount()).toBe(6);
+        const productPages = output.pages.filter((page) =>
+          page.includes('Item / selected scope'),
+        );
+        expect(productPages).toHaveLength(1);
+        for (const choice of saved.pricing.productChoices!)
+          expect(productPages[0]!.replace(/\s+/g, '')).toContain(
+            choice.label.replace(/\s+/g, ''),
+          );
+        const quantityPages = output.pages.filter((page) =>
+          page.includes('Quantity details'),
+        );
+        expect(quantityPages).toHaveLength(1);
+        const quantityPage = quantityPages[0]!;
+        expect(quantityPage).toContain('ROOM FLOOR');
+        expect(quantityPage).toContain('WITH CUTTING WASTE');
+        expect(quantityPage).toContain('NET WALLS');
+        expect(quantityPage).toContain('PAINT NEEDED');
+        expect(quantityPage).toContain('BUY');
+        expect(quantityPage).not.toContain('Price & source');
+        expect(quantityPage).not.toContain('Review notes');
+        expect(quantityPage).not.toContain('Selected product - price included');
+        const sourcePages = output.pages.filter((page) =>
+          page.includes('Products, rates & source evidence'),
+        );
+        expect(sourcePages).toHaveLength(1);
+        expect(sourcePages[0]).toContain('PRICE BASIS');
+        expect(sourcePages[0]).toContain(simulation ? 'Example' : 'Listed');
+        expect(sourcePages[0]).toContain('OUTSIDE THIS ESTIMATE');
+        expect(sourcePages[0]).toContain('CHECK BEFORE ORDERING');
+        expect(sourcePages[0]).toContain('PLANNING ONLY');
+        expect(sourcePages[0]).not.toContain('Calculation references');
+        expect(output.text).not.toContain(saved.calculationVersion);
+        expect(output.pdf.getKeywords()).toContain(saved.calculationVersion);
+        expect(output.pdf.getKeywords()).toContain(saved.id);
+        expect(output.links).toHaveLength(8);
+        expect(new Set(output.links).size).toBe(4);
+        expect(JSON.stringify(saved)).toBe(before);
+      } finally {
+        c.dispose();
+      }
+    },
+  );
+  it.each([true, false])(
+    'exports whole-room pack quantities with product/assumed coverage, facts=%s',
+    async (facts) => {
+      const c = new SessionController(createManualRoom('partial'));
+      try {
+        c.setDestination('cost', 'en-US');
+        const s = c.getSnapshot(),
+          target = marketTargets(s.workspace!.current).find(
+            (t) => t.brief.kind === 'floor',
+          )!;
+        expect(
+          chooseProduct(
+            c,
+            target.brief,
+            {
+              label: 'Whole-room floor',
+              url: 'https://merchant.example/room-floor',
+              imageUrl: null,
+              match: 'lead',
+              conditions: 'standard',
+              evidence: 'Offline fixture',
+              differences: [],
+              offer: null,
+              listing: {
+                priceMinor: 4200,
+                currency: 'USD',
+                country: 'US',
+                unit: 'pack',
+                volumeMl: null,
+                observedAt: 123,
+                ...(facts ? { coverageMm2: 2_200_000 } : {}),
+              },
+            },
+            s.cost!.revision,
+            s.workspace!.current.roomRevision,
+            false,
+          ).ok,
+        ).toBe(true);
+        c.saveEstimate('Whole-room floor');
+        const saved = c.getSnapshot().estimateVersions[0]!,
+          before = JSON.stringify(saved),
+          output = await read(await estimatePdf(saved, pictures));
+        expect(output.text).toContain('USD 462.00');
+        expect(output.text).toContain('11 pack');
+        expect(output.text).toContain('BUY');
+        expect(output.text).toContain('11 packs');
+        expect(output.text).toContain('WITH CUTTING WASTE');
+        expect(output.text).toContain(
+          facts ? 'Product coverage' : 'Planning coverage',
+        );
+        expect(JSON.stringify(saved)).toBe(before);
+      } finally {
+        c.dispose();
+      }
+    },
+  );
+  it('includes selected listing prices in the actual PDF subtotal and excludes unchosen alternatives', async () => {
+    const c = new SessionController(createManualRoom('partial'));
+    try {
+      c.setDestination('cost', 'en-US');
+      const state = c.getSnapshot(),
+        target = marketTargets(state.workspace!.current)[0]!;
+      const candidate = {
+        label: 'Chosen pending bed',
+        url: 'https://merchant.example/chosen-bed',
+        imageUrl: 'https://cdn.example/chosen-bed.jpg',
+        match: 'lead' as const,
+        conditions: 'standard' as const,
+        evidence: 'Observed listed product; specifications incomplete',
+        differences: [],
+        offer: null,
+        listing: {
+          priceMinor: 24900,
+          currency: 'USD' as const,
+          country: 'US',
+          unit: 'item' as const,
+          volumeMl: null,
+          observedAt: 123,
+        },
+      };
+      expect(
+        chooseProduct(
+          c,
+          target.brief,
+          {
+            ...candidate,
+            label: 'Unchosen pending bed',
+            url: 'https://merchant.example/unchosen-bed',
+          },
+          state.cost!.revision,
+          state.workspace!.current.roomRevision,
+          false,
+        ).ok,
+      ).toBe(true);
+      const current = c.getSnapshot();
+      expect(
+        chooseProduct(
+          c,
+          target.brief,
+          candidate,
+          current.cost!.revision,
+          current.workspace!.current.roomRevision,
+          false,
+        ).ok,
+      ).toBe(true);
+      expect(c.saveEstimate('Selected products').ok).toBe(true);
+      const saved = c.getSnapshot().estimateVersions[0]!,
+        before = JSON.stringify(saved);
+      const photo = {
+        key: target.key,
+        url: candidate.url,
+        imageUrl: candidate.imageUrl!,
+        jpeg,
+      };
+      const output = await read(
+        await estimatePdf(saved, { ...pictures, products: [photo] }),
+      );
+      const images = (result: Awaited<ReturnType<typeof read>>) =>
+        result.pdf.getPages().reduce((count, page) => {
+          const objects = page.node
+            .Resources()
+            ?.lookupMaybe(lib.PDFName.of('XObject'), lib.PDFDict);
+          return (
+            count +
+            (objects?.keys().filter((key) => {
+              const object = objects.lookup(key);
+              return (
+                object instanceof lib.PDFRawStream &&
+                object.dict.get(lib.PDFName.of('Subtype'))?.toString() ===
+                  '/Image'
+              );
+            }).length ?? 0)
+          );
+        }, 0);
+      expect(images(output)).toBe(3);
+      expect(output.text).toContain('Selected product photo');
+      expect(output.text).toContain('Quantity details');
+      const wrong = await read(
+        await estimatePdf(saved, {
+          ...pictures,
+          products: [
+            { ...photo, url: 'https://merchant.example/unchosen-bed' },
+          ],
+        }),
+      );
+      expect(images(wrong)).toBe(2);
+      expect(wrong.text).toContain('unavailable');
+      expect(wrong.links).toContain(candidate.url);
+      const corrupt = await read(
+        await estimatePdf(saved, {
+          ...pictures,
+          products: [{ ...photo, jpeg: new Uint8Array([1, 2, 3]) }],
+        }),
+      );
+      expect(images(corrupt)).toBe(2);
+      expect(corrupt.links).toContain(candidate.url);
+      expect(output.text).toContain('Your selected products');
+      expect(output.text).toContain('Chosen pending bed');
+      expect(output.text).not.toContain('Unchosen pending bed');
+      expect(output.text).toContain('Included in subtotal');
+      expect(output.text).toContain('USD 249.00');
+      expect(output.text).toContain('Listed');
+      expect(output.links).toContain(candidate.url);
+      expect(output.links).not.toContain(
+        'https://merchant.example/unchosen-bed',
+      );
+      expect(saved.estimate.knownTotalMinor).toBe(24900);
+      expect(JSON.stringify(saved)).toBe(before);
+    } finally {
+      c.dispose();
+    }
+  });
   it('renders human paint areas in the actual PDF without mutating the saved calculation', async () => {
     const saved = version(),
       before = JSON.stringify(saved);
@@ -95,8 +420,9 @@ describe('actual selectable itemized estimate PDF', () => {
       expect(c.saveEstimate('Material shopping').ok).toBe(true);
       const version = c.getSnapshot().estimateVersions[0]!;
       const output = await read(await estimatePdf(version, pictures));
-      expect(output.text).toContain('Your shopping plan');
-      expect(output.text).toContain('Choose your wall paint');
+      expect(output.text).toContain('BEFORE YOU ORDER');
+      expect(output.text).toContain('Paint: colour, sheen & coats.');
+      expect(output.text).not.toContain('Your shopping plan');
       expect(output.text).not.toContain('Prepare and paint');
       expect(output.text).not.toContain('Clear and protect');
       expect(output.text).not.toContain('service is explicitly excluded');

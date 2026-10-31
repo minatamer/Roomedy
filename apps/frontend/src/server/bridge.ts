@@ -1,6 +1,8 @@
 import 'server-only';
 import { serviceFetch } from './service-identity';
 import { releaseMismatch, stampRelease } from './release-response';
+import { createProductPhotoHandler } from './product-photo';
+const productPhoto = createProductPhotoHandler();
 const release = process.env.ROOMEDY_RELEASE_ID ?? '';
 const origin = process.env.ROOMEDY_BACKEND_ORIGIN || 'http://127.0.0.1:4321';
 const identity = process.env.ROOMEDY_SERVICE_IDENTITY || 'none';
@@ -26,6 +28,17 @@ const unavailable = () =>
     ),
     release,
   );
+export async function forwardProductPhoto(request: Request) {
+  const changed = releaseMismatch(request, release);
+  if (changed) return changed;
+  return stampRelease(
+    await productPhoto(
+      request,
+      process.env.ROOMEDY_PUBLIC_ORIGIN || 'http://127.0.0.1:4320',
+    ),
+    release,
+  );
+}
 import { bridgeGet } from './bridge-core';
 import type { PublicOperation } from './bridge-core';
 import { bridgePost } from './bridge-post';
