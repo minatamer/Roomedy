@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Make sample photos exercise the current feature set —2November2026
+
+The owner wants a useful complex room instead of only a plain bed/cabinet. Keep coherent overlapping room and furniture-detail views with a work area, mirrors/storage, visible light fixtures, openings and independently coloured bed parts. Check reverse camera orientation before shipping, preserve identifiable materials and avoid clutter/phantom reflection objects. Bundle bounded versioned public files so the normal deployed sample intake works; asset availability is distinct from paid model-detection accuracy. Keep actual generation prompts/hashes/coverage and use ordinary decoding/explicit Continue without sample-specific semantic shortcuts. [RM-096](../tickets/RM-096-refresh-the-public-sample-room-photos.md), [current assets/prompts](sample-room-photos-2026-11-02.md), [receipt](../validation/RM-096.md).
+
 ## Keep wall previews visible and commit what the visitor saw — 2 November2026
 
 Intersect the visible wall for a hanging piece instead of projecting its elevated pointer onto the floor. Keep a missed in-canvas ray visibly invalid, retain physical validation, and commit the displayed green preview when release coordinates match. Prevent pending pointer frames from reviving a cancelled gesture. A live reflector must exclude its own glossy backing and editor previews. Verify actual opposite furniture from a meaningful angle; a high overview may physically reflect floor/ceiling. New furniture/features must feed current catalogue/capability facts to every Medy route and keep the local intent/compiler tests connected. The owner explicitly said refreshing still failed: a fresh successful fixture is not evidence that their exact prior failure was stale. [RM-095](../tickets/RM-095-stabilize-mirror-placement-and-reflections.md), [receipt](../validation/RM-095.md).

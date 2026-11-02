@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Finish the validated RM-095 exact23path local checkpoint; owner rechecks original mirror drops/reflection angles in the paid-ready app. No agent paid/Send/env/restart/image/cloud/push/deploy action.
+Next action: Finish validated RM-096 exact two-group local checkpoint (16asset/implementation/evidence paths, then6shared progress paths). Owner can test the richer public samples in the paid-ready app; no agent Continue/Send/paid/env/restart/image-build/cloud/push/deploy action.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1737,6 +1737,22 @@ Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
   Reason: No expanded network/provider authority or new dependencies; strict existing bounds, one owned target/pass and cleanup remain.
   Consequence / reversibility: Scoped provisional AFK recommendation; dated advisory watches and owner/exact-release evidence remain.
   Owner review requested on return: yes. Evidence: docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md, docs/commit-plans/RM-095.md, docs/engineering/room-mirrors.md, docs/validation/RM-095.md
+- **AFK-0038** (AFK-SESSION-001, 2026-11-02T19:42:07+00:00, 07-build): Replace the four examples with versioned same-room wide/bedding/workspace views, covering supported complex objects while retaining ordinary public intake and explicit recognition.
+  Reason: Four richer images broaden visual coverage within existing byte/count/decoder limits; versioned paths avoid stale force-cache responses and ship through the existing public asset copy.
+  Consequence / reversibility: Remove superseded public photos but retain their Git/provenance history. Image quality is inspected locally; actual paid detection remains owner testing.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-096-refresh-the-public-sample-room-photos.md, docs/commit-plans/RM-096.md, docs/validation/RM-096.md
+- **AFK-0039** (AFK-SESSION-001, 2026-11-02T19:58:36+00:00, 07-build): Use two cohesive RM-096 local commits: sixteen implementation/asset/provenance paths, then six shared progress/handoff paths.
+  Reason: The owner requested multiple ticket-prefixed commits; this keeps the four versioned assets, loader and their evidence atomic while separating shared checkpoint notes.
+  Consequence / reversibility: No source/test/asset rebuild between commits. Exact22path checkpoint after final validated gate; no push or deploy.
+  Owner review requested on return: no. Evidence: docs/commit-plans/RM-096.md
+- **AFK-0040** (AFK-SESSION-001, 2026-11-02T20:02:09+00:00, 09-visual-review): Accept the richer four-photo set provisionally after correcting reverse orientation and inspecting all packaged photos/native intake; owner quality/actual detection acceptance remains.
+  Reason: Broad supported feature coverage, stable identities/bed colours, bounded assets and actual gallery/preparation/phone behaviour pass.
+  Consequence / reversibility: Generated images are illustrative public inputs, not calibrated survey or paid-recognition evidence.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-096-refresh-the-public-sample-room-photos.md, docs/commit-plans/RM-096.md, docs/references/sample-room-photos-2026-11-02.md, docs/validation/RM-096.md
+- **AFK-0041** (AFK-SESSION-001, 2026-11-02T20:02:12+00:00, 10b-security-review): No additional security fix for the bounded local sample-photo asset replacement.
+  Reason: Existing same-origin/decoding/provider/lifecycle authority unchanged; finite opaque public assets and metadata removal verified.
+  Consequence / reversibility: Scoped provisional AFK recommendation only; dated watches and exact owner/release gates remain.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-096-refresh-the-public-sample-room-photos.md, docs/commit-plans/RM-096.md, docs/references/sample-room-photos-2026-11-02.md, docs/validation/RM-096.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1759,7 +1775,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-02T19:31:27+00:00",
+  "updated_at": "2026-11-02T20:02:14+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1972,8 +1988,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "AUDIT_GIT_AUTHORITY": {
-      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.\n\n2 November direct owner selects RM-089 after work-area context failure screenshots: add desk/chair → Apply → make them walnut too, and finish clarification → the work area. Preserve at least three previous messages through the existing bounded transcript; fix plural/group/clarification resolution before the model, with one all-or-nothing appearance preview and Undo. Exact thirteen-path local ticket checkpoint under existing Git authority. No paid/provider test or browser message submission (respect prior auto-review paid-mode rejection), env read/change, restart, dependency/delegation/image/cloud/push/deploy. Keep normal paid-ready services. See docs/tickets/RM-089-retain-medy-group-and-clarification-context.md.\n\nRM-089 settled outcome: allocation expanded to fourteen paths before the review-confirmed same-group shortcut correction. Ten initial reproductions failed before implementation; 185 focused checks passed, first full 1737-test gate passed, review caught post-Apply generic suggestions, new controller assertion reproduced that remaining issue, correction preserves group-ID matching and no-group inventory opportunities. Final 124 focused checks and a separate complete canonical 1737-test/111-file gate/both builds pass. Read-only validate pass 2 has no actionable findings; no further source edits after that gate. Three pure owners/two test files only; existing context/provider/financial/admission/lifecycle bounds and normal paid-ready services/env retained. Source-only identity 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712, 385 inputs/4668440 bytes. No browser Send/paid request or new image/hosted proof. Updated real-model/owner evaluation remains pending. Exact ticket-prefixed local checkpoint is authorized under existing local ticket authority.\n\n2 November owner selects RM-090: any chosen theme becomes the default preset for future manual and AI furniture additions. Nineteen-path exact allocation. Store an optional bounded canonical applied theme with existing preview/Apply/Undo/project/recovery semantics; share appearance defaults across catalogue/search/Medy additions and replacements, retain explicit overrides and unrelated accepted pieces. Legacy exact wall/floor preset matching reuses existing UI meaning; no theme guessed from generic style hints. No extra model call/paid/browser Send, env read/change, restart, dependency, delegation, image/cloud/push/deploy. Existing local ticket checkpoint authority applies after validation.\n\nRM-090 settled outcome: read-only creation-path review expanded the allocation to 21 paths before connecting manual coordinates and backend direct prepare_edits; both reuse the same new-piece helper. Eleven production files, one new 31-case test file. Ten initial reproductions failed before implementation; material ordering was corrected without relaxing preset equality; legacy tests use actual manual-room surface facts and AI replacement keeps existing owned Replace permission. Canonical formatting/lint/all types/seven boundaries/assets pass; full default unit run passes1765/1768 with only3 known release-inventory5s timeouts. All193 affected/release checks across7 files pass unchanged at CLI15s, followed by both production builds. Split settled gate covers all1768 tests/112 files; no clean unsplit-root claim. Actual in-app Modern preview/Apply, keyboard chair and coordinate desk inheritance, physical door guard and Undo pass without browser Send/provider request. Read-only validate pass2 has no actionable findings. Optional canonical theme survives Apply/Cancel/Undo/project/recovery/import and custom surfaces; exact legacy matching and explicit finish/material overrides remain bounded. Source-only385 inputs/4671600 bytes, digest 45d92931c1179ef6dae70246f6f53ce1270a7abd8709b98ba0718b38fae8d4e9. Preserve normal paid-ready services/env; owner real-model/physical acceptance and exact Linux/image/hosted release proof remain external. Exact ticket-prefixed local checkpoint remains owner-authorized.\n\nOwner directly selects RM-091 on2November: create a detailed large lighting ticket and research Three.js, then execute/validate loop. Day/Night opposite2D/3D; dark outside/windows, actual lamp illumination and manual/Medy colours; add multiple ceiling models, interior-only ceiling matching walls; first-night-only missing-light tutorial with Later/Medy/manual lighting catalogue; Floor/Ceiling plan editing. Initial48-path allocation and primary research recorded before implementation. Preserve normal paid-ready services/env, no paid/browser Send/dependency/delegation/cloud/image/push/deploy; prior local validated-ticket checkpoint authority unchanged.\n\nRM-091 settled outcome: exact allocation expanded before relevant inspector/export/size/caption integration; final52changed paths exclude the already-correct byte-identical catalogue-panel caller. Day/Night, real finite fixture illumination, optional canonical on/brightness/colour, five presets/custom, three procedural ceiling models, shared height anchoring, interior common-wall-colour ceiling, Floor/Ceiling editing and first-Night manual/unsent-Medy guidance implemented. Eight light slots/two512pxNightshadows, no new timer/dependency/network. Confirmed/fixed named-light property scope, dialog step cleanup,320px dimension overlap, LF manifest, short generic geometry and appearance-only reanchoring; existing old assertions retained except catalogue count19to22. Thirty new cases;194focused/6files and74confirmed-fix/4files pass. Final unmodified default pnpm check passes1798tests/113files, all code gates/sevenboundaries/exactassets/bothbuilds, no split/timeoutoverride. Native manual warm-red preview/Apply, four fixtures/desk, interior/Overview, keyboard ceiling movement, all-model coordinates, responsive390/320/tablet/short, one-time manual/unsent-Medy choice and idleframe45over20seconds pass. No forced native context-loss/40pieceGPU/paid-model/merchant/newPDF claim. Final read-only validation has no actionable findings; scoped AFK security selects no extra fix and retains dated watches. Current source-only394inputs/4709047bytes digest04a695bae5b077a8fd00d188ffc5d77c5eaa176aa3e2a3617321c50e61c1804e; no selected retention snapshot or Linux/image/hosted proof. Preserve paid-ready services/env and owner aesthetic/physical/actual-model acceptance. Exact local ticket checkpoint remains owner-authorized; no paid/browser Send/env/dependency/restart/delegation/Chrome/image/cloud/push/deploy.\n\n2 November owner selects RM-092: replace Day/Night visible words with sun/crescent icons, preserving behavior and accessible names. Eleven-path allocation from clean2d209ac; two presentation files only, no lighting/model/state changes. Local outline SVGs/currentColor,20px centered, aria-hidden/focusable=false, native Day/Night labels/titles. Scoped format/lint/frontend build and actual desktop/320px/keyboard review, no cosmetic tests or repeated unchanged full gate. Existing local ticket commit authority; preserve paid-ready services/env, no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-092 final: scoped Prettier/ESLint pass, frontend build/types/standalone succeeds with normal Windows permissions after sandbox symlinkEPERM. Actual IAB1280/320px shows centered20px sun/crescent in retained60x44 buttons, no text/overflow, native accessible Day/Night names/titles/aria-pressed, click/Space/Enter success and original Floor/Ceiling words. Viewport reset/testtabclosed; no Send/provider. Read-only review of exact two-file presentation diff meets ticket with no actionable findings; callback/state/modal/plan/render/business/test/dependency/config bytes retained. No new tests or unchanged full/backend/security rerun; RM-0911798test evidence stays dated. Source-only394inputs/4710015bytes digestd8e20dd1d531139aa42e60b8638eb97ea78574b0b5c9ae22a319b033709b1596; no retained snapshot/Linux/image/hosted claim. Eleven-path authorized local checkpoint only.\n\n2 November direct owner selects RM-093 after a sideways ceiling-light arrow screenshot. Confirmed shared horizontal furniture-facing marker; orient only ceiling fixture selected markers downward from just below center along actual beam, invariant under quarter-turns. Ten-path allocation, one production scene file, clean3fc473c; retain all marker styles/owners and floor direction behavior, actual light/canonical/plan/export authority. Scoped format/lint/existing lighting+room-view tests/frontend build and native all-three/rotation/floor checks; no new static mirror tests or full/backend/security rerun. Existing exact local ticket checkpoint authority, normal paid-ready services/env; no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-093 final: one scene-only selected-marker transform uses existing isCeiling, origin80mm below fixture and +Yarrow rotated to -Y; floor position/rotation style/raycast/lifecycle/inspection unchanged. Actual pendant Day→90degree→Night, flush, rotatedtrack and camera-change checks show downward arrow; existing desk comparison retains horizontal facing. Camera-comparison screenshots include active motion, not a new settled-camera acceptance claim. Ownedtabclosed; no Send/provider. Scoped format/lint and52existingtests/2files pass; frontend build/types/standalone succeeds. Final read-only review meets ticket with no actionable finding; no source edits after settled build. No new mirror test or unchanged full/backend/security rerun; prior RM0911798gate stays dated. Source-only394inputs/4710241bytes digeste094c4ef25420f09489439b5f1311bd4e36bdf590d150f30c3d7cfd2e84d8056; no retained snapshot/Linux/image/hosted proof. Existing authorized exacttenpathlocalcheckpoint; paid-ready services/env and owner/release acceptance preserved.\n\nOwner selects RM-094 mirrors on2November: newticket/executevalidate loop, wall-hung mirror, standing rear-pivot/support mirror, wardrobe with one mirrored door and premium reflection effect. Clean e9f1bb0;29path allocation. Three original procedural models/localSVGs, shared placement/theme/history/size/search/directtools/persistence/export authorities. Existing full-length mirror preserved. Official Three Reflector and demand-render docs read; choose one shared512pxMSAA0 real-room planar pass, selected visible front-facing then nearest/stable, normal glossy fallback for others, no recursive mirror pass/editor gizmos/new timer/dependency. Standing pivot is model hardware, not arbitrary tilt-contract scope. No new paid/provider/Send/env/restart/Chrome/delegation/dependency/image/cloud/push/deploy; existing exact validated-ticket local commit authority unchanged.\n\nRM-094 settled outcome:30paths (extended before mounted-intent caller),3original models/localSVGs; wall-hung/standing rear-support-pivot/one-mirrored-door wardrobe plus preserved old mirror. Shared manual/coordinate/backend/search/theme/size/locks/history/persistence/export authorities connected; single panel follows leaf. Qualified names and one-wardrobe wording remain bounded. Read-only review confirmed broad wardrobe-word exclusion could misclassify incidental location; restrict to actual aliases, explicit full-length wins, add2regressions.27new cases; final51focused/3files and complete unmodified default1825tests/114files/all code gates/7boundaries/assets/bothbuilds pass. Initial1822of1823 had only release5stimeout, superseded by clean finalgate. Native actual reflected door,2mirrors/shared fallback,standconstruction/front/rotation,wallheight900to1000ApplyUndo,one-leaf/doorOpenClose,390phone/900short,normalcollision/access/ownedlockguards pass. Two tabs closed/viewport reset. Idlecounter15exactlyunchanged61404ms,212calls/21338triangles/11geometries/23textures/29programs; bounded sample, not worstcase40piecephysicalGPU proof. One512pxMSAA0liveplane/target and no recursion/newloop; othersglossy. Finalreadonlyreview no findings; scopedAFKsecurity no extra fix, retain datedwatches. Source-only399inputs/4723851bytes digestdb4bbf7208d91fbb0ca4c8e9630c4f723d859f5784a7ac1b4b6b7c9a6c219d59; no selectedretention/Linux/image/hosted proof. Preserve paid-readyservices/env and owner aesthetic/physical/model/merchant acceptance. No paid/provider/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy; exact local ticket checkpoint authorized.\n\nOwner selects RM-095 mirror fixes on2November after490d2fd: invalid variant still occurs after refreshing; do not dismiss as stale tab. New reports: opposite wardrobe not reflected, held ghost disappears/behind wall, green release sometimes needs second click. Fresh empty-room native standing/wall drops succeed, but do not establish owner room reproduction. Investigate wall-aware projection, last-presented release and active reflector host backing; prove real reflection from meaningful view rather than inventing reflection at physically unsuitable overview angle. Preserve validators/Undo/room authority and one512px target. Consolidate generated catalogue/Medy capability facts and correct stale lighting prohibition; permanent contribution rule plus captured-provider offline regressions.23path initial allocation; exact prior local Git authority unchanged. No paid/provider/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-095 settled23paths/47newcases: visible wall-ray/planned height/inward normal; last shown green preview owns unchanged-coordinate release, final ray only for moved release; pending frame/context retired; missed in-canvas ray retains invalid red ghost/depth-independent outline. Active mirror glossy backing and all editor overlays including catalogue preview excluded/restored around one512px non-MSAA pass. Real opposite wardrobe/window reflected from meaningful interior angle; Night/Day updates. Shared generated current catalogue and lighting/mirror facts reach Medy advice/interpretation/tool paths; stale lighting ban removed; broad shelf stays8IDs with all matching bounded facts retained in provider tool output. Permanent contribution rule/current-catalogue regression coverage.150focused/6files and complete1872tests/116files covered with root code/assets/bothbuild gates; exact default or release-timeout split recorded in receipt, no assertion/config change. Native furnished wall/standing and empty mirroredwardrobe firstrelease, legacy2Dfullmirror,2Dopposite furniture moves,wardrobeOpenClose,phone390/short900 and127432ms byte-exact published idle sample pass. Sample15frames/242attempts/nonfailed1surface/72calls/6158triangles/3geometries/29textures/25programs, publishes every15frames: no perpetual loop claim, not zero individual frames or worstcasephysicalGPU proof. Read-only review confirmed broad tool overflow/preview-overlay exclusion then final R2 no actionable findings. Earlier original owner-room unsupported-variant afterrefresh remains unverified; every default/all mirror themes/fresh empty/furnished fixtures pass, never dismiss owner report as stale. Owner originalroom/aesthetic/physical/live-model/merchant and exact release checks remain external.401sourceinputs/4728374bytes digest0466d9865140e17b0a6bafcc48edff25836a767fca2f80f8cdff1540fcbd4964; sourceonly, no retention/Linux/image/hosted proof. Zero paid/provider/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy. Existing exact local commit authority unchanged.",
-      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026; direct owner work-area context screenshots/request, 2 November 2026; RM-089 final gate and read-only pass 2 receipt; direct owner new-furniture theme-default request, 2 November 2026; RM-090 split gate, actual manual UI and final read-only review receipt; direct owner lighting/ceiling/night/editor request,2November2026; RM-091 complete default gate, actual native controls and final review receipt; owner icon screenshot/correction,2November2026; RM-092 scoped settled build/native accessibility and read-only review receipt; direct owner ceiling-arrow screenshot,2November2026; RM-093 focused/build/native marker checks and read-only receipt; direct owner mirrors request,2November2026; RM-094 complete gate/native real reflection/idle and final review receipt; direct owner mirror bug reports and refresh answer,2November2026; RM-095 settled gate/native/reflection/idle and final review receipt",
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.\n\n2 November direct owner selects RM-089 after work-area context failure screenshots: add desk/chair → Apply → make them walnut too, and finish clarification → the work area. Preserve at least three previous messages through the existing bounded transcript; fix plural/group/clarification resolution before the model, with one all-or-nothing appearance preview and Undo. Exact thirteen-path local ticket checkpoint under existing Git authority. No paid/provider test or browser message submission (respect prior auto-review paid-mode rejection), env read/change, restart, dependency/delegation/image/cloud/push/deploy. Keep normal paid-ready services. See docs/tickets/RM-089-retain-medy-group-and-clarification-context.md.\n\nRM-089 settled outcome: allocation expanded to fourteen paths before the review-confirmed same-group shortcut correction. Ten initial reproductions failed before implementation; 185 focused checks passed, first full 1737-test gate passed, review caught post-Apply generic suggestions, new controller assertion reproduced that remaining issue, correction preserves group-ID matching and no-group inventory opportunities. Final 124 focused checks and a separate complete canonical 1737-test/111-file gate/both builds pass. Read-only validate pass 2 has no actionable findings; no further source edits after that gate. Three pure owners/two test files only; existing context/provider/financial/admission/lifecycle bounds and normal paid-ready services/env retained. Source-only identity 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712, 385 inputs/4668440 bytes. No browser Send/paid request or new image/hosted proof. Updated real-model/owner evaluation remains pending. Exact ticket-prefixed local checkpoint is authorized under existing local ticket authority.\n\n2 November owner selects RM-090: any chosen theme becomes the default preset for future manual and AI furniture additions. Nineteen-path exact allocation. Store an optional bounded canonical applied theme with existing preview/Apply/Undo/project/recovery semantics; share appearance defaults across catalogue/search/Medy additions and replacements, retain explicit overrides and unrelated accepted pieces. Legacy exact wall/floor preset matching reuses existing UI meaning; no theme guessed from generic style hints. No extra model call/paid/browser Send, env read/change, restart, dependency, delegation, image/cloud/push/deploy. Existing local ticket checkpoint authority applies after validation.\n\nRM-090 settled outcome: read-only creation-path review expanded the allocation to 21 paths before connecting manual coordinates and backend direct prepare_edits; both reuse the same new-piece helper. Eleven production files, one new 31-case test file. Ten initial reproductions failed before implementation; material ordering was corrected without relaxing preset equality; legacy tests use actual manual-room surface facts and AI replacement keeps existing owned Replace permission. Canonical formatting/lint/all types/seven boundaries/assets pass; full default unit run passes1765/1768 with only3 known release-inventory5s timeouts. All193 affected/release checks across7 files pass unchanged at CLI15s, followed by both production builds. Split settled gate covers all1768 tests/112 files; no clean unsplit-root claim. Actual in-app Modern preview/Apply, keyboard chair and coordinate desk inheritance, physical door guard and Undo pass without browser Send/provider request. Read-only validate pass2 has no actionable findings. Optional canonical theme survives Apply/Cancel/Undo/project/recovery/import and custom surfaces; exact legacy matching and explicit finish/material overrides remain bounded. Source-only385 inputs/4671600 bytes, digest 45d92931c1179ef6dae70246f6f53ce1270a7abd8709b98ba0718b38fae8d4e9. Preserve normal paid-ready services/env; owner real-model/physical acceptance and exact Linux/image/hosted release proof remain external. Exact ticket-prefixed local checkpoint remains owner-authorized.\n\nOwner directly selects RM-091 on2November: create a detailed large lighting ticket and research Three.js, then execute/validate loop. Day/Night opposite2D/3D; dark outside/windows, actual lamp illumination and manual/Medy colours; add multiple ceiling models, interior-only ceiling matching walls; first-night-only missing-light tutorial with Later/Medy/manual lighting catalogue; Floor/Ceiling plan editing. Initial48-path allocation and primary research recorded before implementation. Preserve normal paid-ready services/env, no paid/browser Send/dependency/delegation/cloud/image/push/deploy; prior local validated-ticket checkpoint authority unchanged.\n\nRM-091 settled outcome: exact allocation expanded before relevant inspector/export/size/caption integration; final52changed paths exclude the already-correct byte-identical catalogue-panel caller. Day/Night, real finite fixture illumination, optional canonical on/brightness/colour, five presets/custom, three procedural ceiling models, shared height anchoring, interior common-wall-colour ceiling, Floor/Ceiling editing and first-Night manual/unsent-Medy guidance implemented. Eight light slots/two512pxNightshadows, no new timer/dependency/network. Confirmed/fixed named-light property scope, dialog step cleanup,320px dimension overlap, LF manifest, short generic geometry and appearance-only reanchoring; existing old assertions retained except catalogue count19to22. Thirty new cases;194focused/6files and74confirmed-fix/4files pass. Final unmodified default pnpm check passes1798tests/113files, all code gates/sevenboundaries/exactassets/bothbuilds, no split/timeoutoverride. Native manual warm-red preview/Apply, four fixtures/desk, interior/Overview, keyboard ceiling movement, all-model coordinates, responsive390/320/tablet/short, one-time manual/unsent-Medy choice and idleframe45over20seconds pass. No forced native context-loss/40pieceGPU/paid-model/merchant/newPDF claim. Final read-only validation has no actionable findings; scoped AFK security selects no extra fix and retains dated watches. Current source-only394inputs/4709047bytes digest04a695bae5b077a8fd00d188ffc5d77c5eaa176aa3e2a3617321c50e61c1804e; no selected retention snapshot or Linux/image/hosted proof. Preserve paid-ready services/env and owner aesthetic/physical/actual-model acceptance. Exact local ticket checkpoint remains owner-authorized; no paid/browser Send/env/dependency/restart/delegation/Chrome/image/cloud/push/deploy.\n\n2 November owner selects RM-092: replace Day/Night visible words with sun/crescent icons, preserving behavior and accessible names. Eleven-path allocation from clean2d209ac; two presentation files only, no lighting/model/state changes. Local outline SVGs/currentColor,20px centered, aria-hidden/focusable=false, native Day/Night labels/titles. Scoped format/lint/frontend build and actual desktop/320px/keyboard review, no cosmetic tests or repeated unchanged full gate. Existing local ticket commit authority; preserve paid-ready services/env, no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-092 final: scoped Prettier/ESLint pass, frontend build/types/standalone succeeds with normal Windows permissions after sandbox symlinkEPERM. Actual IAB1280/320px shows centered20px sun/crescent in retained60x44 buttons, no text/overflow, native accessible Day/Night names/titles/aria-pressed, click/Space/Enter success and original Floor/Ceiling words. Viewport reset/testtabclosed; no Send/provider. Read-only review of exact two-file presentation diff meets ticket with no actionable findings; callback/state/modal/plan/render/business/test/dependency/config bytes retained. No new tests or unchanged full/backend/security rerun; RM-0911798test evidence stays dated. Source-only394inputs/4710015bytes digestd8e20dd1d531139aa42e60b8638eb97ea78574b0b5c9ae22a319b033709b1596; no retained snapshot/Linux/image/hosted claim. Eleven-path authorized local checkpoint only.\n\n2 November direct owner selects RM-093 after a sideways ceiling-light arrow screenshot. Confirmed shared horizontal furniture-facing marker; orient only ceiling fixture selected markers downward from just below center along actual beam, invariant under quarter-turns. Ten-path allocation, one production scene file, clean3fc473c; retain all marker styles/owners and floor direction behavior, actual light/canonical/plan/export authority. Scoped format/lint/existing lighting+room-view tests/frontend build and native all-three/rotation/floor checks; no new static mirror tests or full/backend/security rerun. Existing exact local ticket checkpoint authority, normal paid-ready services/env; no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-093 final: one scene-only selected-marker transform uses existing isCeiling, origin80mm below fixture and +Yarrow rotated to -Y; floor position/rotation style/raycast/lifecycle/inspection unchanged. Actual pendant Day→90degree→Night, flush, rotatedtrack and camera-change checks show downward arrow; existing desk comparison retains horizontal facing. Camera-comparison screenshots include active motion, not a new settled-camera acceptance claim. Ownedtabclosed; no Send/provider. Scoped format/lint and52existingtests/2files pass; frontend build/types/standalone succeeds. Final read-only review meets ticket with no actionable finding; no source edits after settled build. No new mirror test or unchanged full/backend/security rerun; prior RM0911798gate stays dated. Source-only394inputs/4710241bytes digeste094c4ef25420f09489439b5f1311bd4e36bdf590d150f30c3d7cfd2e84d8056; no retained snapshot/Linux/image/hosted proof. Existing authorized exacttenpathlocalcheckpoint; paid-ready services/env and owner/release acceptance preserved.\n\nOwner selects RM-094 mirrors on2November: newticket/executevalidate loop, wall-hung mirror, standing rear-pivot/support mirror, wardrobe with one mirrored door and premium reflection effect. Clean e9f1bb0;29path allocation. Three original procedural models/localSVGs, shared placement/theme/history/size/search/directtools/persistence/export authorities. Existing full-length mirror preserved. Official Three Reflector and demand-render docs read; choose one shared512pxMSAA0 real-room planar pass, selected visible front-facing then nearest/stable, normal glossy fallback for others, no recursive mirror pass/editor gizmos/new timer/dependency. Standing pivot is model hardware, not arbitrary tilt-contract scope. No new paid/provider/Send/env/restart/Chrome/delegation/dependency/image/cloud/push/deploy; existing exact validated-ticket local commit authority unchanged.\n\nRM-094 settled outcome:30paths (extended before mounted-intent caller),3original models/localSVGs; wall-hung/standing rear-support-pivot/one-mirrored-door wardrobe plus preserved old mirror. Shared manual/coordinate/backend/search/theme/size/locks/history/persistence/export authorities connected; single panel follows leaf. Qualified names and one-wardrobe wording remain bounded. Read-only review confirmed broad wardrobe-word exclusion could misclassify incidental location; restrict to actual aliases, explicit full-length wins, add2regressions.27new cases; final51focused/3files and complete unmodified default1825tests/114files/all code gates/7boundaries/assets/bothbuilds pass. Initial1822of1823 had only release5stimeout, superseded by clean finalgate. Native actual reflected door,2mirrors/shared fallback,standconstruction/front/rotation,wallheight900to1000ApplyUndo,one-leaf/doorOpenClose,390phone/900short,normalcollision/access/ownedlockguards pass. Two tabs closed/viewport reset. Idlecounter15exactlyunchanged61404ms,212calls/21338triangles/11geometries/23textures/29programs; bounded sample, not worstcase40piecephysicalGPU proof. One512pxMSAA0liveplane/target and no recursion/newloop; othersglossy. Finalreadonlyreview no findings; scopedAFKsecurity no extra fix, retain datedwatches. Source-only399inputs/4723851bytes digestdb4bbf7208d91fbb0ca4c8e9630c4f723d859f5784a7ac1b4b6b7c9a6c219d59; no selectedretention/Linux/image/hosted proof. Preserve paid-readyservices/env and owner aesthetic/physical/model/merchant acceptance. No paid/provider/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy; exact local ticket checkpoint authorized.\n\nOwner selects RM-095 mirror fixes on2November after490d2fd: invalid variant still occurs after refreshing; do not dismiss as stale tab. New reports: opposite wardrobe not reflected, held ghost disappears/behind wall, green release sometimes needs second click. Fresh empty-room native standing/wall drops succeed, but do not establish owner room reproduction. Investigate wall-aware projection, last-presented release and active reflector host backing; prove real reflection from meaningful view rather than inventing reflection at physically unsuitable overview angle. Preserve validators/Undo/room authority and one512px target. Consolidate generated catalogue/Medy capability facts and correct stale lighting prohibition; permanent contribution rule plus captured-provider offline regressions.23path initial allocation; exact prior local Git authority unchanged. No paid/provider/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-095 settled23paths/47newcases: visible wall-ray/planned height/inward normal; last shown green preview owns unchanged-coordinate release, final ray only for moved release; pending frame/context retired; missed in-canvas ray retains invalid red ghost/depth-independent outline. Active mirror glossy backing and all editor overlays including catalogue preview excluded/restored around one512px non-MSAA pass. Real opposite wardrobe/window reflected from meaningful interior angle; Night/Day updates. Shared generated current catalogue and lighting/mirror facts reach Medy advice/interpretation/tool paths; stale lighting ban removed; broad shelf stays8IDs with all matching bounded facts retained in provider tool output. Permanent contribution rule/current-catalogue regression coverage.150focused/6files and complete1872tests/116files covered with root code/assets/bothbuild gates; exact default or release-timeout split recorded in receipt, no assertion/config change. Native furnished wall/standing and empty mirroredwardrobe firstrelease, legacy2Dfullmirror,2Dopposite furniture moves,wardrobeOpenClose,phone390/short900 and127432ms byte-exact published idle sample pass. Sample15frames/242attempts/nonfailed1surface/72calls/6158triangles/3geometries/29textures/25programs, publishes every15frames: no perpetual loop claim, not zero individual frames or worstcasephysicalGPU proof. Read-only review confirmed broad tool overflow/preview-overlay exclusion then final R2 no actionable findings. Earlier original owner-room unsupported-variant afterrefresh remains unverified; every default/all mirror themes/fresh empty/furnished fixtures pass, never dismiss owner report as stale. Owner originalroom/aesthetic/physical/live-model/merchant and exact release checks remain external.401sourceinputs/4728374bytes digest0466d9865140e17b0a6bafcc48edff25836a767fca2f80f8cdff1540fcbd4964; sourceonly, no retention/Linux/image/hosted proof. Zero paid/provider/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy. Existing exact local commit authority unchanged.\n\nOwner selects new RM-096 on2November after clean0671dae: richer generated sample-room photographs with work area, mirrors, lighting and distinct duvet/pillow colours, usable via normal public sample path for deployment visitors. Existing four examples were built-in generated; normal gallery/loading already works fake/live before config and Continue alone dispatches recognition. Choose four coherent replacement views: two overlapping wide views plus bedding and workspace details, versioned public WebPs within existing256KiB/four/six limits. Remove old unused four; preserve historical provenance, normal decoding/auto-purpose/privacy/abort/provider authority and unrelated landing/manual/fake inference.22path allocation. Explicit built-in image generation authorized by this request, no CLI/API key or paid Roomedy recognition test. New runtime photo/catalogue names never authorize canned detections. Verify real pixels/public endpoints/intake/viewer/phone and release inventory/Docker public copy; no image build/deployment. Existing AFK and exact validated-ticket local Git authority remain, no paid application/Continue/Send/env/restart/dependency/delegation/Chrome/cloud/push/deploy.\n\nRM-096 settled22paths/two cohesive local commits: four new1280x960versionedpublicWebPs455610bytes replace old429800byte simplebed/cabinet photos; remove oldfourunusedfiles, keep historicalprovenance. Built-in imagegen5calls/4selected images, one reverseorientation rejected and corrected before packaging; actual originals/final contact sheet reviewed. Rich same-room bed/walnutframe/terracotta pillows/ivorysheet/blueduvet/cabinet/workdesk/sagechair/standingpivot andwallmirror/onemirroreddoorwardrobe/floorlamp/pendant/three-head track/window/twodoors withbathroomglimpse. Generatedscale/reflections/cameraposes remain illustrative, not calibratedsurvey or detectedfacts. Existing Sharp deterministic no-crop resize/WebP82, opaque/noEXIFXMP, each81420to150842bytes below256KiB. Only productioncode change is4references/captions; preserve normal all-mode gallery/loader/PhotoStore/autopurpose/abort/privacy/explicitContinue, no specialsample detector/fake/manual/landing or providerchange. Existing3assettests enhanced withfullRGBdecode/dimensions/metadata, no redundantstaticcase;46focused/4files/scopedlint/types and final unmodified default1872tests/116files/allcodegates/7boundaries/assets/bothbuilds pass. NativeIABall4viewerRight/Escape/focus/natural1280x960/prepared4local640x480/Continueenabled/secondbatchdisabled/390phone overflow-contained/viewer pass; viewportreset/tabclosed/errorsnone. FourstaticGET200s exacthashes after resolving sandboxloopbackEACCES withnormalpermission; currentinventory includesall4 andDockerignore/publiccopyreviewed, no imagebuild/hostedproof. Fullprompt/PNG/hash/coverage/ownerpaidrecognitionchecklist saved. Final read-onlyreview noactionablefindings; scopedsecurityselectnoextrafix, retain datedwatches. Source401inputs/4754180bytes digest1b2ae4be68a7228507cde4a241b295c3dc0737e6b684c37918740ec32fe73b1a; prior proofs dated, no retainedsnapshot/Linux/image/config/resource/widget/rollout/rollback/hostedclaim. Built-in generation explicitlyauthorized, zero paidRoomedyrecognition/assistant/Send/Continue/CLI API calls. Preserve paid-readyservices/env; no secret/localenv/restart/dependency/delegation/Chrome/otherrepo/imagebuild/cloud/push/deploy. Owner generatedphotoaesthetic/physical/live-recognition and exact releaseacceptance remain external.",
+      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026; direct owner work-area context screenshots/request, 2 November 2026; RM-089 final gate and read-only pass 2 receipt; direct owner new-furniture theme-default request, 2 November 2026; RM-090 split gate, actual manual UI and final read-only review receipt; direct owner lighting/ceiling/night/editor request,2November2026; RM-091 complete default gate, actual native controls and final review receipt; owner icon screenshot/correction,2November2026; RM-092 scoped settled build/native accessibility and read-only review receipt; direct owner ceiling-arrow screenshot,2November2026; RM-093 focused/build/native marker checks and read-only receipt; direct owner mirrors request,2November2026; RM-094 complete gate/native real reflection/idle and final review receipt; direct owner mirror bug reports and refresh answer,2November2026; RM-095 settled gate/native/reflection/idle and final review receipt; direct owner richer public sample photos request,2November2026; RM-096 selected images/prompts/native public-intake proof/complete gate and final review",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_REQUEST": {
@@ -2105,7 +2121,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Finish the validated RM-095 exact23path local checkpoint; owner rechecks original mirror drops/reflection angles in the paid-ready app. No agent paid/Send/env/restart/image/cloud/push/deploy action.",
+  "next_action": "Finish validated RM-096 exact two-group local checkpoint (16asset/implementation/evidence paths, then6shared progress paths). Owner can test the richer public samples in the paid-ready app; no agent Continue/Send/paid/env/restart/image-build/cloud/push/deploy action.",
   "phases": [
     {
       "id": "01-docs",
@@ -2446,28 +2462,28 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Execute entire RM-095 ticket and exact allocation. Investigate unsupported variant after refresh without weakening shared validator. Fix wall-aware ray placement/elevation, retained visible invalid ghost and last-presented pointer release without extra click; preserve floor/2D/touch/cancel/keyboard/history. Verify active reflection does not render its own backing face; one shared512pxMSAA0 target/no recursive pass/no perpetual loop. Prove real opposite furniture reflection at physically meaningful camera, all mirrors, furnished/theme cases, phone/short and idle. Generate shared Medy advice/action catalogue/capability facts and remove obsolete lighting-control ban while preserving installation/safety/pricing boundaries; permanent AGENTS contribution rule and actual captured-provider regressions. Focused tests/types/lint then settled canonical gate, read-only validate confirm/fix/revalidate until no actionable findings. Update honest evidence/deployment docs/helper progress and exact authorized local checkpoint. Preserve paid-ready services/env; no paid/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy. Owner visual/physical/live-model and exact release proof remain separate.",
-        "sha256": "ecba7764038c831cc51c979927e222fa74013b00217b91d9fdf2f1795911c58c",
+        "text": "Execute entire RM-096 and22path initial allocation. Generate original coherent same-bedroom photos with workdesk/chair, mirror variants, floor/ceiling lighting, storage, actual window/door/wall-floor context and independent pillow/sheet/duvet colours; two useful overlapping wide and two bedding/workspace details. Use built-in imagegen only, inspect every original/final for physical coherence and useful object coverage; deterministic installed Sharp WebP packaging within256KiB each, four samples/six-total. New versioned public URLs replace old four unused assets, update captions/provenance full prompts/hashes/target checklist. Preserve sample loader decoding/PhotoStore/auto-purpose/abort/errors/privacy/explicit Continue and all fake/live modes, no hardcoded sample recognition or unrelated landing/manual changes. Verify assets decode/dimensions/limits and bounded errors, actual IAB gallery/viewer/preparation/keyboard/phone without Continue/paid request, public200s and source inventory/Docker public-copy owner, required settled code/assets/build gate, final read-only validate confirm/fix/revalidate no actionable findings. Update canonical helper/docs/deployment owner live-recognition checklist and exact authorized local ticket commit. No app paid-provider test/Send/Continue/env/secret read-change/restart/dependency/delegation/Chrome/otherrepo/image-build/cloud/push/deploy. Built-in generation specifically authorized, no CLI/API fallback. Owner visual/physical/live detection and exact hosted release proof remain separate.",
+        "sha256": "35126b844d14726dd4feb99f9ebb36cfbb9548397471c7d7b3717f1b8428eeab",
         "context_sources": [
-          "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-          "docs/commit-plans/RM-095.md",
-          "docs/validation/RM-095.md"
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/validation/RM-096.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-        "docs/commit-plans/RM-095.md",
-        "docs/engineering/room-mirrors.md",
-        "docs/validation/RM-095.md"
+        "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+        "docs/commit-plans/RM-096.md",
+        "docs/references/sample-room-photos-2026-11-02.md",
+        "docs/validation/RM-096.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Original exact owner-room unsupported-variant recheck, owner aesthetics/physical/live-model/merchant and fresh exact release proof remain external. No paid/provider/browser Send performed.",
-          "reference": "docs/validation/RM-095.md"
+          "reason": "Owner generated-photo visual/physical and actual paid-recognition acceptance plus fresh exact release/hosted proof remain external. No paid recognition/assistant/Continue performed.",
+          "reference": "docs/validation/RM-096.md"
         }
       ],
       "approval": null,
@@ -2670,6 +2686,25 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T19:42:03+00:00",
+          "reason": "Owner requests a richer generated public sample photo set and normal deployment-path availability.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Execute entire RM-095 ticket and exact allocation. Investigate unsupported variant after refresh without weakening shared validator. Fix wall-aware ray placement/elevation, retained visible invalid ghost and last-presented pointer release without extra click; preserve floor/2D/touch/cancel/keyboard/history. Verify active reflection does not render its own backing face; one shared512pxMSAA0 target/no recursive pass/no perpetual loop. Prove real opposite furniture reflection at physically meaningful camera, all mirrors, furnished/theme cases, phone/short and idle. Generate shared Medy advice/action catalogue/capability facts and remove obsolete lighting-control ban while preserving installation/safety/pricing boundaries; permanent AGENTS contribution rule and actual captured-provider regressions. Focused tests/types/lint then settled canonical gate, read-only validate confirm/fix/revalidate until no actionable findings. Update honest evidence/deployment docs/helper progress and exact authorized local checkpoint. Preserve paid-ready services/env; no paid/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy. Owner visual/physical/live-model and exact release proof remain separate.",
+            "sha256": "ecba7764038c831cc51c979927e222fa74013b00217b91d9fdf2f1795911c58c",
+            "context_sources": [
+              "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
+              "docs/commit-plans/RM-095.md",
+              "docs/validation/RM-095.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -2737,23 +2772,23 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "visual",
       "status": "provisional",
       "prompt": {
-        "text": "Read actual RM-095 native empty/furnished first-release drops, wall placement/elevation and remaining physical rejection, actual opposite wardrobe/window reflection at meaningful interior angle, Night/Day, mirrored wardrobe doorOpenClose,2Dfullmirror and opposite-item moves,390phone/900short layout and127s published-idle evidence. Retain exact original owner-room unsupported-variant as unverified, do not attribute it to stale tab. One live plane/others glossy; no worstcasephysicalGPU/paidmodel/exportdownload acceptance.",
-        "sha256": "e4f462e3569bb49ba686cf27c47b8c779f8e6814eda85a92e78541c6cae84ff1",
+        "text": "Review RM-096 four generated originals/final1280x960photos, corrected reverse orientation, same bed/frame/material identities, distinct pillow/sheet/duvet, workdesk/chair, mirrorvariants, floor/ceilinglighting/window/doorcontext and overlapping wide/detailviews. Native all-four gallery/viewerRight/Escape/focus/preparedContinueenabled/four localdecodedpreviews/390phone galleryviewer andcontainedpage pass; agenttabclosed/viewportreset. Source25KBaboveoldset butstill455610bytes total/currentlimits. Generatedphotography not calibratedgeometry/modeldetection; owner quality/physical/live acceptance remains provisional.",
+        "sha256": "a96980102ca7f16188a12a4349ada4bd6dfa14442e46888ca1b595d6c1358b59",
         "context_sources": [
-          "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-          "docs/commit-plans/RM-095.md",
-          "docs/engineering/room-mirrors.md",
-          "docs/validation/RM-095.md"
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/references/sample-room-photos-2026-11-02.md",
+          "docs/validation/RM-096.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-        "docs/commit-plans/RM-095.md",
-        "docs/engineering/room-mirrors.md",
-        "docs/validation/RM-095.md"
+        "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+        "docs/commit-plans/RM-096.md",
+        "docs/references/sample-room-photos-2026-11-02.md",
+        "docs/validation/RM-096.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3725,12 +3760,40 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T19:31:22+00:00"
           },
           "decision": "self-reviewed"
+        },
+        {
+          "reopened_at": "2026-11-02T20:02:08+00:00",
+          "reason": "Owner-selected richer public sample photos change the release source candidate; review exact settled RM-096 while preserving prior dated evidence.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Read actual RM-095 native empty/furnished first-release drops, wall placement/elevation and remaining physical rejection, actual opposite wardrobe/window reflection at meaningful interior angle, Night/Day, mirrored wardrobe doorOpenClose,2Dfullmirror and opposite-item moves,390phone/900short layout and127s published-idle evidence. Retain exact original owner-room unsupported-variant as unverified, do not attribute it to stale tab. One live plane/others glossy; no worstcasephysicalGPU/paidmodel/exportdownload acceptance.",
+            "sha256": "e4f462e3569bb49ba686cf27c47b8c779f8e6814eda85a92e78541c6cae84ff1",
+            "context_sources": [
+              "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
+              "docs/commit-plans/RM-095.md",
+              "docs/engineering/room-mirrors.md",
+              "docs/validation/RM-095.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "self-reviewed"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0040",
+            "recorded_at": "2026-11-02T20:02:09+00:00"
+          },
+          "decision": "self-reviewed"
         }
       ],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0036",
-        "recorded_at": "2026-11-02T19:31:22+00:00"
+        "decision_id": "AFK-0040",
+        "recorded_at": "2026-11-02T20:02:09+00:00"
       }
     },
     {
@@ -3739,23 +3802,23 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete",
       "prompt": {
-        "text": "Read-only validate entire settled RM-09523path diff and ticket, actual placement ray/release/cancel/history/physical validator and reflection backing/overlay/one-target cleanup/fallback callers, generated catalogue/capabilities in advice/interpretation/tools, eight-ID reply versus full bounded provider facts and permanent contributor regression rule. Confirm broad Zod overflow and untagged catalogue ghost findings resolved.47newcases,150focused and complete1872-test/116file code/assets/build coverage, actual native/127sidle evidence. No actionable findings; original exact owner-room state remains unverified, owner/release checks external.",
-        "sha256": "0a51336104bb7e131dcd1964cabc39d1484530d0ea5c998ab7775b500632e544",
+        "text": "Read-only validate entire RM-09622path candidate/ticket/actual sample loader/captions/deleted-old/new-versionedassets/fullRGBdecode/dimensions/metadata/boundederrors/nativegalleryviewer/phone/publicGETexacthash/sourceinventory/Dockerignorepubliccopy andprovenance. ProductioncodeonlyEXAMPLE_PHOTOSpaths/labels; norecognition/fake/manual/landing/lifecycle authority change. Reversewindoworientation fixedbeforeassetselection.46focused/4files,final default1872tests/116files/allcodegates/assets/bothbuilds pass. No source/test/asset edit afterward. No actionable findings; paid detection/owner visual/physical/hosted proof unverified.",
+        "sha256": "8ca59ce946f1faee4e227e41fd480f61792793dd94987bb66ab6746c87886e85",
         "context_sources": [
-          "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-          "docs/commit-plans/RM-095.md",
-          "docs/engineering/room-mirrors.md",
-          "docs/validation/RM-095.md"
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/references/sample-room-photos-2026-11-02.md",
+          "docs/validation/RM-096.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-        "docs/commit-plans/RM-095.md",
-        "docs/engineering/room-mirrors.md",
-        "docs/validation/RM-095.md"
+        "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+        "docs/commit-plans/RM-096.md",
+        "docs/references/sample-room-photos-2026-11-02.md",
+        "docs/validation/RM-096.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3927,6 +3990,26 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T20:02:10+00:00",
+          "reason": "Owner-selected richer public sample photos change the release source candidate; review exact settled RM-096 while preserving prior dated evidence.",
+          "prior_status": "complete",
+          "prior_prompt": {
+            "text": "Read-only validate entire settled RM-09523path diff and ticket, actual placement ray/release/cancel/history/physical validator and reflection backing/overlay/one-target cleanup/fallback callers, generated catalogue/capabilities in advice/interpretation/tools, eight-ID reply versus full bounded provider facts and permanent contributor regression rule. Confirm broad Zod overflow and untagged catalogue ghost findings resolved.47newcases,150focused and complete1872-test/116file code/assets/build coverage, actual native/127sidle evidence. No actionable findings; original exact owner-room state remains unverified, owner/release checks external.",
+            "sha256": "0a51336104bb7e131dcd1964cabc39d1484530d0ea5c998ab7775b500632e544",
+            "context_sources": [
+              "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
+              "docs/commit-plans/RM-095.md",
+              "docs/engineering/room-mirrors.md",
+              "docs/validation/RM-095.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -3936,23 +4019,23 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "security",
       "status": "provisional",
       "prompt": {
-        "text": "Scoped RM-095 review: no new network/storage/paid/tool permission/budget/endpoint or dependency; strict physical/schema/locks/history/lifecycle and byte/count/serial bounds unchanged.8IDreplybound/full bounded provider catalogue, one512pxMSAA0target/pass/overlayvisibilityfinally and demand idle remain. No additional confirmed security fix; retain dated dependency watches/provisional owner dispositions. Not a new advisory certification or scanner upload.",
-        "sha256": "4920c1cdf9be52039d461b1a5399aba6985f817cb25456e429151d655490da3a",
+        "text": "Scope only RM-096 publicgeneratedasset replacement and fixedreference/caption change. Existing sameorigin/count/bytes/fragment/decode/pixel/abort/explicitContinue/provideradmission andsourceidentity bounds intact. FouropaqueWebPsbelow256KiB1280x960/noEXIFXMP, no remotehost/endpoints/storage/permission/dependency/paidcall. No sample-filename semantic authority. No additional justifiedsecurityfix; retaindatedadvisorywatches/provisionaldispositions. No scanner export or new certification.",
+        "sha256": "f428b90ca3791a5d700fc5948d4d14846e57610bafa1cd941c84b15933d37264",
         "context_sources": [
-          "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-          "docs/commit-plans/RM-095.md",
-          "docs/engineering/room-mirrors.md",
-          "docs/validation/RM-095.md"
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/references/sample-room-photos-2026-11-02.md",
+          "docs/validation/RM-096.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-        "docs/commit-plans/RM-095.md",
-        "docs/engineering/room-mirrors.md",
-        "docs/validation/RM-095.md"
+        "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+        "docs/commit-plans/RM-096.md",
+        "docs/references/sample-room-photos-2026-11-02.md",
+        "docs/validation/RM-096.md"
       ],
       "blockers": [],
       "approval": null,
@@ -4204,13 +4287,41 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T19:31:26+00:00"
           },
           "decision": "no-fixes"
+        },
+        {
+          "reopened_at": "2026-11-02T20:02:11+00:00",
+          "reason": "Owner-selected richer public sample photos change the release source candidate; review exact settled RM-096 while preserving prior dated evidence.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Scoped RM-095 review: no new network/storage/paid/tool permission/budget/endpoint or dependency; strict physical/schema/locks/history/lifecycle and byte/count/serial bounds unchanged.8IDreplybound/full bounded provider catalogue, one512pxMSAA0target/pass/overlayvisibilityfinally and demand idle remain. No additional confirmed security fix; retain dated dependency watches/provisional owner dispositions. Not a new advisory certification or scanner upload.",
+            "sha256": "4920c1cdf9be52039d461b1a5399aba6985f817cb25456e429151d655490da3a",
+            "context_sources": [
+              "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
+              "docs/commit-plans/RM-095.md",
+              "docs/engineering/room-mirrors.md",
+              "docs/validation/RM-095.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "no-fixes"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0041",
+            "recorded_at": "2026-11-02T20:02:12+00:00"
+          },
+          "decision": "no-fixes"
         }
       ],
       "selected_findings": [],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0037",
-        "recorded_at": "2026-11-02T19:31:26+00:00"
+        "decision_id": "AFK-0041",
+        "recorded_at": "2026-11-02T20:02:12+00:00"
       }
     },
     {
@@ -4308,28 +4419,28 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Record RM-095 mirror placement/release/backing reflection and current Medy capability correction, permanent contributor checks,47newcases,150focused/6files and complete1872tests/116files with exact gate split truth and both builds, actual firstrelease/2D/door/oppositewardrobeNightDay/phone/short/127sidle and final review.401sourceinputs/4728374bytes digest0466d9865140e17b0a6bafcc48edff25836a767fca2f80f8cdff1540fcbd4964. Keep exact original owner-room unsupported-variant retry and owner aesthetic/physical/paidmodel/merchant finaljourney separate. No retainedsnapshot/Linux/image/resource/config/widget/pairedrollout/rollback/hosted proof or automated paid action. Existing mitigation/security watches/release gates remain.",
-        "sha256": "94a8bcce5fcd0d05cb90b84a59f9b61837323ea4a6ae8f9188fb3c64a20ac445",
+        "text": "Record RM-096 richer public samples for normaldeployed Uploadphotos/Useexamplephotos/explicitContinue path, versionedfiles/currentfullprompts/coverage/checklist, same publicdirectoryDockerignore/runtimecopy andexact fourlocal200/hash/inventory results.46focused/1872defaulttests/116files/allcodegates/assets/bothbuilds/nativeviewerpreparationphone and final reviewpass.401sourceinputs/4754180bytes digest1b2ae4be68a7228507cde4a241b295c3dc0737e6b684c37918740ec32fe73b1a. No imagebuild/deployment/paidtest; owner checksactual10desiredfurniturefixtures, distinctbedding,openings/cross-viewdedupe/reflections. Exactretention/Linux/image/config/resource/widget/pairedrollout/rollback/hosted and owner visual/physical/merchant/live-model proof remain external; keep prior unrelated gates.",
+        "sha256": "63a2ee33405ede66d336026c5e28654c8672d9c2e2f372df300d0d1af7ac8bd0",
         "context_sources": [
-          "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-          "docs/commit-plans/RM-095.md",
-          "docs/engineering/room-mirrors.md",
-          "docs/validation/RM-095.md"
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/references/sample-room-photos-2026-11-02.md",
+          "docs/validation/RM-096.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
-        "docs/commit-plans/RM-095.md",
-        "docs/engineering/room-mirrors.md",
-        "docs/validation/RM-095.md"
+        "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+        "docs/commit-plans/RM-096.md",
+        "docs/references/sample-room-photos-2026-11-02.md",
+        "docs/validation/RM-096.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Original exact owner-room unsupported-variant recheck, owner aesthetics/physical/live-model/merchant and fresh exact release proof remain external. No paid/provider/browser Send performed. Selected retention, exact Linux/image/resource/config/widget/paired rollout/rollback/hosted evidence remains.",
+          "reason": "Owner generated-photo visual/physical and actual paid-recognition acceptance plus fresh exact release/hosted proof remain external. No paid recognition/assistant/Continue performed. Exact retention/Linux/image/config/resource/widget/paired rollout/rollback evidence remains.",
           "reference": "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
         }
       ],
@@ -4568,6 +4679,26 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/commit-plans/RM-094.md",
               "docs/engineering/room-mirrors.md",
               "docs/validation/RM-094.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T20:02:13+00:00",
+          "reason": "Owner-selected richer public sample photos change the release source candidate; review exact settled RM-096 while preserving prior dated evidence.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Record RM-095 mirror placement/release/backing reflection and current Medy capability correction, permanent contributor checks,47newcases,150focused/6files and complete1872tests/116files with exact gate split truth and both builds, actual firstrelease/2D/door/oppositewardrobeNightDay/phone/short/127sidle and final review.401sourceinputs/4728374bytes digest0466d9865140e17b0a6bafcc48edff25836a767fca2f80f8cdff1540fcbd4964. Keep exact original owner-room unsupported-variant retry and owner aesthetic/physical/paidmodel/merchant finaljourney separate. No retainedsnapshot/Linux/image/resource/config/widget/pairedrollout/rollback/hosted proof or automated paid action. Existing mitigation/security watches/release gates remain.",
+            "sha256": "94a8bcce5fcd0d05cb90b84a59f9b61837323ea4a6ae8f9188fb3c64a20ac445",
+            "context_sources": [
+              "docs/tickets/RM-095-stabilize-mirror-placement-and-reflections.md",
+              "docs/commit-plans/RM-095.md",
+              "docs/engineering/room-mirrors.md",
+              "docs/validation/RM-095.md"
             ],
             "status": "afk",
             "approval": null,
@@ -5149,6 +5280,66 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/commit-plans/RM-095.md",
           "docs/engineering/room-mirrors.md",
           "docs/validation/RM-095.md"
+        ]
+      },
+      {
+        "id": "AFK-0038",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T19:42:07+00:00",
+        "phase": "07-build",
+        "choice": "Replace the four examples with versioned same-room wide/bedding/workspace views, covering supported complex objects while retaining ordinary public intake and explicit recognition.",
+        "rationale": "Four richer images broaden visual coverage within existing byte/count/decoder limits; versioned paths avoid stale force-cache responses and ship through the existing public asset copy.",
+        "consequence": "Remove superseded public photos but retain their Git/provenance history. Image quality is inspected locally; actual paid detection remains owner testing.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/validation/RM-096.md"
+        ]
+      },
+      {
+        "id": "AFK-0039",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T19:58:36+00:00",
+        "phase": "07-build",
+        "choice": "Use two cohesive RM-096 local commits: sixteen implementation/asset/provenance paths, then six shared progress/handoff paths.",
+        "rationale": "The owner requested multiple ticket-prefixed commits; this keeps the four versioned assets, loader and their evidence atomic while separating shared checkpoint notes.",
+        "consequence": "No source/test/asset rebuild between commits. Exact22path checkpoint after final validated gate; no push or deploy.",
+        "review_needed": false,
+        "evidence": [
+          "docs/commit-plans/RM-096.md"
+        ]
+      },
+      {
+        "id": "AFK-0040",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T20:02:09+00:00",
+        "phase": "09-visual-review",
+        "choice": "Accept the richer four-photo set provisionally after correcting reverse orientation and inspecting all packaged photos/native intake; owner quality/actual detection acceptance remains.",
+        "rationale": "Broad supported feature coverage, stable identities/bed colours, bounded assets and actual gallery/preparation/phone behaviour pass.",
+        "consequence": "Generated images are illustrative public inputs, not calibrated survey or paid-recognition evidence.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/references/sample-room-photos-2026-11-02.md",
+          "docs/validation/RM-096.md"
+        ]
+      },
+      {
+        "id": "AFK-0041",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T20:02:12+00:00",
+        "phase": "10b-security-review",
+        "choice": "No additional security fix for the bounded local sample-photo asset replacement.",
+        "rationale": "Existing same-origin/decoding/provider/lifecycle authority unchanged; finite opaque public assets and metadata removal verified.",
+        "consequence": "Scoped provisional AFK recommendation only; dated watches and exact owner/release gates remain.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-096-refresh-the-public-sample-room-photos.md",
+          "docs/commit-plans/RM-096.md",
+          "docs/references/sample-room-photos-2026-11-02.md",
+          "docs/validation/RM-096.md"
         ]
       }
     ]
