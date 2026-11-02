@@ -2,6 +2,8 @@
 
 **2 November2026 · locally complete; final owner paid testing and release evidence remain pending.**
 
+**Latest owner-test follow-up:** [RM-086/RM-087](../validation/RM-086-087.md) fixes contextual Medy shortcuts and natural wall-texture follow-ups and grounds wall/window/bathroom-door advice in current room facts. Complete canonical `pnpm check` now passes **1,722 tests / 111 files** and both builds; actual local in-app wall shortcuts, the exact plaster phrase, Apply and Undo pass without an agent paid request. The owner should test the updated live-model conversation before release. Paid mode remains on; no service/env/dependency/cloud change. Original audit/verification details below remain dated evidence for their named candidate.
+
 The owner's current AFK request covers functionality-preserving quality/security audits, justified local fixes, documentation and local commits. It does not authorize deployment or paid tests. The prior visual/UX feedback round is accepted as sufficient to proceed. During the original audit, services and ignored configuration were preserved; no push, image build, provider request or hosted/account action occurred. The subsequent owner-requested follow-up adds read-only cloud checks and local startup, detailed below; secret files and app configuration remain unchanged.
 
 ## Completed work and commits
@@ -53,6 +55,6 @@ Read-only comparison with ClipBuilder, ScreenPilot, Retrosum and Retailor suppor
 
 **Maintenance watch, not an extra deployment system:** retain DEP85-01 and DEP85-02; reassess before exposing a parser/glob path and at the next compatible dependency/toolchain refresh. No suppression or forced major upgrade is selected.
 
-Current source-only inventory is385inputs/4,648,545bytes, digest `5d6827020a4b9b25651925d074fcb1b658f0e3883a3df10f3d18e0dbee892647`. It does not include a newly selected retention snapshot and is not a Linux attestation. Historical hosted receipts remain historical. Use the existing [release inputs](release-inputs.md), [rollout/rollback](rollout-and-rollback.md) and strict proof tooling when those later actions are authorized.
+Current RM-086/RM-087 source-only inventory is **385 inputs / 4,660,995 bytes**, digest **`121501c1d38f85e3a0754e1a0bafff1f0dbd99928d4a576e167af6114978db86`**. The earlier RM-084/RM-085 inventory was 4,648,545 bytes, digest `5d6827020a4b9b25651925d074fcb1b658f0e3883a3df10f3d18e0dbee892647`. Neither includes a newly selected retention snapshot or establishes current Linux/image/hosted proof. Use the existing [release inputs](release-inputs.md), [rollout/rollback](rollout-and-rollback.md) and strict proof tooling for later authorized release work.
 
 The canonical build handoff stays **complete_local** while external evidence/provisional reviews remain. AFK remains active; no continuation is scheduled. The owner can now perform the requested final local paid test. No automatic paid/deployment attempt is scheduled. The separately authorized documentation checkpoint is recorded in the follow-up allocation; runtime-generated changes remain outside staging.

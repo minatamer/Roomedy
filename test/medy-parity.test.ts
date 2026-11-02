@@ -21,9 +21,61 @@ import { createRoomFixture } from '../apps/frontend/src/features/session/fixture
 import { createManualRoom } from '../apps/frontend/src/features/session/entry/manual-room.js';
 import { assistantInput } from './fixtures/assistant.js';
 import { identityIds } from './fixtures/operation.js';
-import { commandRoom, piece, windowFeature } from './fixtures/command-room.js';
+import {
+  commandRoom,
+  piece,
+  windowFeature,
+  door,
+} from './fixtures/command-room.js';
 
 describe('MEDY real protocol and authored fake parity', () => {
+  it.each(['walls', 'window', 'bathroom door'])(
+    'carries a %s discussion through the same bounded advice request',
+    async (topic) => {
+      const room = createManualRoom('partial');
+      room.room.features = [
+        windowFeature(),
+        { ...door('bathroom'), purpose: 'bathroom' },
+      ];
+      const before = structuredClone(room),
+        captured: ProviderRequest[] = [];
+      const input = assistantInput(room, 'What would you recommend next?');
+      input.context = [
+        { role: 'user', text: `What about the ${topic}?` },
+        {
+          role: 'assistant',
+          text: `We can coordinate the ${topic} appearance.`,
+        },
+      ];
+      const result = await createAssistantHandler(vi.fn(), identityIds())(
+        input,
+        {
+          signal: new AbortController().signal,
+          call: (request) => {
+            captured.push(request);
+            return assistantFakeResponse(request, new AbortController().signal);
+          },
+        },
+      );
+      expect(result.kind).toBe('completed');
+      expect(result.assistant?.summary).toMatch(new RegExp(topic));
+      expect(result.assistant?.actions).toBeNull();
+      expect(
+        result.assistant?.suggestions
+          ?.slice(0, 2)
+          .every((choice) => choice.request.includes(topic)),
+      ).toBe(true);
+      expect(captured).toHaveLength(1);
+      const content = captured[0]!.input[0]!.content;
+      if (!Array.isArray(content) || typeof content[0]?.text !== 'string')
+        throw new Error('fixture');
+      const supplied = JSON.parse(content[0].text);
+      expect(supplied.recentTurns).toEqual(input.context);
+      expect(supplied.room.room.features).toEqual(room.room.features);
+      expect(captured[0]!.tools).toEqual([]);
+      expect(room).toEqual(before);
+    },
+  );
   it('validates a novel manual interpretation as a visitor-selectable request, never an executed tool', async () => {
     const input = assistantInput(commandRoom(), 'Give me a closer peek');
     const handler = createAssistantHandler(vi.fn(), identityIds());
@@ -384,7 +436,7 @@ it('gives a plain manual room real material opportunities and reviewed texture r
     context.materialOpportunities
       .map((choice: { label: string }) => choice.label)
       .slice(0, 3),
-  ).toEqual(['Try oak flooring', 'Wood for the bed', 'Wood for the wardrobe']);
+  ).toEqual(['Try oak flooring', 'Try soft plaster walls', 'Wood for the bed']);
   expect(captured[0]!.instructions).toMatch(
     /changing the colour alone does not add texture/i,
   );

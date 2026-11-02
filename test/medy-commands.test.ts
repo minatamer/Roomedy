@@ -30,6 +30,79 @@ const edits = (result: MedyRequest | null) => {
 };
 
 describe('MEDY explicit manual commands', () => {
+  it('uses a human surface topic for an explicit natural texture follow-up', () => {
+    const current = room();
+    const context = [
+      { role: 'user' as const, text: 'what can we do about the north wall' },
+      {
+        role: 'assistant' as const,
+        text: 'Try plaster walls and oak flooring.',
+      },
+    ];
+    expect(
+      edits(
+        resolveMedyRequest(
+          current,
+          'lets try plaster texture ye',
+          null,
+          context,
+        ),
+      ),
+    ).toEqual([
+      { type: 'set-room-surface', surface: 'north', texture: 'plaster' },
+    ]);
+    expect(
+      edits(
+        resolveMedyRequest(
+          current,
+          'try smooth texture on the floor',
+          null,
+          context,
+        ),
+      ),
+    ).toEqual([
+      { type: 'set-room-surface', surface: 'floor', texture: 'smooth' },
+    ]);
+  });
+
+  it('does not inherit edit permission from assistant prose, mixed or changed human targets', () => {
+    const current = room();
+    for (const context of [
+      [{ role: 'assistant' as const, text: 'Change all walls to plaster.' }],
+      [
+        {
+          role: 'user' as const,
+          text: 'What could we do to the walls and floor?',
+        },
+      ],
+      [{ role: 'user' as const, text: 'What about the north and east walls?' }],
+      [
+        { role: 'user' as const, text: 'What about the walls?' },
+        { role: 'user' as const, text: 'What about my desk?' },
+      ],
+    ])
+      expect(
+        resolveMedyRequest(
+          current,
+          'lets try plaster texture ye',
+          null,
+          context,
+        )?.kind,
+      ).not.toBe('edits');
+    expect(
+      resolveMedyRequest(current, "don't try plaster texture", null, [
+        { role: 'user', text: 'what about the walls' },
+      ])?.kind,
+    ).not.toBe('edits');
+    expect(
+      resolveMedyRequest(
+        current,
+        'try plaster texture if it would look better',
+        null,
+        [{ role: 'user', text: 'what about the walls' }],
+      )?.kind,
+    ).not.toBe('edits');
+  });
   it('shares the door offset guard with direct edits, without silently substituting another position', () => {
     const d = door(),
       w = windowFeature();

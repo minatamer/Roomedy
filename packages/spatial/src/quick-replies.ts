@@ -7,6 +7,9 @@ import { quickReplySchema } from '@roomedy/contracts/assistant';
 import { resolveMedyRequest } from './medy.js';
 import { resolveAssistantTask } from './assistant.js';
 import type { DesignTurn } from './design.js';
+import { medyTargets, medyTopic, medyPrefersPlain } from './medy-language.js';
+import type { MedyTopic } from './medy-language.js';
+import { roomSurface } from '@roomedy/contracts/surfaces';
 import {
   roomDesignOpportunities,
   roomMaterialOpportunities,
@@ -225,6 +228,95 @@ const replyDirection = (request: string) =>
         ? 'layout'
         : 'discovery';
 
+function topicReplies(
+  room: RoomDocument,
+  topic: MedyTopic,
+  plain: boolean,
+  pieceLabel?: string,
+): QuickReply[] {
+  if (topic === 'layout')
+    return [
+      { label: 'Preview more open space', request: 'Create more open space' },
+      {
+        label: 'Talk through another layout',
+        request: 'How else could this layout work with the current pieces?',
+      },
+    ];
+  if (topic === 'palette')
+    return [
+      {
+        label: 'Warm & simple palette',
+        request: 'Preview Warm & simple room palette',
+      },
+      {
+        label: 'Light & airy palette',
+        request: 'Preview Light & airy room palette',
+      },
+    ];
+  if (topic === 'floor' || topic.includes('wall')) {
+    if (plain)
+      return [
+        {
+          label: 'Coordinate the plain colour',
+          request: `What colours would work on the plain ${topic}?`,
+        },
+        {
+          label: 'Keep the finish simple',
+          request: `How can the plain ${topic} give this room a calmer feel?`,
+        },
+      ];
+    const target = topic.endsWith(' wall')
+      ? (topic.split(' ')[0] as 'north' | 'east' | 'south' | 'west')
+      : (topic as 'floor' | 'walls');
+    const texture =
+      topic === 'floor'
+        ? roomSurface(room.room, target).texture === 'planks'
+          ? 'tile'
+          : 'wood planks in oak'
+        : roomSurface(room.room, target).texture === 'plaster'
+          ? 'smooth'
+          : 'plaster';
+    return [
+      {
+        label:
+          topic === 'floor'
+            ? 'Try another floor texture'
+            : `Try ${texture} ${topic}`,
+        request: `Change ${topic} texture to ${texture}`,
+      },
+      {
+        label:
+          topic === 'floor'
+            ? 'Coordinate the floor colour'
+            : 'Explore wall colours',
+        request: `What colours would work on the ${topic} in this room?`,
+      },
+    ];
+  }
+  if (topic !== 'furniture')
+    return [
+      {
+        label: `Coordinate the ${topic} frame`,
+        request: `How can I coordinate the ${topic} frame with this room?`,
+      },
+      {
+        label: `Keep ${topic} access clear`,
+        request: `How can I keep access to the ${topic} clear?`,
+      },
+    ];
+  const target = pieceLabel ? `the ${pieceLabel}` : 'the existing furniture';
+  return [
+    {
+      label: 'Coordinate the finish',
+      request: `What finish would work on ${target}?`,
+    },
+    {
+      label: 'Explore its layout',
+      request: `How could ${target} work better in this layout?`,
+    },
+  ];
+}
+
 /** Fill the shelf once, without a second model call or permission to execute a suggestion. */
 export function completeQuickReplies(
   room: RoomDocument,
@@ -239,6 +331,25 @@ export function completeQuickReplies(
         options.message,
       );
   const supplied = (options.choices ?? []).slice(0, 3);
+  const topic =
+    proposal || failure
+      ? null
+      : medyTopic(room, options.previousRequest ?? '', context);
+  const targets = medyTargets(
+    room,
+    options.previousRequest ?? '',
+    selectedId,
+    context,
+  );
+  const target =
+    targets.length === 1 && targets[0]?.kind === 'furniture'
+      ? targets[0].piece.label
+      : undefined;
+  const plain =
+    !proposal &&
+    !failure &&
+    medyPrefersPlain(room, options.previousRequest ?? '', context);
+  const topical = topic ? topicReplies(room, topic, plain, target) : [];
   const materialOptions =
     proposal || failure ? [] : roomMaterialOpportunities(room);
   const opportunities =
@@ -291,12 +402,34 @@ export function completeQuickReplies(
   const candidates: DesignSuggestion[] = [],
     labels = new Set<string>(),
     requests = new Set<string>();
-  for (const raw of [...supplied, ...adjacent].slice(0, 16)) {
+  for (const raw of [...supplied, ...topical, ...adjacent].slice(0, 20)) {
     const valid = validateQuickReplies(room, [raw], selectedId, context)[0];
     if (!valid) continue;
     const key = valid.request.trim().toLocaleLowerCase(),
       label = valid.label.toLocaleLowerCase();
     if (key === previous || requests.has(key) || labels.has(label)) continue;
+    if (plain) {
+      const manual = resolveMedyRequest(
+        room,
+        valid.request,
+        selectedId,
+        context,
+      );
+      if (
+        manual?.kind === 'edits' &&
+        manual.actions.some(
+          (action) =>
+            action.type === 'set-room-surface' &&
+            action.texture &&
+            action.texture !== 'smooth' &&
+            (!topic ||
+              (topic === 'floor'
+                ? action.surface === 'floor'
+                : topic.includes('wall') && action.surface !== 'floor')),
+        )
+      )
+        continue;
+    }
     // A live proposal must remain reviewable; its shelf offers discussion, not another mutation.
     if (
       proposal &&
@@ -320,6 +453,24 @@ export function completeQuickReplies(
     result.push(candidate);
     directions.add(replyDirection(candidate.request));
   };
+  if (topic) {
+    const related = (candidate: DesignSuggestion) =>
+      medyTopic(room, candidate.request) === topic &&
+      (topic !== 'furniture' ||
+        targets.length !== 1 ||
+        medyTargets(room, candidate.request, selectedId, []).some(
+          (target) => target.id === targets[0]!.id,
+        ));
+    for (const candidate of candidates.filter(related)) {
+      if (result.length === 2) break;
+      take(candidate);
+    }
+    if (result.length === 2) {
+      const different = candidates.find((candidate) => !related(candidate));
+      if (different) take(different);
+      return result;
+    }
+  }
   if (candidates[0]) take(candidates[0]);
   if (!directions.has('furnishing')) {
     const gap = candidates.find((candidate) =>

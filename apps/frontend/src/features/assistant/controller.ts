@@ -479,7 +479,7 @@ export class AssistantController {
         'assistant',
         /\breview\b.*\bpreview\b|\bpreview\b.*\breview\b/i.test(text)
           ? 'Compare the highlighted preview with your current room and read the changed fields above. Check sizes, clearances and finishes against your room. Apply keeps this preview; Cancel discards it, and Undo can reverse an accepted change. Nothing has been applied yet.'
-          : medyAdvice(workspace.current, text, selectedId),
+          : medyAdvice(workspace.current, text, selectedId, context),
       );
       return;
     }

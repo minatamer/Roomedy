@@ -6,6 +6,7 @@ import { roomDocumentSchema } from '@roomedy/contracts/room';
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { DesignIntent } from '@roomedy/contracts/assistant';
 import { POLICY } from '@roomedy/contracts/policy';
+import { assistantInputSchema } from '@roomedy/contracts/operations';
 import {
   findCatalogueEntry,
   medyAdvice,
@@ -204,7 +205,16 @@ export async function assistantFakeResponse(
     if (!room.success || request.tools.length) return { kind: 'malformed' };
     const selectedId =
       typeof context.selectedId === 'string' ? context.selectedId : null;
-    const message = medyAdvice(room.data, context.request, selectedId);
+    const recent = assistantInputSchema.shape.context.safeParse(
+      context.recentTurns ?? [],
+    );
+    if (!recent.success) return { kind: 'malformed' };
+    const message = medyAdvice(
+      room.data,
+      context.request,
+      selectedId,
+      recent.data,
+    );
     return {
       kind: 'completed',
       calls: [],

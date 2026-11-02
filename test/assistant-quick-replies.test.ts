@@ -5,6 +5,11 @@ import {
 } from '@roomedy/contracts/assistant';
 import { operationInputSchema } from '@roomedy/contracts/operations';
 import {
+  emptySurfaceAppearance,
+  roomSurface,
+} from '@roomedy/contracts/surfaces';
+import {
+  completeQuickReplies,
   contextualQuickReplies,
   validateQuickReplies,
   LayoutSearch,
@@ -20,9 +25,20 @@ import { commandRoom, piece } from './fixtures/command-room.js';
 import { assistantInput } from './fixtures/assistant.js';
 import { identityIds } from './fixtures/operation.js';
 
-async function setup() {
-  const room = commandRoom([piece('desk', 4000, 4000)]),
-    session = new SessionController(room),
+async function setup(smoothWalls = false) {
+  const room = commandRoom([piece('desk', 4000, 4000)]);
+  if (smoothWalls)
+    room.room.surfaces = {
+      walls: {
+        ...emptySurfaceAppearance(),
+        texture: {
+          value: 'smooth',
+          status: 'estimated',
+          sourceId: 'authored-sample',
+        },
+      },
+    };
+  const session = new SessionController(room),
     ids = identityIds();
   const runtime = createRuntime(
     parseRuntimeConfig({ ROOMEDY_BRIDGE_SECRET: 'synthetic-bridge' }),
@@ -87,6 +103,143 @@ async function setup() {
 }
 
 describe('contextual suggested replies', () => {
+  it('keeps two wall continuations before a distinct optional direction', () => {
+    const room = commandRoom([piece('desk')]);
+    room.room.surfaces = {
+      walls: {
+        ...emptySurfaceAppearance(),
+        texture: {
+          value: 'smooth',
+          status: 'estimated',
+          sourceId: 'authored-sample',
+        },
+      },
+    };
+    const replies = completeQuickReplies(room, {
+      message:
+        'Your walls are ivory and smooth. A plaster texture could add depth while keeping their colour.',
+      previousRequest: 'what can we do about the walls',
+      selectedId: null,
+      choices: [
+        {
+          label: 'Add a bedside cabinet',
+          request: 'I need storage with a Bedside cabinet',
+        },
+        {
+          label: 'Try oak flooring',
+          request: 'Change floor texture to wood planks in oak',
+        },
+        {
+          label: 'Another layout idea',
+          request: 'How else could this layout work?',
+        },
+      ],
+    });
+    expect(replies).toHaveLength(3);
+    expect(
+      replies.slice(0, 2).every((reply) => /walls?/i.test(reply.request)),
+    ).toBe(true);
+    expect(replies[0]!.request).toBe('Change walls texture to plaster');
+    expect(replies[2]!.request).not.toMatch(/walls?/i);
+    expect(
+      validateQuickReplies(
+        room,
+        replies.map(({ label, request }) => ({ label, request })),
+        null,
+      ),
+    ).toHaveLength(3);
+  });
+
+  it('uses the newest explicit topic rather than stale wall or assistant wording', () => {
+    const room = commandRoom([piece('desk')]);
+    for (const previousRequest of [
+      'what can we do about the floor',
+      'what about it',
+    ]) {
+      const replies = completeQuickReplies(room, {
+        message: 'We could coordinate the walls too.',
+        selectedId: null,
+        previousRequest,
+        context: [
+          { role: 'user', text: 'what about the walls' },
+          { role: 'user', text: 'let us discuss the floor' },
+        ],
+      });
+      expect(
+        replies.slice(0, 2).every((reply) => /floor/i.test(reply.request)),
+      ).toBe(true);
+      expect(replies).toHaveLength(3);
+    }
+  });
+
+  it('keeps a recent plain-wall preference and a named-piece discussion in the reply shelf', () => {
+    const room = commandRoom([piece('desk')]);
+    const replies = completeQuickReplies(room, {
+      message: 'We can keep the walls simple.',
+      selectedId: null,
+      previousRequest: 'what would you recommend?',
+      context: [
+        { role: 'user', text: 'I prefer to keep the walls plain, no textures' },
+      ],
+      choices: [
+        { label: 'Plaster walls', request: 'Change walls texture to plaster' },
+      ],
+    });
+    expect(
+      replies.slice(0, 2).every((reply) => /walls/i.test(reply.request)),
+    ).toBe(true);
+    expect(replies.some((reply) => /plaster/i.test(reply.request))).toBe(false);
+    const furniture = completeQuickReplies(room, {
+      message: 'We can coordinate its finish.',
+      selectedId: 'desk',
+      previousRequest: 'what can we do with the desk?',
+      context: [{ role: 'user', text: 'what about the walls?' }],
+    });
+    expect(
+      furniture.slice(0, 2).every((reply) => /desk/i.test(reply.request)),
+    ).toBe(true);
+    const layout = completeQuickReplies(room, {
+      message: 'We can compare arrangements.',
+      selectedId: null,
+      previousRequest: 'How else could this layout work?',
+      context: [{ role: 'user', text: 'what about the walls?' }],
+    });
+    expect(
+      layout
+        .slice(0, 2)
+        .every((reply) => /layout|open space/i.test(reply.request)),
+    ).toBe(true);
+  });
+
+  it('previews the exact natural plaster follow-up locally, then Applies and Undoes it', async () => {
+    const s = await setup(true);
+    try {
+      await s.assistant.submit('what can we do about the walls');
+      const before = structuredClone(
+        s.session.getSnapshot().workspace!.current,
+      );
+      s.transport.mockClear();
+      await s.assistant.submit('lets try plaster texture ye');
+      expect(s.session.getSnapshot().candidate).not.toBeNull();
+      expect(s.session.getSnapshot().workspace!.current).toEqual(before);
+      expect(s.transport).not.toHaveBeenCalled();
+      expect(s.assistant.getSnapshot().messages.at(-1)!.text).toMatch(
+        /preview/i,
+      );
+      expect(s.assistant.apply().ok).toBe(true);
+      const after = s.session.getSnapshot().workspace!.current;
+      expect(roomSurface(after.room, 'walls').texture).toBe('plaster');
+      expect(after.furniture).toEqual(before.furniture);
+      expect(after.room.features).toEqual(before.room.features);
+      expect(after.room.floorFinish).toBe(before.room.floorFinish);
+      expect(s.assistant.undo().ok).toBe(true);
+      expect(s.session.getSnapshot().workspace!.current.room).toEqual(
+        before.room,
+      );
+    } finally {
+      s.close();
+    }
+  });
   it('binds and deduplicates safe offered requests without changing a room', () => {
     const room = commandRoom([piece('desk')]),
       before = structuredClone(room);

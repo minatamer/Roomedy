@@ -31,6 +31,14 @@ export function roomMaterialOpportunities(
         'Oak planks would bring warmth and a natural grain to the plain floor.',
       colors: [roomSurface(room.room, 'floor').color, FINISH_COLORS.oak],
     });
+  if (roomSurface(room.room, 'walls').texture === 'smooth')
+    options.push({
+      label: 'Try soft plaster walls',
+      request: 'Change walls texture to plaster',
+      reason:
+        'A soft plaster finish can add subtle depth while retaining the wall colour.',
+      colors: [roomSurface(room.room, 'walls').color],
+    });
   const pieces = room.furniture
     .map((piece) => ({
       piece,
@@ -75,14 +83,6 @@ export function roomMaterialOpportunities(
         : `Linen would give ${piece.label} a softer woven finish without changing its shape.`,
     });
   }
-  if (roomSurface(room.room, 'walls').texture === 'smooth')
-    options.push({
-      label: 'Try soft plaster walls',
-      request: 'Change walls texture to plaster',
-      reason:
-        'A soft plaster finish can add subtle depth while retaining the wall colour.',
-      colors: [roomSurface(room.room, 'walls').color],
-    });
   return options.slice(0, 5);
 }
 

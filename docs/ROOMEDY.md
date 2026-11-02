@@ -1579,13 +1579,13 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner can perform the final paid/photo/Medy/sourcing/Estimate/PDF journey on the running local app. Current follow-up documentation is validated and allocated for its authorized local checkpoint; new-candidate Linux/image/resource/retained-asset/config/widget/paired rollout/rollback/hosted proofs remain. No automatic paid request or deployment.
+Next action: Owner can test the updated paid-ready local app. Current RM-086/RM-087 source and docs are validated for the exact local checkpoint; no automatic paid request or deployment. Fresh exact release proofs remain required before publication.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
 AFK mode: AFK-SESSION-001
-Provisional owner reviews: 04-decisions, 10b-security-review
+Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
 
 ### AFK decisions
 
@@ -1669,6 +1669,14 @@ Provisional owner reviews: 04-decisions, 10b-security-review
   Reason: Original direct owner requests documented local commits for security work; run skill alone supplies no Git authority. This corrects the earlier agent-only assumption to leave docs unstaged.
   Consequence / reversibility: Fifteen explicit documents are reviewable and reversible in one ticket-prefixed local commit. App/env/cloud/dependency behavior remains unchanged; generated Next dev references stay unstaged.
   Owner review requested on return: yes. Evidence: docs/commit-plans/RM-085-FOLLOWUP.md, docs/validation/RM-085-FOLLOWUP.md
+- **AFK-0021** (AFK-SESSION-001, 2026-11-02T11:45:21+00:00, 09-visual-review): Accept the actual local shortcut/wall-follow-up UX as locally complete, pending owner updated live-model acceptance.
+  Reason: Real in-app first-two wall shortcuts/exact plaster preview/Apply/Undo pass with normal configuration and no paid advice request; complete offline behavior/lifecycle gate passes.
+  Consequence / reversibility: No layout/motion redesign or invented model-quality pass. Preserve owner review and current paid-ready services.
+  Owner review requested on return: yes. Evidence: docs/validation/RM-086-087.md, docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md, docs/commit-plans/RM-086-087.md
+- **AFK-0022** (AFK-SESSION-001, 2026-11-02T11:45:25+00:00, 10b-security-review): No new local security fix selected for the bounded Medy continuity/advice diff.
+  Reason: Human-only target reference inference and strict current request/action/Apply validation remain bounded; no new API, dependency, storage, provider or account authority. Complete existing adversarial/lifecycle tests pass.
+  Consequence / reversibility: Keep existing inactive/dev-only package watches and explicit owner/live/image/hosted limits. This is scoped AFK recommendation, not owner approval or a whole-system security certification.
+  Owner review requested on return: yes. Evidence: docs/validation/RM-086-087.md, docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md, docs/commit-plans/RM-086-087.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1678,7 +1686,7 @@ Provisional owner reviews: 04-decisions, 10b-security-review
 - [x] 06-plan-commit — Planning commit (complete)
 - [x] 07-build — Execute and validate tickets (complete_local)
 - [x] 08-performance — Performance investigation (complete_local)
-- [x] 09-visual-review — Frontend visual approval checkpoint (complete)
+- [x] 09-visual-review — Frontend visual approval checkpoint (provisional)
 - [x] 10a-quality — Quality audit and fixes (complete)
 - [x] 10b-security-review — Security audit and manual review (provisional)
 - [x] 11-security-fixes — Approved security fixes (skipped)
@@ -1691,7 +1699,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-02T11:15:01+00:00",
+  "updated_at": "2026-11-02T11:45:27+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1904,8 +1912,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "AUDIT_GIT_AUTHORITY": {
-      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.",
-      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan",
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.",
+      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_REQUEST": {
@@ -2037,7 +2045,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner can perform the final paid/photo/Medy/sourcing/Estimate/PDF journey on the running local app. Current follow-up documentation is validated and allocated for its authorized local checkpoint; new-candidate Linux/image/resource/retained-asset/config/widget/paired rollout/rollback/hosted proofs remain. No automatic paid request or deployment.",
+  "next_action": "Owner can test the updated paid-ready local app. Current RM-086/RM-087 source and docs are validated for the exact local checkpoint; no automatic paid request or deployment. Fresh exact release proofs remain required before publication.",
   "phases": [
     {
       "id": "01-docs",
@@ -2378,29 +2386,29 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Execute approved Roomedy CPQ tickets RM-022 through RM-030 sequentially at C:/Users/minat/Work/Roomedy. Planning commit4f7fb2b contains all ten packets and documented recommended assumptions. For each ticket, read the complete packet and owning precision references, reconcile real dependencies/Git state, allocate exact paths before edits, implement all locally possible acceptance behavior, run meaningful focused tests and the required settled root gate, then perform read-only validation of the full settled diff. Independently confirm/fix findings and revalidate until no actionable local findings remain. Record actual checks/limitations in per-ticket receipts, stage only explicit reviewed owned paths and make cohesive ticket-prefixed local commits. Continue without routine questions under the owner's keep-going-until-return instruction, recording material decisions in the canonical AFK ledger. Preserve one project/room/commands/Undo/evidence/lifecycle authority and current motion/private logs/security bounds. Prioritize rich customizable 3D studio materials/furniture and a separate centered-chat phase with interactive 3D object/surface highlights, deterministic sourcing/estimate/budget/work-plan/version/PDF behavior. Use current pinned dependencies and existing frontend/private backend pair; no extra service, arbitrary URL proxy, database/account, incoming drawing/PDF feature or unrelated product work. All automated/native testing must be fake/paid-off, with no actual provider/merchant/Cloudflare test dispatch. Inspect process/listener ownership and use only existing Roomedy4320/4321 if runtime is needed; never touch another app or rewrite owner env. No delegation, Git push, deployment, account/cloud mutation or metadata export. After integrated local completion and clean reviews, prepare the owner manual-test handoff with actual limits; do not claim personal visual approval, real local market accuracy or new hosted acceptance.",
-        "sha256": "c122029b50215a3a33f3b6cf7430010da2d778a3687f1adedaa8b52eaaa08256",
+        "text": "Execute RM-086 continuity first, then RM-087 grounded wall/opening advice according to the full tickets and exact shared allocation. Reproduce supplied wall/plaster shortcut failures offline before edits. Reuse bounded existing transcript and shared parser/shortcut safety. Rank two contextual follow-ups with an optional distinct third direction. Resolve explicit natural texture commands only against current explicit targets or unambiguous recent human surface references; model/history prose supplies no permission. Keep walls available among material opportunities, ground relevant window and bathroom-door advice in actual room features, preserve explicit plain finishes. Retain preview/Apply/Cancel/Undo, scope, revision/lifecycle and admission/provider/history budgets. No paid/provider operation, env read/change, service restart, dependency/delegation/image/cloud/push/deploy action. Use focused behavioral regressions, one settled applicable root gate and read-only validate/confirm/fix/revalidate. Document actual evidence and final owner live acceptance limits before an exact ticket-prefixed local checkpoint.",
+        "sha256": "577f572046ed854f7f0c2b2cd4c63e9a3a2504032a8fb23b2b2261a63e0b6b36",
         "context_sources": [
-          "human:current-chat/2026-10-26/cpq-ticket-execution-authorization",
-          "docs/tickets/README.md#cpq-extension--26-october-2026",
-          "docs/Roomedy Extension for CPQ.md",
-          "commit:4f7fb2b"
+          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+          "docs/commit-plans/RM-086-087.md",
+          "Direct owner screenshots and Medy follow-up request, 2 November 2026"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:67b2e08",
-        "docs/validation/RM-021.md",
-        "docs/validation/RM-029.md",
-        "docs/commit-plans/RM-030.md"
+        "docs/validation/RM-086-087.md",
+        "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+        "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+        "docs/commit-plans/RM-086-087.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner final hands-on/visual and separately authorized real-source/provider/physical checks remain pending.",
-          "reference": "docs/tickets/RM-030-validate-the-complete-cpq-experience.md"
+          "reason": "The owner must evaluate updated real-model wording/conversation and merchant/physical quality during the final paid journey. Exact offline follow-up and actual local UI compiler preview/Apply/Undo pass; no agent paid test.",
+          "reference": "docs/validation/RM-086-087.md"
         }
       ],
       "approval": null,
@@ -2425,6 +2433,26 @@ This checklist records local work. Human approvals and unresolved external check
               "source": "human:current-chat/2026-10-17/start-step-seven-ordered-fake-build",
               "scope": "Direct owner-authored phase-seven instruction authorizes ordered local execution, validation and ticket-prefixed staging/commits in fake mode. Stop at required result review gates or reported 0% remaining Codex usage. No paid calls, deployment, push, reset-credit consumption or delegation."
             }
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T11:23:50+00:00",
+          "reason": "Direct owner selects two new connected Medy conversation tickets after final paid test; original completed tickets/evidence remain historical.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Execute approved Roomedy CPQ tickets RM-022 through RM-030 sequentially at C:/Users/minat/Work/Roomedy. Planning commit4f7fb2b contains all ten packets and documented recommended assumptions. For each ticket, read the complete packet and owning precision references, reconcile real dependencies/Git state, allocate exact paths before edits, implement all locally possible acceptance behavior, run meaningful focused tests and the required settled root gate, then perform read-only validation of the full settled diff. Independently confirm/fix findings and revalidate until no actionable local findings remain. Record actual checks/limitations in per-ticket receipts, stage only explicit reviewed owned paths and make cohesive ticket-prefixed local commits. Continue without routine questions under the owner's keep-going-until-return instruction, recording material decisions in the canonical AFK ledger. Preserve one project/room/commands/Undo/evidence/lifecycle authority and current motion/private logs/security bounds. Prioritize rich customizable 3D studio materials/furniture and a separate centered-chat phase with interactive 3D object/surface highlights, deterministic sourcing/estimate/budget/work-plan/version/PDF behavior. Use current pinned dependencies and existing frontend/private backend pair; no extra service, arbitrary URL proxy, database/account, incoming drawing/PDF feature or unrelated product work. All automated/native testing must be fake/paid-off, with no actual provider/merchant/Cloudflare test dispatch. Inspect process/listener ownership and use only existing Roomedy4320/4321 if runtime is needed; never touch another app or rewrite owner env. No delegation, Git push, deployment, account/cloud mutation or metadata export. After integrated local completion and clean reviews, prepare the owner manual-test handoff with actual limits; do not claim personal visual approval, real local market accuracy or new hosted acceptance.",
+            "sha256": "c122029b50215a3a33f3b6cf7430010da2d778a3687f1adedaa8b52eaaa08256",
+            "context_sources": [
+              "human:current-chat/2026-10-26/cpq-ticket-execution-authorization",
+              "docs/tickets/README.md#cpq-extension--26-october-2026",
+              "docs/Roomedy Extension for CPQ.md",
+              "commit:4f7fb2b"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
           },
           "prior_approval": null,
           "prior_decision": null
@@ -2493,30 +2521,29 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "09-visual-review",
       "name": "Frontend visual approval checkpoint",
       "gate": "visual",
-      "status": "complete",
+      "status": "provisional",
       "prompt": {
-        "text": "Perform the delegated provisional visual self-review for the Roomedy CPQ extension in RM-030. Inspect actual fake local studio customization and connected Plan & cost3D, budget, source/work/version/PDF flows on broad, short, tablet and phone layouts. Preserve the warm existing palette, header continuity, reachable44px controls, meaningful finite animation and one scene owner. Use actual screenshots and DOM/native input evidence, with honest startup/physical/assistive limits. No unsolicited redesign or paid request. Record what was inspected and recommend local handoff only; the absent owner has not personally approved visuals. Continue independent quality/security work under the owner instruction to finish all tickets before their manual tests.",
-        "sha256": "1d2af8e10b5a122b0f3b532ea4a456031af69a956acd575dabe3f463ca6a7ad3",
+        "text": "Review the actual changed Medy shortcut/continuation UX for RM-086/RM-087 against the owner screenshots. Preserve layout/motion and existing current paid configuration. Use only the in-app browser for a separate local manual-room test: wall topic, first two wall replies, exact plaster follow-up, wall-only preview, Apply and Undo. Do not submit a provider-capable advice/sourcing/recognition request. Review offline fake/live-protocol and controller evidence; distinguish local UI completion from updated real-model/owner acceptance. Record an AFK self-review with actual evidence, preserving personal owner review.",
+        "sha256": "d3aa7a318d60205b0ff3ea9a1bae8f787159ebcd0a75e27d920b69458f8dacd1",
         "context_sources": [
-          "docs/design/REVIEW_CHECKLIST.md",
-          "docs/validation/RM-030.md",
-          "docs/commit-plans/RM-030.md"
+          "docs/validation/RM-086-087.md",
+          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+          "docs/commit-plans/RM-086-087.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/validation/RM-030.md",
-        "docs/commit-plans/RM-030.md"
+        "docs/validation/RM-086-087.md",
+        "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+        "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+        "docs/commit-plans/RM-086-087.md"
       ],
       "blockers": [],
-      "approval": {
-        "quote": "I think in this chat we hit all the visual feedback we were wanting and all the UX feedback we were wanting. So let's start, like, preparing this for deployment.",
-        "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
-        "scope": "Current RM-062-083 visual/UX checkpoint at ae8d9e9 is sufficient to proceed to audits. Final paid tests remain reserved for owner return."
-      },
-      "decision": "approved-as-is",
+      "approval": null,
+      "decision": "self-reviewed",
       "reviews": [
         {
           "decision": "changes-requested",
@@ -3234,12 +3261,43 @@ This checklist records local work. Human approvals and unresolved external check
             "decision_id": "AFK-0011",
             "recorded_at": "2026-10-26T17:51:21+00:00"
           }
+        },
+        {
+          "reopened_at": "2026-11-02T11:45:20+00:00",
+          "reason": "Owner-selected Medy UX/source follow-up changes the local candidate; review only this exact connected diff and preserve prior dated acceptance/evidence.",
+          "prior_status": "complete",
+          "prior_prompt": {
+            "text": "Perform the delegated provisional visual self-review for the Roomedy CPQ extension in RM-030. Inspect actual fake local studio customization and connected Plan & cost3D, budget, source/work/version/PDF flows on broad, short, tablet and phone layouts. Preserve the warm existing palette, header continuity, reachable44px controls, meaningful finite animation and one scene owner. Use actual screenshots and DOM/native input evidence, with honest startup/physical/assistive limits. No unsolicited redesign or paid request. Record what was inspected and recommend local handoff only; the absent owner has not personally approved visuals. Continue independent quality/security work under the owner instruction to finish all tickets before their manual tests.",
+            "sha256": "1d2af8e10b5a122b0f3b532ea4a456031af69a956acd575dabe3f463ca6a7ad3",
+            "context_sources": [
+              "docs/design/REVIEW_CHECKLIST.md",
+              "docs/validation/RM-030.md",
+              "docs/commit-plans/RM-030.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": {
+            "quote": "I think in this chat we hit all the visual feedback we were wanting and all the UX feedback we were wanting. So let's start, like, preparing this for deployment.",
+            "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
+            "scope": "Current RM-062-083 visual/UX checkpoint at ae8d9e9 is sufficient to proceed to audits. Final paid tests remain reserved for owner return."
+          },
+          "prior_decision": "approved-as-is"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0021",
+            "recorded_at": "2026-11-02T11:45:21+00:00"
+          },
+          "decision": "self-reviewed"
         }
       ],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0011",
-        "recorded_at": "2026-10-26T17:51:21+00:00"
+        "decision_id": "AFK-0021",
+        "recorded_at": "2026-11-02T11:45:21+00:00"
       }
     },
     {
@@ -3248,28 +3306,23 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete",
       "prompt": {
-        "text": "Run Roomedy's current functionality-preserving code-quality, efficiency and structure audit on the clean ae8d9e9 RM-062-083 checkpoint. The owner has accepted the current visual/UX feedback as sufficient to start deployment preparation and explicitly requests AFK decisions, execute/validate loops, documentation and ticket-prefixed local commits. Do not deploy, push, build images, restart services, change/read ignored env, call paid providers, invoke live app operations, upload scanner metadata, delegate, install tools or touch sibling repositories.\n\nRoomedy is a guest rectangular bedroom/workspace planner with photo/manual intake, one canonical session/room/controller and synchronized 2D/3D; reviewed Medy proposals use explicit Apply/Cancel and one Undo. The Estimate phase retains a separate bounded chat, serial six-target product sourcing, one-at-a-time choices, exact USD/FX source evidence, whole-room material quantities, frozen saved versions and visual PDFs with optional selected-product photos/links. Preserve current behavior, deliberate demand-driven motion, locks/provenance, lifecycle/generation/revision fences, finite bytes/fragments/work/deadlines/admission, private operator diagnostics and safe user errors.\n\nFirst document a concrete RM-084 audit plan, current baseline and exact file allocation. Inspect source/test/script/config owners across contracts, pure spatial, backend HTTP/admission/provider/sourcing, frontend server/intake/session/assistant/room/landing/cost/PDF and local release tooling. Focus on demonstrated duplication, unreachable code and avoidable work/ownership complexity. A long file is not a reason to split it; retain framework/worker/public exports until reachability is established. Reuse existing owners and dependencies. Preserve dated receipts and reconcile only current documentation where needed.\n\nRecord each actual finding with evidence, smallest correction, behavior invariants and meaningful focused checks. Implement justified low-risk corrections one cohesive ticket at a time using execute, then settled read-only validate; independently confirm and fix findings and repeat until no actionable local findings remain. Tests must use the existing fake/paid-off, credential-clearing and external-network-denying bootstrap before imports, never the live app. Use installed Node24.19.0/pnpm11.25.0; run applicable canonical root gates once when settled, with NEXT_TELEMETRY_DISABLED=1. Preserve all assertions if known release-copy wall-clock timing requires a documented CLI timeout rerun. Inspect final diffs and exact explicit staged paths for secrets/artifacts, then create cohesive RM-084 local commits under the direct current authorization. Leave paid, physical, current Linux-image/hosted and final owner acceptance evidence explicit. Finish quality before the security audit.",
-        "sha256": "28d0613d2a47e81896904b823c9295ee941a0a8f4a7f51dcb760f0f717011d5a",
+        "text": "Review the exact seven-production/four-test RM-086/RM-087 diff and shared allocation for functionality, duplication, scope, bounded work, current lifecycle/state ownership and useful contextual behavior. No broad refactor or new service/framework/dependency. Confirm complete canonical format/lint/all-types/seven-boundaries/assets/1722-test/shared/backend/frontend-build evidence. Read-only validation compares full ticket requirements, original reproduction and current real controller/compiler/provider request path; no repeated paid or full test/build after unchanged source. Record only actual actionable findings and finish when none remain.",
+        "sha256": "42efd6f4612fdb7d728a19babb5b4f6f86f1bc200e0e9f5a522bafe53410046b",
         "context_sources": [
-          "AGENTS.md",
-          "docs/README.md",
-          "docs/ROOMEDY.md",
-          "docs/tickets/README.md",
-          "docs/engineering/code-quality-plan.md",
-          "scripts/run-tests.mjs",
-          "scripts/isolated-mode.ts",
-          "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request"
+          "docs/validation/RM-086-087.md",
+          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+          "docs/commit-plans/RM-086-087.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-084-audit-deployment-code-quality.md",
-        "docs/engineering/deployment-quality-review.md",
-        "docs/validation/RM-084.md",
-        "docs/commit-plans/RM-084.md",
-        "actual-gate:142-focused-1711-full-111-files-format-lint-types-seven-boundaries-assets-both-builds"
+        "docs/validation/RM-086-087.md",
+        "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+        "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+        "docs/commit-plans/RM-086-087.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3319,6 +3372,30 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T11:45:22+00:00",
+          "reason": "Owner-selected Medy UX/source follow-up changes the local candidate; review only this exact connected diff and preserve prior dated acceptance/evidence.",
+          "prior_status": "complete",
+          "prior_prompt": {
+            "text": "Run Roomedy's current functionality-preserving code-quality, efficiency and structure audit on the clean ae8d9e9 RM-062-083 checkpoint. The owner has accepted the current visual/UX feedback as sufficient to start deployment preparation and explicitly requests AFK decisions, execute/validate loops, documentation and ticket-prefixed local commits. Do not deploy, push, build images, restart services, change/read ignored env, call paid providers, invoke live app operations, upload scanner metadata, delegate, install tools or touch sibling repositories.\n\nRoomedy is a guest rectangular bedroom/workspace planner with photo/manual intake, one canonical session/room/controller and synchronized 2D/3D; reviewed Medy proposals use explicit Apply/Cancel and one Undo. The Estimate phase retains a separate bounded chat, serial six-target product sourcing, one-at-a-time choices, exact USD/FX source evidence, whole-room material quantities, frozen saved versions and visual PDFs with optional selected-product photos/links. Preserve current behavior, deliberate demand-driven motion, locks/provenance, lifecycle/generation/revision fences, finite bytes/fragments/work/deadlines/admission, private operator diagnostics and safe user errors.\n\nFirst document a concrete RM-084 audit plan, current baseline and exact file allocation. Inspect source/test/script/config owners across contracts, pure spatial, backend HTTP/admission/provider/sourcing, frontend server/intake/session/assistant/room/landing/cost/PDF and local release tooling. Focus on demonstrated duplication, unreachable code and avoidable work/ownership complexity. A long file is not a reason to split it; retain framework/worker/public exports until reachability is established. Reuse existing owners and dependencies. Preserve dated receipts and reconcile only current documentation where needed.\n\nRecord each actual finding with evidence, smallest correction, behavior invariants and meaningful focused checks. Implement justified low-risk corrections one cohesive ticket at a time using execute, then settled read-only validate; independently confirm and fix findings and repeat until no actionable local findings remain. Tests must use the existing fake/paid-off, credential-clearing and external-network-denying bootstrap before imports, never the live app. Use installed Node24.19.0/pnpm11.25.0; run applicable canonical root gates once when settled, with NEXT_TELEMETRY_DISABLED=1. Preserve all assertions if known release-copy wall-clock timing requires a documented CLI timeout rerun. Inspect final diffs and exact explicit staged paths for secrets/artifacts, then create cohesive RM-084 local commits under the direct current authorization. Leave paid, physical, current Linux-image/hosted and final owner acceptance evidence explicit. Finish quality before the security audit.",
+            "sha256": "28d0613d2a47e81896904b823c9295ee941a0a8f4a7f51dcb760f0f717011d5a",
+            "context_sources": [
+              "AGENTS.md",
+              "docs/README.md",
+              "docs/ROOMEDY.md",
+              "docs/tickets/README.md",
+              "docs/engineering/code-quality-plan.md",
+              "scripts/run-tests.mjs",
+              "scripts/isolated-mode.ts",
+              "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -3328,26 +3405,23 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "security",
       "status": "provisional",
       "prompt": {
-        "text": "Perform the current Roomedy security audit on committed quality candidate bb1ba5d37675f2fa1362eed9ace84b2e130fc201. This is build phase10b-security-review under the owner's direct 2 November2026 AFK request to audit quality/security, choose only good scoped findings, preserve functionality and commit all validated local work. Quality is complete: 142 affected and1711 full tests/111files, format/lint/types/seven boundaries/assets/both production builds pass through the documented split gate. The worktree/index is clean.\n\nRoomedy is a guest bedroom/workspace planner with manual/photo input, one canonical room/session/command owner, Medy advice/reviewed edits, explicit Apply/Cancel and Undo, retained Design/Estimate chats, fixed two-hour semantic recovery, sourcing/product choices/whole-room quantities/exact USD-FX and snapshot visual PDF exports. Architecture is Next16.4.2/React19.3.1 public frontend with fixed same-origin server routes, private Express5.3.0 backend, shared strict contracts and pure spatial arithmetic; target delivery is the existing Cloud Run service pair. Do not change this architecture or accepted UI/motion.\n\nAudit STRIDE/general threats on the actual application: input/image/import/model/merchant data, safe text/URL/media rendering and diagnostics, canonical action/revision/generation/lock/Undo authority, public/private Origin/release/identity routing, grant/proof/digest/replay/capacity/rate controls, streaming bytes/fragments/pixels/memory, deadlines/cancel/late settlement, SSRF/DNS-pinned selected-photo/product metadata/FX transports, provider tool/round/spend limits, source/quantity/money/version/PDF integrity, secrets/public bundles, and release/config/CI/dependency boundaries. Preserve useful private logs. Record real exploit conditions and exact evidence; distinguish current source checks, historical Linux/cloud proof and unavailable external evidence. Existing SEC-002 account-wide funded-cutoff/privacy evidence remains unresolved; process-local concurrency is not a monetary cap. Do not silently change local paid configuration or rely on older deployment approval.\n\nAudit direct/transitive dependency versions with current primary advisories. Prefer downloading public ecosystem advisory data and matching locally, with finite download/parse bounds and hashes; never send Roomedy source, lockfile, package graph, secrets or scanner metadata to an external scanner. Reuse installed libraries and existing verified local audit tools; no dependency installation or speculative upgrade. Inspect source/history secrets privately with redacted/sanitized output; never expose a secret value.\n\nDuring this audit phase write only RM-085 ticket, exact file plan, detailed Markdown/security-ranked readable PM HTML, sanitized evidence manifest and validation receipt/progress. Reproduce suspected issues using bounded offline/injected tests, never the running paid app, external product fetches, hosted attacks or provider requests. No implementation before the actual findings and a recorded provisional AFK selection. Select only confirmed/static-supported scoped fixes that preserve valid behavior; avoid minor theoretical hardening or new quota/services. If none are justified, record an explicit provisional no-fixes decision and retain actual external risks.\n\nFor each substantial finding supply a stable ID, severity/confidence, trigger/impact/affected owner, evidence, smallest careful correction, invariant risk and meaningful regression plan. The owner explicitly delegates ordinary selection and local commits; AFK recommendations are provisional and do not fabricate personal security or paid/physical acceptance. Preserve unselected/deferred findings. After this gate execute only selected local findings through execute/read-only validate/independently confirm/fix/revalidate; then commit the exact reviewed artifacts/fixes in cohesive RM-085 commits. Do not deploy, push, build images, change/read ignored env, restart services, open Chrome, delegate, upload scanner metadata, spend or touch sibling repositories. Final paid tests are reserved for the owner on return. Finish with a truthful local handoff and pending release/paid/funding/owner checks.",
-        "sha256": "2d086ded74063808851f1e35f885a4e3ab1e83807681d92367b4266ff451d3f9",
+        "text": "Review RM-086/RM-087 changed human-context resolution and optional reply ranking against existing source/advisory audit. Current explicit visitor targets and values win; only unambiguous bounded human surface context can select a finish target, assistant prose grants no permission, negated/conditional/mixed/stale requests cannot broaden commands. Preserve schema validation, private bridge, admission/replay, resource/history/tool/call limits, safe logs, preview/Apply/Undo and expiry/reset/import. No dependency/API/storage/provider/account/config boundary changes. Dated package watches remain unchanged; do not repeat unchanged graph/secret/account operations. Document a scoped current-candidate review and provisional no-fixes selection if no actionable issue is found; retain actual paid/new-image/hosted/owner limits.",
+        "sha256": "54f2b07387965963048b75c64979e9c9f36adda21d88c2245b454b3ffeda6b4c",
         "context_sources": [
-          "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
-          "commit:bb1ba5d37675f2fa1362eed9ace84b2e130fc201",
-          "AGENTS.md",
-          "docs/ROOMEDY.md",
-          "docs/security/SECURITY_REVIEW.md",
-          "docs/security/CPQ_SECURITY_REVIEW.md",
-          "docs/validation/RM-084.md"
+          "docs/validation/RM-086-087.md",
+          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+          "docs/commit-plans/RM-086-087.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/security/DEPLOYMENT_SECURITY_REVIEW.md",
-        "docs/security/DEPLOYMENT_SECURITY_OVERVIEW.html",
-        "docs/security/deployment-audit-inputs-2026-11-02.json",
-        "docs/validation/RM-084.md"
+        "docs/validation/RM-086-087.md",
+        "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+        "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+        "docs/commit-plans/RM-086-087.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3430,13 +3504,44 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T10:37:56+00:00"
           },
           "decision": "no-fixes"
+        },
+        {
+          "reopened_at": "2026-11-02T11:45:24+00:00",
+          "reason": "Owner-selected Medy UX/source follow-up changes the local candidate; review only this exact connected diff and preserve prior dated acceptance/evidence.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Perform the current Roomedy security audit on committed quality candidate bb1ba5d37675f2fa1362eed9ace84b2e130fc201. This is build phase10b-security-review under the owner's direct 2 November2026 AFK request to audit quality/security, choose only good scoped findings, preserve functionality and commit all validated local work. Quality is complete: 142 affected and1711 full tests/111files, format/lint/types/seven boundaries/assets/both production builds pass through the documented split gate. The worktree/index is clean.\n\nRoomedy is a guest bedroom/workspace planner with manual/photo input, one canonical room/session/command owner, Medy advice/reviewed edits, explicit Apply/Cancel and Undo, retained Design/Estimate chats, fixed two-hour semantic recovery, sourcing/product choices/whole-room quantities/exact USD-FX and snapshot visual PDF exports. Architecture is Next16.4.2/React19.3.1 public frontend with fixed same-origin server routes, private Express5.3.0 backend, shared strict contracts and pure spatial arithmetic; target delivery is the existing Cloud Run service pair. Do not change this architecture or accepted UI/motion.\n\nAudit STRIDE/general threats on the actual application: input/image/import/model/merchant data, safe text/URL/media rendering and diagnostics, canonical action/revision/generation/lock/Undo authority, public/private Origin/release/identity routing, grant/proof/digest/replay/capacity/rate controls, streaming bytes/fragments/pixels/memory, deadlines/cancel/late settlement, SSRF/DNS-pinned selected-photo/product metadata/FX transports, provider tool/round/spend limits, source/quantity/money/version/PDF integrity, secrets/public bundles, and release/config/CI/dependency boundaries. Preserve useful private logs. Record real exploit conditions and exact evidence; distinguish current source checks, historical Linux/cloud proof and unavailable external evidence. Existing SEC-002 account-wide funded-cutoff/privacy evidence remains unresolved; process-local concurrency is not a monetary cap. Do not silently change local paid configuration or rely on older deployment approval.\n\nAudit direct/transitive dependency versions with current primary advisories. Prefer downloading public ecosystem advisory data and matching locally, with finite download/parse bounds and hashes; never send Roomedy source, lockfile, package graph, secrets or scanner metadata to an external scanner. Reuse installed libraries and existing verified local audit tools; no dependency installation or speculative upgrade. Inspect source/history secrets privately with redacted/sanitized output; never expose a secret value.\n\nDuring this audit phase write only RM-085 ticket, exact file plan, detailed Markdown/security-ranked readable PM HTML, sanitized evidence manifest and validation receipt/progress. Reproduce suspected issues using bounded offline/injected tests, never the running paid app, external product fetches, hosted attacks or provider requests. No implementation before the actual findings and a recorded provisional AFK selection. Select only confirmed/static-supported scoped fixes that preserve valid behavior; avoid minor theoretical hardening or new quota/services. If none are justified, record an explicit provisional no-fixes decision and retain actual external risks.\n\nFor each substantial finding supply a stable ID, severity/confidence, trigger/impact/affected owner, evidence, smallest careful correction, invariant risk and meaningful regression plan. The owner explicitly delegates ordinary selection and local commits; AFK recommendations are provisional and do not fabricate personal security or paid/physical acceptance. Preserve unselected/deferred findings. After this gate execute only selected local findings through execute/read-only validate/independently confirm/fix/revalidate; then commit the exact reviewed artifacts/fixes in cohesive RM-085 commits. Do not deploy, push, build images, change/read ignored env, restart services, open Chrome, delegate, upload scanner metadata, spend or touch sibling repositories. Final paid tests are reserved for the owner on return. Finish with a truthful local handoff and pending release/paid/funding/owner checks.",
+            "sha256": "2d086ded74063808851f1e35f885a4e3ab1e83807681d92367b4266ff451d3f9",
+            "context_sources": [
+              "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
+              "commit:bb1ba5d37675f2fa1362eed9ace84b2e130fc201",
+              "AGENTS.md",
+              "docs/ROOMEDY.md",
+              "docs/security/SECURITY_REVIEW.md",
+              "docs/security/CPQ_SECURITY_REVIEW.md",
+              "docs/validation/RM-084.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "no-fixes"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0022",
+            "recorded_at": "2026-11-02T11:45:25+00:00"
+          },
+          "decision": "no-fixes"
         }
       ],
       "selected_findings": [],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0016",
-        "recorded_at": "2026-11-02T10:37:56+00:00"
+        "decision_id": "AFK-0022",
+        "recorded_at": "2026-11-02T11:45:25+00:00"
       }
     },
     {
@@ -3534,26 +3639,29 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Update only the current handoff/documentation disposition after the owner says spending is handled, asks to record existing protections and requests normal local paid-ready startup. Preserve original RM-085 history and no-fixes selection; no new implementation, dependency, env or cloud changes. Document read-only existing Cloud Run IAM/scaling/health/paid-mode checks and sibling comparison. Keep new-candidate Linux/image/resource/asset proofs, intended bindings/widget, paired rollback/hosted acceptance and owner final paid/merchant test separate. No agent paid operation. Validate static docs, links and exact source scope; no staging/commit under run workflow.",
-        "sha256": "fca06fa52fb844d15702123a366d90c52ce2f1d60107c1f9c2177afacde34e28",
+        "text": "Update the deployment handoff for completed RM-086/RM-087 with exact current canonical gate, UI/compiler evidence and source-only digest 121501c1d38f85e3a0754e1a0bafff1f0dbd99928d4a576e167af6114978db86 (385 files/4660995 bytes). Keep original audit/October hosted proofs dated, preserve owner spending disposition/existing abuse controls and normal paid-ready services/env. Owner must test updated live-model conversation before new-release Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted acceptance. No automatic paid/provider/cloud/deploy action. Prepare exact twenty-path local checkpoint under existing owner authority, preserving generated types/runtime logs outside staging.",
+        "sha256": "25f22f6eee58f8f2df76ff973833b015e72abb6eed2891a6e9978e6cfeaa0935",
         "context_sources": [
-          "docs/security/ABUSE_PROTECTION_STATUS.md",
-          "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md",
-          "Direct owner follow-up and run instructions, 2 November 2026"
+          "docs/validation/RM-086-087.md",
+          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+          "docs/commit-plans/RM-086-087.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/security/ABUSE_PROTECTION_STATUS.md",
-        "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+        "docs/validation/RM-086-087.md",
+        "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+        "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+        "docs/commit-plans/RM-086-087.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner final paid/merchant/model journey and exact new-candidate Linux/image/resource/retained-asset/new-release config/widget/paired rollout/rollback/hosted acceptance remain; current October IAM/scaling/paid readiness already verified. Spending setup handled per owner; provider terms not independently reviewed.",
-          "reference": "docs/security/ABUSE_PROTECTION_STATUS.md"
+          "reason": "Owner updated live-model/merchant/physical acceptance and exact new-candidate Linux/image/resource/retained-assets/config/widget/paired rollout/rollback/hosted proof remain. Existing protections/spending disposition/paid-ready settings remain unchanged.",
+          "reference": "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
         }
       ],
       "approval": null,
@@ -3617,6 +3725,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/security/DEPLOYMENT_SECURITY_OVERVIEW.html",
               "docs/security/deployment-audit-inputs-2026-11-02.json",
               "docs/commit-plans/RM-085.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T11:45:26+00:00",
+          "reason": "Owner-selected Medy UX/source follow-up changes the local candidate; review only this exact connected diff and preserve prior dated acceptance/evidence.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Update only the current handoff/documentation disposition after the owner says spending is handled, asks to record existing protections and requests normal local paid-ready startup. Preserve original RM-085 history and no-fixes selection; no new implementation, dependency, env or cloud changes. Document read-only existing Cloud Run IAM/scaling/health/paid-mode checks and sibling comparison. Keep new-candidate Linux/image/resource/asset proofs, intended bindings/widget, paired rollback/hosted acceptance and owner final paid/merchant test separate. No agent paid operation. Validate static docs, links and exact source scope; no staging/commit under run workflow.",
+            "sha256": "fca06fa52fb844d15702123a366d90c52ce2f1d60107c1f9c2177afacde34e28",
+            "context_sources": [
+              "docs/security/ABUSE_PROTECTION_STATUS.md",
+              "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md",
+              "Direct owner follow-up and run instructions, 2 November 2026"
             ],
             "status": "afk",
             "approval": null,
@@ -3933,6 +4060,38 @@ This checklist records local work. Human approvals and unresolved external check
         "evidence": [
           "docs/commit-plans/RM-085-FOLLOWUP.md",
           "docs/validation/RM-085-FOLLOWUP.md"
+        ]
+      },
+      {
+        "id": "AFK-0021",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T11:45:21+00:00",
+        "phase": "09-visual-review",
+        "choice": "Accept the actual local shortcut/wall-follow-up UX as locally complete, pending owner updated live-model acceptance.",
+        "rationale": "Real in-app first-two wall shortcuts/exact plaster preview/Apply/Undo pass with normal configuration and no paid advice request; complete offline behavior/lifecycle gate passes.",
+        "consequence": "No layout/motion redesign or invented model-quality pass. Preserve owner review and current paid-ready services.",
+        "review_needed": true,
+        "evidence": [
+          "docs/validation/RM-086-087.md",
+          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+          "docs/commit-plans/RM-086-087.md"
+        ]
+      },
+      {
+        "id": "AFK-0022",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T11:45:25+00:00",
+        "phase": "10b-security-review",
+        "choice": "No new local security fix selected for the bounded Medy continuity/advice diff.",
+        "rationale": "Human-only target reference inference and strict current request/action/Apply validation remain bounded; no new API, dependency, storage, provider or account authority. Complete existing adversarial/lifecycle tests pass.",
+        "consequence": "Keep existing inactive/dev-only package watches and explicit owner/live/image/hosted limits. This is scoped AFK recommendation, not owner approval or a whole-system security certification.",
+        "review_needed": true,
+        "evidence": [
+          "docs/validation/RM-086-087.md",
+          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+          "docs/commit-plans/RM-086-087.md"
         ]
       }
     ]

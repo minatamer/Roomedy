@@ -1,6 +1,12 @@
 import type { RoomDocument } from '@roomedy/contracts/room';
 import type { DesignTurn } from './design.js';
-import { medyCommandWords, medyTargets, medyText } from './medy-language.js';
+import {
+  medyCommandWords,
+  medyTargets,
+  medyText,
+  medyTopic,
+  medyPrefersPlain,
+} from './medy-language.js';
 import { medyControl } from './medy-controls.js';
 import type { MedyControl } from './medy-controls.js';
 import { medyEdit } from './medy-edits.js';
@@ -14,6 +20,7 @@ import {
 } from './design-opportunities.js';
 import { findCatalogueEntry } from './catalogue.js';
 import { BEDROOM_THEMES } from '@roomedy/contracts/furniture-materials';
+import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
 export type MedyRequest = MedyEdit | { kind: 'control'; control: MedyControl };
 /** Shared application language policy. Models never call this with self-authored text. */
@@ -25,8 +32,8 @@ export function resolveMedyRequest(
   operationId = 'local',
 ): MedyRequest | null {
   context = context.slice(-POLICY.contextTurns);
-  const words = medyCommandWords(room, text),
-    plain = medyText(text);
+  let words = medyCommandWords(room, text);
+  const plain = medyText(text);
   if (
     /\b(ignore (?:the |all |previous )?(?:instructions|rules|locks)|system prompt|developer instructions|execute (?:code|javascript)|api key)\b/.test(
       words,
@@ -124,6 +131,25 @@ export function resolveMedyRequest(
   }
   const targets = medyTargets(room, text, selectedId, context);
   if (
+    !targets.length &&
+    /^(?:preview|use|change|set|make|paint)\b/.test(words) &&
+    /\b(texture|plaster|smooth|concrete|tile|planks|linen|finish|colou?r)\b|#[a-f0-9]{6}\b/.test(
+      words,
+    ) &&
+    !/\b(walls?|floor(?:ing)?)\b/.test(words)
+  ) {
+    const topic = medyTopic(room, text, context);
+    if (topic === 'floor' || topic?.includes('wall'))
+      words = `${words.replace(/^use\b/, 'preview')} ${topic}`;
+    else if (/\btexture\b/.test(words))
+      return {
+        kind: 'reply',
+        summary:
+          'Which surface should I preview: all walls, a particular wall, or the floor?',
+        objectIds: [],
+      };
+  }
+  if (
     /^(?:(?:can|could) you )?(?:select|focus|inspect|show me)\b/.test(words) &&
     targets.length
   )
@@ -174,10 +200,11 @@ export function medyAdvice(
   room: RoomDocument,
   text: string,
   selectedId: string | null,
+  context: readonly DesignTurn[] = [],
 ): string {
   room = planningRoom(room);
   const words = medyText(text),
-    targets = medyTargets(room, text, selectedId, []);
+    targets = medyTargets(room, text, selectedId, context);
   const target =
     targets.length === 1 && targets[0]?.kind === 'furniture'
       ? targets[0].piece
@@ -206,19 +233,53 @@ export function medyAdvice(
     return hard.length
       ? `I’d start with the ${hard.length === 1 ? 'conflict' : `${hard.length} conflicts`} in the current room checks. Open the checks and select an affected piece so we can work through it. A cleaner layout starts with usable floor space and clear furniture fronts.`
       : `There are no hard conflicts in the current modeled checks.${access.length ? ' The furniture-front access checks still deserve a look.' : ''} We can look at an exact piece or try a more open arrangement.`;
+  const topic = medyTopic(room, text, context);
+  if (topic === 'layout')
+    return 'We can compare a more open arrangement of the existing pieces, with a clear route through the room and space at furniture fronts. I can preview another layout while keeping the wall and floor finishes; you can compare it before Apply.';
+  if (topic === 'floor' || topic?.includes('wall')) {
+    const surface = topic.endsWith(' wall')
+      ? (topic.split(' ')[0] as 'north' | 'east' | 'south' | 'west')
+      : (topic as 'floor' | 'walls');
+    const appearance = roomSurface(room.room, surface);
+    const plain = medyPrefersPlain(room, text, context);
+    return `The ${topic} in this plan ${topic === 'walls' ? 'have' : 'has'} a ${SURFACE_TEXTURES[appearance.texture].toLowerCase()} finish. ${plain ? 'We can keep that plain finish and coordinate its colour with the pieces you have.' : topic === 'floor' ? 'We can compare wood planks, tile or a quieter plain finish while keeping the layout.' : 'We can compare soft plaster with a smooth finish while retaining the wall colour, or explore a coordinated wall colour.'} I can show a preview before you decide.`;
+  }
+  const windows = room.room.features.filter(
+    (feature) => feature.kind === 'window',
+  );
+  const doors = room.room.features.filter((feature) => feature.kind === 'door');
+  const bathroom = doors.filter((feature) => feature.purpose === 'bathroom');
+  if (topic === 'window' || topic === 'door' || topic === 'bathroom door') {
+    const features =
+      topic === 'window'
+        ? windows
+        : topic === 'bathroom door'
+          ? bathroom
+          : doors;
+    return features.length
+      ? `The plan includes ${features.length === 1 ? `a ${topic}` : `${features.length} ${topic}s`}. We can coordinate ${topic === 'window' ? 'the frame' : 'the leaf and frame'} colours with the walls while keeping the opening in place. Keep the approach clear when arranging furniture; I can preview an appearance change without altering its size or position.`
+      : `There is no ${topic} recorded in this plan. We can work with the openings that are present, or you can add the opening in the room controls before we coordinate it.`;
+  }
+  const openingNote = [
+    windows.length ? 'the window frame' : '',
+    bathroom.length ? 'the bathroom door' : doors.length ? 'the door' : '',
+  ].filter(Boolean);
+  const openings = openingNote.length
+    ? ` We can coordinate ${openingNote.join(' and ')} with the walls and keep their access clear.`
+    : '';
   const opportunities = roomDesignOpportunities(room),
     first = opportunities[0],
     materials = roomMaterialOpportunities(room);
   if (
     materials.length &&
-    !/\b(keep|stay|retain|prefer)\b.*\bplain\b|\bno textures?\b/.test(words) &&
+    !medyPrefersPlain(room, text, context) &&
     /\b(texture|material|plain|finish|colou?r|style|warm|cozy|modern|improve|design|suggest)\b/.test(
       words,
     )
   )
-    return `${materials[0]!.reason}${materials[1] ? ` ${materials[1].reason}` : ''} I can preview either finish so you can compare it with the plain room.`;
+    return `${materials[0]!.reason}${materials[1] ? ` ${materials[1].reason}` : ''} I can preview either finish so you can compare it with the plain room.${openings}`;
   if (!room.furniture.length)
-    return 'Let’s give the room a useful starting layout with the essentials for your goals and a clear centre. I can preview the first pieces together, then coordinate them with warm wood and ivory.';
+    return `Let’s give the room a useful starting layout with the essentials for your goals and a clear centre. I can preview the first pieces together, then coordinate the wall and floor finishes with warm wood and ivory.${openings}`;
   if (/\b(work|desk|window|study|workspace|work zone)\b/.test(words)) {
     const desk = room.furniture.some(
       (piece) =>
@@ -227,5 +288,5 @@ export function medyAdvice(
     );
     return `I’d anchor the work zone ${room.room.features.some((feature) => feature.kind === 'window') ? 'near the window' : 'against a clear wall'}, with the chair facing into the room and room to pull it back. ${!desk ? `There’s no desk in this plan yet; I can preview ${opportunities[0]?.catalogueIds.includes('procedural-chair') ? 'a desk and chair' : 'a desk'} while keeping your existing pieces.` : first ? first.reason : 'We can compare a more open arrangement or coordinate the finishes.'}`;
   }
-  return `I’d keep a clear route through the room and give the furniture fronts useful space. ${first ? `${first.reason} I can preview that addition, or coordinate the wood and wall finishes around the pieces you have.` : 'We can compare a more open layout, a coordinated palette, or a new use for one corner without adding more furniture.'}`;
+  return `I’d keep a clear route through the room and give the furniture fronts useful space. ${first ? `${first.reason} I can preview that addition, or coordinate the wood and wall finishes around the pieces you have.` : 'We can compare a more open layout, wall finishes or a new use for one corner without adding more furniture.'}${openings}`;
 }

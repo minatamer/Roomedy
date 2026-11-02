@@ -35,6 +35,11 @@ export function medyCommandWords(room: RoomDocument, text: string) {
     .replace(/^(?:hey|hi|hello)[, ]+(?:medy[, ]+)?/, '')
     .replace(/^medy[, ]+/, '')
     .replace(/\bplease\b/g, '')
+    .replace(
+      /^(?:let'?s|let us)\s+(?=(?:try|use|preview|change|make|paint)\b)/,
+      '',
+    )
+    .replace(/^try\b/, 'preview')
     .replace(/\bspin\b/g, 'rotate')
     .replace(/\bnudge\b/g, 'move')
     .replace(/\bget rid of\b/g, 'delete')
@@ -157,6 +162,94 @@ export function medyTargets(
     .map((turn) => references(room, turn.text))
     .find((targets) => targets.length > 0);
   return last ?? [];
+}
+
+export type MedyTopic =
+  | 'walls'
+  | 'floor'
+  | 'north wall'
+  | 'east wall'
+  | 'south wall'
+  | 'west wall'
+  | 'window'
+  | 'door'
+  | 'bathroom door'
+  | 'furniture'
+  | 'layout'
+  | 'palette';
+
+/** Topic only: the newest explicit human topic wins, including an ambiguous topic switch. */
+export function medyTopic(
+  room: RoomDocument,
+  text: string,
+  context: readonly DesignTurn[] = [],
+): MedyTopic | null {
+  for (const turn of [
+    text,
+    ...context
+      .slice(-POLICY.contextTurns)
+      .filter((turn) => turn.role === 'user')
+      .slice(-6)
+      .reverse()
+      .map((turn) => turn.text),
+  ]) {
+    const words = medyCommandWords(room, turn),
+      topics: MedyTopic[] = [];
+    const walls = /\bwalls?\b/.test(words)
+      ? [...words.matchAll(/\b(north|east|south|west)\b/g)]
+      : [];
+    if (walls.length)
+      topics.push(...walls.map((wall) => `${wall[1]} wall` as MedyTopic));
+    else if (/\bwalls?\b/.test(words)) topics.push('walls');
+    if (/\bfloor(?:ing)?\b/.test(words)) topics.push('floor');
+    if (/\bwindows?\b/.test(words)) topics.push('window');
+    if (/\bdoors?\b/.test(words))
+      topics.push(/\bbathroom doors?\b/.test(words) ? 'bathroom door' : 'door');
+    if (
+      /\bfurniture\b/.test(words) ||
+      references(room, turn).some((target) => target.kind === 'furniture')
+    )
+      topics.push('furniture');
+    if (
+      !topics.length &&
+      /\b(layout|arrang\w*|circulation|open space)\b/.test(words)
+    )
+      topics.push('layout');
+    if (!topics.length && /\b(palette|theme)\b/.test(words))
+      topics.push('palette');
+    const unique = [...new Set(topics)];
+    if (unique.length) return unique.length === 1 ? unique[0]! : null;
+  }
+  return null;
+}
+
+/** A bounded stated appearance preference, scoped to the active topic and superseded by a new choice. */
+export function medyPrefersPlain(
+  room: RoomDocument,
+  text: string,
+  context: readonly DesignTurn[] = [],
+): boolean {
+  const topic = medyTopic(room, text, context);
+  for (const turn of [
+    text,
+    ...context
+      .slice(-POLICY.contextTurns)
+      .filter((turn) => turn.role === 'user')
+      .slice(-6)
+      .reverse()
+      .map((turn) => turn.text),
+  ]) {
+    const statedTopic = medyTopic(room, turn);
+    if (statedTopic && topic && statedTopic !== topic) continue;
+    const words = medyText(turn);
+    if (/\b(keep|stay|retain|prefer)\b.*\bplain\b|\bno textures?\b/.test(words))
+      return true;
+    if (
+      /\b(try|use|want|prefer|add)\b.*\b(plaster|wood|textures?)\b/.test(words)
+    )
+      return false;
+  }
+  return false;
 }
 
 export const MEDY_QUANTITY =

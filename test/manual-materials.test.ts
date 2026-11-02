@@ -14,7 +14,9 @@ import {
   validateQuickReplies,
   resolveMedyRequest,
   evaluateBatch,
+  medyAdvice,
 } from '@roomedy/spatial';
+import { door, windowFeature, piece } from './fixtures/command-room.js';
 import { createManualRoom } from '../apps/frontend/src/features/session/entry/manual-room.js';
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { SessionController } from '../apps/frontend/src/features/session/controller.js';
@@ -166,6 +168,70 @@ describe('plain fresh manual rooms', () => {
 });
 
 describe('Medy recommends actual texture previews', () => {
+  it('retains wall opportunities in a furniture-heavy room', () => {
+    const room = createManualRoom('partial');
+    room.furniture.push(
+      piece('workstation', 5000, 5000, { catalogueId: 'procedural-desk' }),
+      piece('work-seat', 6500, 5000, {
+        catalogueId: 'procedural-chair',
+        width: 500,
+        depth: 500,
+        height: 850,
+      }),
+      piece('reading-seat', 7500, 5000, {
+        catalogueId: 'armchair',
+        width: 900,
+        depth: 850,
+        height: 900,
+      }),
+    );
+    for (const item of room.furniture)
+      item.materials = { body: 'plain', upholstery: 'plain' };
+    const options = roomMaterialOpportunities(room);
+    expect(options).toHaveLength(5);
+    const wall = options.find(
+      (option) => option.request === 'Change walls texture to plaster',
+    );
+    expect(wall).toBeDefined();
+    const edit = resolveMedyRequest(room, wall!.request, null);
+    expect(edit?.kind).toBe('edits');
+    if (edit?.kind === 'edits')
+      expect(evaluateBatch(room, edit.actions, 'visitor').ok).toBe(true);
+  });
+
+  it('grounds wall and opening advice in current features without inventing a bathroom door', () => {
+    const room = createManualRoom('partial');
+    const bathroom = { ...door('bathroom'), purpose: 'bathroom' as const };
+    room.room.features = [windowFeature(), bathroom];
+    const before = structuredClone(room);
+    const advice = medyAdvice(room, 'How can I improve the room?', null);
+    expect(advice).toMatch(/plaster|wall/i);
+    expect(advice).toMatch(/window frame/i);
+    expect(advice).toMatch(/bathroom door/i);
+    const context = [
+      { role: 'user' as const, text: 'what could we do about the walls' },
+    ];
+    expect(
+      medyAdvice(room, 'what would you recommend next?', null, context),
+    ).toMatch(/wall.*plaster|plaster.*wall/i);
+    expect(
+      medyAdvice(room, 'what about the walls, but keep them plain', null),
+    ).not.toMatch(/compare soft plaster/);
+    expect(medyAdvice(room, 'what about the bathroom door?', null)).toMatch(
+      /leaf and frame/,
+    );
+    expect(room).toEqual(before);
+    room.room.features = [door()];
+    expect(medyAdvice(room, 'what about the bathroom door?', null)).toMatch(
+      /no bathroom door recorded/i,
+    );
+    expect(medyAdvice(room, 'what about the window?', null)).toMatch(
+      /no window recorded/i,
+    );
+    expect(medyAdvice(room, 'How can I improve the room?', null)).not.toMatch(
+      /bathroom door|window frame/,
+    );
+  });
   it('can explicitly return a textured bed to plain without changing its physical facts', () => {
     const room = createRoomFixture('partial'),
       request = resolveMedyRequest(
@@ -192,8 +258,8 @@ describe('Medy recommends actual texture previews', () => {
       options = roomMaterialOpportunities(room);
     expect(options.slice(0, 3).map((choice) => choice.label)).toEqual([
       'Try oak flooring',
+      'Try soft plaster walls',
       'Wood for the bed',
-      'Wood for the wardrobe',
     ]);
     expect(
       guidanceChoices('themes', room, false)
