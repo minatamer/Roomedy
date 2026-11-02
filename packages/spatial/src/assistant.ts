@@ -503,7 +503,16 @@ function resolveExplicitTask(
       .join(' ');
     const additionTypes = types.filter(
       (c) =>
-        new RegExp('\\b' + c + 's?\\b').test(additionClauses) ||
+        (new RegExp('\\b' + c + 's?\\b').test(additionClauses) &&
+          !(
+            c === 'mirror' &&
+            /\bwardrobe with (?:a |one |a single )?mirror/.test(
+              additionClauses,
+            ) &&
+            !/\band (?:a |one )?(?:wall|standing|full|hanging|mirror)/.test(
+              additionClauses,
+            )
+          )) ||
         (c === 'lighting' && /\b(lamps?|lights?)\b/.test(additionClauses)),
     );
     if (

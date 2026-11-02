@@ -1,5 +1,7 @@
 # Roomedy ticket plan
 
+**RM-094 complete locally — 2 November:** [Mirror furniture and room reflections](RM-094-add-mirrors-and-room-reflections.md), [30-path allocation](../commit-plans/RM-094.md), [research](../engineering/room-mirrors.md), [receipt](../validation/RM-094.md). Wall-hung, standing rear-pivot/support and one-mirrored-door wardrobe; shared512px reflection with glossy fallback.27new regressions,51focused and final1825-test/114-file canonical gate/both builds/native model/reflection/height/door/mobile/idle checks pass. Clean final review; no paid/Send or env/service/dependency change.
+
 **RM-093 complete locally — 2 November:** [Point ceiling-light arrows downward](RM-093-point-ceiling-light-markers-down.md), [ten-path allocation](../commit-plans/RM-093.md), [receipt](../validation/RM-093.md). One selected-marker transform branch; floor furniture arrow remains exact.52existing tests/scoped format/lint/frontend build and native pendant/flush/rotated track/desk checks pass; no actionable final finding. No paid/Send or services/env change.
 
 **RM-092 complete locally — 2 November:** [Use sun and crescent icons](RM-092-use-sun-and-moon-toggle-icons.md), [eleven-path allocation](../commit-plans/RM-092.md), [receipt](../validation/RM-092.md). Two presentation files only; accessible Day/Night names and native button behavior retained. Scoped format/lint/frontend build, actual desktop/320px/keyboard and clean read-only review pass. No paid/provider/browser Send or service/env change.

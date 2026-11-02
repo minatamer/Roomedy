@@ -102,6 +102,8 @@ export function createAssistantHandler(
                 supportedColours: COLOUR_PRESETS,
                 lighting: {
                   presets: LIGHT_PRESETS,
+                  mirrors:
+                    'Wall-hung mirror, Standing pivot mirror, Mirrored-door wardrobe (one mirrored hinged leaf). Mirrors reflect the room in 3D; use existing catalogue placement, mounting and preview/Apply.',
                   brightness: '0–100%',
                   examples: [
                     'Set the Floor lamp light to warm red',
@@ -307,6 +309,8 @@ export function createAssistantHandler(
     const context = {
       lighting: {
         presets: LIGHT_PRESETS,
+        mirrors:
+          'Wall-hung mirror, Standing pivot mirror, Mirrored-door wardrobe (one mirrored hinged leaf). Mirrors reflect the room in 3D; use existing catalogue placement, mounting and preview/Apply.',
         brightness: '0–100%',
         examples: [
           'Set the Floor lamp light to warm red',

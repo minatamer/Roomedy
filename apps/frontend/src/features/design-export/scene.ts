@@ -1,3 +1,4 @@
+import { isMirrorPart } from '../room-view/representations/definitions';
 import { openingMaterialTargets } from '@roomedy/contracts/furniture-materials';
 import type { MaterialPattern } from '@roomedy/contracts/furniture-materials';
 import {
@@ -491,7 +492,8 @@ export function buildDesignScene(
       screen.metalness = 0.35;
       if (
         findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
-          ?.category === 'mirror'
+          ?.category === 'mirror' ||
+        piece.catalogueId === 'wardrobe-mirrored'
       )
         windowGlass ??= createWindowGlass();
       for (const part of detailedParts(
@@ -504,7 +506,7 @@ export function buildDesignScene(
           part.name,
           part.center.map(metres),
           part.size.map(metres),
-          part.name === 'mirror-glass' && windowGlass
+          isMirrorPart(part) && windowGlass
             ? windowGlass.mirror
             : part.name === 'tv-screen'
               ? screen

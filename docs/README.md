@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Mirrors — 2 November:** [RM-094](tickets/RM-094-add-mirrors-and-room-reflections.md) adds wall-hung/standing pivot mirrors and a wardrobe with one mirrored door, plus actual room reflections through one bounded shared target. Existing manual/Medy/theme/mount/history/export owners remain. [Research](engineering/room-mirrors.md), [allocation](commit-plans/RM-094.md), [1825-test gate/builds, native checks and review](validation/RM-094.md). No paid/provider/Send or env/service/dependency change; owner premium appearance/model/physical acceptance remains separate.
+
 **Ceiling-light arrows — 2 November:** [RM-093](tickets/RM-093-point-ceiling-light-markers-down.md) points selected ceiling-fixture arrows down along their beam, retaining normal horizontal furniture arrows. [Allocation](commit-plans/RM-093.md), [52 existing checks, scoped build and native model/rotation comparison](validation/RM-093.md). Actual lights/canonical data and paid-ready services/env are unchanged.
 
 **Sun/crescent toggle — 2 November:** [RM-092](tickets/RM-092-use-sun-and-moon-toggle-icons.md) replaces Day/Night words with matching outline icons while retaining accessible names, pressed state and behavior. [Allocation](commit-plans/RM-092.md), [scoped frontend build and actual desktop/320px/keyboard receipt](validation/RM-092.md). No lighting logic or paid/service/config change; owner aesthetic acceptance remains separate.

@@ -169,7 +169,10 @@ const tvSizes = (entry: CatalogueEntry): SizePreset[] =>
 export function furnitureSizePresets(
   entry: CatalogueEntry,
 ): readonly SizePreset[] {
-  if (entry.placement === 'ceiling')
+  if (
+    entry.placement === 'ceiling' ||
+    ['mirror-wall', 'mirror-standing', 'wardrobe-mirrored'].includes(entry.id)
+  )
     return [
       common(
         `${entry.id}-standard`,

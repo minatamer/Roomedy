@@ -388,11 +388,7 @@ export function createAssistantTools(
         type: item.type,
         furniture: {
           ...furniture,
-          pose:
-            CATALOGUE.find((entry) => entry.id === furniture.catalogueId)
-              ?.placement === 'ceiling'
-              ? wallMountedPose(room, furniture, selectedPose)
-              : selectedPose,
+          pose: wallMountedPose(room, furniture, selectedPose),
         },
         ...(item.type === 'replace' ? { id: item.id } : {}),
       } as ProposalAction);

@@ -14,6 +14,8 @@ export interface BoxPart {
   size: readonly [number, number, number];
   role: 'frame' | 'soft' | 'metal' | 'detail';
 }
+export const isMirrorPart = (part: Pick<BoxPart, 'name'>) =>
+  part.name === 'mirror-glass' || part.name.startsWith('mirror-glass-');
 export type Representation =
   | {
       kind: 'mesh';
@@ -112,6 +114,74 @@ export function proceduralParts(
     legs(seat - 35, 30);
     box('back', 0, (h + seat) / 2, -d / 2 + 25, w, h - seat, 50, 'soft');
   } else if (category === 'mirror') {
+    if (variant === 'mirror-standing') {
+      const panelW = w - 100,
+        panelH = h - 160,
+        panelZ = d * 0.18;
+      for (const side of [-1, 1]) {
+        box(
+          `stand-foot-${side}`,
+          side * (w / 2 - 25),
+          20,
+          0,
+          50,
+          40,
+          d,
+          'metal',
+        );
+        box(
+          `stand-post-${side}`,
+          side * (w / 2 - 25),
+          h * 0.34,
+          -d * 0.12,
+          40,
+          h * 0.68,
+          40,
+        );
+        box(
+          `pivot-${side}`,
+          side * (w / 2 - 40),
+          h * 0.6,
+          d * 0.03,
+          40,
+          32,
+          d * 0.4,
+          'metal',
+        );
+        box(
+          `mirror-side-${side}`,
+          side * (panelW / 2 - 10),
+          h / 2 + 50,
+          panelZ,
+          20,
+          panelH,
+          45,
+        );
+      }
+      box('rear-crossbar', 0, h * 0.2, -d * 0.12, w - 50, 30, 30);
+      box('mirror-top', 0, h - 40, panelZ, panelW - 40, 20, 45);
+      box('mirror-bottom', 0, 140, panelZ, panelW - 40, 20, 45);
+      box(
+        'mirror-back',
+        0,
+        h / 2 + 50,
+        panelZ - 16,
+        panelW - 40,
+        panelH - 40,
+        8,
+      );
+      box(
+        'mirror-glass',
+        0,
+        h / 2 + 50,
+        panelZ + 18,
+        panelW - 40,
+        panelH - 40,
+        8,
+        'metal',
+      );
+      return parts;
+    }
     for (const side of [-1, 1])
       box(`mirror-side-${side}`, side * (w / 2 - 10), h / 2, 0, 20, h, d);
     box('mirror-bottom', 0, 10, 0, w - 40, 20, d);
@@ -362,6 +432,17 @@ export function proceduralParts(
       for (const level of [1, 2, 3])
         box(`shelf-${level}`, 0, (h * level) / 4, 0, w - 2 * t, t, d - t);
   }
+  if (variant === 'wardrobe-mirrored')
+    box(
+      'mirror-glass-door--1',
+      -w / 4,
+      h / 2,
+      d / 2 - 2,
+      w / 2 - 60,
+      h - 110,
+      4,
+      'metal',
+    );
   return parts;
 }
 

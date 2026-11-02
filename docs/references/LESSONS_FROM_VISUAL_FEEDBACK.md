@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Give mirror furniture real construction and reflected room content — 2 November 2026
+
+Offer a wall-hung mirror, a freestanding mirror with rear support/pivot hardware, and a wardrobe with one mirrored door. Reuse room themes on the frame while glass stays reflective; mount and move through normal controls. A wardrobe panel must stay attached while its door opens. A premium reflection should show the actual room, not only a static metallic swatch. Bound the extra render/target cost, preserve demand-render idle sleep and keep glossy fallback on other surfaces. Qualified model names must not turn an incidental location noun into a different piece or add an unwanted mirror beside a mirrored wardrobe. [RM-094](../tickets/RM-094-add-mirrors-and-room-reflections.md), [research](../engineering/room-mirrors.md), [evidence and limits](../validation/RM-094.md).
+
 ## Show the light direction on ceiling fixtures — 2 November 2026
 
 A ceiling light's selection arrow should point down along its beam, not borrow the horizontal front-facing arrow of furniture. Rotate the existing marker in fixture-local space so quarter-turns cannot point it sideways; retain the normal floor arrow and marker ownership/style. This is a visual cue correction, not a new aiming/photometric control. [RM-093](../tickets/RM-093-point-ceiling-light-markers-down.md), [evidence](../validation/RM-093.md).

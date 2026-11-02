@@ -65,7 +65,7 @@ export function MountControls({
           pose: placementTarget(wallMountedPose(room, item, pose)),
         },
       ],
-      'Change TV mounting',
+      'Change mounting',
     );
     setError(result.ok ? '' : failureMessage(result, room));
   };
@@ -162,7 +162,11 @@ export function MountControls({
         </label>
       )}
       <label>
-        {entry.placement === 'wall' ? 'Screen position' : 'Supporting surface'}
+        {entry.placement === 'wall'
+          ? entry.category === 'mirror'
+            ? 'Mirror position'
+            : 'Screen position'
+          : 'Supporting surface'}
         <select
           value={bottom !== null && heights.includes(bottom) ? bottom : ''}
           disabled={item.locks.position}

@@ -53,7 +53,7 @@ const hard = (furniture: Furniture[]) =>
   checkRoom(commandRoom(furniture)).issues.filter((i) => i.severity === 'hard');
 describe('bedroom catalogue and real elevated placement', () => {
   it('adds coherent bounded adjustable representations and useful TV diagonal presets', () => {
-    expect(CATALOGUE).toHaveLength(22);
+    expect(CATALOGUE).toHaveLength(25);
     for (const entry of CATALOGUE.slice(8)) {
       const piece = item(entry.id);
       if (entry.placement === 'wall')

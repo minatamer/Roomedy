@@ -346,6 +346,39 @@
         "depth": 180,
         "height": 220
       }
+    },
+    {
+      "catalogueId": "mirror-wall",
+      "filename": "thumbnails/mirror-wall.svg",
+      "bytes": 314,
+      "sha256": "610c4a9284265dd9be96006ffb0909d06582ecb3307c3bfe3409db27e50a998a",
+      "semanticMm": {
+        "width": 700,
+        "depth": 70,
+        "height": 1000
+      }
+    },
+    {
+      "catalogueId": "mirror-standing",
+      "filename": "thumbnails/mirror-standing.svg",
+      "bytes": 437,
+      "sha256": "2c08cf4e9014106c336abc6586845801bbb6bcb206012d87f34d7f1f1bf4c6f0",
+      "semanticMm": {
+        "width": 700,
+        "depth": 450,
+        "height": 1650
+      }
+    },
+    {
+      "catalogueId": "wardrobe-mirrored",
+      "filename": "thumbnails/wardrobe-mirrored.svg",
+      "bytes": 426,
+      "sha256": "5fdb175dd5ef1874561a3ec95446ee2085fd4b293c7d26dd9f233102417ae6e1",
+      "semanticMm": {
+        "width": 1200,
+        "depth": 600,
+        "height": 2100
+      }
     }
   ]
 }

@@ -224,6 +224,39 @@ const records = catalogueSchema.parse([
   },
   ...[
     [
+      'mirror-wall',
+      'Wall-hung mirror',
+      'mirror',
+      'mirror-wall',
+      [400, 700, 1000],
+      [50, 70, 100],
+      [600, 1000, 1500],
+      0,
+      'none',
+    ],
+    [
+      'mirror-standing',
+      'Standing pivot mirror',
+      'mirror',
+      'mirror-standing',
+      [500, 700, 900],
+      [350, 450, 650],
+      [1400, 1650, 1900],
+      400,
+      'none',
+    ],
+    [
+      'wardrobe-mirrored',
+      'Mirrored-door wardrobe',
+      'wardrobe',
+      'wardrobe-mirrored',
+      [800, 1200, 2400],
+      [450, 600, 700],
+      [1600, 2100, 2600],
+      800,
+      'hinged',
+    ],
+    [
       'full-length-mirror',
       'Full-length mirror',
       'mirror',
@@ -403,6 +436,9 @@ const records = catalogueSchema.parse([
       accessMechanism,
       ...(String(id).startsWith('ceiling-')
         ? { placement: 'ceiling', defaultElevationMm: 2200 }
+        : {}),
+      ...(id === 'mirror-wall'
+        ? { placement: 'wall', defaultElevationMm: 900 }
         : {}),
       ...(id === 'tv-wall'
         ? {

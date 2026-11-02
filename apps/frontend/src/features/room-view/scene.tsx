@@ -1,3 +1,7 @@
+import { isMirrorPart } from './representations/definitions';
+import { createMirrorReflection } from './mirror-reflections';
+import type { MirrorReflection } from './mirror-reflections';
+import { RoomMirror, MirrorSurface } from './mirrors';
 import { openingMaterialTargets } from '@roomedy/contracts/furniture-materials';
 import { inspectionPose, inspectionVisible } from './inspection';
 import type { Inspection } from './inspection';
@@ -1324,6 +1328,7 @@ function SelectedDirection({
           : [0, Math.max(0.12, Math.min(0.3, height * 0.25)), depth / 2 + 0.045]
       }
       rotation={[downward ? Math.PI : Math.PI / 2, 0, 0]}
+      userData={{ roomedyEditorOverlay: true }}
     >
       {([true, false] as const).map((halo) => (
         <group key={String(halo)}>
@@ -1380,7 +1385,9 @@ function Piece({
   open,
   windowGlass,
   inspecting = false,
+  mirrorPool,
 }: {
+  mirrorPool: MirrorReflection;
   inspecting?: boolean;
   windowGlass: ReturnType<typeof createWindowGlass> | null;
   open: boolean;
@@ -1537,7 +1544,7 @@ function Piece({
                     : surfaces.hard
               }
               material={
-                part.name === 'mirror-glass' && windowGlass
+                isMirrorPart(part) && windowGlass
                   ? windowGlass.mirror
                   : materials[
                       part.name === 'tv-screen'
@@ -1556,10 +1563,25 @@ function Piece({
               receiveShadow
             />
           );
+          const content = isMirrorPart(part) ? (
+            <>
+              {mesh}
+              <MirrorSurface
+                part={part}
+                pieceId={piece.id}
+                pool={mirrorPool}
+                pivot={motion?.pivot ?? [0, 0, 0]}
+              />
+            </>
+          ) : (
+            mesh
+          );
           return motion ? (
             <OpeningMotion key={part.name} open={open} motion={motion}>
-              {mesh}
+              {content}
             </OpeningMotion>
+          ) : isMirrorPart(part) ? (
+            <group key={part.name}>{content}</group>
           ) : (
             mesh
           );
@@ -1576,6 +1598,7 @@ function Piece({
           geometry={geometry}
           position={[0, 0.015, 0]}
           scale={[w + 0.045, 0.018, d + 0.045]}
+          userData={{ roomedyEditorOverlay: true }}
           dispose={null}
         >
           <OwnedStandard
@@ -1599,6 +1622,7 @@ function Piece({
             geometry={geometry}
             position={[0, h / 2, 0]}
             scale={[w + 0.01, h + 0.01, d + 0.01]}
+            userData={{ roomedyEditorOverlay: true }}
             dispose={null}
           >
             <OwnedBasic color="#765036" wireframe transparent opacity={0.35} />
@@ -1683,11 +1707,13 @@ export function RoomScene(props: SceneProps) {
   useEffect(() => () => geometry.dispose(), [geometry]);
   const surfaces = useMemo(() => createSurfaces(), []);
   useEffect(() => () => surfaces.dispose(), [surfaces]);
+  const mirrorPool = useMemo(() => createMirrorReflection(), []);
+  useEffect(() => () => mirrorPool.dispose(), [mirrorPool]);
   const hasWindows =
     desiredRoom.furniture.some(
       (p) =>
         findCatalogueEntry(p.catalogueId, p.catalogueVersion)?.category ===
-        'mirror',
+          'mirror' || p.catalogueId === 'wardrobe-mirrored',
     ) ||
     desiredRoom.room.features.some(
       (feature) =>
@@ -1889,6 +1915,7 @@ export function RoomScene(props: SceneProps) {
             <Piece
               key={p.id}
               piece={p}
+              mirrorPool={mirrorPool}
               windowGlass={windowGlass}
               selected={selectedId === p.id}
               inspecting={!!props.inspection}
@@ -1906,6 +1933,7 @@ export function RoomScene(props: SceneProps) {
             />
           );
         })}
+      <RoomMirror pool={mirrorPool} selectedId={selectedId} />
       {ghosts.map((p) => {
         const pose = piecePose(p);
         const size = displayFurnitureSize(p);

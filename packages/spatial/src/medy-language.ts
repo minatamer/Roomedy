@@ -59,6 +59,12 @@ export function catalogueMention(
 ): boolean {
   const aliases: Record<string, string> = {
     'full-length-mirror': '(?:full[- ]length )?mirror',
+    'mirror-wall':
+      '(?:wall[- ](?:hung|mounted)|wall|hanging) mirror|mirror (?:that (?:can )?(?:hangs?|mounts?)|to hang|hanging) (?:on )?(?:the |a )?wall',
+    'mirror-standing':
+      '(?:standing(?: pivot)?|freestanding|pivot|cheval) mirror|mirror with (?:a )?(?:pivot|stand)',
+    'wardrobe-mirrored':
+      '(?:mirrored(?:[- ]door)?|mirror[- ]door) wardrobe|wardrobe with (?:a |one |a single )?(?:mirror|mirrored door)',
     'drawer-shelf':
       '(?:shelf|shelving) with (?:animated )?drawers|drawer shel(?:f|ving)',
     'chest-drawers': 'chest of drawers|dresser',
@@ -75,6 +81,14 @@ export function catalogueMention(
     'ceiling-flush': 'flush(?: ceiling)? light',
     'ceiling-track': 'track(?: ceiling)? light',
   };
+  if (
+    entry.id === 'full-length-mirror' &&
+    !/\bfull[- ]length mirror\b/.test(words) &&
+    ['mirror-wall', 'mirror-standing', 'wardrobe-mirrored'].some((id) =>
+      new RegExp(`\\b(?:${aliases[id]})s?\\b`).test(words),
+    )
+  )
+    return false;
   return (
     words.includes(entry.label.toLowerCase()) ||
     (!!aliases[entry.id] &&
@@ -117,6 +131,16 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
     const entry = findCatalogueEntry(p.catalogueId, p.catalogueVersion);
     if (entry && catalogueMention(entry, remaining)) return true;
     const category = entry?.category;
+    if (category === 'mirror') {
+      const specific = CATALOGUE.filter(
+        (e) =>
+          e.category === 'mirror' &&
+          e.id !== 'full-length-mirror' &&
+          catalogueMention(e, remaining),
+      );
+      if (specific.length && !specific.some((e) => e.id === entry?.id))
+        return false;
+    }
     // In “Floor lamp light colour”, light is the named fixture's property.
     if (
       category === 'lighting' &&

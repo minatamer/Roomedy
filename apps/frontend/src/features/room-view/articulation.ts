@@ -97,7 +97,7 @@ export function furniturePartMotion(
     return part.name.startsWith('drawer-')
       ? { pivot: [0, 0, 0], travel: [0, 0, metres(depth * 0.72)], turn: 0 }
       : null;
-  const name = part.name.replace(/^handle-/, '');
+  const name = part.name.replace(/^mirror-glass-/, '').replace(/^handle-/, '');
   const door = parts.find((p) => p.name === name && name.startsWith('door-'));
   if (!door) return null;
   if (kind === 'sliding')

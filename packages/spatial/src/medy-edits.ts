@@ -1032,8 +1032,9 @@ export function medyEdit(
     );
   if (
     target.kind === 'furniture' &&
-    findCatalogueEntry(target.piece.catalogueId, target.piece.catalogueVersion)
-      ?.category === 'tv'
+    (findCatalogueEntry(target.piece.catalogueId, target.piece.catalogueVersion)
+      ?.category === 'tv' ||
+      wallMounted(target.piece))
   ) {
     const elevation =
       words.match(
