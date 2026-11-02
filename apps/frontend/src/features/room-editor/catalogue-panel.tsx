@@ -8,6 +8,7 @@ import {
 import Image from 'next/image';
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture, RoomDocument } from '@roomedy/contracts/room';
+import { roomBedroomTheme } from '@roomedy/contracts/furniture-materials';
 import { POLICY } from '@roomedy/contracts/policy';
 import {
   CATALOGUE,
@@ -103,6 +104,7 @@ function PlacementForm({
             quarterTurns: replacement?.pose.quarterTurns ?? 0,
           },
           replacement?.id,
+          roomBedroomTheme(room.room)?.id,
         );
         if (!replacement)
           furniture.pose.quarterTurns = preferredFurnitureFacing(

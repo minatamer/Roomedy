@@ -20,7 +20,9 @@ import type { Furniture } from '@roomedy/contracts/room';
 import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
 import { validateRoom, preservesHardIssue } from '../commands.js';
 import { checkRoom } from '../checks.js';
-import { findCatalogueEntry } from '../catalogue.js';
+import { findCatalogueEntry, withFurnitureTheme } from '../catalogue.js';
+import { roomBedroomTheme } from '@roomedy/contracts/furniture-materials';
+import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
 import { jsonBytes } from '../history.js';
 import { evaluateScopedBatch } from './scope.js';
 import { candidatePositions, windowPoint } from './positions.js';
@@ -53,7 +55,10 @@ export function emptySearchResult(
     alternatives: [],
   };
 }
-export function proposedSearchPiece(choice: SearchChoice): Furniture | null {
+export function proposedSearchPiece(
+  choice: SearchChoice,
+  themeId?: BedroomThemeId,
+): Furniture | null {
   const entry = findCatalogueEntry(choice.catalogueId, VERSIONS.catalogue);
   if (!entry) return null;
   const dimension = (axis: 'width' | 'depth' | 'height') => ({
@@ -61,30 +66,35 @@ export function proposedSearchPiece(choice: SearchChoice): Furniture | null {
     status: 'estimated' as const,
     sourceId: 'selected-variant',
   });
-  return {
-    id: choice.id,
-    label: entry.label,
-    catalogueId: entry.id,
-    catalogueVersion: entry.version,
-    dimensions: {
-      width: dimension('width'),
-      depth: dimension('depth'),
-      height: dimension('height'),
+  return withFurnitureTheme(
+    {
+      id: choice.id,
+      label: entry.label,
+      catalogueId: entry.id,
+      catalogueVersion: entry.version,
+      dimensions: {
+        width: dimension('width'),
+        depth: dimension('depth'),
+        height: dimension('height'),
+      },
+      pose: {
+        ...(entry.placement && entry.placement !== 'floor'
+          ? { bottomY: entry.defaultElevationMm ?? 0 }
+          : {}),
+        centerX: 0,
+        centerZ: 0,
+        quarterTurns: 0,
+        provenance: { status: 'planned', sourceId: 'assistant-plan' },
+      },
+      ownership: 'proposed',
+      preference: 'flexible',
+      locks: { ...DEFAULT_FURNITURE_LOCKS },
+      finish: choice.finish ?? entry.finishes[0]!,
     },
-    pose: {
-      ...(entry.placement && entry.placement !== 'floor'
-        ? { bottomY: entry.defaultElevationMm ?? 0 }
-        : {}),
-      centerX: 0,
-      centerZ: 0,
-      quarterTurns: 0,
-      provenance: { status: 'planned', sourceId: 'assistant-plan' },
-    },
-    ownership: 'proposed',
-    preference: 'flexible',
-    locks: { ...DEFAULT_FURNITURE_LOCKS },
-    finish: choice.finish ?? entry.finishes[0]!,
-  };
+    entry,
+    themeId,
+    choice.finish !== null,
+  );
 }
 type Actor = { piece: Furniture; kind: 'existing' | 'add' | 'replace' };
 type Frame = { positions: SearchPose[]; next: number };
@@ -233,7 +243,10 @@ export class LayoutSearch {
       ['replace', goal.replacements],
     ] as const)
       for (const choice of choices) {
-        const piece = proposedSearchPiece(choice);
+        const piece = proposedSearchPiece(
+          choice,
+          roomBedroomTheme(room.room)?.id,
+        );
         if (!piece) {
           this.stop('unsupported', ['choose-smaller-replacement']);
           return;
@@ -512,13 +525,22 @@ function evaluateSearchActions(
   if (!parsed.success) return null;
   const actions = parsed.data,
     goal = request.goal;
+  const themeId = roomBedroomTheme(request.room.room)?.id;
   const variant = (piece: Furniture, choices: SearchChoice[]) => {
     const choice = choices.find((p) => p.id === piece.id),
-      expected = choice ? proposedSearchPiece(choice) : null;
+      expected = choice ? proposedSearchPiece(choice, themeId) : null;
+    const materials = piece.materials ?? {},
+      expectedMaterials = expected?.materials ?? {};
     return (
       !!expected &&
       piece.catalogueId === expected.catalogueId &&
       piece.finish === expected.finish &&
+      (!themeId ||
+        (Object.keys(materials).length ===
+          Object.keys(expectedMaterials).length &&
+          (Object.keys(materials) as (keyof typeof materials)[]).every(
+            (key) => materials[key] === expectedMaterials[key],
+          ))) &&
       (['width', 'depth', 'height'] as const).every(
         (axis) =>
           piece.dimensions[axis].value === expected.dimensions[axis].value,

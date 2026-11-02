@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner can test the updated running paid-ready app. RM-089 source/tests/docs are validated for the exact local checkpoint; no automatic paid/browser/provider request or deployment. Fresh exact release proofs remain required.
+Next action: Owner can test the updated running paid-ready app. RM-090 source/tests/docs pass the recorded split gate and reviews for the authorized exact local checkpoint; no automatic paid/provider/browser Send or deployment. Fresh exact release proofs remain required.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1689,6 +1689,14 @@ Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
   Reason: Exact current IDs, existing supported action compiler/evaluation and Apply authority constrain human reference inference; all bounded lifecycle/adversarial tests pass and no new API/state/provider/dependency authority exists.
   Consequence / reversibility: Scoped AFK recommendation only; existing unpatched inactive/dev package watches and owner/live/image/hosted limits remain explicit.
   Owner review requested on return: yes. Evidence: docs/tickets/RM-089-retain-medy-group-and-clarification-context.md, docs/commit-plans/RM-089.md, docs/validation/RM-089.md
+- **AFK-0026** (AFK-SESSION-001, 2026-11-02T16:32:22+00:00, 09-visual-review): Accept locally verified inherited appearance; owner aesthetic/physical/real-model judgment remains pending.
+  Reason: Actual manual keyboard/coordinate controls show the chosen preset; fake/offline tests cover AI/transactions/persistence/all themes.
+  Consequence / reversibility: No new paid or owner-approval claim; retain external release evidence limits.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md, docs/commit-plans/RM-090.md, docs/validation/RM-090.md
+- **AFK-0027** (AFK-SESSION-001, 2026-11-02T16:32:25+00:00, 10b-security-review): No new local security fix selected for the settled RM-090 appearance-default change.
+  Reason: Bounded validated metadata only; all existing scope/locks/Apply/identity/financial/provider bounds remain, with stricter themed candidate material validation and no new API or dependency.
+  Consequence / reversibility: Scoped provisional AFK recommendation; existing dependency watches and owner/release acceptance remain.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md, docs/commit-plans/RM-090.md, docs/validation/RM-090.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1711,7 +1719,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-02T12:37:50+00:00",
+  "updated_at": "2026-11-02T16:32:27+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1924,8 +1932,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "AUDIT_GIT_AUTHORITY": {
-      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.\n\n2 November direct owner selects RM-089 after work-area context failure screenshots: add desk/chair → Apply → make them walnut too, and finish clarification → the work area. Preserve at least three previous messages through the existing bounded transcript; fix plural/group/clarification resolution before the model, with one all-or-nothing appearance preview and Undo. Exact thirteen-path local ticket checkpoint under existing Git authority. No paid/provider test or browser message submission (respect prior auto-review paid-mode rejection), env read/change, restart, dependency/delegation/image/cloud/push/deploy. Keep normal paid-ready services. See docs/tickets/RM-089-retain-medy-group-and-clarification-context.md.\n\nRM-089 settled outcome: allocation expanded to fourteen paths before the review-confirmed same-group shortcut correction. Ten initial reproductions failed before implementation; 185 focused checks passed, first full 1737-test gate passed, review caught post-Apply generic suggestions, new controller assertion reproduced that remaining issue, correction preserves group-ID matching and no-group inventory opportunities. Final 124 focused checks and a separate complete canonical 1737-test/111-file gate/both builds pass. Read-only validate pass 2 has no actionable findings; no further source edits after that gate. Three pure owners/two test files only; existing context/provider/financial/admission/lifecycle bounds and normal paid-ready services/env retained. Source-only identity 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712, 385 inputs/4668440 bytes. No browser Send/paid request or new image/hosted proof. Updated real-model/owner evaluation remains pending. Exact ticket-prefixed local checkpoint is authorized under existing local ticket authority.",
-      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026; direct owner work-area context screenshots/request, 2 November 2026; RM-089 final gate and read-only pass 2 receipt",
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.\n\n2 November direct owner selects RM-089 after work-area context failure screenshots: add desk/chair → Apply → make them walnut too, and finish clarification → the work area. Preserve at least three previous messages through the existing bounded transcript; fix plural/group/clarification resolution before the model, with one all-or-nothing appearance preview and Undo. Exact thirteen-path local ticket checkpoint under existing Git authority. No paid/provider test or browser message submission (respect prior auto-review paid-mode rejection), env read/change, restart, dependency/delegation/image/cloud/push/deploy. Keep normal paid-ready services. See docs/tickets/RM-089-retain-medy-group-and-clarification-context.md.\n\nRM-089 settled outcome: allocation expanded to fourteen paths before the review-confirmed same-group shortcut correction. Ten initial reproductions failed before implementation; 185 focused checks passed, first full 1737-test gate passed, review caught post-Apply generic suggestions, new controller assertion reproduced that remaining issue, correction preserves group-ID matching and no-group inventory opportunities. Final 124 focused checks and a separate complete canonical 1737-test/111-file gate/both builds pass. Read-only validate pass 2 has no actionable findings; no further source edits after that gate. Three pure owners/two test files only; existing context/provider/financial/admission/lifecycle bounds and normal paid-ready services/env retained. Source-only identity 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712, 385 inputs/4668440 bytes. No browser Send/paid request or new image/hosted proof. Updated real-model/owner evaluation remains pending. Exact ticket-prefixed local checkpoint is authorized under existing local ticket authority.\n\n2 November owner selects RM-090: any chosen theme becomes the default preset for future manual and AI furniture additions. Nineteen-path exact allocation. Store an optional bounded canonical applied theme with existing preview/Apply/Undo/project/recovery semantics; share appearance defaults across catalogue/search/Medy additions and replacements, retain explicit overrides and unrelated accepted pieces. Legacy exact wall/floor preset matching reuses existing UI meaning; no theme guessed from generic style hints. No extra model call/paid/browser Send, env read/change, restart, dependency, delegation, image/cloud/push/deploy. Existing local ticket checkpoint authority applies after validation.\n\nRM-090 settled outcome: read-only creation-path review expanded the allocation to 21 paths before connecting manual coordinates and backend direct prepare_edits; both reuse the same new-piece helper. Eleven production files, one new 31-case test file. Ten initial reproductions failed before implementation; material ordering was corrected without relaxing preset equality; legacy tests use actual manual-room surface facts and AI replacement keeps existing owned Replace permission. Canonical formatting/lint/all types/seven boundaries/assets pass; full default unit run passes1765/1768 with only3 known release-inventory5s timeouts. All193 affected/release checks across7 files pass unchanged at CLI15s, followed by both production builds. Split settled gate covers all1768 tests/112 files; no clean unsplit-root claim. Actual in-app Modern preview/Apply, keyboard chair and coordinate desk inheritance, physical door guard and Undo pass without browser Send/provider request. Read-only validate pass2 has no actionable findings. Optional canonical theme survives Apply/Cancel/Undo/project/recovery/import and custom surfaces; exact legacy matching and explicit finish/material overrides remain bounded. Source-only385 inputs/4671600 bytes, digest 45d92931c1179ef6dae70246f6f53ce1270a7abd8709b98ba0718b38fae8d4e9. Preserve normal paid-ready services/env; owner real-model/physical acceptance and exact Linux/image/hosted release proof remain external. Exact ticket-prefixed local checkpoint remains owner-authorized.",
+      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026; direct owner work-area context screenshots/request, 2 November 2026; RM-089 final gate and read-only pass 2 receipt; direct owner new-furniture theme-default request, 2 November 2026; RM-090 split gate, actual manual UI and final read-only review receipt",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_REQUEST": {
@@ -2057,7 +2065,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner can test the updated running paid-ready app. RM-089 source/tests/docs are validated for the exact local checkpoint; no automatic paid/browser/provider request or deployment. Fresh exact release proofs remain required.",
+  "next_action": "Owner can test the updated running paid-ready app. RM-090 source/tests/docs pass the recorded split gate and reviews for the authorized exact local checkpoint; no automatic paid/provider/browser Send or deployment. Fresh exact release proofs remain required.",
   "phases": [
     {
       "id": "01-docs",
@@ -2398,27 +2406,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Execute RM-089 against the full ticket and exact thirteen-path allocation. Reproduce actual add-work-area/Apply/plural-walnut and pending-finish/target-fragment failures offline before implementation. Reuse bounded current transcript and existing manual action compiler; infer only a current unambiguous human group and concrete requested appearance. Treat nearby window as location, not subject; current targets/topics win and duplicate/stale/mixed/unsupported groups clarify without partial edits. Resolve the immediate target-only clarification without replaying completed/negated/conditional/geometry/removal actions. Preserve preview/Apply/Undo, lifecycle/financial/provider/history/resource authority. Run focused fake/injected-provider controller regressions and one settled canonical gate, then read-only validate/confirm/fix/revalidate, scoped quality/security review and exact local checkpoint. No browser Send or paid request, env action, restart, dependency, delegation, cloud/image/push/deploy. Record owner updated live-model acceptance and fresh exact release proof as separate.",
-        "sha256": "3eb9841aeb28604ded3a2ad7c96623d32446005186c23d7cf1dfb8c74a771196",
+        "text": "Execute RM-090 according to the full ticket and nineteen-path allocation. Reproduce later manual/AI additions ignoring all five theme presets before edits. Retain the applied theme as an optional bounded room appearance identity, with old room reads unchanged; use the existing exact wall/floor preset match only for legacy selection. Theme selection is previewed and becomes accepted only on Apply; Cancel/Undo, custom wall/floor changes, project/recovery/import must preserve correct defaults. Reuse the existing theme material role/bedding helper for manual placement ghosts/commits, exact Medy additions/replacements and AI search additions/replacements/strict variant validation. Explicit requested finish/material wins. Preserve existing furniture/geometry/openings/physical/source/financial/identity/limits/lifecycle/provider budgets. Parameterize all themes and verify transaction/persistence/legacy/override/tamper paths offline, run one settled canonical gate and read-only validate/confirm/fix/revalidate before the authorized exact local checkpoint. No browser Send or paid test, env action, restart, dependency, delegation, image/cloud/push/deploy. Actual owner updated live acceptance remains separate.",
+        "sha256": "ad792c919c608cc5a2cf52b164fc628148b88faed90c119702a345f4999c2ea6",
         "context_sources": [
-          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-          "docs/commit-plans/RM-089.md",
-          "docs/validation/RM-089.md"
+          "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+          "docs/commit-plans/RM-090.md",
+          "docs/validation/RM-090.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-        "docs/commit-plans/RM-089.md",
-        "docs/validation/RM-089.md"
+        "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+        "docs/commit-plans/RM-090.md",
+        "docs/validation/RM-090.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner must assess the updated real-model conversation in the normal paid-ready app; exact reported compiler/controller flows pass offline, with no agent paid/browser submission.",
-          "reference": "docs/validation/RM-089.md"
+          "reason": "Actual updated real-model/owner judgment remains pending; all manual and direct AI paths pass offline with no paid/browser Send request.",
+          "reference": "docs/validation/RM-090.md"
         }
       ],
       "approval": null,
@@ -2505,6 +2513,25 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T16:13:43+00:00",
+          "reason": "Owner-selected theme-default behavior changes accepted appearance metadata and manual/AI addition creation; preserve prior candidate evidence.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Execute RM-089 against the full ticket and exact thirteen-path allocation. Reproduce actual add-work-area/Apply/plural-walnut and pending-finish/target-fragment failures offline before implementation. Reuse bounded current transcript and existing manual action compiler; infer only a current unambiguous human group and concrete requested appearance. Treat nearby window as location, not subject; current targets/topics win and duplicate/stale/mixed/unsupported groups clarify without partial edits. Resolve the immediate target-only clarification without replaying completed/negated/conditional/geometry/removal actions. Preserve preview/Apply/Undo, lifecycle/financial/provider/history/resource authority. Run focused fake/injected-provider controller regressions and one settled canonical gate, then read-only validate/confirm/fix/revalidate, scoped quality/security review and exact local checkpoint. No browser Send or paid request, env action, restart, dependency, delegation, cloud/image/push/deploy. Record owner updated live-model acceptance and fresh exact release proof as separate.",
+            "sha256": "3eb9841aeb28604ded3a2ad7c96623d32446005186c23d7cf1dfb8c74a771196",
+            "context_sources": [
+              "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+              "docs/commit-plans/RM-089.md",
+              "docs/validation/RM-089.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -2572,21 +2599,21 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "visual",
       "status": "provisional",
       "prompt": {
-        "text": "Review only the changed RM-089 conversation UX against the supplied screenshots and actual injected controller flows: group context across several messages, pending appearance clarification and same-group post-Apply shortcuts. No layout/CSS change. Existing paid-mode browser Send rejection remains respected; do not send live messages or invent a native/live-model result. Offline behavioral acceptance is reviewable, while personal owner/model-quality acceptance stays provisional.",
-        "sha256": "19a2afd9468245335dedbfff47532a2d21fec1f0bf528c83d43060a3ad016919",
+        "text": "Review RM-090 actual local manual Room-theme preview/Apply, subsequent chair keyboard placement and desk coordinate entry. Both show Modern/walnut/supported materials in the normal settings UI; existing door clearance blocks an unsafe location and normal Undo retains the other piece. No chat submission or new layout. All themes, AI search/direct tools and persistence are covered offline. Owner aesthetic/physical/live-model acceptance remains provisional.",
+        "sha256": "ae851a031826d82192813d2d7009a30377ff83cb69487b8f82b35913fecd58f1",
         "context_sources": [
-          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-          "docs/commit-plans/RM-089.md",
-          "docs/validation/RM-089.md"
+          "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+          "docs/commit-plans/RM-090.md",
+          "docs/validation/RM-090.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-        "docs/commit-plans/RM-089.md",
-        "docs/validation/RM-089.md"
+        "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+        "docs/commit-plans/RM-090.md",
+        "docs/validation/RM-090.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3394,12 +3421,39 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T12:37:45+00:00"
           },
           "decision": "self-reviewed"
+        },
+        {
+          "reopened_at": "2026-11-02T16:32:21+00:00",
+          "reason": "Owner-selected persistent theme-default behavior changes the source candidate; review this exact settled scope and retain prior receipts.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Review only the changed RM-089 conversation UX against the supplied screenshots and actual injected controller flows: group context across several messages, pending appearance clarification and same-group post-Apply shortcuts. No layout/CSS change. Existing paid-mode browser Send rejection remains respected; do not send live messages or invent a native/live-model result. Offline behavioral acceptance is reviewable, while personal owner/model-quality acceptance stays provisional.",
+            "sha256": "19a2afd9468245335dedbfff47532a2d21fec1f0bf528c83d43060a3ad016919",
+            "context_sources": [
+              "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+              "docs/commit-plans/RM-089.md",
+              "docs/validation/RM-089.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "self-reviewed"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0026",
+            "recorded_at": "2026-11-02T16:32:22+00:00"
+          },
+          "decision": "self-reviewed"
         }
       ],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0024",
-        "recorded_at": "2026-11-02T12:37:45+00:00"
+        "decision_id": "AFK-0026",
+        "recorded_at": "2026-11-02T16:32:22+00:00"
       }
     },
     {
@@ -3408,21 +3462,21 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete",
       "prompt": {
-        "text": "Read-only review the final RM-089 three-production/two-test diff against all ticket requirements and exact fourteen-path allocation. Check bounded reference/name/location matching, reuse of the single-piece compiler, all-or-nothing group evaluation, pending-only appearance fragment completion and matching current group shortcut IDs. Preserve finite work/state/history/permissions and all unrelated behavior. Verify the final full canonical 1737-test/all-code-gates/both-builds evidence and source-only digest. Initial shortcut finding must be reproduced, fixed and revalidated; finish only with no actionable findings. No repeated full gate after unchanged settled source.",
-        "sha256": "2dbd2337a25feff515bbed1644b847ee28dd72bfaa15777087c3b89942b828ad",
+        "text": "Read-only validate the settled RM-090 eleven-production/one-test diff and21-path allocation. Verify all creation callers, shared preset roles/sizes/bedding, accepted optional theme identity, exact legacy fallback, explicit finish/body-colour/material precedence, candidate equality independent of material key order, current UI guidance, transaction/persistence and untouched physical/financial/provenance/identity/limits. Pass1 missed manual coordinates/backend direct edits; verify both connected and actual manual UI/backend tool regressions pass. Confirm split gate covers1768 tests/112 files, all code gates/both builds. No source edits after settled gate; no actionable findings.",
+        "sha256": "dd23c64bcb0ccd1507faa5a38406b9246d97536a5cddd9503a959fe746ffcbcd",
         "context_sources": [
-          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-          "docs/commit-plans/RM-089.md",
-          "docs/validation/RM-089.md"
+          "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+          "docs/commit-plans/RM-090.md",
+          "docs/validation/RM-090.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-        "docs/commit-plans/RM-089.md",
-        "docs/validation/RM-089.md"
+        "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+        "docs/commit-plans/RM-090.md",
+        "docs/validation/RM-090.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3516,6 +3570,25 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T16:32:23+00:00",
+          "reason": "Owner-selected persistent theme-default behavior changes the source candidate; review this exact settled scope and retain prior receipts.",
+          "prior_status": "complete",
+          "prior_prompt": {
+            "text": "Read-only review the final RM-089 three-production/two-test diff against all ticket requirements and exact fourteen-path allocation. Check bounded reference/name/location matching, reuse of the single-piece compiler, all-or-nothing group evaluation, pending-only appearance fragment completion and matching current group shortcut IDs. Preserve finite work/state/history/permissions and all unrelated behavior. Verify the final full canonical 1737-test/all-code-gates/both-builds evidence and source-only digest. Initial shortcut finding must be reproduced, fixed and revalidated; finish only with no actionable findings. No repeated full gate after unchanged settled source.",
+            "sha256": "2dbd2337a25feff515bbed1644b847ee28dd72bfaa15777087c3b89942b828ad",
+            "context_sources": [
+              "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+              "docs/commit-plans/RM-089.md",
+              "docs/validation/RM-089.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -3525,21 +3598,21 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "security",
       "status": "provisional",
       "prompt": {
-        "text": "Review only RM-089 human-context/group/clarification inference and shortcut code against existing security boundaries. The active human request and exact current object IDs control a preview; model prose is not permission. Supported appearance actions only, no mixed/negated/conditional/physical/geometry/removal/permission replay, no partial group edits, duplicate/stale groups clarify, current selection does not hijack plurals, object labels remain data. Preserve all schema/Apply/lifecycle/admission/provider/resource bounds. No new API/store/dependency/model/tool/account/config/diagnostics. Retain dated dependency watches and owner external dispositions; record scoped provisional no-fixes if no new actionable issue is found. No paid, scanner export or account operation.",
-        "sha256": "4bb5b3f9d2ceae4e3e1ba19f397dde4b9f0b26ace84808ae4487fd8353ea39b2",
+        "text": "Review only RM-090 bounded optional theme metadata and shared new-piece appearance. A five-value schema is appearance data, never command/provider/physical/financial permission. The existing visitor-only theme action remains unchanged in authority. Explicit user finishes still control choices; themed AI candidates are reconstructed and preset fields compared without relying on property order. All current IDs/scopes/locks/size/provenance/Apply/Undo/import/resource constraints remain. No new endpoint/store/dependency/config/model/tool/call budget. Record scoped AFK no-fixes only if no actual issue, retaining dated dependency watches/external dispositions. No paid/scanner export/account work.",
+        "sha256": "c2d2f413c03ca74ba2199e7c5df57ef3b02f2f99cd68714a21765204864e24bf",
         "context_sources": [
-          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-          "docs/commit-plans/RM-089.md",
-          "docs/validation/RM-089.md"
+          "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+          "docs/commit-plans/RM-090.md",
+          "docs/validation/RM-090.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-        "docs/commit-plans/RM-089.md",
-        "docs/validation/RM-089.md"
+        "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+        "docs/commit-plans/RM-090.md",
+        "docs/validation/RM-090.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3681,13 +3754,40 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T12:37:48+00:00"
           },
           "decision": "no-fixes"
+        },
+        {
+          "reopened_at": "2026-11-02T16:32:24+00:00",
+          "reason": "Owner-selected persistent theme-default behavior changes the source candidate; review this exact settled scope and retain prior receipts.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Review only RM-089 human-context/group/clarification inference and shortcut code against existing security boundaries. The active human request and exact current object IDs control a preview; model prose is not permission. Supported appearance actions only, no mixed/negated/conditional/physical/geometry/removal/permission replay, no partial group edits, duplicate/stale groups clarify, current selection does not hijack plurals, object labels remain data. Preserve all schema/Apply/lifecycle/admission/provider/resource bounds. No new API/store/dependency/model/tool/account/config/diagnostics. Retain dated dependency watches and owner external dispositions; record scoped provisional no-fixes if no new actionable issue is found. No paid, scanner export or account operation.",
+            "sha256": "4bb5b3f9d2ceae4e3e1ba19f397dde4b9f0b26ace84808ae4487fd8353ea39b2",
+            "context_sources": [
+              "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+              "docs/commit-plans/RM-089.md",
+              "docs/validation/RM-089.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "no-fixes"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0027",
+            "recorded_at": "2026-11-02T16:32:25+00:00"
+          },
+          "decision": "no-fixes"
         }
       ],
       "selected_findings": [],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0025",
-        "recorded_at": "2026-11-02T12:37:48+00:00"
+        "decision_id": "AFK-0027",
+        "recorded_at": "2026-11-02T16:32:25+00:00"
       }
     },
     {
@@ -3785,26 +3885,26 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Record RM-089 final complete canonical gate, reported offline conversation reproductions and validated exact fourteen-path checkpoint. Source-only inventory is 385 inputs/4668440 bytes, digest 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712. Keep original source/advisory/October hosted receipts historical. Preserve normal paid-ready services/env, existing abuse protections and owner spending disposition. Actual updated live-model/owner acceptance and exact fresh Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted proofs remain. No browser Send or agent paid request, env/service/cloud/deploy action; no promise of perfect interpretation of every ambiguous future utterance.",
-        "sha256": "33788440f6238a12db8a531d9a7886488ad8fc2af1a45a9b2e43ad34188f9198",
+        "text": "Record RM-090 current optional theme defaults across manual ghosts/coordinates/replacements, exact Medy edits, AI search and backend direct tool. Document31 new regressions and split settled1768-test/112-file coverage, all root code gates/both builds, actual local manual checks and clean second read-only review. Source-only385 inputs/4671600 bytes digest 45d92931c1179ef6dae70246f6f53ce1270a7abd8709b98ba0718b38fae8d4e9; old receipts remain dated. Preserve paid-ready services/env and no browser Send/provider operation. Owner updated live/model/physical/merchant acceptance, selected retained assets and fresh exact Linux/image/resource/config/widget/paired rollout/rollback/hosted proof remain external; no release authorization inferred.",
+        "sha256": "def7fa861b7fa39344723b23763f252b0552ad0735f2de50bb3509cf38a9369f",
         "context_sources": [
-          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-          "docs/commit-plans/RM-089.md",
-          "docs/validation/RM-089.md"
+          "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+          "docs/commit-plans/RM-090.md",
+          "docs/validation/RM-090.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
-        "docs/commit-plans/RM-089.md",
-        "docs/validation/RM-089.md"
+        "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+        "docs/commit-plans/RM-090.md",
+        "docs/validation/RM-090.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner updated real-model/merchant/physical acceptance and exact new-candidate Linux/image/resource/retained-assets/config/widget/paired rollout/rollback/hosted proof remain. Existing protections/spending disposition/paid-ready settings preserved; no agent paid/browser Send.",
+          "reason": "Owner updated real-model/physical/merchant acceptance and exact current-candidate Linux/image/retained-assets/resource/config/widget/paired rollout/rollback/hosted proof remain; no automatic paid or release work.",
           "reference": "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
         }
       ],
@@ -3927,6 +4027,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-088-left-align-chat-message-text.md",
               "docs/commit-plans/RM-088.md",
               "docs/validation/RM-088.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T16:32:26+00:00",
+          "reason": "Owner-selected persistent theme-default behavior changes the source candidate; review this exact settled scope and retain prior receipts.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Record RM-089 final complete canonical gate, reported offline conversation reproductions and validated exact fourteen-path checkpoint. Source-only inventory is 385 inputs/4668440 bytes, digest 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712. Keep original source/advisory/October hosted receipts historical. Preserve normal paid-ready services/env, existing abuse protections and owner spending disposition. Actual updated live-model/owner acceptance and exact fresh Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted proofs remain. No browser Send or agent paid request, env/service/cloud/deploy action; no promise of perfect interpretation of every ambiguous future utterance.",
+            "sha256": "33788440f6238a12db8a531d9a7886488ad8fc2af1a45a9b2e43ad34188f9198",
+            "context_sources": [
+              "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+              "docs/commit-plans/RM-089.md",
+              "docs/validation/RM-089.md"
             ],
             "status": "afk",
             "approval": null,
@@ -4320,6 +4439,36 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
           "docs/commit-plans/RM-089.md",
           "docs/validation/RM-089.md"
+        ]
+      },
+      {
+        "id": "AFK-0026",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T16:32:22+00:00",
+        "phase": "09-visual-review",
+        "choice": "Accept locally verified inherited appearance; owner aesthetic/physical/real-model judgment remains pending.",
+        "rationale": "Actual manual keyboard/coordinate controls show the chosen preset; fake/offline tests cover AI/transactions/persistence/all themes.",
+        "consequence": "No new paid or owner-approval claim; retain external release evidence limits.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+          "docs/commit-plans/RM-090.md",
+          "docs/validation/RM-090.md"
+        ]
+      },
+      {
+        "id": "AFK-0027",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T16:32:25+00:00",
+        "phase": "10b-security-review",
+        "choice": "No new local security fix selected for the settled RM-090 appearance-default change.",
+        "rationale": "Bounded validated metadata only; all existing scope/locks/Apply/identity/financial/provider bounds remain, with stricter themed candidate material validation and no new API or dependency.",
+        "consequence": "Scoped provisional AFK recommendation; existing dependency watches and owner/release acceptance remain.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-090-default-new-furniture-to-the-room-theme.md",
+          "docs/commit-plans/RM-090.md",
+          "docs/validation/RM-090.md"
         ]
       }
     ]

@@ -225,6 +225,7 @@ export function evaluateBatch(
         },
       );
       affected.add(room.roomId);
+      room.room.theme = theme.id;
       for (const piece of room.furniture) {
         const entry = catalogue.find(
           (entry) =>

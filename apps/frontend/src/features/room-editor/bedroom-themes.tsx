@@ -1,6 +1,9 @@
-import { BEDROOM_THEMES } from '@roomedy/contracts/furniture-materials';
+import {
+  BEDROOM_THEMES,
+  roomBedroomTheme,
+} from '@roomedy/contracts/furniture-materials';
 import type { RoomDocument } from '@roomedy/contracts/room';
-import { roomSurface, FINISH_COLORS } from '@roomedy/contracts/surfaces';
+import { FINISH_COLORS } from '@roomedy/contracts/surfaces';
 import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
 import styles from './bedroom-themes.module.css';
@@ -15,15 +18,7 @@ export function BedroomThemes({
   room: RoomDocument;
   onEdit?: SessionController['dispatch'];
 }) {
-  const floor = roomSurface(room.room, 'floor');
-  const walls = roomSurface(room.room, 'walls');
-  const selectedTheme = BEDROOM_THEMES.find(
-    (theme) =>
-      floor.color === theme.floorColor &&
-      floor.texture === theme.floorTexture &&
-      walls.color === theme.wallColor &&
-      walls.texture === theme.wallTexture,
-  );
+  const selectedTheme = roomBedroomTheme(room.room);
   return (
     <details
       className={`${styles.themes} ${layout.disclosure}`}
@@ -38,12 +33,7 @@ export function BedroomThemes({
             key={theme.id}
             type="button"
             aria-label={`Preview ${theme.name} bedroom theme`}
-            aria-pressed={
-              floor.color === theme.floorColor &&
-              floor.texture === theme.floorTexture &&
-              walls.color === theme.wallColor &&
-              walls.texture === theme.wallTexture
-            }
+            aria-pressed={selectedTheme?.id === theme.id}
             onClick={() => {
               const result = (
                 onEdit ?? controller.prepareVisitorPreview.bind(controller)

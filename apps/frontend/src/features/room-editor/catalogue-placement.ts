@@ -1,5 +1,7 @@
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Furniture } from '@roomedy/contracts/room';
+import { roomBedroomTheme } from '@roomedy/contracts/furniture-materials';
+import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
 import { POLICY } from '@roomedy/contracts/policy';
 import { findCatalogueEntry, preferredFurnitureFacing } from '@roomedy/spatial';
 import type { CommandFailure } from '@roomedy/spatial';
@@ -15,8 +17,9 @@ export function catalogueFurniture(
   size: { width: number; depth: number; height?: number },
   pose: Pick<Furniture['pose'], 'centerX' | 'centerZ' | 'quarterTurns'>,
   id: string = crypto.randomUUID(),
+  themeId?: BedroomThemeId,
 ): Furniture {
-  return visitorCatalogueFurniture(entry, size, pose, id);
+  return visitorCatalogueFurniture(entry, size, pose, id, themeId);
 }
 export interface CataloguePlacementSnapshot {
   entry: CatalogueEntry;
@@ -128,6 +131,7 @@ export class CataloguePlacement {
         quarterTurns: 0,
       },
       this.id(),
+      roomBedroomTheme(edit.room.room)?.id,
     );
     this.publish({
       entry: canonical,

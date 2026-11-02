@@ -10,6 +10,7 @@ import type { OperationInput } from '@roomedy/contracts/operations';
 import type { ProposalAction } from '@roomedy/contracts/commands';
 import type { SearchResult } from '@roomedy/contracts/search';
 import { POLICY } from '@roomedy/contracts/policy';
+import { roomBedroomTheme } from '@roomedy/contracts/furniture-materials';
 import {
   CATALOGUE,
   planningRoom,
@@ -372,7 +373,10 @@ export function createAssistantTools(
       )?.find((c) => c.id === item.id && c.catalogueId === item.catalogueId);
       if (!choice || (item.finish !== null && item.finish !== choice.finish))
         return reject();
-      const furniture = proposedSearchPiece(choice);
+      const furniture = proposedSearchPiece(
+        choice,
+        roomBedroomTheme(room.room)?.id,
+      );
       if (!furniture) return reject();
       actions.push({
         type: item.type,

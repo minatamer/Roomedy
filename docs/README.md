@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Theme defaults — 2 November:** [RM-090](tickets/RM-090-default-new-furniture-to-the-room-theme.md) retains the chosen room theme for new manual and AI furniture, including coordinate/replacement/direct-tool paths. Explicit finishes/materials override defaults; Apply/Cancel/Undo and saved-room semantics remain. [Allocation](commit-plans/RM-090.md), [31 new regressions, split1768-test gate/builds, actual manual checks and review](validation/RM-090.md). No paid test or service/env change; owner updated real-model acceptance remains separate.
+
 **Work-area context — 2 November:** [RM-089](tickets/RM-089-retain-medy-group-and-clarification-context.md) fixes plural desk/chair references and the pending finish → “the work area” clarification. Replies continue the same current group across several recent messages, and first two post-Apply shortcuts retain those actual pieces. [Allocation](commit-plans/RM-089.md), [reproductions, gates and review](validation/RM-089.md). No added memory store/model request or paid test; updated real-model acceptance remains owner testing.
 
 **Chat typography — 2 November:** [RM-088](tickets/RM-088-left-align-chat-message-text.md) changes one CSS declaration so user-message text wraps left-aligned inside its existing bubble. [Allocation](commit-plans/RM-088.md), [actual desktop/narrow/newline and scoped-build evidence](validation/RM-088.md). Normal paid configuration is preserved; no agent paid request. Supplemental long-token submission was blocked by automatic review and not retried.

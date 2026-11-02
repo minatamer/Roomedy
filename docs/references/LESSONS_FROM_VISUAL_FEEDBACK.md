@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Keep the selected theme as the default for new furniture — 2 November 2026
+
+A theme is a continuing room choice. Furniture added later through manual placement, coordinates, replacement or Medy should use the same supported preset automatically. Retain the selection in accepted room state through saving, recovery and independent surface customization; preview/Cancel/Undo must preserve the accepted default. Reuse the existing role/size/bedding mappings across every creation caller, and let explicit finish/material choices win without hidden preset colours masking them. Adding a piece must not restyle retained pieces. [RM-090](../tickets/RM-090-default-new-furniture-to-the-room-theme.md), [evidence](../validation/RM-090.md).
+
 ## Keep the subject after Apply and through clarification — 2 November 2026
 
 An applied receipt must not erase the group being discussed. After adding a desk and chair near the window, “make them walnut too” refers to that work area, not to the window, a selected unrelated bed or the whole room. A follow-up “the work area” answers a pending target question and retains the concrete finish already requested. Preserve several recent messages and bind replies to current objects; do not rely only on the last noun or last user message. Ambiguity must ask for the exact pieces, with no partial group edits or replayed geometry/permission changes. The first two post-Apply shortcuts should continue that same group. [RM-089](../tickets/RM-089-retain-medy-group-and-clarification-context.md), [evidence](../validation/RM-089.md).

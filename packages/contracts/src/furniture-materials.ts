@@ -1,14 +1,31 @@
 import { z } from 'zod';
 import type { CatalogueEntry } from './catalogue.js';
-import type { Furniture } from './room.js';
-import { FINISH_COLORS, surfaceColorSchema } from './surfaces.js';
+import type { Furniture, RoomDocument } from './room.js';
+import { FINISH_COLORS, surfaceColorSchema, roomSurface } from './surfaces.js';
 import type { BedroomTheme } from './bedroom-themes.js';
+import { BEDROOM_THEMES, bedroomTheme } from './bedroom-themes.js';
 export {
   BEDROOM_THEMES,
   bedroomTheme,
   bedroomThemeIdSchema,
 } from './bedroom-themes.js';
 export type { BedroomThemeId, BedroomTheme } from './bedroom-themes.js';
+
+/** Retain the applied choice; legacy rooms reuse the exact preset match already shown by the editor. */
+export function roomBedroomTheme(
+  room: RoomDocument['room'],
+): BedroomTheme | undefined {
+  if (room.theme) return bedroomTheme(room.theme);
+  const floor = roomSurface(room, 'floor'),
+    walls = roomSurface(room, 'walls');
+  return BEDROOM_THEMES.find(
+    (theme) =>
+      floor.color === theme.floorColor &&
+      floor.texture === theme.floorTexture &&
+      walls.color === theme.wallColor &&
+      walls.texture === theme.wallTexture,
+  );
+}
 
 export const MATERIAL_PATTERNS = {
   smooth: 'Plain',

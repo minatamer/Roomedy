@@ -3,6 +3,45 @@ import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import { VERSIONS } from '@roomedy/contracts/policy';
 import type { Furniture } from '@roomedy/contracts/room';
 import { DEFAULT_FURNITURE_LOCKS } from '@roomedy/contracts/room';
+import {
+  bedroomTheme,
+  bedroomFurnitureMaterials,
+} from '@roomedy/contracts/furniture-materials';
+import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
+import { FINISH_COLORS } from '@roomedy/contracts/surfaces';
+
+/** Default only a newly created piece; explicit finish/material data retains precedence. */
+export function withFurnitureTheme(
+  piece: Furniture,
+  entry: CatalogueEntry,
+  themeId: BedroomThemeId | undefined,
+  explicitFinish = false,
+): Furniture {
+  if (!themeId) return piece;
+  const theme = bedroomTheme(themeId);
+  const finish =
+    explicitFinish || !entry.finishes.includes(theme.furnitureFinish)
+      ? piece.finish
+      : theme.furnitureFinish;
+  const materials = bedroomFurnitureMaterials(
+    theme,
+    entry,
+    supportsDimensions(entry, {
+      width: piece.dimensions.width.value ?? entry.size.width.default,
+      depth: piece.dimensions.depth.value ?? entry.size.depth.default,
+      height: piece.dimensions.height.value ?? entry.size.height.default,
+    }),
+  );
+  return {
+    ...piece,
+    finish,
+    materials: {
+      ...materials,
+      ...('bodyColor' in materials ? { bodyColor: FINISH_COLORS[finish] } : {}),
+      ...piece.materials,
+    },
+  };
+}
 
 /** Shared manual/MEDY catalogue estimates. A proposed size is never a measured fact. */
 export function visitorCatalogueFurniture(
@@ -13,34 +52,41 @@ export function visitorCatalogueFurniture(
     'centerX' | 'centerZ' | 'quarterTurns' | 'bottomY'
   >,
   id: string,
+  themeId?: BedroomThemeId,
+  finish?: Furniture['finish'],
 ): Furniture {
   const estimate = (value: number) => ({
     value,
     status: 'estimated' as const,
     sourceId: 'visitor-estimate',
   });
-  return {
-    id,
-    label: entry.label,
-    catalogueId: entry.id,
-    catalogueVersion: entry.version,
-    dimensions: {
-      width: estimate(size.width),
-      depth: estimate(size.depth),
-      height: estimate(size.height ?? entry.size.height.default),
+  return withFurnitureTheme(
+    {
+      id,
+      label: entry.label,
+      catalogueId: entry.id,
+      catalogueVersion: entry.version,
+      dimensions: {
+        width: estimate(size.width),
+        depth: estimate(size.depth),
+        height: estimate(size.height ?? entry.size.height.default),
+      },
+      pose: {
+        ...(entry.placement && entry.placement !== 'floor'
+          ? { bottomY: entry.defaultElevationMm ?? 0 }
+          : {}),
+        ...pose,
+        provenance: { status: 'planned', sourceId: 'visitor-plan' },
+      },
+      ownership: 'proposed',
+      preference: 'flexible',
+      locks: { ...DEFAULT_FURNITURE_LOCKS },
+      finish: finish ?? entry.finishes[0]!,
     },
-    pose: {
-      ...(entry.placement && entry.placement !== 'floor'
-        ? { bottomY: entry.defaultElevationMm ?? 0 }
-        : {}),
-      ...pose,
-      provenance: { status: 'planned', sourceId: 'visitor-plan' },
-    },
-    ownership: 'proposed',
-    preference: 'flexible',
-    locks: { ...DEFAULT_FURNITURE_LOCKS },
-    finish: entry.finishes[0]!,
-  };
+    entry,
+    themeId,
+    finish !== undefined,
+  );
 }
 
 const range = (min: number, value: number, max: number) => ({

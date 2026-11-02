@@ -4,6 +4,7 @@ import {
   MATERIAL_PATTERNS,
   furnitureMaterialsLabel,
   BED_BEDDING_PARTS,
+  roomBedroomTheme,
 } from '@roomedy/contracts/furniture-materials';
 import {
   featureLabel,
@@ -488,6 +489,10 @@ export function medyEdit(
       return ask(
         'Give me both X and Z for that exact placement, or ask me to find a suitable place for it.',
       );
+    const finishes = entry.finishes.filter((f) =>
+      new RegExp(`\\b${f}\\b`).test(clause),
+    );
+    if (finishes.length > 1) return ask('Which single finish should I use?');
     const item = visitorCatalogueFurniture(
       entry,
       choice.size ?? {
@@ -496,14 +501,11 @@ export function medyEdit(
       },
       pose,
       target?.id ?? `medy-piece-${operationId}`.slice(0, 80),
+      roomBedroomTheme(room.room)?.id,
+      finishes[0],
     );
     if (!target) item.pose.quarterTurns = preferredFurnitureFacing(room, item);
     item.pose = wallMountedPose(room, item);
-    const finishes = entry.finishes.filter((f) =>
-      new RegExp(`\\b${f}\\b`).test(clause),
-    );
-    if (finishes.length > 1) return ask('Which single finish should I use?');
-    if (finishes[0]) item.finish = finishes[0];
     actions.push(
       target
         ? { type: 'replace', id: target.id, furniture: item }

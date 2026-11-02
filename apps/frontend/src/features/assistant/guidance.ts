@@ -3,6 +3,7 @@ import {
   BEDROOM_THEMES,
   bedroomTheme,
   furnitureMaterialTargets,
+  roomBedroomTheme,
 } from '@roomedy/contracts/furniture-materials';
 import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
 import { FINISH_COLORS, roomSurface } from '@roomedy/contracts/surfaces';
@@ -206,9 +207,10 @@ export function guidanceChoices(
       : undefined;
     const preset = themeId ? bedroomTheme(themeId) : undefined;
     const currentTheme =
-      preset && roomSurface(room.room, 'floor').color === preset.floorColor
+      roomBedroomTheme(room.room) ??
+      (preset && roomSurface(room.room, 'floor').color === preset.floorColor
         ? preset
-        : undefined;
+        : undefined);
     const color =
       piece && entry
         ? furnitureMaterialTargets(piece, entry.category).frame.color
