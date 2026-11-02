@@ -1,0 +1,11 @@
+# RM-085 documentation follow-up receipt
+
+2 November 2026 · follows audit commit `7ae4452c4cea3ee406912216ba81f74e8c222b7c` · [exact allocation](../commit-plans/RM-085-FOLLOWUP.md).
+
+The owner requested documentation of protections already taken, correction of the deployment checklist, paid-mode confirmation and normal local startup for the owner's final test. [Existing protections and evidence](../security/ABUSE_PROTECTION_STATUS.md) distinguish source protections, read-only existing hosted observations, owner disposition of spending setup and remaining new-release work. No additional DDoS infrastructure or application fix is selected. Provider terms were not independently reviewed.
+
+Execute: update current security report/HTML/manifest, handoff and entry points; preserve dated audit facts and use the canonical helper to record the new owner instruction and replace stale current funding blockers. Original provisional no-fixes selection and dependency watches remain. Normal startup loads app-local settings without secret-file inspection/editing; live-ready/live/simulation false is confirmed on both local services and the existing hosted frontend. Design/Estimate GETs return 200. No agent paid request or cloud mutation occurred.
+
+**Read-only validate pass 1: meets the follow-up; no actionable findings.** The exact fifteen allocated documents agree with observed source/cloud/runtime facts. JSON consistency, five balanced static HTML sections without runtime scripts, 40 local links, scoped formatting/whitespace and canonical state pass. The blueprint outside its managed progress block and implementation/tests/packages/config/assets remain unchanged. The only runtime-generated tracked difference is Next's `next-env.d.ts` dev type paths; retain it outside staging. No full unit/build repetition or rendered HTML claim is needed for this documentation-only change.
+
+The separate documentation checkpoint uses standing owner Git authority; startup itself creates no commit. Stage/inspect only the fifteen allocated documents, then verify the local commit and index. Ignore runtime ownership records/content-safe logs and keep both healthy requested services running. No paid test, provider request, dependency change, image build, push or deployment.

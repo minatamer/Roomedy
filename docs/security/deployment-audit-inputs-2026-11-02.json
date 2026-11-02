@@ -127,10 +127,10 @@
     "meteredDispatches": 0
   },
   "newConfirmedActionableLocalApplicationFindings": 0,
-  "retainedExternalFinding": "SEC-002; enforceable account-wide funded cutoff/privacy/hostname evidence remains unverified",
-  "mutations": "Audit documentation only after RM-084; no source/package/config/env/service/account/hosted action",
+  "retainedExternalFinding": "Original audit SEC-002 retained; subsequent owner disposition handles spending setup. Privacy terms not independently reviewed; recheck new-release hostname.",
+  "mutations": "Original audit: documentation only after RM-084, no source/package/config/env/service/account/hosted action. Subsequent follow-up: read-only cloud inspection and owner-requested local startup; no app/config/cloud mutations or agent paid requests.",
   "limits": [
-    "No current Linux/native/OS/container or hosted/IAM/load proof",
+    "No new-candidate Linux/native/OS/container or full hosted/load acceptance; existing October IAM/scaling/readiness observed in follow-up",
     "No paid/provider/merchant/physical tests",
     "No exact configured-secret comparison or credential validity calls",
     "Known detector/advisory data and reachability coverage are finite"
@@ -142,6 +142,51 @@
     "https://github.com/advisories/GHSA-3h52-269p-cp9r",
     "https://github.com/vercel/next.js/security/advisories/GHSA-2464-fhr4-w9xw",
     "https://github.com/vercel/next.js/security/advisories/GHSA-673q-mjm6-r5xr",
-    "https://github.com/lovell/sharp/security/advisories/GHSA-wq5f-xc86-pv6w"
-  ]
+    "https://github.com/lovell/sharp/security/advisories/GHSA-wq5f-xc86-pv6w",
+    "https://docs.cloud.google.com/run/docs/securing/security",
+    "https://docs.cloud.google.com/run/docs/configuring/max-instances"
+  ],
+  "followUp": {
+    "date": "2026-11-02",
+    "evidence": "ABUSE_PROTECTION_STATUS.md",
+    "spendingDisposition": "Owner says setup is handled; no independent provider hard-cutoff verification",
+    "privacyTermsIndependentlyReviewed": false,
+    "extraDdosInfrastructureSelected": false,
+    "cloud": {
+      "project": "roomedy",
+      "region": "europe-west1",
+      "frontendRevision": "roomedy-frontend-00002-kjn",
+      "backendRevision": "roomedy-backend-00003-f8t",
+      "revisionMaxInstancesEach": 1,
+      "serviceMaxInstancesEach": 20,
+      "effectiveConfiguredMaximumEach": 1,
+      "containerConcurrencyEach": 4,
+      "timeoutSecondsEach": 120,
+      "frontendInvoker": "allUsers",
+      "backendInvoker": "serviceAccount:roomedy-frontend@roomedy.iam.gserviceaccount.com",
+      "publicFrontendHealthStatus": 200,
+      "anonymousBackendHealthStatus": 403,
+      "existingHostedReady": "live-ready",
+      "existingHostedMode": "live",
+      "existingHostedSimulation": false,
+      "computeApiEnabled": false,
+      "cloudflareAccountRulesInspected": false,
+      "mutations": 0,
+      "secretValuesInspected": false
+    },
+    "localRun": {
+      "mode": "live",
+      "simulation": false,
+      "backendReady": "live-ready",
+      "frontendReady": "live-ready",
+      "bridgeConfigEqual": true,
+      "designPageStatus": 200,
+      "estimatePageStatus": 200,
+      "ports": [4320, 4321],
+      "envFilesReadOrEdited": false
+    },
+    "agentPaidRequests": 0,
+    "sourceDependencyConfigChanges": 0,
+    "siblingComparison": ["ClipBuilder", "ScreenPilot", "Retrosum", "Retailor"]
+  }
 }

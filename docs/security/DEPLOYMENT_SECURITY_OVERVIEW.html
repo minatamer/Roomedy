@@ -125,9 +125,9 @@
       <h1>Security reviewed.<br />Functionality preserved.</h1>
       <p class="lead">
         No new substantial application vulnerability requiring a local fix was
-        confirmed. Keep the existing spending-control question and two
-        dependency watches visible; no forced upgrades or extra services are
-        recommended.
+        confirmed. Existing app/cloud abuse protections are confirmed and the
+        owner says spending setup is handled. Keep two dependency watches
+        visible; no forced upgrades or extra services are recommended.
       </p>
       <p class="muted">
         Reviewed candidate <code>bb1ba5d</code> · AFK agent recommendation,
@@ -152,18 +152,21 @@
     </div>
     <main>
       <section>
-        <span class="tag">Medium · existing external condition · SEC-002</span>
-        <h2>Account-wide spending cutoff still needs evidence</h2>
+        <span class="tag">Owner disposition · SEC-002 follow-up</span>
+        <h2>Existing protections confirmed; spending handled by owner</h2>
         <p>
-          The app limits work, rate, time and model output. Those controls do
-          not prove that the provider account will stop spending at a funded
-          ceiling across restarts or multiple instances.
+          Turnstile, one-use grants, bounded rates/work and private backend IAM
+          are already in place. Google's frontend adds baseline DoS protection
+          for run.app. Read-only checks confirm existing IAM/scaling. No
+          additional DDoS infrastructure is selected.
         </p>
         <p>
-          <strong>Remaining action:</strong> verify the actual account cutoff,
-          privacy/retention terms and challenge hostname before a new public
-          paid release. Current paid configuration was left untouched. No paid
-          test or account change was made.
+          The owner says spending setup is handled; provider hard cutoff and
+          privacy terms were not independently inspected. Local and existing
+          hosted readiness confirm paid mode is on. Recheck the new release's
+          configuration and Turnstile hostname. No agent paid test or account
+          change occurred.
+          <a href="ABUSE_PROTECTION_STATUS.md">Read the follow-up evidence</a>.
         </p>
       </section>
       <section>
@@ -222,7 +225,8 @@
           Current source/build/tests are checked. No image was built and nothing
           was deployed. Current Linux/native/OS image checks, hosted
           IAM/assets/rollback, final owner paid/merchant/model/physical tests
-          and external spending evidence remain pending.
+          remain pending for the new candidate. Existing October IAM and runtime
+          paid mode have been checked.
         </p>
         <p>
           <a href="../operations/DEPLOYMENT_PREPARATION_HANDOFF.md"

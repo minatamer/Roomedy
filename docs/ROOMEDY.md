@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner on return: run final paid tests and review provisional security/dependency dispositions. Then separately authorize the exact-image/hosted release procedure. No automatic paid test, deployment or scheduled continuation.
+Next action: Owner can perform the final paid/photo/Medy/sourcing/Estimate/PDF journey on the running local app. Current follow-up documentation is validated and allocated for its authorized local checkpoint; new-candidate Linux/image/resource/retained-asset/config/widget/paired rollout/rollback/hosted proofs remain. No automatic paid request or deployment.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1661,6 +1661,14 @@ Provisional owner reviews: 04-decisions, 10b-security-review
   Reason: RM-084 is committed and all1711tests/canonical code/build components pass. Current audit and read-only validation establish no new substantial actionable local application fix; documentation, advisory reachability and safe no-fixes disposition are complete.
   Consequence / reversibility: No source/dependency/config churn or spend/deployment. SEC-002 and both package watches remain visible. Provisional security/historical product reviews and current-image/owner/physical/paid evidence prevent full release acceptance.
   Owner review requested on return: yes. Evidence: commit:bb1ba5d37675f2fa1362eed9ace84b2e130fc201, docs/validation/RM-085.md, docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md, docs/commit-plans/RM-085.md
+- **AFK-0019** (AFK-SESSION-001, 2026-11-02T11:10:30+00:00, 12-handoff): Record owner spending disposition, existing abuse protections and paid-ready local startup; select no extra DDoS infrastructure.
+  Reason: Direct owner instruction and bounded source/sibling/read-only Cloud Run evidence; no concrete missing control justifies added infrastructure.
+  Consequence / reversibility: Retain audit history/dependency watches; update remaining new-release checks. No account/provider hard-cutoff or privacy claim; leave docs unstaged under run workflow.
+  Owner review requested on return: yes. Evidence: docs/security/ABUSE_PROTECTION_STATUS.md, docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md
+- **AFK-0020** (AFK-SESSION-001, 2026-11-02T11:13:54+00:00, 12-handoff): Checkpoint only the separately authorized security follow-up documentation; exclude generated dev type paths/runtime records.
+  Reason: Original direct owner requests documented local commits for security work; run skill alone supplies no Git authority. This corrects the earlier agent-only assumption to leave docs unstaged.
+  Consequence / reversibility: Fifteen explicit documents are reviewable and reversible in one ticket-prefixed local commit. App/env/cloud/dependency behavior remains unchanged; generated Next dev references stay unstaged.
+  Owner review requested on return: yes. Evidence: docs/commit-plans/RM-085-FOLLOWUP.md, docs/validation/RM-085-FOLLOWUP.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1683,7 +1691,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-02T10:43:20+00:00",
+  "updated_at": "2026-11-02T11:15:01+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1896,8 +1904,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "AUDIT_GIT_AUTHORITY": {
-      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.",
-      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.",
+      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_REQUEST": {
@@ -2029,7 +2037,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner on return: run final paid tests and review provisional security/dependency dispositions. Then separately authorize the exact-image/hosted release procedure. No automatic paid test, deployment or scheduled continuation.",
+  "next_action": "Owner can perform the final paid/photo/Medy/sourcing/Estimate/PDF journey on the running local app. Current follow-up documentation is validated and allocated for its authorized local checkpoint; new-candidate Linux/image/resource/retained-asset/config/widget/paired rollout/rollback/hosted proofs remain. No automatic paid request or deployment.",
   "phases": [
     {
       "id": "01-docs",
@@ -3437,28 +3445,22 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "skipped",
       "prompt": {
-        "text": "Execute build phase11-security-fixes for Roomedy candidate bb1ba5d under RM-085 and the recorded current provisional AFK security review. Selected local findings list is empty: no new substantial application vulnerability requiring a local fix was confirmed. Preserve the detailed report, existing SEC-002 external funded-cutoff/privacy condition, DEP85-01 inactive body-parser and DEP85-02 dev-only minimatch watches without marking them patched. Skip application/dependency remediation with that exact reason. Do not introduce a quota/auth service, forced major/override, config toggle or other speculative fix. Preserve all source/test/config/lock/assets/PDF/env/service bytes. Current owner authorizes local audit commits but no paid/provider test, image build, deployment, push, scanner export, restart or account action. Record the skipped phase and its external/watch conditions, then prepare the final local handoff from actual checks.",
-        "sha256": "543bcb0f5bc05ea1f8a1c69dcd36f77690ad85acdec483653ee67d3c78cda734",
+        "text": "Update only the current handoff/documentation disposition after the owner says spending is handled, asks to record existing protections and requests normal local paid-ready startup. Preserve original RM-085 history and no-fixes selection; no new implementation, dependency, env or cloud changes. Document read-only existing Cloud Run IAM/scaling/health/paid-mode checks and sibling comparison. Keep new-candidate Linux/image/resource/asset proofs, intended bindings/widget, paired rollback/hosted acceptance and owner final paid/merchant test separate. No agent paid operation. Validate static docs, links and exact source scope; no staging/commit under run workflow.",
+        "sha256": "fca06fa52fb844d15702123a366d90c52ce2f1d60107c1f9c2177afacde34e28",
         "context_sources": [
-          "docs/security/DEPLOYMENT_SECURITY_REVIEW.md",
-          "docs/security/DEPLOYMENT_SECURITY_OVERVIEW.html",
-          "docs/security/deployment-audit-inputs-2026-11-02.json"
+          "docs/security/ABUSE_PROTECTION_STATUS.md",
+          "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md",
+          "Direct owner follow-up and run instructions, 2 November 2026"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/security/DEPLOYMENT_SECURITY_REVIEW.md",
-        "docs/security/deployment-audit-inputs-2026-11-02.json"
+        "docs/security/ABUSE_PROTECTION_STATUS.md",
+        "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
       ],
-      "blockers": [
-        {
-          "kind": "external",
-          "reason": "SEC-002 enforceable account-wide funded-cutoff/privacy/hostname evidence remains unverified; no paid/account/hosted operation is authorized in this run.",
-          "reference": "docs/security/DEPLOYMENT_SECURITY_REVIEW.md"
-        }
-      ],
+      "blockers": [],
       "approval": null,
       "decision": null,
       "reviews": [
@@ -3503,9 +3505,28 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T11:10:31+00:00",
+          "reason": "Documentation-only follow-up corrects current blockers after explicit owner spending disposition and verified existing protection; original audit/source decisions preserved.",
+          "prior_status": "skipped",
+          "prior_prompt": {
+            "text": "Execute build phase11-security-fixes for Roomedy candidate bb1ba5d under RM-085 and the recorded current provisional AFK security review. Selected local findings list is empty: no new substantial application vulnerability requiring a local fix was confirmed. Preserve the detailed report, existing SEC-002 external funded-cutoff/privacy condition, DEP85-01 inactive body-parser and DEP85-02 dev-only minimatch watches without marking them patched. Skip application/dependency remediation with that exact reason. Do not introduce a quota/auth service, forced major/override, config toggle or other speculative fix. Preserve all source/test/config/lock/assets/PDF/env/service bytes. Current owner authorizes local audit commits but no paid/provider test, image build, deployment, push, scanner export, restart or account action. Record the skipped phase and its external/watch conditions, then prepare the final local handoff from actual checks.",
+            "sha256": "543bcb0f5bc05ea1f8a1c69dcd36f77690ad85acdec483653ee67d3c78cda734",
+            "context_sources": [
+              "docs/security/DEPLOYMENT_SECURITY_REVIEW.md",
+              "docs/security/DEPLOYMENT_SECURITY_OVERVIEW.html",
+              "docs/security/deployment-audit-inputs-2026-11-02.json"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ],
-      "skip_reason": "Current provisional AFK review selects no local fixes: no substantial exposed application issue confirmed; inactive middleware/dev-only advisories remain visible and external account evidence cannot be fabricated locally."
+      "skip_reason": "No selected local security fix; owner-dispositioned spending is not an implementation task and no missing abuse control was found."
     },
     {
       "id": "12-handoff",
@@ -3513,44 +3534,26 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Prepare Roomedy final local deployment-preparation handoff for the 2 November2026 AFK quality/security request. RM-084 quality commit is bb1ba5d37675f2fa1362eed9ace84b2e130fc201:1480 net unreachable-source lines removed in seven source paths,451 unallocated inventory files byte-exact,142 affected tests/11files and1711 unchanged full tests/111files pass. Format/lint/all types/seven boundaries/assets/shared/backend/frontend production builds pass through documented continuation after sandbox loopback EACCES; do not claim a passing unsplit pnpm check. Current source inventory385files/4648545bytes/inputDigest5d6827020a4b9b25651925d074fcb1b658f0e3883a3df10f3d18e0dbee892647 is source evidence, not new Linux/hosted proof.\n\nRM-085 security audit confirms no new substantial local app fix. The fresh public OSV archive was matched locally to446versions, with two known inactive/dev-tool advisory matches left visible:body-parser2.3.0 and minimatch10.2.6. Gitleaks137commits and42public JS files show zero reported credential matches. No source/graph/secret scanner metadata was uploaded. An offline probe verifies no Express parser factories mounted and gzip/deflate/br rejected before read with zero metered calls. Record the provisional AFK no-fixes disposition and skipped local remediation; SEC-002 account-wide spending/privacy/hostname evidence remains externally unresolved. No speculative upgrade/service/config change.\n\nWrite the exact local handoff, final ticket/receipt/PM summary consistency and canonical progress. Preserve earlier audit/validation receipts, current UX/motion/domain/money/quantity/source/Undo/lifecycle/bounds/private logs, all source/test/config/lock/assets/PDF bytes after quality, and current services/env. Actual rendered PM HTML review is unavailable because browser security blocks file URLs; validate structure/links and report that limit without a workaround. Current owner has accepted prior visual/UX work as sufficient to start audits, but final paid/merchant/model/physical tests are reserved for return; historical provisional product and current provisional security reviews remain distinguishable.\n\nPerform read-only validation of the settled exact11-path RM-085 documentation allocation, including input hashes/counts/link/HTML/JSON consistency and Git secret/artifact scope. Independently confirm/fix local documentation defects, revalidate until no actionable local findings, then stage exact paths, inspect the staged diff and make the authorized RM-085 audit/handoff commit. No push/deploy/image build/paid/provider/account/env/service/Chrome/delegation/installation/scanner-export/sibling action. Keep final progress complete_local while external evidence/provisional reviews remain. Do not schedule further work. Return a concise AFK choice/verification/commit summary with the real remaining owner/release checks.",
-        "sha256": "721ea74ad7fb9169f03f145c0ad27ed327ec7109fe3def75384dafc7661cb5f2",
+        "text": "Update only the current handoff/documentation disposition after the owner says spending is handled, asks to record existing protections and requests normal local paid-ready startup. Preserve original RM-085 history and no-fixes selection; no new implementation, dependency, env or cloud changes. Document read-only existing Cloud Run IAM/scaling/health/paid-mode checks and sibling comparison. Keep new-candidate Linux/image/resource/asset proofs, intended bindings/widget, paired rollback/hosted acceptance and owner final paid/merchant test separate. No agent paid operation. Validate static docs, links and exact source scope; no staging/commit under run workflow.",
+        "sha256": "fca06fa52fb844d15702123a366d90c52ce2f1d60107c1f9c2177afacde34e28",
         "context_sources": [
-          "docs/validation/RM-084.md",
-          "docs/security/DEPLOYMENT_SECURITY_REVIEW.md",
-          "docs/security/DEPLOYMENT_SECURITY_OVERVIEW.html",
-          "docs/security/deployment-audit-inputs-2026-11-02.json",
-          "docs/commit-plans/RM-085.md"
+          "docs/security/ABUSE_PROTECTION_STATUS.md",
+          "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md",
+          "Direct owner follow-up and run instructions, 2 November 2026"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "commit:bb1ba5d37675f2fa1362eed9ace84b2e130fc201",
-        "docs/validation/RM-084.md",
-        "docs/validation/RM-085.md",
-        "docs/security/DEPLOYMENT_SECURITY_REVIEW.md",
-        "docs/security/DEPLOYMENT_SECURITY_OVERVIEW.html",
-        "docs/security/deployment-audit-inputs-2026-11-02.json",
-        "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md",
-        "actual-gate:1711-tests-111-files-code-gates-both-builds;446-local-advisory-versions;137-commit-secret-scan;42-public-js;no-paid-tests"
+        "docs/security/ABUSE_PROTECTION_STATUS.md",
+        "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner final paid/photo/Medy/sourcing/Estimate/PDF, merchant/model and physical checks are explicitly reserved for return; current provisional security and historical CPQ product reviews remain outstanding.",
-          "reference": "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
-        },
-        {
-          "kind": "external",
-          "reason": "SEC-002 enforceable account-wide funded-cutoff/privacy/retention/challenge-hostname evidence remains unverified; prior paid enablement is not proof of a cap.",
-          "reference": "docs/security/DEPLOYMENT_SECURITY_REVIEW.md"
-        },
-        {
-          "kind": "external",
-          "reason": "New images/current Linux-native-OS/hosted/IAM/assets/skew/rollback proof requires the later authorized release procedure; no image/deploy action selected. Rendered PM HTML remains unverified because browser policy blocks file URLs.",
-          "reference": "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+          "reason": "Owner final paid/merchant/model journey and exact new-candidate Linux/image/resource/retained-asset/new-release config/widget/paired rollout/rollback/hosted acceptance remain; current October IAM/scaling/paid readiness already verified. Spending setup handled per owner; provider terms not independently reviewed.",
+          "reference": "docs/security/ABUSE_PROTECTION_STATUS.md"
         }
       ],
       "approval": null,
@@ -3593,6 +3596,27 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/commit-plans/RM-030.md",
               "docs/validation/RM-030.md",
               "docs/tickets/README.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T11:10:33+00:00",
+          "reason": "Documentation-only follow-up corrects current blockers after explicit owner spending disposition and verified existing protection; original audit/source decisions preserved.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Prepare Roomedy final local deployment-preparation handoff for the 2 November2026 AFK quality/security request. RM-084 quality commit is bb1ba5d37675f2fa1362eed9ace84b2e130fc201:1480 net unreachable-source lines removed in seven source paths,451 unallocated inventory files byte-exact,142 affected tests/11files and1711 unchanged full tests/111files pass. Format/lint/all types/seven boundaries/assets/shared/backend/frontend production builds pass through documented continuation after sandbox loopback EACCES; do not claim a passing unsplit pnpm check. Current source inventory385files/4648545bytes/inputDigest5d6827020a4b9b25651925d074fcb1b658f0e3883a3df10f3d18e0dbee892647 is source evidence, not new Linux/hosted proof.\n\nRM-085 security audit confirms no new substantial local app fix. The fresh public OSV archive was matched locally to446versions, with two known inactive/dev-tool advisory matches left visible:body-parser2.3.0 and minimatch10.2.6. Gitleaks137commits and42public JS files show zero reported credential matches. No source/graph/secret scanner metadata was uploaded. An offline probe verifies no Express parser factories mounted and gzip/deflate/br rejected before read with zero metered calls. Record the provisional AFK no-fixes disposition and skipped local remediation; SEC-002 account-wide spending/privacy/hostname evidence remains externally unresolved. No speculative upgrade/service/config change.\n\nWrite the exact local handoff, final ticket/receipt/PM summary consistency and canonical progress. Preserve earlier audit/validation receipts, current UX/motion/domain/money/quantity/source/Undo/lifecycle/bounds/private logs, all source/test/config/lock/assets/PDF bytes after quality, and current services/env. Actual rendered PM HTML review is unavailable because browser security blocks file URLs; validate structure/links and report that limit without a workaround. Current owner has accepted prior visual/UX work as sufficient to start audits, but final paid/merchant/model/physical tests are reserved for return; historical provisional product and current provisional security reviews remain distinguishable.\n\nPerform read-only validation of the settled exact11-path RM-085 documentation allocation, including input hashes/counts/link/HTML/JSON consistency and Git secret/artifact scope. Independently confirm/fix local documentation defects, revalidate until no actionable local findings, then stage exact paths, inspect the staged diff and make the authorized RM-085 audit/handoff commit. No push/deploy/image build/paid/provider/account/env/service/Chrome/delegation/installation/scanner-export/sibling action. Keep final progress complete_local while external evidence/provisional reviews remain. Do not schedule further work. Return a concise AFK choice/verification/commit summary with the real remaining owner/release checks.",
+            "sha256": "721ea74ad7fb9169f03f145c0ad27ed327ec7109fe3def75384dafc7661cb5f2",
+            "context_sources": [
+              "docs/validation/RM-084.md",
+              "docs/security/DEPLOYMENT_SECURITY_REVIEW.md",
+              "docs/security/DEPLOYMENT_SECURITY_OVERVIEW.html",
+              "docs/security/deployment-audit-inputs-2026-11-02.json",
+              "docs/commit-plans/RM-085.md"
             ],
             "status": "afk",
             "approval": null,
@@ -3881,6 +3905,34 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/validation/RM-085.md",
           "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md",
           "docs/commit-plans/RM-085.md"
+        ]
+      },
+      {
+        "id": "AFK-0019",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T11:10:30+00:00",
+        "phase": "12-handoff",
+        "choice": "Record owner spending disposition, existing abuse protections and paid-ready local startup; select no extra DDoS infrastructure.",
+        "rationale": "Direct owner instruction and bounded source/sibling/read-only Cloud Run evidence; no concrete missing control justifies added infrastructure.",
+        "consequence": "Retain audit history/dependency watches; update remaining new-release checks. No account/provider hard-cutoff or privacy claim; leave docs unstaged under run workflow.",
+        "review_needed": true,
+        "evidence": [
+          "docs/security/ABUSE_PROTECTION_STATUS.md",
+          "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+        ]
+      },
+      {
+        "id": "AFK-0020",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T11:13:54+00:00",
+        "phase": "12-handoff",
+        "choice": "Checkpoint only the separately authorized security follow-up documentation; exclude generated dev type paths/runtime records.",
+        "rationale": "Original direct owner requests documented local commits for security work; run skill alone supplies no Git authority. This corrects the earlier agent-only assumption to leave docs unstaged.",
+        "consequence": "Fifteen explicit documents are reviewable and reversible in one ticket-prefixed local commit. App/env/cloud/dependency behavior remains unchanged; generated Next dev references stay unstaged.",
+        "review_needed": true,
+        "evidence": [
+          "docs/commit-plans/RM-085-FOLLOWUP.md",
+          "docs/validation/RM-085-FOLLOWUP.md"
         ]
       }
     ]
