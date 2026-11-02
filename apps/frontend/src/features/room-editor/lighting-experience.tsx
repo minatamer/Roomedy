@@ -3,6 +3,31 @@ import { offerNightLighting } from './lighting-preference';
 import controls from './view-controls.module.css';
 import styles from './lighting-experience.module.css';
 
+function DaylightIcon({ night }: { night: boolean }) {
+  return (
+    <svg
+      className={styles.timeIcon}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {night ? (
+        <path d="M20.9 13.3A9 9 0 0 1 10.7 3.1 9 9 0 1 0 20.9 13.3Z" />
+      ) : (
+        <>
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function LightingExperience({
   owner,
   view,
@@ -81,11 +106,21 @@ export function LightingExperience({
           </>
         ) : (
           <>
-            <button aria-pressed={!night} onClick={() => onNight(false)}>
-              Day
+            <button
+              aria-label="Day"
+              title="Day"
+              aria-pressed={!night}
+              onClick={() => onNight(false)}
+            >
+              <DaylightIcon night={false} />
             </button>
-            <button aria-pressed={night} onClick={() => onNight(true)}>
-              Night
+            <button
+              aria-label="Night"
+              title="Night"
+              aria-pressed={night}
+              onClick={() => onNight(true)}
+            >
+              <DaylightIcon night />
             </button>
           </>
         )}

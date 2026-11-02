@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Use familiar symbols for the scene time — 2 November 2026
+
+The owner prefers a sun and crescent-moon pair over visible Day/Night words in the editor pill. Match the existing outline icon weight, inherit selected/unselected colour, center both symbols and keep native accessible names/hover titles and44px targets. This changes presentation only; Floor/Ceiling remains textual. [RM-092](../tickets/RM-092-use-sun-and-moon-toggle-icons.md), [evidence](../validation/RM-092.md).
+
 ## Make lighting part of the room, not an app theme — 2 November 2026
 
 Night belongs to the editor scene: dark outside/windows and visible illumination from actual fixtures, while Roomedy's controls keep their warm style. Light emission colour is independent of shade/frame finish and the room theme. Offer familiar white presets, decorative warm red and custom colour through the same manual/Medy preview/Apply/Undo owner. Interior cameras need a wall-colour ceiling; Overview keeps the room open. A separate Ceiling plan lets fixtures move without selecting furniture below. First Night with no fixture should invite manual Lighting or Medy once, with no automatic request. Budget real lights/shadows, keep idle rendering asleep and judge the actual room/mobile view; a glowing material alone does not illuminate surfaces. [RM-091](../tickets/RM-091-light-the-editor-by-day-and-night.md), [research](../engineering/editor-lighting.md), [evidence and limits](../validation/RM-091.md).
