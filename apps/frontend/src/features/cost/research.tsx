@@ -33,36 +33,11 @@ import {
   guideView,
   chooseRemainingProducts,
   chooseGuidedProduct,
+  entryIsCurrent,
 } from './selection-guide';
 import type { GuideAction } from './selection-guide';
 import { ChatIcon } from './chat-visuals';
 import styles from './workspace.module.css';
-
-export function ResearchProgress({
-  sectionRef,
-  statusRef,
-}: {
-  sectionRef?: Ref<HTMLElement>;
-  statusRef?: Ref<HTMLParagraphElement>;
-}) {
-  return (
-    <section
-      ref={sectionRef}
-      className={styles.researchPending}
-      aria-label="Product options"
-    >
-      <p
-        role="status"
-        ref={statusRef}
-        tabIndex={-1}
-        className={styles.thinking}
-      >
-        <span aria-hidden="true" />
-        Thinking
-      </p>
-    </section>
-  );
-}
 
 export function Research({
   controller,
@@ -165,11 +140,7 @@ export function Research({
     });
     return () => cancelAnimationFrame(frame);
   }, [busy, sectionRef]);
-  const fresh = (entry: MarketEntry) =>
-    entry.generation === state.generation &&
-    entry.workspaceId === state.workspace?.workspaceId &&
-    entry.roomRevision === room.roomRevision &&
-    entry.costRevision === draft.revision;
+  const fresh = (entry: MarketEntry) => entryIsCurrent(entry, state);
   const say = useCallback(
     (text: string) => {
       if (controller.costMessage('assistant', text))

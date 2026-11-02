@@ -518,33 +518,6 @@
 .marketStatus:empty {
   display: none;
 }
-.offerVisual {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 18px;
-  min-height: 92px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #eee2d1, #f6efe3);
-}
-.offerVisual > svg {
-  width: 54px;
-  height: 54px;
-  flex-shrink: 0;
-  color: #8c674a;
-}
-.offerVisual span {
-  display: grid;
-  gap: 5px;
-}
-.offerVisual strong {
-  font-size: 17px;
-  font-weight: 500;
-}
-.offerVisual small {
-  font-size: 11px;
-  color: #806c58;
-}
 .sourceCards article > strong {
   font-size: 24px;
   font-weight: 500;
@@ -706,17 +679,6 @@
   }
   .lineCardTop strong {
     margin-left: 34px;
-  }
-  .offerVisual {
-    padding: 14px;
-    gap: 12px;
-  }
-  .offerVisual > svg {
-    width: 42px;
-    height: 42px;
-  }
-  .offerVisual strong {
-    font-size: 15px;
   }
 }
 

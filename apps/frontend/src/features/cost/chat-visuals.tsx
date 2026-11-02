@@ -1,66 +1,9 @@
-import type {
-  EstimateLine,
-  EstimateOffer,
-  RoomEstimate,
-} from '@roomedy/contracts/estimates';
+import type { EstimateLine, RoomEstimate } from '@roomedy/contracts/estimates';
 import { money, quantity, targetKey } from './state';
 import styles from './workspace.module.css';
 
 import { ChatIcon } from '../assistant/chat-icon';
 export { ChatIcon } from '../assistant/chat-icon';
-
-export function OfferVisual({ offer }: { offer: EstimateOffer | null }) {
-  const kind = offer?.kind;
-  return (
-    <div className={styles.offerVisual}>
-      <ChatIcon
-        kind={
-          !offer
-            ? 'search'
-            : kind === 'floor'
-              ? 'floor'
-              : kind === 'paint' || kind === 'primer'
-                ? 'walls'
-                : kind === 'service'
-                  ? 'services'
-                  : 'furniture'
-        }
-      />
-      <span>
-        {offer?.kind === 'furniture' ? (
-          offer.outerSizeMm ? (
-            <>
-              <strong>
-                {offer.outerSizeMm.width} × {offer.outerSizeMm.depth} ×{' '}
-                {offer.outerSizeMm.height}
-              </strong>
-              <small>W × D × H · mm</small>
-            </>
-          ) : (
-            <strong>Size needs confirmation</strong>
-          )
-        ) : offer?.kind === 'floor' ? (
-          <>
-            <strong>{offer.coverageMm2 / 1e6} m²</strong>
-            <small>coverage per pack</small>
-          </>
-        ) : offer && 'packs' in offer ? (
-          <>
-            <strong>{offer.coverageMm2PerLitre / 1e6} m² / L</strong>
-            <small>per coat · {offer.sheen}</small>
-          </>
-        ) : offer?.kind === 'service' ? (
-          <>
-            <strong>{offer.market.city}</strong>
-            <small>{offer.scope.replaceAll('-', ' ')}</small>
-          </>
-        ) : (
-          <strong>Unpriced lead</strong>
-        )}
-      </span>
-    </div>
-  );
-}
 
 export function CostLineCards({
   estimate,

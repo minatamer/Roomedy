@@ -1578,14 +1578,14 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 <!-- build-progress:start -->
 ## Build command progress
 
-Current phase: **local workflow finished**
-Next action: Owner review of the completed RM-062–083 local checkpoint; final Git gate verifies145 planned paths and clean index/worktree. Keep aesthetic/physical/merchant/live-model acceptance pending. No push, deployment or image builds.
+Current phase: **10b-security-review**
+Next action: Commit the exact validated RM-084 allocation, then prepare the current-candidate RM-085 security prompt and audit. No paid tests or deployment.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
 
 AFK mode: AFK-SESSION-001
-Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
+Provisional owner reviews: 04-decisions
 
 ### AFK decisions
 
@@ -1641,6 +1641,14 @@ Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
   Reason: All required local tests, actual fake interactions, bounded measurements and quality/security reviews are complete without a new actionable local finding. The owner explicitly reserves their final manual tests for return.
   Consequence / reversibility: No deployment, provider spend or other-app/env mutation. Product/visual/security self-reviews remain provisional; real sourcing/physical/funding/current-image release evidence is still outstanding.
   Owner review requested on return: yes. Evidence: docs/operations/CPQ_LOCAL_HANDOFF.md, docs/validation/RM-030.md, docs/security/CPQ_SECURITY_REVIEW.md
+- **AFK-0014** (AFK-SESSION-001, 2026-11-02T10:08:29+00:00, 10a-quality): Continue the active AFK session under the renewed 2 November owner request; use RM-084/RM-085 for current quality/security reviews and validated local commits.
+  Reason: The direct request delegates both audits and justified fixes, prioritizes functionality and prohibits paid tests. set-afk-mode rejects duplicate activation; preserve the existing session and decisions.
+  Consequence / reversibility: No routine questions or speculative rewrites. No env/service/cloud/provider operation. Final owner paid tests and provisional security review remain outstanding.
+  Owner review requested on return: yes. Evidence: human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request, commit:ae8d9e9, docs/commit-plans/RM-062-083-CHECKPOINT.md
+- **AFK-0015** (AFK-SESSION-001, 2026-11-02T10:13:32+00:00, 10a-quality): Execute Q84-01 through Q84-03: remove proven unreachable historical UI/styles and catalogue filter, and reuse the existing equivalent research snapshot predicate.
+  Reason: RM-084 plan and allocation record reachability evidence. The current photo/Estimate flows have real owning components; shared controller/renderer/money logic and private diagnostics stay exact. No file-length-driven refactor is justified.
+  Consequence / reversibility: Reversible source cleanup only. CSS semantic comparison must preserve reachable declarations/order; behavioral tests and canonical gates must pass before commit. Owner final paid testing remains outstanding.
+  Owner review requested on return: yes. Evidence: docs/engineering/deployment-quality-review.md, docs/commit-plans/RM-084.md, .release/runtime/rm084-inventory.json
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1650,11 +1658,11 @@ Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
 - [x] 06-plan-commit — Planning commit (complete)
 - [x] 07-build — Execute and validate tickets (complete_local)
 - [x] 08-performance — Performance investigation (complete_local)
-- [x] 09-visual-review — Frontend visual approval checkpoint (provisional)
+- [x] 09-visual-review — Frontend visual approval checkpoint (complete)
 - [x] 10a-quality — Quality audit and fixes (complete)
-- [x] 10b-security-review — Security audit and manual review (provisional)
-- [x] 11-security-fixes — Approved security fixes (skipped)
-- [x] 12-handoff — Final local handoff (complete_local)
+- [ ] 10b-security-review — Security audit and manual review (pending)
+- [ ] 11-security-fixes — Approved security fixes (pending)
+- [ ] 12-handoff — Final local handoff (pending)
 
 This checklist records local work. Human approvals and unresolved external checks are preserved below; it does not authorize paid calls or deployment.
 
@@ -1663,7 +1671,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-10-31T19:52:33+00:00",
+  "updated_at": "2026-11-02T10:23:55+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1876,8 +1884,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "AUDIT_GIT_AUTHORITY": {
-      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.",
-      "source": "human:current-chat/2026-10-21/approve-BL-checkpoint-and-audits; build/SKILL.md",
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.",
+      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_REQUEST": {
@@ -2009,7 +2017,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner review of the completed RM-062–083 local checkpoint; final Git gate verifies145 planned paths and clean index/worktree. Keep aesthetic/physical/merchant/live-model acceptance pending. No push, deployment or image builds.",
+  "next_action": "Commit the exact validated RM-084 allocation, then prepare the current-candidate RM-085 security prompt and audit. No paid tests or deployment.",
   "phases": [
     {
       "id": "01-docs",
@@ -2465,7 +2473,7 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "09-visual-review",
       "name": "Frontend visual approval checkpoint",
       "gate": "visual",
-      "status": "provisional",
+      "status": "complete",
       "prompt": {
         "text": "Perform the delegated provisional visual self-review for the Roomedy CPQ extension in RM-030. Inspect actual fake local studio customization and connected Plan & cost3D, budget, source/work/version/PDF flows on broad, short, tablet and phone layouts. Preserve the warm existing palette, header continuity, reachable44px controls, meaningful finite animation and one scene owner. Use actual screenshots and DOM/native input evidence, with honest startup/physical/assistive limits. No unsolicited redesign or paid request. Record what was inspected and recommend local handoff only; the absent owner has not personally approved visuals. Continue independent quality/security work under the owner instruction to finish all tickets before their manual tests.",
         "sha256": "1d2af8e10b5a122b0f3b532ea4a456031af69a956acd575dabe3f463ca6a7ad3",
@@ -2483,8 +2491,12 @@ This checklist records local work. Human approvals and unresolved external check
         "docs/commit-plans/RM-030.md"
       ],
       "blockers": [],
-      "approval": null,
-      "decision": "self-reviewed",
+      "approval": {
+        "quote": "I think in this chat we hit all the visual feedback we were wanting and all the UX feedback we were wanting. So let's start, like, preparing this for deployment.",
+        "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
+        "scope": "Current RM-062-083 visual/UX checkpoint at ae8d9e9 is sufficient to proceed to audits. Final paid tests remain reserved for owner return."
+      },
+      "decision": "approved-as-is",
       "reviews": [
         {
           "decision": "changes-requested",
@@ -3189,6 +3201,19 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-10-26T17:51:21+00:00"
           },
           "decision": "self-reviewed"
+        },
+        {
+          "decision": "approved-as-is",
+          "approval": {
+            "quote": "I think in this chat we hit all the visual feedback we were wanting and all the UX feedback we were wanting. So let's start, like, preparing this for deployment.",
+            "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
+            "scope": "Current RM-062-083 visual/UX checkpoint at ae8d9e9 is sufficient to proceed to audits. Final paid tests remain reserved for owner return."
+          },
+          "prior_afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0011",
+            "recorded_at": "2026-10-26T17:51:21+00:00"
+          }
         }
       ],
       "afk_review": {
@@ -3203,22 +3228,28 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete",
       "prompt": {
-        "text": "Within RM-030, document and execute a proportionate quality/efficiency/structure review of the actual CPQ delta from the accepted pre-extension source through67b2e08. Inspect contracts/pure quantities and exact money, session shared Undo/preview/version/persistence, full-page navigation/conversation/source controls, shared material/3D/export ownership, backend admitted sourcing/provider metadata and tests. Prioritize preserved behavior over line count. Keep strict bounds, private fixed diagnostics, safe helpful UI errors, existing dependencies/lazy entries and motion. Confirm concrete duplication/dead code/authority/cleanup faults independently before any scoped edit; allocate paths first, regress meaningful behavior and revalidate. Reconcile stale current README/pricing status with actual local completion. No speculative refactor, log removal, provider test, extra service/port, owner-env or other-app mutation, cloud/push/delegation. Required settled pnpm check is running; inspect final diff read-only. Commit exact RM-030 documentation/handoff under standing owner authority after audits finish; no source commit needed when no source defect exists.",
-        "sha256": "f28466c9701e1bef01d4982850fe36bed081cba8dc857b869bd9febb7458d612",
+        "text": "Run Roomedy's current functionality-preserving code-quality, efficiency and structure audit on the clean ae8d9e9 RM-062-083 checkpoint. The owner has accepted the current visual/UX feedback as sufficient to start deployment preparation and explicitly requests AFK decisions, execute/validate loops, documentation and ticket-prefixed local commits. Do not deploy, push, build images, restart services, change/read ignored env, call paid providers, invoke live app operations, upload scanner metadata, delegate, install tools or touch sibling repositories.\n\nRoomedy is a guest rectangular bedroom/workspace planner with photo/manual intake, one canonical session/room/controller and synchronized 2D/3D; reviewed Medy proposals use explicit Apply/Cancel and one Undo. The Estimate phase retains a separate bounded chat, serial six-target product sourcing, one-at-a-time choices, exact USD/FX source evidence, whole-room material quantities, frozen saved versions and visual PDFs with optional selected-product photos/links. Preserve current behavior, deliberate demand-driven motion, locks/provenance, lifecycle/generation/revision fences, finite bytes/fragments/work/deadlines/admission, private operator diagnostics and safe user errors.\n\nFirst document a concrete RM-084 audit plan, current baseline and exact file allocation. Inspect source/test/script/config owners across contracts, pure spatial, backend HTTP/admission/provider/sourcing, frontend server/intake/session/assistant/room/landing/cost/PDF and local release tooling. Focus on demonstrated duplication, unreachable code and avoidable work/ownership complexity. A long file is not a reason to split it; retain framework/worker/public exports until reachability is established. Reuse existing owners and dependencies. Preserve dated receipts and reconcile only current documentation where needed.\n\nRecord each actual finding with evidence, smallest correction, behavior invariants and meaningful focused checks. Implement justified low-risk corrections one cohesive ticket at a time using execute, then settled read-only validate; independently confirm and fix findings and repeat until no actionable local findings remain. Tests must use the existing fake/paid-off, credential-clearing and external-network-denying bootstrap before imports, never the live app. Use installed Node24.19.0/pnpm11.25.0; run applicable canonical root gates once when settled, with NEXT_TELEMETRY_DISABLED=1. Preserve all assertions if known release-copy wall-clock timing requires a documented CLI timeout rerun. Inspect final diffs and exact explicit staged paths for secrets/artifacts, then create cohesive RM-084 local commits under the direct current authorization. Leave paid, physical, current Linux-image/hosted and final owner acceptance evidence explicit. Finish quality before the security audit.",
+        "sha256": "28d0613d2a47e81896904b823c9295ee941a0a8f4a7f51dcb760f0f717011d5a",
         "context_sources": [
+          "AGENTS.md",
+          "docs/README.md",
+          "docs/ROOMEDY.md",
+          "docs/tickets/README.md",
           "docs/engineering/code-quality-plan.md",
-          "docs/validation/RM-030.md",
-          "docs/commit-plans/RM-030.md"
+          "scripts/run-tests.mjs",
+          "scripts/isolated-mode.ts",
+          "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/engineering/code-quality-plan.md",
-        "docs/validation/RM-029.md",
-        "docs/validation/RM-030.md",
-        "commit:67b2e08"
+        "docs/tickets/RM-084-audit-deployment-code-quality.md",
+        "docs/engineering/deployment-quality-review.md",
+        "docs/validation/RM-084.md",
+        "docs/commit-plans/RM-084.md",
+        "actual-gate:142-focused-1711-full-111-files-format-lint-types-seven-boundaries-assets-both-builds"
       ],
       "blockers": [],
       "approval": null,
@@ -3249,6 +3280,25 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T10:08:27+00:00",
+          "reason": "Owner requests a fresh functionality-preserving quality/security pass on ae8d9e9 after RM-031-083 changes. Prior evidence remains historical.",
+          "prior_status": "complete",
+          "prior_prompt": {
+            "text": "Within RM-030, document and execute a proportionate quality/efficiency/structure review of the actual CPQ delta from the accepted pre-extension source through67b2e08. Inspect contracts/pure quantities and exact money, session shared Undo/preview/version/persistence, full-page navigation/conversation/source controls, shared material/3D/export ownership, backend admitted sourcing/provider metadata and tests. Prioritize preserved behavior over line count. Keep strict bounds, private fixed diagnostics, safe helpful UI errors, existing dependencies/lazy entries and motion. Confirm concrete duplication/dead code/authority/cleanup faults independently before any scoped edit; allocate paths first, regress meaningful behavior and revalidate. Reconcile stale current README/pricing status with actual local completion. No speculative refactor, log removal, provider test, extra service/port, owner-env or other-app mutation, cloud/push/delegation. Required settled pnpm check is running; inspect final diff read-only. Commit exact RM-030 documentation/handoff under standing owner authority after audits finish; no source commit needed when no source defect exists.",
+            "sha256": "f28466c9701e1bef01d4982850fe36bed081cba8dc857b869bd9febb7458d612",
+            "context_sources": [
+              "docs/engineering/code-quality-plan.md",
+              "docs/validation/RM-030.md",
+              "docs/commit-plans/RM-030.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -3256,21 +3306,8 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "10b-security-review",
       "name": "Security audit and manual review",
       "gate": "security",
-      "status": "provisional",
-      "prompt": {
-        "text": "Audit the Roomedy CPQ delta through67b2e08 under RM-030 using STRIDE and the prior reviewed security report. Inspect fixed admitted sourcing route, public origin/release/body/identity/grant/replay/deadline/settlement boundaries, pinned provider built-in web-search contract and untrusted opened-page evidence, no model command/purchase authority, source HTTPS URLs, price/fit/locality validation, exact bounded money, immutable imports/recovery/PDF and resource cleanup. Preserve private logs and helpful fixed public errors. Review unchanged lockfile/package identities against targeted current official Next/pdf-lib/braces advisories without uploading private graph/source or reading secrets. Record meaningful confirmed findings and small safe plans, retained SEC-002 account funding/privacy uncertainty and actual unperformed live/hosted/physical checks. Produce detailed CPQ_SECURITY_REVIEW.md and warm severity-ranked PM HTML. No app security fix before actual finding disposition; AFK may select a justified scoped local fix, or no-fixes with reasons when no actionable local issue exists. Never invent an exploit, full scanner result or security certification. No provider/paid request, cloud/account mutation, dependency install, delegation or push. Existing local-document commit authority applies after clean loop.",
-        "sha256": "0adf3be047040bf70fb0b24c6c0d8f6b86680603ec49614ee9ae55798b5ffa37",
-        "context_sources": [
-          "docs/security/SECURITY_REVIEW.md",
-          "docs/commit-plans/RM-030.md",
-          "docs/engineering/sourcing.md",
-          "docs/engineering/estimate-versions.md",
-          "docs/engineering/estimate-pdf.md"
-        ],
-        "status": "afk",
-        "approval": null,
-        "afk_session": "AFK-SESSION-001"
-      },
+      "status": "pending",
+      "prompt": null,
       "evidence": [
         "docs/security/CPQ_SECURITY_REVIEW.md",
         "docs/security/CPQ_SECURITY_OVERVIEW.html",
@@ -3278,7 +3315,7 @@ This checklist records local work. Human approvals and unresolved external check
       ],
       "blockers": [],
       "approval": null,
-      "decision": "no-fixes",
+      "decision": null,
       "reviews": [
         {
           "decision": "selected-fixes",
@@ -3328,31 +3365,37 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-10-26T17:58:57+00:00"
           },
           "decision": "no-fixes"
+        },
+        {
+          "reopened_at": "2026-11-02T10:08:27+00:00",
+          "reason": "Owner requests a fresh functionality-preserving quality/security pass on ae8d9e9 after RM-031-083 changes. Prior evidence remains historical.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Audit the Roomedy CPQ delta through67b2e08 under RM-030 using STRIDE and the prior reviewed security report. Inspect fixed admitted sourcing route, public origin/release/body/identity/grant/replay/deadline/settlement boundaries, pinned provider built-in web-search contract and untrusted opened-page evidence, no model command/purchase authority, source HTTPS URLs, price/fit/locality validation, exact bounded money, immutable imports/recovery/PDF and resource cleanup. Preserve private logs and helpful fixed public errors. Review unchanged lockfile/package identities against targeted current official Next/pdf-lib/braces advisories without uploading private graph/source or reading secrets. Record meaningful confirmed findings and small safe plans, retained SEC-002 account funding/privacy uncertainty and actual unperformed live/hosted/physical checks. Produce detailed CPQ_SECURITY_REVIEW.md and warm severity-ranked PM HTML. No app security fix before actual finding disposition; AFK may select a justified scoped local fix, or no-fixes with reasons when no actionable local issue exists. Never invent an exploit, full scanner result or security certification. No provider/paid request, cloud/account mutation, dependency install, delegation or push. Existing local-document commit authority applies after clean loop.",
+            "sha256": "0adf3be047040bf70fb0b24c6c0d8f6b86680603ec49614ee9ae55798b5ffa37",
+            "context_sources": [
+              "docs/security/SECURITY_REVIEW.md",
+              "docs/commit-plans/RM-030.md",
+              "docs/engineering/sourcing.md",
+              "docs/engineering/estimate-versions.md",
+              "docs/engineering/estimate-pdf.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "no-fixes"
         }
       ],
-      "selected_findings": [],
-      "afk_review": {
-        "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0012",
-        "recorded_at": "2026-10-26T17:58:57+00:00"
-      }
+      "selected_findings": []
     },
     {
       "id": "11-security-fixes",
       "name": "Approved security fixes",
       "gate": null,
-      "status": "skipped",
-      "prompt": {
-        "text": "Apply the actual provisional CPQ security disposition for RM-030: no new local findings selected, so no source remediation is needed. Retain the detailed audit and existing unresolved SEC-002 funding/privacy condition. Do not invent a patch, change dependencies/security controls, invoke a provider, alter env/account/cloud state or deploy. Record the justified skip and continue the authorized final documentation/handoff loop.",
-        "sha256": "55176623f03134e11323e9f6f31f5b975b66bc8f9785a46fae04c7507eefbc7c",
-        "context_sources": [
-          "docs/security/CPQ_SECURITY_REVIEW.md",
-          "docs/validation/RM-030.md"
-        ],
-        "status": "afk",
-        "approval": null,
-        "afk_session": "AFK-SESSION-001"
-      },
+      "status": "pending",
+      "prompt": null,
       "evidence": [
         "docs/security/CPQ_SECURITY_REVIEW.md",
         "docs/validation/RM-030.md"
@@ -3390,6 +3433,24 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T10:08:28+00:00",
+          "reason": "Owner requests a fresh functionality-preserving quality/security pass on ae8d9e9 after RM-031-083 changes. Prior evidence remains historical.",
+          "prior_status": "skipped",
+          "prior_prompt": {
+            "text": "Apply the actual provisional CPQ security disposition for RM-030: no new local findings selected, so no source remediation is needed. Retain the detailed audit and existing unresolved SEC-002 funding/privacy condition. Do not invent a patch, change dependencies/security controls, invoke a provider, alter env/account/cloud state or deploy. Record the justified skip and continue the authorized final documentation/handoff loop.",
+            "sha256": "55176623f03134e11323e9f6f31f5b975b66bc8f9785a46fae04c7507eefbc7c",
+            "context_sources": [
+              "docs/security/CPQ_SECURITY_REVIEW.md",
+              "docs/validation/RM-030.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ],
       "skip_reason": "No new actionable local CPQ security source finding was confirmed or selected; unresolved SEC-002 requires external account evidence, not an invented local source patch."
@@ -3398,20 +3459,8 @@ This checklist records local work. Human approvals and unresolved external check
       "id": "12-handoff",
       "name": "Final local handoff",
       "gate": null,
-      "status": "complete_local",
-      "prompt": {
-        "text": "Finish RM-030 and the ten-ticket Roomedy CPQ extension as a local fake-only handoff. Reconcile every RM-021–029 implementation/clean validation/commit with the queue and current source, final1178-test/72-file/root/both-build gate, real native size/3D/source/budget/work/version/PDF evidence, measured limits and security/quality outcomes. Preserve historical hosted/audit receipts while current README/docs clearly distinguish local extension from unchanged production. Provide exact4320/4321 owned fake readiness, sample/manual steps, editable three-version JSON and all-page-inspected12-pagePDF, source inventory and recommended-choice report. Keep owner final manual/visual/security, actual provider/merchant/physical and current-image release evidence pending. Verify documentation links, entire settled allocated diff and exact staged files/content; create the approved cohesive RM-030 local commit, no push/deploy/env/other-app mutation. Canonical handoff stays complete_local because provisional reviews/external checks remain. Mark the explicit local-ticket goal complete only after all required local work and commit are achieved, then wait for owner tests.",
-        "sha256": "134ca9e7451cbed1f6270262b0aa501e1c99c0a9d7d7a3dd9669be7b78a10c83",
-        "context_sources": [
-          "docs/operations/CPQ_LOCAL_HANDOFF.md",
-          "docs/commit-plans/RM-030.md",
-          "docs/validation/RM-030.md",
-          "docs/tickets/README.md"
-        ],
-        "status": "afk",
-        "approval": null,
-        "afk_session": "AFK-SESSION-001"
-      },
+      "status": "pending",
+      "prompt": null,
       "evidence": [
         "commit:67b2e08",
         "docs/operations/CPQ_LOCAL_HANDOFF.md",
@@ -3449,6 +3498,26 @@ This checklist records local work. Human approvals and unresolved external check
               "question_context": "The quality and security audits haven’t run. Should I finish them before deployment? “Finish audits first” approves the saved RM-016 prompt and pre-approves the remaining build phase prompts; the separate review of actual security findings stays in place.",
               "scope": "Direct response instructs taking the recommended Finish audits first path defined in the single pending question: approve saved RM-016 prompt and preapprove remaining phase prompts. Do not repeat routine questions. Preserve the separately named manual review of actual security findings; no future findings are preselected."
             }
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T10:08:28+00:00",
+          "reason": "Owner requests a fresh functionality-preserving quality/security pass on ae8d9e9 after RM-031-083 changes. Prior evidence remains historical.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Finish RM-030 and the ten-ticket Roomedy CPQ extension as a local fake-only handoff. Reconcile every RM-021–029 implementation/clean validation/commit with the queue and current source, final1178-test/72-file/root/both-build gate, real native size/3D/source/budget/work/version/PDF evidence, measured limits and security/quality outcomes. Preserve historical hosted/audit receipts while current README/docs clearly distinguish local extension from unchanged production. Provide exact4320/4321 owned fake readiness, sample/manual steps, editable three-version JSON and all-page-inspected12-pagePDF, source inventory and recommended-choice report. Keep owner final manual/visual/security, actual provider/merchant/physical and current-image release evidence pending. Verify documentation links, entire settled allocated diff and exact staged files/content; create the approved cohesive RM-030 local commit, no push/deploy/env/other-app mutation. Canonical handoff stays complete_local because provisional reviews/external checks remain. Mark the explicit local-ticket goal complete only after all required local work and commit are achieved, then wait for owner tests.",
+            "sha256": "134ca9e7451cbed1f6270262b0aa501e1c99c0a9d7d7a3dd9669be7b78a10c83",
+            "context_sources": [
+              "docs/operations/CPQ_LOCAL_HANDOFF.md",
+              "docs/commit-plans/RM-030.md",
+              "docs/validation/RM-030.md",
+              "docs/tickets/README.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
           },
           "prior_approval": null,
           "prior_decision": null
@@ -3656,6 +3725,36 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/operations/CPQ_LOCAL_HANDOFF.md",
           "docs/validation/RM-030.md",
           "docs/security/CPQ_SECURITY_REVIEW.md"
+        ]
+      },
+      {
+        "id": "AFK-0014",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T10:08:29+00:00",
+        "phase": "10a-quality",
+        "choice": "Continue the active AFK session under the renewed 2 November owner request; use RM-084/RM-085 for current quality/security reviews and validated local commits.",
+        "rationale": "The direct request delegates both audits and justified fixes, prioritizes functionality and prohibits paid tests. set-afk-mode rejects duplicate activation; preserve the existing session and decisions.",
+        "consequence": "No routine questions or speculative rewrites. No env/service/cloud/provider operation. Final owner paid tests and provisional security review remain outstanding.",
+        "review_needed": true,
+        "evidence": [
+          "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request",
+          "commit:ae8d9e9",
+          "docs/commit-plans/RM-062-083-CHECKPOINT.md"
+        ]
+      },
+      {
+        "id": "AFK-0015",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T10:13:32+00:00",
+        "phase": "10a-quality",
+        "choice": "Execute Q84-01 through Q84-03: remove proven unreachable historical UI/styles and catalogue filter, and reuse the existing equivalent research snapshot predicate.",
+        "rationale": "RM-084 plan and allocation record reachability evidence. The current photo/Estimate flows have real owning components; shared controller/renderer/money logic and private diagnostics stay exact. No file-length-driven refactor is justified.",
+        "consequence": "Reversible source cleanup only. CSS semantic comparison must preserve reachable declarations/order; behavioral tests and canonical gates must pass before commit. Owner final paid testing remains outstanding.",
+        "review_needed": true,
+        "evidence": [
+          "docs/engineering/deployment-quality-review.md",
+          "docs/commit-plans/RM-084.md",
+          ".release/runtime/rm084-inventory.json"
         ]
       }
     ]
