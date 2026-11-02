@@ -335,15 +335,19 @@ export function completeQuickReplies(
     proposal || failure
       ? null
       : medyTopic(room, options.previousRequest ?? '', context);
-  const targets = medyTargets(
+  const mentionedTargets = medyTargets(
     room,
     options.previousRequest ?? '',
     selectedId,
     context,
   );
+  const targets =
+    topic === 'furniture'
+      ? mentionedTargets.filter((target) => target.kind === 'furniture')
+      : mentionedTargets;
   const target =
-    targets.length === 1 && targets[0]?.kind === 'furniture'
-      ? targets[0].piece.label
+    targets.length && targets.every((target) => target.kind === 'furniture')
+      ? targets.map((target) => target.piece.label).join(' and ')
       : undefined;
   const plain =
     !proposal &&
@@ -453,14 +457,18 @@ export function completeQuickReplies(
     result.push(candidate);
     directions.add(replyDirection(candidate.request));
   };
-  if (topic) {
-    const related = (candidate: DesignSuggestion) =>
-      medyTopic(room, candidate.request) === topic &&
-      (topic !== 'furniture' ||
-        targets.length !== 1 ||
-        medyTargets(room, candidate.request, selectedId, []).some(
-          (target) => target.id === targets[0]!.id,
-        ));
+  if (topic && (topic !== 'furniture' || targets.length)) {
+    const related = (candidate: DesignSuggestion) => {
+      if (medyTopic(room, candidate.request) !== topic) return false;
+      if (topic !== 'furniture' || !targets.length) return true;
+      const references = medyTargets(room, candidate.request, selectedId, []);
+      return (
+        references.length === targets.length &&
+        references.every((reference) =>
+          targets.some((target) => target.id === reference.id),
+        )
+      );
+    };
     for (const candidate of candidates.filter(related)) {
       if (result.length === 2) break;
       take(candidate);

@@ -1,7 +1,7 @@
 import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { Feature, Furniture, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
-import { findCatalogueEntry } from './catalogue.js';
+import { CATALOGUE, findCatalogueEntry } from './catalogue.js';
 import type { DesignTurn } from './design.js';
 
 export const medyText = (text: string) =>
@@ -19,6 +19,13 @@ export const medyText = (text: string) =>
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const namePattern = (label: string) =>
   new RegExp(`(?<![a-z0-9])${escape(medyText(label))}(?![a-z0-9])`, 'g');
+const furnitureCategories = [
+  ...new Set(CATALOGUE.map((entry) => entry.category)),
+];
+const locationMention = (words: string, kind: Feature['kind'] | 'wall') =>
+  new RegExp(
+    `\\b(?:near|by|beside|next to|in front of|against)\\s+(?:the |a |my )?(?:north |east |south |west )?${kind}s?\\b`,
+  ).test(words);
 export type MedyTarget =
   | { kind: 'room'; id: string }
   | { kind: 'furniture'; id: string; piece: Furniture }
@@ -94,27 +101,52 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
       ),
     )
     .map((mention) => mention.piece);
-  const pieces = names.length
-    ? names
-    : room.furniture.filter((p) => {
-        const entry = findCatalogueEntry(p.catalogueId, p.catalogueVersion);
-        if (entry && catalogueMention(entry, t)) return true;
-        const category = entry?.category;
-        const aliases =
-          category === 'storage'
-            ? 'storage|shelf|shelves|cabinet|nightstand|bedside'
-            : category === 'wardrobe'
-              ? 'wardrobe|closet'
-              : category === 'bed'
-                ? 'bed|pillow|pillowcase|sheet|bedsheet|duvet|blanket|bedding'
-                : category;
-        return !!aliases && new RegExp(`\\b(${aliases})s?\\b`).test(t);
-      });
+  const workAreaPattern =
+    /\b(work[ -]area|workspace|workstation|work zone|desk setup)\b/;
+  const workArea =
+    workAreaPattern.test(t) &&
+    !names.some((piece) => workAreaPattern.test(medyText(piece.label)));
+  let remaining = t;
+  for (const piece of names)
+    remaining = remaining.replace(namePattern(piece.label), ' ');
+  const pieces = room.furniture.filter((p) => {
+    if (names.some((named) => named.id === p.id)) return true;
+    const entry = findCatalogueEntry(p.catalogueId, p.catalogueVersion);
+    if (entry && catalogueMention(entry, remaining)) return true;
+    const category = entry?.category;
+    if (workArea && (category === 'desk' || category === 'chair')) return true;
+    const aliases =
+      category === 'storage'
+        ? 'storage|shelf|shelves|cabinet|nightstand|bedside'
+        : category === 'wardrobe'
+          ? 'wardrobe|closet'
+          : category === 'bed'
+            ? 'bed|pillow|pillowcase|sheet|bedsheet|duvet|blanket|bedding'
+            : category;
+    return !!aliases && new RegExp(`\\b(${aliases})s?\\b`).test(remaining);
+  });
   const targets: MedyTarget[] = pieces.map((piece) => ({
     kind: 'furniture',
     id: piece.id,
     piece,
   }));
+  const categories = pieces.map(
+    (piece) =>
+      findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)?.category,
+  );
+  if (
+    (workArea &&
+      ['desk', 'chair'].some(
+        (category) =>
+          categories.filter((current) => current === category).length !== 1,
+      )) ||
+    furnitureCategories.some(
+      (category) =>
+        new RegExp(`\\b${category}s?\\b`).test(remaining) &&
+        !categories.includes(category),
+    )
+  )
+    return [];
   let featureWords = t;
   for (const piece of names)
     featureWords = featureWords.replace(namePattern(piece.label), 'item');
@@ -149,19 +181,58 @@ export function medyTargets(
     }
     return explicit;
   }
-  if (!/\b(it|this|that|selected|same|its)\b/.test(medyText(text))) return [];
+  const plural = /\b(them|they|these|those|both)\b/.test(medyText(text));
+  if (!plural && !/\b(it|this|that|selected|same|its)\b/.test(medyText(text)))
+    return [];
   const selected = room.furniture.find((p) => p.id === selectedId);
-  if (selected)
+  if (selected && !plural)
     return [{ kind: 'furniture', id: selected.id, piece: selected }];
   const feature = room.room.features.find((f) => f.id === selectedId);
-  if (feature) return [{ kind: 'feature', id: feature.id, feature }];
-  const last = context
+  if (feature && !plural) return [{ kind: 'feature', id: feature.id, feature }];
+  const recent = context
+    .slice(-POLICY.contextTurns)
     .filter((t) => t.role === 'user')
     .slice(-6)
-    .reverse()
-    .map((turn) => references(room, turn.text))
-    .find((targets) => targets.length > 0);
-  return last ?? [];
+    .reverse();
+  for (const turn of recent) {
+    const subject = medyCommandWords(room, turn.text);
+    const targets = references(room, turn.text);
+    if (targets.length) {
+      const furniture = targets.filter((target) => target.kind === 'furniture');
+      if (plural && furniture.length) {
+        // Inspect location syntax after masking names; never rewrite a piece's label into a different subject.
+        const otherTargets = targets.filter(
+          (target) => target.kind !== 'furniture',
+        );
+        if (
+          otherTargets.some(
+            (target) =>
+              target.kind !== 'feature' ||
+              !locationMention(subject, target.feature.kind),
+          )
+        )
+          return [];
+        const categories = furniture.map(
+          (target) =>
+            findCatalogueEntry(
+              target.piece.catalogueId,
+              target.piece.catalogueVersion,
+            )?.category,
+        );
+        if (new Set(categories).size !== categories.length) return [];
+        return furniture;
+      }
+      return targets;
+    }
+    // Do not reach past a new subject to resurrect an older furniture group.
+    if (
+      /\b(walls?|floor(?:ing)?|windows?|doors?|layout|palette|theme|bed|desk|chair|wardrobe|work[ -]area|workspace|workstation|desk setup)\b/i.test(
+        subject,
+      )
+    )
+      return [];
+  }
+  return [];
 }
 
 export type MedyTopic =
@@ -195,21 +266,31 @@ export function medyTopic(
   ]) {
     const words = medyCommandWords(room, turn),
       topics: MedyTopic[] = [];
-    const walls = /\bwalls?\b/.test(words)
+    const furniture =
+      /\b(furniture|work[ -]area|workspace|workstation|work zone|desk setup)\b/.test(
+        words,
+      ) || references(room, turn).some((target) => target.kind === 'furniture');
+    const wallMention =
+      /\bwalls?\b/.test(words) &&
+      !(furniture && locationMention(words, 'wall'));
+    const walls = wallMention
       ? [...words.matchAll(/\b(north|east|south|west)\b/g)]
       : [];
     if (walls.length)
       topics.push(...walls.map((wall) => `${wall[1]} wall` as MedyTopic));
-    else if (/\bwalls?\b/.test(words)) topics.push('walls');
+    else if (wallMention) topics.push('walls');
     if (/\bfloor(?:ing)?\b/.test(words)) topics.push('floor');
-    if (/\bwindows?\b/.test(words)) topics.push('window');
-    if (/\bdoors?\b/.test(words))
-      topics.push(/\bbathroom doors?\b/.test(words) ? 'bathroom door' : 'door');
     if (
-      /\bfurniture\b/.test(words) ||
-      references(room, turn).some((target) => target.kind === 'furniture')
+      /\bwindows?\b/.test(words) &&
+      !(furniture && locationMention(words, 'window'))
     )
-      topics.push('furniture');
+      topics.push('window');
+    if (
+      /\bdoors?\b/.test(words) &&
+      !(furniture && locationMention(words, 'door'))
+    )
+      topics.push(/\bbathroom doors?\b/.test(words) ? 'bathroom door' : 'door');
+    if (furniture) topics.push('furniture');
     if (
       !topics.length &&
       /\b(layout|arrang\w*|circulation|open space)\b/.test(words)

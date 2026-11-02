@@ -21,12 +21,15 @@ import { parseRuntimeConfig } from '../apps/backend/src/config/runtime-config.js
 import { createRoomedyFakeProvider } from '../apps/backend/src/providers/fake.js';
 import { SessionController } from '../apps/frontend/src/features/session/controller.js';
 import { AssistantController } from '../apps/frontend/src/features/assistant/controller.js';
-import { commandRoom, piece } from './fixtures/command-room.js';
+import { commandRoom, piece, windowFeature } from './fixtures/command-room.js';
 import { assistantInput } from './fixtures/assistant.js';
 import { identityIds } from './fixtures/operation.js';
 
-async function setup(smoothWalls = false) {
-  const room = commandRoom([piece('desk', 4000, 4000)]);
+async function setup(
+  smoothWalls = false,
+  initialRoom?: ReturnType<typeof commandRoom>,
+) {
+  const room = initialRoom ?? commandRoom([piece('desk', 4000, 4000)]);
   if (smoothWalls)
     room.room.surfaces = {
       walls: {
@@ -103,6 +106,94 @@ async function setup(smoothWalls = false) {
 }
 
 describe('contextual suggested replies', () => {
+  it('retains the added desk/chair group across Apply, acknowledgement and a plural finish follow-up', async () => {
+    const original = commandRoom(
+      [piece('bed', 5000, 5000, { catalogueId: 'procedural-bed' })],
+      [windowFeature()],
+    );
+    const s = await setup(false, original);
+    try {
+      await s.assistant.submit('I need a desk and chair near the window');
+      expect(s.session.getSnapshot().candidate).not.toBeNull();
+      expect(s.assistant.apply().ok).toBe(true);
+      const accepted = structuredClone(
+        s.session.getSnapshot().workspace!.current,
+      );
+      const added = accepted.furniture.filter(
+        (item) => !original.furniture.some((old) => old.id === item.id),
+      );
+      expect(added).toHaveLength(2);
+      await s.assistant.submit('thanks');
+      s.transport.mockClear();
+      await s.assistant.submit('make them walnut too');
+      expect(s.session.getSnapshot().candidate).not.toBeNull();
+      expect(s.transport).not.toHaveBeenCalled();
+      expect(s.session.getSnapshot().workspace!.current).toEqual(accepted);
+      expect(s.assistant.apply().ok).toBe(true);
+      const changed = s.session.getSnapshot().workspace!.current;
+      expect(
+        s.assistant
+          .getSnapshot()
+          .messages.at(-1)!
+          .quickReplies.slice(0, 2)
+          .every((choice) =>
+            added.every((item) => choice.request.includes(item.label)),
+          ),
+      ).toBe(true);
+      for (const item of changed.furniture) {
+        const previous = accepted.furniture.find((old) => old.id === item.id)!;
+        expect(item).toEqual(
+          added.some((added) => added.id === item.id)
+            ? { ...previous, finish: 'walnut' }
+            : previous,
+        );
+      }
+      expect(changed.room).toEqual(accepted.room);
+      expect(s.assistant.undo().ok).toBe(true);
+      expect(s.session.getSnapshot().workspace!.current.furniture).toEqual(
+        accepted.furniture,
+      );
+    } finally {
+      s.close();
+    }
+  });
+
+  it('treats the work-area fragment as the answer to the pending finish clarification', async () => {
+    const original = commandRoom([
+      piece('desk', 3000, 3000),
+      piece('chair', 5000, 3000, {
+        catalogueId: 'procedural-chair',
+        width: 500,
+        depth: 500,
+        height: 850,
+      }),
+      piece('bed', 6000, 6000, { catalogueId: 'procedural-bed' }),
+    ]);
+    const s = await setup(false, original);
+    try {
+      await s.assistant.submit('make them walnut too');
+      expect(s.session.getSnapshot().candidate).toBeNull();
+      expect(s.assistant.getSnapshot().messages.at(-1)!.text).toMatch(
+        /which.*piece/i,
+      );
+      s.transport.mockClear();
+      await s.assistant.submit('the work area');
+      expect(s.session.getSnapshot().candidate).not.toBeNull();
+      expect(s.transport).not.toHaveBeenCalled();
+      expect(s.assistant.apply().ok).toBe(true);
+      const current = s.session.getSnapshot().workspace!.current;
+      expect(
+        current.furniture
+          .filter((item) => item.id !== 'bed')
+          .every((item) => item.finish === 'walnut'),
+      ).toBe(true);
+      expect(current.furniture.find((item) => item.id === 'bed')).toEqual(
+        original.furniture.find((item) => item.id === 'bed'),
+      );
+    } finally {
+      s.close();
+    }
+  });
   it('keeps two wall continuations before a distinct optional direction', () => {
     const room = commandRoom([piece('desk')]);
     room.room.surfaces = {

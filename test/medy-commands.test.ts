@@ -30,6 +30,215 @@ const edits = (result: MedyRequest | null) => {
 };
 
 describe('MEDY explicit manual commands', () => {
+  const workRoom = () => {
+    const current = room();
+    current.furniture.push(
+      piece('chair-one', 4000, 7000, {
+        catalogueId: 'procedural-chair',
+        width: 500,
+        depth: 500,
+        height: 850,
+      }),
+    );
+    return current;
+  };
+
+  it('retains the subject across three neutral user messages and resolves mixed names/categories', () => {
+    const current = workRoom();
+    current.furniture.find((item) => item.id === 'desk-one')!.label = 'desk';
+    const context = [
+      {
+        role: 'user' as const,
+        text: 'I need a desk and chair near the window',
+      },
+      ...['thanks', 'okay', 'looks good'].flatMap((text) => [
+        { role: 'user' as const, text },
+        { role: 'assistant' as const, text: 'We can continue.' },
+      ]),
+    ];
+    expect(
+      edits(
+        resolveMedyRequest(current, 'make them all walnut too', null, context),
+      ).map((action) => ('id' in action ? action.id : null)),
+    ).toEqual(['desk-one', 'chair-one']);
+    expect(
+      edits(
+        resolveMedyRequest(current, 'make the desk setup walnut', null),
+      ).map((action) => ('id' in action ? action.id : null)),
+    ).toEqual(['desk-one', 'chair-one']);
+    expect(
+      edits(resolveMedyRequest(current, 'make the bed walnut', null, context)),
+    ).toEqual([{ type: 'finish', id: 'bed-one', finish: 'walnut' }]);
+  });
+
+  it('does not resurrect stale groups or select between duplicate work areas', () => {
+    const context = [
+      {
+        role: 'user' as const,
+        text: 'I need a desk and chair near the window',
+      },
+    ];
+    const current = workRoom();
+    for (const changed of [
+      {
+        ...current,
+        furniture: current.furniture.filter((item) => item.id !== 'chair-one'),
+      },
+      {
+        ...current,
+        furniture: [...current.furniture, piece('other-desk', 7000, 7500)],
+      },
+    ]) {
+      expect(
+        resolveMedyRequest(changed, 'make them walnut too', null, context)
+          ?.kind,
+      ).not.toBe('edits');
+      expect(
+        resolveMedyRequest(changed, 'make the work area walnut', null)?.kind,
+      ).not.toBe('edits');
+    }
+    expect(
+      resolveMedyRequest(current, 'make them walnut too', 'bed-one', [
+        ...context,
+        { role: 'user', text: 'What about the walls?' },
+      ])?.kind,
+    ).not.toBe('edits');
+    expect(
+      resolveMedyRequest(current, 'make them walnut too', null, [
+        { role: 'assistant', text: 'Make the desk and chair walnut.' },
+      ])?.kind,
+    ).not.toBe('edits');
+  });
+
+  it('never replays fulfilled or non-appearance requests from a target-only answer', () => {
+    const current = workRoom();
+    for (const text of [
+      'Done — applied the change.',
+      'Undid the last change.',
+      'Preview cancelled.',
+    ]) {
+      expect(
+        resolveMedyRequest(current, 'the work area', null, [
+          { role: 'user', text: 'make them walnut too' },
+          { role: 'assistant', text },
+        ])?.kind,
+      ).not.toBe('edits');
+    }
+    for (const text of [
+      'move them by the window',
+      'delete them',
+      'unlock them',
+      "don't make them walnut",
+      'make them walnut if it works',
+    ]) {
+      expect(
+        resolveMedyRequest(current, 'the work area', null, [
+          { role: 'user', text },
+          { role: 'assistant', text: 'Which pieces do you mean?' },
+        ])?.kind,
+      ).not.toBe('edits');
+    }
+  });
+
+  it('rejects the entire group when one piece cannot accept the appearance', () => {
+    const current = workRoom(),
+      before = structuredClone(current);
+    expect(
+      resolveMedyRequest(
+        current,
+        'make the bed and desk upholstery linen',
+        null,
+      )?.kind,
+    ).not.toBe('edits');
+    expect(current).toEqual(before);
+    expect(
+      resolveMedyRequest(current, 'set them width to 140 cm', null, [
+        { role: 'user', text: 'The desk and chair' },
+      ])?.kind,
+    ).not.toBe('edits');
+    expect(
+      resolveMedyRequest(current, 'make them walnut and move them left', null, [
+        { role: 'user', text: 'The desk and chair' },
+      ])?.kind,
+    ).not.toBe('edits');
+  });
+
+  it('treats location-like object labels as data while resolving a pronoun', () => {
+    const current = workRoom();
+    current.furniture.find((item) => item.id === 'desk-one')!.label =
+      'Bed near the window';
+    expect(
+      edits(
+        resolveMedyRequest(current, 'make them walnut too', null, [
+          { role: 'user', text: 'Bed near the window' },
+        ]),
+      ),
+    ).toEqual([{ type: 'finish', id: 'desk-one', finish: 'walnut' }]);
+  });
+  it.each(['them', 'those', 'both', 'these'])(
+    'resolves %s to the previous work-area pieces rather than the location window or unrelated selection',
+    (pronoun) => {
+      const current = room();
+      current.furniture.push(
+        piece('chair-one', 4000, 7000, {
+          catalogueId: 'procedural-chair',
+          width: 500,
+          depth: 500,
+          height: 850,
+        }),
+      );
+      const context = [
+        {
+          role: 'user' as const,
+          text: 'I need a desk and chair near the window',
+        },
+        {
+          role: 'assistant' as const,
+          text: 'Done — add selected essentials. You can Undo.',
+        },
+        { role: 'user' as const, text: 'thanks' },
+        { role: 'assistant' as const, text: 'You are welcome.' },
+      ];
+      expect(
+        edits(
+          resolveMedyRequest(
+            current,
+            `make ${pronoun} walnut too`,
+            'bed-one',
+            context,
+          ),
+        ),
+      ).toEqual([
+        { type: 'finish', id: 'desk-one', finish: 'walnut' },
+        { type: 'finish', id: 'chair-one', finish: 'walnut' },
+      ]);
+    },
+  );
+
+  it.each(['work area', 'workspace', 'workstation', 'desk setup'])(
+    'completes the pending finish request when the visitor clarifies %s',
+    (group) => {
+      const current = room();
+      current.furniture.push(
+        piece('chair-one', 4000, 7000, {
+          catalogueId: 'procedural-chair',
+          width: 500,
+          depth: 500,
+          height: 850,
+        }),
+      );
+      const result = resolveMedyRequest(current, `the ${group}`, null, [
+        { role: 'user', text: 'make them walnut too' },
+        {
+          role: 'assistant',
+          text: 'Which piece should use that finish? Select its card, or name the room palette.',
+        },
+      ]);
+      expect(
+        edits(result).map((action) => ('id' in action ? action.id : null)),
+      ).toEqual(['desk-one', 'chair-one']);
+    },
+  );
   it('uses a human surface topic for an explicit natural texture follow-up', () => {
     const current = room();
     const context = [

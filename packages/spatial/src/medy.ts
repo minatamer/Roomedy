@@ -21,6 +21,115 @@ import {
 import { findCatalogueEntry } from './catalogue.js';
 import { BEDROOM_THEMES } from '@roomedy/contracts/furniture-materials';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
+import type { MedyTarget } from './medy-language.js';
+
+const appearanceOnly = (words: string) =>
+  /\b(finish|colou?r|paint|pattern|texture|material|upholstery|oak|ivory|walnut|clay|sage|charcoal|navy|white|sand|plaster|wood|linen|fabric|smooth)\b|#[a-f0-9]{6}\b/.test(
+    words,
+  ) &&
+  !/\b(if|or|not|don't|do not|never|except|without|move|put|place|rotate|resize|width|depth|height|size|offset|delete|remove|replace|add|lock|unlock|confirm|measured|apply|undo|cancel|palette|theme|goals?|condition)\b|[;]|\b\d+(?:\.\d+)?\s*(?:mm|cm|m|ft|feet|inches)\b/.test(
+    words,
+  );
+
+/** Reuse the single-piece compiler, keeping group appearance changes all-or-nothing. */
+function appearanceGroup(
+  room: RoomDocument,
+  words: string,
+  targets: MedyTarget[],
+  operationId: string,
+): MedyEdit | null {
+  if (targets.length < 2 || !appearanceOnly(words))
+    return medyEdit(room, words, targets, operationId);
+  const categories = targets.map((target) =>
+    target.kind === 'furniture'
+      ? findCatalogueEntry(
+          target.piece.catalogueId,
+          target.piece.catalogueVersion,
+        )?.category
+      : null,
+  );
+  const ask = (summary: string): MedyEdit => ({
+    kind: 'reply',
+    summary,
+    objectIds: targets.map((target) => target.id),
+  });
+  if (
+    categories.includes(null) ||
+    new Set(categories).size !== categories.length
+  )
+    return ask(
+      'Which pieces form this group? Name the exact pieces so I can preview their finish together.',
+    );
+  const actions: Extract<MedyEdit, { kind: 'edits' }>['actions'] = [],
+    labels: string[] = [];
+  for (const target of targets) {
+    const part = medyEdit(room, words, [target], operationId);
+    if (
+      part?.kind !== 'edits' ||
+      part.actions.some(
+        (action) =>
+          !['finish', 'set-furniture-materials'].includes(action.type) ||
+          !('id' in action) ||
+          action.id !== target.id,
+      )
+    )
+      return ask(
+        part?.kind === 'reply'
+          ? part.summary
+          : 'Those pieces need different appearance choices. Nothing has changed; let’s choose a supported finish for the group.',
+      );
+    actions.push(...part.actions);
+    labels.push(part.label);
+  }
+  if (
+    actions.length > POLICY.actions ||
+    !evaluateBatch(room, actions, 'visitor').ok
+  )
+    return ask(
+      'That group change cannot be previewed together. Nothing has changed; let’s work on a smaller group.',
+    );
+  return {
+    kind: 'edits',
+    actions,
+    objectIds: targets.map((target) => target.id),
+    label: labels.join('; '),
+  };
+}
+
+function clarificationWords(
+  room: RoomDocument,
+  words: string,
+  targets: MedyTarget[],
+  context: readonly DesignTurn[],
+): string | null {
+  if (
+    !targets.length ||
+    context.at(-1)?.role !== 'assistant' ||
+    !/^Which pieces?\b/i.test(context.at(-1)!.text)
+  )
+    return null;
+  let fragment = words.replace(
+    /\b(work[ -]area|workspace|workstation|work zone|desk setup|the|my|this|that|these|those|both|and|item|pieces?|furniture)\b/g,
+    '',
+  );
+  for (const target of targets)
+    if (target.kind === 'furniture') {
+      const category = findCatalogueEntry(
+        target.piece.catalogueId,
+        target.piece.catalogueVersion,
+      )?.category;
+      if (category)
+        fragment = fragment.replace(new RegExp(`\\b${category}s?\\b`, 'g'), '');
+    }
+  if (/[a-z0-9#]/.test(fragment)) return null;
+  const prior = [...context].reverse().find((turn) => turn.role === 'user');
+  if (!prior) return null;
+  const request = medyCommandWords(room, prior.text);
+  return /^(?:make|set|change|paint|preview|use)\b/.test(request) &&
+    appearanceOnly(request)
+    ? request
+    : null;
+}
 
 export type MedyRequest = MedyEdit | { kind: 'control'; control: MedyControl };
 /** Shared application language policy. Models never call this with self-authored text. */
@@ -130,6 +239,7 @@ export function resolveMedyRequest(
     };
   }
   const targets = medyTargets(room, text, selectedId, context);
+  words = clarificationWords(room, words, targets, context) ?? words;
   if (
     !targets.length &&
     /^(?:preview|use|change|set|make|paint)\b/.test(words) &&
@@ -191,7 +301,19 @@ export function resolveMedyRequest(
     )
   )
     return null;
-  return medyEdit(room, words, targets, operationId);
+  if (
+    !targets.length &&
+    appearanceOnly(words) &&
+    /^(?:make|set|change|paint|preview|use)\b/.test(words) &&
+    !/\b(walls?|floor)\b/.test(words)
+  )
+    return {
+      kind: 'reply',
+      summary:
+        'Which pieces should use that appearance? Name the group or select a piece, and I’ll preview it.',
+      objectIds: [],
+    };
+  return appearanceGroup(room, words, targets, operationId);
 }
 export type { MedyControl, MedyControlResult } from './medy-controls.js';
 

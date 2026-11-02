@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Keep the subject after Apply and through clarification — 2 November 2026
+
+An applied receipt must not erase the group being discussed. After adding a desk and chair near the window, “make them walnut too” refers to that work area, not to the window, a selected unrelated bed or the whole room. A follow-up “the work area” answers a pending target question and retains the concrete finish already requested. Preserve several recent messages and bind replies to current objects; do not rely only on the last noun or last user message. Ambiguity must ask for the exact pieces, with no partial group edits or replayed geometry/permission changes. The first two post-Apply shortcuts should continue that same group. [RM-089](../tickets/RM-089-retain-medy-group-and-clarification-context.md), [evidence](../validation/RM-089.md).
+
 ## Left-align text inside chat bubbles — 2 November 2026
 
 Visitor and assistant chat text should use normal left-aligned typography. A visitor bubble may sit on the right, but wrapped lines inside it share a left edge; do not right-align the prose or introduce artificial spacing to align line endings. Preserve intentional typed newlines and safe long-token wrapping. Check the actual narrow bubble as well as desktop. [RM-088](../tickets/RM-088-left-align-chat-message-text.md), [evidence](../validation/RM-088.md).

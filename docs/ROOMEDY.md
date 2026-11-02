@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner can review the running paid-ready local app. RM-088 one-declaration typography change is validated for its exact local checkpoint; no automatic paid/provider request or deployment.
+Next action: Owner can test the updated running paid-ready app. RM-089 source/tests/docs are validated for the exact local checkpoint; no automatic paid/browser/provider request or deployment. Fresh exact release proofs remain required.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1681,6 +1681,14 @@ Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
   Reason: Actual wrapped messages compute left alignment without horizontal overflow at desktop/390/320; newline and existing Estimate alignment verified; scoped frontend build passes.
   Consequence / reversibility: No logic/config change. Supplemental long-token submission was blocked and not retried; use only verified source/visible-message evidence. Owner final acceptance remains pending.
   Owner review requested on return: yes. Evidence: docs/tickets/RM-088-left-align-chat-message-text.md, docs/commit-plans/RM-088.md, docs/validation/RM-088.md
+- **AFK-0024** (AFK-SESSION-001, 2026-11-02T12:37:45+00:00, 09-visual-review): Accept the RM-089 offline conversation UX correction as locally complete, with updated native/live-model owner acceptance pending.
+  Reason: Actual injected controller reproductions and final canonical gate cover group/clarification/Apply/Undo/shortcut behavior; no new visual layout or paid/browser submission.
+  Consequence / reversibility: No fabricated owner approval or live-model guarantee; retain all current normal app configuration and external release limits.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-089-retain-medy-group-and-clarification-context.md, docs/commit-plans/RM-089.md, docs/validation/RM-089.md
+- **AFK-0025** (AFK-SESSION-001, 2026-11-02T12:37:48+00:00, 10b-security-review): No new local security fix selected for the settled RM-089 context/appearance/shortcut change.
+  Reason: Exact current IDs, existing supported action compiler/evaluation and Apply authority constrain human reference inference; all bounded lifecycle/adversarial tests pass and no new API/state/provider/dependency authority exists.
+  Consequence / reversibility: Scoped AFK recommendation only; existing unpatched inactive/dev package watches and owner/live/image/hosted limits remain explicit.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-089-retain-medy-group-and-clarification-context.md, docs/commit-plans/RM-089.md, docs/validation/RM-089.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1703,7 +1711,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-02T11:59:09+00:00",
+  "updated_at": "2026-11-02T12:37:50+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1916,8 +1924,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "AUDIT_GIT_AUTHORITY": {
-      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.",
-      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026",
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.\n\n2 November direct owner selects RM-089 after work-area context failure screenshots: add desk/chair → Apply → make them walnut too, and finish clarification → the work area. Preserve at least three previous messages through the existing bounded transcript; fix plural/group/clarification resolution before the model, with one all-or-nothing appearance preview and Undo. Exact thirteen-path local ticket checkpoint under existing Git authority. No paid/provider test or browser message submission (respect prior auto-review paid-mode rejection), env read/change, restart, dependency/delegation/image/cloud/push/deploy. Keep normal paid-ready services. See docs/tickets/RM-089-retain-medy-group-and-clarification-context.md.\n\nRM-089 settled outcome: allocation expanded to fourteen paths before the review-confirmed same-group shortcut correction. Ten initial reproductions failed before implementation; 185 focused checks passed, first full 1737-test gate passed, review caught post-Apply generic suggestions, new controller assertion reproduced that remaining issue, correction preserves group-ID matching and no-group inventory opportunities. Final 124 focused checks and a separate complete canonical 1737-test/111-file gate/both builds pass. Read-only validate pass 2 has no actionable findings; no further source edits after that gate. Three pure owners/two test files only; existing context/provider/financial/admission/lifecycle bounds and normal paid-ready services/env retained. Source-only identity 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712, 385 inputs/4668440 bytes. No browser Send/paid request or new image/hosted proof. Updated real-model/owner evaluation remains pending. Exact ticket-prefixed local checkpoint is authorized under existing local ticket authority.",
+      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026; direct owner work-area context screenshots/request, 2 November 2026; RM-089 final gate and read-only pass 2 receipt",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_REQUEST": {
@@ -2049,7 +2057,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner can review the running paid-ready local app. RM-088 one-declaration typography change is validated for its exact local checkpoint; no automatic paid/provider request or deployment.",
+  "next_action": "Owner can test the updated running paid-ready app. RM-089 source/tests/docs are validated for the exact local checkpoint; no automatic paid/browser/provider request or deployment. Fresh exact release proofs remain required.",
   "phases": [
     {
       "id": "01-docs",
@@ -2390,27 +2398,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Execute RM-088 according to its exact ten-path allocation. Correct only user-message text-align right to left; preserve bubble placement, whitespace/newline/overflow behavior and every logic/config/provider boundary. Use actual in-app desktop/narrow checks with existing local manual commands; do not submit provider-capable questions or paid tests. Verify scoped CSS formatting and frontend build; no new mirror tests or repeated unchanged full suite. Record exact one-declaration read-only review, source-only release identity, known supplementary submission auto-review block and owner aesthetic limits. Finish the separately authorized local checkpoint only after exact scope inspection.",
-        "sha256": "ff0644262ddfd80f08152112ddb7e4ae44a30fe3f5b222a3985a6f535a20d7d9",
+        "text": "Execute RM-089 against the full ticket and exact thirteen-path allocation. Reproduce actual add-work-area/Apply/plural-walnut and pending-finish/target-fragment failures offline before implementation. Reuse bounded current transcript and existing manual action compiler; infer only a current unambiguous human group and concrete requested appearance. Treat nearby window as location, not subject; current targets/topics win and duplicate/stale/mixed/unsupported groups clarify without partial edits. Resolve the immediate target-only clarification without replaying completed/negated/conditional/geometry/removal actions. Preserve preview/Apply/Undo, lifecycle/financial/provider/history/resource authority. Run focused fake/injected-provider controller regressions and one settled canonical gate, then read-only validate/confirm/fix/revalidate, scoped quality/security review and exact local checkpoint. No browser Send or paid request, env action, restart, dependency, delegation, cloud/image/push/deploy. Record owner updated live-model acceptance and fresh exact release proof as separate.",
+        "sha256": "3eb9841aeb28604ded3a2ad7c96623d32446005186c23d7cf1dfb8c74a771196",
         "context_sources": [
-          "docs/tickets/RM-088-left-align-chat-message-text.md",
-          "docs/commit-plans/RM-088.md",
-          "docs/validation/RM-088.md"
+          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+          "docs/commit-plans/RM-089.md",
+          "docs/validation/RM-089.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-088-left-align-chat-message-text.md",
-        "docs/commit-plans/RM-088.md",
-        "docs/validation/RM-088.md"
+        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+        "docs/commit-plans/RM-089.md",
+        "docs/validation/RM-089.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic/updated live-model final acceptance and exact new-candidate Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted proof remain. Supplemental long-token native submission is unverified after automatic paid-mode risk rejection; core alignment/wrapping is verified with existing messages.",
-          "reference": "docs/validation/RM-088.md"
+          "reason": "Owner must assess the updated real-model conversation in the normal paid-ready app; exact reported compiler/controller flows pass offline, with no agent paid/browser submission.",
+          "reference": "docs/validation/RM-089.md"
         }
       ],
       "approval": null,
@@ -2471,6 +2479,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
               "docs/commit-plans/RM-086-087.md",
               "Direct owner screenshots and Medy follow-up request, 2 November 2026"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T12:24:07+00:00",
+          "reason": "Direct owner selects a material Medy group-reference/clarification fix after final live testing; preserve prior completed ticket evidence.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Execute RM-088 according to its exact ten-path allocation. Correct only user-message text-align right to left; preserve bubble placement, whitespace/newline/overflow behavior and every logic/config/provider boundary. Use actual in-app desktop/narrow checks with existing local manual commands; do not submit provider-capable questions or paid tests. Verify scoped CSS formatting and frontend build; no new mirror tests or repeated unchanged full suite. Record exact one-declaration read-only review, source-only release identity, known supplementary submission auto-review block and owner aesthetic limits. Finish the separately authorized local checkpoint only after exact scope inspection.",
+            "sha256": "ff0644262ddfd80f08152112ddb7e4ae44a30fe3f5b222a3985a6f535a20d7d9",
+            "context_sources": [
+              "docs/tickets/RM-088-left-align-chat-message-text.md",
+              "docs/commit-plans/RM-088.md",
+              "docs/validation/RM-088.md"
             ],
             "status": "afk",
             "approval": null,
@@ -2545,21 +2572,21 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "visual",
       "status": "provisional",
       "prompt": {
-        "text": "Self-review only the RM-088 typography correction against the owner screenshot: wrapped user lines need a normal left edge inside the existing bubble. Verify desktop/390px/320px actual messages, intentional newline preservation and unchanged overflow; inspect existing Estimate alignment. Preserve normal paid configuration, use supported in-app browser only and do not retry the rejected extra message submission. Report actual checks and the unverified supplementary long-token fixture; do not fabricate owner aesthetic acceptance.",
-        "sha256": "ce8f114c489df8df9a89ce1f9fd71058daca22d680e6a0a9ef311a48147925f9",
+        "text": "Review only the changed RM-089 conversation UX against the supplied screenshots and actual injected controller flows: group context across several messages, pending appearance clarification and same-group post-Apply shortcuts. No layout/CSS change. Existing paid-mode browser Send rejection remains respected; do not send live messages or invent a native/live-model result. Offline behavioral acceptance is reviewable, while personal owner/model-quality acceptance stays provisional.",
+        "sha256": "19a2afd9468245335dedbfff47532a2d21fec1f0bf528c83d43060a3ad016919",
         "context_sources": [
-          "docs/tickets/RM-088-left-align-chat-message-text.md",
-          "docs/commit-plans/RM-088.md",
-          "docs/validation/RM-088.md"
+          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+          "docs/commit-plans/RM-089.md",
+          "docs/validation/RM-089.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-088-left-align-chat-message-text.md",
-        "docs/commit-plans/RM-088.md",
-        "docs/validation/RM-088.md"
+        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+        "docs/commit-plans/RM-089.md",
+        "docs/validation/RM-089.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3340,12 +3367,39 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T11:59:07+00:00"
           },
           "decision": "self-reviewed"
+        },
+        {
+          "reopened_at": "2026-11-02T12:37:44+00:00",
+          "reason": "Owner-selected material conversation-context follow-up changes the source candidate; preserve prior candidate reviews and review this exact settled scope.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Self-review only the RM-088 typography correction against the owner screenshot: wrapped user lines need a normal left edge inside the existing bubble. Verify desktop/390px/320px actual messages, intentional newline preservation and unchanged overflow; inspect existing Estimate alignment. Preserve normal paid configuration, use supported in-app browser only and do not retry the rejected extra message submission. Report actual checks and the unverified supplementary long-token fixture; do not fabricate owner aesthetic acceptance.",
+            "sha256": "ce8f114c489df8df9a89ce1f9fd71058daca22d680e6a0a9ef311a48147925f9",
+            "context_sources": [
+              "docs/tickets/RM-088-left-align-chat-message-text.md",
+              "docs/commit-plans/RM-088.md",
+              "docs/validation/RM-088.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "self-reviewed"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0024",
+            "recorded_at": "2026-11-02T12:37:45+00:00"
+          },
+          "decision": "self-reviewed"
         }
       ],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0023",
-        "recorded_at": "2026-11-02T11:59:07+00:00"
+        "decision_id": "AFK-0024",
+        "recorded_at": "2026-11-02T12:37:45+00:00"
       }
     },
     {
@@ -3354,23 +3408,21 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete",
       "prompt": {
-        "text": "Review the exact seven-production/four-test RM-086/RM-087 diff and shared allocation for functionality, duplication, scope, bounded work, current lifecycle/state ownership and useful contextual behavior. No broad refactor or new service/framework/dependency. Confirm complete canonical format/lint/all-types/seven-boundaries/assets/1722-test/shared/backend/frontend-build evidence. Read-only validation compares full ticket requirements, original reproduction and current real controller/compiler/provider request path; no repeated paid or full test/build after unchanged source. Record only actual actionable findings and finish when none remain.",
-        "sha256": "42efd6f4612fdb7d728a19babb5b4f6f86f1bc200e0e9f5a522bafe53410046b",
+        "text": "Read-only review the final RM-089 three-production/two-test diff against all ticket requirements and exact fourteen-path allocation. Check bounded reference/name/location matching, reuse of the single-piece compiler, all-or-nothing group evaluation, pending-only appearance fragment completion and matching current group shortcut IDs. Preserve finite work/state/history/permissions and all unrelated behavior. Verify the final full canonical 1737-test/all-code-gates/both-builds evidence and source-only digest. Initial shortcut finding must be reproduced, fixed and revalidated; finish only with no actionable findings. No repeated full gate after unchanged settled source.",
+        "sha256": "2dbd2337a25feff515bbed1644b847ee28dd72bfaa15777087c3b89942b828ad",
         "context_sources": [
-          "docs/validation/RM-086-087.md",
-          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
-          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
-          "docs/commit-plans/RM-086-087.md"
+          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+          "docs/commit-plans/RM-089.md",
+          "docs/validation/RM-089.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/validation/RM-086-087.md",
-        "docs/tickets/RM-086-keep-medy-followups-in-context.md",
-        "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
-        "docs/commit-plans/RM-086-087.md"
+        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+        "docs/commit-plans/RM-089.md",
+        "docs/validation/RM-089.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3444,6 +3496,26 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T12:37:45+00:00",
+          "reason": "Owner-selected material conversation-context follow-up changes the source candidate; preserve prior candidate reviews and review this exact settled scope.",
+          "prior_status": "complete",
+          "prior_prompt": {
+            "text": "Review the exact seven-production/four-test RM-086/RM-087 diff and shared allocation for functionality, duplication, scope, bounded work, current lifecycle/state ownership and useful contextual behavior. No broad refactor or new service/framework/dependency. Confirm complete canonical format/lint/all-types/seven-boundaries/assets/1722-test/shared/backend/frontend-build evidence. Read-only validation compares full ticket requirements, original reproduction and current real controller/compiler/provider request path; no repeated paid or full test/build after unchanged source. Record only actual actionable findings and finish when none remain.",
+            "sha256": "42efd6f4612fdb7d728a19babb5b4f6f86f1bc200e0e9f5a522bafe53410046b",
+            "context_sources": [
+              "docs/validation/RM-086-087.md",
+              "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+              "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+              "docs/commit-plans/RM-086-087.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -3453,23 +3525,21 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "security",
       "status": "provisional",
       "prompt": {
-        "text": "Review RM-086/RM-087 changed human-context resolution and optional reply ranking against existing source/advisory audit. Current explicit visitor targets and values win; only unambiguous bounded human surface context can select a finish target, assistant prose grants no permission, negated/conditional/mixed/stale requests cannot broaden commands. Preserve schema validation, private bridge, admission/replay, resource/history/tool/call limits, safe logs, preview/Apply/Undo and expiry/reset/import. No dependency/API/storage/provider/account/config boundary changes. Dated package watches remain unchanged; do not repeat unchanged graph/secret/account operations. Document a scoped current-candidate review and provisional no-fixes selection if no actionable issue is found; retain actual paid/new-image/hosted/owner limits.",
-        "sha256": "54f2b07387965963048b75c64979e9c9f36adda21d88c2245b454b3ffeda6b4c",
+        "text": "Review only RM-089 human-context/group/clarification inference and shortcut code against existing security boundaries. The active human request and exact current object IDs control a preview; model prose is not permission. Supported appearance actions only, no mixed/negated/conditional/physical/geometry/removal/permission replay, no partial group edits, duplicate/stale groups clarify, current selection does not hijack plurals, object labels remain data. Preserve all schema/Apply/lifecycle/admission/provider/resource bounds. No new API/store/dependency/model/tool/account/config/diagnostics. Retain dated dependency watches and owner external dispositions; record scoped provisional no-fixes if no new actionable issue is found. No paid, scanner export or account operation.",
+        "sha256": "4bb5b3f9d2ceae4e3e1ba19f397dde4b9f0b26ace84808ae4487fd8353ea39b2",
         "context_sources": [
-          "docs/validation/RM-086-087.md",
-          "docs/tickets/RM-086-keep-medy-followups-in-context.md",
-          "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
-          "docs/commit-plans/RM-086-087.md"
+          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+          "docs/commit-plans/RM-089.md",
+          "docs/validation/RM-089.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/validation/RM-086-087.md",
-        "docs/tickets/RM-086-keep-medy-followups-in-context.md",
-        "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
-        "docs/commit-plans/RM-086-087.md"
+        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+        "docs/commit-plans/RM-089.md",
+        "docs/validation/RM-089.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3583,13 +3653,41 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T11:45:25+00:00"
           },
           "decision": "no-fixes"
+        },
+        {
+          "reopened_at": "2026-11-02T12:37:47+00:00",
+          "reason": "Owner-selected material conversation-context follow-up changes the source candidate; preserve prior candidate reviews and review this exact settled scope.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Review RM-086/RM-087 changed human-context resolution and optional reply ranking against existing source/advisory audit. Current explicit visitor targets and values win; only unambiguous bounded human surface context can select a finish target, assistant prose grants no permission, negated/conditional/mixed/stale requests cannot broaden commands. Preserve schema validation, private bridge, admission/replay, resource/history/tool/call limits, safe logs, preview/Apply/Undo and expiry/reset/import. No dependency/API/storage/provider/account/config boundary changes. Dated package watches remain unchanged; do not repeat unchanged graph/secret/account operations. Document a scoped current-candidate review and provisional no-fixes selection if no actionable issue is found; retain actual paid/new-image/hosted/owner limits.",
+            "sha256": "54f2b07387965963048b75c64979e9c9f36adda21d88c2245b454b3ffeda6b4c",
+            "context_sources": [
+              "docs/validation/RM-086-087.md",
+              "docs/tickets/RM-086-keep-medy-followups-in-context.md",
+              "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
+              "docs/commit-plans/RM-086-087.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "no-fixes"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0025",
+            "recorded_at": "2026-11-02T12:37:48+00:00"
+          },
+          "decision": "no-fixes"
         }
       ],
       "selected_findings": [],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0022",
-        "recorded_at": "2026-11-02T11:45:25+00:00"
+        "decision_id": "AFK-0025",
+        "recorded_at": "2026-11-02T12:37:48+00:00"
       }
     },
     {
@@ -3687,27 +3785,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Update the current deployment handoff with RM-088 single CSS declaration, passed scoped build/actual layout checks, unchanged dated 1722-test business evidence and current source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070 (385 files/4660994 bytes). Preserve existing protections, owner spending disposition and normal paid-ready services/env. Actual owner aesthetic/live-model acceptance and exact new Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted evidence remain separate. Document automatic rejection of extra message submission and safe remaining read-only checks. No automatic paid/provider/cloud/deploy action.",
-        "sha256": "c5054bfd614d027cb51a1ad12594d24fadf5920a0756d67a6357e02889969c6d",
+        "text": "Record RM-089 final complete canonical gate, reported offline conversation reproductions and validated exact fourteen-path checkpoint. Source-only inventory is 385 inputs/4668440 bytes, digest 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712. Keep original source/advisory/October hosted receipts historical. Preserve normal paid-ready services/env, existing abuse protections and owner spending disposition. Actual updated live-model/owner acceptance and exact fresh Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted proofs remain. No browser Send or agent paid request, env/service/cloud/deploy action; no promise of perfect interpretation of every ambiguous future utterance.",
+        "sha256": "33788440f6238a12db8a531d9a7886488ad8fc2af1a45a9b2e43ad34188f9198",
         "context_sources": [
-          "docs/tickets/RM-088-left-align-chat-message-text.md",
-          "docs/commit-plans/RM-088.md",
-          "docs/validation/RM-088.md"
+          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+          "docs/commit-plans/RM-089.md",
+          "docs/validation/RM-089.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-088-left-align-chat-message-text.md",
-        "docs/commit-plans/RM-088.md",
-        "docs/validation/RM-088.md"
+        "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+        "docs/commit-plans/RM-089.md",
+        "docs/validation/RM-089.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic/updated live-model final acceptance and exact new-candidate Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted proof remain. Supplemental long-token native submission is unverified after automatic paid-mode risk rejection; core alignment/wrapping is verified with existing messages.",
-          "reference": "docs/validation/RM-088.md"
+          "reason": "Owner updated real-model/merchant/physical acceptance and exact new-candidate Linux/image/resource/retained-assets/config/widget/paired rollout/rollback/hosted proof remain. Existing protections/spending disposition/paid-ready settings preserved; no agent paid/browser Send.",
+          "reference": "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
         }
       ],
       "approval": null,
@@ -3810,6 +3908,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-086-keep-medy-followups-in-context.md",
               "docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md",
               "docs/commit-plans/RM-086-087.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T12:37:48+00:00",
+          "reason": "Owner-selected material conversation-context follow-up changes the source candidate; preserve prior candidate reviews and review this exact settled scope.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Update the current deployment handoff with RM-088 single CSS declaration, passed scoped build/actual layout checks, unchanged dated 1722-test business evidence and current source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070 (385 files/4660994 bytes). Preserve existing protections, owner spending disposition and normal paid-ready services/env. Actual owner aesthetic/live-model acceptance and exact new Linux/image/retained-assets/config/widget/paired rollout/rollback/hosted evidence remain separate. Document automatic rejection of extra message submission and safe remaining read-only checks. No automatic paid/provider/cloud/deploy action.",
+            "sha256": "c5054bfd614d027cb51a1ad12594d24fadf5920a0756d67a6357e02889969c6d",
+            "context_sources": [
+              "docs/tickets/RM-088-left-align-chat-message-text.md",
+              "docs/commit-plans/RM-088.md",
+              "docs/validation/RM-088.md"
             ],
             "status": "afk",
             "approval": null,
@@ -4173,6 +4290,36 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/tickets/RM-088-left-align-chat-message-text.md",
           "docs/commit-plans/RM-088.md",
           "docs/validation/RM-088.md"
+        ]
+      },
+      {
+        "id": "AFK-0024",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T12:37:45+00:00",
+        "phase": "09-visual-review",
+        "choice": "Accept the RM-089 offline conversation UX correction as locally complete, with updated native/live-model owner acceptance pending.",
+        "rationale": "Actual injected controller reproductions and final canonical gate cover group/clarification/Apply/Undo/shortcut behavior; no new visual layout or paid/browser submission.",
+        "consequence": "No fabricated owner approval or live-model guarantee; retain all current normal app configuration and external release limits.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+          "docs/commit-plans/RM-089.md",
+          "docs/validation/RM-089.md"
+        ]
+      },
+      {
+        "id": "AFK-0025",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T12:37:48+00:00",
+        "phase": "10b-security-review",
+        "choice": "No new local security fix selected for the settled RM-089 context/appearance/shortcut change.",
+        "rationale": "Exact current IDs, existing supported action compiler/evaluation and Apply authority constrain human reference inference; all bounded lifecycle/adversarial tests pass and no new API/state/provider/dependency authority exists.",
+        "consequence": "Scoped AFK recommendation only; existing unpatched inactive/dev package watches and owner/live/image/hosted limits remain explicit.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-089-retain-medy-group-and-clarification-context.md",
+          "docs/commit-plans/RM-089.md",
+          "docs/validation/RM-089.md"
         ]
       }
     ]
