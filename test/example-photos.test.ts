@@ -1,9 +1,14 @@
 import { readFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import type Sharp from '../apps/backend/node_modules/sharp/lib/index.js';
 import { expect, it, vi } from 'vitest';
 import {
   loadExamplePhotos,
   EXAMPLE_PHOTOS,
 } from '../apps/frontend/src/features/room-intake/example-photos.js';
+const sharp = createRequire(
+  new URL('../apps/backend/package.json', import.meta.url),
+)('sharp') as typeof Sharp;
 it('fetches the local room and furniture views as bounded blobs without invoking drafting', async () => {
   const transport = vi
     .fn<typeof fetch>()
@@ -71,6 +76,18 @@ it('loads all four real local WebP views within upload count and byte limits wit
     const bytes = new Uint8Array(await blob.arrayBuffer());
     expect(new TextDecoder().decode(bytes.slice(0, 4))).toBe('RIFF');
     expect(new TextDecoder().decode(bytes.slice(8, 12))).toBe('WEBP');
+    const decoded = await sharp(bytes)
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    expect(decoded.info).toMatchObject({
+      width: 1280,
+      height: 960,
+      channels: 3,
+    });
+    expect(decoded.data.byteLength).toBe(1280 * 960 * 3);
+    const metadata = await sharp(bytes).metadata();
+    expect(metadata.exif).toBeUndefined();
+    expect(metadata.xmp).toBeUndefined();
     expect(EXAMPLE_PHOTOS[i]!.purpose).toBe('auto');
   }
   expect(transport).toHaveBeenCalledTimes(4);

@@ -1,13 +1,15 @@
 # Photo-capture example assets —19 October2026
 
+**Historical/superseded —2November2026:** [RM-096 current photos and full prompts](sample-room-photos-2026-11-02.md) replaces the four public example assets below with versioned richer-room views. Old filenames/hashes and earlier screenshots are historical Git evidence, not current shipped files. The capture guide/landing history below remains distinct.
+
 Selected after owner rejected close-ups and requested opposite-corner whole-room examples. Two local wide photographic views of one simple bed/bedside-storage bedroom; built-in image generation only, no app-provider/API/CLI calls. Generation outputs/prompts/coherence/size/SHA256 are recorded after inspection. Existing landing source images remain unchanged. The animated guide is authored SVG/CSS, not a raster video or editable room preview.
 
 ## Selected assets and method
 
 Built-in `image_gen.imagegen`, opaque photographic output; no API key/CLI/app-provider request. Selected original PNGs remain in the Codex generated-images folder. Ordinary deterministic asset packaging resizes/encodes those pixels to1280×960WebP quality82; no creative edits in Python. Landing assets are untouched. Both final views were visually inspected: same ivory upholstered bed, cream duvet/sand throw, ivory cabinet, oak floor/plaster; first looks toward the headboard/window, reverse looks from pillows toward the foot/door. The second has overlapping bed/floor context and does not repeat the front view. These are authored examples, not measured real-room evidence; the existing fake adapter supplies reviewable estimates and bed/cabinet vocabulary.
 
-| Final repository asset | Bytes | SHA256 |
-| --- | ---: | --- |
+| Final repository asset                                  | Bytes | SHA256                                                             |
+| ------------------------------------------------------- | ----: | ------------------------------------------------------------------ |
 | `apps/frontend/public/examples/bedroom-corner-one.webp` | 79378 | `06b799e6d574185b4ed12082d3bdc3e3f04c5f5cc260ab2092e054e7e134c917` |
 | `apps/frontend/public/examples/bedroom-corner-two.webp` | 79582 | `3c9adcf436751d5ef778c7891128e1ff9ff7c1dbb3e97342c82572aa1da2976a` |
 
@@ -27,9 +29,9 @@ The guide is code-native SVG/CSS and reuses the site palette; it does not use a 
 
 Latest owner request adds two close photographs of the furniture already visible in the sample bedroom. The two original wide room views remain. Built-in imagegen produced each new landscape photo using `bedroom-corner-one.webp` as the inspected identity reference; no CLI/API key/app-provider request was used. Outputs were visually inspected, then deterministically resized/encoded with existing Sharp to 1280×960 WebP quality82, without creative pixel changes. The same ivory upholstered bed, cream bedding/sand throw, ivory two-drawer cabinet with brass knobs, oak floor and beige curtain remain. These are authored example images; fake mode is not pixel recognition or confirmed measurement evidence.
 
-| Final repository asset | Bytes | SHA256 |
-| --- | ---: | --- |
-| `apps/frontend/public/examples/bedroom-bed-detail.webp` | 169494 | `67bc1f727a5d31608acde2e66fd0d0df27f910a98760abcb5ba001a22635e858` |
+| Final repository asset                                      |  Bytes | SHA256                                                             |
+| ----------------------------------------------------------- | -----: | ------------------------------------------------------------------ |
+| `apps/frontend/public/examples/bedroom-bed-detail.webp`     | 169494 | `67bc1f727a5d31608acde2e66fd0d0df27f910a98760abcb5ba001a22635e858` |
 | `apps/frontend/public/examples/bedroom-cabinet-detail.webp` | 101346 | `603044735e05dc9c0f2b82ba808ad6b4fb13cb58c41dd70b02d3898f743584dc` |
 
 All four examples total 429800 bytes. Each stays below the existing 256KiB asset ceiling and joins ordinary decoder/admission/auto-purpose selection. Originals remain at `C:/Users/minat/.codex/generated_images/01a15835-0bd9-7d20-9601-faf2b8383623/exec-c6dfd5ef-0ce0-4d95-b44c-eedc4b1db35c.png` (bed) and `exec-8eecb379-5c70-482f-87f3-aebe9ff1b136.png` (cabinet).

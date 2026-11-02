@@ -1,5 +1,7 @@
 # Photo intake and uncertain 2D review
 
+**Current sample photos —2November2026:** [RM-096](../tickets/RM-096-refresh-the-public-sample-room-photos.md) uses four versioned richer same-bedroom WebPs: two wide views plus bedding/workspace details, with work area, mirror variants, floor/ceiling lighting and contrasting bed parts. [Current asset/prompts/coverage record](../references/sample-room-photos-2026-11-02.md). They use the unchanged public gallery/loader in every runtime mode and ordinary explicit Continue; no sample identity selects recognition output. Each remains below256KiB, total455,610bytes. Existing Docker public-copy and release inventory include them; actual paid recognition/hosted proof remains separate.
+
 ## Current AM flow —20October2026
 
 21 October owner follow-up: built-in example photos are public demo inputs in both fake and live mode, including before availability finishes loading. The gallery and Use example photos prepare the same four fixed local assets through ordinary bounded loading/PhotoStore/decoding. They never call recognition automatically or select simulated results in live mode. Continue retains live transfer disclosure, configured capability, verification/admission and real provider dispatch. The shared six-photo limit and lifecycle/abort protections remain. This supersedes the fake-only example policy in historical T notes below; [actual BL follow-up](../validation/RM-015BL.md#public-samples-in-real-mode--owner-follow-up).
