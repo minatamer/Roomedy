@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Roomedy · Deployment security review</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font:
+          16px/1.65 system-ui,
+          sans-serif;
+        color: #443426;
+        background: #f3ecdf;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        max-width: 1040px;
+        margin: auto;
+        padding: 48px 24px 64px;
+      }
+      .kicker {
+        color: #80634a;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      h1 {
+        max-width: 780px;
+        font-size: clamp(2.1rem, 5vw, 3.7rem);
+        line-height: 1.1;
+        letter-spacing: -0.045em;
+        margin: 14px 0 24px;
+        font-weight: 550;
+      }
+      h2 {
+        font-size: 1.35rem;
+        margin: 0 0 10px;
+      }
+      p {
+        margin: 0 0 15px;
+      }
+      a {
+        color: #6b492d;
+        text-underline-offset: 3px;
+      }
+      .lead {
+        font-size: 1.13rem;
+        max-width: 800px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin: 28px 0;
+      }
+      .stat,
+      section {
+        border: 1px solid #d8c8b2;
+        border-radius: 17px;
+        background: #fffaf1;
+        padding: 22px;
+      }
+      .stat strong {
+        display: block;
+        font-size: 2rem;
+        line-height: 1.25;
+        font-weight: 550;
+      }
+      .stat span {
+        color: #7d6854;
+        font-size: 0.85rem;
+      }
+      section {
+        margin: 18px 0;
+      }
+      .tag {
+        display: inline-block;
+        border: 1px solid #d0b799;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 0.76rem;
+        margin-bottom: 10px;
+        background: #f2e3ce;
+      }
+      .muted,
+      footer {
+        color: #7b6651;
+        font-size: 0.88rem;
+      }
+      ul {
+        padding-left: 22px;
+        margin: 12px 0;
+      }
+      li {
+        margin: 7px 0;
+      }
+      code {
+        overflow-wrap: anywhere;
+        font-size: 0.88em;
+      }
+      @media (max-width: 600px) {
+        body {
+          padding: 28px 18px 44px;
+        }
+        .stats {
+          grid-template-columns: 1fr;
+        }
+        .stat {
+          display: flex;
+          gap: 18px;
+          align-items: center;
+        }
+        section {
+          padding: 19px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="kicker">Roomedy · RM-085 · 2 November 2026</p>
+      <h1>Security reviewed.<br />Functionality preserved.</h1>
+      <p class="lead">
+        No new substantial application vulnerability requiring a local fix was
+        confirmed. Keep the existing spending-control question and two
+        dependency watches visible; no forced upgrades or extra services are
+        recommended.
+      </p>
+      <p class="muted">
+        Reviewed candidate <code>bb1ba5d</code> · AFK agent recommendation,
+        pending owner disposition.
+        <a href="DEPLOYMENT_SECURITY_REVIEW.md"
+          >Read the detailed evidence and plans</a
+        >.
+      </p>
+    </header>
+    <div class="stats" aria-label="Actual local checks">
+      <div class="stat">
+        <strong>1,711</strong
+        ><span>offline tests passed in the current quality gate</span>
+      </div>
+      <div class="stat">
+        <strong>446</strong><span>locked package versions matched locally</span>
+      </div>
+      <div class="stat">
+        <strong>0</strong
+        ><span>secret findings in 137 commits / 42 public JS files</span>
+      </div>
+    </div>
+    <main>
+      <section>
+        <span class="tag">Medium · existing external condition · SEC-002</span>
+        <h2>Account-wide spending cutoff still needs evidence</h2>
+        <p>
+          The app limits work, rate, time and model output. Those controls do
+          not prove that the provider account will stop spending at a funded
+          ceiling across restarts or multiple instances.
+        </p>
+        <p>
+          <strong>Remaining action:</strong> verify the actual account cutoff,
+          privacy/retention terms and challenge hostname before a new public
+          paid release. Current paid configuration was left untouched. No paid
+          test or account change was made.
+        </p>
+      </section>
+      <section>
+        <span class="tag">High upstream · dependency watch · DEP85-01</span>
+        <h2>body-parser: vulnerable middleware is never mounted</h2>
+        <p>
+          Installed 2.3.0 matches a compressed-request crash advisory; 2.4.0
+          contains the patch. Roomedy uses its own bounded reader. A local probe
+          confirmed zero parser factories mounted and rejection of gzip, deflate
+          and Brotli before reading.
+        </p>
+        <p>
+          <strong>Decision:</strong> no exposed path was found, so retain the
+          package watch without a forced dependency change. Reassess at the next
+          dependency refresh and before adding middleware.
+        </p>
+      </section>
+      <section>
+        <span class="tag">Moderate upstream · dev tooling only · DEP85-02</span>
+        <h2>minimatch: no visitor-controlled glob path</h2>
+        <p>
+          Installed 10.2.6 matches a pattern-amplification advisory; 11.0.1 is
+          the published fix. Its four local paths are development tooling. No
+          production importer or visitor glob endpoint reaches it.
+        </p>
+        <p>
+          <strong>Decision:</strong> keep untrusted patterns out of tooling and
+          update through a compatible parent/toolchain refresh. Neither
+          dependency is claimed patched or suppressed.
+        </p>
+      </section>
+      <section>
+        <h2>What the audit preserved</h2>
+        <ul>
+          <li>
+            Private backend identity, challenge/input-bound one-use grants and
+            replay protection.
+          </li>
+          <li>
+            Finite work, bytes, fragments, images, tool calls, deadlines and
+            cancellation ownership.
+          </li>
+          <li>
+            Explicit Apply/Cancel/Undo, exact quantities and USD/FX, frozen PDFs
+            and source evidence.
+          </li>
+          <li>
+            Safe visitor errors, useful private diagnostics and the completed
+            visual/UX work.
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h2>Local completion is separate from release acceptance</h2>
+        <p>
+          Current source/build/tests are checked. No image was built and nothing
+          was deployed. Current Linux/native/OS image checks, hosted
+          IAM/assets/rollback, final owner paid/merchant/model/physical tests
+          and external spending evidence remain pending.
+        </p>
+        <p>
+          <a href="../operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+            >Open the exact handoff</a
+          >
+          ·
+          <a href="deployment-audit-inputs-2026-11-02.json"
+            >Sanitized audit inputs</a
+          >
+        </p>
+      </section>
+    </main>
+    <footer>
+      Public advisory data was downloaded and matched locally. No source,
+      dependency graph, lockfile, secrets or scanner metadata was uploaded. This
+      is a bounded review, not a security certification.
+    </footer>
+  </body>
+</html>

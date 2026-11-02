@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-02",
+  "candidateCommit": "bb1ba5d37675f2fa1362eed9ace84b2e130fc201",
+  "quality": {
+    "ticket": "RM-084",
+    "focusedTests": 142,
+    "focusedFiles": 11,
+    "fullTests": 1711,
+    "fullFiles": 111,
+    "formatLintTypesBoundariesAssetsBuilds": "passed",
+    "boundaryTests": 7,
+    "gateMode": "split after sandbox loopback EACCES; complete unchanged default suite passed outside restriction",
+    "paidTests": 0
+  },
+  "runtimeInputs": {
+    "files": 385,
+    "bytes": 4648545,
+    "inputDigest": "5d6827020a4b9b25651925d074fcb1b658f0e3883a3df10f3d18e0dbee892647",
+    "previousPublicAssetRetentionIncluded": false,
+    "currentLinuxRuntimeVerified": false
+  },
+  "dependencyAudit": {
+    "lockfileSha256": "573a5446a1a6449a293c2be55371efba12b8c1da79d90c4b6fdd78c1fb053cc9",
+    "download": {
+      "url": "https://storage.googleapis.com/osv-vulnerabilities/npm/all.zip",
+      "downloadedAt": "2026-11-02T10:28:43+00:00",
+      "lastModified": "Mon, 02 Nov 2026 06:33:28 GMT",
+      "bytes": 219727466,
+      "sha256": "6edcfd946549779504ae0474a92a0978533a88e3a89b2499c66816723101c000",
+      "metadataExport": false
+    },
+    "parse": {
+      "records": 231019,
+      "withdrawnSkipped": 744,
+      "expandedBytes": 389554806,
+      "packageRelevantAdvisories": 240
+    },
+    "packageVersionsMatched": 446,
+    "matches": [
+      {
+        "id": "GHSA-27r3-jxmh-p828",
+        "package": "body-parser",
+        "version": "2.3.0",
+        "upstreamSeverity": "HIGH",
+        "published": "2026-10-23T20:53:11Z",
+        "modified": "2026-10-23T21:00:06.131613693Z",
+        "disposition": "inactive middleware; no Roomedy parser mounted",
+        "patched": false
+      },
+      {
+        "id": "GHSA-g3hv-75wg-m249",
+        "package": "minimatch",
+        "version": "10.2.6",
+        "upstreamSeverity": "MODERATE",
+        "published": "2026-10-30T23:09:55Z",
+        "modified": "2026-10-30T23:15:07.420159385Z",
+        "disposition": "dev tooling only; no production importer path",
+        "patched": false
+      }
+    ],
+    "rangeException": {
+      "id": "GHSA-3h52-269p-cp9r",
+      "type": "ECOSYSTEM",
+      "disposition": "manually checked official affected ranges; Next16.4.2 outside ranges"
+    },
+    "importerPaths": [
+      {
+        "key": "minimatch@10.2.6",
+        "path": [
+          ".:devDependencies",
+          "@next/eslint-plugin-next@16.4.2(eslint@10.13.0)",
+          "@eslint-community/eslint-utils@4.9.1(eslint@10.13.0)",
+          "eslint@10.13.0",
+          "minimatch@10.2.6"
+        ]
+      },
+      {
+        "key": "minimatch@10.2.6",
+        "path": [".:devDependencies", "eslint@10.13.0", "minimatch@10.2.6"]
+      },
+      {
+        "key": "minimatch@10.2.6",
+        "path": [
+          ".:devDependencies",
+          "eslint-plugin-react-hooks@7.1.1(eslint@10.13.0)",
+          "eslint@10.13.0",
+          "minimatch@10.2.6"
+        ]
+      },
+      {
+        "key": "minimatch@10.2.6",
+        "path": [
+          ".:devDependencies",
+          "typescript-eslint@8.71.2(eslint@10.13.0)(typescript@6.0.3)",
+          "@typescript-eslint/typescript-estree@8.71.2(typescript@6.0.3)",
+          "minimatch@10.2.6"
+        ]
+      },
+      {
+        "key": "body-parser@2.3.0",
+        "path": [
+          "apps/backend:dependencies",
+          "express@5.3.0",
+          "body-parser@2.3.0"
+        ]
+      }
+    ],
+    "scannerMetadataExport": false
+  },
+  "secretAudit": {
+    "tool": "Gitleaks8.30.1",
+    "verifiedArchiveSha256": "d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e",
+    "historyCommits": 137,
+    "historyFindings": 0,
+    "publicJavaScriptFiles": 42,
+    "publicCredentialPatternMatches": 0,
+    "ignoredEnvValuesRead": false,
+    "exactConfiguredSecretComparison": false,
+    "redacted": true,
+    "scannerMetadataExport": false
+  },
+  "offlineParserProbe": {
+    "bodyParserFactoriesMounted": 0,
+    "compressedEncodingsRejectedBeforeRead": ["gzip", "deflate", "br"],
+    "network": "denied",
+    "meteredDispatches": 0
+  },
+  "newConfirmedActionableLocalApplicationFindings": 0,
+  "retainedExternalFinding": "SEC-002; enforceable account-wide funded cutoff/privacy/hostname evidence remains unverified",
+  "mutations": "Audit documentation only after RM-084; no source/package/config/env/service/account/hosted action",
+  "limits": [
+    "No current Linux/native/OS/container or hosted/IAM/load proof",
+    "No paid/provider/merchant/physical tests",
+    "No exact configured-secret comparison or credential validity calls",
+    "Known detector/advisory data and reachability coverage are finite"
+  ],
+  "primarySources": [
+    "https://google.github.io/osv.dev/data/",
+    "https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828",
+    "https://github.com/isaacs/minimatch/security/advisories/GHSA-g3hv-75wg-m249",
+    "https://github.com/advisories/GHSA-3h52-269p-cp9r",
+    "https://github.com/vercel/next.js/security/advisories/GHSA-2464-fhr4-w9xw",
+    "https://github.com/vercel/next.js/security/advisories/GHSA-673q-mjm6-r5xr",
+    "https://github.com/lovell/sharp/security/advisories/GHSA-wq5f-xc86-pv6w"
+  ]
+}
