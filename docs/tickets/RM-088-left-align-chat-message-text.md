@@ -1,0 +1,9 @@
+# RM-088 — Left-align chat message text
+
+**Complete locally:** the single declaration is corrected; actual desktop/390px/320px wrapping, intentional newlines, unchanged overflow handling, scoped formatting and frontend build pass. A supplemental long-token submission was blocked by automatic approval review in paid mode and was not retried. Owner aesthetic acceptance remains separate.
+
+2 November 2026 · owner-selected visual correction · base `f8f460f`, clean entry. A wrapped visitor message is right-aligned inside its bubble, leaving an awkward gap before the short last line. Use normal left-aligned typography. Keep the existing bubble placement, width, padding, colour, authored line breaks and overflow handling. Assistant and Estimate messages already read left-aligned; verify those owning states without unnecessary changes.
+
+Change only the Design assistant `.user` text alignment. Check the actual desktop and narrow chat, wrapped text, intentional newlines and a long token without sending paid requests. Use supported local manual commands for the browser check. Scoped CSS formatting and frontend build are sufficient; no new cosmetic mirror test or repeated full business/backend gate. Read-only validation must confirm the single CSS declaration and unchanged behavior. Record this visual preference in the feedback lessons and update the release handoff's source-only identity.
+
+[Exact allocation](../commit-plans/RM-088.md), [receipt](../validation/RM-088.md). Preserve normal paid-ready services/env and all room/chat/preview/Apply/Undo/source/financial/PDF authority. Existing local ticket-commit authority applies after validation. No paid/provider test, env action, restart, dependency, delegation, image build, cloud mutation, push or deployment. Owner aesthetic acceptance remains separate.

@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Left-align text inside chat bubbles — 2 November 2026
+
+Visitor and assistant chat text should use normal left-aligned typography. A visitor bubble may sit on the right, but wrapped lines inside it share a left edge; do not right-align the prose or introduce artificial spacing to align line endings. Preserve intentional typed newlines and safe long-token wrapping. Check the actual narrow bubble as well as desktop. [RM-088](../tickets/RM-088-left-align-chat-message-text.md), [evidence](../validation/RM-088.md).
+
 ## Prove the whole market flow and bound paid tests —30 October2026
 
 One successful bed lookup did not validate furniture, flooring and walls. Test the full requested manual condition and region, verify real prices and loaded photos, then click pictures as well as titles. A complete quote and an observed comparison price are different: missing coverage/fit/tax must not erase a valid store listing. Model-copied image URLs can be missing or even point to HTML; actual page metadata is a reliable bounded fallback. Normalize harmless attribution only for discovery identity, retaining variant and financial-source checks.
