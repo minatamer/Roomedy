@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Finish only the validated RM-092 eleven-path local checkpoint. Owner can review the running paid-ready app; no automatic provider/Send/env/restart/deployment action.
+Next action: Finish only the validated RM-093 ten-path local checkpoint. Owner can review downward ceiling-light arrows in the running paid-ready app; no automatic provider/Send/env/restart/deployment action.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1713,6 +1713,10 @@ Provisional owner reviews: 04-decisions, 09-visual-review, 10b-security-review
   Reason: Native desktop/narrow/keyboard/accessible-name checks pass and callbacks/lighting owners are unchanged; scoped build passes.
   Consequence / reversibility: No paid/model/security/whole-suite rerun or owner acceptance claim. Existing external release proofs remain.
   Owner review requested on return: yes. Evidence: docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md, docs/commit-plans/RM-092.md, docs/validation/RM-092.md
+- **AFK-0032** (AFK-SESSION-001, 2026-11-02T18:01:01+00:00, 09-visual-review): Accept the locally verified downward ceiling-light marker provisionally; owner aesthetic judgment remains.
+  Reason: Native all-three/rotation/time/floor comparison and52existing tests/scoped frontend gates pass; unchanged actual light/canonical/plan authority.
+  Consequence / reversibility: No paid/model/full-audit or new settled-camera/physical performance claim; owner and release evidence remain separate.
+  Owner review requested on return: yes. Evidence: docs/tickets/RM-093-point-ceiling-light-markers-down.md, docs/commit-plans/RM-093.md, docs/validation/RM-093.md
 
 - [x] 01-docs — Documentation (complete)
 - [x] 02-flow — Core flow (complete)
@@ -1735,7 +1739,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-02T17:53:55+00:00",
+  "updated_at": "2026-11-02T18:01:03+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1948,8 +1952,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "AUDIT_GIT_AUTHORITY": {
-      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.\n\n2 November direct owner selects RM-089 after work-area context failure screenshots: add desk/chair → Apply → make them walnut too, and finish clarification → the work area. Preserve at least three previous messages through the existing bounded transcript; fix plural/group/clarification resolution before the model, with one all-or-nothing appearance preview and Undo. Exact thirteen-path local ticket checkpoint under existing Git authority. No paid/provider test or browser message submission (respect prior auto-review paid-mode rejection), env read/change, restart, dependency/delegation/image/cloud/push/deploy. Keep normal paid-ready services. See docs/tickets/RM-089-retain-medy-group-and-clarification-context.md.\n\nRM-089 settled outcome: allocation expanded to fourteen paths before the review-confirmed same-group shortcut correction. Ten initial reproductions failed before implementation; 185 focused checks passed, first full 1737-test gate passed, review caught post-Apply generic suggestions, new controller assertion reproduced that remaining issue, correction preserves group-ID matching and no-group inventory opportunities. Final 124 focused checks and a separate complete canonical 1737-test/111-file gate/both builds pass. Read-only validate pass 2 has no actionable findings; no further source edits after that gate. Three pure owners/two test files only; existing context/provider/financial/admission/lifecycle bounds and normal paid-ready services/env retained. Source-only identity 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712, 385 inputs/4668440 bytes. No browser Send/paid request or new image/hosted proof. Updated real-model/owner evaluation remains pending. Exact ticket-prefixed local checkpoint is authorized under existing local ticket authority.\n\n2 November owner selects RM-090: any chosen theme becomes the default preset for future manual and AI furniture additions. Nineteen-path exact allocation. Store an optional bounded canonical applied theme with existing preview/Apply/Undo/project/recovery semantics; share appearance defaults across catalogue/search/Medy additions and replacements, retain explicit overrides and unrelated accepted pieces. Legacy exact wall/floor preset matching reuses existing UI meaning; no theme guessed from generic style hints. No extra model call/paid/browser Send, env read/change, restart, dependency, delegation, image/cloud/push/deploy. Existing local ticket checkpoint authority applies after validation.\n\nRM-090 settled outcome: read-only creation-path review expanded the allocation to 21 paths before connecting manual coordinates and backend direct prepare_edits; both reuse the same new-piece helper. Eleven production files, one new 31-case test file. Ten initial reproductions failed before implementation; material ordering was corrected without relaxing preset equality; legacy tests use actual manual-room surface facts and AI replacement keeps existing owned Replace permission. Canonical formatting/lint/all types/seven boundaries/assets pass; full default unit run passes1765/1768 with only3 known release-inventory5s timeouts. All193 affected/release checks across7 files pass unchanged at CLI15s, followed by both production builds. Split settled gate covers all1768 tests/112 files; no clean unsplit-root claim. Actual in-app Modern preview/Apply, keyboard chair and coordinate desk inheritance, physical door guard and Undo pass without browser Send/provider request. Read-only validate pass2 has no actionable findings. Optional canonical theme survives Apply/Cancel/Undo/project/recovery/import and custom surfaces; exact legacy matching and explicit finish/material overrides remain bounded. Source-only385 inputs/4671600 bytes, digest 45d92931c1179ef6dae70246f6f53ce1270a7abd8709b98ba0718b38fae8d4e9. Preserve normal paid-ready services/env; owner real-model/physical acceptance and exact Linux/image/hosted release proof remain external. Exact ticket-prefixed local checkpoint remains owner-authorized.\n\nOwner directly selects RM-091 on2November: create a detailed large lighting ticket and research Three.js, then execute/validate loop. Day/Night opposite2D/3D; dark outside/windows, actual lamp illumination and manual/Medy colours; add multiple ceiling models, interior-only ceiling matching walls; first-night-only missing-light tutorial with Later/Medy/manual lighting catalogue; Floor/Ceiling plan editing. Initial48-path allocation and primary research recorded before implementation. Preserve normal paid-ready services/env, no paid/browser Send/dependency/delegation/cloud/image/push/deploy; prior local validated-ticket checkpoint authority unchanged.\n\nRM-091 settled outcome: exact allocation expanded before relevant inspector/export/size/caption integration; final52changed paths exclude the already-correct byte-identical catalogue-panel caller. Day/Night, real finite fixture illumination, optional canonical on/brightness/colour, five presets/custom, three procedural ceiling models, shared height anchoring, interior common-wall-colour ceiling, Floor/Ceiling editing and first-Night manual/unsent-Medy guidance implemented. Eight light slots/two512pxNightshadows, no new timer/dependency/network. Confirmed/fixed named-light property scope, dialog step cleanup,320px dimension overlap, LF manifest, short generic geometry and appearance-only reanchoring; existing old assertions retained except catalogue count19to22. Thirty new cases;194focused/6files and74confirmed-fix/4files pass. Final unmodified default pnpm check passes1798tests/113files, all code gates/sevenboundaries/exactassets/bothbuilds, no split/timeoutoverride. Native manual warm-red preview/Apply, four fixtures/desk, interior/Overview, keyboard ceiling movement, all-model coordinates, responsive390/320/tablet/short, one-time manual/unsent-Medy choice and idleframe45over20seconds pass. No forced native context-loss/40pieceGPU/paid-model/merchant/newPDF claim. Final read-only validation has no actionable findings; scoped AFK security selects no extra fix and retains dated watches. Current source-only394inputs/4709047bytes digest04a695bae5b077a8fd00d188ffc5d77c5eaa176aa3e2a3617321c50e61c1804e; no selected retention snapshot or Linux/image/hosted proof. Preserve paid-ready services/env and owner aesthetic/physical/actual-model acceptance. Exact local ticket checkpoint remains owner-authorized; no paid/browser Send/env/dependency/restart/delegation/Chrome/image/cloud/push/deploy.\n\n2 November owner selects RM-092: replace Day/Night visible words with sun/crescent icons, preserving behavior and accessible names. Eleven-path allocation from clean2d209ac; two presentation files only, no lighting/model/state changes. Local outline SVGs/currentColor,20px centered, aria-hidden/focusable=false, native Day/Night labels/titles. Scoped format/lint/frontend build and actual desktop/320px/keyboard review, no cosmetic tests or repeated unchanged full gate. Existing local ticket commit authority; preserve paid-ready services/env, no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-092 final: scoped Prettier/ESLint pass, frontend build/types/standalone succeeds with normal Windows permissions after sandbox symlinkEPERM. Actual IAB1280/320px shows centered20px sun/crescent in retained60x44 buttons, no text/overflow, native accessible Day/Night names/titles/aria-pressed, click/Space/Enter success and original Floor/Ceiling words. Viewport reset/testtabclosed; no Send/provider. Read-only review of exact two-file presentation diff meets ticket with no actionable findings; callback/state/modal/plan/render/business/test/dependency/config bytes retained. No new tests or unchanged full/backend/security rerun; RM-0911798test evidence stays dated. Source-only394inputs/4710015bytes digestd8e20dd1d531139aa42e60b8638eb97ea78574b0b5c9ae22a319b033709b1596; no retained snapshot/Linux/image/hosted claim. Eleven-path authorized local checkpoint only.",
-      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026; direct owner work-area context screenshots/request, 2 November 2026; RM-089 final gate and read-only pass 2 receipt; direct owner new-furniture theme-default request, 2 November 2026; RM-090 split gate, actual manual UI and final read-only review receipt; direct owner lighting/ceiling/night/editor request,2November2026; RM-091 complete default gate, actual native controls and final review receipt; owner icon screenshot/correction,2November2026; RM-092 scoped settled build/native accessibility and read-only review receipt",
+      "value": "Owner approves exact BL checkpoint staging/commit and later cohesive quality/remediation commits after execute/validate loops. Quality must precede audit-only security. Follow build prompt gates and the explicit security finding-selection stop; no reviewed findings exist yet. No push/deploy/scanner metadata export, new paid calls or delegation is authorized by this instruction. Prior AFK preference is not prompt preapproval.\n\n2 November 2026: Owner requests AFK MODE: current functionality-preserving quality and proportionate security execute/validate loops, documentation and local commits for both. No paid tests; owner reserves final paid tests on return. Existing AFK-SESSION-001 is retained. Current visual/UX feedback is sufficient to begin audits. No deployment/push/provider/scanner upload/restart/other-repository action.\n\n2 November owner follow-up: document existing abuse protection and revise release tasks; owner says OpenAI spending setup is handled and asks not to pursue it. This is owner disposition, not independent account hard-cutoff/privacy verification. Read-only roomedy/europe-west1 inspection verifies October revision IAM/scaling and anonymous backend denial; safe hosted and local GETs show live-ready/live/simulation false. Existing baseline retained; no extra DDoS infrastructure selected after read-only sibling comparison. Owner explicitly requests normal local run for final paid test. Both services started with normal config; no agent paid request, cloud mutation, env read/change, image/deploy/push. Native Next startup regenerates next-env.d.ts to dev type paths; application implementation/dependency/config otherwise unchanged. Docs follow-up left unstaged under run workflow. Remaining: owner final paid journey, exact new Linux/image/resource/asset proofs, new-release bindings/widget and paired rollout/rollback/hosted checks. See docs/security/ABUSE_PROTECTION_STATUS.md and docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md.\n\nFollow-up checkpoint clarification: the existing direct owner instruction to document/commit all current security work authorizes the exact fifteen documentation paths in docs/commit-plans/RM-085-FOLLOWUP.md, independently of app startup. Supersedes the earlier agent assumption to leave follow-up docs unstaged. The run operation itself grants no Git authority. Exclude native generated next-env.d.ts and ignored runtime/log records from staging. No application/config/provider/cloud action or paid test is selected. Static doc review and exact staged path/secret/whitespace inspection precede commit.\n\n2 November direct owner selects RM-086 contextual Medy shortcuts/natural finish follow-ups and RM-087 grounded wall/window/bathroom-door advice after supplied screenshots from final live testing. Implement both and validate offline; no agent paid tests. Existing local Git authority permits the exact connected ticket-prefixed checkpoint after validation. Preserve current paid-ready services/env and unrelated generated next-env.d.ts. Actual new live behavior acceptance remains owner testing. See docs/tickets/RM-086-keep-medy-followups-in-context.md, docs/tickets/RM-087-ground-medy-wall-and-opening-advice.md and docs/commit-plans/RM-086-087.md. Prior audit/image/hosted evidence remains bound to its original candidate.\n\n2 November direct owner selects RM-088 normal left-aligned user chat typography after a wrapped right-aligned message screenshot. Only Design .user text-align right to left; preserve bubble placement, newlines/overflow and all logic. Ten-path allocation/local ticket checkpoint authorized by existing step-seven authority. Scoped formatting/frontend build and actual desktop/390/320/newline checks pass. Extra long-token message submission was auto-review rejected due paid-mode risk and not retried; computed existing overflow and messages were inspected safely. No paid test, env/service/config/logic change, restart, dependency, delegation, cloud/image/push/deploy. Source-only identity e49ca5b2020adef84252435240219f71e4be1b86279e164728629b934c0a5070, 385 inputs/4660994 bytes. Prior 1722-test and scoped security evidence remains dated; no new behavior/security boundary to re-audit. See docs/validation/RM-088.md.\n\n2 November direct owner selects RM-089 after work-area context failure screenshots: add desk/chair → Apply → make them walnut too, and finish clarification → the work area. Preserve at least three previous messages through the existing bounded transcript; fix plural/group/clarification resolution before the model, with one all-or-nothing appearance preview and Undo. Exact thirteen-path local ticket checkpoint under existing Git authority. No paid/provider test or browser message submission (respect prior auto-review paid-mode rejection), env read/change, restart, dependency/delegation/image/cloud/push/deploy. Keep normal paid-ready services. See docs/tickets/RM-089-retain-medy-group-and-clarification-context.md.\n\nRM-089 settled outcome: allocation expanded to fourteen paths before the review-confirmed same-group shortcut correction. Ten initial reproductions failed before implementation; 185 focused checks passed, first full 1737-test gate passed, review caught post-Apply generic suggestions, new controller assertion reproduced that remaining issue, correction preserves group-ID matching and no-group inventory opportunities. Final 124 focused checks and a separate complete canonical 1737-test/111-file gate/both builds pass. Read-only validate pass 2 has no actionable findings; no further source edits after that gate. Three pure owners/two test files only; existing context/provider/financial/admission/lifecycle bounds and normal paid-ready services/env retained. Source-only identity 8e28d9834bdc125efc9da3c89ec2e52d190a5206c7544dedf4d6c3e17a90d712, 385 inputs/4668440 bytes. No browser Send/paid request or new image/hosted proof. Updated real-model/owner evaluation remains pending. Exact ticket-prefixed local checkpoint is authorized under existing local ticket authority.\n\n2 November owner selects RM-090: any chosen theme becomes the default preset for future manual and AI furniture additions. Nineteen-path exact allocation. Store an optional bounded canonical applied theme with existing preview/Apply/Undo/project/recovery semantics; share appearance defaults across catalogue/search/Medy additions and replacements, retain explicit overrides and unrelated accepted pieces. Legacy exact wall/floor preset matching reuses existing UI meaning; no theme guessed from generic style hints. No extra model call/paid/browser Send, env read/change, restart, dependency, delegation, image/cloud/push/deploy. Existing local ticket checkpoint authority applies after validation.\n\nRM-090 settled outcome: read-only creation-path review expanded the allocation to 21 paths before connecting manual coordinates and backend direct prepare_edits; both reuse the same new-piece helper. Eleven production files, one new 31-case test file. Ten initial reproductions failed before implementation; material ordering was corrected without relaxing preset equality; legacy tests use actual manual-room surface facts and AI replacement keeps existing owned Replace permission. Canonical formatting/lint/all types/seven boundaries/assets pass; full default unit run passes1765/1768 with only3 known release-inventory5s timeouts. All193 affected/release checks across7 files pass unchanged at CLI15s, followed by both production builds. Split settled gate covers all1768 tests/112 files; no clean unsplit-root claim. Actual in-app Modern preview/Apply, keyboard chair and coordinate desk inheritance, physical door guard and Undo pass without browser Send/provider request. Read-only validate pass2 has no actionable findings. Optional canonical theme survives Apply/Cancel/Undo/project/recovery/import and custom surfaces; exact legacy matching and explicit finish/material overrides remain bounded. Source-only385 inputs/4671600 bytes, digest 45d92931c1179ef6dae70246f6f53ce1270a7abd8709b98ba0718b38fae8d4e9. Preserve normal paid-ready services/env; owner real-model/physical acceptance and exact Linux/image/hosted release proof remain external. Exact ticket-prefixed local checkpoint remains owner-authorized.\n\nOwner directly selects RM-091 on2November: create a detailed large lighting ticket and research Three.js, then execute/validate loop. Day/Night opposite2D/3D; dark outside/windows, actual lamp illumination and manual/Medy colours; add multiple ceiling models, interior-only ceiling matching walls; first-night-only missing-light tutorial with Later/Medy/manual lighting catalogue; Floor/Ceiling plan editing. Initial48-path allocation and primary research recorded before implementation. Preserve normal paid-ready services/env, no paid/browser Send/dependency/delegation/cloud/image/push/deploy; prior local validated-ticket checkpoint authority unchanged.\n\nRM-091 settled outcome: exact allocation expanded before relevant inspector/export/size/caption integration; final52changed paths exclude the already-correct byte-identical catalogue-panel caller. Day/Night, real finite fixture illumination, optional canonical on/brightness/colour, five presets/custom, three procedural ceiling models, shared height anchoring, interior common-wall-colour ceiling, Floor/Ceiling editing and first-Night manual/unsent-Medy guidance implemented. Eight light slots/two512pxNightshadows, no new timer/dependency/network. Confirmed/fixed named-light property scope, dialog step cleanup,320px dimension overlap, LF manifest, short generic geometry and appearance-only reanchoring; existing old assertions retained except catalogue count19to22. Thirty new cases;194focused/6files and74confirmed-fix/4files pass. Final unmodified default pnpm check passes1798tests/113files, all code gates/sevenboundaries/exactassets/bothbuilds, no split/timeoutoverride. Native manual warm-red preview/Apply, four fixtures/desk, interior/Overview, keyboard ceiling movement, all-model coordinates, responsive390/320/tablet/short, one-time manual/unsent-Medy choice and idleframe45over20seconds pass. No forced native context-loss/40pieceGPU/paid-model/merchant/newPDF claim. Final read-only validation has no actionable findings; scoped AFK security selects no extra fix and retains dated watches. Current source-only394inputs/4709047bytes digest04a695bae5b077a8fd00d188ffc5d77c5eaa176aa3e2a3617321c50e61c1804e; no selected retention snapshot or Linux/image/hosted proof. Preserve paid-ready services/env and owner aesthetic/physical/actual-model acceptance. Exact local ticket checkpoint remains owner-authorized; no paid/browser Send/env/dependency/restart/delegation/Chrome/image/cloud/push/deploy.\n\n2 November owner selects RM-092: replace Day/Night visible words with sun/crescent icons, preserving behavior and accessible names. Eleven-path allocation from clean2d209ac; two presentation files only, no lighting/model/state changes. Local outline SVGs/currentColor,20px centered, aria-hidden/focusable=false, native Day/Night labels/titles. Scoped format/lint/frontend build and actual desktop/320px/keyboard review, no cosmetic tests or repeated unchanged full gate. Existing local ticket commit authority; preserve paid-ready services/env, no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-092 final: scoped Prettier/ESLint pass, frontend build/types/standalone succeeds with normal Windows permissions after sandbox symlinkEPERM. Actual IAB1280/320px shows centered20px sun/crescent in retained60x44 buttons, no text/overflow, native accessible Day/Night names/titles/aria-pressed, click/Space/Enter success and original Floor/Ceiling words. Viewport reset/testtabclosed; no Send/provider. Read-only review of exact two-file presentation diff meets ticket with no actionable findings; callback/state/modal/plan/render/business/test/dependency/config bytes retained. No new tests or unchanged full/backend/security rerun; RM-0911798test evidence stays dated. Source-only394inputs/4710015bytes digestd8e20dd1d531139aa42e60b8638eb97ea78574b0b5c9ae22a319b033709b1596; no retained snapshot/Linux/image/hosted claim. Eleven-path authorized local checkpoint only.\n\n2 November direct owner selects RM-093 after a sideways ceiling-light arrow screenshot. Confirmed shared horizontal furniture-facing marker; orient only ceiling fixture selected markers downward from just below center along actual beam, invariant under quarter-turns. Ten-path allocation, one production scene file, clean3fc473c; retain all marker styles/owners and floor direction behavior, actual light/canonical/plan/export authority. Scoped format/lint/existing lighting+room-view tests/frontend build and native all-three/rotation/floor checks; no new static mirror tests or full/backend/security rerun. Existing exact local ticket checkpoint authority, normal paid-ready services/env; no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.\n\nRM-093 final: one scene-only selected-marker transform uses existing isCeiling, origin80mm below fixture and +Yarrow rotated to -Y; floor position/rotation style/raycast/lifecycle/inspection unchanged. Actual pendant Day→90degree→Night, flush, rotatedtrack and camera-change checks show downward arrow; existing desk comparison retains horizontal facing. Camera-comparison screenshots include active motion, not a new settled-camera acceptance claim. Ownedtabclosed; no Send/provider. Scoped format/lint and52existingtests/2files pass; frontend build/types/standalone succeeds. Final read-only review meets ticket with no actionable finding; no source edits after settled build. No new mirror test or unchanged full/backend/security rerun; prior RM0911798gate stays dated. Source-only394inputs/4710241bytes digeste094c4ef25420f09489439b5f1311bd4e36bdf590d150f30c3d7cfd2e84d8056; no retained snapshot/Linux/image/hosted proof. Existing authorized exacttenpathlocalcheckpoint; paid-ready services/env and owner/release acceptance preserved.",
+      "source": "human:01a19bb7-b0b7-73f0-9f39-cc81635f8fc5/2026-11-02/deployment-preparation-request; direct owner 2 November spending/doc/run instructions; follow-up proof docs; original direct owner security documentation/local-commit instruction; exact follow-up plan; direct owner Medy screenshots and implementation request, 2 November; direct owner typography screenshot/correction request, 2 November 2026; direct owner work-area context screenshots/request, 2 November 2026; RM-089 final gate and read-only pass 2 receipt; direct owner new-furniture theme-default request, 2 November 2026; RM-090 split gate, actual manual UI and final read-only review receipt; direct owner lighting/ceiling/night/editor request,2November2026; RM-091 complete default gate, actual native controls and final review receipt; owner icon screenshot/correction,2November2026; RM-092 scoped settled build/native accessibility and read-only review receipt; direct owner ceiling-arrow screenshot,2November2026; RM-093 focused/build/native marker checks and read-only receipt",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_REQUEST": {
@@ -2081,7 +2085,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Finish only the validated RM-092 eleven-path local checkpoint. Owner can review the running paid-ready app; no automatic provider/Send/env/restart/deployment action.",
+  "next_action": "Finish only the validated RM-093 ten-path local checkpoint. Owner can review downward ceiling-light arrows in the running paid-ready app; no automatic provider/Send/env/restart/deployment action.",
   "phases": [
     {
       "id": "01-docs",
@@ -2422,27 +2426,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Execute RM-092 exact eleven-path allocation: replace only 3D Day/Night visible labels with local outline sun/crescent SVG icons, preserving aria-label/title names, pressed state/callbacks/thumb/sizing/touch/focus/lighting/modal/plan owners. No new dependencies or generic icon framework. Verify scoped formatting/lint/frontend build, actual desktop/320px Day/Night appearance and keyboard activation, unchanged Floor/Ceiling labels, read-only final diff review. No new cosmetic tests, repeated full unit/backend/security audit, paid/Send/env/service/dependency/restart/delegation/Chrome/image/cloud/push/deploy. Preserve dated RM-091 full1798-test evidence and recompute source-only release identity; use existing local validated-ticket checkpoint authority.",
-        "sha256": "69570c5172f8b2ab4442de2b9fc764abb759946a8f6b341a9041b639b8c3b62c",
+        "text": "Execute RM-093 exact ten-path one-production-file allocation. The selected furniture direction arrow currently uses a +Z horizontal marker for ceiling lights. Add a ceiling-only local transform below fixture center, rotating arrow +Y geometry to -Y; parent quarterTurns cannot turn it sideways. Keep normal floor marker transform exact, existing marker style/geometry/depth/raycast/disposal/selection-inspection owner and all actual illumination/canonical/edit/plan/export behavior unchanged. Verify native all-three ceiling selection, rotated fixture, day/night and ordinary furniture comparison, scoped format/lint/existing lighting+room-view tests/frontend build. Read-only review then exact authorized local checkpoint, current source-only identity and clear owner/release limits. No new mirror test or repeated full/backend/security audit; no paid/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.",
+        "sha256": "9244ec9075a7fc1cb10c8d31e7aaea35dde387862c37386cb9c2dde63e2e8413",
         "context_sources": [
-          "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
-          "docs/commit-plans/RM-092.md",
-          "docs/validation/RM-092.md"
+          "docs/tickets/RM-093-point-ceiling-light-markers-down.md",
+          "docs/commit-plans/RM-093.md",
+          "docs/validation/RM-093.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
-        "docs/commit-plans/RM-092.md",
-        "docs/validation/RM-092.md"
+        "docs/tickets/RM-093-point-ceiling-light-markers-down.md",
+        "docs/commit-plans/RM-093.md",
+        "docs/validation/RM-093.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic acceptance and existing final paid/release evidence remain separate.",
-          "reference": "docs/validation/RM-092.md"
+          "reason": "Owner aesthetic/final paid/release evidence remains separate.",
+          "reference": "docs/validation/RM-093.md"
         }
       ],
       "approval": null,
@@ -2587,6 +2591,25 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T17:57:09+00:00",
+          "reason": "Owner identifies a misleading horizontal direction marker on a ceiling light.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Execute RM-092 exact eleven-path allocation: replace only 3D Day/Night visible labels with local outline sun/crescent SVG icons, preserving aria-label/title names, pressed state/callbacks/thumb/sizing/touch/focus/lighting/modal/plan owners. No new dependencies or generic icon framework. Verify scoped formatting/lint/frontend build, actual desktop/320px Day/Night appearance and keyboard activation, unchanged Floor/Ceiling labels, read-only final diff review. No new cosmetic tests, repeated full unit/backend/security audit, paid/Send/env/service/dependency/restart/delegation/Chrome/image/cloud/push/deploy. Preserve dated RM-091 full1798-test evidence and recompute source-only release identity; use existing local validated-ticket checkpoint authority.",
+            "sha256": "69570c5172f8b2ab4442de2b9fc764abb759946a8f6b341a9041b639b8c3b62c",
+            "context_sources": [
+              "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
+              "docs/commit-plans/RM-092.md",
+              "docs/validation/RM-092.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
         }
       ]
     },
@@ -2654,21 +2677,21 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": "visual",
       "status": "provisional",
       "prompt": {
-        "text": "Self-review RM-092 sun/crescent substitution against owner screenshot. Native IAB1280x720/320x640 shows centered20px currentColor outline icons, old60x44pill targets, no visible words/overflow, accessible Day/Night names/titles/pressed values, click/Space/Enter activation, unchanged Floor/Ceiling labels. Existing thumb/focus/lighting/first-Night state unchanged. Viewport reset and ownedtabclosed. Scoped frontend build passes after normal Windows packaging permissions; no paid/Send request. Owner aesthetic acceptance remains pending.",
-        "sha256": "a705f5b33255716f50b97b30c40de466fe48b004caf1c36d9cef3575edd71de6",
+        "text": "Review RM-093 local ceiling-arrow correction against owner screenshot. Native manual pendant Day/Night/90degree, flush and rotatedtrack arrow point down along actual beam; track camera change retains direction. Selecting original desk retains horizontal arrow. Existing arrow style/length/nonraycast and inspection suppression unchanged. Screenshots under ignored runtime are actual; some camera-comparison frames are transitional and not a settled-camera/phone/performance acceptance claim.52existing tests/scoped code/frontend build pass; no Send/provider. Owner aesthetic judgment remains separate.",
+        "sha256": "bb3af154596d0b472e1be7aa94c8e39294ac4493551c060fca33d53c62dfdff8",
         "context_sources": [
-          "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
-          "docs/commit-plans/RM-092.md",
-          "docs/validation/RM-092.md"
+          "docs/tickets/RM-093-point-ceiling-light-markers-down.md",
+          "docs/commit-plans/RM-093.md",
+          "docs/validation/RM-093.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
-        "docs/commit-plans/RM-092.md",
-        "docs/validation/RM-092.md"
+        "docs/tickets/RM-093-point-ceiling-light-markers-down.md",
+        "docs/commit-plans/RM-093.md",
+        "docs/validation/RM-093.md"
       ],
       "blockers": [],
       "approval": null,
@@ -3558,12 +3581,39 @@ This checklist records local work. Human approvals and unresolved external check
             "recorded_at": "2026-11-02T17:53:54+00:00"
           },
           "decision": "self-reviewed"
+        },
+        {
+          "reopened_at": "2026-11-02T18:01:00+00:00",
+          "reason": "Owner-selected ceiling-marker correction changes the frontend candidate; retain prior exact audit evidence.",
+          "prior_status": "provisional",
+          "prior_prompt": {
+            "text": "Self-review RM-092 sun/crescent substitution against owner screenshot. Native IAB1280x720/320x640 shows centered20px currentColor outline icons, old60x44pill targets, no visible words/overflow, accessible Day/Night names/titles/pressed values, click/Space/Enter activation, unchanged Floor/Ceiling labels. Existing thumb/focus/lighting/first-Night state unchanged. Viewport reset and ownedtabclosed. Scoped frontend build passes after normal Windows packaging permissions; no paid/Send request. Owner aesthetic acceptance remains pending.",
+            "sha256": "a705f5b33255716f50b97b30c40de466fe48b004caf1c36d9cef3575edd71de6",
+            "context_sources": [
+              "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
+              "docs/commit-plans/RM-092.md",
+              "docs/validation/RM-092.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": "self-reviewed"
+        },
+        {
+          "afk_review": {
+            "session_id": "AFK-SESSION-001",
+            "decision_id": "AFK-0032",
+            "recorded_at": "2026-11-02T18:01:01+00:00"
+          },
+          "decision": "self-reviewed"
         }
       ],
       "afk_review": {
         "session_id": "AFK-SESSION-001",
-        "decision_id": "AFK-0031",
-        "recorded_at": "2026-11-02T17:53:54+00:00"
+        "decision_id": "AFK-0032",
+        "recorded_at": "2026-11-02T18:01:01+00:00"
       }
     },
     {
@@ -4045,26 +4095,26 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Record RM-092 two-file icon presentation correction, scoped format/lint/frontend build and actual desktop/320px/keyboard checks, final read-only review with no findings. Keep RM-0911798-test full business gate dated rather than rerunning unchanged logic. Current source-only394inputs/4710015bytes digestd8e20dd1d531139aa42e60b8638eb97ea78574b0b5c9ae22a319b033709b1596. Update exact release source identity, retain normal paid-ready services/env and original owner final paid/aesthetic/physical/model/merchant/exact-image/hosted acceptance limits. Exact eleven-path local commit authorized; no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.",
-        "sha256": "9c832932a0d5f2b0d83c99ef5a5ce74c25999efe599068557e4d5afa4c4644cb",
+        "text": "Record RM-093 one-production-file selected-marker transform and exact ten-path checkpoint. Real light/canonical/plan/export/provider authority unchanged.52existinglighting/roomview tests plus scopedformat/lint/frontendbuild and native allthree/rotation/DayNight/floor comparison pass, clean final read-onlyreview. Source-only394inputs/4710241bytes digeste094c4ef25420f09489439b5f1311bd4e36bdf590d150f30c3d7cfd2e84d8056; no retainedsnapshot. Prior RM0911798business gate stays dated; no mirror/full/backend/security rerun. Normal paid-ready services/env preserved. Owner aesthetic/final model/physical/merchant and exact Linux/image/resources/config/widget/rollout/rollback/hosted proofs remain external; no automatic paid/Send/env/restart/dependency/delegation/Chrome/image/cloud/push/deployment.",
+        "sha256": "206a5462cf8ee53eaeca52e6d6ac0ff83175e95d1f6d61071f1075939ac2b7d7",
         "context_sources": [
-          "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
-          "docs/commit-plans/RM-092.md",
-          "docs/validation/RM-092.md"
+          "docs/tickets/RM-093-point-ceiling-light-markers-down.md",
+          "docs/commit-plans/RM-093.md",
+          "docs/validation/RM-093.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
-        "docs/commit-plans/RM-092.md",
-        "docs/validation/RM-092.md"
+        "docs/tickets/RM-093-point-ceiling-light-markers-down.md",
+        "docs/commit-plans/RM-093.md",
+        "docs/validation/RM-093.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic/final live-model/physical/merchant acceptance and fresh exact Linux/image/retained-assets/resource/config/widget/paired rollout/rollback/hosted proof remain.",
+          "reason": "Owner aesthetic/final model/physical/merchant acceptance and fresh exact Linux/image/retained-assets/resource/config/widget/paired rollout/rollback/hosted proof remain.",
           "reference": "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
         }
       ],
@@ -4245,6 +4295,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/commit-plans/RM-091.md",
               "docs/engineering/editor-lighting.md",
               "docs/validation/RM-091.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-02T18:01:02+00:00",
+          "reason": "Owner-selected ceiling-marker correction changes the frontend candidate; retain prior exact audit evidence.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Record RM-092 two-file icon presentation correction, scoped format/lint/frontend build and actual desktop/320px/keyboard checks, final read-only review with no findings. Keep RM-0911798-test full business gate dated rather than rerunning unchanged logic. Current source-only394inputs/4710015bytes digestd8e20dd1d531139aa42e60b8638eb97ea78574b0b5c9ae22a319b033709b1596. Update exact release source identity, retain normal paid-ready services/env and original owner final paid/aesthetic/physical/model/merchant/exact-image/hosted acceptance limits. Exact eleven-path local commit authorized; no Send/provider/env/restart/dependency/delegation/Chrome/image/cloud/push/deploy.",
+            "sha256": "9c832932a0d5f2b0d83c99ef5a5ce74c25999efe599068557e4d5afa4c4644cb",
+            "context_sources": [
+              "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
+              "docs/commit-plans/RM-092.md",
+              "docs/validation/RM-092.md"
             ],
             "status": "afk",
             "approval": null,
@@ -4731,6 +4800,21 @@ This checklist records local work. Human approvals and unresolved external check
           "docs/tickets/RM-092-use-sun-and-moon-toggle-icons.md",
           "docs/commit-plans/RM-092.md",
           "docs/validation/RM-092.md"
+        ]
+      },
+      {
+        "id": "AFK-0032",
+        "session_id": "AFK-SESSION-001",
+        "recorded_at": "2026-11-02T18:01:01+00:00",
+        "phase": "09-visual-review",
+        "choice": "Accept the locally verified downward ceiling-light marker provisionally; owner aesthetic judgment remains.",
+        "rationale": "Native all-three/rotation/time/floor comparison and52existing tests/scoped frontend gates pass; unchanged actual light/canonical/plan authority.",
+        "consequence": "No paid/model/full-audit or new settled-camera/physical performance claim; owner and release evidence remain separate.",
+        "review_needed": true,
+        "evidence": [
+          "docs/tickets/RM-093-point-ceiling-light-markers-down.md",
+          "docs/commit-plans/RM-093.md",
+          "docs/validation/RM-093.md"
         ]
       }
     ]

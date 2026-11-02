@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Ceiling-light arrows — 2 November:** [RM-093](tickets/RM-093-point-ceiling-light-markers-down.md) points selected ceiling-fixture arrows down along their beam, retaining normal horizontal furniture arrows. [Allocation](commit-plans/RM-093.md), [52 existing checks, scoped build and native model/rotation comparison](validation/RM-093.md). Actual lights/canonical data and paid-ready services/env are unchanged.
+
 **Sun/crescent toggle — 2 November:** [RM-092](tickets/RM-092-use-sun-and-moon-toggle-icons.md) replaces Day/Night words with matching outline icons while retaining accessible names, pressed state and behavior. [Allocation](commit-plans/RM-092.md), [scoped frontend build and actual desktop/320px/keyboard receipt](validation/RM-092.md). No lighting logic or paid/service/config change; owner aesthetic acceptance remains separate.
 
 **Editor lighting — 2 November:** [RM-091](tickets/RM-091-light-the-editor-by-day-and-night.md) adds Day/Night, real fixture light and colour/brightness controls, pendant/flush/track models, interior ceilings and a separate Ceiling plan. First Night guidance opens manual Lighting or an unsent Medy draft. [Research](engineering/editor-lighting.md), [52-path allocation](commit-plans/RM-091.md), [full1798-test gate/builds, native checks and review](validation/RM-091.md). Bounded8lights/2Nightshadows with idle sleep; no paid request or service/env/dependency change. Owner updated aesthetic/physical/model acceptance remains separate.

@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Show the light direction on ceiling fixtures — 2 November 2026
+
+A ceiling light's selection arrow should point down along its beam, not borrow the horizontal front-facing arrow of furniture. Rotate the existing marker in fixture-local space so quarter-turns cannot point it sideways; retain the normal floor arrow and marker ownership/style. This is a visual cue correction, not a new aiming/photometric control. [RM-093](../tickets/RM-093-point-ceiling-light-markers-down.md), [evidence](../validation/RM-093.md).
+
 ## Use familiar symbols for the scene time — 2 November 2026
 
 The owner prefers a sun and crescent-moon pair over visible Day/Night words in the editor pill. Match the existing outline icon weight, inherit selected/unselected colour, center both symbols and keep native accessible names/hover titles and44px targets. This changes presentation only; Floor/Ceiling remains textual. [RM-092](../tickets/RM-092-use-sun-and-moon-toggle-icons.md), [evidence](../validation/RM-092.md).

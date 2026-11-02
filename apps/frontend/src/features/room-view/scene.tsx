@@ -95,7 +95,7 @@ import type { ViewBridge, SavedViewCamera } from './view-morph';
 import type { PerspectiveCamera } from 'three';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 import { RoomLights, Bulb } from './lighting';
-import { isLight } from './lighting-model';
+import { isLight, isCeiling } from './lighting-model';
 
 export type CameraAction = {
   kind:
@@ -1306,22 +1306,24 @@ function SelectedDirection({
   width,
   depth,
   height,
+  downward = false,
 }: {
   width: number;
   depth: number;
   height: number;
+  downward?: boolean;
 }) {
   const length = Math.max(0.9, Math.min(1.2, Math.max(width, depth) * 0.6)),
     head = 0.22,
     shaft = length - head;
   return (
     <group
-      position={[
-        0,
-        Math.max(0.12, Math.min(0.3, height * 0.25)),
-        depth / 2 + 0.045,
-      ]}
-      rotation={[Math.PI / 2, 0, 0]}
+      position={
+        downward
+          ? [0, -0.08, 0]
+          : [0, Math.max(0.12, Math.min(0.3, height * 0.25)), depth / 2 + 0.045]
+      }
+      rotation={[downward ? Math.PI : Math.PI / 2, 0, 0]}
     >
       {([true, false] as const).map((halo) => (
         <group key={String(halo)}>
@@ -1585,7 +1587,14 @@ function Piece({
       )}
       {selected && (
         <>
-          {!inspecting && <SelectedDirection width={w} depth={d} height={h} />}
+          {!inspecting && (
+            <SelectedDirection
+              width={w}
+              depth={d}
+              height={h}
+              downward={isCeiling(piece)}
+            />
+          )}
           <mesh
             geometry={geometry}
             position={[0, h / 2, 0]}
