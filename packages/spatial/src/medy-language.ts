@@ -71,6 +71,9 @@ export function catalogueMention(
     'bedroom-bench': '(?:bedroom )?bench',
     'side-table': 'side table',
     'floor-lamp': 'floor lamp',
+    'ceiling-pendant': '(?:ceiling )?pendant(?: light| lamp)?',
+    'ceiling-flush': 'flush(?: ceiling)? light',
+    'ceiling-track': 'track(?: ceiling)? light',
   };
   return (
     words.includes(entry.label.toLowerCase()) ||
@@ -114,6 +117,17 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
     const entry = findCatalogueEntry(p.catalogueId, p.catalogueVersion);
     if (entry && catalogueMention(entry, remaining)) return true;
     const category = entry?.category;
+    // In “Floor lamp light colour”, light is the named fixture's property.
+    if (
+      category === 'lighting' &&
+      names.some(
+        (piece) =>
+          findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+            ?.category === 'lighting',
+      ) &&
+      !/\b(and|all|both|other|lights|lamps)\b/.test(remaining)
+    )
+      return false;
     if (workArea && (category === 'desk' || category === 'chair')) return true;
     const aliases =
       category === 'storage'
@@ -122,7 +136,9 @@ function references(room: RoomDocument, text: string): MedyTarget[] {
           ? 'wardrobe|closet'
           : category === 'bed'
             ? 'bed|pillow|pillowcase|sheet|bedsheet|duvet|blanket|bedding'
-            : category;
+            : category === 'lighting'
+              ? 'lighting|lamp|light'
+              : category;
     return !!aliases && new RegExp(`\\b(${aliases})s?\\b`).test(remaining);
   });
   const targets: MedyTarget[] = pieces.map((piece) => ({

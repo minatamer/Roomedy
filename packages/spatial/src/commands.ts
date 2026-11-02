@@ -3,6 +3,7 @@ import {
   furnitureUpholsteryChoices,
   bedroomTheme,
   bedroomFurnitureMaterials,
+  lightSettings,
 } from '@roomedy/contracts/furniture-materials';
 import { wallMountedPose } from './elevation.js';
 import {
@@ -136,6 +137,7 @@ export function validateRoom(
       (e) => e.id === item.catalogueId && e.version === item.catalogueVersion,
     );
     if (!entry) return undefined;
+    if (item.light && entry.category !== 'lighting') return undefined;
     if (
       (!entry.placement || entry.placement === 'floor') &&
       (item.pose.bottomY ?? 0) !== 0
@@ -170,6 +172,7 @@ const nonspatial = new Set([
   'room-finish',
   'set-room-surface',
   'set-furniture-materials',
+  'set-light',
   'set-opening-materials',
   'set-locks',
   'set-preference',
@@ -382,7 +385,21 @@ export function evaluateBatch(
     if (!item) return { ok: false, code: 'invalid-input' };
     const start = originals.get(item.id) ?? item;
     affected.add(item.id);
-    if (action.type === 'move') {
+    if (action.type === 'set-light') {
+      const entry = catalogue.find(
+        (entry) =>
+          entry.id === item.catalogueId &&
+          entry.version === item.catalogueVersion,
+      )!;
+      if (entry.category !== 'lighting')
+        return { ok: false, code: 'unsupported-variant' };
+      const current = lightSettings(item);
+      item.light = {
+        color: action.light.color ?? current.color,
+        brightness: action.light.brightness ?? current.brightness,
+        on: action.light.on ?? current.on,
+      };
+    } else if (action.type === 'move') {
       if (
         (start.locks.position &&
           (action.pose.centerX !== start.pose.centerX ||
@@ -559,6 +576,43 @@ export function evaluateBatch(
       for (const axis of ['width', 'depth', 'height'] as const)
         item.dimensions[axis] = measured(action[axis], 'visitor-confirmed');
   }
+  // Ceiling mounting follows room/fixture height, never an independent measured elevation.
+  const mountingIds = new Set(
+    actions.flatMap((action) =>
+      action.type === 'add'
+        ? [action.furniture.id]
+        : [
+              'replace',
+              'move',
+              'rotate',
+              'resize',
+              'set-size-estimate',
+              'correct-dimensions',
+            ].includes(action.type) && 'id' in action
+          ? [action.id]
+          : [],
+    ),
+  );
+  for (const item of room.furniture)
+    if (
+      catalogue.find((entry) => entry.id === item.catalogueId)?.placement ===
+        'ceiling' &&
+      (mountingIds.has(item.id) ||
+        room.room.height.value !== before.room.height.value)
+    ) {
+      const mounted = wallMountedPose(room, item);
+      if (mounted.bottomY !== item.pose.bottomY) {
+        item.pose = {
+          ...mounted,
+          provenance: {
+            status: 'planned',
+            sourceId:
+              authority === 'assistant' ? 'assistant-plan' : 'visitor-plan',
+          },
+        };
+        affected.add(item.id);
+      }
+    }
   if (!roomDocumentSchema.safeParse(room).success)
     return { ok: false, code: 'invalid-input' };
   const candidate = validateRoom(room, catalogue);

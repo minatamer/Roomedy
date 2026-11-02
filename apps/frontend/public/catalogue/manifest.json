@@ -313,6 +313,39 @@
         "depth": 350,
         "height": 1550
       }
+    },
+    {
+      "catalogueId": "ceiling-pendant",
+      "filename": "thumbnails/ceiling-pendant.svg",
+      "bytes": 515,
+      "sha256": "c1d8a32cb40b62101fd3fd65c48c8750e00b14a59327b8cbd53ac661531caf70",
+      "semanticMm": {
+        "width": 450,
+        "depth": 450,
+        "height": 500
+      }
+    },
+    {
+      "catalogueId": "ceiling-flush",
+      "filename": "thumbnails/ceiling-flush.svg",
+      "bytes": 412,
+      "sha256": "54b696994fdd00f848686da57e77d3175409adb48acf7223fcc79560b3d5c0c8",
+      "semanticMm": {
+        "width": 500,
+        "depth": 500,
+        "height": 100
+      }
+    },
+    {
+      "catalogueId": "ceiling-track",
+      "filename": "thumbnails/ceiling-track.svg",
+      "bytes": 533,
+      "sha256": "bf844b7d86f9a0b9db5f339e74f1b80a962b7fe5e6fa031edad1fca621d6905e",
+      "semanticMm": {
+        "width": 900,
+        "depth": 180,
+        "height": 220
+      }
     }
   ]
 }

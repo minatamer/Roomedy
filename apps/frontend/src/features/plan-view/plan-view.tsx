@@ -48,6 +48,7 @@ import {
   snapPosition,
 } from './adapter';
 import type { PlanLabelLayout } from './adapter';
+import { isCeiling, layerFurniture } from '../room-view/lighting-model';
 import styles from '../room-editor/editor.module.css';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
 import { CataloguePlanGhost } from '../room-editor/catalogue-placement-ui';
@@ -357,12 +358,14 @@ function PlanLabel({
   );
 }
 export function PlanView({
+  layer = 'floor',
   controller,
   state,
   placement,
   arranging = true,
   active = true,
 }: {
+  layer?: 'floor' | 'ceiling';
   controller: SessionController;
   state: SessionSnapshot;
   placement?: CataloguePlacement;
@@ -875,282 +878,313 @@ export function PlanView({
                 </g>
               );
             })}
-        {room.room.features.map((feature) => {
-          const r = wallBand(
-            room,
-            feature.kind !== 'obstacle' && feature.offset.value !== null
-              ? {
-                  ...feature,
-                  offset: {
-                    value: 0,
-                    status: 'estimated',
-                    sourceId: 'display-origin',
-                  },
-                }
-              : feature,
-            feature.kind === 'obstacle' ? (feature.projection.value ?? 1) : 1,
-          );
-          if (!r) return null;
-          const selected = view.selectedId === feature.id;
-          return (
-            <g
-              key={feature.id}
-              role="button"
-              tabIndex={0}
-              aria-label={`${featureLabel(feature).toLowerCase()}, ${feature.wall} wall, ${feature.width.value ?? 'unknown'} mm wide`}
-              aria-pressed={selected}
-              className={styles.feature}
-              style={
-                feature.kind !== 'obstacle'
-                  ? {
-                      transform: `translate(${feature.wall === 'north' || feature.wall === 'south' ? feature.offset.value : 0}px, ${feature.wall === 'east' || feature.wall === 'west' ? feature.offset.value : 0}px)`,
-                      transition:
-                        windowGhost?.id === feature.id
-                          ? 'none'
-                          : 'transform 180ms cubic-bezier(.2,.75,.2,1)',
-                      cursor:
-                        readOnly || !arranging
-                          ? 'pointer'
-                          : feature.wall === 'north' || feature.wall === 'south'
-                            ? 'ew-resize'
-                            : 'ns-resize',
-                    }
-                  : undefined
-              }
-              onPointerDown={(event) => windowDown(event, feature)}
-              onPointerMove={(event) => windowMove(event)}
-              onPointerUp={(event) => windowMove(event, true)}
-              onPointerCancel={() => windowGesture.current?.edit.cancel()}
-              onLostPointerCapture={() => windowGesture.current?.edit.cancel()}
-              onClick={() => {
-                if (!gesture.current && !windowGesture.current)
-                  controller.select(feature.id);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape' && !e.nativeEvent.isComposing) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  escapeSelection();
-                  return;
-                }
-                if (
-                  feature.kind !== 'obstacle' &&
-                  arranging &&
-                  !readOnly &&
-                  !e.nativeEvent.isComposing &&
-                  !e.ctrlKey &&
-                  !e.metaKey &&
-                  e.key.startsWith('Arrow')
-                ) {
-                  e.preventDefault();
-                  if (windowGesture.current) return;
-                  controller.select(feature.id);
-                  const offset = nudgeWindowOffset(
-                    canonicalRoom,
-                    feature,
-                    e.key,
-                    e.shiftKey,
-                    e.altKey,
-                  );
-                  const edit = beginWindowEdit(controller, feature.id);
-                  if (edit && offset !== null) {
-                    const result = edit.commit(offset);
-                    if (!result.ok)
-                      controller.notify(failureMessage(result, canonicalRoom));
-                  } else
-                    controller.notify(
-                      'Review the opening width, position and wall measurements before moving it.',
-                    );
-                  return;
-                }
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  controller.select(feature.id);
-                }
-              }}
-            >
-              {feature.kind === 'door' &&
-                feature.mechanism === 'inward' &&
-                feature.width.value !== null &&
-                (() => {
-                  const band = wallBand(
-                    room,
-                    {
-                      ...feature,
-                      offset: {
-                        value: 0,
-                        status: 'estimated',
-                        sourceId: 'display-origin',
-                      },
+        <g pointerEvents={layer === 'ceiling' ? 'none' : undefined}>
+          {room.room.features.map((feature) => {
+            const r = wallBand(
+              room,
+              feature.kind !== 'obstacle' && feature.offset.value !== null
+                ? {
+                    ...feature,
+                    offset: {
+                      value: 0,
+                      status: 'estimated',
+                      sourceId: 'display-origin',
                     },
-                    feature.width.value!,
-                  );
-                  return (
-                    band && (
-                      <rect
-                        x={band.minX}
-                        y={band.minZ}
-                        width={band.maxX - band.minX}
-                        height={band.maxZ - band.minZ}
-                        fill="#9a70491a"
-                        stroke="#92745a"
-                        strokeWidth="12"
-                        strokeDasharray="60 40"
-                      />
-                    )
-                  );
-                })()}
-              <line
-                x1={r.minX}
-                y1={r.minZ}
-                x2={r.maxX}
-                y2={r.maxZ}
-                stroke={
-                  feature.kind !== 'obstacle' && feature.materials
-                    ? feature.kind === 'window' || feature.purpose === 'balcony'
-                      ? (feature.materials.frameColor ?? '#f7f5ef')
-                      : (feature.materials.color ?? '#77634c')
-                    : selected
-                      ? '#704830'
-                      : feature.kind === 'window' ||
-                          (feature.kind === 'door' &&
-                            feature.purpose === 'balcony')
-                        ? '#f7f5ef'
-                        : '#77634c'
+                  }
+                : feature,
+              feature.kind === 'obstacle' ? (feature.projection.value ?? 1) : 1,
+            );
+            if (!r) return null;
+            const selected = view.selectedId === feature.id;
+            return (
+              <g
+                key={feature.id}
+                role={layer === 'floor' ? 'button' : undefined}
+                tabIndex={layer === 'floor' ? 0 : -1}
+                aria-hidden={layer === 'ceiling' || undefined}
+                aria-label={`${featureLabel(feature).toLowerCase()}, ${feature.wall} wall, ${feature.width.value ?? 'unknown'} mm wide`}
+                aria-pressed={selected}
+                className={styles.feature}
+                style={
+                  feature.kind !== 'obstacle'
+                    ? {
+                        transform: `translate(${feature.wall === 'north' || feature.wall === 'south' ? feature.offset.value : 0}px, ${feature.wall === 'east' || feature.wall === 'west' ? feature.offset.value : 0}px)`,
+                        transition:
+                          windowGhost?.id === feature.id
+                            ? 'none'
+                            : 'transform 180ms cubic-bezier(.2,.75,.2,1)',
+                        cursor:
+                          readOnly || !arranging
+                            ? 'pointer'
+                            : feature.wall === 'north' ||
+                                feature.wall === 'south'
+                              ? 'ew-resize'
+                              : 'ns-resize',
+                      }
+                    : undefined
                 }
-                strokeWidth={selected ? 140 : 100}
-              />
-              {feature.kind === 'door' && feature.purpose === 'balcony' && (
+                onPointerDown={(event) => windowDown(event, feature)}
+                onPointerMove={(event) => windowMove(event)}
+                onPointerUp={(event) => windowMove(event, true)}
+                onPointerCancel={() => windowGesture.current?.edit.cancel()}
+                onLostPointerCapture={() =>
+                  windowGesture.current?.edit.cancel()
+                }
+                onClick={() => {
+                  if (!gesture.current && !windowGesture.current)
+                    controller.select(feature.id);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape' && !e.nativeEvent.isComposing) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    escapeSelection();
+                    return;
+                  }
+                  if (
+                    feature.kind !== 'obstacle' &&
+                    arranging &&
+                    !readOnly &&
+                    !e.nativeEvent.isComposing &&
+                    !e.ctrlKey &&
+                    !e.metaKey &&
+                    e.key.startsWith('Arrow')
+                  ) {
+                    e.preventDefault();
+                    if (windowGesture.current) return;
+                    controller.select(feature.id);
+                    const offset = nudgeWindowOffset(
+                      canonicalRoom,
+                      feature,
+                      e.key,
+                      e.shiftKey,
+                      e.altKey,
+                    );
+                    const edit = beginWindowEdit(controller, feature.id);
+                    if (edit && offset !== null) {
+                      const result = edit.commit(offset);
+                      if (!result.ok)
+                        controller.notify(
+                          failureMessage(result, canonicalRoom),
+                        );
+                    } else
+                      controller.notify(
+                        'Review the opening width, position and wall measurements before moving it.',
+                      );
+                    return;
+                  }
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    controller.select(feature.id);
+                  }
+                }}
+              >
+                {feature.kind === 'door' &&
+                  feature.mechanism === 'inward' &&
+                  feature.width.value !== null &&
+                  (() => {
+                    const band = wallBand(
+                      room,
+                      {
+                        ...feature,
+                        offset: {
+                          value: 0,
+                          status: 'estimated',
+                          sourceId: 'display-origin',
+                        },
+                      },
+                      feature.width.value!,
+                    );
+                    return (
+                      band && (
+                        <rect
+                          x={band.minX}
+                          y={band.minZ}
+                          width={band.maxX - band.minX}
+                          height={band.maxZ - band.minZ}
+                          fill="#9a70491a"
+                          stroke="#92745a"
+                          strokeWidth="12"
+                          strokeDasharray="60 40"
+                        />
+                      )
+                    );
+                  })()}
                 <line
-                  x1={
-                    (r.minX + r.maxX) / 2 -
-                    (feature.wall === 'east' || feature.wall === 'west'
-                      ? 70
-                      : 0)
+                  x1={r.minX}
+                  y1={r.minZ}
+                  x2={r.maxX}
+                  y2={r.maxZ}
+                  stroke={
+                    feature.kind !== 'obstacle' && feature.materials
+                      ? feature.kind === 'window' ||
+                        feature.purpose === 'balcony'
+                        ? (feature.materials.frameColor ?? '#f7f5ef')
+                        : (feature.materials.color ?? '#77634c')
+                      : selected
+                        ? '#704830'
+                        : feature.kind === 'window' ||
+                            (feature.kind === 'door' &&
+                              feature.purpose === 'balcony')
+                          ? '#f7f5ef'
+                          : '#77634c'
                   }
-                  y1={
-                    (r.minZ + r.maxZ) / 2 -
-                    (feature.wall === 'north' || feature.wall === 'south'
-                      ? 70
-                      : 0)
-                  }
-                  x2={
-                    (r.minX + r.maxX) / 2 +
-                    (feature.wall === 'east' || feature.wall === 'west'
-                      ? 70
-                      : 0)
-                  }
-                  y2={
-                    (r.minZ + r.maxZ) / 2 +
-                    (feature.wall === 'north' || feature.wall === 'south'
-                      ? 70
-                      : 0)
-                  }
-                  stroke="#77634c"
-                  strokeWidth="20"
-                  pointerEvents="none"
+                  strokeWidth={selected ? 140 : 100}
                 />
-              )}
-              <line
-                x1={r.minX}
-                y1={r.minZ}
-                x2={r.maxX}
-                y2={r.maxZ}
-                stroke="transparent"
-                strokeWidth="300"
-              />
-              {feature.kind === 'obstacle' && (
+                {feature.kind === 'door' && feature.purpose === 'balcony' && (
+                  <line
+                    x1={
+                      (r.minX + r.maxX) / 2 -
+                      (feature.wall === 'east' || feature.wall === 'west'
+                        ? 70
+                        : 0)
+                    }
+                    y1={
+                      (r.minZ + r.maxZ) / 2 -
+                      (feature.wall === 'north' || feature.wall === 'south'
+                        ? 70
+                        : 0)
+                    }
+                    x2={
+                      (r.minX + r.maxX) / 2 +
+                      (feature.wall === 'east' || feature.wall === 'west'
+                        ? 70
+                        : 0)
+                    }
+                    y2={
+                      (r.minZ + r.maxZ) / 2 +
+                      (feature.wall === 'north' || feature.wall === 'south'
+                        ? 70
+                        : 0)
+                    }
+                    stroke="#77634c"
+                    strokeWidth="20"
+                    pointerEvents="none"
+                  />
+                )}
+                <line
+                  x1={r.minX}
+                  y1={r.minZ}
+                  x2={r.maxX}
+                  y2={r.maxZ}
+                  stroke="transparent"
+                  strokeWidth="300"
+                />
+                {feature.kind === 'obstacle' && (
+                  <rect
+                    x={r.minX}
+                    y={r.minZ}
+                    width={r.maxX - r.minX}
+                    height={r.maxZ - r.minZ}
+                    fill="#9b8978"
+                  />
+                )}
+              </g>
+            );
+          })}
+        </g>
+        {layer === 'ceiling' && (
+          <g opacity={0.14} pointerEvents="none" aria-hidden="true">
+            {layerFurniture(room, 'floor').map((piece) => {
+              const width = piece.dimensions.width.value ?? 600,
+                depth = piece.dimensions.depth.value ?? 600;
+              return (
                 <rect
-                  x={r.minX}
-                  y={r.minZ}
-                  width={r.maxX - r.minX}
-                  height={r.maxZ - r.minZ}
-                  fill="#9b8978"
+                  key={piece.id}
+                  x={piece.pose.centerX - width / 2}
+                  y={piece.pose.centerZ - depth / 2}
+                  width={width}
+                  height={depth}
+                  fill="#8a7154"
+                  rx={30}
+                  transform={`rotate(${piece.pose.quarterTurns * 90} ${piece.pose.centerX} ${piece.pose.centerZ})`}
                 />
-              )}
-            </g>
-          );
-        })}
-        {furnitureByElevation(room).map((item) => {
-          const w = item.dimensions.width.value,
-            d = item.dimensions.depth.value;
-          const selected = view.selectedId === item.id;
-          const category =
-            findCatalogueEntry(item.catalogueId, item.catalogueVersion)
-              ?.category ?? 'piece';
-          const label = planFurnitureName(item);
-          const labelLayout = planLabelLayout(
-            item,
-            label + (w === null || d === null ? ' ?' : ''),
-            category === 'tv' ? 135 : 185,
-            room,
-          );
-          return (
-            <g
-              key={item.id}
-              role="button"
-              tabIndex={0}
-              aria-pressed={selected}
-              aria-label={`${item.label}, ${w ?? 'unknown'} by ${d ?? 'unknown'} mm, ${before ? 'Before, read-only' : state.candidate ? 'proposal preview' : state.clientLoadFailure ? 'read-only' : item.locks.position ? 'position locked' : 'movable'}`}
-              className={`${styles.piece} ${readOnly || !arranging ? styles.piecePreview : ''}`}
-              transform={`translate(${item.pose.centerX} ${item.pose.centerZ})`}
-              onKeyDown={(e) => key(e, item)}
-              onPointerDown={(event) => {
-                event.stopPropagation();
-                if (event.button !== 0 || gesture.current) return;
-                controller.select(item.id);
-                if (readOnly || !arranging) return;
-                if (item.locks.position) {
-                  controller.notify(
-                    'Position is locked. Unlock it in properties to move this piece.',
-                  );
-                  return;
-                }
-                const p = point(event);
-                if (!p) return;
-                event.currentTarget.setPointerCapture(event.pointerId);
-                gesture.current = {
-                  id: item.id,
-                  pointerId: event.pointerId,
-                  clientX: event.clientX,
-                  clientY: event.clientY,
-                  offsetX: p.x - item.pose.centerX,
-                  offsetZ: p.z - item.pose.centerZ,
-                  revision: state.workspace!.current.roomRevision,
-                  target: event.currentTarget,
-                  viewport: svg.current!.getBoundingClientRect(),
-                  viewBox: `${box.x} ${box.z} ${box.width} ${box.depth}`,
-                };
-              }}
-              onPointerMove={(e) => move(e, item)}
-              onPointerUp={(e) => drop(e, item)}
-              onPointerCancel={cancel}
-              onLostPointerCapture={cancel}
-            >
-              {!displayFurnitureSize(item) && (w === null || d === null) ? (
-                <circle
-                  r="260"
-                  fill="#f1e8da"
-                  stroke="#76634d"
-                  strokeWidth="20"
-                  strokeDasharray="50 35"
-                />
-              ) : (
-                <OrientedFootprint item={item} selected={selected} />
-              )}
-              {projectedLabelVisible(room, item) && (
-                <PlanLabel
-                  layout={labelLayout}
-                  fill={
-                    ['charcoal', 'walnut'].includes(item.finish)
-                      ? '#fffaf2'
-                      : '#302b25'
+              );
+            })}
+          </g>
+        )}
+        {furnitureByElevation(room)
+          .filter((item) => isCeiling(item) === (layer === 'ceiling'))
+          .map((item) => {
+            const w = item.dimensions.width.value,
+              d = item.dimensions.depth.value;
+            const selected = view.selectedId === item.id;
+            const category =
+              findCatalogueEntry(item.catalogueId, item.catalogueVersion)
+                ?.category ?? 'piece';
+            const label = planFurnitureName(item);
+            const labelLayout = planLabelLayout(
+              item,
+              label + (w === null || d === null ? ' ?' : ''),
+              category === 'tv' ? 135 : 185,
+              room,
+            );
+            return (
+              <g
+                key={item.id}
+                role="button"
+                tabIndex={0}
+                aria-pressed={selected}
+                aria-label={`${item.label}, ${w ?? 'unknown'} by ${d ?? 'unknown'} mm, ${before ? 'Before, read-only' : state.candidate ? 'proposal preview' : state.clientLoadFailure ? 'read-only' : item.locks.position ? 'position locked' : 'movable'}`}
+                className={`${styles.piece} ${readOnly || !arranging ? styles.piecePreview : ''}`}
+                transform={`translate(${item.pose.centerX} ${item.pose.centerZ})`}
+                onKeyDown={(e) => key(e, item)}
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                  if (event.button !== 0 || gesture.current) return;
+                  controller.select(item.id);
+                  if (readOnly || !arranging) return;
+                  if (item.locks.position) {
+                    controller.notify(
+                      'Position is locked. Unlock it in properties to move this piece.',
+                    );
+                    return;
                   }
-                />
-              )}
-            </g>
-          );
-        })}
+                  const p = point(event);
+                  if (!p) return;
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  gesture.current = {
+                    id: item.id,
+                    pointerId: event.pointerId,
+                    clientX: event.clientX,
+                    clientY: event.clientY,
+                    offsetX: p.x - item.pose.centerX,
+                    offsetZ: p.z - item.pose.centerZ,
+                    revision: state.workspace!.current.roomRevision,
+                    target: event.currentTarget,
+                    viewport: svg.current!.getBoundingClientRect(),
+                    viewBox: `${box.x} ${box.z} ${box.width} ${box.depth}`,
+                  };
+                }}
+                onPointerMove={(e) => move(e, item)}
+                onPointerUp={(e) => drop(e, item)}
+                onPointerCancel={cancel}
+                onLostPointerCapture={cancel}
+              >
+                {!displayFurnitureSize(item) && (w === null || d === null) ? (
+                  <circle
+                    r="260"
+                    fill="#f1e8da"
+                    stroke="#76634d"
+                    strokeWidth="20"
+                    strokeDasharray="50 35"
+                  />
+                ) : (
+                  <OrientedFootprint item={item} selected={selected} />
+                )}
+                {(layer === 'ceiling' || projectedLabelVisible(room, item)) && (
+                  <PlanLabel
+                    layout={labelLayout}
+                    fill={
+                      ['charcoal', 'walnut'].includes(item.finish)
+                        ? '#fffaf2'
+                        : '#302b25'
+                    }
+                  />
+                )}
+              </g>
+            );
+          })}
 
         {regions.map((issue) => {
           const r = issue.region!;
@@ -1205,7 +1239,7 @@ export function PlanView({
           })()}
         <text
           x={width / 2}
-          y={-170}
+          y={depth + 300}
           textAnchor="middle"
           fontSize="170"
           fill="#51463d"

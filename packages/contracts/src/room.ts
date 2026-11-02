@@ -7,6 +7,7 @@ import { bedroomThemeIdSchema } from './bedroom-themes.js';
 import {
   openingMaterialsSchema,
   furnitureMaterialsSchema,
+  lightSettingsSchema,
 } from './furniture-materials.js';
 import {
   finishSchema,
@@ -65,6 +66,7 @@ export const furnitureSchema = z.strictObject({
   locks: locksSchema,
   finish: finishSchema,
   materials: furnitureMaterialsSchema.optional(),
+  light: lightSettingsSchema.optional(),
 });
 const featureBase = {
   id: idSchema,

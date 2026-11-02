@@ -3,7 +3,11 @@ import type { Furniture } from '@roomedy/contracts/room';
 import { roomBedroomTheme } from '@roomedy/contracts/furniture-materials';
 import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
 import { POLICY } from '@roomedy/contracts/policy';
-import { findCatalogueEntry, preferredFurnitureFacing } from '@roomedy/spatial';
+import {
+  findCatalogueEntry,
+  preferredFurnitureFacing,
+  wallMountedPose,
+} from '@roomedy/spatial';
 import type { CommandFailure } from '@roomedy/spatial';
 import { visitorCatalogueFurniture } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
@@ -180,7 +184,11 @@ export class CataloguePlacement {
     this.lastPose = key;
     const item = {
       ...oriented,
-      pose: { ...oriented.pose, centerX: snapped.x, centerZ: snapped.z },
+      pose: wallMountedPose(edit.room, oriented, {
+        ...oriented.pose,
+        centerX: snapped.x,
+        centerZ: snapped.z,
+      }),
     };
     const result = this.session.previewVisitor([
       { type: 'add', furniture: item },

@@ -187,9 +187,69 @@ export function proceduralParts(
     legs(h - 30, 30, 30);
     box('lower-shelf', 0, h * 0.25, 0, w - 40, 20, d - 40);
   } else if (category === 'lighting') {
-    box('lamp-base', 0, 12, 0, w * 0.75, 24, d * 0.75, 'metal');
-    box('lamp-stem', 0, (h - 160) / 2, 0, 22, h - 160, 22, 'metal');
-    box('lamp-shade', 0, h - 130, 0, w, 260, d, 'soft');
+    if (variant.startsWith('ceiling-')) {
+      box(
+        'ceiling-canopy',
+        0,
+        h - 12,
+        0,
+        Math.min(w, 180),
+        24,
+        Math.min(d, 180),
+        'metal',
+      );
+      if (variant === 'ceiling-pendant') {
+        box('pendant-cord', 0, h * 0.62, 0, 12, h * 0.7, 12, 'metal');
+        for (const sign of [-1, 1]) {
+          box(
+            `shade-side-${sign}`,
+            sign * (w / 2 - 12),
+            h * 0.2,
+            0,
+            24,
+            h * 0.4,
+            d,
+            'soft',
+          );
+          box(
+            `shade-face-${sign}`,
+            0,
+            h * 0.2,
+            sign * (d / 2 - 12),
+            w,
+            h * 0.4,
+            24,
+            'soft',
+          );
+        }
+        box('diffuser', 0, 15, 0, w - 48, 20, d - 48, 'soft');
+      } else if (variant === 'ceiling-track') {
+        box('track-rail', 0, h - 45, 0, w, 30, 40, 'metal');
+        for (const [i, x] of [-0.35, 0, 0.35].entries()) {
+          box(`track-neck-${i}`, x * w, h * 0.55, 0, 22, h * 0.6, 22, 'metal');
+          box(
+            `track-head-${i}`,
+            x * w,
+            h * 0.25,
+            0,
+            w * 0.17,
+            h * 0.5,
+            d,
+            'soft',
+          );
+        }
+      } else {
+        box('flush-frame', 0, h * 0.55, 0, w, h * 0.9, d, 'metal');
+        box('flush-diffuser', 0, 8, 0, w - 28, 16, d - 28, 'soft');
+      }
+    } else {
+      const base = Math.min(24, h * 0.2),
+        stem = h - Math.min(160, h * 0.6),
+        shade = Math.min(260, h * 0.7);
+      box('lamp-base', 0, base / 2, 0, w * 0.75, base, d * 0.75, 'metal');
+      box('lamp-stem', 0, stem / 2, 0, 22, stem, 22, 'metal');
+      box('lamp-shade', 0, h - shade / 2, 0, w, shade, d, 'soft');
+    }
   } else {
     const t = 22;
     box('left-side', -w / 2 + t / 2, h / 2, 0, t, h, d);

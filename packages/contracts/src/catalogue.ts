@@ -26,7 +26,7 @@ export const catalogueEntrySchema = z
       'table',
       'lighting',
     ]),
-    placement: z.enum(['floor', 'surface', 'wall']).optional(),
+    placement: z.enum(['floor', 'surface', 'wall', 'ceiling']).optional(),
     defaultElevationMm: z
       .number()
       .int()

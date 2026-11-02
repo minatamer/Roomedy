@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Make lighting part of the room, not an app theme — 2 November 2026
+
+Night belongs to the editor scene: dark outside/windows and visible illumination from actual fixtures, while Roomedy's controls keep their warm style. Light emission colour is independent of shade/frame finish and the room theme. Offer familiar white presets, decorative warm red and custom colour through the same manual/Medy preview/Apply/Undo owner. Interior cameras need a wall-colour ceiling; Overview keeps the room open. A separate Ceiling plan lets fixtures move without selecting furniture below. First Night with no fixture should invite manual Lighting or Medy once, with no automatic request. Budget real lights/shadows, keep idle rendering asleep and judge the actual room/mobile view; a glowing material alone does not illuminate surfaces. [RM-091](../tickets/RM-091-light-the-editor-by-day-and-night.md), [research](../engineering/editor-lighting.md), [evidence and limits](../validation/RM-091.md).
+
 ## Keep the selected theme as the default for new furniture — 2 November 2026
 
 A theme is a continuing room choice. Furniture added later through manual placement, coordinates, replacement or Medy should use the same supported preset automatically. Retain the selection in accepted room state through saving, recovery and independent surface customization; preview/Cancel/Undo must preserve the accepted default. Reuse the existing role/size/bedding mappings across every creation caller, and let explicit finish/material choices win without hidden preset colours masking them. Adding a piece must not restyle retained pieces. [RM-090](../tickets/RM-090-default-new-furniture-to-the-room-theme.md), [evidence](../validation/RM-090.md).

@@ -11,6 +11,29 @@ export {
 } from './bedroom-themes.js';
 export type { BedroomThemeId, BedroomTheme } from './bedroom-themes.js';
 
+/** Authored visual swatches; Kelvin labels are approximate, not photometric facts. */
+export const LIGHT_PRESETS = [
+  { id: 'candlelight', label: 'Candlelight · 2200 K', color: '#ffb969' },
+  { id: 'warm-white', label: 'Warm white · 2700 K', color: '#ffd6a3' },
+  { id: 'neutral', label: 'Neutral · 4000 K', color: '#fff1dc' },
+  { id: 'daylight', label: 'Daylight · 6500 K', color: '#e4edff' },
+  { id: 'warm-red', label: 'Warm red', color: '#ff6640' },
+] as const;
+export const lightSettingsSchema = z.strictObject({
+  color: surfaceColorSchema,
+  brightness: z.number().int().min(0).max(100),
+  on: z.boolean(),
+});
+export type LightSettings = z.infer<typeof lightSettingsSchema>;
+export const DEFAULT_LIGHT: Readonly<LightSettings> = Object.freeze({
+  color: '#ffd6a3',
+  brightness: 75,
+  on: true,
+});
+export const lightSettings = (piece: {
+  light?: LightSettings | undefined;
+}): Readonly<LightSettings> => piece.light ?? DEFAULT_LIGHT;
+
 /** Retain the applied choice; legacy rooms reuse the exact preset match already shown by the editor. */
 export function roomBedroomTheme(
   room: RoomDocument['room'],

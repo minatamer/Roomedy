@@ -1,0 +1,23 @@
+# Editor lighting decisions — RM-091
+
+2 November 2026. Research is limited to primary documentation; installed Three.js0.186.1 is the implementation authority. No dependency or renderer replacement.
+
+Three's [shadow manual](https://threejs.org/manual/pages/shadows.html) explains that each shadow-casting light redraws the scene, and a point-light shadow requires six views. Use downward spot lighting and no cube shadow maps; reserve two512px fixture shadows. [SpotLight](https://threejs.org/docs/pages/SpotLight.html) supports finite distance, inverse-square decay, cone angle and penumbra. Eight illumination sources is an authored preview budget, not a Three.js hardware guarantee. Older rooms above that count remain importable; selected then stable-ID prioritization and a visible disclosure avoid silently promising every fixture illuminates the scene.
+
+Keep the existing linear working space and sRGB display/material texture handling described in [Three's colour-management guide](https://threejs.org/manual/pages/color-management.html). Preset CSS colours enter through Three.Color; do not manually apply another gamma conversion or replace existing daylight tone mapping. An emissive bulb makes the source visible; the spot light illuminates receiving surfaces. An emissive material alone does not light the room.
+
+Reuse [rendering on demand](https://threejs.org/manual/pages/rendering-on-demand.html): finite transitions/dragging/settings invalidate existing frames, with no star animation, flicker or second loop. Shadows update with existing demand frames. Stable keyed fixture objects avoid unnecessary shader changes on brightness/colour edits. Dispose shadow render targets and materials with their owner. Keep absence/off/dim states legible through a small neutral night ambient term; do not fake measured brightness or energy usage.
+
+The [Australian Government lighting guidance](https://www.energyrating.gov.au/consumer-information/products/lighting/choosing-right-lamp) distinguishes warm2700K, cool4000K and daylight5000–6500K. [US DOE tunable-light guidance](https://www.energy.gov/cmei/ssl/understanding-led-color-tunable-products) describes warm dimming toward1800K and common2700–3000K warm white. Offer Candlelight2200K, Warm white2700K, Neutral4000K, Daylight6500K, Warm red and custom colour. RGB swatches are authored visual approximations, not calibrated colour temperature or colour-rendering claims. Warm red is a decorative colour preset, not a Kelvin value or health recommendation.
+
+Ceilings use the common wall colour, with no independent material data. Interior viewpoints render the underside at the display room height; Overview hides it. Ceiling fixtures have planned vertical anchoring to room height and their own supported depth; movement remains X/Z on the shared command path. Floor plan/export keeps floor objects readable, while Ceiling mode adds the fixtures with faint floor context. Existing physical collision/height/unknown provenance is retained.
+
+Day/night and plan layer are editor presentation only. Light source colour/brightness/on/off are canonical optional fixture data and belong to normal preview/history/project/recovery. Old fixtures without light fields receive warm-white defaults; no migration rewrites saved rooms. The first-night dialog stores only a local offered flag and never dispatches an operation. Medy navigation supplies a draft, requiring the normal Send action to continue.
+
+## Implemented calibration and ownership
+
+The final preview uses 0.65 candela per brightness percent for ceiling fixtures and 0.24 for floor lamps, finite distance14m, angle1.22rad, penumbra0.9 and decay2. This is authored visual calibration, not measured output. Track uses three emissive heads and one broad illumination source. Day has no fixture shadow maps; Night uses at most two512px maps and suppresses the sun shadow. Enabled lamps can emit in either time; Day retains its original environment.
+
+Automatic vertical mounting runs for creation/replacement/related geometry and actual room-height changes. Appearance-only light/material edits preserve retained elevations. The shared helper already covers the existing manual coordinate caller, so that file required no change. Standard supported size presets follow each ceiling model's canonical dimensions.
+
+Actual final verification and its limits are recorded in the [RM-091 receipt](../validation/RM-091.md): full1798-test/113-file gate and both builds, manual Night/interior/ceiling/mobile checks, unsent Medy onboarding and observed idle sleep. Day/night does not change saved project or PDF lighting. Actual owner/model quality and worst-case device performance remain separate acceptance.

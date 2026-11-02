@@ -12,6 +12,7 @@ import {
   openingMaterialsSchema,
   furnitureMaterialsSchema,
   bedroomThemeIdSchema,
+  lightSettingsSchema,
 } from './furniture-materials.js';
 import {
   roomDocumentSchema,
@@ -72,6 +73,13 @@ export const proposalActionSchema = z.discriminatedUnion('type', [
   }),
 ]);
 export const visitorActionSchema = z.discriminatedUnion('type', [
+  z.strictObject({
+    type: z.literal('set-light'),
+    id: idSchema,
+    light: lightSettingsSchema
+      .partial()
+      .refine((value) => Object.keys(value).length > 0),
+  }),
   z.strictObject({
     type: z.literal('set-bedroom-theme'),
     theme: bedroomThemeIdSchema,

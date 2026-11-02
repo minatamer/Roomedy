@@ -41,6 +41,16 @@ export function wallMountedPose(
   item: Furniture,
   pose = item.pose,
 ): Furniture['pose'] {
+  if (
+    findCatalogueEntry(item.catalogueId, item.catalogueVersion)?.placement ===
+    'ceiling'
+  ) {
+    const height = room.room.height.value ?? 2600;
+    return {
+      ...pose,
+      bottomY: Math.max(0, height - (item.dimensions.height.value ?? 200)),
+    };
+  }
   if (!wallMounted(item)) return { ...pose };
   const width = item.dimensions.width.value,
     depth = item.dimensions.depth.value;
@@ -87,6 +97,11 @@ export function projectedLabelVisible(
   room: RoomDocument,
   item: Furniture,
 ): boolean {
+  if (
+    findCatalogueEntry(item.catalogueId, item.catalogueVersion)?.placement ===
+    'ceiling'
+  )
+    return false;
   const bottom = furnitureBottom(item);
   return (
     bottom === null ||
@@ -95,6 +110,8 @@ export function projectedLabelVisible(
         rect = footprint(other);
       return (
         other.id !== item.id &&
+        findCatalogueEntry(other.catalogueId, other.catalogueVersion)
+          ?.placement !== 'ceiling' &&
         top !== null &&
         top > bottom &&
         rect &&

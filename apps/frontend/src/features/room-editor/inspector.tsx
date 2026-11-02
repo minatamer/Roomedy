@@ -1,6 +1,7 @@
 import { OpeningMaterialControls } from './opening-material-controls';
 import { FurnitureMaterialControls } from './furniture-material-controls';
 import { MountControls } from './mount-controls';
+import { LightControls } from './light-controls';
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Feature, Furniture, RoomDocument } from '@roomedy/contracts/room';
@@ -185,6 +186,9 @@ export function FurnitureInspector({
                 label: 'Appearance',
                 content: (
                   <div className={layout.stack}>
+                    {entry.category === 'lighting' && (
+                      <LightControls item={item} onEdit={run} />
+                    )}
                     <FurnitureMaterialControls
                       finishControl={
                         <label>

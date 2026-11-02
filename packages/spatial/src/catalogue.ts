@@ -344,6 +344,39 @@ const records = catalogueSchema.parse([
       0,
       'none',
     ],
+    [
+      'ceiling-pendant',
+      'Pendant light',
+      'lighting',
+      'ceiling-pendant',
+      [300, 450, 650],
+      [300, 450, 650],
+      [300, 500, 800],
+      0,
+      'none',
+    ],
+    [
+      'ceiling-flush',
+      'Flush ceiling light',
+      'lighting',
+      'ceiling-flush',
+      [300, 500, 700],
+      [300, 500, 700],
+      [60, 100, 180],
+      0,
+      'none',
+    ],
+    [
+      'ceiling-track',
+      'Track ceiling light',
+      'lighting',
+      'ceiling-track',
+      [600, 900, 1400],
+      [120, 180, 300],
+      [120, 220, 400],
+      0,
+      'none',
+    ],
   ].map(
     ([
       id,
@@ -368,6 +401,9 @@ const records = catalogueSchema.parse([
       },
       accessMm,
       accessMechanism,
+      ...(String(id).startsWith('ceiling-')
+        ? { placement: 'ceiling', defaultElevationMm: 2200 }
+        : {}),
       ...(id === 'tv-wall'
         ? {
             placement: 'wall',

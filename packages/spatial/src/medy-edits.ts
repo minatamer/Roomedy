@@ -5,6 +5,7 @@ import {
   furnitureMaterialsLabel,
   BED_BEDDING_PARTS,
   roomBedroomTheme,
+  LIGHT_PRESETS,
 } from '@roomedy/contracts/furniture-materials';
 import {
   featureLabel,
@@ -14,6 +15,7 @@ import {
 } from './elevation.js';
 import { catalogueMention } from './medy-language.js';
 import type { VisitorAction } from '@roomedy/contracts/commands';
+import type { LightSettings } from '@roomedy/contracts/furniture-materials';
 import { visitorBatchSchema } from '@roomedy/contracts/commands';
 import type { Feature, RoomDocument } from '@roomedy/contracts/room';
 import { POLICY } from '@roomedy/contracts/policy';
@@ -126,7 +128,7 @@ export function medyEdit(
         );
   };
   const editing =
-    /\b(set|make|paint|change|preview|resize|adjust|correct|confirm|measured|mark|move|place|put|rotate|turn|face|delete|remove|lock|unlock|protect|unprotect|own|owned|replace|add|mount|hang)\b/.test(
+    /\b(set|make|paint|change|preview|resize|adjust|correct|confirm|measured|mark|move|place|put|rotate|turn|face|delete|remove|lock|unlock|protect|unprotect|own|owned|replace|add|mount|hang|dim|switch)\b/.test(
       words,
     );
   const openingPresetRequest =
@@ -145,6 +147,88 @@ export function medyEdit(
     return ask(
       'Which exact change should I preview? Choose one value or condition; I won’t guess between alternatives.',
     );
+  const lightTargets = targets.filter(
+    (target) =>
+      target.kind === 'furniture' &&
+      findCatalogueEntry(
+        target.piece.catalogueId,
+        target.piece.catalogueVersion,
+      )?.category === 'lighting',
+  );
+  if (
+    lightTargets.length &&
+    /\b(turn|switch|dim|brightness|glow|illumination)\b/.test(words) &&
+    /\b(paint|move|rotate|resize|delete|remove|replace|add|lock|unlock)\b/.test(
+      words,
+    )
+  )
+    return ask(
+      'Let’s preview the lighting separately from changes to objects, materials or placement.',
+    );
+  if (
+    lightTargets.length &&
+    !/\b(add|replace|paint)\b/.test(words) &&
+    /\b(light|lights|glow|illumination|brightness|dim|candlelight|warm|neutral|daylight|cool|red|on|off)\b/.test(
+      words,
+    )
+  ) {
+    if (
+      lightTargets.length !== targets.length ||
+      (lightTargets.length > 1 &&
+        !/\b(all|both|these|those|them|lights|lamps|and)\b/.test(words)) ||
+      /\b(move|rotate|resize|size|width|depth|height|delete|remove|lock|unlock|confirm|not|never|don't|without|finish|frame|shade|material|upholstery|oak|walnut|ivory|clay|sage|charcoal)\b/.test(
+        words,
+      )
+    )
+      return ask(
+        'Choose the lights and one lighting change first; I’ll keep their placement and materials unchanged.',
+      );
+    const patch: Partial<LightSettings> = {};
+    const hex = words.match(/#[a-f0-9]{6}\b/g) ?? [];
+    const presets = LIGHT_PRESETS.filter((preset) =>
+      new RegExp(`\\b${preset.id.replaceAll('-', '[- ]')}\\b`).test(words),
+    );
+    if (hex.length > 1 || presets.length > 1)
+      return ask('Which single light colour should I use?');
+    const preset =
+      presets[0] ??
+      (/\bred\b/.test(words)
+        ? LIGHT_PRESETS[4]
+        : /\bcool\b/.test(words)
+          ? LIGHT_PRESETS[2]
+          : undefined);
+    if (
+      new Set(
+        words.match(/\b(red|blue|green|pink|purple|amber|white)\b/g) ?? [],
+      ).size > 1 ||
+      (hex[0] && preset && hex[0] !== preset.color)
+    )
+      return ask('Which single light colour should I preview?');
+    if (hex[0] || preset) patch.color = hex[0] ?? preset!.color;
+    const percentages =
+      words.match(/(?<![\w.])[+-]?\d+(?:\.\d+)?\s*(?:%|percent\b)/g) ?? [];
+    if (percentages.length > 1)
+      return ask('Choose one brightness from 0 to 100%.');
+    if (percentages[0])
+      patch.brightness = Number(percentages[0].replace(/%|percent/g, ''));
+    const on = /\bon\b/.test(words),
+      off = /\boff\b/.test(words);
+    if (on && off) return ask('Should those lights be on or off?');
+    if (on || off) patch.on = on;
+    if (
+      !Object.keys(patch).length ||
+      (patch.brightness !== undefined &&
+        (!Number.isInteger(patch.brightness) ||
+          patch.brightness < 0 ||
+          patch.brightness > 100))
+    )
+      return ask(
+        'Choose a light colour preset, a six-digit hex colour, brightness from 0 to 100%, or on/off.',
+      );
+    for (const target of lightTargets)
+      actions.push({ type: 'set-light', id: target.id, light: patch });
+    return batch('Change lighting');
+  }
   if (
     /\b(room palette|room style|warm-simple|calm-focused|light-airy)\b/.test(
       words,

@@ -29,7 +29,7 @@ import type {
   CheckFacts,
 } from '@roomedy/contracts/room';
 import { findCatalogueEntry } from '@roomedy/spatial';
-import type { InstancedMesh, MeshBasicMaterial } from 'three';
+import type { InstancedMesh, MeshBasicMaterial, Mesh } from 'three';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { furnitureMaterialTargets } from '@roomedy/contracts/furniture-materials';
 import {
@@ -94,6 +94,8 @@ import {
 import type { ViewBridge, SavedViewCamera } from './view-morph';
 import type { PerspectiveCamera } from 'three';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
+import { RoomLights, Bulb } from './lighting';
+import { isLight } from './lighting-model';
 
 export type CameraAction = {
   kind:
@@ -112,6 +114,7 @@ export type CameraAction = {
   sequence: number;
 };
 export interface SceneProps {
+  night?: boolean;
   active?: boolean;
   interactive?: boolean;
   viewBridge?: ViewBridge | undefined;
@@ -1565,6 +1568,7 @@ function Piece({
           <OwnedStandard color="#9a7857" wireframe />
         </mesh>
       )}
+      {isLight(piece) && <Bulb piece={piece} />}
       {(selected || proposed) && (
         <mesh
           geometry={geometry}
@@ -1618,6 +1622,10 @@ export function RoomScene(props: SceneProps) {
           .map((f) => [f.id, f.offset.value!]),
       ),
   );
+  useLayoutEffect(() => {
+    gl.setClearColor(props.night ? '#0d1524' : '#f7f5f0', props.night ? 1 : 0);
+    invalidate();
+  }, [gl, invalidate, props.night]);
   useEffect(() => invalidate(), [desiredRoom, invalidate]);
   useFrame((_, delta) => {
     const next = new Map<string, number>();
@@ -1684,8 +1692,9 @@ export function RoomScene(props: SceneProps) {
   );
   useLayoutEffect(() => {
     windowGlass?.prepare(gl);
+    windowGlass?.setNight(!!props.night);
     invalidate();
-  }, [windowGlass, gl, invalidate]);
+  }, [windowGlass, gl, invalidate, props.night]);
   useEffect(() => () => windowGlass?.dispose(), [windowGlass]);
   const [assets, setAssets] = useState<ReadonlyMap<string, AssetState>>(
     new Map(),
@@ -1714,6 +1723,13 @@ export function RoomScene(props: SceneProps) {
   }, [assets, urls, onNotice]);
   const bounds = displayRoom(rendered),
     ghosts = changedPieces(room, candidate);
+  const ceiling = useRef<Mesh>(null);
+  useFrame(({ camera }) => {
+    if (ceiling.current)
+      ceiling.current.visible =
+        props.cameraView !== 'overview' &&
+        camera.position.y < bounds.height - 0.02;
+  });
   const sunTarget = useMemo(() => {
     const target = new Object3D();
     target.position.set(bounds.width / 2, 0, bounds.depth / 2);
@@ -1745,8 +1761,37 @@ export function RoomScene(props: SceneProps) {
           action={props.cameraAction}
         />
       )}
-      <ambientLight intensity={0.35} />
-      <hemisphereLight args={['#fff8ee', '#a89175', 1.6]} />
+      <ambientLight intensity={props.night ? 0.12 : 0.35} />
+      <hemisphereLight
+        args={
+          props.night
+            ? ['#a0b4db', '#201b28', 0.22]
+            : ['#fff8ee', '#a89175', 1.6]
+        }
+      />
+      <RoomLights
+        room={rendered}
+        selectedId={selectedId}
+        night={!!props.night}
+        editing={props.editing}
+      />
+      {props.cameraView !== 'overview' && !props.inspection?.isolated && (
+        <mesh
+          ref={ceiling}
+          visible={false}
+          name="interior-ceiling"
+          geometry={geometry}
+          position={[bounds.width / 2, bounds.height + 0.035, bounds.depth / 2]}
+          scale={[bounds.width + 0.1, 0.07, bounds.depth + 0.1]}
+          receiveShadow
+          dispose={null}
+        >
+          <OwnedStandard
+            color={roomSurface(rendered.room, 'walls').color}
+            roughness={0.9}
+          />
+        </mesh>
+      )}
       <primitive object={sunTarget} />
       <directionalLight
         position={[
@@ -1755,8 +1800,8 @@ export function RoomScene(props: SceneProps) {
           bounds.depth * 0.25,
         ]}
         target={sunTarget}
-        intensity={2.5}
-        castShadow
+        intensity={props.night ? 0.015 : 2.5}
+        castShadow={!props.night}
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-shadowSpan}
         shadow-camera-right={shadowSpan}

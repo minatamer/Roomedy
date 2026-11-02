@@ -38,6 +38,24 @@ function appearanceGroup(
   targets: MedyTarget[],
   operationId: string,
 ): MedyEdit | null {
+  if (
+    targets.length > 1 &&
+    targets.every(
+      (target) =>
+        target.kind === 'furniture' &&
+        findCatalogueEntry(
+          target.piece.catalogueId,
+          target.piece.catalogueVersion,
+        )?.category === 'lighting',
+    )
+  ) {
+    const lighting = medyEdit(room, words, targets, operationId);
+    if (
+      lighting?.kind === 'edits' &&
+      lighting.actions.every((action) => action.type === 'set-light')
+    )
+      return lighting;
+  }
   if (targets.length < 2 || !appearanceOnly(words))
     return medyEdit(room, words, targets, operationId);
   const categories = targets.map((target) =>

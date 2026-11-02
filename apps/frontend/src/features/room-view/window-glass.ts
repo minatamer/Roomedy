@@ -58,6 +58,15 @@ export function createWindowGlass() {
     material,
     mirror,
     daylight,
+    setNight(night: boolean) {
+      daylight.map = night ? null : (texture ?? null);
+      daylight.color.set(night ? '#02040a' : '#ffffff');
+      daylight.needsUpdate = true;
+      material.color.set(night ? '#101929' : '#f1f7f4');
+      material.transmission = night ? 0.7 : 0.96;
+      material.envMapIntensity = night ? 0.06 : 1.15;
+      mirror.envMapIntensity = night ? 0.12 : 1.1;
+    },
     prepare(renderer?: WebGLRenderer) {
       if (disposed) return;
       prepareDaylight();

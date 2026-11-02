@@ -3,6 +3,7 @@ import type { VisitorAction } from '@roomedy/contracts/commands';
 function slot(action: VisitorAction): string | null {
   switch (action.type) {
     case 'set-furniture-materials':
+    case 'set-light':
     case 'set-opening-materials':
     case 'move':
     case 'rotate':
@@ -36,7 +37,12 @@ export function appendInspectorEdits(
   const action = incoming.length === 1 ? incoming[0] : undefined;
   if (last && action && slot(action) !== null && slot(last) === slot(action)) {
     let merged = structuredClone(action);
-    if (last.type === 'set-furniture-materials' && action.type === last.type)
+    if (last.type === 'set-light' && action.type === 'set-light')
+      merged = { ...action, light: { ...last.light, ...action.light } };
+    else if (
+      last.type === 'set-furniture-materials' &&
+      action.type === last.type
+    )
       merged = {
         ...action,
         materials: { ...last.materials, ...action.materials },

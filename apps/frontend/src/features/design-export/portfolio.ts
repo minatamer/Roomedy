@@ -244,48 +244,54 @@ export function drawPortfolioPlan(c: Context, project: Project) {
     c.lineWidth = 4;
     c.stroke();
   });
-  furnitureByElevation(room).forEach((piece) => {
-    const i = room.furniture.indexOf(piece);
-    const b = boxes[i];
-    if (!b) {
-      const x = ox + piece.pose.centerX * scale,
-        y = oy + piece.pose.centerZ * scale;
-      text(c, `${i + 1}?`, x, y, 12, palette.clay);
-      return;
-    }
-    const x = ox + b.minX * scale,
-      y = oy + b.minZ * scale,
-      w = (b.maxX - b.minX) * scale,
-      h = (b.maxZ - b.minZ) * scale;
-    c.fillStyle =
-      findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
-        ?.category === 'tv'
-        ? '#282b2a'
-        : (piece.materials?.bodyColor ??
-          piece.materials?.softColor ??
-          FINISH_PALETTE[piece.finish]);
-    c.fillRect(x, y, w, h);
-    c.strokeStyle = '#77573f';
-    c.lineWidth = 1.1;
-    c.strokeRect(x, y, w, h);
-    c.font = '11px Arial';
-    const label =
-      w > 70 && h > 25
-        ? short(c, `${i + 1}. ${piece.label}`, w - 12)
-        : `${i + 1}`;
-    const measure = c.measureText(label);
-    const labelX = projectedLabelVisible(room, piece)
-      ? x + w / 2
-      : x + w + measure.width / 2 + 8;
-    c.fillStyle = palette.paper;
-    c.fillRect(
-      labelX - measure.width / 2 - 4,
-      y + h / 2 - 10,
-      measure.width + 8,
-      16,
-    );
-    text(c, label, labelX - measure.width / 2, y + h / 2 + 2, 11);
-  });
+  furnitureByElevation(room)
+    .filter(
+      (piece) =>
+        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+          ?.placement !== 'ceiling',
+    )
+    .forEach((piece) => {
+      const i = room.furniture.indexOf(piece);
+      const b = boxes[i];
+      if (!b) {
+        const x = ox + piece.pose.centerX * scale,
+          y = oy + piece.pose.centerZ * scale;
+        text(c, `${i + 1}?`, x, y, 12, palette.clay);
+        return;
+      }
+      const x = ox + b.minX * scale,
+        y = oy + b.minZ * scale,
+        w = (b.maxX - b.minX) * scale,
+        h = (b.maxZ - b.minZ) * scale;
+      c.fillStyle =
+        findCatalogueEntry(piece.catalogueId, piece.catalogueVersion)
+          ?.category === 'tv'
+          ? '#282b2a'
+          : (piece.materials?.bodyColor ??
+            piece.materials?.softColor ??
+            FINISH_PALETTE[piece.finish]);
+      c.fillRect(x, y, w, h);
+      c.strokeStyle = '#77573f';
+      c.lineWidth = 1.1;
+      c.strokeRect(x, y, w, h);
+      c.font = '11px Arial';
+      const label =
+        w > 70 && h > 25
+          ? short(c, `${i + 1}. ${piece.label}`, w - 12)
+          : `${i + 1}`;
+      const measure = c.measureText(label);
+      const labelX = projectedLabelVisible(room, piece)
+        ? x + w / 2
+        : x + w + measure.width / 2 + 8;
+      c.fillStyle = palette.paper;
+      c.fillRect(
+        labelX - measure.width / 2 - 4,
+        y + h / 2 - 10,
+        measure.width + 8,
+        16,
+      );
+      text(c, label, labelX - measure.width / 2, y + h / 2 + 2, 11);
+    });
 }
 async function encode(canvas: HTMLCanvasElement) {
   const blob = await new Promise<Blob>((resolve, reject) =>

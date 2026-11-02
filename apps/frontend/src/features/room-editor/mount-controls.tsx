@@ -46,6 +46,13 @@ export function MountControls({
   const input = useRef<HTMLInputElement>(null),
     errorId = useId();
   if (!entry?.placement || entry.placement === 'floor') return null;
+  if (entry.placement === 'ceiling')
+    return advanced ? null : (
+      <p className={styles.hint}>
+        Mounted to the ceiling. Move it across the Ceiling plan; its drop
+        follows the fixture size.
+      </p>
+    );
   const apply = (pose: Furniture['pose']) => {
     const room = editRoom ?? controller.getSnapshot().workspace?.current;
     if (!room) return;

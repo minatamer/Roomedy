@@ -169,6 +169,16 @@ const tvSizes = (entry: CatalogueEntry): SizePreset[] =>
 export function furnitureSizePresets(
   entry: CatalogueEntry,
 ): readonly SizePreset[] {
+  if (entry.placement === 'ceiling')
+    return [
+      common(
+        `${entry.id}-standard`,
+        'Standard',
+        entry.size.width.default,
+        entry.size.depth.default,
+        entry.size.height.default,
+      ),
+    ];
   if (!entry.adjustable) return [];
   return (
     entry.category === 'tv'

@@ -8,7 +8,7 @@ import { checkRoom } from './checks.js';
 import { planningRoom, planningChecks } from './planning.js';
 import { designerRequest, designPalette, designSuggestions } from './design.js';
 import type { DesignTurn } from './design.js';
-import { medyCommandWords } from './medy-language.js';
+import { medyCommandWords, catalogueMention } from './medy-language.js';
 import { requestedCatalogueSize } from './size-presets.js';
 
 const clarificationLabel =
@@ -501,8 +501,10 @@ function resolveExplicitTask(
           )[0]!,
       )
       .join(' ');
-    const additionTypes = types.filter((c) =>
-      new RegExp('\\b' + c + 's?\\b').test(additionClauses),
+    const additionTypes = types.filter(
+      (c) =>
+        new RegExp('\\b' + c + 's?\\b').test(additionClauses) ||
+        (c === 'lighting' && /\b(lamps?|lights?)\b/.test(additionClauses)),
     );
     if (
       /\b(?:two|three|four|five|six|\d+)\s+(?:beds?|desks?|chairs?|wardrobes?)\b/.test(
@@ -530,9 +532,14 @@ function resolveExplicitTask(
     goal.kind = pieces.length ? 'add' : 'furnish';
     for (const [i, c] of additionTypes.entries()) {
       const namedEntry = CATALOGUE.find(
-        (e) => e.category === c && t.includes(e.label.toLowerCase()),
+        (e) => e.category === c && catalogueMention(e, t),
       );
-      const entry = namedEntry ?? CATALOGUE.find((e) => e.category === c)!;
+      const entry =
+        namedEntry ??
+        (c === 'lighting' && /\bceiling\b/.test(t)
+          ? CATALOGUE.find((entry) => entry.id === 'ceiling-pendant')
+          : undefined) ??
+        CATALOGUE.find((e) => e.category === c)!;
       const requested = requestedCatalogueSize(
         entry,
         medyCommandWords(room, t),

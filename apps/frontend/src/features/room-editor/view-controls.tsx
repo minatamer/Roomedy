@@ -99,29 +99,40 @@ export function ViewControls({
 export function FrameControls({
   view,
   onView,
+  children,
 }: {
   view: 'plan' | 'cutaway';
   onView: (view: 'plan' | 'cutaway') => void;
+  children?: ReactNode;
 }) {
   return (
-    <div className={styles.frameControls}>
-      <div
-        role="group"
-        aria-label="Room view"
-        className={styles.viewSwitch}
-        data-view={view}
-      >
-        <span className={styles.viewThumb} aria-hidden="true" />
-        <button aria-pressed={view === 'plan'} onClick={() => onView('plan')}>
-          2D
-        </button>
-        <button
-          aria-pressed={view === 'cutaway'}
-          onClick={() => onView('cutaway')}
+    <>
+      {children && (
+        <div
+          className={`${styles.frameControls} ${styles.environmentControls}`}
         >
-          3D
-        </button>
+          {children}
+        </div>
+      )}
+      <div className={styles.frameControls}>
+        <div
+          role="group"
+          aria-label="Room view"
+          className={styles.viewSwitch}
+          data-view={view}
+        >
+          <span className={styles.viewThumb} aria-hidden="true" />
+          <button aria-pressed={view === 'plan'} onClick={() => onView('plan')}>
+            2D
+          </button>
+          <button
+            aria-pressed={view === 'cutaway'}
+            onClick={() => onView('cutaway')}
+          >
+            3D
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

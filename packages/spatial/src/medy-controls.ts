@@ -1,4 +1,5 @@
 export type MedyControl =
+  | { type: 'environment'; mode: 'day' | 'night' | 'floor' | 'ceiling' }
   | { type: 'view'; view: 'plan' | 'cutaway' }
   | {
       type: 'camera';
@@ -38,6 +39,19 @@ export function medyControl(text: string): MedyControl | null {
     .replace(/^(?:can|could|would) you\s+/, '')
     .replace(/[?.!]+$/, '')
     .trim();
+  const environment = t.match(
+    /^(?:show|open|switch to|preview) (?:the )?(day|night|daytime|nighttime|floor|ceiling)(?: mode| view| plan)?$/,
+  );
+  if (environment)
+    return {
+      type: 'environment',
+      mode:
+        environment[1] === 'daytime'
+          ? 'day'
+          : environment[1] === 'nighttime'
+            ? 'night'
+            : (environment[1] as 'day' | 'night' | 'floor' | 'ceiling'),
+    };
   if (
     /^(?:apply|accept|keep)(?: (?:it|that|this|the changes|the preview|the proposal|these changes))?$/.test(
       t,

@@ -63,6 +63,8 @@ import { furnitureOpening, featureOpening } from '../room-view/articulation';
 import { OpeningPreview } from './opening-preview';
 import controlsStyles from './view-controls.module.css';
 import { roomSurface, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
+import { LightingExperience } from './lighting-experience';
+import { isLight, isCeiling } from '../room-view/lighting-model';
 
 const Cutaway = lazy(() => import('../room-view/cutaway'));
 function RoomToolIcon({ panel }: { panel: Panel }) {
@@ -133,6 +135,18 @@ export function Editor({
     placement.getEntry,
   );
   const [catalogueCategory, setCatalogueCategory] = useState('all');
+  const environmentKey = state.workspace?.workspaceId ?? '';
+  const [environment, setEnvironment] = useState({
+    workspaceId: environmentKey,
+    night: false,
+    layer: 'floor' as 'floor' | 'ceiling',
+  });
+  if (environment.workspaceId !== environmentKey)
+    setEnvironment({
+      workspaceId: environmentKey,
+      night: false,
+      layer: 'floor',
+    });
   const [cutawayOpenedAt] = useState(() => performance.now());
   const panelMotion = useSurfaceMotion(
     `${state.workspace?.workspaceId ?? 'opening'}:${state.presentation.panel}:${state.presentation.panel === 'inspector' ? state.presentation.selectedId : ''}:${state.comparison}`,
@@ -359,6 +373,32 @@ export function Editor({
         openDrawer();
       };
       switch (control.type) {
+        case 'environment':
+          if (
+            (control.mode === 'floor' || control.mode === 'ceiling') &&
+            (current.candidate || current.pending)
+          )
+            return {
+              ok: false,
+              summary:
+                'Apply or reset the current preview before changing plan layers.',
+            };
+          placement.cancel();
+          if (control.mode === 'day' || control.mode === 'night') {
+            setEnvironment((value) => ({
+              ...value,
+              night: control.mode === 'night',
+            }));
+            setRoomView('cutaway');
+          } else {
+            controller.select(null);
+            setEnvironment((value) => ({
+              ...value,
+              layer: control.mode as 'floor' | 'ceiling',
+            }));
+            setRoomView('plan');
+          }
+          return done(`Here’s the ${control.mode} view.`);
         case 'view':
           setMedyCamera(null);
           setRoomView(control.view);
@@ -656,13 +696,48 @@ export function Editor({
     { id: 'assistant', label: 'Medy' },
   ];
   const activeTool = activeRoomTool(state);
+  const editingLayer = adding
+    ? adding.placement === 'ceiling'
+      ? 'ceiling'
+      : 'floor'
+    : item
+      ? isCeiling(item)
+        ? 'ceiling'
+        : 'floor'
+      : environment.layer;
   const frameControls = (
     <FrameControls
       view={roomView}
       onView={(next) => {
         setRoomView(next);
       }}
-    />
+    >
+      <LightingExperience
+        key={workspaceId}
+        owner={controller}
+        view={roomView}
+        night={environment.night}
+        layer={editingLayer}
+        hasFixtures={shownRoom.furniture.some(isLight)}
+        canOffer={
+          !readOnly &&
+          !tourActive &&
+          state.destination === 'design' &&
+          !state.pending
+        }
+        onNight={(night) => setEnvironment((value) => ({ ...value, night }))}
+        onLayer={(layer) => {
+          placement.cancel();
+          controller.select(null);
+          setEnvironment((value) => ({ ...value, layer }));
+        }}
+        onManual={() => open('catalogue', 'lighting')}
+        onMedy={() => {
+          open('assistant');
+          assistant?.draft('Add a ceiling pendant light');
+        }}
+      />
+    </FrameControls>
   );
   const projectBrand = (
     <div
@@ -859,6 +934,7 @@ export function Editor({
                   </ViewControls>
                 </div>
                 <PlanView
+                  layer={editingLayer}
                   active={viewMorph.planInteractive}
                   controller={controller}
                   state={state}
@@ -875,6 +951,7 @@ export function Editor({
               >
                 <Suspense fallback={null}>
                   <Cutaway
+                    night={environment.night}
                     key={workspace.workspaceId}
                     layerRef={cutawayLayer}
                     layerClassName={morphStyles.cutawayLayer}

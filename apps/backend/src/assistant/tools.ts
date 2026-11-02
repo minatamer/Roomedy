@@ -21,6 +21,7 @@ import {
   validateSearchCandidate,
   searchFacts,
   assistantSearchFallback,
+  wallMountedPose,
 } from '@roomedy/spatial';
 import type { AssistantTask } from '@roomedy/spatial';
 import { runBackendLayoutSearch } from './layout-search.js';
@@ -378,15 +379,20 @@ export function createAssistantTools(
         roomBedroomTheme(room.room)?.id,
       );
       if (!furniture) return reject();
+      const selectedPose = {
+        ...furniture.pose,
+        ...pose,
+        provenance: furniture.pose.provenance,
+      };
       actions.push({
         type: item.type,
         furniture: {
           ...furniture,
-          pose: {
-            ...furniture.pose,
-            ...pose,
-            provenance: furniture.pose.provenance,
-          },
+          pose:
+            CATALOGUE.find((entry) => entry.id === furniture.catalogueId)
+              ?.placement === 'ceiling'
+              ? wallMountedPose(room, furniture, selectedPose)
+              : selectedPose,
         },
         ...(item.type === 'replace' ? { id: item.id } : {}),
       } as ProposalAction);

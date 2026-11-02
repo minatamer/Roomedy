@@ -30,6 +30,7 @@ import {
   BEDROOM_THEMES,
   BED_BEDDING_PARTS,
   MATERIAL_PATTERNS,
+  LIGHT_PRESETS,
 } from '@roomedy/contracts/furniture-materials';
 import { COLOUR_PRESETS, SURFACE_TEXTURES } from '@roomedy/contracts/surfaces';
 
@@ -99,6 +100,18 @@ export function createAssistantHandler(
                 bedroomThemes: BEDROOM_THEMES,
                 bedBeddingParts: BED_BEDDING_PARTS,
                 supportedColours: COLOUR_PRESETS,
+                lighting: {
+                  presets: LIGHT_PRESETS,
+                  brightness: '0–100%',
+                  examples: [
+                    'Set the Floor lamp light to warm red',
+                    'Set the lights brightness to 50%',
+                    'Turn the lights off',
+                    'Add a ceiling pendant light',
+                  ],
+                  views:
+                    'Day/Night in 3D; Floor/Ceiling in 2D; interior ceiling follows wall colour. Light emission is independent of fixture finish. Preview then Apply.',
+                },
                 supportedSurfaceTextures: SURFACE_TEXTURES,
                 supportedFurniturePatterns: MATERIAL_PATTERNS,
                 request: input.text,
@@ -292,6 +305,18 @@ export function createAssistantHandler(
       return result('completed', reply.summary, reply);
     }
     const context = {
+      lighting: {
+        presets: LIGHT_PRESETS,
+        brightness: '0–100%',
+        examples: [
+          'Set the Floor lamp light to warm red',
+          'Set the lights brightness to 50%',
+          'Turn the lights off',
+          'Add a ceiling pendant light',
+        ],
+        views:
+          'Day/Night in 3D; Floor/Ceiling in 2D; interior ceiling follows wall colour. Light emission is independent of fixture finish. Preview then Apply.',
+      },
       promptVersion: ASSISTANT_PROMPT_VERSION,
       task: {
         kind: task.kind,

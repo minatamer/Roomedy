@@ -1,0 +1,91 @@
+.dialog {
+  width: min(390px, calc(100vw - 32px));
+  max-height: calc(100svh - 40px);
+  overflow: auto;
+  padding: 30px;
+  border: 1px solid #fff9e5;
+  border-radius: 28px;
+  color: #493a2d;
+  background: linear-gradient(145deg, #fff5df, #e9d7b7);
+  box-shadow: 0 24px 90px #160d0645;
+  font: inherit;
+}
+.lightControls input[type='range'],
+.lightControls input[type='checkbox'] {
+  accent-color: #70523b;
+}
+.lightControls input[type='range'] {
+  width: 100%;
+  min-height: 32px;
+}
+.dialog::backdrop {
+  background: #1b20295c;
+  backdrop-filter: blur(7px);
+}
+.dialog h2 {
+  margin: 12px 0;
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.dialog p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+.dialog small {
+  display: block;
+  margin-top: 14px;
+  color: #766044;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+.mark {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #263244;
+  color: #ffdda5;
+  font-size: 34px;
+}
+.actions {
+  display: grid;
+  gap: 9px;
+}
+.actions button {
+  min-height: 46px;
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: 1px solid #c5ad87;
+  background: #f7ebd5;
+  color: #493a2d;
+  font: inherit;
+  cursor: pointer;
+}
+.actions button:first-child {
+  color: #fff7e8;
+  background: #70523b;
+  border-color: #70523b;
+}
+.actions button:focus-visible {
+  outline: 2px solid #70523b;
+  outline-offset: 3px;
+}
+@media (max-height: 480px) {
+  .dialog {
+    padding: 20px;
+  }
+  .mark {
+    display: none;
+  }
+  .dialog h2 {
+    font-size: 24px;
+  }
+  .dialog p {
+    margin-bottom: 12px;
+  }
+}

@@ -34,6 +34,7 @@ import { findCatalogueEntry } from '@roomedy/spatial';
 import type { MedyControl } from '@roomedy/spatial';
 import { ViewControls } from '../room-editor/view-controls';
 import controlsStyles from '../room-editor/view-controls.module.css';
+import { isLight, LIGHT_LIMIT } from './lighting-model';
 
 class GraphicsBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; onFailure: () => void },
@@ -61,6 +62,7 @@ export type CutawayProps = Pick<
   | 'cameraFrame'
   | 'openingId'
   | 'viewBridge'
+  | 'night'
 > & {
   cameraStateRef: MutableRefObject<CameraPose | null>;
   onPlan: () => void;
@@ -412,6 +414,7 @@ export default function Cutaway({
       <div
         className={styles.viewport}
         data-mode={moving ? 'move' : 'explore'}
+        data-time={props.night ? 'night' : 'day'}
         data-paused={!active || undefined}
       >
         {lost ? (
@@ -469,6 +472,17 @@ export default function Cutaway({
             {assets.failed > 0
               ? 'Some model detail could not load; simple shapes preserve the same sizes.'
               : ''}
+          </p>
+        )}
+        {rendered.furniture.filter(
+          (piece) =>
+            isLight(piece) &&
+            piece.light?.on !== false &&
+            (piece.light?.brightness ?? 75) > 0,
+        ).length > LIGHT_LIMIT && (
+          <p className={styles.notice} role="status">
+            Up to eight lights illuminate this preview. Select a fixture to
+            include it; other switched-on bulbs remain visible.
           </p>
         )}
         {rendered.furniture.some(hasIllustrativeSize) && (

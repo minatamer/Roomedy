@@ -252,6 +252,7 @@ export class LayoutSearch {
           return;
         }
         this.actors.push({ piece, kind });
+        piece.pose = wallMountedPose(room, piece);
       }
     if (
       goal.kind === 'window' &&
@@ -535,6 +536,7 @@ function evaluateSearchActions(
       !!expected &&
       piece.catalogueId === expected.catalogueId &&
       piece.finish === expected.finish &&
+      JSON.stringify(piece.light) === JSON.stringify(expected.light) &&
       (!themeId ||
         (Object.keys(materials).length ===
           Object.keys(expectedMaterials).length &&
