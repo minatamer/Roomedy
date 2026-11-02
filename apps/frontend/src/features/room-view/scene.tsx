@@ -194,10 +194,12 @@ function GraphicsLifecycle({
 
 /** Local development observations only; no payloads, telemetry, React frame updates or production probe. */
 function DevelopmentProbe({
+  mirrorPool,
   projection,
   selectedId,
   action,
 }: {
+  mirrorPool: MirrorReflection;
   projection: RoomDocument;
   selectedId: string | null;
   action: CameraAction | null;
@@ -229,6 +231,7 @@ function DevelopmentProbe({
     if (s.frames === 1 || s.frames % 15 === 0) {
       const sorted = [...s.intervals].sort((a, b) => a - b);
       gl.domElement.dataset.roomedyFrameSample = JSON.stringify({
+        mirror: mirrorPool.stats,
         frames: s.frames,
         intervals: sorted.length,
         p50Ms:
@@ -1557,6 +1560,11 @@ function Piece({
                   (v, i) => metres(v) - (motion?.pivot[i] ?? 0),
                 ) as [number, number, number]
               }
+              userData={
+                isMirrorPart(part)
+                  ? { roomedyMirrorSurface: `${piece.id}:${part.name}` }
+                  : {}
+              }
               scale={part.size.map(metres) as [number, number, number]}
               dispose={null}
               castShadow
@@ -1791,6 +1799,7 @@ export function RoomScene(props: SceneProps) {
       />
       {process.env.NODE_ENV === 'development' && (
         <DevelopmentProbe
+          mirrorPool={mirrorPool}
           projection={rendered}
           selectedId={selectedId}
           action={props.cameraAction}

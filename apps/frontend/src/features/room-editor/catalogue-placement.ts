@@ -13,7 +13,7 @@ import { visitorCatalogueFurniture } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
 import { snapPosition } from '../plan-view/adapter';
 import { beginRoomEdit } from '../room-view/manipulation';
-import type { FloorPoint } from '../room-view/manipulation';
+import type { CataloguePoint } from '../room-view/catalogue-point';
 import { failureMessage } from './messages';
 
 export function catalogueFurniture(
@@ -34,7 +34,7 @@ export interface CataloguePlacementSnapshot {
 }
 export interface PlacementTarget {
   element: SVGSVGElement | HTMLCanvasElement;
-  point: (client: { x: number; y: number }) => FloorPoint | null;
+  point: (client: { x: number; y: number }) => CataloguePoint | null;
 }
 /** Only an uncommitted piece/pose. SessionController remains the room/command authority. */
 export class CataloguePlacement {
@@ -84,18 +84,21 @@ export class CataloguePlacement {
       }
     };
   }
-  locate(client: { x: number; y: number }) {
+  contains(client: { x: number; y: number }) {
     const target = this.target;
-    if (!target?.element.isConnected) return null;
+    if (!target?.element.isConnected) return false;
     const rect = target.element.getBoundingClientRect();
-    return rect.width > 0 &&
+    return (
+      rect.width > 0 &&
       rect.height > 0 &&
       client.x >= rect.left &&
       client.x <= rect.right &&
       client.y >= rect.top &&
       client.y <= rect.bottom
-      ? target.point(client)
-      : null;
+    );
+  }
+  locate(client: { x: number; y: number }) {
+    return this.contains(client) ? this.target!.point(client) : null;
   }
   focusTarget() {
     const target = this.target;
@@ -148,8 +151,8 @@ export class CataloguePlacement {
     return true;
   }
   move(
-    point: FloorPoint | null,
-    inside = true,
+    point: CataloguePoint | null,
+    inside = !!point,
     snap = this.session.getSnapshot().presentation.snap,
   ) {
     const state = this.state,
@@ -165,21 +168,29 @@ export class CataloguePlacement {
       )
     ) {
       this.lastPose = '';
-      if (state.inside) this.publish({ ...state, inside: false });
+      this.failure = { ok: false, code: 'invalid-input' };
+      const visible = point ? false : inside;
+      this.publish({
+        ...state,
+        inside: visible,
+        valid: false,
+        error: visible ? 'Point inside the room to place it.' : '',
+      });
       return;
     }
     const facing = this.autoFacing
-      ? preferredFurnitureFacing(edit.room, {
+      ? (point.quarterTurns ??
+        preferredFurnitureFacing(edit.room, {
           ...state.item,
           pose: { ...state.item.pose, centerX: point.x, centerZ: point.z },
-        })
+        }))
       : state.item.pose.quarterTurns;
     const oriented = {
       ...state.item,
       pose: { ...state.item.pose, quarterTurns: facing },
     };
     const snapped = snapPosition(edit.room, oriented, point, snap);
-    const key = `${snapped.x}:${snapped.z}:${facing}:${inside}`;
+    const key = `${snapped.x}:${snapped.z}:${facing}:${point.bottomY ?? oriented.pose.bottomY}:${inside}`;
     if (key === this.lastPose) return;
     this.lastPose = key;
     const item = {
@@ -188,6 +199,7 @@ export class CataloguePlacement {
         ...oriented.pose,
         centerX: snapped.x,
         centerZ: snapped.z,
+        ...(point.bottomY === undefined ? {} : { bottomY: point.bottomY }),
       }),
     };
     const result = this.session.previewVisitor([

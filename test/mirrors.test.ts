@@ -367,47 +367,63 @@ describe('single bounded live mirror pass', () => {
       pool.dispose();
     }
   });
-  it('restores hidden editor overlays and renderer state after an optional reflection failure', () => {
-    const pool = createMirrorReflection(),
-      scene = new Scene(),
-      overlay = new Group();
-    overlay.userData.roomedyEditorOverlay = true;
-    scene.add(overlay);
-    pool.register(surface('one'));
-    pool.update(camera(), null);
-    const targets: unknown[] = [];
-    const renderer = {
-      xr: { enabled: true },
-      shadowMap: { autoUpdate: true },
-      getRenderTarget: () => null,
-      setRenderTarget: (target: unknown) => targets.push(target),
-      state: { buffers: { depth: { setMask: () => {} } } },
-      autoClear: true,
-      render: () => {
-        expect(overlay.visible).toBe(false);
-        throw Error('optional-gpu-failure');
-      },
-    };
-    try {
-      pool.reflector.onBeforeRender(
-        renderer as unknown as ThreeTypes.WebGLRenderer,
-        scene,
-        camera(),
-        pool.reflector.geometry,
-        Array.isArray(pool.reflector.material)
-          ? pool.reflector.material[0]!
-          : pool.reflector.material,
-        new Group(),
-      );
-      expect(overlay.visible).toBe(true);
-      expect(renderer.xr.enabled).toBe(true);
-      expect(renderer.shadowMap.autoUpdate).toBe(true);
-      expect(targets.at(-1)).toBeNull();
-      expect(pool.update(camera(), null)).toBeNull();
-    } finally {
-      pool.dispose();
-    }
-  });
+  it.each([false, true])(
+    'excludes its own glossy backing while retaining other mirrors, restores visibility/state (failure=%s)',
+    (fail) => {
+      const pool = createMirrorReflection(),
+        scene = new Scene(),
+        overlay = new Group(),
+        backing = new Group(),
+        otherMirror = new Group();
+      overlay.userData.roomedyEditorOverlay = true;
+      backing.userData.roomedyMirrorSurface = 'one';
+      otherMirror.userData.roomedyMirrorSurface = 'two';
+      scene.add(overlay, backing, otherMirror);
+      pool.register(surface('one'));
+      pool.update(camera(), null);
+      const targets: unknown[] = [];
+      const renderer = {
+        xr: { enabled: true },
+        shadowMap: { autoUpdate: true },
+        getRenderTarget: () => null,
+        setRenderTarget: (target: unknown) => targets.push(target),
+        state: { buffers: { depth: { setMask: () => {} } } },
+        autoClear: true,
+        render: () => {
+          expect(overlay.visible).toBe(false);
+          expect(backing.visible).toBe(false);
+          expect(otherMirror.visible).toBe(true);
+          if (fail) throw Error('optional-gpu-failure');
+        },
+      };
+      try {
+        pool.reflector.onBeforeRender(
+          renderer as unknown as ThreeTypes.WebGLRenderer,
+          scene,
+          camera(),
+          pool.reflector.geometry,
+          Array.isArray(pool.reflector.material)
+            ? pool.reflector.material[0]!
+            : pool.reflector.material,
+          new Group(),
+        );
+        expect(overlay.visible).toBe(true);
+        expect(backing.visible).toBe(true);
+        expect(otherMirror.visible).toBe(true);
+        expect(renderer.xr.enabled).toBe(true);
+        expect(renderer.shadowMap.autoUpdate).toBe(true);
+        expect(targets.at(-1)).toBeNull();
+        expect(pool.stats).toMatchObject({
+          attempts: 1,
+          failed: fail,
+          surfaces: 1,
+        });
+        expect(pool.update(camera(), null)).toBe(fail ? null : 'one');
+      } finally {
+        pool.dispose();
+      }
+    },
+  );
   it('disposes the only target and geometry exactly once and retires registration', () => {
     const pool = createMirrorReflection(),
       target = vi.spyOn(pool.reflector.getRenderTarget(), 'dispose'),

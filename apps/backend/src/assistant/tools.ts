@@ -236,7 +236,7 @@ export function createAssistantTools(
         );
       reply = {
         ...emptyAssistantReply(room, 'Here are some pieces to explore.'),
-        catalogueIds: entries.map((e) => e.id),
+        catalogueIds: entries.slice(0, 8).map((e) => e.id),
       };
       return { ok: true, items: entries };
     }

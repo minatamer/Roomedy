@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Keep wall previews visible and commit what the visitor saw — 2 November2026
+
+Intersect the visible wall for a hanging piece instead of projecting its elevated pointer onto the floor. Keep a missed in-canvas ray visibly invalid, retain physical validation, and commit the displayed green preview when release coordinates match. Prevent pending pointer frames from reviving a cancelled gesture. A live reflector must exclude its own glossy backing and editor previews. Verify actual opposite furniture from a meaningful angle; a high overview may physically reflect floor/ceiling. New furniture/features must feed current catalogue/capability facts to every Medy route and keep the local intent/compiler tests connected. The owner explicitly said refreshing still failed: a fresh successful fixture is not evidence that their exact prior failure was stale. [RM-095](../tickets/RM-095-stabilize-mirror-placement-and-reflections.md), [receipt](../validation/RM-095.md).
+
 ## Give mirror furniture real construction and reflected room content — 2 November 2026
 
 Offer a wall-hung mirror, a freestanding mirror with rear support/pivot hardware, and a wardrobe with one mirrored door. Reuse room themes on the frame while glass stays reflective; mount and move through normal controls. A wardrobe panel must stay attached while its door opens. A premium reflection should show the actual room, not only a static metallic swatch. Bound the extra render/target cost, preserve demand-render idle sleep and keep glossy fallback on other surfaces. Qualified model names must not turn an incidental location noun into a different piece or add an unwanted mirror beside a mirrored wardrobe. [RM-094](../tickets/RM-094-add-mirrors-and-room-reflections.md), [research](../engineering/room-mirrors.md), [evidence and limits](../validation/RM-094.md).

@@ -4,6 +4,25 @@ import type { CatalogueEntry } from '@roomedy/contracts/catalogue';
 import type { CataloguePlacement } from './catalogue-placement';
 import { focusProperties } from './focus';
 
+/** Commit the displayed preview when release has not moved; never reproject it under a moving camera. */
+export function releaseCataloguePlacement(
+  placement: CataloguePlacement,
+  client: { x: number; y: number },
+  presented: { x: number; y: number } | null,
+) {
+  if (!placement.contains(client)) {
+    placement.cancel();
+    return { ok: false as const, code: 'invalid-input' as const };
+  }
+  if (!presented || client.x !== presented.x || client.y !== presented.y)
+    placement.move(placement.locate(client), true);
+  if (!placement.getSnapshot()?.inside) {
+    placement.cancel();
+    return { ok: false as const, code: 'invalid-input' as const };
+  }
+  return placement.commit();
+}
+
 type Held = {
   id: number;
   x: number;
@@ -65,8 +84,12 @@ export function useCataloguePlacementInput(placement: CataloguePlacement) {
   useEffect(() => {
     let frame = 0;
     let last: { x: number; y: number } | null = null;
+    let presented: { x: number; y: number } | null = null;
     const update = () => {
-      if (last) placement.move(placement.locate(last));
+      if (last) {
+        placement.move(placement.locate(last), placement.contains(last));
+        presented = { ...last };
+      }
     };
     const animate = () => {
       frame = 0;
@@ -131,7 +154,10 @@ export function useCataloguePlacementInput(placement: CataloguePlacement) {
       event.preventDefault();
       event.stopImmediatePropagation();
       last = { x: event.clientX, y: event.clientY };
-      update();
+      if (frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
       release();
       if (
         old.catalogue &&
@@ -141,11 +167,17 @@ export function useCataloguePlacementInput(placement: CataloguePlacement) {
         if (item)
           placement.move({ x: item.pose.centerX, z: item.pose.centerZ });
         placement.focusTarget();
-      } else if (!placement.getSnapshot()?.inside) placement.cancel();
-      else if (placement.commit().ok) focusProperties(placement.session);
+      } else if (releaseCataloguePlacement(placement, last, presented).ok)
+        focusProperties(placement.session);
       else placement.focusTarget();
+      last = null;
+      presented = null;
     };
     const cancel = () => {
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      last = null;
+      presented = null;
       release();
       placement.cancel();
     };
@@ -212,6 +244,8 @@ export function useCataloguePlacementInput(placement: CataloguePlacement) {
         release();
         if (frame) cancelAnimationFrame(frame);
         frame = 0;
+        last = null;
+        presented = null;
       }
     });
     window.addEventListener('pointerdown', down, true);

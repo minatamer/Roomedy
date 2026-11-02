@@ -9,6 +9,8 @@ import { SessionController } from '../apps/frontend/src/features/session/control
 import { createRoomFixture } from '../apps/frontend/src/features/session/fixtures/rooms.js';
 import { cameraViewPose } from '../apps/frontend/src/features/room-view/camera.js';
 import { projectOf } from '../apps/frontend/src/features/session/project.js';
+import { releaseCataloguePlacement } from '../apps/frontend/src/features/room-editor/catalogue-placement-input.js';
+import { BEDROOM_THEMES } from '@roomedy/contracts/furniture-materials';
 
 const desk = CATALOGUE.find((entry) => entry.category === 'desk')!;
 const sessions: SessionController[] = [];
@@ -38,6 +40,123 @@ afterEach(() => {
 });
 
 describe('catalogue additions use the shared command authority', () => {
+  it.each(CATALOGUE)(
+    'previews and commits the canonical default for $id',
+    (entry) => {
+      const { session, placement } = setup('cutaway');
+      expect(placement.start(entry)).toBe(true);
+      expect(placement.getSnapshot()?.error).toBe('');
+      expect(placement.commit()).toMatchObject({ ok: true, changed: true });
+      expect(
+        session.getSnapshot().workspace!.current.furniture[0]!.catalogueId,
+      ).toBe(entry.id);
+    },
+  );
+  it.each(BEDROOM_THEMES)(
+    'adds every mirror under the $id theme through the real placement controller',
+    (theme) => {
+      for (const id of [
+        'mirror-wall',
+        'mirror-standing',
+        'wardrobe-mirrored',
+        'full-length-mirror',
+      ]) {
+        const { session, placement } = setup('cutaway');
+        expect(
+          session.dispatch(
+            [{ type: 'set-bedroom-theme', theme: theme.id }],
+            'Theme',
+          ).ok,
+        ).toBe(true);
+        placement.start(CATALOGUE.find((e) => e.id === id)!);
+        expect(placement.getSnapshot()?.error).toBe('');
+        expect(placement.commit()).toMatchObject({ ok: true, changed: true });
+        expect(session.undo().ok).toBe(true);
+        expect(session.getSnapshot().workspace!.current.furniture).toHaveLength(
+          0,
+        );
+      }
+    },
+  );
+  it('commits the presented green preview once even when the camera projection changes before release', () => {
+    const { session, placement } = setup('cutaway');
+    let projected = { x: 900, z: 1000 };
+    placement.registerTarget({
+      element: {
+        isConnected: true,
+        getBoundingClientRect: () => ({
+          left: 0,
+          top: 0,
+          right: 100,
+          bottom: 100,
+          width: 100,
+          height: 100,
+        }),
+      } as HTMLCanvasElement,
+      point: () => projected,
+    });
+    placement.start(desk);
+    const client = { x: 50, y: 50 };
+    placement.move(placement.locate(client), true);
+    const displayed = placement.getSnapshot()!.item.pose;
+    projected = { x: 3000, z: 3500 };
+    expect(releaseCataloguePlacement(placement, client, client)).toMatchObject({
+      ok: true,
+      changed: true,
+    });
+    expect(session.getSnapshot().workspace!.current.furniture[0]!.pose).toEqual(
+      displayed,
+    );
+    expect(releaseCataloguePlacement(placement, client, client).ok).toBe(false);
+    expect(session.getSnapshot().workspace!.history.entries).toHaveLength(1);
+  });
+  it('projects an unpresented release position and cancels an outside release', () => {
+    const { session, placement } = setup();
+    placement.registerTarget({
+      element: {
+        isConnected: true,
+        getBoundingClientRect: () => ({
+          left: 0,
+          top: 0,
+          right: 100,
+          bottom: 100,
+          width: 100,
+          height: 100,
+        }),
+      } as HTMLCanvasElement,
+      point: () => ({ x: 1000, z: 1000 }),
+    });
+    placement.start(desk);
+    expect(
+      releaseCataloguePlacement(placement, { x: 70, y: 50 }, { x: 50, y: 50 })
+        .ok,
+    ).toBe(true);
+    expect(
+      session.getSnapshot().workspace!.current.furniture[0]!.pose.centerX,
+    ).toBe(1000);
+    placement.start(desk);
+    expect(
+      releaseCataloguePlacement(placement, { x: 101, y: 50 }, null).ok,
+    ).toBe(false);
+    expect(placement.getSnapshot()).toBeNull();
+    expect(session.getSnapshot().workspace!.current.furniture).toHaveLength(1);
+  });
+  it('retains an invalid wall ghost on a missed in-canvas ray, then recovers at the next valid wall hit', () => {
+    const { placement } = setup('cutaway');
+    placement.start(CATALOGUE.find((e) => e.id === 'mirror-wall')!);
+    placement.move({ x: 1000, z: 0, bottomY: 1200, quarterTurns: 0 });
+    const visible = placement.getSnapshot()!.item;
+    placement.move(null, true);
+    expect(placement.getSnapshot()).toMatchObject({
+      inside: true,
+      valid: false,
+      item: visible,
+    });
+    expect(placement.commit().ok).toBe(false);
+    placement.move({ x: 1500, z: 0, bottomY: 1200, quarterTurns: 0 });
+    expect(placement.getSnapshot()?.valid).toBe(true);
+    expect(placement.commit().ok).toBe(true);
+  });
   it.each(['plan', 'cutaway'] as const)(
     'keeps session snapping enabled for placement in %s',
     (view) => {

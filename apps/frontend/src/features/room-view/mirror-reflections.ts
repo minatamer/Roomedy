@@ -29,6 +29,8 @@ export function createMirrorReflection() {
     position = new Vector3(),
     normal = new Vector3(),
     viewer = new Vector3();
+  let activeSurface: string | null = null;
+  let attempts = 0;
   let disposed = false,
     failed = false;
   const render = reflector.onBeforeRender.bind(reflector);
@@ -39,7 +41,12 @@ export function createMirrorReflection() {
     if (disposed || failed) return;
     const hidden: Object3D[] = [];
     scene.traverse((object) => {
-      if (object.visible && object.userData.roomedyEditorOverlay) {
+      if (
+        object.visible &&
+        (object.userData.roomedyEditorOverlay ||
+          (activeSurface !== null &&
+            object.userData.roomedyMirrorSurface === activeSurface))
+      ) {
         hidden.push(object);
         object.visible = false;
       }
@@ -48,6 +55,7 @@ export function createMirrorReflection() {
       xr = renderer.xr.enabled,
       shadow = renderer.shadowMap.autoUpdate;
     try {
+      attempts++;
       render(...args);
     } catch {
       failed = true;
@@ -63,6 +71,9 @@ export function createMirrorReflection() {
   };
   return {
     reflector,
+    get stats() {
+      return { disposed, failed, attempts, surfaces: surfaces.size };
+    },
     register(surface: Surface) {
       if (disposed) return () => {};
       surfaces.set(surface.id, surface);
@@ -72,6 +83,7 @@ export function createMirrorReflection() {
     },
     update(camera: Camera, selectedId: string | null) {
       reflector.visible = false;
+      activeSurface = null;
       if (disposed || failed) return null;
       camera.updateWorldMatrix(true, false);
       frustum.setFromProjectionMatrix(
@@ -117,6 +129,7 @@ export function createMirrorReflection() {
       );
       const chosen = candidates[0]?.surface;
       if (!chosen) return null;
+      activeSurface = chosen.id;
       chosen.object.matrixWorld.decompose(
         reflector.position,
         reflector.quaternion,

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useSyncExternalStore } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Raycaster, Vector2 } from 'three';
 import type { CataloguePlacement } from '../room-editor/catalogue-placement';
-import { pointOnFloor } from './manipulation';
+import { cataloguePoint } from './catalogue-point';
 
 const noSubscribe = () => () => {};
 const empty = () => null;
@@ -34,7 +34,11 @@ export function CatalogueGhost({
         );
         camera.updateMatrixWorld();
         ray.setFromCamera(cursor, camera);
-        return pointOnFloor(ray.ray);
+        const current = placement.getSnapshot(),
+          room = placement.session.getSnapshot().workspace?.current;
+        return current && room
+          ? cataloguePoint(ray.ray, room, current.item, current.entry)
+          : null;
       },
     });
   }, [placement, gl, camera, ray, cursor]);
@@ -46,6 +50,7 @@ export function CatalogueGhost({
   const color = valid ? '#6d896c' : '#ae573e';
   return (
     <group
+      userData={{ roomedyEditorOverlay: true }}
       position={[
         item.pose.centerX / 1000,
         h / 2 + 0.01 + (item.pose.bottomY ?? 0) / 1000,
@@ -62,10 +67,11 @@ export function CatalogueGhost({
           depthWrite={false}
         />
       </mesh>
-      <mesh raycast={() => {}}>
+      <mesh raycast={() => {}} renderOrder={31}>
         <boxGeometry args={[w, h, d]} />
         <meshBasicMaterial
           color={color}
+          depthTest={false}
           wireframe
           transparent
           opacity={0.85}
