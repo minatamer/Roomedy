@@ -1,5 +1,7 @@
 # Rich sample-room photos — 2 November2026
 
+**Historical v2 set:** Superseded3November by [RM-099 standing-mirror removal](sample-room-photos-2026-11-03.md), four `-v3.webp` public edits. The standing mirror is no longer part of the active public photos. Keep the original prompts/hashes/ten-piece visual checklist below as provenance for v2 and its dated paid results.
+
 [RM-096](../tickets/RM-096-refresh-the-public-sample-room-photos.md) replaces the four simple19–20October sample photos with four richer same-bedroom views. Built-in `image_gen.imagegen`, opaque original photographic assets; five generation/edit calls including one rejected reverse orientation. No CLI/API-key use, Roomedy recognition/assistant call or external stock image. This set is authored test/demo input, not measured real-room or paid recognition evidence. Historical originals/provenance remain in Git and [the prior record](photo-capture-assets-2026-10-19.md).
 
 ## Selected final files

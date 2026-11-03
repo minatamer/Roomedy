@@ -1,21 +1,21 @@
 export const EXAMPLE_PHOTOS = [
   {
-    path: '/examples/bedroom-room-one-v2.webp',
+    path: '/examples/bedroom-room-one-v3.webp',
     label: 'Bed and work area',
     purpose: 'auto' as const,
   },
   {
-    path: '/examples/bedroom-room-two-v2.webp',
+    path: '/examples/bedroom-room-two-v3.webp',
     label: 'Mirrors and doorways',
     purpose: 'auto' as const,
   },
   {
-    path: '/examples/bedroom-bedding-v2.webp',
+    path: '/examples/bedroom-bedding-v3.webp',
     label: 'Bedding detail',
     purpose: 'auto' as const,
   },
   {
-    path: '/examples/bedroom-workspace-v2.webp',
+    path: '/examples/bedroom-workspace-v3.webp',
     label: 'Work area and lighting',
     purpose: 'auto' as const,
   },
