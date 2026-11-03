@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner review the retained v3 sample gallery with standing mirror removed.49 affected tests/scoped format-lint/frontend build/native four-photo preparation/public hashes/inventory pass. Source402inputs/4703065bytes digest06f6aeacc112fc6ce9f5871e52da62b0e5a76ff20dd0769f3e0e7e0c8294f5b2. Exact18-path local RM-099 checkpoint; no new paid scan/push/deploy. New v3 recognition/physical/aesthetic/exact-hosted acceptance remain separate.
+Next action: Owner review the committed RM-097–099 work on4November2026 using docs/commit-plans/RM-097-099-CHECKPOINT.md and its receipt. Existing five commits plus two documentation commits preserve the validated app/v3 photos. Clean local checkpoint; no new paid call/push/deploy or owner acceptance. Current services/open gallery retained; aesthetic/physical/merchant/actual v3 recognition/exact hosted proof remain separate.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1799,7 +1799,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-03T15:54:06+00:00",
+  "updated_at": "2026-11-03T15:58:58+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1917,9 +1917,9 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "LOCAL_COMMIT_SCOPE": {
-      "source": "human:current-chat/2026-10-30/commit-all-current-work-no-deploy; docs/commit-plans/RM-053-061-CHECKPOINT.md",
-      "confidence": "confirmed",
-      "value": "Owner authorizes exact-path local staging and ticket-prefixed commits after each completed validated ticket. Required audit artifacts remain unstaged until security review. No push. Latest30 October2026 direct owner requests all current work planned/staged/committed locally in multiple ticket-prefixed commits, with no deployment. Exact87-path/four-commit plan: docs/commit-plans/RM-053-061-CHECKPOINT.md. Verified implementation commits:98b6c2a03614696905b47ff2cc39502f938bb9d7 (market sourcing), dd2957919bf32e200075eda40c0c48256fc061b7 (PDF snapshot reuse),1923bc17baf9bb1a7892f5b265575d06c85806ae (connected studio/mobile/PDF). Final shared documentation commit is identified by Git history and ignored checkpoint manifests. Preserve all tested source bytes and pending owner aesthetic/physical/merchant/live-photo acceptance. Normalization-only next-env receives index refresh without content change. No push/deploy/provider/env/restart/Chrome/delegation/dependency/ClipBuilder action."
+      "value": "Owner authorizes exact-path local staging and ticket-prefixed commits after each completed validated ticket. Required audit artifacts remain unstaged until security review. No push. Latest30 October2026 direct owner requests all current work planned/staged/committed locally in multiple ticket-prefixed commits, with no deployment. Exact87-path/four-commit plan: docs/commit-plans/RM-053-061-CHECKPOINT.md. Verified implementation commits:98b6c2a03614696905b47ff2cc39502f938bb9d7 (market sourcing), dd2957919bf32e200075eda40c0c48256fc061b7 (PDF snapshot reuse),1923bc17baf9bb1a7892f5b265575d06c85806ae (connected studio/mobile/PDF). Final shared documentation commit is identified by Git history and ignored checkpoint manifests. Preserve all tested source bytes and pending owner aesthetic/physical/merchant/live-photo acceptance. Normalization-only next-env receives index refresh without content change. No push/deploy/provider/env/restart/Chrome/delegation/dependency/ClipBuilder action.\n\n3November2026 direct owner requests file commit plan, multiple commits, stage and commit; review tomorrow4November. Clean entryeb82f2b already contains five RM-097–099 commits after98210f4 (48 unique paths). Preserve all existing commits/application blobs. Add exact four-doc/two-commit checkpoint per docs/commit-plans/RM-097-099-CHECKPOINT.md; final review union50 paths. No push/deploy/provider/service/env/dependency/browser action. This is local Git authority and review scheduling intent, not owner visual/physical acceptance.",
+      "source": "human:current-chat/2026-10-30/commit-all-current-work-no-deploy; docs/commit-plans/RM-053-061-CHECKPOINT.md; direct owner file-plan/multiple-local-commit instruction,3November2026",
+      "confidence": "confirmed"
     },
     "IMPLEMENTATION_AUTHORIZATION": {
       "value": "Approved refinements adopted into blueprint and existing tickets; owner explicitly resumes RM-003 then numeric-order execute/validate/exact-path local commit loop in fake/paid-off mode. Stop at manual visual/security gates or 0% usage. No paid calls/deployment/push/reset-credit consumption.",
@@ -2145,7 +2145,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner review the retained v3 sample gallery with standing mirror removed.49 affected tests/scoped format-lint/frontend build/native four-photo preparation/public hashes/inventory pass. Source402inputs/4703065bytes digest06f6aeacc112fc6ce9f5871e52da62b0e5a76ff20dd0769f3e0e7e0c8294f5b2. Exact18-path local RM-099 checkpoint; no new paid scan/push/deploy. New v3 recognition/physical/aesthetic/exact-hosted acceptance remain separate.",
+  "next_action": "Owner review the committed RM-097–099 work on4November2026 using docs/commit-plans/RM-097-099-CHECKPOINT.md and its receipt. Existing five commits plus two documentation commits preserve the validated app/v3 photos. Clean local checkpoint; no new paid call/push/deploy or owner acceptance. Current services/open gallery retained; aesthetic/physical/merchant/actual v3 recognition/exact hosted proof remain separate.",
   "phases": [
     {
       "id": "01-docs",
@@ -4565,31 +4565,31 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Record completed RM-099 public sample standing-mirror removal, four versioned bounded opaque WebPs/370624bytes and four ordinary URL substitutions; wall mirror/remaining scene/app variants preserved.49 affected tests, scoped format-lint/frontend build/native four-photo viewer/preparation and public/inventory hashes pass. Exact18-path local ticket checkpoint under existing authority. No new Roomedy paid operation, detector/model/env/service/dependency/delegation/Chrome/cloud/push/deploy change. New v3 recognition/aesthetic/physical/exact hosted acceptance remain separate and previous v2 paid evidence stays dated.",
-        "sha256": "8d23a837ecc4ce59db8b04a19c2156ee418d24a4388eea3deaf20af5a59a9bf8",
+        "text": "Finish the owner-authorized RM-097–099 exact local checkpoint on clean entryeb82f2b. Preserve five existing commits, all application/assets/tests/config bytes, current permanent instructions and dated receipts. Two documentation commits: one exact file-level map, then receipt/deployment handoff/helper state. Verify exact staged groups, tracked blobs, parent order,50-path final union and clean worktree/index. Reuse settled1988-code and49-current-asset evidence; no app gate repetition, provider/browser/env/service/dependency/cloud/push/deploy action. Owner review4November remains pending.",
+        "sha256": "a8d7935ff80d7cbf388ac7f5a8431f361aaf874879a2df558b59d03c4f936f46",
         "context_sources": [
-          "docs/tickets/RM-099-remove-standing-mirror-from-samples.md",
-          "docs/commit-plans/RM-099.md",
-          "docs/validation/RM-099.md",
-          "docs/references/sample-room-photos-2026-11-03.md",
-          "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+          "docs/commit-plans/RM-097-099-CHECKPOINT.md",
+          "docs/validation/RM-097-099-CHECKPOINT.md",
+          "docs/validation/RM-097.md",
+          "docs/validation/RM-098.md",
+          "docs/validation/RM-099.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-099-remove-standing-mirror-from-samples.md",
-        "docs/commit-plans/RM-099.md",
-        "docs/validation/RM-099.md",
-        "docs/references/sample-room-photos-2026-11-03.md",
-        "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+        "docs/commit-plans/RM-097-099-CHECKPOINT.md",
+        "docs/validation/RM-097-099-CHECKPOINT.md",
+        "docs/validation/RM-097.md",
+        "docs/validation/RM-098.md",
+        "docs/validation/RM-099.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic/physical and actual new v3 photo-recognition acceptance remain separate; no new paid scan authorized or spent. Exact hosted candidate proof remains outstanding.",
-          "reference": "docs/validation/RM-099.md"
+          "reason": "Owner review is planned for4November2026; visual/physical/merchant/actual new v3 recognition and exact hosted release acceptance are not supplied by this local Git checkpoint.",
+          "reference": "docs/validation/RM-097-099-CHECKPOINT.md"
         }
       ],
       "approval": null,
@@ -4924,6 +4924,27 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-098-reconcile-photo-mirrors-and-placement.md",
               "docs/commit-plans/RM-098.md",
               "docs/validation/RM-098.md#final-owner-authorized-paid-check-after-the-verifier",
+              "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-03T15:58:57+00:00",
+          "reason": "Direct owner requests exact file-level plan and multiple local commits for tomorrow review.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Record completed RM-099 public sample standing-mirror removal, four versioned bounded opaque WebPs/370624bytes and four ordinary URL substitutions; wall mirror/remaining scene/app variants preserved.49 affected tests, scoped format-lint/frontend build/native four-photo viewer/preparation and public/inventory hashes pass. Exact18-path local ticket checkpoint under existing authority. No new Roomedy paid operation, detector/model/env/service/dependency/delegation/Chrome/cloud/push/deploy change. New v3 recognition/aesthetic/physical/exact hosted acceptance remain separate and previous v2 paid evidence stays dated.",
+            "sha256": "8d23a837ecc4ce59db8b04a19c2156ee418d24a4388eea3deaf20af5a59a9bf8",
+            "context_sources": [
+              "docs/tickets/RM-099-remove-standing-mirror-from-samples.md",
+              "docs/commit-plans/RM-099.md",
+              "docs/validation/RM-099.md",
+              "docs/references/sample-room-photos-2026-11-03.md",
               "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
             ],
             "status": "afk",
