@@ -18,7 +18,12 @@ import {
   FAKE_PROCESSING_PREVIEW_MS,
 } from '../apps/frontend/src/features/room-intake/recognition-client.js';
 import { displayFurnitureFootprint } from '../apps/frontend/src/features/catalogue/display-size.js';
-import { intersection } from '@roomedy/spatial';
+import {
+  intersection,
+  planningRoom,
+  verticallySeparate,
+  footprint,
+} from '@roomedy/spatial';
 import { unknown } from './fixtures/command-room.js';
 
 async function setup() {
@@ -150,6 +155,78 @@ it('opens the studio once with unchanged estimates, locks, baseline, fixed expir
   expect(session.getSnapshot().workspace!.baseline).toEqual(original);
   session.dispose();
 });
+
+it.each([false, true])(
+  'verifies a crowded scan before accepting one editable baseline, simulation=%s',
+  async (simulation) => {
+    const { session, review } = await setup();
+    const raw = recognitionFixture(
+      'repeated-desk',
+      sources.map((s) => s.id),
+    );
+    const template = raw.observations[0]!;
+    raw.room = { width: unknown(), depth: unknown(), height: unknown() };
+    raw.sourcePurposes = sources.map((s) => ({
+      id: s.id,
+      purpose: 'room' as const,
+    }));
+    raw.observations = [
+      'procedural-bed',
+      'bedside-drawers',
+      'procedural-desk',
+      'chair-desk-fixed',
+      'wardrobe-mirrored',
+      'mirror-standing',
+      'mirror-wall',
+      'floor-lamp',
+      'ceiling-pendant',
+      'ceiling-track',
+    ].map((catalogueId, index) => ({
+      ...structuredClone(template),
+      ref: `detected_${index}`,
+      catalogueId,
+      sourceId: sources[index % 2]!.id,
+      appearance: undefined,
+      width: unknown(),
+      depth: unknown(),
+      height: unknown(),
+      wall: 'unknown' as const,
+      wallEvidence: { status: 'unknown' as const, sourceId: null },
+      poseEvidence: {
+        status: 'estimated' as const,
+        sourceId: sources[index % 2]!.id,
+      },
+      sketch: { x: 0.5, z: 0.5, quarterTurns: null },
+    }));
+    raw.groups = raw.observations.map((o) => [o.ref]);
+    const send = transport(raw, simulation);
+    await draftFromPhotos(review, send, { openStudio: true });
+    const state = session.getSnapshot(),
+      room = state.workspace!.current,
+      proxy = planningRoom(room);
+    expect(send).toHaveBeenCalledTimes(2);
+    expect(state.phase).toBe('editor');
+    expect(room.furniture).toHaveLength(10);
+    for (const p of proxy.furniture)
+      for (const other of proxy.furniture)
+        if (p.id !== other.id && !verticallySeparate(p, other))
+          expect(
+            intersection(footprint(p)!, footprint(other)!),
+          ).toBeUndefined();
+    expect(room.room.width).toEqual(unknown());
+    expect(
+      room.furniture.every((p) =>
+        Object.values(p.dimensions).every((m) => m.value === null),
+      ),
+    ).toBe(true);
+    expect(state.workspace!.baseline).toEqual(room);
+    expect(state.workspace!.history.entries).toHaveLength(0);
+    const project = readProject(exportProject(state)!);
+    expect(project.ok).toBe(true);
+    expect(review.photos.getSnapshot()).toHaveLength(0);
+    session.dispose();
+  },
+);
 
 it('accepts overlapping unknown-size photo estimates as one separated near-wall baseline with Medy open', async () => {
   const { session, review } = await setup(),
@@ -329,6 +406,8 @@ it('finishes the fake preview through the same direct studio authority', async (
     await vi.advanceTimersByTimeAsync(FAKE_PROCESSING_PREVIEW_MS);
     await pending;
     expect(session.getSnapshot().phase).toBe('editor');
+    expect(session.getSnapshot().message).toContain('starting positions');
+    await vi.advanceTimersByTimeAsync(4000);
     expect(vi.getTimerCount()).toBe(0);
   } finally {
     session.dispose();
@@ -350,6 +429,8 @@ it.each([
         previewProcessing,
       });
       expect(session.getSnapshot().phase).toBe('editor');
+      expect(session.getSnapshot().message).toContain('starting positions');
+      await vi.advanceTimersByTimeAsync(4000);
       expect(vi.getTimerCount()).toBe(0);
     } finally {
       session.dispose();

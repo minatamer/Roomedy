@@ -17,6 +17,12 @@ import {
 } from '@roomedy/spatial';
 import type { PhotoPurpose } from './photo-store';
 import { emptySurfaceAppearance } from '@roomedy/contracts/surfaces';
+import {
+  illustratedPhotoPose,
+  illustratedPhotoRelation,
+  observedPhotoWall,
+  PHOTO_BACK_WALLS,
+} from './photo-pose';
 
 export const unknown = () => ({
   value: null,
@@ -623,6 +629,21 @@ export function adoptHypothesis(
   }
   const grouped = new Set(parsed.groups.flat());
   const groups = [...parsed.groups];
+  for (const observation of parsed.observations) {
+    if (
+      observation.kind === 'furniture' &&
+      observation.catalogueId &&
+      ['visible', 'partial'].includes(observation.visibility) &&
+      !grouped.has(observation.ref) &&
+      parsed.observations.filter(
+        (o) =>
+          o.kind === 'furniture' &&
+          o.catalogueId === observation.catalogueId &&
+          ['visible', 'partial'].includes(o.visibility),
+      ).length === 1
+    )
+      groups.push([observation.ref]);
+  }
   for (const kind of ['door', 'window'] as const) {
     const visible = parsed.observations.filter(
       (o) =>
@@ -702,6 +723,7 @@ export function adoptHypothesis(
           o.poseEvidence.status !== 'unknown' &&
           roomSources.has(o.poseEvidence.sourceId ?? ''),
       );
+      const wall = observedPhotoWall(members, roomSources);
       const facing =
         positioned?.sketch.quarterTurns ??
         members.find(
@@ -709,7 +731,8 @@ export function adoptHypothesis(
             o.sketch.quarterTurns !== null &&
             o.poseEvidence.status !== 'unknown' &&
             roomSources.has(o.poseEvidence.sourceId ?? ''),
-        )?.sketch.quarterTurns;
+        )?.sketch.quarterTurns ??
+        (wall ? (PHOTO_BACK_WALLS.indexOf(wall) as 0 | 1 | 2 | 3) : undefined);
       const normalized: [number, number] | null = positioned
         ? [positioned.sketch.x!, positioned.sketch.z!]
         : null;
@@ -722,6 +745,8 @@ export function adoptHypothesis(
         piece.catalogueId,
         piece.catalogueVersion,
       )!;
+      if (normalized && (!entry.placement || entry.placement === 'floor'))
+        piece.pose = illustratedPhotoPose(next.room, piece, wall);
       if (entry.placement && entry.placement !== 'floor') {
         // Nominal rendering envelopes only: never adopt them as photo measurements.
         const proxy = structuredClone(next.room);
@@ -787,6 +812,133 @@ export function adoptHypothesis(
       next.links.push({ entityId: id, observations, normalized: null });
     }
   }
+  const freshLinks = next.links.filter(
+    (link) => !draft.links.some((prior) => prior.entityId === link.entityId),
+  );
+  const related = new Set(
+    freshLinks
+      .filter((link) =>
+        next.observations.some(
+          (o) => link.observations.includes(o.ref) && o.relation,
+        ),
+      )
+      .map((link) => link.entityId),
+  );
+  const walls = new Map<
+    string,
+    NonNullable<ReturnType<typeof observedPhotoWall>>
+  >();
+  for (const link of freshLinks) {
+    const piece = next.room.furniture.find((p) => p.id === link.entityId);
+    const wall = observedPhotoWall(
+      next.observations.filter((o) => link.observations.includes(o.ref)),
+      roomSources,
+    );
+    if (piece && wall && wall === PHOTO_BACK_WALLS[piece.pose.quarterTurns])
+      walls.set(piece.id, wall);
+  }
+  const pairs = freshLinks.flatMap((link) => {
+    const members = next.observations.filter((o) =>
+      link.observations.includes(o.ref),
+    );
+    const relations = members.filter(
+      (o) =>
+        o.relation &&
+        o.poseEvidence.sourceId &&
+        roomSources.has(o.poseEvidence.sourceId),
+    );
+    const targets = new Set(
+      relations.map((o) => {
+        const ref = refs.get(o.relation!.targetRef);
+        return next.links.find((l) => ref && l.observations.includes(ref))
+          ?.entityId;
+      }),
+    );
+    if (targets.size !== 1 || targets.has(undefined)) return [];
+    const relation = relations[0]!.relation!;
+    if (
+      relations.some(
+        (o) =>
+          o.relation!.kind !== relation.kind ||
+          o.relation!.side !== relation.side,
+      )
+    )
+      return [];
+    const piece = next.room.furniture.find((p) => p.id === link.entityId),
+      target = next.room.furniture.find((p) => p.id === [...targets][0]);
+    if (
+      !piece ||
+      !target ||
+      draft.room.furniture.some((p) => p.id === target.id)
+    )
+      return [];
+    return [
+      {
+        piece,
+        target,
+        relation,
+        members,
+        key: `${target.id}:${relation.kind}:${relation.side}`,
+      },
+    ];
+  });
+  const byPiece = new Map(pairs.map((pair) => [pair.piece.id, pair]));
+  const visiting = new Set<string>(),
+    settled = new Map<string, boolean>();
+  const resolve = (pair: (typeof pairs)[number]): boolean => {
+    const id = pair.piece.id;
+    if (settled.has(id)) return settled.get(id)!;
+    if (visiting.has(id)) return false;
+    visiting.add(id);
+    const finish = (ok: boolean) => {
+      visiting.delete(id);
+      settled.set(id, ok);
+      return ok;
+    };
+    if (pairs.filter((p) => p.key === pair.key).length !== 1)
+      return finish(false);
+    const dependency = byPiece.get(pair.target.id);
+    if (
+      (dependency && !resolve(dependency)) ||
+      (related.has(pair.target.id) && !dependency)
+    )
+      return finish(false);
+    const wall = walls.get(pair.target.id);
+    const expected =
+      pair.relation.kind === 'faces'
+        ? (pair.target.pose.quarterTurns + 2) % 4
+        : pair.target.pose.quarterTurns;
+    if (
+      pair.members.some(
+        (o) =>
+          (o.sketch.quarterTurns !== null &&
+            o.sketch.quarterTurns !== expected) ||
+          (pair.relation.kind === 'beside' &&
+            o.wall !== 'unknown' &&
+            o.wallEvidence.status !== 'unknown' &&
+            roomSources.has(o.wallEvidence.sourceId ?? '') &&
+            o.wall !== wall),
+      )
+    )
+      return finish(false);
+    const pose = illustratedPhotoRelation(
+      next.room,
+      pair.piece,
+      pair.target,
+      pair.relation,
+      wall,
+    );
+    if (pose) {
+      pair.piece.pose = pose;
+      pair.target.pose = {
+        ...pair.target.pose,
+        provenance: { status: 'planned', sourceId: 'photo-relation-plan' },
+      };
+      if (pair.relation.kind === 'beside' && wall) walls.set(id, wall);
+    }
+    return finish(!!pose);
+  };
+  for (const pair of pairs) resolve(pair);
   return finishDraft(draft, next);
 }
 

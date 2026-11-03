@@ -451,6 +451,8 @@ export class ReviewController {
         .filter((item) => !assigned.has(item.ref))
         .map((item) => item.label),
     };
+    // One deterministic demo-layout verification before establishing the baseline.
+    // Imports, recovered rooms and later accepted visitor edits never run this pass.
     const placement = planPhotoPlacement(
       draft.room,
       draft.links.map((link) => link.entityId),
@@ -466,7 +468,7 @@ export class ReviewController {
       );
     else if (placement.adjusted.length)
       this.session.notify(
-        'Adjusted starting positions to keep preview furniture separate. Sizes and placement still need checking.',
+        'Arranged starting positions to keep furniture separate and openings clear. This is an approximate layout; add measurements before checking fit.',
       );
     return true;
   }

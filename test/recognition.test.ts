@@ -96,6 +96,9 @@ it.each([4, 6])(
         (part: { type: string }) => part.type === 'input_image',
       );
       expect(imageParts).toHaveLength(count);
+      expect(
+        imageParts.every((part: { detail: string }) => part.detail === 'high'),
+      ).toBe(true);
       expect(body.store).toBe(false);
       expect(body.max_output_tokens).toBe(POLICY.recognitionOutputTokens);
       const catalogueId =

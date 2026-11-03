@@ -89,11 +89,35 @@ const photoObjectAppearance = z.strictObject({
   frameColor: surfaceColorSchema.nullable(),
   framePattern: materialPatternSchema.nullable(),
 });
+export const PHOTO_VIEW_WALLS = {
+  'south-west': { left: 'north', right: 'east' },
+  'south-east': { left: 'west', right: 'north' },
+  'north-east': { left: 'south', right: 'west' },
+  'north-west': { left: 'east', right: 'south' },
+} as const;
+const photoCorner = z.enum([
+  'south-west',
+  'south-east',
+  'north-east',
+  'north-west',
+]);
 /** Untrusted adapter output. IDs below are temporary observation references, never canonical room IDs. */
 export const draftObservationSchema = z.strictObject({
   ref: idSchema,
   sourceId: idSchema,
   kind: z.enum(['furniture', 'door', 'window', 'obstacle']),
+  wallView: z
+    .strictObject({ sourceId: idSchema, side: z.enum(['left', 'right']) })
+    .nullable()
+    .optional(),
+  relation: z
+    .strictObject({
+      kind: z.enum(['faces', 'beside']),
+      targetRef: idSchema,
+      side: z.enum(['left', 'right']).nullable(),
+    })
+    .nullable()
+    .optional(),
   doorPurpose: z.enum(['room', 'bathroom', 'balcony']).nullable().optional(),
   catalogueId: idSchema.nullable(),
   label: labelSchema,
@@ -135,6 +159,12 @@ export const draftHypothesisSchema = z
       .max(POLICY.photos)
       .optional(),
     shape: z.enum(['rectangle', 'unknown', 'unsupported']),
+    roomViews: z
+      .array(
+        z.strictObject({ sourceId: idSchema, corner: photoCorner.nullable() }),
+      )
+      .max(POLICY.photos)
+      .optional(),
     frameEvidence: evidenceSchema,
     surfaces: z
       .strictObject({ floor: photoSurface, walls: photoSurface })
@@ -195,6 +225,9 @@ export type DraftHypothesis = z.infer<typeof draftHypothesisSchema>;
 export type DraftObservation = z.infer<typeof draftObservationSchema>;
 export type PhotoManifest = z.infer<typeof photoManifestSchema>;
 const failureFields = [
+  'roomViews',
+  'wallView',
+  'relation',
   'version',
   'sourcePurposes',
   'shape',
@@ -273,6 +306,10 @@ export function parseDraftHypothesis(
     return reject('source-manifest', 'sourcePurposes');
   const allowed = new Set(sources),
     roles = parsed.data.sourcePurposes;
+  const supportsRoom = (id: string) =>
+    roles
+      ? roles.some((r) => r.id === id && r.purpose === 'room')
+      : !automaticSources.includes(id);
   if (parsed.data.surfaces) {
     for (const target of ['floor', 'walls'] as const) {
       const appearance = parsed.data.surfaces[target];
@@ -317,6 +354,17 @@ export function parseDraftHypothesis(
       o.projection,
     ]),
   ];
+  const views = new Map(
+    (parsed.data.roomViews ?? []).map((v) => [v.sourceId, v]),
+  );
+  if (
+    views.size !== (parsed.data.roomViews ?? []).length ||
+    [...views.values()].some(
+      (v) =>
+        !allowed.has(v.sourceId) || (v.corner && !supportsRoom(v.sourceId)),
+    )
+  )
+    return reject('evidence', 'roomViews');
   const evidence = [
     parsed.data.frameEvidence,
     ...parsed.data.observations.flatMap((o) => [
@@ -327,6 +375,39 @@ export function parseDraftHypothesis(
     ]),
   ];
   for (const observation of parsed.data.observations) {
+    if (observation.wallView) {
+      const view = views.get(observation.wallView.sourceId);
+      if (!view?.corner || !supportsRoom(view.sourceId))
+        return reject('evidence', 'wallView');
+      const wall = PHOTO_VIEW_WALLS[view.corner][observation.wallView.side];
+      if (observation.wall !== 'unknown' && observation.wall !== wall)
+        return reject('evidence', 'wallView');
+      observation.wall = wall;
+      observation.wallEvidence = {
+        status: 'estimated',
+        sourceId: view.sourceId,
+      };
+    }
+    if (observation.relation) {
+      const target = parsed.data.observations.find(
+        (o) => o.ref === observation.relation!.targetRef,
+      );
+      if (
+        observation.kind !== 'furniture' ||
+        target?.kind !== 'furniture' ||
+        target.ref === observation.ref ||
+        parsed.data.groups.some(
+          (g) => g.includes(observation.ref) && g.includes(target.ref),
+        ) ||
+        !observation.poseEvidence.sourceId ||
+        !supportsRoom(observation.poseEvidence.sourceId) ||
+        (observation.relation.kind === 'beside' &&
+          !observation.relation.side) ||
+        (observation.relation.kind === 'faces' &&
+          observation.relation.side !== null)
+      )
+        return reject('evidence', 'relation');
+    }
     if (observation.doorPurpose && observation.kind !== 'door')
       return reject('evidence', 'doorPurpose');
     if (!allowed.has(observation.sourceId))

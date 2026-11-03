@@ -40,6 +40,39 @@ function bedsideDraft() {
   return adopted.draft;
 }
 
+it('uses independently room-backed wall and pose evidence attached to a detail observation', () => {
+  const draft = bedsideDraft();
+  draft.sources.push({ id: 'detail', purpose: 'furniture', available: true });
+  const bed = draft.room.furniture[0]!;
+  for (const o of draft.observations.filter(
+    (o) => o.catalogueId === 'procedural-bed',
+  )) {
+    o.sourceId = 'detail';
+    o.wallEvidence = o.poseEvidence = { status: 'estimated', sourceId: 'one' };
+  }
+  expect(photoBackWalls(draft).get(bed.id)).toBe('north');
+  for (const o of draft.observations) {
+    o.wallEvidence = o.poseEvidence = {
+      status: 'estimated',
+      sourceId: 'detail',
+    };
+  }
+  expect(photoBackWalls(draft).size).toBe(0);
+});
+
+it('retains a wall derived from the camera plane when global facing was deliberately left unknown', () => {
+  const draft = bedsideDraft(),
+    bed = draft.room.furniture[0]!;
+  for (const o of draft.observations.filter(
+    (o) => o.catalogueId === 'procedural-bed',
+  )) {
+    o.wallView = { sourceId: 'one', side: 'left' };
+    o.sketch.quarterTurns = null;
+    o.poseEvidence = { status: 'estimated', sourceId: 'one' };
+  }
+  expect(photoBackWalls(draft).get(bed.id)).toBe('north');
+});
+
 it.each([0, 1, 2, 3] as const)(
   'plans a uniquely co-visible bedside along its bed wall at rotation %s without changing unknown evidence',
   (turn) => {
@@ -256,15 +289,17 @@ it.each([0, 1, 2, 3] as const)(
     ).toBeDefined();
     const result = planPhotoPlacement(room, ['bed', 'cabinet']);
     expect(result.unresolved).toEqual([]);
-    expect(result.adjusted).toEqual(['cabinet']);
-    expect(result.room.furniture[0]).toEqual(before.furniture[0]);
+    expect(result.adjusted).toEqual(['bed', 'cabinet']);
+    expect(result.room.furniture[0]!.pose.provenance.sourceId).toBe(
+      'photo-layout-plan',
+    );
     const cabinet = result.room.furniture[1]!;
     expect(cabinet.pose.provenance).toEqual({
       status: 'planned',
       sourceId: 'photo-layout-plan',
     });
     expect(cabinet.pose.quarterTurns).toBe(
-      before.furniture[1]!.pose.quarterTurns,
+      result.room.furniture[0]!.pose.quarterTurns,
     );
     expect(cabinet.dimensions).toEqual(before.furniture[1]!.dimensions);
     expect(cabinet.finish).toBe(before.furniture[1]!.finish);
@@ -324,13 +359,13 @@ it('avoids known obstacle regions and stays within the planning frame', () => {
   expect(bounds.maxZ).toBeLessThanOrEqual(4800);
 });
 
-it('clamps an outlying estimated footprint without changing facing or any room dimensions', () => {
+it('places an outlying fresh cabinet at a sensible edge without changing room dimensions', () => {
   const room = photoRoom();
   room.furniture = [room.furniture[1]!];
   room.furniture[0]!.pose.centerX = 4190;
   const result = planPhotoPlacement(room, ['cabinet']);
   expect(result.adjusted).toEqual(['cabinet']);
-  expect(displayFurnitureFootprint(result.room.furniture[0]!)!.maxX).toBe(4200);
+  expect(displayFurnitureFootprint(result.room.furniture[0]!)!.maxX).toBe(4150);
   expect(result.room.room.width).toEqual(unknown());
 });
 
