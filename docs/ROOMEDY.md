@@ -1799,7 +1799,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-03T15:35:17+00:00",
+  "updated_at": "2026-11-03T15:54:06+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -1842,8 +1842,8 @@ This checklist records local work. Human approvals and unresolved external check
       "confidence": "confirmed"
     },
     "PRODUCT_CHOICES": {
-      "value": "Reviewed product question set resolved. Remaining work is exact licensed assets/artwork and later visual acceptance, compatible model and authorized evaluation/account setup, measured limits/search mechanisms and actual live/hosted verification. No pending product answer is invented for prices, inputs, main-editor manipulation, comparison or retention.",
-      "source": "Human default selection for Q-01 through Q-09 plus explicit Q-07 deferral; docs/ROOMEDY.md section 26.2 separates decisions from engineering/evidence",
+      "value": "Reviewed product question set resolved. Remaining work is exact licensed assets/artwork and later visual acceptance, compatible model and authorized evaluation/account setup, measured limits/search mechanisms and actual live/hosted verification. No pending product answer is invented for prices, inputs, main-editor manipulation, comparison or retention.\n\n3November2026 direct owner permanent instruction: Roomedy stays on gpt-6-luna. Do not suggest, raise, discuss, compare pricing for, request approval for or remind the owner of alternative/upgraded models. The abandoned recommendation is permanently closed. No pending model-choice approval or follow-up exists. Improve the current model workflow and deterministic validation only. This confirmed current instruction supersedes every older pending-model note in immutable historical records.",
+      "source": "Human default selection for Q-01 through Q-09 plus explicit Q-07 deferral; docs/ROOMEDY.md section 26.2 separates decisions from engineering/evidence; direct owner permanent Luna instruction,3November2026",
       "confidence": "confirmed"
     },
     "DEPLOYMENT_PLATFORM": {
