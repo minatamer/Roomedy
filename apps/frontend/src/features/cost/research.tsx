@@ -715,7 +715,7 @@ export function Research({
                                 setMessage('');
                                 if (applied.complete) return;
                                 say(
-                                  `${kept ? 'Kept' : 'Added'} ${candidate.label} in your estimate. ${applied.next ? `Next, ${applied.next.label}. Choose one of these options, or let me choose the rest.` : 'Some items still need your choice or more options.'}`,
+                                  `${kept ? 'Kept' : 'Selected'} ${candidate.label} as your product choice. ${applied.next ? `Next, ${applied.next.label}. Choose one of these options, or let me choose the rest.` : 'Some items still need your choice or more options.'}`,
                                 );
                               } else setMessage(applied.reason);
                             }}

@@ -10,7 +10,9 @@ import {
   prepareCommand,
   applyCommand,
   undoCommand,
+  footprint,
 } from '@roomedy/spatial';
+import { displayRoom } from '../apps/frontend/src/features/room-view/adapter.js';
 import { roomDocumentSchema } from '@roomedy/contracts/room';
 import { assistantToolSchemas } from '@roomedy/contracts/assistant';
 import {
@@ -26,6 +28,67 @@ const plannedMove = (id: string, x: number, z: number) => ({
   type: 'move' as const,
   id,
   pose: { centerX: x, centerZ: z, quarterTurns: 0 as const },
+});
+it('preserves legacy financial planning assumptions independently of the editor frame', () => {
+  const room = commandRoom([]);
+  room.room.width = room.room.depth = room.room.height = unknown();
+  const before = structuredClone(room),
+    estimate = planningRoom(room, 'estimate');
+  expect([
+    estimate.room.width.value,
+    estimate.room.depth.value,
+    estimate.room.height.value,
+  ]).toEqual([6000, 5000, 2700]);
+  room.furniture.push(piece('outlier', 8000, 9000));
+  expect(planningRoom(room, 'estimate').room.width.value).toBe(8600);
+  expect(planningRoom(room).room.width.value).toBe(4200);
+  expect(before.room.width.value).toBeNull();
+  expect(room.room.width.value).toBeNull();
+});
+it.each([false, true])(
+  'keeps unknown planning axes in the actual displayed frame, including an outlier: %s',
+  (outlier) => {
+    const room = commandRoom(outlier ? [piece('outlier', 8000, 9000)] : []);
+    room.room.width = room.room.depth = room.room.height = unknown();
+    const original = structuredClone(room),
+      display = displayRoom(room),
+      planned = planningRoom(room);
+    expect(planned.room.width.value).toBe(display.width * 1000);
+    expect(planned.room.depth.value).toBe(display.depth * 1000);
+    expect(planned.room.height.value).toBe(display.height * 1000);
+    expect(room).toEqual(original);
+  },
+);
+it('searches a mounted mirror inside the displayed unknown-room floor without promoting room dimensions', () => {
+  const room = commandRoom([]);
+  room.room.width = room.room.depth = room.room.height = unknown();
+  const selected = goal({
+    kind: 'add',
+    additions: [
+      {
+        id: 'added_mirror',
+        catalogueId: 'mirror-wall',
+        size: { width: 700, depth: 70, height: 1000 },
+        finish: null,
+      },
+    ],
+  });
+  const search = new LayoutSearch(
+    request(room, selected),
+    scopeFor(room, selected),
+  );
+  while (!search.step()) {}
+  const candidate = search.finish().candidate;
+  expect(candidate).not.toBeNull();
+  const add = candidate!.actions.find((a) => a.type === 'add');
+  if (!add || add.type !== 'add') throw new Error('missing mirror addition');
+  const bounds = footprint(add.furniture)!,
+    display = displayRoom(room);
+  expect(bounds.minX).toBeGreaterThanOrEqual(0);
+  expect(bounds.maxX).toBeLessThanOrEqual(display.width * 1000);
+  expect(bounds.minZ).toBeGreaterThanOrEqual(0);
+  expect(bounds.maxZ).toBeLessThanOrEqual(display.depth * 1000);
+  expect(room.room.width.value).toBeNull();
 });
 
 it('uses deterministic bounded planning defaults without changing supplied values, locks or evidence', () => {
@@ -55,7 +118,7 @@ it('uses deterministic bounded planning defaults without changing supplied value
   expect(planningRoom(room)).toEqual(planned);
   expect(roomDocumentSchema.safeParse(planned).success).toBe(true);
   expect(planned.room.width).toMatchObject({
-    value: 6000,
+    value: 4200,
     status: 'estimated',
   });
   expect(planned.furniture[0]!.dimensions.depth).toEqual(

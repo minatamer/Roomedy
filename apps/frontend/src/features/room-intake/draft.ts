@@ -13,6 +13,7 @@ import {
   evaluateBatch,
   findCatalogueEntry,
   validateRoom,
+  wallMountedPose,
 } from '@roomedy/spatial';
 import type { PhotoPurpose } from './photo-store';
 import { emptySurfaceAppearance } from '@roomedy/contracts/surfaces';
@@ -694,15 +695,55 @@ export function adoptHypothesis(
         depth: first.depth,
         height: first.height,
       };
-      const normalized: [number, number] = [
-        first.sketch.x ?? 0.5,
-        first.sketch.z ?? 0.5,
-      ];
+      const positioned = members.find(
+        (o) =>
+          o.sketch.x !== null &&
+          o.sketch.z !== null &&
+          o.poseEvidence.status !== 'unknown' &&
+          roomSources.has(o.poseEvidence.sourceId ?? ''),
+      );
+      const facing =
+        positioned?.sketch.quarterTurns ??
+        members.find(
+          (o) =>
+            o.sketch.quarterTurns !== null &&
+            o.poseEvidence.status !== 'unknown' &&
+            roomSources.has(o.poseEvidence.sourceId ?? ''),
+        )?.sketch.quarterTurns;
+      const normalized: [number, number] | null = positioned
+        ? [positioned.sketch.x!, positioned.sketch.z!]
+        : null;
       piece.pose = {
         ...piece.pose,
-        ...displayPosition(next, normalized),
-        quarterTurns: first.sketch.quarterTurns ?? 0,
+        ...(normalized ? displayPosition(next, normalized) : {}),
+        quarterTurns: facing ?? piece.pose.quarterTurns,
       };
+      const entry = findCatalogueEntry(
+        piece.catalogueId,
+        piece.catalogueVersion,
+      )!;
+      if (entry.placement && entry.placement !== 'floor') {
+        // Nominal rendering envelopes only: never adopt them as photo measurements.
+        const proxy = structuredClone(next.room);
+        for (const [axis, fallback] of [
+          ['width', 4200],
+          ['depth', 4800],
+          ['height', 2600],
+        ] as const)
+          if (proxy.room[axis].value === null)
+            proxy.room[axis] = estimate(fallback);
+        const nominal = { ...piece, dimensions: { ...piece.dimensions } };
+        for (const axis of ['width', 'depth', 'height'] as const)
+          if (nominal.dimensions[axis].value === null)
+            nominal.dimensions[axis] = estimate(entry.size[axis].default);
+        piece.pose = {
+          ...wallMountedPose(proxy, nominal, {
+            ...piece.pose,
+            bottomY: entry.defaultElevationMm ?? 0,
+          }),
+          provenance: { status: 'planned', sourceId: 'photo-mount-plan' },
+        };
+      }
       if (first.finish) piece.finish = first.finish;
       const materials = photoFurnitureMaterials(members, piece.catalogueId);
       if (materials) piece.materials = materials;
@@ -733,6 +774,10 @@ export function adoptHypothesis(
           feature.mechanismProvenance = first.mechanismEvidence;
         }
         if (feature.kind === 'door') {
+          const purposes = new Set(
+            members.flatMap((o) => (o.doorPurpose ? [o.doorPurpose] : [])),
+          );
+          if (purposes.size === 1) feature.purpose = [...purposes][0]!;
           feature.hinge = first.hinge;
           feature.hingeProvenance = first.hingeEvidence;
         }

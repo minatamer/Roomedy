@@ -37,6 +37,35 @@ const completed = {
     },
   ],
 };
+it.each(['interactive', 'photo', 'sourcing', 'sourcing-media'] as const)(
+  'uses the admitted %s profile output ceiling without changing the model or retrying',
+  async (profile) => {
+    const fetcher = vi.fn<typeof fetch>(async (_url, options) => {
+      const body = JSON.parse(options!.body as string);
+      expect(body.max_output_tokens).toBe(
+        profile === 'photo'
+          ? POLICY.recognitionOutputTokens
+          : POLICY.providerOutputTokens,
+      );
+      expect(body.model).toBe('fixture-model');
+      expect(body.store).toBe(false);
+      expect(body.parallel_tool_calls).toBe(false);
+      expect(body).not.toHaveProperty('profile');
+      expect(body).not.toHaveProperty('reasoning');
+      return Response.json(completed);
+    });
+    const provider = createResponsesProvider(
+      'synthetic-key',
+      'fixture-model',
+      fetcher,
+    );
+    const call = provider.start(input(), new AbortController().signal, profile);
+    expect(await call.result).toMatchObject({ kind: 'completed' });
+    await call.settled;
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(provider.meteredDispatches).toBe(1);
+  },
+);
 it('accepts bounded current reasoning content and direct function metadata in stateless serial continuation', () => {
   const reasoning = {
     type: 'reasoning',

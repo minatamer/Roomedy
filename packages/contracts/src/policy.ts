@@ -82,6 +82,7 @@ export const POLICY = Object.freeze({
   operationBridgeMs: 110_000,
   hostingRequestMs: 120_000,
   providerOutputTokens: 8192,
+  recognitionOutputTokens: 24_576,
   providerSchemaBytes: 64 * 1024,
   roomEdgeMm: 20_000,
   furnitureEdgeMm: 10_000,

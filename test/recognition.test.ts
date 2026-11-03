@@ -3,6 +3,7 @@ import request from 'supertest';
 import { readFile } from 'node:fs/promises';
 import { decodeInput, parseDraftHypothesis } from '@roomedy/contracts/intake';
 import { recognitionInputSchema } from '@roomedy/contracts/operations';
+import { POLICY } from '@roomedy/contracts/policy';
 import { createRuntime } from '../apps/backend/src/runtime/create-runtime.js';
 import { parseRuntimeConfig } from '../apps/backend/src/config/runtime-config.js';
 import { createApp } from '../apps/backend/src/http/create-app.js';
@@ -96,6 +97,21 @@ it.each([4, 6])(
       );
       expect(imageParts).toHaveLength(count);
       expect(body.store).toBe(false);
+      expect(body.max_output_tokens).toBe(POLICY.recognitionOutputTokens);
+      const catalogueId =
+        body.text.format.schema.properties.observations.items.properties
+          .catalogueId;
+      expect(catalogueId.anyOf[0].enum).toEqual(
+        expect.arrayContaining([
+          'bedside-drawers',
+          'mirror-wall',
+          'mirror-standing',
+          'wardrobe-mirrored',
+          'ceiling-pendant',
+          'ceiling-track',
+        ]),
+      );
+      expect(catalogueId.anyOf[0].enum).not.toContain('invented-piece');
       return Response.json({
         status: 'completed',
         output: [
@@ -114,6 +130,7 @@ it.each([4, 6])(
     const call = provider.start(
       recognitionRequest(input, prepared),
       new AbortController().signal,
+      'photo',
     );
     expect(await call.result).toMatchObject({
       kind: 'completed',

@@ -61,7 +61,7 @@ export function calculateRoomEstimate(
       return { ok: false, code: 'invalid-input' };
     const room =
       parsed.data.demoScope === 'materials'
-        ? planningRoom(acceptedRoom)
+        ? planningRoom(acceptedRoom, 'estimate')
         : acceptedRoom;
     const settings = parsed.data,
       offers = new Map(offered.data.map((offer) => [offer.id, offer]));

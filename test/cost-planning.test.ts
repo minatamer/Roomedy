@@ -487,6 +487,17 @@ describe('computed budgets and typed planning tools', () => {
 });
 
 describe('collective market requests', () => {
+  it.each([
+    'Find options for the desk, flooring and wall paint.',
+    'Find flooring and paint options.',
+  ])(
+    'clarifies combined targets instead of silently dropping part of %s',
+    (text) => {
+      expect(
+        costIntent(text, createRoomFixture('sample'), 'USD', null),
+      ).toMatchObject({ kind: 'clarify' });
+    },
+  );
   it('routes whole-room research through the shared market action while keeping target searches specific', () => {
     const room = createRoomFixture('sample');
     for (const text of [

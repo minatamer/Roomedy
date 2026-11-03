@@ -81,6 +81,16 @@ export function costIntent(
       !room.furniture.some((piece) => lower.includes(piece.label.toLowerCase()))
     )
       return { kind: 'research', key: 'all', query: text.slice(0, 240) };
+    if (
+      /\bfloor(?:ing)?\b/.test(lower) &&
+      /\b(?:paint|walls?)\b/.test(lower) &&
+      /\band\b|,/.test(lower)
+    )
+      return {
+        kind: 'clarify',
+        message:
+          'Research one item at a time, or use Find all options for furniture, flooring and wall paint together. Which item would you like first?',
+      };
     const piece = room.furniture.find((p) =>
       lower.includes(p.label.toLowerCase()),
     );

@@ -94,6 +94,7 @@ export const draftObservationSchema = z.strictObject({
   ref: idSchema,
   sourceId: idSchema,
   kind: z.enum(['furniture', 'door', 'window', 'obstacle']),
+  doorPurpose: z.enum(['room', 'bathroom', 'balcony']).nullable().optional(),
   catalogueId: idSchema.nullable(),
   label: labelSchema,
   wall: z.enum(['north', 'east', 'south', 'west', 'unknown']),
@@ -176,8 +177,20 @@ export const draftHypothesisSchema = z
           message: 'Invalid observation association',
         });
   });
-export const draftHypothesisJsonSchema = () =>
-  z.toJSONSchema(draftHypothesisSchema);
+export const draftHypothesisJsonSchema = (catalogueIds?: readonly string[]) =>
+  z.toJSONSchema(
+    catalogueIds
+      ? draftHypothesisSchema.safeExtend({
+          observations: z
+            .array(
+              draftObservationSchema.extend({
+                catalogueId: z.enum(catalogueIds).nullable(),
+              }),
+            )
+            .max(POLICY.draftObservations),
+        })
+      : draftHypothesisSchema,
+  );
 export type DraftHypothesis = z.infer<typeof draftHypothesisSchema>;
 export type DraftObservation = z.infer<typeof draftObservationSchema>;
 export type PhotoManifest = z.infer<typeof photoManifestSchema>;
@@ -192,6 +205,7 @@ const failureFields = [
   'groups',
   'ref',
   'sourceId',
+  'doorPurpose',
   'wall',
   'mechanism',
   'hinge',
@@ -313,6 +327,8 @@ export function parseDraftHypothesis(
     ]),
   ];
   for (const observation of parsed.data.observations) {
+    if (observation.doorPurpose && observation.kind !== 'door')
+      return reject('evidence', 'doorPurpose');
     if (!allowed.has(observation.sourceId))
       return reject('source-reference', 'sourceId');
     if (observation.appearance) {

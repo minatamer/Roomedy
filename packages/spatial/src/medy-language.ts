@@ -304,6 +304,25 @@ export function medyTopic(
       .reverse()
       .map((turn) => turn.text),
   ]) {
+    // In a surface-treatment question, nearby pieces/openings and unchanged
+    // surfaces are context, not additional requested treatment targets.
+    const question = medyCommandWords(room, turn.split(/[?!]/)[0] ?? '').split(
+      /\b(?:considering|taking into account|given)\b/,
+    )[0]!;
+    const surfaceQuestion = question.match(
+      /^(?:what|which)\s+(?:(north|east|south|west)\s+)?(walls?|floor(?:ing)?)\s+(?:treatments?|colou?rs?|textures?|finish(?:es)?|materials?)\b/,
+    );
+    if (
+      surfaceQuestion &&
+      !/\b(?:and|also)\s+(?:(?:what|which|the)\s+)?(?:walls?|floor(?:ing)?|furniture|desk|chair|doors?|windows?)\s+(?:treatments?|colou?rs?|textures?|finish(?:es)?|materials?)\b/.test(
+        question,
+      )
+    )
+      return surfaceQuestion[2]!.startsWith('floor')
+        ? 'floor'
+        : surfaceQuestion[1]
+          ? (`${surfaceQuestion[1]} wall` as MedyTopic)
+          : 'walls';
     const words = medyCommandWords(room, turn),
       topics: MedyTopic[] = [];
     const furniture =

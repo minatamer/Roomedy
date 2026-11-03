@@ -9,6 +9,7 @@ import type {
   ProviderPort,
   ProviderRequest,
   ProviderOutcome,
+  ProviderCallProfile,
 } from './provider.js';
 const object = (x: unknown): x is Record<string, unknown> =>
   !!x && typeof x === 'object' && !Array.isArray(x);
@@ -208,7 +209,11 @@ function checkInputItems(input: ProviderRequest['input']) {
     }
   }
 }
-export function responseBody(input: ProviderRequest, model: string) {
+export function responseBody(
+  input: ProviderRequest,
+  model: string,
+  profile: ProviderCallProfile = 'interactive',
+) {
   if (
     !/^[A-Za-z0-9._:-]{1,120}$/.test(model) ||
     input.instructions.length > POLICY.contextBytes ||
@@ -262,7 +267,10 @@ export function responseBody(input: ProviderRequest, model: string) {
     background: false,
     stream: false,
     parallel_tool_calls: false,
-    max_output_tokens: POLICY.providerOutputTokens,
+    max_output_tokens:
+      profile === 'photo'
+        ? POLICY.recognitionOutputTokens
+        : POLICY.providerOutputTokens,
     tools: input.search
       ? [
           {
@@ -463,7 +471,7 @@ export function createResponsesProvider(
     start(input, parent, profile = 'interactive') {
       let body: string;
       try {
-        body = responseBody(input, model);
+        body = responseBody(input, model, profile);
       } catch (error) {
         report?.('request');
         throw error;

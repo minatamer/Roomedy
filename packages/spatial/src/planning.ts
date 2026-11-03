@@ -12,7 +12,10 @@ const estimate = (value: number): Measurement => ({
 const evidence = { status: 'estimated' as const, sourceId: 'planning-default' };
 
 /** A disposable design projection. Never adopt its assumptions as accepted room measurements. */
-export function planningRoom(room: RoomDocument): RoomDocument {
+export function planningRoom(
+  room: RoomDocument,
+  purpose: 'editor' | 'estimate' = 'editor',
+): RoomDocument {
   const missing =
     [room.room.width, room.room.depth, room.room.height].some(
       (m) => m.value === null,
@@ -49,30 +52,43 @@ export function planningRoom(room: RoomDocument): RoomDocument {
     if (piece.pose.provenance.status === 'unknown')
       piece.pose.provenance = { ...evidence };
   }
-  for (const [axis, fallback, position] of [
-    ['width', 6000, 'centerX'],
-    ['depth', 5000, 'centerZ'],
-  ] as const)
-    if (planned.room[axis].value === null) {
-      const extent = planned.furniture.reduce<number>(
-        (max, p) =>
-          Math.max(
-            max,
-            p.pose[position] +
-              (p.dimensions[
-                p.pose.quarterTurns % 2
-                  ? axis === 'width'
-                    ? 'depth'
-                    : 'width'
-                  : axis
-              ].value ?? 0) /
-                2,
-          ),
-        fallback,
-      );
-      planned.room[axis] = estimate(Math.min(POLICY.roomEdgeMm, extent));
-    }
-  if (planned.room.height.value === null) planned.room.height = estimate(2700);
+  if (purpose === 'estimate') {
+    // Retain the established, separately disclosed takeoff assumptions exactly.
+    for (const [axis, fallback, position] of [
+      ['width', 6000, 'centerX'],
+      ['depth', 5000, 'centerZ'],
+    ] as const)
+      if (planned.room[axis].value === null) {
+        const extent = planned.furniture.reduce<number>(
+          (max, p) =>
+            Math.max(
+              max,
+              p.pose[position] +
+                (p.dimensions[
+                  p.pose.quarterTurns % 2
+                    ? axis === 'width'
+                      ? 'depth'
+                      : 'width'
+                    : axis
+                ].value ?? 0) /
+                  2,
+            ),
+          fallback,
+        );
+        planned.room[axis] = estimate(Math.min(POLICY.roomEdgeMm, extent));
+      }
+    if (planned.room.height.value === null)
+      planned.room.height = estimate(2700);
+  } else {
+    // Match the existing displayed frame; outliers do not silently enlarge it.
+    for (const [axis, fallback] of [
+      ['width', 4200],
+      ['depth', 4800],
+      ['height', 2600],
+    ] as const)
+      if (planned.room[axis].value === null)
+        planned.room[axis] = estimate(fallback);
+  }
   for (const feature of planned.room.features) {
     if (feature.wall === 'unknown') {
       feature.wall = feature.kind === 'door' ? 'west' : 'north';

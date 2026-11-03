@@ -24,6 +24,56 @@ import { AssistantController } from '../apps/frontend/src/features/assistant/con
 import { commandRoom, piece, windowFeature } from './fixtures/command-room.js';
 import { assistantInput } from './fixtures/assistant.js';
 import { identityIds } from './fixtures/operation.js';
+import { medyTopic } from '../packages/spatial/src/medy-language.js';
+
+it.each([
+  [
+    'What wall treatment would suit the work area, considering the window and bathroom door? Keep the layout and floor as they are.',
+    'walls',
+  ],
+  [
+    'Which wall colour would work beside the desk? Leave the floor unchanged.',
+    'walls',
+  ],
+  [
+    'What floor finish would suit the work area, considering the walls and window? Keep the walls as they are.',
+    'floor',
+  ],
+] as const)(
+  'keeps the explicit surface question in the first two replies: %s',
+  (previousRequest, topic) => {
+    const room = commandRoom([piece('desk')]);
+    const replies = completeQuickReplies(room, {
+      previousRequest,
+      message:
+        'We can preview a surface treatment while retaining the current arrangement.',
+      selectedId: null,
+      choices: [
+        {
+          label: 'Another layout idea',
+          request: 'How else could this layout work?',
+        },
+      ],
+    });
+    expect(replies.slice(0, 2)).toHaveLength(2);
+    expect(
+      replies
+        .slice(0, 2)
+        .every((r) =>
+          topic === 'walls'
+            ? /walls?/i.test(r.request)
+            : /floor/i.test(r.request),
+        ),
+    ).toBe(true);
+  },
+);
+it.each([
+  'What wall treatment and floor finish would suit this room?',
+  'Which wall colour and which door colour would work?',
+  'Change walls to plaster and floor to oak',
+])('retains actual multiple-target ambiguity: %s', (text) => {
+  expect(medyTopic(commandRoom([piece('desk')]), text)).toBeNull();
+});
 
 async function setup(
   smoothWalls = false,

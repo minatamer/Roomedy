@@ -286,6 +286,50 @@ describe('strict admitted source contracts and evidence', () => {
     expect(call).toHaveBeenCalledOnce();
     expect(page).toHaveBeenCalledOnce();
   });
+  it.each([
+    [103_420, 'A current gallon of interior paint.'],
+    [1_000_000_000, 'A current gallon of interior paint.'],
+    [9_816_000, 'This paint covers up to 400 sq. ft. per gallon.'],
+  ])(
+    'does not use an invalid or uncertain AI paint yield of %i as a product quantity',
+    async (yieldMm2, evidence) => {
+      const i = input('surface:north'),
+        reply = await fakeReply(i),
+        candidate = reply.candidates[0]!;
+      reply.candidates = [candidate];
+      candidate.url = 'https://merchant.example/paint';
+      candidate.evidence = evidence as string;
+      candidate.offer = null;
+      candidate.listing = {
+        priceMinor: 3998,
+        currency: 'USD',
+        country: i.locality.country,
+        unit: 'can',
+        volumeMl: 3785,
+        coverageMm2PerLitre: yieldMm2 as number,
+        observedAt: null,
+      };
+      const call = vi.fn(async () => ({
+        kind: 'completed' as const,
+        calls: [],
+        data: reply,
+        search: { calls: 8, opened: [candidate.url], sources: [] },
+      }));
+      const result = await createSourcingHandler(
+        false,
+        () => 123,
+        id,
+      )(i, {
+        signal: new AbortController().signal,
+        remainingMs: 1000,
+        call,
+      });
+      const listing = result.sourcing!.candidates[0]!.listing!;
+      expect(listing).toMatchObject({ priceMinor: 3998, volumeMl: 3785 });
+      expect(listing.coverageMm2PerLitre).toBeUndefined();
+      expect(call).toHaveBeenCalledOnce();
+    },
+  );
   it('retains a real paint can size and per-coat yield while preserving a valid price', async () => {
     const i = input('surface:north'),
       reply = await fakeReply(i),

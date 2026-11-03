@@ -269,6 +269,19 @@ export function createSourcingHandler(
       for (const candidate of data.candidates) {
         if (candidate && typeof candidate === 'object') {
           const offer = candidate.offer;
+          // Model extraction is not authority to invert yield or turn a maximum
+          // into a per-coat rate. Keep the independent price, not this quantity.
+          const uncertainPaintYield =
+            ['paint', 'primer'].includes(input.brief.kind) &&
+            typeof candidate.evidence === 'string' &&
+            /\b(?:cover(?:age|s)?|yield|spread)\b[^;\n]{0,100}\bup to\b|\bup to\s+\d[\d.,]*\s*(?:sq\.?\s*ft|square feet|m[²2])/i.test(
+              candidate.evidence,
+            );
+          const validPaintYield = (value: unknown) =>
+            Number.isSafeInteger(value) &&
+            (value as number) >= 1_000_000 &&
+            (value as number) <= 30_000_000 &&
+            !uncertainPaintYield;
           if (candidate.listing && typeof candidate.listing === 'object') {
             candidate.listing.observedAt = simulation ? null : observed;
             for (const key of ['coverageMm2', 'coverageMm2PerLitre']) {
@@ -276,7 +289,8 @@ export function createSourcingHandler(
               if (
                 value !== null &&
                 value !== undefined &&
-                (!Number.isSafeInteger(value) ||
+                ((key === 'coverageMm2PerLitre' && !validPaintYield(value)) ||
+                  !Number.isSafeInteger(value) ||
                   value < 10_000 ||
                   value > 1_000_000_000)
               )
@@ -288,6 +302,11 @@ export function createSourcingHandler(
             candidate.listing = listing.success ? listing.data : null;
           }
           if (offer && typeof offer === 'object') {
+            if (
+              ['paint', 'primer'].includes(offer.kind) &&
+              !validPaintYield(offer.coverageMm2PerLitre)
+            )
+              delete offer.coverageMm2PerLitre;
             const pack = Array.isArray(offer.packs) ? offer.packs[0] : null;
             const price =
               'priceMinor' in offer ? offer.priceMinor : pack?.priceMinor;
@@ -309,9 +328,7 @@ export function createSourcingHandler(
               offer.coverageMm2 <= 1_000_000_000
                 ? { coverageMm2: offer.coverageMm2 }
                 : {}),
-              ...(Number.isSafeInteger(offer.coverageMm2PerLitre) &&
-              offer.coverageMm2PerLitre >= 10_000 &&
-              offer.coverageMm2PerLitre <= 1_000_000_000
+              ...(validPaintYield(offer.coverageMm2PerLitre)
                 ? { coverageMm2PerLitre: offer.coverageMm2PerLitre }
                 : {}),
               observedAt: simulation ? null : observed,
