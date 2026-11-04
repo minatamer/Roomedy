@@ -11,5 +11,18 @@ coverage/
 .DS_Store
 Thumbs.db
 
+# Private credentials and local diagnostic/export artifacts.
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
+application_default_credentials.json
+*.har
+*.heapsnapshot
+*.roomedy
+output/
+
 .release/
 **/.next-release-*/

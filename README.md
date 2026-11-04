@@ -1,37 +1,126 @@
-# Roomedy
+<h1 align="center">Roomedy</h1>
 
-**2 November follow-up:** [Existing abuse protections and cloud evidence](docs/security/ABUSE_PROTECTION_STATUS.md) confirm the proportionate demo baseline; no additional DDoS infrastructure is selected. Spending setup is handled per owner instruction. Local and existing hosted paid mode are confirmed by safe readiness/config GETs; the local stack is running for the owner's final test. No agent paid requests or app/config/cloud changes. [Updated release tasks](docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md).
+<p align="center">
+  <strong>Your room. A fresh perspective. A plan to make it yours.</strong>
+</p>
 
-![Roomedy editorial artwork: a cocoa background, an ivory room cutaway and a Medy card reading Your room. Together.](docs/assets/roomedy-overview.png)
+<p align="center">
+  <a href="https://roomedy-frontend-860563209111.europe-west1.run.app"><strong>Try the hosted demo</strong></a>
+  · <a href="#the-experience">The experience</a>
+  · <a href="#run-locally">Run locally</a>
+  · <a href="docs/README.md">Documentation</a>
+</p>
 
-Roomedy turns room photos into an editable studio with precision2D and stylized3D views. Choose photos, continue through processing, then correct measurements and arrange supported furniture in the studio manually or through reviewable assistant proposals. Manual room setup is also available. The local CPQ extension adds richer furniture/wall/floor customization and a separate 3D Plan & cost phase with reviewed product research, transparent quantities/services/moving, budget alternatives, saved versions and itemized estimate PDF output. It finishes and furnishes an existing room; drawing/floor-plan/PDF intake is permanently excluded.
+<p align="center">
+  <img src="docs/assets/roomedy-overview.png" width="900"
+    alt="Roomedy editorial artwork: a warm room cutaway and Medy beside the words Your room. Together." />
+</p>
 
-**Local CPQ review —26October:** All ten RM-021–RM-030 tickets are complete locally with a1178-test/72-file gate and both builds under fake/paid-off authority. The hosted release below is unchanged and does not contain this extension. [Local walkthrough and limitations](docs/operations/CPQ_LOCAL_HANDOFF.md), [ticket queue](docs/tickets/README.md#cpq-extension--26-october-2026). Final owner manual/visual and real-source evaluation remain pending.
+Roomedy turns a few room photos into an editable 2D and 3D studio. Arrange furniture, explore materials and lighting, then find products and bring the costs together—with **Medy** beside you through the design and shopping conversations.
 
-**Deployed:** [Try Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). The approved landing text fades in immediately at the center, then moves left as the prepared3D room fades in. Paid recognition and provider-backed Medy are enabled. One hosted four-sample photo flow and one contextual Medy request passed quiet verification on their first attempt; the resulting room opens in3D/2D with Medy initially selected. [Hosted acceptance](docs/operations/HOSTED_ACCEPTANCE.md) and [exact candidate](docs/operations/landing-paid-candidate-2026-10-21.json) record current identities,1,043-test gate/nine Linux probes/97 exact public assets and remaining limits. SEC-001 is fixed; The later owner disposition handles SEC-002's spending portion; provider terms were not independently reviewed. Existing protections and current paid-mode checks are recorded in the 2 November follow-up above. This bounded walkthrough is not a general accuracy, fit or capacity guarantee.
+Start with your own photos, explore the supplied room photos, or build a room manually. The demo focuses on furnishing and finishing rectangular bedrooms and home offices.
 
-Use Node **24.19.0** and pnpm **11.25.0**. From the root:
+## The experience
 
-```powershell
+| Start with | Make it yours |
+| --- | --- |
+| **Your room** | Add photos or choose a manual starting point. Recognition drafts supported furniture and room features into a planning layout. |
+| **Your design** | Move and rotate furniture in 2D, inspect the room in 3D, and edit finishes, bedding, mirrors, lighting and room surfaces. Switch between day and night. |
+| **Your conversation** | Ask Medy for advice or a supported change. Review a preview before Apply, and use Undo to reverse an accepted change. |
+| **Your shopping plan** | Find options for the listed furniture, flooring and walls. Compare the returned cards, choose products in any order and review prices, quantities and sources. |
+| **Your takeaway** | Save reviewed estimates, download a visual PDF or export an editable project and supported 3D formats. Continue saved room restores the design and both conversations in the same tab. |
+
+## From photos to a room plan
+
+1. **Bring the room into view** — choose still JPEG, PNG or WebP photos, use the examples, or start manually.
+2. **Explore the studio** — inspect the planning layout in 2D and 3D, correct measurements and customize the room.
+3. **Design with Medy** — discuss the current room and review proposed changes before applying them.
+4. **Find and compare** — search the room's shopping list and inspect product options, source links and recorded prices.
+5. **Review and export** — check the breakdown, save a planning estimate and download the design or shopping plan.
+
+Photo layouts are approximate illustrations. Verify measurements, clearances, product variants, quantities and supplier terms before purchasing or carrying out work.
+
+## Built around a reviewable room
+
+- **One accepted design:** manual edits and Medy proposals share the same room, preview, Apply and Undo authority.
+- **Connected design and costs:** quantities and estimates follow accepted room data and chosen products; missing prices remain visible.
+- **Useful source evidence:** product cards retain links, price context and available specifications without inventing missing coverage or dimensions.
+- **Bounded photo processing:** up to **six photos**, **8 MiB each** and **24 MiB combined**, with pixel, preparation, server request and processing limits beyond the file picker.
+- **Temporary sessions:** same-tab recovery keeps the room and both chats within the original **two-hour** session. Original photos and pending operations are excluded; downloaded project files remain separate and chat-free.
+
+## Under the hood
+
+| Layer | Technology |
+| --- | --- |
+| Experience | Next.js, React and TypeScript |
+| Room views | SVG 2D plan, Three.js and React Three Fiber |
+| Private API | Node.js and Express |
+| Shared contracts | Zod schemas and a pure spatial/estimate package |
+| Recognition and Medy | Server-only OpenAI Responses adapter with validated structured output |
+| Product research | Bounded web research, source validation and deterministic estimate calculations |
+| Exports | Visual PDFs, editable JSON projects, GLB and OBJ/MTL |
+| Abuse protection | Cloudflare Turnstile, input-bound single-use grants and finite admission/resource limits |
+
+```text
+Browser
+  └─ Next.js studio + Medy + shopping plan
+       ├─ shared browser-safe contracts and spatial rules
+       └─ fixed same-origin API bridge
+            └─ private Express API
+                 ├─ recognition and assistant adapters
+                 └─ product research and source validation
+```
+
+The model proposes bounded data. Application code validates it and owns geometry, quantities, prices and accepted changes.
+
+## Run locally
+
+Use **Node 24.19.0** and **pnpm 11.25.0**. From the repository root:
+
+```sh
 pnpm install --frozen-lockfile
 pnpm build:shared
+```
+
+Start the backend and frontend in separate terminals:
+
+```sh
 pnpm dev:backend
-# In a second terminal:
+```
+
+```sh
 pnpm dev:frontend
 ```
 
-Verify ports **4321** (backend) and **4320** (frontend) are free or belong to this checkout before starting. Optional configuration uses app-local ignored `.env.local` files with blank-secret examples. Existing process environment takes precedence. Defaults are fake/paid-off; deliberate drafting/assistant requests use visibly authored fake output. Live operation remains unavailable without its separately reviewed model/privacy/funding/visitor-verification prerequisites. Never use another repo's secrets or stop its services.
+Open [Roomedy on port 4320](http://127.0.0.1:4320). Backend liveness is available at [port 4321 /v1/health](http://127.0.0.1:4321/v1/health).
 
-After `pnpm build`, `pnpm test:smoke` briefly verifies both owned local apps and their fixed bridge, then cleans up. It refuses occupied ports and forces fake/paid-off independently of manual configuration.
+An unconfigured checkout defaults to fake mode with paid operations off. The manual studio needs no provider key; protected API operations additionally require matching private bridge configuration. Optional configuration loads from ignored app-local `.env.local` files; committed `.env.example` files contain safe defaults and blank secret fields. Existing local configuration takes precedence. See the [backend](apps/backend/README.md) and [frontend](apps/frontend/README.md) guides for setup and live prerequisites.
 
-Use `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:boundaries`, `pnpm test:unit`, `pnpm build`, or `pnpm check` for the settled full no-key gate. Tests force fake/paid-off before imports and deny external network. Development uses separate `.next-dev` output with persistent Turbopack filesystem caching disabled; in-memory hot reload stays active. Production keeps its existing bundler, caching and `.next` output. [RM-041 restart/reload evidence](docs/validation/RM-041.md).
+Keep the dedicated ports and stop only the owning Roomedy process tree when restarting. Development uses `.next-dev`, separate from production `.next` output.
 
-- [Backend setup](apps/backend/README.md) and [frontend setup](apps/frontend/README.md)
-- [Detailed blueprint](docs/ROOMEDY.md) and [documentation map](docs/README.md)
-- [Ordered ticket queue](docs/tickets/README.md)
-- [Product concept overview](docs/ROOMEDY_OVERVIEW.html) — scripted illustration, separate from the app
-- [RM-001 allocation](docs/commit-plans/RM-001.md) and [validation evidence](docs/validation/RM-001.md)
+### Quality checks
 
-Selected domain: **tryroomedy.com**, not yet registered/configured. The owner has requested deployment to the existing `roomedy` cloud project after the recommended audit-first path. No domain purchase/DNS change or new paid evaluation is implied. Current security findings still follow the build review process.
+```sh
+pnpm check
+```
 
-Local release preparation: `pnpm release:inventory --out <file>` records exact source inputs; `pnpm release:build` is a dry run. Explicit local Linux image/probe execution uses `pnpm release:build --execute`. Docker's Linux engine is now available; current candidate images/probes must still actually pass before deployment. A Windows build/inventory is not Linux proof. Snapshot Docker commands and installer work are bounded, with cleanup owned by the verified temporary container. No release helper pushes or deploys. See [operations](docs/operations/README.md), [strict proof policy](docs/operations/release-inputs.md), [stale-client behavior](docs/operations/stale-client.md) and [guarded rollout/rollback](docs/operations/rollout-and-rollback.md).
+This runs formatting, lint, strict app/test types, import boundaries, isolated unpaid unit tests and both production builds. The test launcher forces fake/paid-off settings and blocks external requests. The [validation records](docs/validation) distinguish actual checks from unperformed acceptance.
+
+## Project guide
+
+| Read | For |
+| --- | --- |
+| [Frontend](apps/frontend/README.md) · [Backend](apps/backend/README.md) | Setup, commands and runtime boundaries |
+| [Documentation map](docs/README.md) · [Product blueprint](docs/ROOMEDY.md) · [Visual overview](docs/ROOMEDY_OVERVIEW.html) | Product scope, architecture and design story |
+| [Photo intake](docs/engineering/image-intake.md) · [Provider safety](docs/engineering/provider-safety.md) | Image preparation, limits and protected AI operations |
+| [Public-source review](docs/security/PUBLIC_REPOSITORY_REVIEW.md) · [Security review](docs/security/DEPLOYMENT_SECURITY_REVIEW.md) | Secret-scan scope, upload protections and dated security findings |
+| [Tickets](docs/tickets/README.md) · [Validation](docs/validation) | Implementation decisions, evidence and limitations |
+| [Deployment preparation](docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md) · [Hosted releases](docs/operations/HOSTED_ACCEPTANCE.md) | Local readiness and the separately recorded deployed revision |
+
+This README describes the current source. The hosted link may run an earlier revision; local validation does not establish that the latest changes have been deployed.
+
+Roomedy is a portfolio demonstration. Real room photos, credentials, private conversations and local diagnostic/export artifacts must stay out of version control. Only supported still-image intake is provided; floor-plan, drawing and PDF intake are outside the demo's scope.
+
+<p align="center">
+  Built and maintained by <a href="https://github.com/minatamer">Mina Tamer</a>.
+</p>
