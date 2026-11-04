@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner review RM-100 plain scan labels and ordinary measurement fields in the running app. Existing focused checks, scoped frontend gates and native saved-scan review are recorded in the receipt. Canonical unknown facts and saved scan inventory/layout remain exact; no additional paid call. Exact twenty-one-path local checkpoint under existing authority; owner/physical/merchant/hosted acceptance remains separate.
+Next action: Owner review RM-101 direct whole-room shopping results in the running app. One bounded Find all request, every returned card directly visible and retained during choosing; existing provider/source/financial/Undo/lifecycle guards preserved. Exact fifteen-path validated local checkpoint; no new paid QA, manual restart or hosted change. Owner/physical/merchant/exact-hosted acceptance remains separate.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1799,7 +1799,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-04T09:27:14+00:00",
+  "updated_at": "2026-11-04T10:12:06+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -2145,7 +2145,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner review RM-100 plain scan labels and ordinary measurement fields in the running app. Existing focused checks, scoped frontend gates and native saved-scan review are recorded in the receipt. Canonical unknown facts and saved scan inventory/layout remain exact; no additional paid call. Exact twenty-one-path local checkpoint under existing authority; owner/physical/merchant/hosted acceptance remains separate.",
+  "next_action": "Owner review RM-101 direct whole-room shopping results in the running app. One bounded Find all request, every returned card directly visible and retained during choosing; existing provider/source/financial/Undo/lifecycle guards preserved. Exact fifteen-path validated local checkpoint; no new paid QA, manual restart or hosted change. Owner/physical/merchant/exact-hosted acceptance remains separate.",
   "phases": [
     {
       "id": "01-docs",
@@ -2486,27 +2486,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Complete RM-100 remaining editor measurement-uncertainty presentation correction. Preserve actual canonical facts and all planning/fit/financial/Apply/Undo authority; no new paid call or service restart. Validate seven frontend files with focused checks/build/native saved-project review, then exact sixteen-path local checkpoint.",
-        "sha256": "e417064e79753b404065f9d8e37dd245f9673329fad396e5670ac76f2c7490d1",
+        "text": "Complete RM-101 owner-requested direct whole-room market results. One finite serial run covers all current shopping targets without six-item/Start/Next gates; all returned cards remain visible. Preserve provider/source/financial/Undo/lifecycle guards. Meaningful tests and offline native QA, remove temporary route, settled gates/builds/read-only review, then exact fifteen-path local checkpoint. No paid QA or manual restart.",
+        "sha256": "12259fa59b21f839fa3b8f4dda253eb073ddbec50a61188fd99f4c735f70e2ca",
         "context_sources": [
-          "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
-          "docs/commit-plans/RM-100.md",
-          "docs/validation/RM-100.md"
+          "docs/tickets/RM-101-show-all-market-options-directly.md",
+          "docs/commit-plans/RM-101.md",
+          "docs/validation/RM-101.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
-        "docs/commit-plans/RM-100.md",
-        "docs/validation/RM-100.md"
+        "docs/tickets/RM-101-show-all-market-options-directly.md",
+        "docs/commit-plans/RM-101.md",
+        "docs/validation/RM-101.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic, physical/merchant and exact hosted-release acceptance remain separate; this is an editor display-only correction.",
-          "reference": "docs/validation/RM-100.md"
+          "reason": "Owner aesthetic, actual live merchant quality, physical fit and exact hosted-release acceptance remain separate.",
+          "reference": "docs/validation/RM-101.md"
         }
       ],
       "approval": null,
@@ -2861,6 +2861,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-099-remove-standing-mirror-from-samples.md",
               "docs/commit-plans/RM-099.md",
               "docs/validation/RM-099.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T09:48:16+00:00",
+          "reason": "Direct owner rejects choose-now/search-more interruption and requests all room options directly.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Complete RM-100 remaining editor measurement-uncertainty presentation correction. Preserve actual canonical facts and all planning/fit/financial/Apply/Undo authority; no new paid call or service restart. Validate seven frontend files with focused checks/build/native saved-project review, then exact sixteen-path local checkpoint.",
+            "sha256": "e417064e79753b404065f9d8e37dd245f9673329fad396e5670ac76f2c7490d1",
+            "context_sources": [
+              "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
+              "docs/commit-plans/RM-100.md",
+              "docs/validation/RM-100.md"
             ],
             "status": "afk",
             "approval": null,
@@ -4582,27 +4601,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Owner review RM-100 plain scan labels and ordinary measurement fields in the running app. Existing focused checks, scoped frontend gates and native saved-scan review are recorded in the receipt. Canonical unknown facts and saved scan inventory/layout remain exact; no additional paid call. Exact twenty-one-path local checkpoint under existing authority; owner/physical/merchant/hosted acceptance remains separate.",
-        "sha256": "da4d1476fc2c6259e25bdc9b17a4923c56022d277b4d5f4fd372d9e3a673a7cb",
+        "text": "Owner review RM-101 direct whole-room shopping results in the running app. One bounded Find all request, every returned card directly visible and retained during choosing; existing provider/source/financial/Undo/lifecycle guards preserved. Exact fifteen-path validated local checkpoint; no new paid QA, manual restart or hosted change. Owner/physical/merchant/exact-hosted acceptance remains separate.",
+        "sha256": "14eb346869e9e7e4f9afc2ec33c386625bb7533c0cfdb82a5992019f985bf712",
         "context_sources": [
-          "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
-          "docs/commit-plans/RM-100.md",
-          "docs/validation/RM-100.md"
+          "docs/tickets/RM-101-show-all-market-options-directly.md",
+          "docs/commit-plans/RM-101.md",
+          "docs/validation/RM-101.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
-        "docs/commit-plans/RM-100.md",
-        "docs/validation/RM-100.md"
+        "docs/tickets/RM-101-show-all-market-options-directly.md",
+        "docs/commit-plans/RM-101.md",
+        "docs/validation/RM-101.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic, physical/merchant and exact hosted-release acceptance remain separate; this is an editor display-only correction.",
-          "reference": "docs/validation/RM-100.md"
+          "reason": "Owner aesthetic, actual live merchant quality, physical fit and exact hosted-release acceptance remain separate.",
+          "reference": "docs/validation/RM-101.md"
         }
       ],
       "approval": null,
@@ -4980,6 +4999,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/validation/RM-097.md",
               "docs/validation/RM-098.md",
               "docs/validation/RM-099.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T10:12:05+00:00",
+          "reason": "Reconcile direct owner RM-101 whole-room results correction.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-100 plain scan labels and ordinary measurement fields in the running app. Existing focused checks, scoped frontend gates and native saved-scan review are recorded in the receipt. Canonical unknown facts and saved scan inventory/layout remain exact; no additional paid call. Exact twenty-one-path local checkpoint under existing authority; owner/physical/merchant/hosted acceptance remains separate.",
+            "sha256": "da4d1476fc2c6259e25bdc9b17a4923c56022d277b4d5f4fd372d9e3a673a7cb",
+            "context_sources": [
+              "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
+              "docs/commit-plans/RM-100.md",
+              "docs/validation/RM-100.md"
             ],
             "status": "afk",
             "approval": null,

@@ -11,7 +11,7 @@ import type { SessionSnapshot } from '../session/state';
 import { buildSourcingBrief } from './brief';
 import { beginResearch } from './client';
 import {
-  MARKET_BATCH_SIZE,
+  MARKET_TARGET_LIMIT,
   marketTargets,
   marketTargetForKey,
   runMarketResearch,
@@ -36,7 +36,6 @@ import {
   entryIsCurrent,
 } from './selection-guide';
 import type { GuideAction } from './selection-guide';
-import { ChatIcon } from './chat-visuals';
 import styles from './workspace.module.css';
 
 export function Research({
@@ -237,7 +236,7 @@ export function Research({
           if (update.kind === 'finding') {
             index++;
             setProgress(
-              `Finding ${index} of ${Math.min(targets.length, MARKET_BATCH_SIZE)} · ${target.label}`,
+              `Finding ${index} of ${Math.min(targets.length, MARKET_TARGET_LIMIT)} · ${target.label}`,
             );
           } else if (
             update.answer.ok &&
@@ -299,10 +298,10 @@ export function Research({
         if (!result.cancelled) {
           say(
             result.remaining.length && all
-              ? `Options for the first ${Math.min(targets.length, MARKET_BATCH_SIZE)} items are ready. There ${result.remaining.length === 1 ? 'is 1 more item' : `are ${result.remaining.length} more items`} to find. Continue the search, or start choosing from the ready options one item at a time.`
+              ? `Found options for ${choicesFound} of ${targets.length} items. The search was interrupted; your results are shown below.`
               : choicesFound
-                ? 'Your options are ready. We’ll choose one item at a time: furniture first, then flooring and paint. Choose each product with me, or let me choose the rest from the closest priced matches. Then I’ll show your cost breakdown and help you export it.'
-                : 'The search is finished, but these items still need suitable options. Let’s review them one at a time; I won’t choose an unsupported product for you.',
+                ? `Found options for ${choicesFound} of ${targets.length} items. Compare the cards below and choose products in any order.`
+                : 'The search is finished. Items without suitable options are shown below; you can try those items again.',
           );
         }
       } catch {
@@ -464,8 +463,6 @@ export function Research({
   useImperativeHandle(requestRef, () => start, [start]);
   useImperativeHandle(guideRef, () => act);
   if (!message && !entries.length && !busy) return null;
-  if (view.stage === 'done' && view.complete && !busy) return null;
-  const chosen = currentProductChoices(room, draft);
   return (
     <section
       ref={sectionRef}
@@ -473,69 +470,12 @@ export function Research({
       className={styles.marketResearch}
       aria-label="Product options"
     >
-      {busy ? (
+      {busy && (
         <div className={styles.researchPending}>
           <p role="status" className={styles.thinking}>
             <span aria-hidden="true" />
             {progress || 'Finding options…'}
           </p>
-        </div>
-      ) : view.stage === 'ready' ? (
-        <div className={styles.guideIntro}>
-          <p>
-            {entries.some(fresh)
-              ? `${view.available.length} ${view.available.length === 1 ? 'item is' : 'items are'} ready to review. We’ll keep just one item in view.`
-              : 'These options need refreshing for your current design.'}
-          </p>
-          <div className={styles.actions}>
-            {entries.some(fresh) ? (
-              <>
-                <button
-                  className="glass-control"
-                  onClick={() => act('start')}
-                  disabled={!!state.candidate}
-                >
-                  Start choosing →
-                </button>
-                <button
-                  className="glass-control"
-                  onClick={() => act('auto')}
-                  disabled={!!state.candidate}
-                >
-                  Choose for me
-                </button>
-              </>
-            ) : (
-              <button
-                className="glass-control"
-                onClick={() => void start('all', '')}
-                disabled={!!state.candidate}
-              >
-                Find current options →
-              </button>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className={styles.marketHeading}>
-          <ChatIcon kind="search" />
-          <div>
-            <h3>{view.active?.label ?? 'Choose your next product'}</h3>
-            <p>
-              Item{' '}
-              {view.queue.findIndex(
-                (target) => target.key === view.active?.key,
-              ) + 1}{' '}
-              of {view.queue.length} · {view.active?.group}
-            </p>
-            <p className={styles.choiceProgress} aria-live="polite">
-              {
-                view.targets.filter((target) => view.reviewed.has(target.key))
-                  .length
-              }{' '}
-              of {marketTargets(room).length} choices completed
-            </p>
-          </div>
         </div>
       )}
       <p
@@ -549,46 +489,18 @@ export function Research({
       {message.includes('in Design') && (
         <button onClick={onDesign}>Review this piece in Design ↗</button>
       )}
-      {!busy &&
-        view.stage === 'choosing' &&
-        view.active &&
-        !entries.some((entry) => entry.target.key === view.active!.key) && (
-          <div className={styles.guideIntro}>
-            <p>
-              We still need options for {view.active.label} before choosing this
-              product.
-            </p>
-            <button
-              className="glass-control"
-              disabled={!!state.candidate}
-              onClick={() => {
-                if (
-                  !controller.costMessage(
-                    'visitor',
-                    `Find options for ${view.active!.label}.`,
-                  )
-                )
-                  return;
-                setResearchAfter(
-                  controller.getSnapshot().cost!.messages.at(-1)!.id!,
-                );
-                void start(view.active!.key, '');
-              }}
-            >
-              Find options for this item →
-            </button>
-          </div>
-        )}
+      {!busy && entries.length > 0 && !entries.some(fresh) && (
+        <button
+          className="glass-control"
+          disabled={!!state.candidate}
+          onClick={() => void start('all', '')}
+        >
+          Find current options →
+        </button>
+      )}
       {(['Furniture', 'Flooring', 'Wall paint', 'Services'] as const).map(
         (group) => {
-          const items =
-            !busy && view.stage === 'choosing'
-              ? entries.filter(
-                  (entry) =>
-                    entry.target.group === group &&
-                    entry.target.key === view.active?.key,
-                )
-              : [];
+          const items = entries.filter((entry) => entry.target.group === group);
           if (!items.length) return null;
           return (
             <section
@@ -596,6 +508,7 @@ export function Research({
               className={styles.marketGroup}
               aria-label={`${group} market options`}
             >
+              <h3>{group}</h3>
               {items.map((entry) => {
                 const { target, update } = entry;
                 if (update.kind === 'finding')
@@ -636,12 +549,7 @@ export function Research({
                     key={target.key}
                     aria-label={`${target.label} options`}
                   >
-                    <h4 className={styles.srOnly}>{target.label} options</h4>
-                    {chosen.some((choice) => choice.key === target.key) && (
-                      <p className={styles.note}>
-                        Keep this product to continue, or choose another option.
-                      </p>
-                    )}
+                    <h4>{target.label} options</h4>
                     {answer.simulation && (
                       <p className={styles.note}>
                         Example options · illustrative prices, not live store
@@ -715,7 +623,7 @@ export function Research({
                                 setMessage('');
                                 if (applied.complete) return;
                                 say(
-                                  `${kept ? 'Kept' : 'Selected'} ${candidate.label} as your product choice. ${applied.next ? `Next, ${applied.next.label}. Choose one of these options, or let me choose the rest.` : 'Some items still need your choice or more options.'}`,
+                                  `${kept ? 'Kept' : 'Selected'} ${candidate.label} as your product choice.`,
                                 );
                               } else setMessage(applied.reason);
                             }}
@@ -781,9 +689,7 @@ export function Research({
           disabled={!!state.candidate}
           onClick={() => void start('remaining', '')}
         >
-          Find the next {Math.min(remaining.length, MARKET_BATCH_SIZE)}{' '}
-          {remaining.length === 1 ? 'item' : 'items'}{' '}
-          <span aria-hidden="true">→</span>
+          Resume search <span aria-hidden="true">→</span>
         </button>
       )}
     </section>

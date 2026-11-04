@@ -9,12 +9,7 @@ import { costIntent, FIND_OPTIONS_MESSAGE } from './planning';
 import { OptionsPrompt } from './options-prompt';
 import { ChosenProducts } from './chosen-products';
 import { useCostConversationState } from './conversation';
-import {
-  INITIAL_PRODUCT_GUIDE,
-  guideIntent,
-  guideView,
-  entryIsCurrent,
-} from './selection-guide';
+import { guideIntent } from './selection-guide';
 import type { GuideAction } from './selection-guide';
 import { PlanCards } from './plan-cards';
 import { VersionControls } from './version-controls';
@@ -70,9 +65,7 @@ export function CostWorkspace({
   const [budget, setBudget] = useCostConversationState(controller, 'budget');
   const [work, setWork] = useCostConversationState(controller, 'work');
   const [researchBusy, setResearchBusy] = useState(false);
-  const [guideState] = useCostConversationState(controller, 'guide');
   const [guideEntries] = useCostConversationState(controller, 'entries');
-  const [remainingOptions] = useCostConversationState(controller, 'remaining');
   const guideAction = useRef<
     ((action: GuideAction, request?: string) => void) | null
   >(null);
@@ -142,61 +135,7 @@ export function CostWorkspace({
       'selection-summary',
     ].includes(draft.messages.at(-1)?.kind ?? '');
   const legacy = draft.settings.locality.currency !== 'USD';
-  const guide = guideView(
-    currentRoom,
-    currentCost,
-    guideEntries,
-    guideState ?? INITIAL_PRODUCT_GUIDE,
-  );
   const guided = !saved && !legacy && guideEntries.length > 0;
-  const guideFresh = guideEntries.some((entry) => entryIsCurrent(entry, state));
-  const continueResearch = () => {
-    if (researchBusy || state.candidate || !controller.checkExpiry()) return;
-    const text = remainingOptions.length
-      ? 'Find the remaining options for my room.'
-      : 'Find more options for this item.';
-    if (!controller.costMessage('visitor', text)) return;
-    setResearchAfter(controller.getSnapshot().cost!.messages.at(-1)!.id!);
-    void research.current?.(
-      remainingOptions.length ? 'remaining' : (guide.active?.key ?? 'all'),
-      '',
-    );
-  };
-  const firstGuideLabel = !guideFresh
-    ? 'Find current options'
-    : guide.complete && guide.stage !== 'choosing'
-      ? 'Cost breakdown'
-      : guide.stage === 'ready'
-        ? remainingOptions.length
-          ? 'Find remaining options'
-          : 'Start choosing'
-        : guide.next
-          ? 'Next item'
-          : guide.complete
-            ? 'View cost breakdown'
-            : remainingOptions.length
-              ? 'Find remaining options'
-              : 'Review this item';
-  const firstGuideAction = () => {
-    if (!guideFresh) ask(FIND_OPTIONS_MESSAGE);
-    else if (guide.complete && guide.stage !== 'choosing')
-      ask('Show my cost breakdown.');
-    else if (
-      (guide.stage === 'ready' && remainingOptions.length) ||
-      (guide.stage === 'choosing' &&
-        !guide.next &&
-        !guide.complete &&
-        remainingOptions.length)
-    )
-      continueResearch();
-    else if (guide.stage === 'choosing' && !guide.next && !guide.complete) {
-      researchResults.current?.focus({ preventScroll: true });
-      researchResults.current?.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth',
-      });
-    } else guideAction.current?.(guide.stage === 'ready' ? 'start' : 'next');
-  };
   useEffect(() => {
     if (!saved) controller.repairSelectedPrices();
   }, [controller, saved, currentCost.revision, state.generation]);
@@ -770,14 +709,10 @@ export function CostWorkspace({
                   researchBusy ||
                   currentCost.settings.locality.currency !== 'USD'
                 }
-                onClick={() =>
-                  guided ? firstGuideAction() : ask('Show my cost breakdown.')
-                }
+                onClick={() => ask('Show my cost breakdown.')}
               >
-                <ChatIcon
-                  kind={guided && !guide.complete ? 'furniture' : 'budget'}
-                />
-                <span>{guided ? firstGuideLabel : 'Cost breakdown'}</span>
+                <ChatIcon kind="budget" />
+                <span>Cost breakdown</span>
                 <span className={assistant.choiceArrow} aria-hidden="true">
                   →
                 </span>
@@ -785,28 +720,12 @@ export function CostWorkspace({
               <button
                 className="glass-control"
                 disabled={
-                  !!saved ||
-                  legacy ||
-                  researchBusy ||
-                  !!state.candidate ||
-                  (guided && !guideFresh)
+                  !!saved || legacy || researchBusy || !!state.candidate
                 }
-                onClick={() =>
-                  guided
-                    ? guideAction.current?.(guide.complete ? 'review' : 'auto')
-                    : ask(FIND_OPTIONS_MESSAGE)
-                }
+                onClick={() => ask(FIND_OPTIONS_MESSAGE)}
               >
                 <ChatIcon kind="search" />
-                <span>
-                  {guided
-                    ? guide.complete
-                      ? 'Review choices'
-                      : guide.stage === 'ready'
-                        ? 'Choose for me'
-                        : 'Choose the rest for me'
-                    : 'Find options'}
-                </span>
+                <span>Find options</span>
                 <span className={assistant.choiceArrow} aria-hidden="true">
                   →
                 </span>

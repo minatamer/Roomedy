@@ -1523,40 +1523,6 @@
 .marketResearch {
   margin: 22px 0;
 }
-.guideIntro {
-  margin: 12px 0 20px;
-  font-size: 14px;
-  line-height: 1.65;
-  color: var(--muted);
-}
-.guideIntro p {
-  margin: 0 0 14px;
-}
-.page .guideIntro button {
-  min-height: 44px;
-  padding: 11px 18px;
-}
-.page .guideIntro button:first-child {
-  background: #73523a;
-  color: #fff9ef;
-  border-color: #73523a;
-}
-.marketHeading {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.marketHeading > svg {
-  flex-shrink: 0;
-  margin-top: 3px;
-}
-.marketHeading h3 {
-  margin: 0 0 5px;
-  font-size: 22px;
-  font-weight: 600;
-}
-.marketHeading p,
 .marketStatus,
 .marketFailure p {
   margin: 0;
@@ -1684,10 +1650,6 @@
 
 .productCarousel {
   min-width: 0;
-}
-.choiceProgress {
-  font-weight: 600;
-  margin-top: 8px !important;
 }
 .chosenProducts,
 .completionExport {

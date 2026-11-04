@@ -5,11 +5,12 @@ import {
   WALLS,
 } from '@roomedy/contracts/surfaces';
 import type { SourcingBrief } from '@roomedy/contracts/sourcing';
+import { POLICY } from '@roomedy/contracts/policy';
 import type { SessionController } from '../session/controller';
 import { buildSourcingBrief } from './brief';
 import { beginResearch } from './client';
 
-export const MARKET_BATCH_SIZE = 6;
+export const MARKET_TARGET_LIMIT = POLICY.furniture + WALLS.length + 1;
 export interface MarketTarget {
   key: string;
   group: 'Furniture' | 'Flooring' | 'Wall paint' | 'Services';
@@ -81,7 +82,7 @@ export function marketTargetForKey(room: RoomDocument, key: string) {
   );
 }
 
-/** One visitor-selected finite batch. Each target retains the existing one-operation owner. */
+/** One visitor-selected finite room search; each target keeps its one-operation owner. */
 export function runMarketResearch(
   controller: SessionController,
   targets: MarketTarget[],
@@ -114,7 +115,7 @@ export function runMarketResearch(
   const result = (async () => {
     let processed = 0;
     try {
-      for (const target of targets.slice(0, MARKET_BATCH_SIZE)) {
+      for (const target of targets.slice(0, MARKET_TARGET_LIMIT)) {
         if (!fresh() || !controller.checkExpiry()) break;
         current = begin(controller, target.brief);
         if (!current) break;

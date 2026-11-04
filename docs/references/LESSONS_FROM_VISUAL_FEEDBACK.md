@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Find all should reveal all results directly —4 November2026
+
+Owner rejects the RM-074 readiness screen combined with the RM-057 six-item stop. [RM-101](../tickets/RM-101-show-all-market-options-directly.md) treats one Find all action as the whole bounded room shopping request, preserving serial per-target operation guards while exposing every returned card without Start/Next gates. Keep all categories/cards available during selection and stable planning shortcuts. Resume is for genuinely interrupted work; finding results never chooses a product automatically. This owner decision supersedes the older one-at-a-time presentation preference.
+
 ## Keep missing measurements out of object names —4 November2026
 
 Owner's successful scan showed `Bed ?`, `Desk ?` and similar labels only because physical dimensions were absent. These marks suggest recognition doubt even when the item is correctly captured. [RM-100](../tickets/RM-100-remove-editor-measurement-uncertainty.md) extends the earlier removal of measurement questions to the remaining editor surfaces: plain names/outlines, supplied numeric dimensions only and ordinary editable fields. Avoid repeated status badges and measurement nags in 2D, 3D, properties and import. Keep unknown/supplied facts and physical/financial validation intact internally; never invent measured values to simplify presentation.

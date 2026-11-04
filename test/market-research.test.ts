@@ -6,7 +6,7 @@ import { createRoomFixture } from '../apps/frontend/src/features/session/fixture
 import { beginResearch } from '../apps/frontend/src/features/cost/client.js';
 import { buildSourcingBrief } from '../apps/frontend/src/features/cost/brief.js';
 import {
-  MARKET_BATCH_SIZE,
+  MARKET_TARGET_LIMIT,
   marketTargets,
   runMarketResearch,
 } from '../apps/frontend/src/features/cost/market-research.js';
@@ -154,18 +154,92 @@ describe('explicit collective market research', () => {
     expect(c.getSnapshot().workspace!.history).toBe(history);
     expect(c.getSnapshot().pending).toBeNull();
   });
-  it('dispatches at most six targets per click and returns explicit continuation without retry', async () => {
+  it('keeps the complete request bounded to the maximum supported room target count', async () => {
     const c = session(),
       base = marketTargets(c.getSnapshot().workspace!.current),
       h = transportFor();
-    const targets = Array.from({ length: MARKET_BATCH_SIZE + 2 }, (_, i) => ({
+    const targets = Array.from({ length: MARKET_TARGET_LIMIT + 2 }, (_, i) => ({
       ...base[0]!,
       key: `target-${i}`,
     }));
     const result = await runMarketResearch(c, targets, () => {}, h.begin)
       .result;
-    expect(h.calls).toHaveLength(MARKET_BATCH_SIZE);
-    expect(result.remaining).toEqual(targets.slice(MARKET_BATCH_SIZE));
+    expect(h.calls).toHaveLength(MARKET_TARGET_LIMIT);
+    expect(result.remaining).toEqual(targets.slice(MARKET_TARGET_LIMIT));
+  });
+  it('finds every furniture, floor and wall target beyond six in one serial request', async () => {
+    const room = createRoomFixture('sample');
+    room.furniture = Array.from({ length: 9 }, (_, i) => ({
+      ...structuredClone(room.furniture[0]!),
+      id: `piece-${i}`,
+      label: `Piece ${i}`,
+    }));
+    const c = new SessionController(room);
+    owned.push(c);
+    c.setDestination('cost');
+    const targets = marketTargets(room),
+      before = c.getSnapshot().cost;
+    let active = 0,
+      maximum = 0;
+    const h = transportFor(async () => {
+      active++;
+      maximum = Math.max(maximum, active);
+      await Promise.resolve();
+      active--;
+      return {};
+    });
+    const answered: string[] = [];
+    const result = await runMarketResearch(
+      c,
+      targets,
+      (target, update) => {
+        if (update.kind === 'answer') answered.push(target.key);
+      },
+      h.begin,
+    ).result;
+    expect(targets).toHaveLength(11);
+    expect(h.calls).toEqual(targets.map((target) => target.brief.label));
+    expect(answered).toEqual(targets.map((target) => target.key));
+    expect(maximum).toBe(1);
+    expect(result).toEqual({ remaining: [], cancelled: false });
+    expect(c.getSnapshot().cost).toBe(before);
+  });
+  it('retires a later in-flight target after six completed results without dispatching another', async () => {
+    const c = session(),
+      base = marketTargets(c.getSnapshot().workspace!.current);
+    const targets = Array.from({ length: 11 }, (_, i) => ({
+      ...base[0]!,
+      key: `target-${i}`,
+    }));
+    let reached!: () => void;
+    const seventh = new Promise<void>((resolve) => {
+      reached = resolve;
+    });
+    const h = transportFor(async () => {
+      if (h.calls.length === 7) {
+        reached();
+        return new Promise(() => {});
+      }
+      return {};
+    });
+    const answered: string[] = [];
+    const run = runMarketResearch(
+      c,
+      targets,
+      (target, update) => {
+        if (update.kind === 'answer') answered.push(target.key);
+      },
+      h.begin,
+    );
+    await seventh;
+    c.setDestination('design');
+    expect(await run.result).toEqual({
+      remaining: targets.slice(6),
+      cancelled: true,
+    });
+    expect(h.calls).toHaveLength(7);
+    expect(answered).toEqual(targets.slice(0, 6).map((target) => target.key));
+    expect(c.getSnapshot().pending).toBeNull();
   });
   it('keeps successful siblings after a target failure, with no automatic retry', async () => {
     const c = session(),
