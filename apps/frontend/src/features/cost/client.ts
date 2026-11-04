@@ -9,11 +9,14 @@ import { readOperationResponse } from '../session/operation-client';
 import { obtainAdmission } from '../session/admission-client';
 import { verificationFailureMessage } from '../verification/failure';
 import { operationAvailability } from '../session/operation-client';
-import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
+import { VERSIONS } from '@roomedy/contracts/policy';
 import type { SessionController } from '../session/controller';
+import { createOperationDeadline } from '../session/operation-deadline';
+import type { OperationProgress } from '../session/operation-deadline';
 import type { SourcingBrief } from '@roomedy/contracts/sourcing';
 import { sourcingBriefSchema } from '@roomedy/contracts/sourcing';
 import { researchLocality } from './journey';
+import type { ResearchScope } from './research-scope';
 type ResearchResponse =
   | Awaited<ReturnType<typeof researchProducts>>
   | { ok: false; message: string; retired: true };
@@ -23,6 +26,7 @@ export function beginResearch(
   controller: SessionController,
   brief: SourcingBrief,
   transport: typeof fetch = fetch,
+  scope?: ResearchScope,
 ) {
   if (!sourcingBriefSchema.safeParse(brief).success) return null;
   const state = controller.getSnapshot();
@@ -33,14 +37,14 @@ export function beginResearch(
     state.candidate
   )
     return null;
-  const token = controller.beginOperation();
-  if (!token) return null;
+  const token = scope?.owner ?? controller.beginOperation();
+  if (!token || !controller.isCurrent(token)) return null;
   const input = sourcingInputSchema.parse({
     schemaVersion: VERSIONS.schema,
     catalogueVersion: VERSIONS.catalogue,
     rulesVersion: VERSIONS.rules,
     kind: 'sourcing',
-    identity: token,
+    identity: scope ? { ...token, operationId: crypto.randomUUID() } : token,
     costRevision: state.cost.revision,
     locality: researchLocality(
       state.cost.settings.locality,
@@ -62,13 +66,13 @@ export function beginResearch(
     });
   };
   const release = controller.ownResource(cancel, token);
-  const timer = setTimeout(() => {
+  const deadline = createOperationDeadline(() => {
     abort.abort();
     stop({
       ok: false,
       message: 'Research took too long. Your current estimate is unchanged.',
     });
-  }, POLICY.operationBridgeMs);
+  });
   const result = (async () => {
     try {
       const work = (async () => {
@@ -76,10 +80,17 @@ export function beginResearch(
         if (!config?.capabilities.sourcing)
           return {
             ok: false as const,
+            pause: true,
             message:
               'Research is unavailable here. You can continue with your current choices.',
           };
-        const answer = await researchProducts(input, abort.signal, transport);
+        const answer = await researchProducts(
+          input,
+          abort.signal,
+          transport,
+          deadline.stage,
+          scope?.verify,
+        );
         if (answer.ok && answer.simulation !== (config.mode === 'fake'))
           return {
             ok: false as const,
@@ -89,6 +100,7 @@ export function beginResearch(
         return answer;
       })().catch(() => ({
         ok: false as const,
+        pause: true,
         message:
           'Research could not finish. Your accepted prices are unchanged.',
       }));
@@ -102,10 +114,10 @@ export function beginResearch(
           retired: true,
           message: 'This research belongs to an earlier design or cost scope.',
         };
-      controller.completeOperation(token, () => {});
+      if (!scope) controller.completeOperation(token, () => {});
       return { ...answer, input };
     } finally {
-      clearTimeout(timer);
+      deadline.dispose();
       release?.();
     }
   })();
@@ -115,9 +127,12 @@ export async function researchProducts(
   input: Extract<OperationInput, { kind: 'sourcing' }>,
   signal: AbortSignal,
   transport: typeof fetch = fetch,
+  progress?: OperationProgress,
+  verify?: ResearchScope['verify'],
 ) {
   const parsed = sourcingInputSchema.parse(input);
   const post = async (path: 'admission' | 'sourcing', body: unknown) => {
+    progress?.('request');
     const response = await transport('/api/roomedy/v1/' + path, {
       method: 'POST',
       credentials: 'same-origin',
@@ -128,18 +143,27 @@ export async function researchProducts(
     });
     return readOperationResponse(response, signal);
   };
-  const fail = (message: string) => ({ ok: false as const, message });
-  const admission = await obtainAdmission(parsed, signal, (body) =>
-    post('admission', body),
+  const fail = (message: string, pause = false) => ({
+    ok: false as const,
+    message,
+    ...(pause ? { pause: true } : {}),
+  });
+  const admission = await obtainAdmission(
+    parsed,
+    signal,
+    (body) => post('admission', body),
+    verify,
+    progress,
   );
   const verificationFailure = verificationFailureMessage(admission);
-  if (verificationFailure) return fail(verificationFailure);
+  if (verificationFailure) return fail(verificationFailure, true);
   const error = safeErrorSchema.safeParse(admission);
-  if (error.success) return fail(errorMessages[error.data.error.code]);
+  if (error.success) return fail(errorMessages[error.data.error.code], true);
   const grant = admissionResultSchema.safeParse(admission);
   if (!grant.success || grant.data.kind !== 'granted')
     return fail(
       'Research verification is unavailable. Your current estimate is unchanged.',
+      true,
     );
   const raw = await post('sourcing', {
     input: parsed,
@@ -147,12 +171,17 @@ export async function researchProducts(
   });
   const operationError = safeErrorSchema.safeParse(raw);
   if (operationError.success)
-    return fail(errorMessages[operationError.data.error.code]);
+    return fail(errorMessages[operationError.data.error.code], true);
   const result = operationResultSchema.safeParse(raw);
   if (
     result.success &&
     JSON.stringify(result.data.identity) === JSON.stringify(parsed.identity)
   ) {
+    if (result.data.kind === 'unavailable')
+      return fail(
+        'Research is busy or unavailable. Your found options are saved.',
+        true,
+      );
     if (result.data.kind === 'timeout')
       return fail(
         'Research reached its time limit. Your accepted prices are unchanged. Try a specific product or supplier page, or try another store.',
@@ -174,6 +203,7 @@ export async function researchProducts(
   )
     return fail(
       'Research could not finish. Your accepted prices are unchanged.',
+      true,
     );
   return {
     ok: true as const,

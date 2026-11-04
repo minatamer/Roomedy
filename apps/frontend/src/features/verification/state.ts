@@ -31,7 +31,6 @@ export function requestVerification(
     const finish = (proof?: string, failure?: VerificationFailure) => {
       if (settled) return;
       settled = true;
-      clearTimeout(timer);
       signal.removeEventListener('abort', abort);
       if (pending === owned) {
         pending = null;
@@ -41,7 +40,6 @@ export function requestVerification(
       else resolve(proof && proof.length <= 2048 ? proof : null);
     };
     const abort = () => finish();
-    const timer = setTimeout(abort, 60_000);
     const owned = { challenge, finish };
     signal.addEventListener('abort', abort, { once: true });
     pending = owned;

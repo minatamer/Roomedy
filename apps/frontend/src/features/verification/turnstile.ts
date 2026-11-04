@@ -10,8 +10,8 @@ interface WidgetOptions {
   language: 'en';
   appearance: 'interaction-only';
   retry: 'never';
-  'refresh-expired': 'never';
-  'refresh-timeout': 'never';
+  'refresh-expired': 'manual';
+  'refresh-timeout': 'manual';
   'response-field': false;
   callback(proof: string): void;
   'before-interactive-callback'(): void;
@@ -51,8 +51,8 @@ export function mountVerification(
       language: 'en',
       appearance: 'interaction-only',
       retry: 'never',
-      'refresh-expired': 'never',
-      'refresh-timeout': 'never',
+      'refresh-expired': 'manual',
+      'refresh-timeout': 'manual',
       'response-field': false,
       callback: complete,
       'before-interactive-callback': () => {
@@ -73,8 +73,12 @@ export function mountVerification(
         );
         return true;
       },
-      'expired-callback': () => complete(undefined, 'timeout'),
-      'timeout-callback': () => complete(undefined, 'timeout'),
+      'expired-callback': () => {
+        if (active) interact();
+      },
+      'timeout-callback': () => {
+        if (active) interact();
+      },
       'unsupported-callback': () => complete(undefined, 'browser'),
     });
   } catch {

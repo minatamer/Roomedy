@@ -6,13 +6,14 @@ import {
   recognitionInputSchema,
 } from '@roomedy/contracts/operations';
 import type { OperationResult } from '@roomedy/contracts/operations';
-import { POLICY, VERSIONS } from '@roomedy/contracts/policy';
+import { VERSIONS } from '@roomedy/contracts/policy';
 import { readOperationResponse as read } from '../session/operation-client';
 import { operationAvailability } from '../session/operation-client';
 export { operationAvailability as recognitionAvailability } from '../session/operation-client';
 import { releaseTransport } from '../session/release-client';
 import { obtainAdmission } from '../session/admission-client';
 import { verificationFailureMessage } from '../verification/failure';
+import { createOperationDeadline } from '../session/operation-deadline';
 import type { ReviewController } from './review-controller';
 
 type Transport = typeof fetch;
@@ -97,16 +98,16 @@ export async function draftFromPhotos(
   const token = controller.beginDraftOperation();
   if (!token) return;
   const abort = new AbortController(),
-    signal = AbortSignal.any([
-      abort.signal,
-      AbortSignal.timeout(POLICY.operationBridgeMs),
-    ]);
+    deadline = new AbortController(),
+    signal = AbortSignal.any([abort.signal, deadline.signal]);
+  const watchdog = createOperationDeadline(() => deadline.abort());
   const timedOut = () => {
     if (controller.isCurrent(token))
       controller.endDraftOperation(token, outcomes.timeout);
   };
   signal.addEventListener('abort', timedOut, { once: true });
   controller.ownOperation(token, () => {
+    watchdog.dispose();
     signal.removeEventListener('abort', timedOut);
     abort.abort();
   });
@@ -153,6 +154,7 @@ export async function draftFromPhotos(
       path: 'admission' | 'recognize-room',
       value: unknown,
     ) => {
+      watchdog.stage('request');
       const response = await transport(base + path, {
         method: 'POST',
         credentials: 'same-origin',
@@ -165,8 +167,12 @@ export async function draftFromPhotos(
     };
     if (!current()) return;
     controller.draftProgress(token, 'drafting');
-    const admitted = await obtainAdmission(input, signal, (body) =>
-      post('admission', body),
+    const admitted = await obtainAdmission(
+      input,
+      signal,
+      (body) => post('admission', body),
+      undefined,
+      watchdog.stage,
     );
     if (!current()) return;
     const verificationFailure = verificationFailureMessage(admitted);
@@ -228,5 +234,7 @@ export async function draftFromPhotos(
         ? outcomes.timeout
         : 'Photo processing could not connect. Your photos are still here; try again.',
     );
+  } finally {
+    watchdog.dispose();
   }
 }

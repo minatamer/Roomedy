@@ -34,6 +34,9 @@ function VerificationDialog({ pending }: { pending: PendingVerification }) {
   const container = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const [interactive, setInteractive] = useState(false);
+  const [slowAttempt, setSlowAttempt] = useState<number | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const slow = slowAttempt === attempt;
   const generation = useRef({ value: 0 });
   useEffect(() => {
     const lifecycle = generation.current;
@@ -55,6 +58,20 @@ function VerificationDialog({ pending }: { pending: PendingVerification }) {
         previous.focus({ preventScroll: true });
     };
   }, [pending]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const owned = dialog.current;
+      if (!owned) return;
+      try {
+        if (!owned.open) owned.showModal();
+        setInteractive(true);
+        setSlowAttempt(attempt);
+      } catch {
+        pending.finish();
+      }
+    }, 15_000);
+    return () => clearTimeout(timer);
+  }, [pending, attempt]);
   useEffect(() => {
     return loadVerificationScript(
       document,
@@ -81,7 +98,7 @@ function VerificationDialog({ pending }: { pending: PendingVerification }) {
         }
       },
     );
-  }, [ready, pending]);
+  }, [ready, pending, attempt]);
   return (
     <dialog
       ref={dialog}
@@ -96,12 +113,21 @@ function VerificationDialog({ pending }: { pending: PendingVerification }) {
       <div hidden={!interactive}>
         <h2 id="verification-heading">One quick check</h2>
         <p id="verification-description">
-          Complete this check to continue. Your room and photos stay here if you
-          cancel.
+          {slow
+            ? 'The browser check is taking longer than usual. You can keep waiting or try the check again.'
+            : 'Complete this check to continue. Your room and photos stay here if you cancel.'}
         </p>
       </div>
       <div className={styles.widget} ref={container} />
       <div hidden={!interactive} className={styles.footer}>
+        {slow && (
+          <button
+            type="button"
+            onClick={() => setAttempt((value) => value + 1)}
+          >
+            Try the check again
+          </button>
+        )}
         <button type="button" onClick={() => pending.finish()}>
           Cancel
         </button>

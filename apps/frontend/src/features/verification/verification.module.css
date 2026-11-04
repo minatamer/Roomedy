@@ -16,7 +16,7 @@
 .dialog::backdrop {
   background: #43352a66;
 }
-/* The vendor owns quiet iframe visibility; only required interaction opens a modal. */
+/* Quiet checks stay unobtrusive; slow or interactive checks offer in-place controls. */
 .dialog:not([open]) {
   display: block;
   position: fixed;
@@ -44,6 +44,8 @@
   justify-content: center;
 }
 .footer {
+  display: grid;
+  gap: 8px;
   margin-top: 20px;
 }
 .footer[hidden] {

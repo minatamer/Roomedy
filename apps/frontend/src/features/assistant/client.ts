@@ -8,14 +8,17 @@ import { safeErrorSchema, errorMessages } from '@roomedy/contracts/api';
 import { readOperationResponse } from '../session/operation-client';
 import { obtainAdmission } from '../session/admission-client';
 import { verificationFailureMessage } from '../verification/failure';
+import type { OperationProgress } from '../session/operation-deadline';
 
 export async function askAssistant(
   input: Extract<OperationInput, { kind: 'assistant' }>,
   signal: AbortSignal,
   transport: typeof fetch = fetch,
+  progress?: OperationProgress,
 ) {
   const parsed = assistantInputSchema.parse(input);
   const post = async (path: 'admission' | 'assistant', body: unknown) => {
+    progress?.('request');
     const response = await transport('/api/roomedy/v1/' + path, {
       method: 'POST',
       credentials: 'same-origin',
@@ -26,8 +29,12 @@ export async function askAssistant(
     });
     return readOperationResponse(response, signal);
   };
-  const admission = await obtainAdmission(parsed, signal, (body) =>
-    post('admission', body),
+  const admission = await obtainAdmission(
+    parsed,
+    signal,
+    (body) => post('admission', body),
+    undefined,
+    progress,
   );
   const verificationFailure = verificationFailureMessage(admission);
   if (verificationFailure)

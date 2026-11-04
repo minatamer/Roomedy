@@ -29,6 +29,7 @@ import type { GuidanceStep } from './guidance';
 import { MessageReveal } from './message-reveal';
 import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
 import { medyConversationOf } from '../session/conversations';
+import { createOperationDeadline } from '../session/operation-deadline';
 
 export interface AssistantMessage {
   id: number;
@@ -553,7 +554,7 @@ export class AssistantController {
     const abort = new AbortController(),
       deadline = new AbortController();
     const signal = AbortSignal.any([abort.signal, deadline.signal]);
-    const timer = setTimeout(() => {
+    const watchdog = createOperationDeadline(() => {
       if (!this.session.isCurrent(token)) return;
       done = true;
       this.pending = null;
@@ -565,9 +566,9 @@ export class AssistantController {
         );
       });
       deadline.abort();
-    }, POLICY.operationBridgeMs);
+    });
     const release = this.session.ownResource(() => {
-      clearTimeout(timer);
+      watchdog.dispose();
       abort.abort();
       if (!done && this.pending === token) {
         this.pending = null;
@@ -714,6 +715,7 @@ export class AssistantController {
         },
         signal,
         this.transport,
+        watchdog.stage,
       );
       if (!current()) return;
       finish(

@@ -1,4 +1,4 @@
-import { it, expect, vi } from 'vitest';
+import { afterEach, it, expect, vi } from 'vitest';
 import { SessionController } from '../apps/frontend/src/features/session/controller.js';
 import { ReviewController } from '../apps/frontend/src/features/room-intake/review-controller.js';
 import {
@@ -8,7 +8,11 @@ import {
 import { recognitionFixture } from '../apps/backend/src/recognition/fixtures.js';
 import type { OperationInput } from '@roomedy/contracts/operations';
 import { errorMessages } from '@roomedy/contracts/api';
-import { PUBLIC_LIMITS } from '@roomedy/contracts/policy';
+import { POLICY, PUBLIC_LIMITS } from '@roomedy/contracts/policy';
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
 async function setup() {
   let id = 0,
     photo = 0,
@@ -286,14 +290,9 @@ it.each([
   session.dispose();
 });
 
-it('uses the whole operation deadline and accepts a response beyond the health-probe timeout', async () => {
+it('gives the recognition request its work deadline beyond the health-probe timeout', async () => {
   const { review, session } = await setup();
-  const timeouts: number[] = [];
-  const original = AbortSignal.timeout;
-  vi.spyOn(AbortSignal, 'timeout').mockImplementation((ms) => {
-    timeouts.push(ms);
-    return original(ms);
-  });
+  vi.useFakeTimers();
   const send = transport(async (input) => {
     await new Promise((r) => setTimeout(r, 3100));
     return Response.json({
@@ -304,17 +303,23 @@ it('uses the whole operation deadline and accepts a response beyond the health-p
       draft: recognitionFixture('empty', ['photo_1', 'photo_2']),
     });
   });
-  await draftFromPhotos(review, send);
-  expect(timeouts).toContain(110000);
+  const pending = draftFromPhotos(review, send);
+  await vi.waitFor(() =>
+    expect(
+      send.mock.calls.some(([url]) => String(url).endsWith('/recognize-room')),
+    ).toBe(true),
+  );
+  await vi.advanceTimersByTimeAsync(3100);
+  await pending;
   expect(review.getSnapshot().stage).toBe('review');
   expect(review.getSnapshot().recognition).toBe('idle');
   session.dispose();
+  vi.useRealTimers();
 });
 
 it('independently ends visible progress when transport ignores the whole deadline', async () => {
   const { review, session } = await setup();
-  const deadline = new AbortController();
-  vi.spyOn(AbortSignal, 'timeout').mockReturnValue(deadline.signal);
+  vi.useFakeTimers();
   let resolve!: (response: Response) => void;
   const send = transport(
     () =>
@@ -324,7 +329,7 @@ it('independently ends visible progress when transport ignores the whole deadlin
   );
   const pending = draftFromPhotos(review, send);
   await vi.waitFor(() => expect(resolve).toBeTypeOf('function'));
-  deadline.abort();
+  await vi.advanceTimersByTimeAsync(POLICY.operationBridgeMs);
   expect(review.getSnapshot().recognition).toBe('idle');
   expect(review.getSnapshot().message).toContain('took too long');
   const before = review.getSnapshot();
@@ -340,4 +345,5 @@ it('independently ends visible progress when transport ignores the whole deadlin
   await pending;
   expect(review.getSnapshot()).toEqual(before);
   session.dispose();
+  vi.useRealTimers();
 });
