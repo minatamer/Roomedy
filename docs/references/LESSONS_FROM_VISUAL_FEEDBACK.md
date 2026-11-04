@@ -1,5 +1,17 @@
 # Lessons from the owner's visual feedback
 
+## Let the design lead the PDF —4 November2026
+
+The owner expects a professional room presentation before the cost record. [RM-107](../tickets/RM-107-create-a-design-led-room-pdf.md) gives branding its own cover, contents their own page, and large varied room views, actual editor plans and saved finish/furniture details the first section. Avoid oversized empty photo frames and a second, simplified2D drawing. Group identical finishes, retain useful captions and place costs/products/quantity/source evidence afterward without changing their truth. Contents must use actual final page ranges and working internal links. [Research](professional-room-pdf.md), [evidence](../validation/RM-107.md).
+
+## Export the room the editor actually displays —4 November2026
+
+The owner supplied an estimate whose furniture became tiny markers in3D and bare question-mark numbers in2D. The editor already uses nominal catalogue dimensions for display when measurements are absent; exporting with only strict physical geometry loses that visible room. [RM-106](../tickets/RM-106-render-furniture-and-logo-in-pdf.md) makes PDF imagery and plans use the same disposable display helpers, retaining actual measurements/poses and strict model-export behavior. Include the actual Roomedy logo, use plain numbers and concise practical fit guidance. Validate an actual all-unmeasured export rather than only measured authored fixtures. [Evidence](../validation/RM-106.md).
+
+## Offer the next useful action after research —4 November2026
+
+After options are ready, the owner expects Choose for me among the planning shortcuts. [RM-105](../tickets/RM-105-offer-choose-for-me-after-research.md) replaces the middle Find options action contextually, preserving the compact row, Cost breakdown and Export. Reuse the explicit local selection path and current-source guards. Keep every result card visible and never insert a choose-now/search-more interruption. Fresh idle results, active work, stale results and completed choices need distinct shortcut states. [Evidence](../validation/RM-105.md).
+
 ## Continue must restore the conversations as well as the room —4 November2026
 
 Owner expects both Medy and Estimate/cost-breakdown chat to survive Continue saved room. [RM-102](../tickets/RM-102-restore-saved-session-conversations.md) supersedes the old chat-free recovery projection while keeping project downloads separate. Store bounded conversation display/context data, completed options and accurate report revision context; chat-only edits must save. Fresh operation/workspace ownership still governs all new actions. Never resume requests, authorize old previews, replace historical values with a current total or extend the two-hour lifetime merely by restoring.
@@ -164,10 +176,10 @@ The owner asked to learn from four referenced Retailor chats because repeated vi
 
 | Source | Referenced chat                                                                             | Feedback period / contribution                                                                                                                           |
 | ------ | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| T1     | [Run final manual test locally](thread://01a148cf-f24c-72d1-b0ba-9149694f0287?hostId=local) | 17 October: short useful copy, reachable actions, hot reload, real recognition misses, private decision logs and explicit public/private release choices |
-| T2     | [Run app and review visuals](thread://01a143b0-2c61-7200-a67e-01063bad74b8?hostId=local)    | 16 October: composer/layout defects, concise labels, sample plus upload tests, quiet verification, functionality-preserving and demo-sized audits        |
-| T3     | [Visual feedback v2](thread://01a13e80-4505-7162-9b36-da7e24e6df08?hostId=local)            | 15–16 October: upload versus processing, panel geometry, tours, touch affordances, validation, consistency and brittle historical-proof tests            |
-| T4     | [Visual feedback](thread://01a13966-5351-7773-a0cc-0786942d172d?hostId=local)               | 14–15 October: unwanted copy, palette scope, stable typography, representative previews, reset races and recurring responsive corrections                |
+| T1     | Run final manual test locally (private source reference omitted) | 17 October: short useful copy, reachable actions, hot reload, real recognition misses, private decision logs and explicit public/private release choices |
+| T2     | Run app and review visuals (private source reference omitted)    | 16 October: composer/layout defects, concise labels, sample plus upload tests, quiet verification, functionality-preserving and demo-sized audits        |
+| T3     | Visual feedback v2 (private source reference omitted)            | 15–16 October: upload versus processing, panel geometry, tours, touch affordances, validation, consistency and brittle historical-proof tests            |
+| T4     | Visual feedback (private source reference omitted)               | 14–15 October: unwanted copy, palette scope, stable typography, representative previews, reset races and recurring responsive corrections                |
 
 All sources concern another repository. Its navy/lime palette, commerce, checkout, generated logos, marketing video, database/storage exceptions, runtime flags, funded limits, manual pass and Git/security/cloud permissions do **not** transfer. Roomedy keeps its selected palette, similar furniture models, optional short tour, semantic export/import, authored manual sample and rough-2D-before-main-editor-3D flow. Routine implementation choices within that scope do not require new approval; a material new product feature does.
 
@@ -479,3 +491,18 @@ Owner asks PDF to encourage Estimate before exporting so the file includes actua
 ## RM-061 — Reorder while preserving the liked gap
 
 Owner likes the existing spacing and wants New Room/Export/Estimate before editing controls. Measure actual button edges, transfer separator padding instead of inventing a new gap, and align keyboard order. Check menu direction after moving its trigger toward the top. Retained view layers also own imperative opacity: stable sibling identities and stacking prevent a moved action wrapper inheriting an old view's hidden style during hot reload. Preserve compact editor-first layout.
+
+
+## Safe overlapping market research —4 November 2026
+
+Whole-room research should overlap independent item work under existing server limits, rather than serializing every item or interrupting the normal list. Keep one foreground session owner, exact separate admissions, one proof prompt, stable result ordering and truthful progress. Busy service responses pause new work and preserve results; never automatically retry paid calls or imply local concurrency proves account quota safety. [RM-108](../validation/RM-108.md).
+
+
+## Text-first chat reading —4 November 2026
+
+When a chat combines explanation with visual cards, the explanation is the reading anchor and remains visible. Guide the visitor to the actual visual and name the real interaction. One scroller owner avoids competing end/Apply/research effects. New user-request identity must survive React batching; background results must respect manual reading and keyboard focus. [RM-109](../validation/RM-109.md).
+
+
+## Minimal product selection —4 November 2026
+
+A product selection is a persistent pressed state, not a recurring Keep action or chat receipt. Delegate across usable returned products without confusing a product preference with a verified price or fit. After delegation, show unresolved targets only, then one visual selected summary; preserve explicit manual comparison. Exact photos need honest labeled room-reference fallbacks. Persist presentation mode without replaying operations. [RM-110](../validation/RM-110.md).

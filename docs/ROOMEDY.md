@@ -1,5 +1,7 @@
 # Roomedy — product and engineering blueprint
 
+**Owner-selected RM-103–110 local checkpoint —4 November:** Direct owner requests the [93-path/five-commit plan](commit-plans/RM-103-110-CHECKPOINT.md), exact staging and normal ticket-prefixed local commits; [receipt](validation/RM-103-110-CHECKPOINT.md). This supersedes prior no-Git notices for this checkpoint only. Preserve all validated implementation/test/ticket bytes, original160-commit ancestry, model/services/env and external owner/merchant/physical/hosted acceptance. Public/security evidence is selected for committing without implying publication approval. No amend/rebase/push/deploy/provider/service action. Git object verification is separate from the existing2043-test/124-file documented coverage and both-build evidence.
+
 ## Organized furniture and room settings —30 October2026
 
 [RM-051](tickets/RM-051-organize-furniture-and-room-settings.md) gives colour controls their own reliable spacing:44px swatch and Hex align exactly, RGB fields share a row/height, and generic inspector margins no longer override them. Base finish and Theme share a compact row. Frame, Bedding/Upholstery, individual bed parts and Hardware each have one short heading; visible Colour/Material labels retain full-context accessible names. Patterns expose their current value in an expandable row. Room themes and surface materials also collapse, while the selected material keeps a small visual swatch. The surface selector replaces a repeated target heading; one source-aware photo estimate note replaces repeated default captions. Room Layout/Openings and tab entry spacing use the same tighter rhythm.
@@ -1579,7 +1581,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.
+Next action: Owner test RM-110 after browser refresh: pressed inert Selected state, silent selection/switching with no Keep confirmations or per-product chat receipts. Choose for me ranks usable preferences with unchanged financial/fit/source guards and no new research/retry; eleven-target unpriced-pendant fixture selects11/11. Delegation shows only genuine unresolved targets or one visual selected-product summary. Exact images use labeled room-finish/catalogue references when missing/broken. Optional UI-only delegated mode survives Continue; legacy inference, manual comparison, source/quantity details, idempotence and Undo/session authority remain. 2043-test/124-file coverage with documented full/scoped continuation and all code/types/boundary/assets/both-build gates plus native isolated390phone/manual/automatic/partial/recovery/fallback/Undo checks pass; final read-only validation no actionable finding. QA removed.91 combined paths unstaged/uncommitted, exact HEAD/history/index retained. No paid/provider call, extra automatic search/retry, real CAPTCHA, owner-session/Chrome, model/env/dependency/cloud/push/deploy or manual restart. Original exact candidate/merchant/physical/owner aesthetic/hosted acceptance remains separate.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1799,7 +1801,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-04T11:23:49+00:00",
+  "updated_at": "2026-11-04T16:35:48+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -2145,7 +2147,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
+  "next_action": "Owner test RM-110 after browser refresh: pressed inert Selected state, silent selection/switching with no Keep confirmations or per-product chat receipts. Choose for me ranks usable preferences with unchanged financial/fit/source guards and no new research/retry; eleven-target unpriced-pendant fixture selects11/11. Delegation shows only genuine unresolved targets or one visual selected-product summary. Exact images use labeled room-finish/catalogue references when missing/broken. Optional UI-only delegated mode survives Continue; legacy inference, manual comparison, source/quantity details, idempotence and Undo/session authority remain. 2043-test/124-file coverage with documented full/scoped continuation and all code/types/boundary/assets/both-build gates plus native isolated390phone/manual/automatic/partial/recovery/fallback/Undo checks pass; final read-only validation no actionable finding. QA removed.91 combined paths unstaged/uncommitted, exact HEAD/history/index retained. No paid/provider call, extra automatic search/retry, real CAPTCHA, owner-session/Chrome, model/env/dependency/cloud/push/deploy or manual restart. Original exact candidate/merchant/physical/owner aesthetic/hosted acceptance remains separate.",
   "phases": [
     {
       "id": "01-docs",
@@ -2486,27 +2488,29 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
-        "sha256": "74a616b2e8c70994b6e4ae626553df7024aac4338b2412ade02ddd4694609b77",
+        "text": "Owner test RM-110 after browser refresh: pressed inert Selected state, silent selection/switching with no Keep confirmations or per-product chat receipts. Choose for me ranks usable preferences with unchanged financial/fit/source guards and no new research/retry; eleven-target unpriced-pendant fixture selects11/11. Delegation shows only genuine unresolved targets or one visual selected-product summary. Exact images use labeled room-finish/catalogue references when missing/broken. Optional UI-only delegated mode survives Continue; legacy inference, manual comparison, source/quantity details, idempotence and Undo/session authority remain. 2043-test/124-file coverage with documented full/scoped continuation and all code/types/boundary/assets/both-build gates plus native isolated390phone/manual/automatic/partial/recovery/fallback/Undo checks pass; final read-only validation no actionable finding. QA removed.91 combined paths unstaged/uncommitted, exact HEAD/history/index retained. No paid/provider call, extra automatic search/retry, real CAPTCHA, owner-session/Chrome, model/env/dependency/cloud/push/deploy or manual restart. Original exact candidate/merchant/physical/owner aesthetic/hosted acceptance remains separate.",
+        "sha256": "414f37019a41f5978bde12b15224db63871dc6f3d68b106203c25c08252d5d1f",
         "context_sources": [
-          "docs/tickets/RM-102-restore-saved-session-conversations.md",
-          "docs/commit-plans/RM-102.md",
-          "docs/validation/RM-102.md"
+          "docs/tickets/RM-110-simplify-product-selection.md",
+          "docs/commit-plans/RM-110.md",
+          "docs/validation/RM-110.md",
+          "docs/design/layout.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-102-restore-saved-session-conversations.md",
-        "docs/commit-plans/RM-102.md",
-        "docs/validation/RM-102.md"
+        "docs/tickets/RM-110-simplify-product-selection.md",
+        "docs/commit-plans/RM-110.md",
+        "docs/validation/RM-110.md",
+        "docs/design/layout.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic/live-merchant/physical and exact hosted-release acceptance remain separate; older omitted chat cannot be reconstructed from chat-free records.",
-          "reference": "docs/validation/RM-102.md"
+          "reason": "Actual owner candidate/live merchant/physical/owner aesthetic/exact-hosted acceptance remains separate from local fake-only verification.",
+          "reference": "docs/validation/RM-110.md"
         }
       ],
       "approval": null,
@@ -2916,6 +2920,307 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-102-restore-saved-session-conversations.md",
               "docs/commit-plans/RM-102.md",
               "docs/validation/RM-102.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T12:00:02+00:00",
+          "reason": "Direct owner requests photo-limit/public-repository review, current README improvement and diagnosis of a failed floor-lamp verification.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
+            "sha256": "74a616b2e8c70994b6e4ae626553df7024aac4338b2412ade02ddd4694609b77",
+            "context_sources": [
+              "docs/tickets/RM-102-restore-saved-session-conversations.md",
+              "docs/commit-plans/RM-102.md",
+              "docs/validation/RM-102.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T12:13:57+00:00",
+          "prior_prompt": {
+            "text": "Complete owner RM-103 local photo-limit/public-source review and portfolio README. Preserve Git history exactly; no snapshot, publication branch, paid request, env/service/dependency/cloud action. Fix only confirmed browser verification deadline reason loss, preserve all bounds and explicit retries. Redacted existing local scanner, affected verification/upload tests, scoped frontend gates/build, valid docs/artwork/ignore rules, exact fourteen-path local checkpoint and read-only review.",
+            "sha256": "3206606884e425c00919b43a4cd536d681547e705c7823c1fbd5463e7990e575",
+            "context_sources": [
+              "docs/tickets/RM-103-verify-public-source-and-photo-limits.md",
+              "docs/commit-plans/RM-103.md",
+              "docs/validation/RM-103.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T12:23:28+00:00",
+          "reason": "Owner rejects premature verification timeout interrupting product research.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review completed RM-103 current README/public-source/photo-limit checks and corrected browser verification expiry copy.100 photo-boundary checks,86 affected checks, scoped code/types/frontend build, local redacted history/current/public-bundle scan and media/link/ignore review pass. Keep exactly fourteen paths unstaged/uncommitted and HEAD/history unchanged; no public snapshot/branch/rewrite/push/deploy, owner request retry or service/env/dependency action. Fresh exact Linux/image/hosted and owner acceptance remain separate.",
+            "sha256": "d8bcf61323222505592420e086467502ba361f55983829dc4b7d0e07e6eec662",
+            "context_sources": [
+              "docs/tickets/RM-103-verify-public-source-and-photo-limits.md",
+              "docs/commit-plans/RM-103.md",
+              "docs/validation/RM-103.md",
+              "docs/security/PUBLIC_REPOSITORY_REVIEW.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T12:40:35+00:00",
+          "prior_prompt": {
+            "text": "Complete RM-104 owner correction: remove premature verification wait failure; suspend caller network watchdog only during its exact proof wait and refresh per actual request. Keep in-place manual challenge recovery, slow wait/retry/cancel guidance, backend/provider/hosting limits and no paid retry. Preserve RM-103 pending files and exact HEAD/history, all work unstaged/uncommitted. Offline actual-client/lifecycle/native tests, full gates/both builds and redacted scan; no live CAPTCHA/paid request/Chrome/env/service/dependency/cloud/push/deploy.",
+            "sha256": "09b85d97429628dc9f713a9498d3fef1f2cab9083449f18a05bf252ca923edb3",
+            "context_sources": [
+              "docs/tickets/RM-104-keep-verification-wait-out-of-research.md",
+              "docs/commit-plans/RM-104.md",
+              "docs/validation/RM-104.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T12:54:38+00:00",
+          "reason": "Owner requests Choose for me among shortcuts once options are found.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review completed RM-104: no independent60s proof cutoff, caller-scoped verification wait outside fresh request budgets, in-place manual vendor refresh and slow wait/retry/cancel controls.92 focused checks and2011tests/120files, code/types/boundaries/assets/both builds and native offline desktop/320phone checks pass. Keep28 combined RM-103/104 paths unstaged/uncommitted and HEAD/history exact; no paid request, real CAPTCHA, owner-search retry, Chrome, manual restart, env/dependency/cloud/push/deploy. Exact live-vendor/Linux/image/hosted and owner acceptance remain separate.",
+            "sha256": "3b2069bbaf25ab456f5ce64ed44f7644a07f828fae5ab7e714d4b5ec3a8f3d19",
+            "context_sources": [
+              "docs/tickets/RM-104-keep-verification-wait-out-of-research.md",
+              "docs/commit-plans/RM-104.md",
+              "docs/validation/RM-104.md",
+              "docs/security/PUBLIC_REPOSITORY_REVIEW.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T13:03:31+00:00",
+          "prior_prompt": {
+            "text": "Complete owner RM-105 contextual Choose for me shortcut after ready current research. Reuse explicit local auto-selection with all source/financial/lifecycle guards; compact Cost breakdown/middle action/Export row, no readiness interruption. Existing tests/native injected guarded/selection/recovery/phone checks, remove QA route, scoped frontend gates/build and exact32-path unstaged union. Preserve RM-103/104, HEAD/history/services/env; no paid request, real CAPTCHA, Chrome, restart, dependency, cloud/push/deploy or Git mutation.",
+            "sha256": "2ad3274b5108ecdf369d28feb8ffa354423d15ec3fb46b0efb7eb6eba465f30d",
+            "context_sources": [
+              "docs/tickets/RM-105-offer-choose-for-me-after-research.md",
+              "docs/commit-plans/RM-105.md",
+              "docs/validation/RM-105.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T13:13:48+00:00",
+          "reason": "Owner supplied broken actual PDF and requested furniture rendering and logo fixes.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-105: Choose for me is the middle planning shortcut after current usable results settle, through the existing explicit local selection flow. Cost breakdown/Export and all cards remain; busy/stale/completed/saved/legacy/preview guards and financial/source/Undo/lifecycle authority remain.32 focused checks, native offline ready/busy/reload/selection/Undo/320phone checks and scoped format/lint/frontend+test types/frontend build pass. QA route/tab removed and viewport reset. Preserve RM-103/104, all32 combined paths unstaged/uncommitted and exact HEAD/history/services/env. No paid request, real CAPTCHA, Chrome, restart, dependency, cloud/push/deploy. Owner/live-merchant/physical/exact-hosted acceptance stays separate.",
+            "sha256": "c768a6055b42f187d47673aa71ec40049d09e7ad1c767dc8490b82f12acb9384",
+            "context_sources": [
+              "docs/tickets/RM-105-offer-choose-for-me-after-research.md",
+              "docs/commit-plans/RM-105.md",
+              "docs/validation/RM-105.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T13:23:37+00:00",
+          "prior_prompt": {
+            "text": "Complete owner RM-106: restore editor nominal furniture geometry in PDF room pictures and plan only, include actual Roomedy logo and remove repeated uncertainty presentation. Preserve strict model export, measurements/poses/mounting, finance/source/photos/links and export lifecycle. Meaningful regression/native offline PDFs/every-page visual review/scoped gates/frontend build; remove QA route. Preserve32 prior paths and exact HEAD/history/services/env,41 total unstaged/uncommitted. No paid request, real CAPTCHA, Chrome, restart, dependency, cloud/push/deploy.",
+            "sha256": "42c30b6242e6e126e02038502179c054f6590e8d20fbc470bcfa11711907d6b1",
+            "context_sources": [
+              "docs/tickets/RM-106-render-furniture-and-logo-in-pdf.md",
+              "docs/commit-plans/RM-106.md",
+              "docs/validation/RM-106.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T13:39:58+00:00",
+          "reason": "Owner selects professional design-first PDF redesign and final restart.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-106: PDF room pictures/numbered footprints reuse editor nominal display geometry; actual Roomedy logo on every estimate page and portfolio, ordinary numbers and concise measurement presentation. Canonical unknown/supplied facts/poses/mounting, strict GLB/OBJ, financial/source/photos/links and export lifecycle remain unchanged.112 focused tests/five files, native offline Estimate/project downloads/all20 pages visually inspected and scoped format/lint/frontend+test types/frontend build pass. QA route/tab removed. Re-export the existing saved estimate; no new scan/research needed. Preserve all41 combined paths unstaged/uncommitted, exact HEAD/history/services/env; no paid request, real CAPTCHA, Chrome, restart, dependency, cloud/push/deploy. Owner/live-merchant/physical/exact-hosted acceptance stays separate.",
+            "sha256": "a9286a3a6ba1d3741d6084eacf95d065e5622a47f5c5e9ef9b8940d544a993ba",
+            "context_sources": [
+              "docs/tickets/RM-106-render-furniture-and-logo-in-pdf.md",
+              "docs/commit-plans/RM-106.md",
+              "docs/validation/RM-106.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T14:14:01+00:00",
+          "prior_prompt": {
+            "text": "Complete owner RM-107 professional design-led PDF: centred branded cover, clickable contents, large distinct3D views, actual editor floor/conditional ceiling plan, furniture/finish palette before costs/products/quantities/sources. Shared estimate/project/design-only paths; preserve saved facts/financial/source/media/strict model/export lifecycle bounds. Focused regressions, native offline all-mode/download/design-only/every-page review, settled root gates/both builds and read-only validate→confirm/fix→revalidate to no actionable findings, then owner-authorized verified normal-config full-stack restart. Preserve prior work and exact history unstaged/uncommitted; no paid call, real CAPTCHA, Chrome, env/dependency/cloud/push/deploy.",
+            "sha256": "3dea123ef0f50c94f5bc1441a6e05ca25e46d03e7b88b5e14ae7eef6c49b04f9",
+            "context_sources": [
+              "docs/tickets/RM-107-create-a-design-led-room-pdf.md",
+              "docs/commit-plans/RM-107.md",
+              "docs/validation/RM-107.md",
+              "docs/references/professional-room-pdf.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T14:45:27+00:00",
+          "reason": "Owner selects professional design-first PDF redesign and final restart.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner test RM-107 professional design-first PDF: centred cover/clickable contents, large distinct3D shots, actual editor floor/ceiling plans and saved finish/furniture detail before costs/products/quantities/sources. Shared Estimate/project/design-only output preserves canonical/strict-model/source/money/quantity/media/lifecycle authority.2010tests/120files and all code/types/boundary/assets/both-build gates pass; actual offline15/15/7-page downloads/all37 pages inspected, final read-only validation has no actionable finding. QA removed. Final owner-authorized verified restart passes old-tree cleanup, new normal-live readiness and pages200. Re-export the saved estimate; no paid scan/research needed.54 combined paths unstaged/uncommitted, exact HEAD/history retained; no paid call, real CAPTCHA, Chrome, env/dependency/cloud/push/deploy. Owner aesthetic/physical/live-merchant/exact-hosted acceptance remains separate.",
+            "sha256": "ea1bf1bda5864893276c129b8787e492525494286cd434220b52b1450535e542",
+            "context_sources": [
+              "docs/tickets/RM-107-create-a-design-led-room-pdf.md",
+              "docs/commit-plans/RM-107.md",
+              "docs/validation/RM-107.md",
+              "docs/references/professional-room-pdf.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T14:47:24+00:00",
+          "reason": "Owner selects safe market research performance improvements.",
+          "prior_status": "in_progress",
+          "prior_prompt": {
+            "text": "Complete owner RM-108 professional design-led PDF: centred branded cover, clickable contents, large distinct3D views, actual editor floor/conditional ceiling plan, furniture/finish palette before costs/products/quantities/sources. Shared estimate/project/design-only paths; preserve saved facts/financial/source/media/strict model/export lifecycle bounds. Focused regressions, native offline all-mode/download/design-only/every-page review, settled root gates/both builds and read-only validate→confirm/fix→revalidate to no actionable findings, then owner-authorized verified normal-config full-stack restart. Preserve prior work and exact history unstaged/uncommitted; no paid call, real CAPTCHA, Chrome, env/dependency/cloud/push/deploy.",
+            "sha256": "eeeb9ac3773ee594a990dafb3dd3fb9a652a5301483e4d8da457d8e34d241345",
+            "context_sources": [
+              "docs/tickets/RM-108-overlap-independent-market-searches.md",
+              "docs/commit-plans/RM-108.md",
+              "docs/validation/RM-108.md",
+              "docs/engineering/market-research-performance.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T15:05:35+00:00",
+          "prior_prompt": {
+            "text": "Complete owner RM-108 bounded two-lane independent market research, one foreground owner with unique child wire identities and FIFO proof prompts. Pause new launches on busy/unavailable, retain in-flight results and stable cards; no automatic paid retry or raised backend limits. Test injected transports/proofs/lifecycle and isolated native offline states, settled gates and read-only validation to no actionable findings. Preserve all prior paths, exact history/index and normal services; no paid, model/env/dependency/cloud/push/deploy or manual restart.",
+            "sha256": "b572bff6c9ef1cdb5809bf849ac6619b721c96e5550ee6d67d8dbd3d9796a7dc",
+            "context_sources": [
+              "docs/tickets/RM-108-overlap-independent-market-searches.md",
+              "docs/commit-plans/RM-108.md",
+              "docs/validation/RM-108.md",
+              "docs/engineering/market-research-performance.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T15:17:15+00:00",
+          "reason": "Owner selects text-first chat scrolling and visual interaction guidance.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner test RM-108: independent market searches now overlap in two lanes under existing backend limits; one foreground parent, unique child wire admissions and FIFO proof prompts. Stable cards/finished-active progress, genuine endpoint/availability backpressure pauses unscheduled work and retains sibling results; explicit Resume only, no automatic paid retry. Preserve source/price/quantity/history/lifecycle/model/budgets and all prior pending work. 2023 tests/121 files, all code/types/boundary/assets/both-build gates and native isolated offline queue/proof/cancel checks pass; final read-only validation no actionable findings. QA removed.64 combined paths unstaged/uncommitted; HEAD/history/index unchanged. No paid provider/real CAPTCHA/account quota test, env/dependency/cloud/push/deploy or manual restart. Owner live/API-account/merchant/exact-hosted acceptance remains separate.",
+            "sha256": "39db3bea4b2c421ebf358d131d468d042f66e3f99a42b26c2adc262e7e089f8e",
+            "context_sources": [
+              "docs/tickets/RM-108-overlap-independent-market-searches.md",
+              "docs/commit-plans/RM-108.md",
+              "docs/validation/RM-108.md",
+              "docs/engineering/market-research-performance.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T15:44:58+00:00",
+          "prior_prompt": {
+            "text": "Complete RM-109 text-first anchored Design/Estimate visual replies and concise truthful interaction guidance. One container-only reading owner, visible primary prose, stable late-layout anchoring and manual-reading precedence; preserve preview/actions/motion/financial/source/history/lifecycle/model and all prior pending bytes. Meaningful focused tests and isolated native desktop/phone/short/restore checks, settled gates and read-only validate-confirm-fix-revalidate to no actionable findings. Keep exact history/index unstaged/uncommitted; no paid, real CAPTCHA, owner-session/Chrome, env/dependency/cloud/push/deploy or manual restart.",
+            "sha256": "3098b24fa3d782b45bcf009550a313294d425b0d454b8dfe0199dfeab125c3e3",
+            "context_sources": [
+              "docs/tickets/RM-109-keep-chat-explanations-in-view.md",
+              "docs/commit-plans/RM-109.md",
+              "docs/validation/RM-109.md",
+              "docs/design/layout.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
+        },
+        {
+          "reopened_at": "2026-11-04T16:01:16+00:00",
+          "reason": "Owner selects text-first chat scrolling and visual interaction guidance.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner test RM-109 after one browser refresh: both chats show visible explanations before visuals, use one container-only reading owner, preserve manual history/keyboard focus and recognize batched explicit request identities. Late layouts keep the prose anchor; previews/cards/checks/cost/category/calculation/carousel/selection/sections/budget/work/saved views receive truthful current-control guidance. Preserve reveal motion, source/price/quantity/Apply/Undo/history/session/model/provider authority and RM-108 concurrency.2036 tests/123 files, all code/types/boundary/assets/both-build gates and native isolated desktop/390phone/short/saved/normal-shortcut checks pass; latest read-only validation no actionable finding. QA removed.76 combined paths unstaged/uncommitted, exact HEAD/history/index retained; no paid call, real CAPTCHA, owner session/Chrome, env/dependency/cloud/push/deploy or manual restart. Physical/actual paid prose/owner aesthetic/hosted acceptance remains separate.",
+            "sha256": "95b31a60889cbff32d07ca6090301e9d53d4880083c30ab6079fe8fe73005ee0",
+            "context_sources": [
+              "docs/tickets/RM-109-keep-chat-explanations-in-view.md",
+              "docs/commit-plans/RM-109.md",
+              "docs/validation/RM-109.md",
+              "docs/design/layout.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T16:35:45+00:00",
+          "prior_prompt": {
+            "text": "Complete RM-110 minimal pressed Selected state, no per-product chat receipts, delegated automatic preference completion across usable results, unresolved-only chooser and visual selected summary with labeled real-room image fallbacks. Preserve source/price/quantity/fit/Undo/Continue/lifecycle/model/budgets and prior pending work. Meaningful offline selection/media/recovery tests, native fake-only11-target/manual/partial/phone/reload/Undo checks before settled gates, read-only validate-confirm-fix-revalidate until clean. Exact history/index unstaged/uncommitted; no paid, real CAPTCHA, owner-session/Chrome, env/dependency/cloud/push/deploy or manual restart.",
+            "sha256": "a29e8f6079fd9c6fd4494bc0e82d1611aead066b96bafd30c94b9e1c9ba28c09",
+            "context_sources": [
+              "docs/tickets/RM-110-simplify-product-selection.md",
+              "docs/commit-plans/RM-110.md",
+              "docs/validation/RM-110.md",
+              "docs/design/layout.md"
             ],
             "status": "afk",
             "approval": null,
@@ -4635,27 +4940,29 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
-        "sha256": "74a616b2e8c70994b6e4ae626553df7024aac4338b2412ade02ddd4694609b77",
+        "text": "Owner test RM-110 after browser refresh: pressed inert Selected state, silent selection/switching with no Keep confirmations or per-product chat receipts. Choose for me ranks usable preferences with unchanged financial/fit/source guards and no new research/retry; eleven-target unpriced-pendant fixture selects11/11. Delegation shows only genuine unresolved targets or one visual selected-product summary. Exact images use labeled room-finish/catalogue references when missing/broken. Optional UI-only delegated mode survives Continue; legacy inference, manual comparison, source/quantity details, idempotence and Undo/session authority remain. 2043-test/124-file coverage with documented full/scoped continuation and all code/types/boundary/assets/both-build gates plus native isolated390phone/manual/automatic/partial/recovery/fallback/Undo checks pass; final read-only validation no actionable finding. QA removed.91 combined paths unstaged/uncommitted, exact HEAD/history/index retained. No paid/provider call, extra automatic search/retry, real CAPTCHA, owner-session/Chrome, model/env/dependency/cloud/push/deploy or manual restart. Original exact candidate/merchant/physical/owner aesthetic/hosted acceptance remains separate.",
+        "sha256": "414f37019a41f5978bde12b15224db63871dc6f3d68b106203c25c08252d5d1f",
         "context_sources": [
-          "docs/tickets/RM-102-restore-saved-session-conversations.md",
-          "docs/commit-plans/RM-102.md",
-          "docs/validation/RM-102.md"
+          "docs/tickets/RM-110-simplify-product-selection.md",
+          "docs/commit-plans/RM-110.md",
+          "docs/validation/RM-110.md",
+          "docs/design/layout.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-102-restore-saved-session-conversations.md",
-        "docs/commit-plans/RM-102.md",
-        "docs/validation/RM-102.md"
+        "docs/tickets/RM-110-simplify-product-selection.md",
+        "docs/commit-plans/RM-110.md",
+        "docs/validation/RM-110.md",
+        "docs/design/layout.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic/live-merchant/physical and exact hosted-release acceptance remain separate; older omitted chat cannot be reconstructed from chat-free records.",
-          "reference": "docs/validation/RM-102.md"
+          "reason": "Actual owner candidate/live merchant/physical/owner aesthetic/exact-hosted acceptance remains separate from local fake-only verification.",
+          "reference": "docs/validation/RM-110.md"
         }
       ],
       "approval": null,
@@ -5071,6 +5378,163 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-101-show-all-market-options-directly.md",
               "docs/commit-plans/RM-101.md",
               "docs/validation/RM-101.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T12:13:59+00:00",
+          "reason": "Reconcile owner public-source/photo-limit review while retaining exact Git history.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
+            "sha256": "74a616b2e8c70994b6e4ae626553df7024aac4338b2412ade02ddd4694609b77",
+            "context_sources": [
+              "docs/tickets/RM-102-restore-saved-session-conversations.md",
+              "docs/commit-plans/RM-102.md",
+              "docs/validation/RM-102.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T12:40:36+00:00",
+          "reason": "Record completed owner verification-wait correction without changing history.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review completed RM-103 current README/public-source/photo-limit checks and corrected browser verification expiry copy.100 photo-boundary checks,86 affected checks, scoped code/types/frontend build, local redacted history/current/public-bundle scan and media/link/ignore review pass. Keep exactly fourteen paths unstaged/uncommitted and HEAD/history unchanged; no public snapshot/branch/rewrite/push/deploy, owner request retry or service/env/dependency action. Fresh exact Linux/image/hosted and owner acceptance remain separate.",
+            "sha256": "d8bcf61323222505592420e086467502ba361f55983829dc4b7d0e07e6eec662",
+            "context_sources": [
+              "docs/tickets/RM-103-verify-public-source-and-photo-limits.md",
+              "docs/commit-plans/RM-103.md",
+              "docs/validation/RM-103.md",
+              "docs/security/PUBLIC_REPOSITORY_REVIEW.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T13:03:32+00:00",
+          "reason": "Reconcile completed RM-105 ready-options shortcut with pending RM-103/104.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review completed RM-104: no independent60s proof cutoff, caller-scoped verification wait outside fresh request budgets, in-place manual vendor refresh and slow wait/retry/cancel controls.92 focused checks and2011tests/120files, code/types/boundaries/assets/both builds and native offline desktop/320phone checks pass. Keep28 combined RM-103/104 paths unstaged/uncommitted and HEAD/history exact; no paid request, real CAPTCHA, owner-search retry, Chrome, manual restart, env/dependency/cloud/push/deploy. Exact live-vendor/Linux/image/hosted and owner acceptance remain separate.",
+            "sha256": "3b2069bbaf25ab456f5ce64ed44f7644a07f828fae5ab7e714d4b5ec3a8f3d19",
+            "context_sources": [
+              "docs/tickets/RM-104-keep-verification-wait-out-of-research.md",
+              "docs/commit-plans/RM-104.md",
+              "docs/validation/RM-104.md",
+              "docs/security/PUBLIC_REPOSITORY_REVIEW.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T13:23:38+00:00",
+          "reason": "Reconcile completed RM-106 PDF rendering and branding correction.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-105: Choose for me is the middle planning shortcut after current usable results settle, through the existing explicit local selection flow. Cost breakdown/Export and all cards remain; busy/stale/completed/saved/legacy/preview guards and financial/source/Undo/lifecycle authority remain.32 focused checks, native offline ready/busy/reload/selection/Undo/320phone checks and scoped format/lint/frontend+test types/frontend build pass. QA route/tab removed and viewport reset. Preserve RM-103/104, all32 combined paths unstaged/uncommitted and exact HEAD/history/services/env. No paid request, real CAPTCHA, Chrome, restart, dependency, cloud/push/deploy. Owner/live-merchant/physical/exact-hosted acceptance stays separate.",
+            "sha256": "c768a6055b42f187d47673aa71ec40049d09e7ad1c767dc8490b82f12acb9384",
+            "context_sources": [
+              "docs/tickets/RM-105-offer-choose-for-me-after-research.md",
+              "docs/commit-plans/RM-105.md",
+              "docs/validation/RM-105.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T14:14:02+00:00",
+          "reason": "Reconcile completed RM-107 professional PDF and owner-authorized verified restart.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-106: PDF room pictures/numbered footprints reuse editor nominal display geometry; actual Roomedy logo on every estimate page and portfolio, ordinary numbers and concise measurement presentation. Canonical unknown/supplied facts/poses/mounting, strict GLB/OBJ, financial/source/photos/links and export lifecycle remain unchanged.112 focused tests/five files, native offline Estimate/project downloads/all20 pages visually inspected and scoped format/lint/frontend+test types/frontend build pass. QA route/tab removed. Re-export the existing saved estimate; no new scan/research needed. Preserve all41 combined paths unstaged/uncommitted, exact HEAD/history/services/env; no paid request, real CAPTCHA, Chrome, restart, dependency, cloud/push/deploy. Owner/live-merchant/physical/exact-hosted acceptance stays separate.",
+            "sha256": "a9286a3a6ba1d3741d6084eacf95d065e5622a47f5c5e9ef9b8940d544a993ba",
+            "context_sources": [
+              "docs/tickets/RM-106-render-furniture-and-logo-in-pdf.md",
+              "docs/commit-plans/RM-106.md",
+              "docs/validation/RM-106.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T15:05:37+00:00",
+          "reason": "Reconcile completed safe parallel market research and owner testing handoff.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner test RM-107 professional design-first PDF: centred cover/clickable contents, large distinct3D shots, actual editor floor/ceiling plans and saved finish/furniture detail before costs/products/quantities/sources. Shared Estimate/project/design-only output preserves canonical/strict-model/source/money/quantity/media/lifecycle authority.2010tests/120files and all code/types/boundary/assets/both-build gates pass; actual offline15/15/7-page downloads/all37 pages inspected, final read-only validation has no actionable finding. QA removed. Final owner-authorized verified restart passes old-tree cleanup, new normal-live readiness and pages200. Re-export the saved estimate; no paid scan/research needed.54 combined paths unstaged/uncommitted, exact HEAD/history retained; no paid call, real CAPTCHA, Chrome, env/dependency/cloud/push/deploy. Owner aesthetic/physical/live-merchant/exact-hosted acceptance remains separate.",
+            "sha256": "ea1bf1bda5864893276c129b8787e492525494286cd434220b52b1450535e542",
+            "context_sources": [
+              "docs/tickets/RM-107-create-a-design-led-room-pdf.md",
+              "docs/commit-plans/RM-107.md",
+              "docs/validation/RM-107.md",
+              "docs/references/professional-room-pdf.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T15:45:00+00:00",
+          "reason": "Handoff completed text-first chat reading and contextual visual guidance.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner test RM-108: independent market searches now overlap in two lanes under existing backend limits; one foreground parent, unique child wire admissions and FIFO proof prompts. Stable cards/finished-active progress, genuine endpoint/availability backpressure pauses unscheduled work and retains sibling results; explicit Resume only, no automatic paid retry. Preserve source/price/quantity/history/lifecycle/model/budgets and all prior pending work. 2023 tests/121 files, all code/types/boundary/assets/both-build gates and native isolated offline queue/proof/cancel checks pass; final read-only validation no actionable findings. QA removed.64 combined paths unstaged/uncommitted; HEAD/history/index unchanged. No paid provider/real CAPTCHA/account quota test, env/dependency/cloud/push/deploy or manual restart. Owner live/API-account/merchant/exact-hosted acceptance remains separate.",
+            "sha256": "39db3bea4b2c421ebf358d131d468d042f66e3f99a42b26c2adc262e7e089f8e",
+            "context_sources": [
+              "docs/tickets/RM-108-overlap-independent-market-searches.md",
+              "docs/commit-plans/RM-108.md",
+              "docs/validation/RM-108.md",
+              "docs/engineering/market-research-performance.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T16:35:46+00:00",
+          "reason": "Handoff minimal selected-product UX and delegated completion.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner test RM-109 after one browser refresh: both chats show visible explanations before visuals, use one container-only reading owner, preserve manual history/keyboard focus and recognize batched explicit request identities. Late layouts keep the prose anchor; previews/cards/checks/cost/category/calculation/carousel/selection/sections/budget/work/saved views receive truthful current-control guidance. Preserve reveal motion, source/price/quantity/Apply/Undo/history/session/model/provider authority and RM-108 concurrency.2036 tests/123 files, all code/types/boundary/assets/both-build gates and native isolated desktop/390phone/short/saved/normal-shortcut checks pass; latest read-only validation no actionable finding. QA removed.76 combined paths unstaged/uncommitted, exact HEAD/history/index retained; no paid call, real CAPTCHA, owner session/Chrome, env/dependency/cloud/push/deploy or manual restart. Physical/actual paid prose/owner aesthetic/hosted acceptance remains separate.",
+            "sha256": "95b31a60889cbff32d07ca6090301e9d53d4880083c30ab6079fe8fe73005ee0",
+            "context_sources": [
+              "docs/tickets/RM-109-keep-chat-explanations-in-view.md",
+              "docs/commit-plans/RM-109.md",
+              "docs/validation/RM-109.md",
+              "docs/design/layout.md"
             ],
             "status": "afk",
             "approval": null,
@@ -5816,3 +6280,18 @@ This checklist records local work. Human approvals and unresolved external check
 }
 ```
 <!-- build-progress:end -->
+
+
+## Safe overlapping market research —4 November 2026
+
+RM-108 overlaps independent Estimate searches in two lanes, retaining one foreground owner and individual wire/admission identities. FIFO proof UI, stable result positions and finished/active progress prevent cross-request confusion. Endpoint/capacity/unavailable failures pause unscheduled items; no automatic paid retry. Existing server/model/budgets, source/price/quantity and lifecycle authority remain unchanged. See [receipt](validation/RM-108.md).
+
+
+## Text-first chat reading —4 November 2026
+
+RM-109 gives both chats a shared text-first reading owner and visible primary explanations with actual-control guidance. Respect manual history, recognize batched explicit requests, keep late-layout anchors, avoid outer-page and bottom/action races, and preserve revealed-text motion, source/financial/history/session/provider authority. [Evidence](validation/RM-109.md).
+
+
+## Minimal product selection —4 November 2026
+
+RM-110 removes Keep confirmations and per-product chat receipts, uses pressed Selected state, completes delegated choices across usable priced/unpriced results with unchanged financial/fit guards, and replaces completed alternatives with the visual selected-product summary. Optional UI-only automatic mode survives Continue. Missing/broken merchant photos use labeled real-room colour/texture/catalogue references. Source/quantity details, manual comparison, Undo and all lifecycle/provider authority remain. [Evidence](validation/RM-110.md).
