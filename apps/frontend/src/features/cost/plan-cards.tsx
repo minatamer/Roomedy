@@ -39,7 +39,7 @@ export function PlanCards({
     : null;
   const previewHeading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
-    if (preview) previewHeading.current?.focus();
+    if (preview) previewHeading.current?.focus({ preventScroll: true });
   }, [preview]);
   const lineList = (lines: RoomEstimate['lines']) => (
     <ul>
@@ -70,6 +70,11 @@ export function PlanCards({
           <h3 ref={previewHeading} tabIndex={-1}>
             {preview.label}
           </h3>
+          <p>
+            Compare the current and proposed costs below. Use Apply design &amp;
+            estimate to keep this preview, or Cancel preview to leave your room
+            and prices as they are.
+          </p>
           <div className={styles.pricePair}>
             <p>
               Current known costs
@@ -142,6 +147,12 @@ export function PlanCards({
           <h3>
             <ChatIcon kind="budget" /> Budget options
           </h3>
+          {options.length > 0 && (
+            <p>
+              Compare the alternatives below. Use Preview this option to review
+              its room and cost changes before applying them.
+            </p>
+          )}
           <div className={styles.pricePair}>
             <p>
               Known costs
@@ -259,6 +270,10 @@ export function PlanCards({
           <h3>
             <ChatIcon kind="work" /> Your work plan
           </h3>
+          <p>
+            Open a step below for its instructions. Expand Shopping quantities
+            from this estimate to review the included materials.
+          </p>
           <p className={styles.note}>
             Suggested order · confirm methods and timing with your installer.
           </p>

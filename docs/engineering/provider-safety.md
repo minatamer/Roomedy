@@ -1,5 +1,11 @@
 # Admission and bounded provider transport
 
+## Verification waiting and request deadlines — RM-104, 4 November 2026
+
+The browser no longer fails a pending proof request after an independent60s timer. One exact pending check belongs to the caller's signal and fixed guest lifetime. During that caller's proof wait, its active-work watchdog is suspended; it receives a fresh110s window for each actual network request afterward. The same boundary applies to sourcing, recognition and Medy. A slow quiet check reveals wait/retry/cancel controls after15s rather than failing the shopping target. Explicit widget replacement retires old callbacks without repeating admission/provider work. Cancel, phase/reset/expiry/unmount still retire the exact request.
+
+Managed challenge/token expiry remains refreshable in place through manual vendor refresh; it does not itself reject the product. Network/script/browser/configuration failures remain explicit. No automatic provider or verification retry, token reuse, cache or challenge bypass is added. Existing server intake/provider/whole-operation/bridge/hosting deadlines, rate/capacity/digest/grant/replay and unresolved-work accounting remain unchanged. Browser waits are separate from server work, rather than longer server leases. [Cloudflare widget configuration](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/) documents manual refresh and callbacks; actual live widget/owner/exact-hosted acceptance remains separate. [Receipt](../validation/RM-104.md).
+
 RM-008, 18 October 2026. [Ticket](../tickets/RM-008-build-shared-admission-and-bounded-provider-transport.md), [allocation](../commit-plans/RM-008.md), [actual checks](../validation/RM-008.md). Local infrastructure only: RM-010/011 register recognition/assistant use cases. No funded model, live challenge vendor, hosted identity or provider allowance is selected. No paid call occurred.
 
 ## One admitted path
@@ -24,7 +30,7 @@ The backend recomputes SHA-256 over strict request semantics including actual su
 | Packed memory | 64 KiB pages; at most160 pages per maximum body; no retained array of tiny wire fragments |
 | Grant ledger / lifetime | 256 records; 120 seconds, with active consumed protection retained until retirement |
 | Global process rates | 30 admission attempts and12 admitted operations per60-second window, shared across browser identities/tabs |
-| Challenge | 15-second visible deadline; at most2 unresolved verifier promises, including timed-out/aborted work |
+| Server token validation | 15-second visible deadline; at most2 unresolved verifier promises, including timed-out/aborted work |
 | Body / provider / operation / bridge / proposed host deadlines | 15s body;45s interactive or85s photo provider call;60s assistant or90s recognition;110s operation bridge;120s proposed hosting timeout |
 | Provider request | 10 MiB after conservative pre-serialization work/byte checking and actual encoding;100,000 nodes/depth24; schema64 KiB/depth10 |
 | Output | 1 MiB,4096 fragments,8192 output tokens |
@@ -95,3 +101,8 @@ See [sourcing policy](sourcing.md) for actual fake/injected evidence, model/tool
 28 October2026 direct human AFK instruction authorizes normal-env restart and economical real CPQ/provider tests, fixes and retests, without a fixed spend ceiling. This supersedes fake/paid-off holds only for this named local review. It does not authorize purchases, bookings, contacts, owner-env inspection/editing, accounts/cloud changes, delegation, push or deployment. Test fixtures remain independently fake/paid-off.
 
 The separate public reference-rate adapter sends only a fixed supported currency pair to `https://api.frankfurter.dev/v2/rate/{currency}/usd`. No room, city, preferences, image, address, cookie or provider credential is transmitted. GET only, redirect:error, five-second linked abort,8192bytes/128fragments, strict pair/date/rate validation, at most seven calendar days of reference age, no retry. Five possible successful cached observations expire after15minutes; never share pending user work or cache failures. A single source result has at most three candidates/currencies, memoized within that operation. Cancellation and actual unresolved transport/reader settlement retain ownership rather than falsely freeing capacity. This is a reference-price aid, not a spending limit or a guaranteed checkout rate. Existing paid dispatch/search/admission/private log bounds remain.
+
+
+## Safe overlapping market research —4 November 2026
+
+RM-108 adds only frontend batch scheduling: two child sourcing requests under one session parent and unique wire identities. Each child retains its exact input-bound admission/grant/proof; only proof interaction queues. A child never completes the parent or releases siblings. Any safe endpoint error, failed verification, unavailable configuration/provider, invalid response or transport failure pauses new launches. Specific parsed item refusals/malformed results retain per-item handling. No automatic retry; active siblings settle normally and visitor Resume schedules only unprocessed items. Server two-slot/dispatch/settlement ownership, provider model/tools/rounds/deadlines remain unchanged. [Research and API-limit caveats](market-research-performance.md), [receipt](../validation/RM-108.md).

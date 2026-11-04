@@ -10,9 +10,12 @@ import {
   marketTargets,
   runMarketResearch,
 } from '../apps/frontend/src/features/cost/market-research.js';
+import type { ResearchScope } from '../apps/frontend/src/features/cost/research-scope.js';
 import type { MarketUpdate } from '../apps/frontend/src/features/cost/market-research.js';
+import { verificationSnapshot } from '../apps/frontend/src/features/verification/state.js';
 const owned: SessionController[] = [];
 afterEach(() => {
+  verificationSnapshot()?.finish();
   owned.splice(0).forEach((c) => c.dispose());
 });
 function session() {
@@ -47,6 +50,8 @@ function transportFor(
         simulation: true,
       });
     calls.push(input.brief.label);
+    const extra = await answer?.(input);
+    if (extra?.error) return Response.json(extra);
     return Response.json({
       identity: input.identity,
       kind: 'completed',
@@ -54,16 +59,258 @@ function transportFor(
       simulation: true,
       message: 'Review',
       sourcing: { candidates: [], notes: [] },
-      ...(await answer?.(input)),
+      ...extra,
     });
   };
   return {
     calls,
-    begin: (c: SessionController, b: Parameters<typeof beginResearch>[1]) =>
-      beginResearch(c, b, transport),
+    begin: (
+      c: SessionController,
+      b: Parameters<typeof beginResearch>[1],
+      scope: ResearchScope,
+    ) => beginResearch(c, b, transport, scope),
   };
 }
 describe('explicit collective market research', () => {
+  it('does not replace another foreground operation or launch from the wrong phase', async () => {
+    const c = session(),
+      targets = marketTargets(c.getSnapshot().workspace!.current),
+      h = transportFor();
+    const pending = c.beginOperation();
+    const blocked = await runMarketResearch(c, targets, () => {}, h.begin)
+      .result;
+    expect(blocked.remaining).toEqual(targets);
+    expect(c.getSnapshot().pending).toBe(pending);
+    expect(h.calls).toHaveLength(0);
+    c.setDestination('design');
+    await runMarketResearch(c, targets, () => {}, h.begin).result;
+    expect(h.calls).toHaveLength(0);
+    expect(c.getSnapshot().pending).toBeNull();
+  });
+  it('retires both proof callers and ignores an old proof after cancellation', async () => {
+    const c = session(),
+      targets = marketTargets(c.getSnapshot().workspace!.current).slice(0, 2);
+    let admissions = 0,
+      sourced = 0;
+    const transport: typeof fetch = async (url) => {
+      if (String(url).endsWith('/config'))
+        return Response.json({
+          mode: 'live',
+          capabilities: {
+            manual: true,
+            recognition: true,
+            assistant: true,
+            sourcing: true,
+            simulation: false,
+          },
+          limits: PUBLIC_LIMITS,
+        });
+      if (String(url).endsWith('/admission')) {
+        admissions++;
+        return Response.json({
+          kind: 'verification',
+          state: 'interaction',
+          simulation: false,
+          challenge: {
+            siteKey: 'synthetic',
+            action: 'roomedy-ai',
+            inputHash: (admissions === 1 ? 'a' : 'b').repeat(64),
+          },
+        });
+      }
+      sourced++;
+      throw new Error('unexpected sourcing');
+    };
+    const receive = vi.fn();
+    const batch = runMarketResearch(
+      c,
+      targets,
+      receive,
+      (session, brief, scope) =>
+        beginResearch(session, brief, transport, scope),
+    );
+    await vi.waitFor(() => expect(admissions).toBe(2));
+    await vi.waitFor(() => expect(verificationSnapshot()).not.toBeNull());
+    const old = verificationSnapshot()!;
+    batch.cancel();
+    expect((await batch.result).cancelled).toBe(true);
+    old.finish('late-proof');
+    await Promise.resolve();
+    expect(verificationSnapshot()).toBeNull();
+    expect(c.getSnapshot().pending).toBeNull();
+    expect(sourced).toBe(0);
+    expect(
+      receive.mock.calls.every(([, update]) => update.kind === 'finding'),
+    ).toBe(true);
+  });
+  it('keeps two admitted searches active, distinct and owned until out-of-order completion', async () => {
+    const c = session(),
+      targets = marketTargets(c.getSnapshot().workspace!.current).slice(0, 3);
+    const releases: (() => void)[] = [],
+      identities: string[] = [];
+    const h = transportFor(async (input) => {
+      identities.push(JSON.stringify(input.identity));
+      await new Promise<void>((resolve) => releases.push(resolve));
+      return {};
+    });
+    const answered: string[] = [];
+    const batch = runMarketResearch(
+      c,
+      targets,
+      (target, update) => {
+        if (update.kind === 'answer') answered.push(target.key);
+      },
+      h.begin,
+    );
+    await vi.waitFor(() => expect(releases).toHaveLength(2));
+    const parent = c.getSnapshot().pending;
+    expect(
+      identities.every((identity) => identity !== JSON.stringify(parent)),
+    ).toBe(true);
+    releases[1]!();
+    await vi.waitFor(() => expect(releases).toHaveLength(3));
+    expect(answered).toEqual([targets[1]!.key]);
+    expect(c.getSnapshot().pending).toEqual(parent);
+    releases[0]!();
+    releases[2]!();
+    expect(await batch.result).toEqual({
+      remaining: [],
+      cancelled: false,
+      paused: false,
+    });
+    expect(new Set(identities).size).toBe(3);
+    expect(answered).toEqual([
+      targets[1]!.key,
+      targets[0]!.key,
+      targets[2]!.key,
+    ]);
+    expect(c.getSnapshot().pending).toBeNull();
+  });
+  it.each([
+    'busy',
+    'not-available',
+    'upstream-unavailable',
+    'provider-unavailable',
+  ])(
+    'pauses unscheduled targets after %s, retaining the active sibling with no retry',
+    async (code) => {
+      const c = session(),
+        targets = marketTargets(c.getSnapshot().workspace!.current).slice(0, 3);
+      const releases: (() => void)[] = [];
+      const h = transportFor(async () => {
+        const index = releases.length;
+        await new Promise<void>((resolve) => releases.push(resolve));
+        return index
+          ? {}
+          : code === 'provider-unavailable'
+            ? { kind: 'unavailable', sourcing: undefined }
+            : {
+                error: {
+                  code,
+                  message: 'Synthetic',
+                  reference: 'synthetic',
+                  retryable: true,
+                },
+              };
+      });
+      const answers: MarketUpdate[] = [];
+      const batch = runMarketResearch(
+        c,
+        targets,
+        (_, update) => {
+          if (update.kind === 'answer') answers.push(update);
+        },
+        h.begin,
+      );
+      await vi.waitFor(() => expect(releases).toHaveLength(2));
+      releases[0]!();
+      await vi.waitFor(() => expect(answers).toHaveLength(1));
+      expect(c.getSnapshot().pending).not.toBeNull();
+      releases[1]!();
+      expect(await batch.result).toEqual({
+        remaining: targets.slice(2),
+        cancelled: false,
+        paused: true,
+      });
+      expect(h.calls).toHaveLength(2);
+      expect(answers[1]).toMatchObject({ answer: { ok: true } });
+    },
+  );
+  it('binds serialized verification proofs and grants to distinct concurrently sourced inputs', async () => {
+    const c = session(),
+      targets = marketTargets(c.getSnapshot().workspace!.current).slice(0, 2);
+    const hashes = new Map<string, string>(),
+      proofs: string[] = [],
+      releases: (() => void)[] = [];
+    const transport: typeof fetch = async (url, init) => {
+      if (String(url).endsWith('/config'))
+        return Response.json({
+          mode: 'live',
+          capabilities: {
+            manual: true,
+            recognition: true,
+            assistant: true,
+            sourcing: true,
+            simulation: false,
+          },
+          limits: PUBLIC_LIMITS,
+        });
+      const body = JSON.parse(String(init?.body)),
+        id = body.input.identity.operationId;
+      if (String(url).endsWith('/admission')) {
+        if (!hashes.has(id))
+          hashes.set(id, (hashes.size ? 'b' : 'a').repeat(64));
+        if (!body.proof)
+          return Response.json({
+            kind: 'verification',
+            state: 'interaction',
+            simulation: false,
+            challenge: {
+              siteKey: 'synthetic',
+              action: 'roomedy-ai',
+              inputHash: hashes.get(id),
+            },
+          });
+        expect(body.proof).toBe(hashes.get(id));
+        proofs.push(body.proof);
+        return Response.json({
+          kind: 'granted',
+          grant: id,
+          expiresAt: 123,
+          simulation: false,
+        });
+      }
+      expect(body.grant).toBe(id);
+      await new Promise<void>((resolve) => releases.push(resolve));
+      return Response.json({
+        identity: body.input.identity,
+        kind: 'completed',
+        draft: null,
+        simulation: false,
+        message: 'Review',
+        sourcing: { candidates: [], notes: [] },
+      });
+    };
+    const batch = runMarketResearch(
+      c,
+      targets,
+      () => {},
+      (session, brief, scope) =>
+        beginResearch(session, brief, transport, scope),
+    );
+    for (const key of ['a', 'b']) {
+      await vi.waitFor(() =>
+        expect(verificationSnapshot()?.challenge.inputHash).toBe(
+          key.repeat(64),
+        ),
+      );
+      verificationSnapshot()!.finish(key.repeat(64));
+    }
+    await vi.waitFor(() => expect(releases).toHaveLength(2));
+    expect(proofs).toEqual(['a'.repeat(64), 'b'.repeat(64)]);
+    releases.forEach((release) => release());
+    expect((await batch.result).cancelled).toBe(false);
+  });
   it('keeps fully customized bed parts in a bounded valid shopping brief', () => {
     const room = createRoomFixture('partial'),
       bed = room.furniture[0]!;
@@ -128,7 +375,7 @@ describe('explicit collective market research', () => {
       true,
     );
   });
-  it('uses real admitted client operations serially without changing accepted costs or history', async () => {
+  it('uses real admitted client operations concurrently without changing accepted costs or history', async () => {
     const c = session(),
       before = c.getSnapshot().cost,
       history = c.getSnapshot().workspace!.history;
@@ -142,10 +389,13 @@ describe('explicit collective market research', () => {
       (_, u) => updates.push(u),
       h.begin,
     ).result;
-    expect(result).toEqual({ remaining: [], cancelled: false });
+    expect(result).toEqual({ remaining: [], cancelled: false, paused: false });
     expect(h.calls).toEqual(targets.map((t) => t.brief.label));
-    expect(updates.map((u) => u.kind)).toEqual(
-      targets.flatMap(() => ['finding', 'answer']),
+    expect(updates.filter((u) => u.kind === 'finding')).toHaveLength(
+      targets.length,
+    );
+    expect(updates.filter((u) => u.kind === 'answer')).toHaveLength(
+      targets.length,
     );
     expect(
       updates.filter((u) => u.kind === 'answer').every((u) => u.answer.ok),
@@ -167,7 +417,7 @@ describe('explicit collective market research', () => {
     expect(h.calls).toHaveLength(MARKET_TARGET_LIMIT);
     expect(result.remaining).toEqual(targets.slice(MARKET_TARGET_LIMIT));
   });
-  it('finds every furniture, floor and wall target beyond six in one serial request', async () => {
+  it('finds every furniture, floor and wall target beyond six in one bounded request', async () => {
     const room = createRoomFixture('sample');
     room.furniture = Array.from({ length: 9 }, (_, i) => ({
       ...structuredClone(room.furniture[0]!),
@@ -200,8 +450,8 @@ describe('explicit collective market research', () => {
     expect(targets).toHaveLength(11);
     expect(h.calls).toEqual(targets.map((target) => target.brief.label));
     expect(answered).toEqual(targets.map((target) => target.key));
-    expect(maximum).toBe(1);
-    expect(result).toEqual({ remaining: [], cancelled: false });
+    expect(maximum).toBe(2);
+    expect(result).toEqual({ remaining: [], cancelled: false, paused: false });
     expect(c.getSnapshot().cost).toBe(before);
   });
   it('retires a later in-flight target after six completed results without dispatching another', async () => {
@@ -216,7 +466,7 @@ describe('explicit collective market research', () => {
       reached = resolve;
     });
     const h = transportFor(async () => {
-      if (h.calls.length === 7) {
+      if (h.calls.length >= 7) {
         reached();
         return new Promise(() => {});
       }
@@ -236,8 +486,9 @@ describe('explicit collective market research', () => {
     expect(await run.result).toEqual({
       remaining: targets.slice(6),
       cancelled: true,
+      paused: false,
     });
-    expect(h.calls).toHaveLength(7);
+    expect(h.calls).toHaveLength(8);
     expect(answered).toEqual(targets.slice(0, 6).map((target) => target.key));
     expect(c.getSnapshot().pending).toBeNull();
   });
@@ -311,7 +562,7 @@ describe('explicit collective market research', () => {
       if (change === 'dispose') c.dispose();
       if (change === 'cancel') batch.cancel();
       expect((await batch.result).cancelled).toBe(true);
-      expect(h.calls).toHaveLength(1);
+      expect(h.calls).toHaveLength(2);
       expect(receive.mock.calls.every(([, u]) => u.kind === 'finding')).toBe(
         true,
       );

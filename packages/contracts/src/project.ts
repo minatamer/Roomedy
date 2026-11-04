@@ -177,6 +177,7 @@ export const recoveryCostUISchema = z.strictObject({
     key: z.string().max(160).nullable(),
     reviewedKeys: z.array(z.string().max(160)).max(64).optional(),
     passId: messageId.optional(),
+    mode: z.enum(['manual', 'automatic']).optional(),
   }),
 });
 export const recoveryEstimateSchema = z.strictObject({

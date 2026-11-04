@@ -14,6 +14,7 @@ import {
   guideIntent,
   INITIAL_PRODUCT_GUIDE,
   chooseGuidedProduct,
+  visibleMarketEntries,
 } from '../apps/frontend/src/features/cost/selection-guide.js';
 import type { ProductGuide } from '../apps/frontend/src/features/cost/selection-guide.js';
 import {
@@ -22,7 +23,12 @@ import {
 } from '../apps/frontend/src/features/cost/product-choices.js';
 import type { MarketEntry } from '../apps/frontend/src/features/cost/conversation.js';
 import { buildSourcingBrief } from '../apps/frontend/src/features/cost/brief.js';
-import { calculateRoomEstimate, sampleEstimateOffers } from '@roomedy/spatial';
+import {
+  calculateRoomEstimate,
+  sampleEstimateOffers,
+  CATALOGUE,
+  proposedSearchPiece,
+} from '@roomedy/spatial';
 const sessions: SessionController[] = [];
 function setup(simulation = true) {
   const c = new SessionController(createManualRoom('partial'));
@@ -94,94 +100,231 @@ function candidate(kind: string, index: number): SourcingCandidate {
 }
 afterEach(() => sessions.splice(0).forEach((c) => c.dispose()));
 describe('one-item product guide and explicit batch choice', () => {
-  it.each([true, false])(
-    'automatically advances a new pass with saved complete choices, showing no total until its last item: simulation=%s',
-    (simulation) => {
-      const { c, entries } = setup(simulation);
-      expect(chooseRemainingProducts(c, entries).ok).toBe(true);
-      c.costMessage('visitor', 'Review these products again.');
-      const passId = c.getSnapshot().cost!.messages.at(-1)!.id!;
-      let guide: ProductGuide = {
-        stage: 'choosing',
-        key: entries[0]!.target.key,
-        reviewedKeys: [],
-        passId,
-      };
-      for (const [index, original] of entries.entries()) {
-        const revision = c.getSnapshot().cost!.revision;
-        const fresh = entries.map((e) => ({ ...e, costRevision: revision })),
-          entry = fresh.find((e) => e.target.key === original.target.key)!;
-        if (entry.update.kind !== 'answer' || !entry.update.answer.ok)
-          throw Error('fixture');
-        const result = chooseGuidedProduct(
-          c,
-          fresh,
-          entry,
-          entry.update.answer.reply.candidates[1]!,
-          guide,
-        );
-        expect(result.ok).toBe(true);
-        if (!result.ok) throw Error(result.reason);
-        guide = result.guide;
-        expect(guide.reviewedKeys).toHaveLength(index + 1);
-        expect(
-          allProductsChosen(
-            c.getSnapshot().workspace!.current,
-            c.getSnapshot().cost!,
-          ),
-        ).toBe(true);
-        expect(
-          c
-            .getSnapshot()
-            .cost!.messages.filter((m) => m.kind === 'selection-summary'),
-        ).toHaveLength(index === entries.length - 1 ? 2 : 1);
-        expect(result.complete).toBe(index === entries.length - 1);
-        expect(guide.key).toBe(entries[index + 1]?.target.key ?? null);
-      }
-      expect(c.completeProductChoices(passId)).toBe(false);
-      expect(c.completeProductChoices(-1)).toBe(false);
-      expect(
-        c
-          .getSnapshot()
-          .cost!.messages.filter((m) => m.kind === 'selection-summary'),
-      ).toHaveLength(2);
-    },
-  );
-  it('keeping existing selections advances each step without changing prices and still reports once at the end', () => {
-    const { c, entries } = setup();
-    expect(chooseRemainingProducts(c, entries).ok).toBe(true);
-    const before = c.getSnapshot().cost!.revision;
-    let guide: ProductGuide = {
-      stage: 'choosing',
-      key: entries[0]!.target.key,
-      reviewedKeys: [],
-    };
-    for (const entry of entries) {
-      const fresh = entries.map((e) => ({
-        ...e,
-        costRevision: c.getSnapshot().cost!.revision,
-      }));
-      const active = fresh.find((e) => e.target.key === entry.target.key)!;
-      if (active.update.kind !== 'answer' || !active.update.answer.ok)
-        throw Error('fixture');
-      const result = chooseGuidedProduct(
-        c,
-        fresh,
-        active,
-        active.update.answer.reply.candidates[0]!,
-        guide,
-      );
-      expect(result.ok).toBe(true);
-      if (!result.ok) throw Error(result.reason);
-      guide = result.guide;
-      expect(c.getSnapshot().cost!.revision).toBe(before);
-    }
-    expect(guide.stage).toBe('done');
+  it('chooses all eleven returned targets including a pendant without a verified price, without changing the room', () => {
+    const room = createManualRoom('partial'),
+      base = room.furniture[0]!;
+    room.furniture = Array.from({ length: 8 }, (_, index) => ({
+      ...structuredClone(base),
+      id: `piece_${index}`,
+      label: `Piece ${index}`,
+    }));
+    const pendant = CATALOGUE.find((entry) =>
+      entry.id.includes('ceiling-pendant'),
+    )!;
+    const light = proposedSearchPiece({
+      id: 'pendant_1',
+      catalogueId: pendant.id,
+      size: null,
+      finish: null,
+    });
+    if (!light) throw Error('fixture pendant');
+    room.furniture.push(light);
+    const c = new SessionController(room);
+    sessions.push(c);
+    c.setDestination('cost', 'en-US');
+    const s = c.getSnapshot(),
+      before = JSON.stringify(s.workspace!.current);
+    const entries: MarketEntry[] = marketTargets(s.workspace!.current).map(
+      (target, index) => ({
+        target,
+        roomRevision: s.workspace!.current.roomRevision,
+        costRevision: s.cost!.revision,
+        generation: s.generation,
+        workspaceId: s.workspace!.workspaceId,
+        update: {
+          kind: 'answer',
+          answer: {
+            ok: true,
+            simulation: false,
+            input: {
+              kind: 'sourcing',
+              schemaVersion: VERSIONS.schema,
+              catalogueVersion: VERSIONS.catalogue,
+              rulesVersion: VERSIONS.rules,
+              identity: {
+                workspaceId: s.workspace!.workspaceId,
+                generation: s.generation,
+                operationId: `fixture_${index}`,
+                roomId: room.roomId,
+                inputRevision: room.roomRevision,
+              },
+              costRevision: s.cost!.revision,
+              locality: s.cost!.settings.locality,
+              brief: target.brief,
+            },
+            reply: {
+              candidates: [
+                {
+                  ...candidate(target.brief.kind, index),
+                  ...(target.key === light.id
+                    ? { listing: null, conditions: 'unknown' as const }
+                    : {}),
+                },
+              ],
+              notes: [],
+            },
+          },
+        },
+      }),
+    );
+    expect(entries).toHaveLength(11);
+    const result = chooseRemainingProducts(c, entries);
+    expect(result.selected).toHaveLength(11);
+    expect(
+      allProductsChosen(
+        c.getSnapshot().workspace!.current,
+        c.getSnapshot().cost!,
+      ),
+    ).toBe(true);
+    expect(JSON.stringify(c.getSnapshot().workspace!.current)).toBe(before);
     expect(
       c
         .getSnapshot()
-        .cost!.messages.filter((m) => m.kind === 'selection-summary'),
+        .cost!.settings.selectedPrices?.some((price) => price.key === light.id),
+    ).toBe(false);
+    expect(
+      c
+        .getSnapshot()
+        .cost!.messages.filter(
+          (message) => message.kind === 'selection-summary',
+        ),
+    ).toHaveLength(1);
+    expect(c.undo().ok).toBe(true);
+    expect(
+      currentProductChoices(
+        c.getSnapshot().workspace!.current,
+        c.getSnapshot().cost!,
+      ),
+    ).toHaveLength(0);
+  });
+  it('manual product clicks are silent, while delegated presentation hides only choices already made', () => {
+    const { c, entries } = setup(),
+      before = c.getSnapshot(),
+      entry = entries[0]!;
+    if (entry.update.kind !== 'answer' || !entry.update.answer.ok)
+      throw Error('fixture');
+    const result = chooseGuidedProduct(
+      c,
+      entries,
+      entry,
+      entry.update.answer.reply.candidates[0]!,
+      INITIAL_PRODUCT_GUIDE,
+    );
+    expect(result.ok).toBe(true);
+    const state = c.getSnapshot();
+    expect(state.cost!.messages).toEqual(before.cost!.messages);
+    expect(
+      visibleMarketEntries(state.workspace!.current, state.cost!, entries, {
+        stage: 'choosing',
+        key: null,
+        mode: 'manual',
+      }),
+    ).toHaveLength(entries.length);
+    expect(
+      visibleMarketEntries(state.workspace!.current, state.cost!, entries, {
+        stage: 'choosing',
+        key: null,
+        mode: 'automatic',
+      }).map((item) => item.target.key),
+    ).toEqual(entries.slice(1).map((item) => item.target.key));
+  });
+  it('retains genuinely empty targets while selecting every usable sibling and infers legacy delegation from its explicit request', () => {
+    const { c, entries } = setup();
+    const missing = entries.at(-1)!;
+    if (missing.update.kind !== 'answer' || !missing.update.answer.ok)
+      throw Error('fixture');
+    missing.update.answer.reply.candidates = [];
+    c.costMessage('visitor', 'Choose for me.');
+    const passId = c.getSnapshot().cost!.messages.at(-1)!.id!;
+    const result = chooseRemainingProducts(c, entries, false);
+    expect(result.selected).toHaveLength(entries.length - 1);
+    const state = c.getSnapshot();
+    expect(
+      visibleMarketEntries(state.workspace!.current, state.cost!, entries, {
+        stage: 'choosing',
+        key: missing.target.key,
+        passId,
+      }).map((item) => item.target.key),
+    ).toEqual([missing.target.key]);
+    expect(
+      state.cost!.messages.filter(
+        (message) => message.kind === 'selection-summary',
+      ),
+    ).toHaveLength(0);
+  });
+  it('does not require selected products to be kept again or add messages for repeated selection', () => {
+    const { c, entries } = setup();
+    expect(chooseRemainingProducts(c, entries).ok).toBe(true);
+    const before = c.getSnapshot(),
+      fresh = entries.map((entry) => ({
+        ...entry,
+        costRevision: before.cost!.revision,
+      }));
+    const first = fresh[0]!;
+    if (first.update.kind !== 'answer' || !first.update.answer.ok)
+      throw Error('fixture');
+    const result = chooseGuidedProduct(
+      c,
+      fresh,
+      first,
+      first.update.answer.reply.candidates[0]!,
+      { stage: 'done', key: null, mode: 'manual' },
+    );
+    expect(result.ok).toBe(true);
+    expect(c.getSnapshot().cost).toBe(before.cost);
+    expect(
+      visibleMarketEntries(before.workspace!.current, before.cost!, fresh, {
+        stage: 'done',
+        key: null,
+        mode: 'manual',
+      }),
+    ).toHaveLength(entries.length);
+  });
+  it('switches a completed selection directly and emits only an updated completion summary', () => {
+    const { c, entries } = setup();
+    chooseRemainingProducts(c, entries);
+    const before = c.getSnapshot(),
+      fresh = entries.map((entry) => ({
+        ...entry,
+        costRevision: before.cost!.revision,
+      })),
+      first = fresh[0]!;
+    if (first.update.kind !== 'answer' || !first.update.answer.ok)
+      throw Error('fixture');
+    const result = chooseGuidedProduct(
+      c,
+      fresh,
+      first,
+      first.update.answer.reply.candidates[1]!,
+      {
+        stage: 'choosing',
+        key: first.target.key,
+        mode: 'manual',
+        reviewedKeys: [],
+      },
+    );
+    expect(result.ok).toBe(true);
+    expect(result.ok && result.complete).toBe(true);
+    expect(
+      c
+        .getSnapshot()
+        .cost!.messages.filter((message) => message.role === 'visitor'),
+    ).toEqual(
+      before.cost!.messages.filter((message) => message.role === 'visitor'),
+    );
+    expect(
+      c
+        .getSnapshot()
+        .cost!.messages.filter(
+          (message) => message.kind === 'selection-summary',
+        ),
     ).toHaveLength(2);
+    expect(
+      currentProductChoices(
+        c.getSnapshot().workspace!.current,
+        c.getSnapshot().cost!,
+      )[0]!.url,
+    ).toBe(first.update.answer.reply.candidates[1]!.url);
   });
   it('automatically returns to skipped items before completing a fresh manual guide', () => {
     const { c, entries } = setup();
@@ -341,9 +484,9 @@ describe('one-item product guide and explicit batch choice', () => {
         .cost!.messages.some((m) => m.kind === 'selection-summary'),
     ).toBe(false);
   });
-  it('never automatically chooses known wrong-size, unavailable, wrong-unit or foreign-only options', () => {
+  it('uses unchanged manual pricing and geometry guards while excluding unavailable stock', () => {
     const { c, entries } = setup(),
-      before = JSON.stringify(c.getSnapshot().cost);
+      before = c.getSnapshot().workspace!.current;
     for (const [index, entry] of entries.entries()) {
       if (entry.update.kind !== 'answer' || !entry.update.answer.ok) continue;
       for (const candidate of entry.update.answer.reply.candidates) {
@@ -370,8 +513,17 @@ describe('one-item product guide and explicit batch choice', () => {
         else candidate.listing!.currency = 'EUR';
       }
     }
-    expect(chooseRemainingProducts(c, entries).ok).toBe(false);
-    expect(JSON.stringify(c.getSnapshot().cost)).toBe(before);
+    const result = chooseRemainingProducts(c, entries);
+    expect(result.ok).toBe(true);
+    expect(result.selected).not.toContain(entries[1]!.target.key);
+    expect(c.getSnapshot().workspace!.current).toBe(before);
+    const prices = c.getSnapshot().cost!.settings.selectedPrices ?? [];
+    expect(
+      prices.find((price) => price.key === entries[2]!.target.key),
+    ).toMatchObject({ unit: 'each', quantity: 1, quantityConfirmed: false });
+    expect(prices.some((price) => price.key === entries[3]!.target.key)).toBe(
+      false,
+    );
   });
   it('guards explicit batch input identity, duplicates and stale revisions before writing', () => {
     const { c, entries } = setup(),
@@ -514,7 +666,7 @@ describe('one-item product guide and explicit batch choice', () => {
       before.cost!.productChoices,
     );
   });
-  it('skips unpriced/foreign/unavailable/conditional choices and leaves missing targets unresolved', () => {
+  it('finishes valid preference choices even when price evidence is incomplete, foreign or conditional', () => {
     const { c, entries } = setup();
     for (const [i, entry] of entries.entries()) {
       if (entry.update.kind !== 'answer' || !entry.update.answer.ok) continue;
@@ -526,18 +678,18 @@ describe('one-item product guide and explicit batch choice', () => {
     }
     const result = chooseRemainingProducts(c, entries);
     expect(result.ok).toBe(true);
-    expect(result.selected).toHaveLength(1);
+    expect(result.selected).toHaveLength(4);
     expect(
       c
         .getSnapshot()
         .cost!.messages.some((m) => m.kind === 'selection-summary'),
-    ).toBe(false);
+    ).toBe(true);
     expect(
       allProductsChosen(
         c.getSnapshot().workspace!.current,
         c.getSnapshot().cost!,
       ),
-    ).toBe(false);
+    ).toBe(true);
   });
   it('rejects stale entries and inactive/retired sessions without changing prices', () => {
     const { c, entries } = setup(),

@@ -9,8 +9,14 @@ import { POLICY } from '@roomedy/contracts/policy';
 import type { SessionController } from '../session/controller';
 import { buildSourcingBrief } from './brief';
 import { beginResearch } from './client';
+import { createResearchScope } from './research-scope';
+import type { ResearchScope } from './research-scope';
 
 export const MARKET_TARGET_LIMIT = POLICY.furniture + WALLS.length + 1;
+export const MARKET_RESEARCH_CONCURRENCY = Math.min(
+  2,
+  POLICY.expensiveOperations,
+);
 export interface MarketTarget {
   key: string;
   group: 'Furniture' | 'Flooring' | 'Wall paint' | 'Services';
@@ -82,20 +88,40 @@ export function marketTargetForKey(room: RoomDocument, key: string) {
   );
 }
 
-/** One visitor-selected finite room search; each target keeps its one-operation owner. */
+/** One finite foreground batch; independent children keep distinct admissions. */
 export function runMarketResearch(
   controller: SessionController,
   targets: MarketTarget[],
   receive: (target: MarketTarget, update: MarketUpdate) => void,
-  begin: typeof beginResearch = beginResearch,
+  begin: (
+    controller: SessionController,
+    brief: SourcingBrief,
+    scope: ResearchScope,
+  ) => ReturnType<typeof beginResearch> = (session, brief, scope) =>
+    beginResearch(session, brief, fetch, scope),
 ) {
   const initial = controller.getSnapshot();
+  const owner =
+    targets.length &&
+    !initial.pending &&
+    !initial.candidate &&
+    initial.cost &&
+    initial.destination === 'cost' &&
+    controller.canEdit()
+      ? controller.beginOperation()
+      : null;
+  const scope = owner ? createResearchScope(owner) : null;
   let stopped = false;
-  let current: ReturnType<typeof beginResearch> = null;
+  let paused = false;
+  const active = new Set<NonNullable<ReturnType<typeof beginResearch>>>();
+  const completed = new Set<number>();
+  let next = 0;
   const fresh = () => {
     const state = controller.getSnapshot();
     return (
       !stopped &&
+      !!owner &&
+      controller.isCurrent(owner) &&
       state.destination === 'cost' &&
       !state.candidate &&
       state.generation === initial.generation &&
@@ -107,29 +133,46 @@ export function runMarketResearch(
   };
   const cancel = () => {
     stopped = true;
-    current?.cancel();
+    for (const task of active) task.cancel();
   };
   const unsubscribe = controller.subscribe(() => {
     if (!fresh()) cancel();
   });
   const result = (async () => {
-    let processed = 0;
-    try {
-      for (const target of targets.slice(0, MARKET_TARGET_LIMIT)) {
-        if (!fresh() || !controller.checkExpiry()) break;
-        current = begin(controller, target.brief);
-        if (!current) break;
+    const work = async () => {
+      while (!paused && fresh() && controller.checkExpiry()) {
+        const index = next++;
+        if (index >= Math.min(targets.length, MARKET_TARGET_LIMIT)) return;
+        const target = targets[index]!;
+        const task = begin(controller, target.brief, scope!);
+        if (!task) {
+          paused = true;
+          return;
+        }
+        active.add(task);
         receive(target, { kind: 'finding' });
-        const answer = await current.result;
-        current = null;
-        if (!answer.ok && 'retired' in answer && answer.retired) stopped = true;
-        if (!fresh()) break;
-        processed++;
+        const answer = await task.result;
+        active.delete(task);
+        if (!answer.ok && 'retired' in answer && answer.retired) cancel();
+        if (!fresh()) return;
+        completed.add(index);
+        if (!answer.ok && 'pause' in answer && answer.pause) paused = true;
         receive(target, { kind: 'answer', answer });
       }
-      return { remaining: targets.slice(processed), cancelled: stopped };
+    };
+    try {
+      await Promise.all(
+        Array.from({ length: MARKET_RESEARCH_CONCURRENCY }, work),
+      );
+      return {
+        remaining: targets.filter((_, index) => !completed.has(index)),
+        cancelled: stopped,
+        paused,
+      };
     } finally {
       unsubscribe();
+      for (const task of active) task.cancel();
+      if (owner) controller.completeOperation(owner, () => {});
     }
   })();
   return { cancel, result };

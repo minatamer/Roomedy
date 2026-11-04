@@ -16,6 +16,29 @@ function session() {
 }
 afterEach(() => sessions.splice(0).forEach((c) => c.dispose()));
 describe('separate session-owned Estimate conversation UI', () => {
+  it('restores delegated presentation as UI data without replaying selection or research', () => {
+    const c = session(),
+      store = costConversation(c);
+    store.set('guide', {
+      stage: 'choosing',
+      key: 'surface:floor',
+      mode: 'automatic',
+      passId: 1,
+    });
+    const saved = recoveryOf(c.getSnapshot())!;
+    expect(saved.conversations!.estimate!.ui!.guide.mode).toBe('automatic');
+    const restored = new SessionController();
+    sessions.push(restored);
+    expect(restored.restore(saved)).toBe(true);
+    restored.setDestination('cost', 'en-US');
+    expect(costConversation(restored).getSnapshot().guide.mode).toBe(
+      'automatic',
+    );
+    expect(restored.getSnapshot().pending).toBeNull();
+    expect(restored.getSnapshot().cost!.productChoices).toEqual(
+      c.getSnapshot().cost!.productChoices,
+    );
+  });
   it('retains result placement, product entries, draft and view across Design return/remount', () => {
     const c = session(),
       store = costConversation(c),
@@ -30,6 +53,7 @@ describe('separate session-owned Estimate conversation UI', () => {
       key: target.key,
       reviewedKeys: [target.key],
       passId: 7,
+      mode: 'automatic',
     });
     store.set('entries', [
       {
@@ -55,6 +79,7 @@ describe('separate session-owned Estimate conversation UI', () => {
       key: target.key,
       reviewedKeys: [target.key],
       passId: 7,
+      mode: 'automatic',
     });
     expect(c.getSnapshot().cost!.messages).toBe(messages);
   });

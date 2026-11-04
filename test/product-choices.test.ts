@@ -309,10 +309,14 @@ describe('explicit product preferences and completion chat', () => {
         { role: 'assistant', kind: 'selection-summary' },
       ]);
       expect(completed.cost!.messages[0]!.text).toContain(
-        'chosen a product for every item',
+        'All 7 products are selected',
       );
-      expect(completed.cost!.messages[0]!.text).toContain('cost breakdown');
-      expect(completed.cost!.messages[0]!.text).toContain('known subtotal');
+      expect(completed.cost!.messages[0]!.text).toContain(
+        'Review your choices',
+      );
+      expect(completed.cost!.messages[0]!.text).not.toContain(
+        'Choose products',
+      );
       expect(
         currentProductChoices(completed.workspace!.current, completed.cost!),
       ).toHaveLength(7);

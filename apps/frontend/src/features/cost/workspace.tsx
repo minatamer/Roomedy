@@ -9,13 +9,16 @@ import { costIntent, FIND_OPTIONS_MESSAGE } from './planning';
 import { OptionsPrompt } from './options-prompt';
 import { ChosenProducts } from './chosen-products';
 import { useCostConversationState } from './conversation';
-import { guideIntent } from './selection-guide';
+import { guideIntent, entryIsCurrent } from './selection-guide';
+import { allProductsChosen } from './product-choices';
+import { productChoices } from './source-card';
 import type { GuideAction } from './selection-guide';
 import { PlanCards } from './plan-cards';
 import { VersionControls } from './version-controls';
 import { EstimatePdfControls } from './estimate-pdf-controls';
 import { EstimateReview } from './estimate-review';
 import { RevealedText } from '../assistant/revealed-text';
+import { useChatReading } from '../assistant/chat-reading';
 import { JourneyCards } from './journey-cards';
 import { LocationCard } from './location-card';
 import {
@@ -25,7 +28,7 @@ import {
   simpleEstimateInputs,
 } from './journey';
 import type { CostSection } from './journey';
-import { explainCost, explanationLines } from './state';
+import { explainCost, explanationLines, targetKey } from './state';
 import type { CostMessage } from './state';
 import { ChatIcon, CostLineCards } from './chat-visuals';
 import assistant from '../assistant/assistant.module.css';
@@ -119,23 +122,34 @@ export function CostWorkspace({
   const heading = useRef<HTMLHeadingElement>(null),
     researchResults = useRef<HTMLElement>(null),
     composer = useRef<HTMLTextAreaElement>(null),
-    logEnd = useRef<HTMLDivElement>(null),
+    log = useRef<HTMLDivElement>(null),
     latestReply = useRef<HTMLElement>(null),
-    latestRequest = useRef<HTMLElement>(null),
+    planReply = useRef<HTMLDivElement>(null),
+    savedReply = useRef<HTMLDivElement>(null),
     sectionStart = useRef<HTMLDivElement>(null);
   const latestMessageId = draft.messages.at(-1)?.id,
-    latestIsGuided =
-      latestMessageId === researchAfter &&
-      draft.messages.at(-1)?.role === 'assistant',
-    latestIsSelectionSummary =
-      draft.messages.at(-1)?.kind === 'selection-summary',
-    latestIsBreakdown = [
-      'breakdown',
-      'find-options',
-      'selection-summary',
-    ].includes(draft.messages.at(-1)?.kind ?? '');
+    savedId = saved?.id;
+  const requestKey = `${state.workspace!.workspaceId}:${state.generation}:${draft.messages.findLast((message) => message.role === 'visitor')?.id ?? ''}`;
+  const read = useChatReading(log);
+  const previousReading = useRef({
+    section,
+    proposal: state.costProposal,
+    viewingId,
+  });
   const legacy = draft.settings.locality.currency !== 'USD';
   const guided = !saved && !legacy && guideEntries.length > 0;
+  const offerAutoChoice =
+    guided &&
+    !researchBusy &&
+    !state.pending &&
+    !allProductsChosen(currentRoom, currentCost) &&
+    guideEntries.some(
+      (entry) =>
+        entryIsCurrent(entry, state) &&
+        entry.update.kind === 'answer' &&
+        entry.update.answer.ok &&
+        productChoices(entry.update.answer.reply.candidates).length > 0,
+    );
   useEffect(() => {
     if (!saved) controller.repairSelectedPrices();
   }, [controller, saved, currentCost.revision, state.generation]);
@@ -145,31 +159,40 @@ export function CostWorkspace({
     heading.current?.focus({ preventScroll: true });
   }, []);
   useEffect(() => {
-    if (latestMessageId !== undefined)
-      (latestIsBreakdown
-        ? latestIsSelectionSummary
-          ? latestReply.current
-          : (latestRequest.current ?? latestReply.current)
-        : latestIsGuided
-          ? latestReply.current
-          : logEnd.current
-      )?.scrollIntoView({
-        block: latestIsBreakdown || latestIsGuided ? 'start' : 'nearest',
-        behavior: 'smooth',
-      });
+    const changedSection = previousReading.current.section !== section;
+    const changedPreview =
+      previousReading.current.proposal !== state.costProposal &&
+      !!state.costProposal;
+    const changedVersion = previousReading.current.viewingId !== viewingId;
+    previousReading.current = {
+      section,
+      proposal: state.costProposal,
+      viewingId,
+    };
+    const target = savedId
+      ? savedReply.current
+      : changedPreview
+        ? planReply.current
+        : researchBusy
+          ? researchResults.current
+          : changedSection && section !== 'welcome'
+            ? sectionStart.current
+            : (latestReply.current ?? sectionStart.current);
+    read(
+      target,
+      changedSection || changedPreview || changedVersion,
+      requestKey,
+    );
   }, [
+    read,
     latestMessageId,
-    latestIsBreakdown,
-    latestIsSelectionSummary,
-    latestIsGuided,
+    requestKey,
+    section,
+    researchBusy,
+    state.costProposal,
+    viewingId,
+    savedId,
   ]);
-  useEffect(() => {
-    if (section !== 'welcome')
-      sectionStart.current?.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth',
-      });
-  }, [section]);
   const openSection = (next: CostSection) => {
     setSection(next);
     setBudget(null);
@@ -293,164 +316,15 @@ export function CostWorkspace({
   const chooseProducts = () => {
     if (researchResults.current) {
       researchResults.current.focus({ preventScroll: true });
-      researchResults.current.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth',
-      });
+      read(researchResults.current, true);
     } else ask(FIND_OPTIONS_MESSAGE);
   };
-  const renderMessage = (message: CostMessage, i: number) => (
-    <article
-      key={message.id ?? i}
-      ref={
-        i === draft.messages.length - 1
-          ? latestReply
-          : message.role === 'visitor' && i === draft.messages.length - 2
-            ? latestRequest
-            : undefined
-      }
-      className={
-        message.role === 'visitor'
-          ? `${styles.visitor} ${assistant.user}`
-          : `${styles.reply} ${assistant.reply}`
-      }
-      aria-label={message.role === 'visitor' ? 'Your request' : 'Medy response'}
-    >
-      {message.kind === 'selection-summary' ||
-      message.kind === 'breakdown' ||
-      message.kind === 'find-options' ? (
-        <>
-          <RevealedText
-            id={message.id ?? -i - 1}
-            text={message.text}
-            ledger={controller.costReveal}
-            enabled={state.destination === 'cost'}
-            onComplete={revealComplete}
-          />
-          {estimate &&
-          !message.historical &&
-          message.roomRevision === room.roomRevision &&
-          message.costRevision === draft.revision ? (
-            <div className={assistant.cards}>
-              {message.kind === 'find-options' ? (
-                <OptionsPrompt
-                  room={room}
-                  disabled={
-                    researchBusy ||
-                    !!state.candidate ||
-                    state.destination !== 'cost'
-                  }
-                  onFind={() => ask(FIND_OPTIONS_MESSAGE)}
-                />
-              ) : (
-                <EstimateReview
-                  estimate={estimate}
-                  room={room}
-                  offers={draft.offers}
-                  materialsOnly={draft.settings.demoScope === 'materials'}
-                  onChooseProducts={chooseProducts}
-                  hasOptions={researchAfter !== null}
-                  download={
-                    state.destination === 'cost' &&
-                    message.kind !== 'selection-summary' ? (
-                      <EstimatePdfControls
-                        controller={controller}
-                        selectedId={null}
-                      />
-                    ) : null
-                  }
-                />
-              )}
-              {message.kind !== 'find-options' && (
-                <ChosenProducts
-                  room={room}
-                  pricing={draft}
-                  estimate={estimate}
-                  onTakeoff={
-                    !saved
-                      ? (key, updates) => {
-                          controller.setSelectedTakeoff(
-                            key,
-                            updates,
-                            currentCost.revision,
-                          );
-                        }
-                      : undefined
-                  }
-                  onQuantity={
-                    !saved
-                      ? (key, quantity) => {
-                          controller.setSelectedQuantity(
-                            key,
-                            quantity,
-                            currentCost.revision,
-                          );
-                        }
-                      : undefined
-                  }
-                />
-              )}
-              {message.kind === 'selection-summary' && (
-                <div className={styles.completionExport}>
-                  <p>
-                    Your products are chosen. Review the breakdown above, then
-                    export your room and selected products as a PDF.
-                  </p>
-                  <EstimatePdfControls
-                    controller={controller}
-                    selectedId={null}
-                    label="Export estimate PDF"
-                  />
-                </div>
-              )}
-              {message.kind === 'breakdown' && currentResult.ok && (
-                <VersionControls
-                  controller={controller}
-                  state={state}
-                  estimate={currentResult.estimate}
-                  selectedId={null}
-                  onView={setViewingId}
-                />
-              )}
-            </div>
-          ) : (
-            <p className={styles.note}>
-              {message.kind === 'breakdown'
-                ? 'Earlier breakdown.'
-                : 'Earlier reply.'}{' '}
-              Your choices have changed since this reply.
-            </p>
-          )}
-        </>
-      ) : message.lineIds &&
-        !message.historical &&
-        estimate &&
-        message.roomRevision === room.roomRevision &&
-        message.costRevision === draft.revision ? (
-        <>
-          <CostLineCards
-            estimate={estimate}
-            lines={estimate.lines.filter((line) =>
-              message.lineIds!.includes(line.id),
-            )}
-            inspect={inspect}
-          />
-          <details>
-            <summary>Full explanation</summary>
-            {message.text}
-          </details>
-        </>
-      ) : message.lineIds ? (
-        <details>
-          <summary>Earlier cost explanation</summary>
-          {message.text}
-        </details>
-      ) : message.role === 'assistant' &&
-        ['Your work plan.', 'Let’s compare your options.'].includes(
-          message.text,
-        ) ? (
-        <span className={styles.srOnly}>{message.text}</span>
-      ) : message.role === 'assistant' && i === draft.messages.length - 1 ? (
+  const renderMessage = (message: CostMessage, i: number) => {
+    const lines =
+      estimate?.lines.filter((line) => message.lineIds?.includes(line.id)) ??
+      [];
+    const prose =
+      message.role === 'assistant' && i === draft.messages.length - 1 ? (
         <RevealedText
           id={message.id ?? -i - 1}
           text={message.text}
@@ -458,13 +332,164 @@ export function CostWorkspace({
           enabled={state.destination === 'cost'}
           onComplete={revealComplete}
         />
-      ) : message.role === 'visitor' ? (
-        <p>{message.text}</p>
       ) : (
-        message.text
-      )}
-    </article>
-  );
+        <p>{message.text}</p>
+      );
+    return (
+      <article
+        key={message.id ?? i}
+        ref={i === draft.messages.length - 1 ? latestReply : undefined}
+        className={
+          message.role === 'visitor'
+            ? `${styles.visitor} ${assistant.user}`
+            : `${styles.reply} ${assistant.reply}`
+        }
+        aria-label={
+          message.role === 'visitor' ? 'Your request' : 'Medy response'
+        }
+      >
+        {message.kind === 'selection-summary' ||
+        message.kind === 'breakdown' ||
+        message.kind === 'find-options' ? (
+          <>
+            <RevealedText
+              id={message.id ?? -i - 1}
+              text={message.text}
+              ledger={controller.costReveal}
+              enabled={state.destination === 'cost'}
+              onComplete={revealComplete}
+            />
+            {estimate &&
+            !message.historical &&
+            message.roomRevision === room.roomRevision &&
+            message.costRevision === draft.revision ? (
+              <div className={assistant.cards}>
+                {message.kind !== 'selection-summary' && (
+                  <p className={styles.note}>
+                    {message.kind === 'find-options'
+                      ? 'Look through the room items below, then use Find options for my room to search for products.'
+                      : 'Review the breakdown below. Select a category tile to jump to its item costs, and expand product details to review quantities and sources.'}
+                  </p>
+                )}
+                {message.kind === 'find-options' ? (
+                  <OptionsPrompt
+                    room={room}
+                    disabled={
+                      researchBusy ||
+                      !!state.candidate ||
+                      state.destination !== 'cost'
+                    }
+                    onFind={() => ask(FIND_OPTIONS_MESSAGE)}
+                  />
+                ) : message.kind !== 'selection-summary' ? (
+                  <EstimateReview
+                    estimate={estimate}
+                    room={room}
+                    offers={draft.offers}
+                    materialsOnly={draft.settings.demoScope === 'materials'}
+                    onChooseProducts={chooseProducts}
+                    hasOptions={researchAfter !== null}
+                    download={
+                      state.destination === 'cost' ? (
+                        <EstimatePdfControls
+                          controller={controller}
+                          selectedId={null}
+                        />
+                      ) : null
+                    }
+                  />
+                ) : null}
+                {message.kind !== 'find-options' && (
+                  <ChosenProducts
+                    room={room}
+                    pricing={draft}
+                    estimate={estimate}
+                    onTakeoff={
+                      !saved
+                        ? (key, updates) => {
+                            controller.setSelectedTakeoff(
+                              key,
+                              updates,
+                              currentCost.revision,
+                            );
+                          }
+                        : undefined
+                    }
+                    onQuantity={
+                      !saved
+                        ? (key, quantity) => {
+                            controller.setSelectedQuantity(
+                              key,
+                              quantity,
+                              currentCost.revision,
+                            );
+                          }
+                        : undefined
+                    }
+                  />
+                )}
+                {message.kind === 'selection-summary' && (
+                  <div className={styles.completionExport}>
+                    <p>Export your room and selected products as a PDF.</p>
+                    <EstimatePdfControls
+                      controller={controller}
+                      selectedId={null}
+                      label="Export estimate PDF"
+                    />
+                  </div>
+                )}
+                {message.kind === 'breakdown' && currentResult.ok && (
+                  <VersionControls
+                    controller={controller}
+                    state={state}
+                    estimate={currentResult.estimate}
+                    selectedId={null}
+                    onView={setViewingId}
+                  />
+                )}
+              </div>
+            ) : (
+              <p className={styles.note}>
+                {message.kind === 'breakdown'
+                  ? 'Earlier breakdown.'
+                  : 'Earlier reply.'}{' '}
+                Your choices have changed since this reply.
+              </p>
+            )}
+          </>
+        ) : message.lineIds &&
+          !message.historical &&
+          estimate &&
+          message.roomRevision === room.roomRevision &&
+          message.costRevision === draft.revision ? (
+          <>
+            {prose}
+            {lines.length > 0 && (
+              <p className={styles.note}>
+                Compare the cost cards below. Open Calculation &amp; assumptions
+                to see how each amount is worked out.
+                {lines.some((line) =>
+                  line.targets.some((target) => targetKey(target) !== null),
+                ) && ' Use See related costs to explore an item.'}
+              </p>
+            )}
+            <CostLineCards
+              estimate={estimate}
+              lines={lines}
+              inspect={inspect}
+            />
+          </>
+        ) : message.lineIds ? (
+          <details>
+            <summary>Earlier cost explanation</summary>
+            {message.text}
+          </details>
+        ) : (
+          prose
+        )}
+      </article>
+    );
+  };
   const researchNode = !saved ? (
     <Research
       key="research-owner"
@@ -516,6 +541,7 @@ export function CostWorkspace({
             </h2>
           </div>
           <div
+            ref={log}
             className={`${styles.transcript} roomedy-scroll`}
             role="log"
             aria-label="Cost conversation"
@@ -596,10 +622,7 @@ export function CostWorkspace({
                               sectionStart.current?.focus({
                                 preventScroll: true,
                               });
-                              sectionStart.current?.scrollIntoView({
-                                block: 'start',
-                                behavior: 'smooth',
-                              });
+                              read(sectionStart.current, true);
                             });
                           }}
                         />
@@ -608,18 +631,20 @@ export function CostWorkspace({
                   )}
                   {!saved && conversation}
                   {!saved && estimate && (
-                    <PlanCards
-                      controller={controller}
-                      state={state}
-                      estimate={estimate}
-                      budget={budget}
-                      work={work}
-                      inspect={inspect}
-                      onPreview={setSelected}
-                      onResolved={() =>
-                        composer.current?.focus({ preventScroll: true })
-                      }
-                    />
+                    <div ref={planReply}>
+                      <PlanCards
+                        controller={controller}
+                        state={state}
+                        estimate={estimate}
+                        budget={budget}
+                        work={work}
+                        inspect={inspect}
+                        onPreview={setSelected}
+                        onResolved={() =>
+                          composer.current?.focus({ preventScroll: true })
+                        }
+                      />
+                    </div>
                   )}
                   <div
                     ref={sectionStart}
@@ -661,11 +686,19 @@ export function CostWorkspace({
                       )}
                   </div>
                   {saved && estimate && (
-                    <ChosenProducts
-                      room={room}
-                      pricing={draft}
-                      estimate={estimate}
-                    />
+                    <div ref={savedReply}>
+                      <p>
+                        This is your saved estimate. Review the selected
+                        products below, expand their details for quantities and
+                        sources, or select a category tile in the breakdown to
+                        jump to its item costs.
+                      </p>
+                      <ChosenProducts
+                        room={room}
+                        pricing={draft}
+                        estimate={estimate}
+                      />
+                    </div>
                   )}
                   {saved && estimate && (
                     <EstimateReview
@@ -695,7 +728,6 @@ export function CostWorkspace({
                   )}
                 </>
               )}
-              <div ref={logEnd} />
             </div>
           </div>
           <div className={styles.chatFooter}>
@@ -724,10 +756,14 @@ export function CostWorkspace({
                 disabled={
                   !!saved || legacy || researchBusy || !!state.candidate
                 }
-                onClick={() => ask(FIND_OPTIONS_MESSAGE)}
+                onClick={() =>
+                  ask(offerAutoChoice ? 'Choose for me.' : FIND_OPTIONS_MESSAGE)
+                }
               >
-                <ChatIcon kind="search" />
-                <span>Find options</span>
+                <ChatIcon kind={offerAutoChoice ? 'start' : 'search'} />
+                <span>
+                  {offerAutoChoice ? 'Choose for me' : 'Find options'}
+                </span>
                 <span className={assistant.choiceArrow} aria-hidden="true">
                   →
                 </span>

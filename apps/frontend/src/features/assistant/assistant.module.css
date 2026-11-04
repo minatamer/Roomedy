@@ -78,6 +78,7 @@
   outline-offset: -3px;
 }
 .messages {
+  overflow-anchor: none;
   min-height: 80px;
   overflow-y: auto;
   overscroll-behavior: contain;

@@ -17,7 +17,6 @@ import {
   chooseProduct,
   productChosen,
   prepareProductChoice,
-  sourceSizeNeedsReview,
 } from './attach-offer';
 import { selectedPriceInputs } from './listed-prices';
 import { productChoices } from './source-card';
@@ -27,6 +26,7 @@ export interface ProductGuide {
   key: string | null;
   reviewedKeys?: string[];
   passId?: number;
+  mode?: 'manual' | 'automatic';
 }
 export type GuideAction = 'start' | 'next' | 'auto' | 'review';
 export function guideIntent(text: string): GuideAction | null {
@@ -161,15 +161,27 @@ export function chooseGuidedProduct(
     !entry.update.answer.ok
   )
     return fail('These options belong to an earlier design or estimate.');
-  if (
-    !controller.costMessage(
-      'visitor',
-      `${productChosen(before.workspace.current, before.cost, entry.target.brief, candidate) ? 'Keep' : 'Choose'} ${candidate.label}.`,
-    )
-  )
-    return fail('The current room is no longer available.');
+  const alreadySelected = productChosen(
+    before.workspace.current,
+    before.cost,
+    entry.target.brief,
+    candidate,
+  );
+  const wasComplete = allProductsChosen(before.workspace.current, before.cost);
   const passId =
-    guide.passId ?? controller.getSnapshot().cost!.messages.at(-1)!.id!;
+    (wasComplete ? before.cost.messages.at(-1)?.id : guide.passId) ??
+    before.cost.messages.at(-1)?.id ??
+    1;
+  if (alreadySelected)
+    return {
+      ok: true as const,
+      revision: before.cost.revision,
+      passId,
+      guide,
+      complete: wasComplete,
+      next: guideView(before.workspace.current, before.cost, entries, guide)
+        .next,
+    };
   const result = chooseProduct(
     controller,
     entry.target.brief,
@@ -189,12 +201,17 @@ export function chooseGuidedProduct(
     { ...guide, passId },
     entry.target.key,
   );
-  if (progress.complete) controller.completeProductChoices(passId);
+  const complete = allProductsChosen(current.workspace!.current, current.cost!);
+  if (complete) controller.completeProductChoices(passId);
   return {
     ok: true as const,
     revision: current.cost!.revision,
     passId,
     ...progress,
+    complete,
+    guide: complete
+      ? { ...progress.guide, stage: 'done' as const, key: null }
+      : progress.guide,
   };
 }
 export function entryIsCurrent(entry: MarketEntry, state: SessionSnapshot) {
@@ -205,7 +222,27 @@ export function entryIsCurrent(entry: MarketEntry, state: SessionSnapshot) {
     entry.costRevision === state.cost?.revision
   );
 }
-function recommendation(
+/** Delegation changes presentation only; restored mode never grants an operation. */
+export function visibleMarketEntries(
+  room: RoomDocument,
+  draft: CostDraft,
+  entries: MarketEntry[],
+  guide: ProductGuide,
+) {
+  const automatic =
+    guide.mode === 'automatic' ||
+    (!guide.mode &&
+      guideIntent(
+        draft.messages.find((message) => message.id === guide.passId)?.text ??
+          '',
+      ) === 'auto');
+  if (!automatic) return entries;
+  const chosen = new Set(
+    currentProductChoices(room, draft).map((choice) => choice.key),
+  );
+  return entries.filter((entry) => !chosen.has(entry.target.key));
+}
+function recommendations(
   entry: MarketEntry,
   room: RoomDocument,
   draft: CostDraft,
@@ -216,59 +253,46 @@ function recommendation(
     entry.target.brief.kind === 'primer' ||
     entry.target.brief.kind === 'service'
   )
-    return null;
+    return [];
   const candidates = productChoices(answer.reply.candidates).filter(
     (candidate) => {
       const offer = candidate.offer,
-        listing = candidate.listing;
+        target = entry.target.brief.target;
       if (offer && offer.kind !== entry.target.brief.kind) return false;
       if (
-        candidate.conditions !== 'standard' ||
-        offer?.availability === 'unavailable' ||
-        offer?.pricing === 'allowance'
-      )
-        return false;
-      if (
         offer?.kind === 'furniture' &&
-        offer.outerSizeMm &&
-        sourceSizeNeedsReview(entry.target.brief, offer)
+        offer.category !== entry.target.brief.category
       )
         return false;
-      const surface = entry.target.brief.target;
+      if (offer?.availability === 'unavailable') return false;
       if (
         offer?.kind === 'paint' &&
-        surface.kind === 'surface' &&
+        target.kind === 'surface' &&
         ((offer.colour !== 'tint-allowance' &&
           offer.colour !== entry.target.brief.colour) ||
-          offer.sheen !== roomSurfaceDetail(room.room, surface.surface).sheen)
+          offer.sheen !== roomSurfaceDetail(room.room, target.surface).sheen)
       )
         return false;
-      const quoted =
-        !!offer &&
-        offer.market.currency === 'USD' &&
-        shoppingCountries(draft.settings.locality.country).includes(
-          offer.market.country,
-        ) &&
-        attachOffer(room, draft, entry.target.brief, candidate).ok;
-      const units =
-        entry.target.brief.kind === 'furniture'
-          ? ['item', 'each']
-          : entry.target.brief.kind === 'floor'
-            ? ['pack', 'm2']
-            : ['can'];
-      const listed =
-        !!listing &&
-        listing.currency === 'USD' &&
-        shoppingCountries(draft.settings.locality.country).includes(
-          listing.country,
-        ) &&
-        units.includes(listing.unit);
-      return quoted || listed;
+      return true;
     },
   );
   const rank = (candidate: SourcingCandidate) => {
     const offer = candidate.offer,
       listing = candidate.listing;
+    const attached = attachOffer(room, draft, entry.target.brief, candidate).ok;
+    const units =
+      entry.target.brief.kind === 'furniture'
+        ? ['item', 'each']
+        : entry.target.brief.kind === 'floor'
+          ? ['pack', 'm2']
+          : ['can'];
+    const listed =
+      !!listing &&
+      listing.currency === 'USD' &&
+      shoppingCountries(draft.settings.locality.country).includes(
+        listing.country,
+      ) &&
+      units.includes(listing.unit);
     const amount =
       listing?.priceMinor ??
       (offer && 'packs' in offer
@@ -280,22 +304,23 @@ function recommendation(
       listing?.volumeMl ??
       (offer && 'packs' in offer ? offer.packs[0]!.volumeMl : 0);
     return [
+      candidate.conditions === 'standard' && (attached || listed) ? 0 : 1,
+      candidate.conditions === 'standard' ? 0 : 1,
       candidate.match === 'custom' ? 0 : candidate.match === 'similar' ? 1 : 2,
-      attachOffer(room, draft, entry.target.brief, candidate).ok ? 0 : 1,
+      attached ? 0 : 1,
       coverage ? amount / coverage : volume ? amount / volume : amount,
     ];
   };
-  return (
-    candidates
-      .map((candidate, index) => ({ candidate, index, rank: rank(candidate) }))
-      .sort(
-        (a, b) =>
-          a.rank[0]! - b.rank[0]! ||
-          a.rank[1]! - b.rank[1]! ||
-          a.rank[2]! - b.rank[2]! ||
-          a.index - b.index,
-      )[0]?.candidate ?? null
-  );
+  return candidates
+    .map((candidate, index) => ({ candidate, index, rank: rank(candidate) }))
+    .sort((a, b) => {
+      for (let i = 0; i < a.rank.length; i++) {
+        const difference = a.rank[i]! - b.rank[i]!;
+        if (difference) return difference;
+      }
+      return a.index - b.index;
+    })
+    .map((item) => item.candidate);
 }
 /** Explicit visitor automation only: stage supported choices, then one guarded commit. */
 export function chooseRemainingProducts(
@@ -334,45 +359,50 @@ export function chooseRemainingProducts(
     );
     if (!entry) continue;
     if (entry.target.brief.kind !== target.brief.kind) continue;
-    const candidate = recommendation({ ...entry, target }, room, staged);
-    if (!candidate || entry.update.kind !== 'answer' || !entry.update.answer.ok)
-      continue;
-    const prepared = prepareProductChoice(
+    if (entry.update.kind !== 'answer' || !entry.update.answer.ok) continue;
+    for (const candidate of recommendations(
+      { ...entry, target },
       room,
       staged,
-      target.brief,
-      candidate,
-      entry.update.answer.simulation,
-      target.matchingWalls,
-    );
-    if (!prepared.ok) continue;
-    const choices = [
-      ...(staged.productChoices ?? []).filter(
-        (choice) => choice.key !== target.key,
-      ),
-      prepared.choice,
-    ];
-    const settings = prepared.settings;
-    settings.selectedPrices = selectedPriceInputs(room, {
-      ...staged,
-      settings,
-      offers: prepared.offers,
-      productChoices: choices,
-    });
-    const cost = validatedCost(room, settings, prepared.offers);
-    if (!cost) continue;
-    staged = {
-      ...staged,
-      settings: cost.settings,
-      offers: cost.offers,
-      productChoices: choices,
-    };
-    selected.push(target.key);
-    inputs.push(prepared.choice);
+    )) {
+      const prepared = prepareProductChoice(
+        room,
+        staged,
+        target.brief,
+        candidate,
+        entry.update.answer.simulation,
+        target.matchingWalls,
+      );
+      if (!prepared.ok) continue;
+      const choices = [
+        ...(staged.productChoices ?? []).filter(
+          (choice) => choice.key !== target.key,
+        ),
+        prepared.choice,
+      ];
+      const settings = prepared.settings;
+      settings.selectedPrices = selectedPriceInputs(room, {
+        ...staged,
+        settings,
+        offers: prepared.offers,
+        productChoices: choices,
+      });
+      const cost = validatedCost(room, settings, prepared.offers);
+      if (!cost) continue;
+      staged = {
+        ...staged,
+        settings: cost.settings,
+        offers: cost.offers,
+        productChoices: choices,
+      };
+      selected.push(target.key);
+      inputs.push(prepared.choice);
+      break;
+    }
   }
   if (!selected.length)
     return fail(
-      'I couldn’t find a supported priced choice for the remaining items. Let’s review them together.',
+      'No usable product options are available for the remaining items yet.',
     );
   if (
     !controller.chooseCostProducts(

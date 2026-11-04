@@ -1201,7 +1201,9 @@ export class SessionController {
       );
     return this.appendCostMessage(
       'assistant',
-      `${completed ? 'You’ve chosen a product for every item. ' : ''}Here’s your cost breakdown: ${money(estimate.knownTotalMinor, 'USD')} ${estimate.complete ? 'planning total' : 'known subtotal'}.${estimate.unpricedCount ? ' Choose products for the items that still need a price.' : ''}${estimate.lines.some((line) => line.pricing === 'listed') ? ' Listed prices are included provisionally; review quantities, coverage and fit before exporting.' : ''} Open an item for its quantities and sources.`,
+      completed
+        ? `All ${currentProductChoices(this.state.workspace.current, this.state.cost).length} products are selected. Known subtotal: ${money(estimate.knownTotalMinor, 'USD')}. Review your choices below, or export your room.`
+        : `Here’s your cost breakdown: ${money(estimate.knownTotalMinor, 'USD')} ${estimate.complete ? 'planning total' : 'known subtotal'}.${estimate.unpricedCount ? ' Choose products for the items that still need a price.' : ''}${estimate.lines.some((line) => line.pricing === 'listed') ? ' Listed prices are included provisionally; review quantities, coverage and fit before exporting.' : ''} Open an item for its quantities and sources.`,
       undefined,
       completed ? 'selection-summary' : 'breakdown',
     );

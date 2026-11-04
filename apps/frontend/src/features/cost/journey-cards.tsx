@@ -122,8 +122,10 @@ export function JourneyCards({
       </h3>
       <p>
         {section === 'furniture'
-          ? 'Keep the pieces you have, or compare similar products for anything you’re buying.'
-          : 'Keep the existing finish, or include the one in your design.'}
+          ? 'Review the piece cards below. Choose what to keep, or use Find options on a piece you want to buy.'
+          : section === 'floor'
+            ? 'Review the floor card below. Choose whether to keep the existing floor or include the finish in your design, then use Find flooring to compare products.'
+            : 'Review the wall card below. Choose whether to keep the existing finish or include the one in your design, then use Find paint options to compare products.'}
       </p>
       <div className={styles.journeyGrid}>
         {section === 'furniture' ? (

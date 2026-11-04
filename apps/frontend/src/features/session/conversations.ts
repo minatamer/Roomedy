@@ -299,6 +299,7 @@ export function restoredCostUI(
       ...(saved.guide.passId !== undefined
         ? { passId: saved.guide.passId }
         : {}),
+      ...(saved.guide.mode ? { mode: saved.guide.mode } : {}),
     },
   };
 }

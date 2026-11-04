@@ -19,6 +19,8 @@ import { guidanceChoices, guidanceMessage } from './guidance';
 import type { GuidanceChoice } from './guidance';
 import type { DesignSuggestion } from '@roomedy/contracts/assistant';
 import { RevealedText } from './revealed-text';
+import { useChatReading } from './chat-reading';
+import { designVisualGuidance } from './visual-guidance';
 import styles from './assistant.module.css';
 
 export function Assistant({
@@ -35,27 +37,33 @@ export function Assistant({
       controller.getSnapshot,
       controller.getSnapshot,
     ),
-    end = useRef<HTMLDivElement>(null),
-    proposalActions = useRef<HTMLDivElement>(null),
+    log = useRef<HTMLDivElement>(null),
+    latestArticle = useRef<HTMLElement>(null),
     composer = useRef<HTMLTextAreaElement>(null);
   const [revealedId, setRevealedId] = useState<number | null>(null);
   const session = controller.session,
     room = roomState.workspace!.current,
     preview = roomState.candidate;
-  useEffect(() => {
-    if (state.messages.length > 0)
-      end.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [state.messages.length, state.busy]);
+  const read = useChatReading(log);
+  const latest = state.messages.at(-1),
+    latestId = latest?.id,
+    latestOperation = latest?.operationId;
+  const requestKey = `${roomState.workspace!.workspaceId}:${roomState.generation}:${state.messages.findLast((message) => message.role === 'user')?.id ?? ''}`;
   const previewOperation =
     preview?.source === 'assistant' ? preview.identity.operationId : null;
   useEffect(() => {
-    if (!previewOperation) return;
-    const target = proposalActions.current;
-    target
-      ?.querySelector<HTMLButtonElement>('button')
-      ?.focus({ preventScroll: true });
-    target?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [previewOperation, state.messages.length]);
+    if (tourActive || latestId === undefined) return;
+    const following = read(latestArticle.current, false, requestKey);
+    if (following && previewOperation && latestOperation === previewOperation)
+      latestArticle.current?.focus({ preventScroll: true });
+  }, [
+    read,
+    tourActive,
+    latestId,
+    latestOperation,
+    previewOperation,
+    requestKey,
+  ]);
   const focusComposer = () =>
     requestAnimationFrame(() =>
       composer.current?.focus({ preventScroll: true }),
@@ -66,8 +74,7 @@ export function Assistant({
     focusProperties(session, id === room.roomId ? undefined : id);
   };
   const submit = () => void controller.submit();
-  const latest = state.messages.at(-1),
-    replyId = latest ? (latest.role === 'assistant' ? latest.id : null) : 0,
+  const replyId = latest ? (latest.role === 'assistant' ? latest.id : null) : 0,
     guidance = latest?.guidance?.step ?? (!latest ? 'welcome' : null),
     staleGuidance =
       !!latest?.guidance && latest.guidance.roomRevision !== room.roomRevision,
@@ -130,6 +137,7 @@ export function Assistant({
         </p>
       )}
       <div
+        ref={log}
         className={styles.messages}
         role="log"
         tabIndex={0}
@@ -154,12 +162,32 @@ export function Assistant({
               preview?.source === 'assistant' &&
               preview.identity.operationId === message.operationId;
           const shown = active ? preview.room : room;
-          const visualReply =
-            reply?.kind === 'proposal' ||
-            (reply?.kind === 'explanation' &&
-              (!!reply.objectIds.length ||
-                !!reply.catalogueIds.length ||
-                !!reply.checks.issues.length));
+          const objectIds =
+            reply?.objectIds.filter(
+              (id) =>
+                id === room.roomId ||
+                shown.furniture.some((p) => p.id === id) ||
+                shown.room.features.some((f) => f.id === id),
+            ) ?? [];
+          const catalogueIds =
+            reply?.catalogueIds.filter(
+              (id) => !!findCatalogueEntry(id, VERSIONS.catalogue),
+            ) ?? [];
+          const visualGuide = designVisualGuidance({
+            preview: active && reply?.kind === 'proposal',
+            objects: objectIds.length,
+            catalogue: catalogueIds.length,
+            issues:
+              (reply?.blockedIssue &&
+              reply.blockedIssue.severity !== 'unassessed'
+                ? 1
+                : 0) +
+              (reply?.kind === 'explanation' && message.operationId !== null
+                ? reply.checks.issues.filter(
+                    (issue) => issue.severity !== 'unassessed',
+                  ).length
+                : 0),
+          });
           const prose =
             message.role === 'assistant' &&
             state.messages.at(-1)?.id === message.id ? (
@@ -176,30 +204,28 @@ export function Assistant({
           return (
             <article
               key={message.id}
+              ref={
+                message.id === state.messages.at(-1)?.id
+                  ? latestArticle
+                  : undefined
+              }
+              tabIndex={message.role === 'assistant' ? -1 : undefined}
               className={message.role === 'user' ? styles.user : styles.reply}
               aria-label={
                 message.role === 'user' ? 'Your request' : 'Medy response'
               }
             >
-              {visualReply ? (
-                <details className={styles.responseNotes}>
-                  <summary>
-                    {active ? 'Why this change?' : 'Medy’s notes'}
-                  </summary>
-                  {prose}
-                </details>
-              ) : (
-                prose
-              )}
+              {prose}
+              {visualGuide && <p className={styles.note}>{visualGuide}</p>}
               {reply?.kind === 'proposal' && active && (
                 <p className={styles.note}>Preview</p>
               )}
               {active && (
                 <SurfacePreview current={room} proposed={preview.room} />
               )}
-              {!!reply?.objectIds.length && (
+              {!!objectIds.length && (
                 <div className={styles.cards}>
-                  {reply.objectIds.map((id) => {
+                  {objectIds.map((id) => {
                     const piece = shown.furniture.find((p) => p.id === id),
                       before = room.furniture.find((p) => p.id === id),
                       feature = shown.room.features.find((f) => f.id === id);
@@ -285,9 +311,9 @@ export function Assistant({
                   })}
                 </div>
               )}
-              {!!reply?.catalogueIds.length && (
+              {!!catalogueIds.length && (
                 <div className={styles.cards}>
-                  {reply.catalogueIds.map((id) => {
+                  {catalogueIds.map((id) => {
                     const item = findCatalogueEntry(id, VERSIONS.catalogue);
                     if (!item) return null;
                     return (
@@ -409,7 +435,6 @@ export function Assistant({
                     />
                   </details>
                   <div
-                    ref={proposalActions}
                     className={styles.proposalActions}
                     data-room-target="preview"
                     role="group"
@@ -441,7 +466,6 @@ export function Assistant({
           );
         })}
         {state.busy && <ThinkingStatus />}
-        <div ref={end} />
       </div>
       <form
         className={styles.composer}

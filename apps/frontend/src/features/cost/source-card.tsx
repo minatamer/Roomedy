@@ -1,7 +1,6 @@
 import type { SourcingReply } from '@roomedy/contracts/sourcing';
-import { safeProductImage } from '@roomedy/contracts/sourcing';
-import Image from 'next/image';
-import { useState } from 'react';
+import { ProductVisual } from './product-visual';
+import type { ProductReference } from './product-visual';
 import { money } from './state';
 import { ExternalLink } from './external-link';
 import styles from './workspace.module.css';
@@ -24,39 +23,13 @@ export function productChoices(candidates: SourcingReply['candidates']) {
     );
 }
 
-function ProductMedia({
-  candidate,
-  simulation,
-}: {
-  candidate: SourcingReply['candidates'][number];
-  simulation: boolean;
-}) {
-  const [failed, setFailed] = useState(false);
-  const src = safeProductImage(candidate.imageUrl);
-  if (!src || failed) return null;
-  return (
-    <ExternalLink url={candidate.url} className={styles.productImage}>
-      <Image
-        src={src}
-        alt={`${candidate.label} · ${simulation ? 'illustrative product photo' : 'source product photo'}`}
-        unoptimized
-        width={640}
-        height={440}
-        loading="lazy"
-        decoding="async"
-        referrerPolicy="no-referrer"
-        onError={() => setFailed(true)}
-      />
-    </ExternalLink>
-  );
-}
 export function SourceCard({
   candidate,
   simulation,
   matchingWalls = false,
   chooseLabel,
   selected,
-  confirmSelection = false,
+  reference,
   disabled,
   needsSizeReview = false,
   onSelect,
@@ -67,7 +40,7 @@ export function SourceCard({
   matchingWalls?: boolean;
   chooseLabel?: string;
   selected: boolean;
-  confirmSelection?: boolean;
+  reference?: ProductReference;
   disabled: boolean;
   needsSizeReview?: boolean;
   onSelect: () => void;
@@ -75,10 +48,13 @@ export function SourceCard({
 }) {
   return (
     <article aria-label={candidate.label} className={styles.sourceCard}>
-      <ProductMedia
-        key={candidate.imageUrl ?? 'none'}
-        candidate={candidate}
+      <ProductVisual
+        key={candidate.imageUrl ?? candidate.url}
+        imageUrl={candidate.imageUrl}
+        url={candidate.url}
+        label={candidate.label}
         simulation={simulation}
+        reference={reference}
       />
       <div className={styles.productBody}>
         <p className={styles.productStore}>
@@ -158,13 +134,14 @@ export function SourceCard({
         <div className={styles.actions}>
           <button
             className={styles.primary}
-            disabled={disabled || (selected && !confirmSelection)}
-            onClick={onSelect}
+            aria-pressed={selected}
+            disabled={disabled || selected}
+            onClick={() => {
+              if (!selected) onSelect();
+            }}
           >
             {selected
-              ? confirmSelection
-                ? 'Keep this product'
-                : '✓ Selected product'
+              ? '✓ Selected'
               : chooseLabel
                 ? chooseLabel
                 : matchingWalls

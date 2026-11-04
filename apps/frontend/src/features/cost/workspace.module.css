@@ -1816,6 +1816,120 @@
   line-height: 1.4;
   white-space: normal;
 }
+.page .productBody > .actions > .primary[aria-pressed='true'] {
+  background: #e0d1bb;
+  color: #513b29;
+  border-color: #a88a67;
+  box-shadow: inset 0 2px 4px #513b2926;
+  opacity: 1;
+  cursor: default;
+}
+.productReference {
+  width: 100%;
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+}
+.productReference > span {
+  width: 100%;
+  min-height: 180px;
+}
+.productReference img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+}
+.productReference > svg {
+  width: 64px;
+  height: 64px;
+  color: #604c38;
+}
+.productReference[data-texture='planks'],
+.productReference[data-texture='wood'],
+.productReference[data-texture='herringbone'] {
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 30px, #49382733 31px 32px),
+    repeating-linear-gradient(90deg, transparent 0 100px, #49382722 101px 102px);
+}
+.productReference[data-texture='tile'],
+.productReference[data-texture='checker'] {
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 44px, #fff8 45px 47px),
+    repeating-linear-gradient(90deg, transparent 0 44px, #fff8 45px 47px);
+}
+.productReference[data-texture='stripes'],
+.productReference[data-texture='linen'] {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 5px,
+    #49382722 6px 7px
+  );
+}
+.productReference[data-texture='carpet'],
+.productReference[data-texture='concrete'],
+.productReference[data-texture='plaster'] {
+  background-image: radial-gradient(#49382733 0.6px, transparent 0.8px);
+  background-size: 4px 4px;
+}
+.referenceCaption {
+  display: block;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+.page .productImage.referenceImage {
+  aspect-ratio: auto;
+}
+.selectedCard > .productImage {
+  aspect-ratio: 4 / 3;
+  max-height: 220px;
+}
+.selectedCard .productReference,
+.selectedCard .productReference > span {
+  min-height: 132px;
+}
+.selectedCard .productReference img {
+  height: 132px;
+}
+.chosenProducts > .selectedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 18px;
+  padding: 0;
+  list-style: none;
+}
+.chosenProducts .selectedCard {
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--surface-border);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.chosenProducts .selectedCard + .selectedCard {
+  margin: 0;
+  padding: 14px;
+}
+.selectedBody {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+.selectedBody > a {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.selectedDetails > summary {
+  min-height: 44px;
+  align-content: center;
+  font-size: 13px;
+  cursor: pointer;
+}
 .sourceEvidence > summary {
   min-height: 44px;
   align-content: center;
