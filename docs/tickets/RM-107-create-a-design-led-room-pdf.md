@@ -1,0 +1,10 @@
+# RM-107 — create a professional design-led room PDF
+
+4 November 2026. Complete locally. Direct owner requests researched document sections, a centred large logo/tagline cover, contents on page two, large varied3D images, the editor's actual2D artwork, useful finish/furniture details, then costs/products/quantities/sources; execute→read-only validate→confirm/fix→revalidate until no actionable findings, then restart for owner testing. [Research](../references/professional-room-pdf.md), [allocation](../commit-plans/RM-107.md), [receipt](../validation/RM-107.md).
+
+- [x] Cover is Roomedy branding and Your room, made real., with no cost-first hero; page two has accurate clickable contents/ranges.
+- [x] Design comes before costs: large full-width overview and distinct interior angles, actual editor floor-plan artwork, conditional ceiling plan, finish palette and a furniture detail. No oversized empty photo frames, repeated identical fallback views or invented products/measurements.
+- [x] Both Estimate and project PDF paths use the shared design section; design-only export uses that same presentation. Saved layout, furniture, colours/materials, mounted heights and source/financial/quantity/photo/link truth remain exact.
+- [x] Reuse finite renderer/assets, current camera/display helpers and actual read-only PlanView; bound new shots, SVG/pixels/pages/bytes. Preserve cancellation/reset/expiry/resources and strict GLB/OBJ. No provider/model/env/dependency/cloud/push/deploy or owner-session change.
+- [x] Meaningful section/contents/finance/bounds/camera regressions, canonical settled gates/both builds, native offline all-mode/download/design-only checks and every-page rendering review pass. Record validation findings/dispositions; latest pass has no actionable finding. Remove QA routes and preserve prior work/history unstaged/uncommitted.
+- [x] Restart the documented app stack only after validation, verify owned old processes absent and new normal-config readiness; leave app ready for owner testing.

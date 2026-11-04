@@ -52,7 +52,8 @@ function version(long = false) {
 async function read(bytes: Uint8Array) {
   const pdf = await lib.PDFDocument.load(bytes),
     pages: string[] = [],
-    links: string[] = [];
+    links: string[] = [],
+    destinations: number[] = [];
   for (const page of pdf.getPages()) {
     const streams = page.node.Contents();
     let body = '';
@@ -74,15 +75,66 @@ async function read(bytes: Uint8Array) {
       for (let i = 0; i < annotations.size(); i++) {
         const annotation = annotations.lookup(i, lib.PDFDict),
           action = annotation.lookup(lib.PDFName.of('A'), lib.PDFDict);
+        if (action.get(lib.PDFName.of('S'))?.toString() === '/GoTo') {
+          const target = action
+            .lookup(lib.PDFName.of('D'), lib.PDFArray)
+            .get(0)!
+            .toString();
+          const index = pdf
+            .getPages()
+            .findIndex((p) => p.ref.toString() === target);
+          expect(index).toBeGreaterThanOrEqual(2);
+          destinations.push(index + 1);
+          continue;
+        }
         expect(action.get(lib.PDFName.of('S'))?.toString()).toBe('/URI');
         links.push(
           action.lookup(lib.PDFName.of('URI'), lib.PDFString).decodeText(),
         );
       }
   }
-  return { pdf, pages, text: pages.join('\n'), links };
+  return { pdf, pages, text: pages.join('\n'), links, destinations };
 }
 describe('actual selectable itemized estimate PDF', () => {
+  it('places the design before costs and binds contents to actual chapter pages after pagination', async () => {
+    const saved = version(true),
+      before = JSON.stringify(saved),
+      output = await read(await estimatePdf(saved, pictures));
+    expect(output.pages[0]).toContain('Your room, made real.');
+    expect(output.pages[0]).not.toContain('USD');
+    expect(output.pages[1]).toContain('Contents');
+    expect(output.pages[2]).toContain('The room, reimagined');
+    expect(output.pages[3]).toContain('A different perspective');
+    expect(output.pages[4]).toContain('Your floor plan');
+    expect(output.pages[5]).toContain('Finishes & furniture');
+    const cost = output.pages.findIndex(
+      (p, i) => i > 1 && p.includes('Cost summary'),
+    );
+    expect(cost).toBeGreaterThanOrEqual(6);
+    expect(output.destinations).toContain(cost + 1);
+    expect(output.destinations[0]).toBe(3);
+    expect(new Set(output.destinations).size).toBe(output.destinations.length);
+    expect(
+      output.destinations.every(
+        (page) => page >= 3 && page <= output.pages.length,
+      ),
+    ).toBe(true);
+    expect(JSON.stringify(saved)).toBe(before);
+  });
+  it('rejects excessive design-view work before rendering and preserves existing page limits', async () => {
+    await expect(
+      estimatePdf(version(), {
+        ...pictures,
+        views: Array.from({ length: 4 }, () => ({
+          image: jpeg,
+          label: 'extra',
+        })),
+      }),
+    ).rejects.toMatchObject({ code: 'too-large' });
+    await expect(
+      estimatePdf(version(), pictures, { pages: 5 }),
+    ).rejects.toMatchObject({ code: 'too-large' });
+  });
   it('keeps an unpriced selected link as a reference without claiming a quote or listing rate', async () => {
     const c = new SessionController(createManualRoom('partial'));
     try {
@@ -190,7 +242,7 @@ describe('actual selectable itemized estimate PDF', () => {
         expect(output.text).toContain('HOW THE TOTAL IS BUILT');
         expect(output.text).toContain('BEFORE YOU ORDER');
         expect(output.text).not.toContain('Your shopping plan');
-        expect(output.pdf.getPageCount()).toBe(6);
+        expect(output.pdf.getPageCount()).toBe(10);
         const productPages = output.pages.filter((page) =>
           page.includes('Item / selected scope'),
         );
@@ -199,9 +251,9 @@ describe('actual selectable itemized estimate PDF', () => {
           expect(productPages[0]!.replace(/\s+/g, '')).toContain(
             choice.label.replace(/\s+/g, ''),
           );
-        const quantityPages = output.pages.filter((page) =>
-          page.includes('Quantity details'),
-        );
+        const quantityPages = output.pages
+          .slice(2)
+          .filter((page) => page.includes('Quantity details'));
         expect(quantityPages).toHaveLength(1);
         const quantityPage = quantityPages[0]!;
         expect(quantityPage).toContain('ROOM FLOOR');
@@ -212,9 +264,9 @@ describe('actual selectable itemized estimate PDF', () => {
         expect(quantityPage).not.toContain('Price & source');
         expect(quantityPage).not.toContain('Review notes');
         expect(quantityPage).not.toContain('Selected product - price included');
-        const sourcePages = output.pages.filter((page) =>
-          page.includes('Products, rates & source evidence'),
-        );
+        const sourcePages = output.pages
+          .slice(2)
+          .filter((page) => page.includes('Products, rates & source evidence'));
         expect(sourcePages).toHaveLength(1);
         expect(sourcePages[0]).toContain('PRICE BASIS');
         expect(sourcePages[0]).toContain(simulation ? 'Example' : 'Listed');
@@ -367,7 +419,8 @@ describe('actual selectable itemized estimate PDF', () => {
             }).length ?? 0)
           );
         }, 0);
-      expect(images(output)).toBe(3);
+      const baseline = images(await read(await estimatePdf(saved, pictures)));
+      expect(images(output)).toBe(baseline + 1);
       expect(output.text).toContain('Selected product photo');
       expect(output.text).toContain('Quantity details');
       const wrong = await read(
@@ -378,7 +431,7 @@ describe('actual selectable itemized estimate PDF', () => {
           ],
         }),
       );
-      expect(images(wrong)).toBe(2);
+      expect(images(wrong)).toBe(baseline);
       expect(wrong.text).toContain('unavailable');
       expect(wrong.links).toContain(candidate.url);
       const corrupt = await read(
@@ -387,7 +440,7 @@ describe('actual selectable itemized estimate PDF', () => {
           products: [{ ...photo, jpeg: new Uint8Array([1, 2, 3]) }],
         }),
       );
-      expect(images(corrupt)).toBe(2);
+      expect(images(corrupt)).toBe(baseline);
       expect(corrupt.links).toContain(candidate.url);
       expect(output.text).toContain('Your selected products');
       expect(output.text).toContain('Chosen pending bed');

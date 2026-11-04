@@ -39,29 +39,19 @@ async function prepare(kind: DesignExportKind, port: ExportPort) {
     port.check();
     return new Blob([Uint8Array.from(bytes)], { type: 'application/pdf' });
   }
-  const { captureRoomPictures } = await import('../design-export/capture');
+  const [{ captureEstimatePictures }, { designPortfolioPdf }] =
+    await Promise.all([
+      import('../cost/estimate-pdf-capture'),
+      import('../design-export/document'),
+    ]);
+  const pictures = await captureEstimatePictures(port);
   port.check();
-  const captures = await captureRoomPictures(
+  const bytes = await designPortfolioPdf(
     port.project.current,
-    port.signal,
+    pictures,
     port.check,
-    port.progress,
   );
-  try {
-    port.check();
-    const { createPortfolioPages } = await import('../design-export/portfolio');
-    const pages = await createPortfolioPages(port.project, captures.pictures, {
-      check: port.check,
-      progress: port.progress,
-      simpleShapes: captures.simplified,
-    });
-    const { portfolioPdf } = await import('../design-export/pdf');
-    port.progress('Preparing your portfolio…');
-    const bytes = await portfolioPdf(pages, port.check);
-    return new Blob([Uint8Array.from(bytes)], { type: 'application/pdf' });
-  } finally {
-    captures.dispose();
-  }
+  return new Blob([Uint8Array.from(bytes)], { type: 'application/pdf' });
 }
 export function ExportDialog({
   controller,

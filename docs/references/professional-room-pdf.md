@@ -1,0 +1,11 @@
+# Professional Roomedy PDF structure
+
+4 November 2026. Owner-selected RM-107 research and editorial decisions. This structure is a Roomedy design decision, not a claim of a mandatory professional standard.
+
+[Houzz Pro's client-presentation guidance](https://pro.houzz.com/pro-learn/blog/startup-guide-interior-design-presentation-ideas-tips) treats the design narrative, room arrangement, floor plans, materials and visualisations as complementary ways to explain a proposed space. Its [visualisation workflow](https://pro.houzz.com/pro-learn/blog/how-interior-designers-use-houzz-pro-visualization) connects2D/3D plans, walkthrough views, finishes and selection boards. These primary product/practice sources support a visual design package before detailed purchasing records; they do not prescribe our exact page order.
+
+Selected contents: a centred branded cover; accurate clickable contents; room in3D (full overview plus two distinct interior/cutaway angles); detailed floor plan from the actual editor; ceiling plan only when fixtures exist; furniture detail with saved floor/wall/material palette; cost summary; selected products; quantities/calculations; source evidence; existing scoped work plan where applicable. Final contents numbers/ranges derive from actual generated pages, including long financial continuations.
+
+Use the room itself as the main image, removing oversized cream photo frames and avoidable margins inside captures. Large interior images can share one page; plans retain enough area for actual material patterns, bedding, orientation and labels. A centred typographic cover has deliberate breathing space. Palette colours and descriptions come from saved room facts, never new model output, marketplace images or sampled invented finishes. Generic design geometry and exact chosen store products remain distinct in the existing financial/source evidence.
+
+Reuse one finite renderer for at most four document views, display-only camera/navigation sizes, the actual read-only PlanView for floor/ceiling snapshots and the existing immutable export job. Keep one practical size/fit review in the purchasing section rather than repeated measurement-status warnings. No new network/provider research is part of export; cached selected images remain optional and bound to their exact source identities.

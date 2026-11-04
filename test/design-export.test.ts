@@ -37,17 +37,19 @@ import {
   readProject,
 } from '../apps/frontend/src/features/session/project.js';
 import {
-  portfolioFacts,
-  measurement,
-} from '../apps/frontend/src/features/design-export/facts.js';
-import {
   buildDesignScene,
   prepareGlbTextures,
 } from '../apps/frontend/src/features/design-export/scene.js';
 import { objFiles } from '../apps/frontend/src/features/design-export/obj.js';
-import { portfolioPdf } from '../apps/frontend/src/features/design-export/pdf.js';
+import { designPortfolioPdf } from '../apps/frontend/src/features/design-export/document.js';
 import { coverCrop } from '../apps/frontend/src/features/design-export/capture.js';
+import { displayFurnitureSize } from '../apps/frontend/src/features/catalogue/display-size.js';
 import { wallBoxes } from '../apps/frontend/src/features/room-view/adapter.js';
+import { documentNavigationRoom } from '../apps/frontend/src/features/design-export/document-views.js';
+import {
+  cameraViewPose,
+  cameraPositionAllowed,
+} from '../apps/frontend/src/features/room-view/camera.js';
 const project = (count = 1) => {
   const c = new SessionController(
     commandRoom(
@@ -125,47 +127,80 @@ describe('editable projects and bounded portfolio facts', () => {
       c.dispose();
     }
   });
-  it.each([
-    [0, 3],
-    [1, 4],
-    [16, 4],
-    [17, 5],
-    [32, 5],
-    [40, 6],
-  ] as const)(
-    'paginates %s furniture into %s useful pages without fillers',
-    (count, pages) => {
-      const p = project(count),
-        before = JSON.stringify(p),
-        facts = portfolioFacts(p);
-      expect(facts.pages).toBe(pages);
-      expect(facts.inventory.flat().length).toBe(count);
-      expect(facts.inventory.every((part) => part.length <= 16)).toBe(true);
-      expect(JSON.stringify(p)).toBe(before);
-    },
-  );
-  it('retains Unicode labels, exact half-mm movement and estimated/unknown measurements', () => {
-    const p = project();
-    p.current.furniture[0]!.label = 'Desk — مكتب 🌿';
-    p.current.furniture[0]!.pose.centerX += 0.5;
-    p.current.room.width = {
-      value: 10000,
-      status: 'estimated',
-      sourceId: 'visitor-estimate',
-    };
-    p.current.room.height = unknown();
-    p.current.furniture[0]!.dimensions.depth = unknown();
-    const facts = portfolioFacts(p);
-    expect(facts.moved).toBe(1);
-    expect(facts.inventory[0]![0]!.label).toBe('Desk — مكتب 🌿');
-    expect(facts.missingSize).toBe(1);
-    expect(facts.uncertain).toBe(true);
-    expect(facts.area).toMatch(/^~/);
-    expect(measurement(p.current.room.height)).toBe('Not recorded');
-    expect(measurement(known(1201))).toBe('1.201 m');
-  });
 });
 describe('canonical3D export projection', () => {
+  it('uses nominal camera obstacles for unmeasured furniture without changing saved measurement/pose facts', () => {
+    const room = commandRoom([piece('desk', 2500, 2500)], [door()]);
+    room.room.width = unknown();
+    room.room.depth = unknown();
+    room.furniture[0]!.dimensions.depth = unknown();
+    const before = JSON.stringify(room),
+      visual = documentNavigationRoom(room);
+    expect(visual.furniture[0]!.dimensions.depth.value).toBeGreaterThan(0);
+    expect(visual.furniture[0]!.pose).toEqual(room.furniture[0]!.pose);
+    const doorway = cameraViewPose(visual, 'doorway'),
+      corner = cameraViewPose(visual, 'corner');
+    expect(doorway).not.toBeNull();
+    expect(corner).not.toBeNull();
+    expect(doorway!.position).not.toEqual(corner!.position);
+    expect(cameraPositionAllowed(visual, doorway!.position)).toBe(true);
+    expect(cameraPositionAllowed(visual, corner!.position)).toBe(true);
+    expect(cameraPositionAllowed(visual, [2.5, 1.6, 2.5])).toBe(false);
+    expect(JSON.stringify(room)).toBe(before);
+  });
+  it.each([
+    ['procedural-desk', 0],
+    ['mirror-wall', 900],
+    ['ceiling-pendant', 2100],
+  ] as const)(
+    'renders unmeasured %s in PDF pictures without changing strict model exports or measured facts',
+    (catalogueId, bottomY) => {
+      const item = piece('photo-piece', 2600.5, 1900.5, {
+        catalogueId,
+        quarterTurns: 1,
+      });
+      item.dimensions = {
+        width: unknown(),
+        depth: unknown(),
+        height: unknown(),
+      };
+      item.pose.bottomY = bottomY;
+      // A supplied axis must win over the nominal size for that same axis.
+      item.dimensions.width = known(1201);
+      const room = commandRoom([item]),
+        before = JSON.stringify(room),
+        strict = buildDesignScene(room),
+        picture = buildDesignScene(room, new Map(), {}, true);
+      try {
+        const fallback = strict.root.children.find(
+            (n) => n.userData.roomedy?.id === item.id,
+          )!,
+          rendered = picture.root.children.find(
+            (n) => n.userData.roomedy?.id === item.id,
+          )!,
+          size = new Box3().setFromObject(rendered).getSize(new Vector3()),
+          shown = displayFurnitureSize(item)!;
+        expect(fallback.children[0]!.name).toBe('Size not recorded');
+        expect(rendered.children.length).toBeGreaterThan(0);
+        expect(
+          rendered.children.some((n) => n.name === 'Size not recorded'),
+        ).toBe(false);
+        expect(size.x).toBeCloseTo(shown.depth / 1000, 4);
+        expect(size.z).toBeCloseTo(1.201, 4);
+        expect(rendered.position.toArray()).toEqual([
+          2.6005,
+          bottomY / 1000,
+          1.9005,
+        ]);
+        expect(rendered.rotation.y).toBe(-Math.PI / 2);
+        expect(rendered.userData.roomedy.dimensions.depth.value).toBeNull();
+        expect(JSON.stringify(room)).toBe(before);
+      } finally {
+        strict.dispose();
+        picture.dispose();
+      }
+    },
+  );
   it.each([0, 1, 2, 3] as const)(
     'keeps true odd dimensions, physical half-mm centre and quarter-turn%s',
     (turn) => {
@@ -444,32 +479,52 @@ const jpeg = Uint8Array.from(
     'base64',
   ),
 );
-describe('generated portfolio PDF', () => {
-  it('writes a real multipage landscape PDF containing only generated page images', async () => {
-    const bytes = await portfolioPdf([jpeg, jpeg, jpeg]),
+describe('shared professional design-only PDF', () => {
+  it('generates a bounded portrait design document without changing editable facts', async () => {
+    const room = project().current,
+      before = JSON.stringify(room);
+    room.furniture[0]!.label = 'Desk — مكتب 🌿';
+    const marked = JSON.stringify(room);
+    const bytes = await designPortfolioPdf(
+        room,
+        { overview: jpeg, plan: jpeg },
+        () => {},
+      ),
       text = Buffer.from(bytes).toString('latin1');
     expect(text.startsWith('%PDF-')).toBe(true);
-    expect(text.match(/\/Type \/Page\b/g)).toHaveLength(3);
-    expect(text.match(/\/Subtype \/Image/g)).toHaveLength(3);
-    expect(text).toContain('/MediaBox [ 0 0 841.89 595.28 ]');
-    expect(text).toContain('xref');
+    expect(text.match(/\/Type \/Page\b/g)).toHaveLength(6);
+    expect(text).toContain('/MediaBox [ 0 0 595.28 841.89 ]');
     expect(text).not.toContain('/JavaScript');
     expect(text).not.toContain('/EmbeddedFiles');
+    expect(JSON.stringify(room)).toBe(marked);
+    expect(marked).not.toBe(before);
   });
-  it('rejects empty or excessive page work before image parsing', async () => {
-    await expect(portfolioPdf([])).rejects.toMatchObject({ code: 'too-large' });
+  it('rejects excessive view work instead of accepting unbounded design pages', async () => {
     await expect(
-      portfolioPdf(
-        Array.from({ length: POLICY.designExportPages + 1 }, () => jpeg),
+      designPortfolioPdf(
+        project().current,
+        {
+          overview: jpeg,
+          plan: jpeg,
+          views: Array.from({ length: 4 }, () => ({
+            image: jpeg,
+            label: 'extra',
+          })),
+        },
+        () => {},
       ),
     ).rejects.toMatchObject({ code: 'too-large' });
   });
-  it('fences cancellation before or between generated pages', async () => {
+  it('fences cancellation between document pages', async () => {
     let calls = 0;
     await expect(
-      portfolioPdf([jpeg, jpeg], () => {
-        if (++calls === 2) throw new Error('cancel');
-      }),
+      designPortfolioPdf(
+        project().current,
+        { overview: jpeg, plan: jpeg },
+        () => {
+          if (++calls === 2) throw new Error('cancel');
+        },
+      ),
     ).rejects.toThrow('cancel');
     expect(calls).toBe(2);
   });

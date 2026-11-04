@@ -19,9 +19,13 @@ import { readableEstimateNote } from './estimate-presentation';
 import { currentProductChoices, choicePriceIncluded } from './product-choices';
 import { quantityVisual } from './quantity-visuals';
 import { listedEvidence, sourceNote, sourceScope } from './source-visuals';
-export interface EstimatePictures {
-  overview: Uint8Array;
-  plan: Uint8Array;
+import {
+  appendDesignPages,
+  designPictureBytes,
+  finishDocumentPages,
+} from '../design-export/document';
+import type { DesignPictures } from '../design-export/document';
+export interface EstimatePictures extends DesignPictures {
   simplified: boolean;
   products?: EstimateProductPicture[];
 }
@@ -106,8 +110,7 @@ export async function estimatePdf(
     maxBytes > POLICY.designExportPdfBytes ||
     (pictures.products?.length ?? 0) > 45 ||
     productBytes > 6 * 1024 * 1024 ||
-    pictures.overview.byteLength + pictures.plan.byteLength + productBytes >
-      maxBytes
+    designPictureBytes(pictures) + productBytes > maxBytes
   )
     throw new DesignExportError('too-large');
   const check = () => port.check?.();
@@ -356,7 +359,14 @@ export async function estimatePdf(
       height: 841.89,
       color: paper,
     });
-    draw('roomedy.', 42, 794, 21, bold, cocoa);
+    page.drawSvgPath('M5 27V6h12c6 0 10 4 10 10v11H5Z M15 27V17h12', {
+      x: 38,
+      y: 815,
+      scale: 0.9,
+      borderColor: ink,
+      borderWidth: 3.5,
+    });
+    draw('roomedy.', 76, 794, 21, bold, cocoa);
     right('YOUR ROOM / YOUR PLAN', 801, 7.5, bold, muted, 553);
     const subtitle = `${version.label} | ${e.locality.city}, ${e.locality.country} | ${currency}`;
     let subtitleSize = 9;
@@ -405,6 +415,7 @@ export async function estimatePdf(
     chapterNumber++;
     table = isTable;
     next();
+    design.sections.push({ title: text, page });
   };
   const link = (label: string, url: string, x = 42, width = 511) => {
     const address = sourceUrlSchema.parse(url),
@@ -429,24 +440,6 @@ export async function estimatePdf(
   const yieldWork = async () => {
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
     check();
-  };
-  const image = async (
-    bytes: Uint8Array,
-    top: number,
-    width: number,
-    height: number,
-    x = 42,
-  ) => {
-    check();
-    const jpg = await pdf.embedJpg(bytes);
-    check();
-    const scale = Math.min(width / jpg.width, height / jpg.height);
-    page.drawImage(jpg, {
-      x: x + (width - jpg.width * scale) / 2,
-      y: top - height + (height - jpg.height * scale) / 2,
-      width: jpg.width * scale,
-      height: jpg.height * scale,
-    });
   };
   const quantityLabel = (quantity: EstimateQuantity | null) =>
     estimateQuantityText(quantity).replace(
@@ -677,44 +670,17 @@ export async function estimatePdf(
       y = top - height - 12;
     }
   };
-  chapter('Your room, made real.');
-  para('A shopping plan for the room you imagined.', 11, font, muted);
-  panel(42, y + 3, 511, 288);
-  await image(pictures.overview, y - 7, 487, 268, 54);
-  y -= 306;
-  const coverTop = y;
-  panel(42, coverTop, 511, 158, oat);
-  draw(
-    e.complete ? 'Estimated selected-scope total' : 'Known costs so far',
-    64,
-    coverTop - 27,
-    9,
-    bold,
-    muted,
+  const design = await appendDesignPages(
+    pdf,
+    version.room,
+    pictures,
+    { label: version.label, savedAt: version.savedAt, financial: true },
+    { font, bold, titleFont },
+    check,
+    maxPages,
   );
-  draw(
-    cash(e.knownTotalMinor, currency),
-    64,
-    coverTop - 76,
-    fit(cash(e.knownTotalMinor, currency), 467, 35),
-    font,
-    cocoa,
-  );
-  y = coverTop - 101;
-  para(totalStatus, 10, font, ink, 467, 64);
-  y = coverTop - 178;
-  para(
-    `Saved ${new Date(version.savedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}  /  ${version.label}`,
-    9,
-    bold,
-    muted,
-  );
-  para(
-    'Selected products, whole-room quantities and recorded prices. Start with the room plan, then review your choices and quantities.',
-    10,
-    font,
-    muted,
-  );
+  chapterNumber = design.sections.length;
+  chapter('Cost summary');
   if (
     used.some((offer) => offer.source.kind === 'sample') ||
     choices.some((choice) => choice.simulation)
@@ -725,56 +691,16 @@ export async function estimatePdf(
       font,
       muted,
     );
-  chapter('The selected room & plan');
-  panel(42, y + 3, 511, 365);
-  await image(pictures.plan, y - 8, 487, 343, 54);
-  y -= 383;
-  const measure = (axis: 'width' | 'depth' | 'height') => {
-    const m = version.room.room[axis];
-    return m.value === null
-      ? 'Not measured'
-      : `${(m.value / 1000).toLocaleString('en-US', { maximumFractionDigits: 3 })} m`;
-  };
-  const dimensionsTop = y;
-  for (const [i, axis] of (['width', 'depth', 'height'] as const).entries()) {
-    const x = 42 + i * 174;
-    panel(x, dimensionsTop, 163, 78);
-    draw(axis.toUpperCase(), x + 15, dimensionsTop - 20, 8, bold, muted);
-    draw(measure(axis), x + 15, dimensionsTop - 43, 17, font);
-    draw(
-      version.room.room[axis].value === null
-        ? 'Needs your measurement'
-        : version.room.room[axis].status,
-      x + 15,
-      dimensionsTop - 62,
-      8,
-      font,
-      muted,
-    );
-  }
-  y = dimensionsTop - 101;
-  infoCards([
-    {
-      title: 'PLAN NUMBERS',
-      detail: 'Match numbered furniture to the selected product cards.',
-    },
-    {
-      title: '~ ESTIMATED',
-      detail: 'Estimated dimensions need checking before ordering.',
-    },
-    {
-      title: pictures.simplified
-        ? 'SIMPLIFIED / UNKNOWN'
-        : 'UNKNOWN DIMENSIONS',
-      detail: pictures.simplified
-        ? 'Simplified meshes and unknown sizes use illustrative bounds. Check physical size and fit.'
-        : 'Illustrative bounds only. The picture does not confirm measurement or fit.',
-    },
-  ]);
-  chapter('Cost summary');
   const summaryTop = y;
   panel(42, summaryTop, 511, 126, oat);
-  draw('YOUR SHOPPING ESTIMATE', 64, summaryTop - 26, 9, bold, muted);
+  draw(
+    e.complete ? 'Estimated selected-scope total' : 'Known costs so far',
+    64,
+    summaryTop - 26,
+    9,
+    bold,
+    muted,
+  );
   draw(
     cash(e.knownTotalMinor, currency),
     64,
@@ -1713,17 +1639,8 @@ export async function estimatePdf(
       await yieldWork();
     }
   }
-  for (const [i, p] of pdf.getPages().entries()) {
-    page = p;
-    page.drawLine({
-      start: { x: 42, y: 52 },
-      end: { x: 553, y: 52 },
-      color: lineColor,
-      thickness: 0.5,
-    });
-    draw('ROOMEDY  /  A PLAN FOR YOUR ROOM', 42, 35, 7, bold, muted);
-    draw(`${i + 1} / ${pdf.getPageCount()}`, 520, 35, 8, font, muted);
-  }
+  design.finishContents();
+  finishDocumentPages(pdf, font, bold);
   check();
   const bytes = await pdf.save({ useObjectStreams: false });
   check();

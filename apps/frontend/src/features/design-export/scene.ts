@@ -114,11 +114,12 @@ export async function loadDesignAssets(
     dispose: () => cache.dispose(),
   };
 }
-/** A read-only presentation of the same canonical adapter/representation geometry. */
+/** Read-only geometry. PDF pictures opt into editor illustrations; model exports stay strict. */
 export function buildDesignScene(
   input: RoomDocument,
   assets: ReadonlyMap<string, GLTF> = new Map(),
   surfaceIO: SurfaceIO = {},
+  illustrative = false,
 ) {
   const room = presentationRoom(input);
   const root = new Group(),
@@ -430,7 +431,7 @@ export function buildDesignScene(
   for (const piece of room.furniture) {
     const group = new Group(),
       pose = piecePose(piece),
-      first = pieceRepresentation(piece);
+      first = pieceRepresentation(piece, true, illustrative);
     group.name = piece.label;
     group.position.fromArray(pose.position);
     group.rotation.y = pose.rotationY;
@@ -451,7 +452,7 @@ export function buildDesignScene(
     };
     root.add(group);
     const asset = first.kind === 'mesh' ? assets.get(first.url) : undefined,
-      representation = pieceRepresentation(piece, !!asset);
+      representation = pieceRepresentation(piece, !!asset, illustrative);
     if (representation.kind === 'mesh' && asset) {
       const instance = surfaceModel(
         asset.scene,

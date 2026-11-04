@@ -17,6 +17,7 @@ import { cameraViewPose } from '../room-view/camera';
 import type { Triple } from '../room-view/adapter';
 import { buildDesignScene, loadDesignAssets } from './scene';
 import { DesignExportError, withExportSignal } from './facts';
+import { documentNavigationRoom } from './document-views';
 export interface RoomPicture {
   image: HTMLCanvasElement;
   label: string;
@@ -55,7 +56,7 @@ export async function captureRoomPictures(
   signal: AbortSignal,
   check: () => void,
   progress: (text: string) => void,
-  mode: 'all' | 'overview' = 'all',
+  mode: 'all' | 'overview' | 'document' = 'all',
 ) {
   const assets = await loadDesignAssets(room, signal);
   let renderer: WebGLRenderer | undefined,
@@ -91,7 +92,7 @@ export async function captureRoomPictures(
   signal.addEventListener('abort', lost, { once: true });
   try {
     check();
-    projection = buildDesignScene(room, assets.ready);
+    projection = buildDesignScene(room, assets.ready, {}, true);
     await projection.prepareSurfaces(signal);
     check();
     const scene = new Scene();
@@ -146,7 +147,7 @@ export async function captureRoomPictures(
       const direction = new Vector3(
         side === 0 ? 0.55 : -0.7,
         0.75,
-        side === 0 ? 0.8 : -0.6,
+        side === 0 || side === 2 ? 0.8 : -0.6,
       )
         .normalize()
         .multiplyScalar((radius / Math.sin((25 * Math.PI) / 180)) * 1.15);
@@ -155,8 +156,10 @@ export async function captureRoomPictures(
         target: center.toArray() as Triple,
       };
     };
-    const doorway = cameraViewPose(room, 'doorway'),
-      corner = cameraViewPose(room, 'corner');
+    const navigation =
+      mode === 'document' ? documentNavigationRoom(room) : room;
+    const doorway = cameraViewPose(navigation, 'doorway'),
+      corner = cameraViewPose(navigation, 'corner');
     const views = [
       { ...overview(0), inside: false, label: 'The room, reimagined' },
       {
@@ -165,16 +168,44 @@ export async function captureRoomPictures(
         label: doorway ? 'From the doorway' : 'A different perspective',
       },
       {
-        ...(corner ?? overview(0)),
+        ...(corner ?? overview(mode === 'document' ? 2 : 0)),
         inside: !!corner,
         label: corner ? 'From the opposite corner' : 'Space and proportion',
       },
     ];
+    if (mode === 'document') {
+      const work = cameraViewPose(navigation, 'work-area');
+      if (work)
+        work.position[1] = Math.min(
+          projection.bounds.height - 0.15,
+          work.position[1] + 0.5,
+        );
+      const focal = projection.root.children.find(
+        (node) => node.userData.roomedy?.id,
+      );
+      const box = focal
+        ? new Box3().setFromObject(focal)
+        : new Box3().setFromObject(projection.root);
+      const target = box.getCenter(new Vector3()),
+        radius = Math.max(0.3, box.getSize(new Vector3()).length() / 2);
+      const position = target
+        .clone()
+        .add(
+          new Vector3(0.5, 0.55, 0.85)
+            .normalize()
+            .multiplyScalar((radius / Math.sin((25 * Math.PI) / 180)) * 1.15),
+        );
+      views.push({
+        ...(work ?? {
+          position: position.toArray() as Triple,
+          target: target.toArray() as Triple,
+        }),
+        inside: !!work,
+        label: work ? 'The work area' : 'Furniture in focus',
+      });
+    }
     const pictures: RoomPicture[] = [];
-    for (const [index, view] of (mode === 'overview'
-      ? views.slice(0, 1)
-      : views
-    ).entries()) {
+    for (const view of mode === 'overview' ? views.slice(0, 1) : views) {
       check();
       progress('Creating room views…');
       projection.setCutaway(view.position, view.inside);
@@ -195,15 +226,14 @@ export async function captureRoomPictures(
       check();
       if (!renderer) throw new DesignExportError('cancelled');
       renderer.render(scene, camera);
-      const crop =
-        index === 0
-          ? coverCrop(new Box3().setFromObject(projection.root), camera)
-          : {
-              x: 0,
-              y: 0,
-              width: POLICY.designExportViewWidth,
-              height: POLICY.designExportViewHeight,
-            };
+      const crop = !view.inside
+        ? coverCrop(new Box3().setFromObject(projection.root), camera)
+        : {
+            x: 0,
+            y: 0,
+            width: POLICY.designExportViewWidth,
+            height: POLICY.designExportViewHeight,
+          };
       const canvas = document.createElement('canvas');
       canvas.width = crop.width;
       canvas.height = crop.height;

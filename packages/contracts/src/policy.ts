@@ -32,7 +32,7 @@ export const POLICY = Object.freeze({
   designExportObjBytes: 24 * 1024 * 1024,
   designExportGlbBytes: 16 * 1024 * 1024,
   designExportPdfBytes: 24 * 1024 * 1024,
-  designExportPages: 6,
+  designExportPages: 7,
   estimateExportPages: 48,
   designExportPageWidth: 2200,
   designExportPageHeight: 1556,
