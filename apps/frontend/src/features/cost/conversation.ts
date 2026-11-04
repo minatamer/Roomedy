@@ -4,6 +4,11 @@ import type { SessionController } from '../session/controller';
 import type { CostSection } from './journey';
 import type { MarketTarget, MarketUpdate } from './market-research';
 import type { ProductGuide } from './selection-guide';
+import {
+  costUIOf,
+  estimateConversationOf,
+  restoredCostUI,
+} from '../session/conversations';
 export const INITIAL_PRODUCT_GUIDE: ProductGuide = Object.freeze({
   stage: 'ready',
   key: null,
@@ -16,7 +21,7 @@ export interface MarketEntry {
   generation: number;
   workspaceId: string;
 }
-interface Conversation {
+export interface Conversation {
   viewingId: string | null;
   section: CostSection;
   selected: string | null;
@@ -43,9 +48,20 @@ const initial = (): Conversation => ({
   guide: INITIAL_PRODUCT_GUIDE,
 });
 const conversations = new WeakMap<SessionController, CostConversation>();
-/** Ephemeral UI only: never financial/project/recovery state or Design AI context. */
+/** UI state is recovery data only; it never becomes financial or Design AI authority. */
 class CostConversation {
   private state = initial();
+  private readonly identity: { workspaceId: string; generation: number };
+  constructor(private controller: SessionController) {
+    const state = controller.getSnapshot();
+    this.identity = {
+      workspaceId: state.workspace?.workspaceId ?? '',
+      generation: state.generation,
+    };
+    const saved = state.conversations?.estimate?.ui;
+    if (saved && state.cost && state.workspace)
+      this.state = restoredCostUI(saved, state);
+  }
   private listeners = new Set<() => void>();
   private live = true;
   getSnapshot = () => this.state;
@@ -80,6 +96,13 @@ class CostConversation {
     }
     if (Object.is(value, this.state[key])) return;
     this.state = { ...this.state, [key]: value };
+    const session = this.controller.getSnapshot();
+    const estimate = estimateConversationOf(session);
+    if (estimate)
+      this.controller.rememberConversations(
+        { estimate: { ...estimate, ui: costUIOf(this.state, session) } },
+        this.identity,
+      );
     this.listeners.forEach((fn) => fn());
   }
   dispose() {
@@ -93,7 +116,7 @@ class CostConversation {
 export function costConversation(controller: SessionController) {
   let store = conversations.get(controller);
   if (!store) {
-    store = new CostConversation();
+    store = new CostConversation(controller);
     conversations.set(controller, store);
     const owned = store;
     controller.ownResource(() => {

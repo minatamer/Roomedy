@@ -28,6 +28,7 @@ import { guidanceChoices, guidanceMessage } from './guidance';
 import type { GuidanceStep } from './guidance';
 import { MessageReveal } from './message-reveal';
 import type { BedroomThemeId } from '@roomedy/contracts/furniture-materials';
+import { medyConversationOf } from '../session/conversations';
 
 export interface AssistantMessage {
   id: number;
@@ -59,7 +60,7 @@ interface Dependencies {
     scope: ActionScope,
   ) => Promise<SearchResult>;
 }
-/** Ephemeral conversation only. Canonical room, one candidate, Apply and Undo belong to SessionController. */
+/** Conversation owner; recovery projects bounded history. Room, candidate, Apply and Undo stay in SessionController. */
 export class AssistantController {
   private state: Snapshot = Object.freeze({
     draft: '',
@@ -91,10 +92,50 @@ export class AssistantController {
     roomRevision: number;
   } | null = null;
   private noChangeOperation: string | null = null;
+  private readonly conversationIdentity: {
+    workspaceId: string;
+    generation: number;
+  };
   constructor(
     readonly session: SessionController,
     private deps: Dependencies = {},
   ) {
+    const sessionState = session.getSnapshot();
+    this.conversationIdentity = {
+      workspaceId: sessionState.workspace?.workspaceId ?? '',
+      generation: sessionState.generation,
+    };
+    const saved = sessionState.conversations?.medy;
+    if (saved && sessionState.workspace) {
+      const room = sessionState.workspace.current;
+      const selected = (id: string | null) =>
+        id === room.roomId ||
+        room.furniture.some((piece) => piece.id === id) ||
+        room.room.features.some((feature) => feature.id === id)
+          ? id
+          : null;
+      const messages: AssistantMessage[] = saved.messages.map((message) => ({
+        ...message,
+        operationId: null,
+        guidance: null,
+        quickReplies: message.quickReplies
+          .filter((choice) => choice.roomRevision === saved.roomRevision)
+          .map((choice) => ({
+            ...choice,
+            roomRevision: room.roomRevision,
+            selectedId: selected(choice.selectedId),
+          })),
+      }));
+      this.serial = Math.max(0, ...messages.map((message) => message.id));
+      this.state = Object.freeze({
+        ...this.state,
+        messages,
+        draft: saved.draft,
+        tourSeen: saved.tourSeen,
+        themeId: saved.themeId,
+      });
+      this.reveal.complete(messages.map((message) => message.id));
+    }
     this.transport = releaseTransport(deps.transport ?? fetch, () =>
       session.clientPartFailed(),
     );
@@ -118,6 +159,19 @@ export class AssistantController {
   private publish(change: Partial<Snapshot>) {
     if (!this.live) return;
     this.state = Object.freeze({ ...this.state, ...change });
+    if (
+      'messages' in change ||
+      'draft' in change ||
+      'tourSeen' in change ||
+      'themeId' in change
+    ) {
+      const room = this.session.getSnapshot().workspace?.current;
+      if (room)
+        this.session.rememberConversations(
+          { medy: medyConversationOf(this.state, room.roomRevision) },
+          this.conversationIdentity,
+        );
+    }
     for (const listener of this.listeners) listener();
   }
   draft(text: string) {

@@ -9,6 +9,7 @@ import {
 } from '@roomedy/spatial';
 import type { SessionSnapshot } from './state';
 import { selectedPricesValid } from '../cost/listed-prices';
+import { estimateConversationOf } from './conversations';
 
 export type ProjectFailure =
   | 'too-large'
@@ -153,17 +154,32 @@ export function projectOf(state: SessionSnapshot): Project | null {
 }
 export function recoveryOf(state: SessionSnapshot): Recovery | null {
   const project = projectOf(state);
-  return project
-    ? {
-        createdAt: state.createdAt,
-        expiresAt: state.expiresAt,
-        project,
-        ui: {
-          view: state.presentation.roomView === 'plan' ? '2d' : '3d',
-          destination: state.destination,
-        },
-      }
-    : null;
+  if (!project) return null;
+  const estimate = estimateConversationOf(state);
+  const conversations = {
+    ...(state.conversations?.medy
+      ? {
+          medy: {
+            ...state.conversations.medy,
+            roomRevision: state.workspace!.current.roomRevision,
+          },
+        }
+      : {}),
+    ...(estimate && (estimate.messages.length || estimate.ui)
+      ? { estimate }
+      : {}),
+  };
+  const parsed = recoverySchema.safeParse({
+    createdAt: state.createdAt,
+    expiresAt: state.expiresAt,
+    project,
+    ...(Object.keys(conversations).length ? { conversations } : {}),
+    ui: {
+      view: state.presentation.roomView === 'plan' ? '2d' : '3d',
+      destination: state.destination,
+    },
+  });
+  return parsed.success ? parsed.data : null;
 }
 export function exportProject(state: SessionSnapshot): string | null {
   const project = projectOf(state);

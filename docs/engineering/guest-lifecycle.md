@@ -1,5 +1,9 @@
 # Guest lifecycle — RM-012
 
+## Saved conversations — RM-102, 4 November 2026
+
+The owner's Continue correction supersedes the chat-free **tab recovery** statements below. The same key, original two-hour expiry, 250ms debounce, 512KiB semantic-pair limit and 1MiB whole-record ceiling now include bounded Medy and Estimate conversations, drafts and completed shopping results. Chat-only changes trigger saving. Continue creates fresh operational identity, restores already-read messages and preserves historical breakdowns; unfinished searches require explicit resume. Photos, requests/grants, runtime authorization, unapplied previews and Undo remain transient. Reset/expiry/disposal clear both conversations and fence old owners. Oversize or denied updates retain memory-only behavior and retire the stale owned record where possible. Project file exports/imports remain chat-free. Legacy records remain valid, but omitted history cannot be reconstructed. [Evidence](../validation/RM-102.md).
+
 18 October2026. [Allocation](../commit-plans/RM-012.md), [actual evidence](../validation/RM-012.md), [single session authority](session-and-plan.md). Fake/off local implementation; real deployment skew and physical-device/owner acceptance remain separately owned.
 
 ## One room, two inspection states

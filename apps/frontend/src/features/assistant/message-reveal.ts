@@ -15,6 +15,10 @@ export function revealWords(text: string) {
 /** One timeline per retained message, shared by panel mounts; no persisted content. */
 export class MessageReveal {
   private starts = new Map<number, number>();
+  complete(ids: readonly number[]) {
+    // A normal reveal is bounded below two seconds; recovered history is already read.
+    for (const id of ids) this.starts.set(id, -10_000);
+  }
   begin(id: number, now: number) {
     if (!this.starts.has(id)) this.starts.set(id, now);
     return Math.max(0, now - this.starts.get(id)!);

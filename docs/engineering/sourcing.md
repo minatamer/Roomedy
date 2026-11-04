@@ -1,5 +1,9 @@
 # Targeted product and service sourcing
 
+## Saved whole-room results — RM-101–102, 4 November 2026
+
+Find all runs the bounded complete target set serially and immediately shows all completed category cards, without the earlier six-item/choose-now interruption. Existing per-target provider/admission/deadline limits remain. Continue saved room includes up to 45 completed target records with each reply's existing three-candidate bound, within the same 1MiB tab-recovery envelope. This supersedes earlier transient-card-only recovery statements. It excludes request identities/grants and creates no automatic refresh/retry. Rebuilt current-room/pricing/brief checks govern explicit candidate selection; stale cards remain inert history and interrupted targets require explicit resume. Project exports remain chat-free. [Find all evidence](../validation/RM-101.md), [Continue evidence](../validation/RM-102.md).
+
 RM-026,26October2026. [Ticket](../tickets/RM-026-research-local-products-and-services.md), [allocation](../commit-plans/RM-026.md), [actual checks](../validation/RM-026.md).
 
 ## Operation and evidence

@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Continue must restore the conversations as well as the room —4 November2026
+
+Owner expects both Medy and Estimate/cost-breakdown chat to survive Continue saved room. [RM-102](../tickets/RM-102-restore-saved-session-conversations.md) supersedes the old chat-free recovery projection while keeping project downloads separate. Store bounded conversation display/context data, completed options and accurate report revision context; chat-only edits must save. Fresh operation/workspace ownership still governs all new actions. Never resume requests, authorize old previews, replace historical values with a current total or extend the two-hour lifetime merely by restoring.
+
 ## Find all should reveal all results directly —4 November2026
 
 Owner rejects the RM-074 readiness screen combined with the RM-057 six-item stop. [RM-101](../tickets/RM-101-show-all-market-options-directly.md) treats one Find all action as the whole bounded room shopping request, preserving serial per-target operation guards while exposing every returned card without Start/Next gates. Keep all categories/cards available during selection and stable planning shortcuts. Resume is for genuinely interrupted work; finding results never chooses a product automatically. This owner decision supersedes the older one-at-a-time presentation preference.

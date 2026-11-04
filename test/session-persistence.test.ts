@@ -78,7 +78,7 @@ it('coalesces accepted changes and excludes candidate/chat/history/operations fr
   expect(p.flush()).toBe(true);
   expect(storage.writes).toBe(1);
 });
-it('recovers price-only edits and saved versions without serializing or rewriting chat', async () => {
+it('recovers prices, saved versions and chat-only changes while exported projects stay chat-free', async () => {
   vi.useFakeTimers();
   const { session: s, persistence: p, storage } = setup();
   s.setDestination('cost');
@@ -90,14 +90,20 @@ it('recovers price-only edits and saved versions without serializing or rewritin
   const writes = storage.writes;
   s.costMessage('visitor', 'PRIVATE_COST_CHAT');
   await vi.advanceTimersByTimeAsync(300);
-  expect(storage.writes).toBe(writes);
-  expect(storage.getItem(RECOVERY_KEY)).not.toContain('PRIVATE_COST_CHAT');
+  expect(storage.writes).toBe(writes + 1);
+  expect(storage.getItem(RECOVERY_KEY)).toContain('PRIVATE_COST_CHAT');
+  expect(JSON.stringify(projectOf(s.getSnapshot()))).not.toContain(
+    'PRIVATE_COST_CHAT',
+  );
   const read = readRecovery(storage.getItem(RECOVERY_KEY)!, 0);
   expect(read.ok).toBe(true);
   if (read.ok) {
     expect(read.value.project.cost!.settings.floor.wasteBps).toBe(2000);
     expect(read.value.project.versions).toHaveLength(1);
     expect(read.value.ui.destination).toBe('cost');
+    expect(read.value.conversations?.estimate?.messages.at(-1)?.text).toBe(
+      'PRIVATE_COST_CHAT',
+    );
   }
   expect(p.flush()).toBe(true);
 });

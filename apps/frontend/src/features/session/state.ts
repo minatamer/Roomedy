@@ -1,6 +1,9 @@
 import type { CostDraft } from '../cost/state';
 import type { CostProposal } from '../cost/planning';
-import type { EstimateVersion } from '@roomedy/contracts/project';
+import type {
+  EstimateVersion,
+  RecoveryConversations,
+} from '@roomedy/contracts/project';
 import type { ProjectDestination } from '../cost/navigation';
 import type { OperationIdentity } from '@roomedy/contracts/commands';
 import type { CheckFacts, RoomDocument } from '@roomedy/contracts/room';
@@ -34,6 +37,8 @@ export interface PhotoNotes {
   readonly simulated: boolean;
 }
 export interface SessionSnapshot {
+  /** Bounded conversation display data for same-tab recovery; never edit/provider authority. */
+  readonly conversations?: RecoveryConversations | undefined;
   /** Transient form reset identity, never saved/project data. */
   readonly inspectorReset?: number;
   readonly tourOffered: boolean;

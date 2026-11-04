@@ -1,5 +1,7 @@
 # Roomedy documentation
 
+**Saved-session conversations complete locally —4 November:** [RM-102](tickets/RM-102-restore-saved-session-conversations.md) makes Continue restore both Medy and Estimate conversations, breakdown context and completed shopping results within the existing bounded tab lifetime. [Allocation](commit-plans/RM-102.md), [receipt](validation/RM-102.md). Recovery never resumes a provider request or unapplied preview. Project downloads remain separate and chat-free.
+
 **Direct room-shopping results —4 November:** [RM-101](tickets/RM-101-show-all-market-options-directly.md) replaces the six-item/Start choosing interruption with one complete bounded room search and directly visible cards for every returned item. Products remain available while choosing; pricing/source/size/Undo and per-target provider bounds remain. [Allocation](commit-plans/RM-101.md), [receipt](validation/RM-101.md). No paid QA request.
 
 **Editor measurement presentation —4 November:** [RM-100](tickets/RM-100-remove-editor-measurement-uncertainty.md) removes leftover question marks, size-status outlines, missing/status dimension labels and repeated editor/property/import warnings after the owner's successful scan. [Allocation](commit-plans/RM-100.md), [validation](validation/RM-100.md). Supplied values remain editable; canonical evidence, planning/fit and financial authority remain unchanged. No new paid scan.

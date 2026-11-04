@@ -1,5 +1,9 @@
 # Grounded assistant policy — RM-011
 
+## Tab-session conversation recovery — RM-102, 4 November 2026
+
+Continue saved room now restores Medy's bounded messages, contextual replies, draft, theme and session tour state. This supersedes earlier claims that all conversation data is ephemeral or excluded from tab recovery. It saves at most the existing 80 messages/256KiB and only known display/context fields; actions, grants, pending work and unapplied previews are excluded. A fresh controller reads current runtime configuration and restores completed words without replaying a request or proposal. Workspace identity fences prevent a retired controller writing into another session. Project exports remain chat-free. [Evidence](../validation/RM-102.md).
+
 ## Visited tour and phase continuity —RM-038–040, 29 October 2026
 
 The automatic short orientation is offered once, including Skip/Escape, using a non-sensitive local UI preference and SessionController fallback. Explicit Medy Show me around remains available. The preference never enters project/recovery/provider/Undo data; a fresh room does not rearm it. This supersedes W's workspace-only automatic rearm policy below. Blocked storage still preserves the offer during the active session.

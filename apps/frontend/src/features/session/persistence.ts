@@ -18,6 +18,8 @@ export class SessionPersistence {
   private offers: object | null = null;
   private budget: number | null = null;
   private versions: object | null = null;
+  private conversations: object | null = null;
+  private messages: object | null = null;
   private destination = '';
   private view = '';
   private latestWrite: object | null = null;
@@ -71,6 +73,8 @@ export class SessionPersistence {
       this.settings =
       this.offers =
       this.versions =
+      this.conversations =
+      this.messages =
         null;
     this.budget = null;
     this.destination = this.view = '';
@@ -102,6 +106,8 @@ export class SessionPersistence {
       this.offers === (state.cost?.offers ?? null) &&
       this.budget === (state.cost?.budgetMinor ?? null) &&
       this.versions === state.estimateVersions &&
+      this.conversations === (state.conversations ?? null) &&
+      this.messages === (state.cost?.messages ?? null) &&
       this.destination === state.destination &&
       this.view === state.presentation.roomView
     )
@@ -112,6 +118,8 @@ export class SessionPersistence {
     this.offers = state.cost?.offers ?? null;
     this.budget = state.cost?.budgetMinor ?? null;
     this.versions = state.estimateVersions;
+    this.conversations = state.conversations ?? null;
+    this.messages = state.cost?.messages ?? null;
     this.destination = state.destination;
     this.view = state.presentation.roomView;
     this.dirty = true;
@@ -167,6 +175,8 @@ export class SessionPersistence {
         latest.cost?.offers !== state.cost?.offers ||
         latest.cost?.budgetMinor !== state.cost?.budgetMinor ||
         latest.estimateVersions !== state.estimateVersions ||
+        latest.conversations !== state.conversations ||
+        latest.cost?.messages !== state.cost?.messages ||
         latest.destination !== state.destination ||
         latest.phase !== 'editor' ||
         latest.expiresAt <= this.now()

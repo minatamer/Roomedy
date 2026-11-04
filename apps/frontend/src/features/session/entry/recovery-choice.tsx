@@ -47,7 +47,8 @@ export function RecoveryChoice({
         Pick up where you left off.
       </h2>
       <p id="entry-recovery-description" className={styles.description}>
-        Your last design is saved in this tab, ready for your next idea.
+        Your design and both conversations are saved in this tab, ready to
+        continue.
       </p>
       <div className={styles.actions}>
         <button

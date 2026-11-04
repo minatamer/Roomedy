@@ -228,6 +228,7 @@ export function Research({
         choicesFound = 0;
       pendingBatch.current = targets;
       pendingAll.current = all;
+      if (all) setRemaining(targets);
       const running = runMarketResearch(
         controller,
         targets,
@@ -244,10 +245,12 @@ export function Research({
           ) {
             choicesFound++;
           }
-          if (update.kind === 'answer')
+          if (update.kind === 'answer') {
             pendingBatch.current = pendingBatch.current.filter(
               (item) => item.key !== target.key,
             );
+            if (all) setRemaining(pendingBatch.current);
+          }
           setEntries((previous) => [
             ...previous.filter((entry) => entry.target.key !== target.key),
             {

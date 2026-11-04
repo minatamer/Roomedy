@@ -328,6 +328,7 @@ export function CostWorkspace({
             onComplete={revealComplete}
           />
           {estimate &&
+          !message.historical &&
           message.roomRevision === room.roomRevision &&
           message.costRevision === draft.revision ? (
             <div className={assistant.cards}>
@@ -422,6 +423,7 @@ export function CostWorkspace({
           )}
         </>
       ) : message.lineIds &&
+        !message.historical &&
         estimate &&
         message.roomRevision === room.roomRevision &&
         message.costRevision === draft.revision ? (

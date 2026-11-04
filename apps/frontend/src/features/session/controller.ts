@@ -56,7 +56,12 @@ import { initialPresentation } from './state';
 import type { Panel, PhotoNotes, SessionSnapshot } from './state';
 import { recoverySchema } from '@roomedy/contracts/project';
 import { ESTIMATE_VERSION_LIMIT } from '@roomedy/contracts/project';
-import type { EstimateVersion, Recovery } from '@roomedy/contracts/project';
+import type {
+  EstimateVersion,
+  Recovery,
+  RecoveryConversations,
+} from '@roomedy/contracts/project';
+import { continuedConversations, restoredCostMessages } from './conversations';
 import { validateProject, projectOf } from './project';
 import { captureVersion, freezeVersion } from '../cost/versions';
 import { clearanceNotice } from './clearance';
@@ -148,6 +153,22 @@ export class SessionController {
     });
   }
   getSnapshot = (): SessionSnapshot => this.state;
+  rememberConversations(
+    value: Partial<RecoveryConversations>,
+    identity: { workspaceId: string; generation: number },
+  ): boolean {
+    const state = this.state;
+    if (
+      !this.active() ||
+      this.cleaning ||
+      !state.workspace ||
+      state.workspace.workspaceId !== identity.workspaceId ||
+      state.generation !== identity.generation
+    )
+      return false;
+    this.publish({ conversations: { ...state.conversations, ...value } });
+    return true;
+  }
   markTourOffered() {
     if (this.active() && this.state.workspace && !this.state.tourOffered)
       this.publish({ tourOffered: true });
@@ -166,6 +187,7 @@ export class SessionController {
       };
     this.state = Object.freeze({
       ...this.state,
+      ...(change.generation !== undefined ? { conversations: undefined } : {}),
       ...(change.generation !== undefined || change.cost === null
         ? { shoppingLocation: null }
         : {}),
@@ -246,6 +268,7 @@ export class SessionController {
     this.state = Object.freeze({
       ...this.state,
       phase,
+      conversations: undefined,
       destination: 'design',
       cost: null,
       shoppingLocation: null,
@@ -368,6 +391,7 @@ export class SessionController {
       cost?: EstimateState | null;
       versions?: readonly EstimateVersion[];
       destination?: ProjectDestination;
+      conversations?: RecoveryConversations | undefined;
     },
   ): boolean {
     if (this.cleaning || this.state.phase === 'disposed') return false;
@@ -381,11 +405,19 @@ export class SessionController {
         )
       : null;
     const createdAt = options?.createdAt ?? this.now();
+    const conversations = continuedConversations(
+      options?.conversations,
+      room?.roomRevision ?? 0,
+      workspace?.current.roomRevision ?? 0,
+    );
     this.costReveal.clear();
     this.state = Object.freeze({
       ...this.state,
       generation,
       workspace,
+      conversations,
+      tourOffered:
+        this.state.tourOffered || !!options?.conversations?.medy?.tourSeen,
       shoppingLocation: null,
       pending: null,
       candidate: null,
@@ -396,8 +428,14 @@ export class SessionController {
           ? {
               ...structuredClone(options.cost),
               revision: 0,
-              roomRevision: room.roomRevision,
-              messages: [],
+              roomRevision: workspace!.current.roomRevision,
+              messages: conversations?.estimate
+                ? restoredCostMessages(
+                    conversations.estimate,
+                    workspace!.current.roomRevision,
+                    0,
+                  )
+                : [],
             }
           : null,
       estimateVersions: Object.freeze(
@@ -418,6 +456,13 @@ export class SessionController {
       clientLoadFailure: false,
       photoNotes: null,
     });
+    this.costMessageId = Math.max(
+      0,
+      ...(this.state.cost?.messages ?? []).map((message) => message.id ?? 0),
+    );
+    this.costReveal.complete(
+      (this.state.cost?.messages ?? []).map((message) => message.id!),
+    );
     this.clearMessageTimer();
     this.cleaning = true;
     this.operations.clear();
@@ -474,6 +519,7 @@ export class SessionController {
       cost: validated.value.cost,
       versions: validated.value.versions,
       destination: validated.value.cost ? record.ui.destination : 'design',
+      conversations: record.conversations,
     });
   }
   saveEstimate(
@@ -1170,6 +1216,7 @@ export class SessionController {
       !this.active() ||
       !this.state.cost ||
       this.state.destination !== 'cost' ||
+      this.costMessageId >= Number.MAX_SAFE_INTEGER - 1 ||
       !text.trim() ||
       text.length > 4000
     )

@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner review RM-101 direct whole-room shopping results in the running app. One bounded Find all request, every returned card directly visible and retained during choosing; existing provider/source/financial/Undo/lifecycle guards preserved. Exact fifteen-path validated local checkpoint; no new paid QA, manual restart or hosted change. Owner/physical/merchant/exact-hosted acceptance remains separate.
+Next action: Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1799,7 +1799,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-04T10:12:06+00:00",
+  "updated_at": "2026-11-04T11:23:49+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -2145,7 +2145,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner review RM-101 direct whole-room shopping results in the running app. One bounded Find all request, every returned card directly visible and retained during choosing; existing provider/source/financial/Undo/lifecycle guards preserved. Exact fifteen-path validated local checkpoint; no new paid QA, manual restart or hosted change. Owner/physical/merchant/exact-hosted acceptance remains separate.",
+  "next_action": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
   "phases": [
     {
       "id": "01-docs",
@@ -2486,27 +2486,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Complete RM-101 owner-requested direct whole-room market results. One finite serial run covers all current shopping targets without six-item/Start/Next gates; all returned cards remain visible. Preserve provider/source/financial/Undo/lifecycle guards. Meaningful tests and offline native QA, remove temporary route, settled gates/builds/read-only review, then exact fifteen-path local checkpoint. No paid QA or manual restart.",
-        "sha256": "12259fa59b21f839fa3b8f4dda253eb073ddbec50a61188fd99f4c735f70e2ca",
+        "text": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
+        "sha256": "74a616b2e8c70994b6e4ae626553df7024aac4338b2412ade02ddd4694609b77",
         "context_sources": [
-          "docs/tickets/RM-101-show-all-market-options-directly.md",
-          "docs/commit-plans/RM-101.md",
-          "docs/validation/RM-101.md"
+          "docs/tickets/RM-102-restore-saved-session-conversations.md",
+          "docs/commit-plans/RM-102.md",
+          "docs/validation/RM-102.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-101-show-all-market-options-directly.md",
-        "docs/commit-plans/RM-101.md",
-        "docs/validation/RM-101.md"
+        "docs/tickets/RM-102-restore-saved-session-conversations.md",
+        "docs/commit-plans/RM-102.md",
+        "docs/validation/RM-102.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic, actual live merchant quality, physical fit and exact hosted-release acceptance remain separate.",
-          "reference": "docs/validation/RM-101.md"
+          "reason": "Owner aesthetic/live-merchant/physical and exact hosted-release acceptance remain separate; older omitted chat cannot be reconstructed from chat-free records.",
+          "reference": "docs/validation/RM-102.md"
         }
       ],
       "approval": null,
@@ -2887,6 +2887,40 @@ This checklist records local work. Human approvals and unresolved external check
           },
           "prior_approval": null,
           "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T10:49:21+00:00",
+          "reason": "Direct owner requests both conversations saved and restored by Continue saved room.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Complete RM-101 owner-requested direct whole-room market results. One finite serial run covers all current shopping targets without six-item/Start/Next gates; all returned cards remain visible. Preserve provider/source/financial/Undo/lifecycle guards. Meaningful tests and offline native QA, remove temporary route, settled gates/builds/read-only review, then exact fifteen-path local checkpoint. No paid QA or manual restart.",
+            "sha256": "12259fa59b21f839fa3b8f4dda253eb073ddbec50a61188fd99f4c735f70e2ca",
+            "context_sources": [
+              "docs/tickets/RM-101-show-all-market-options-directly.md",
+              "docs/commit-plans/RM-101.md",
+              "docs/validation/RM-101.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "prompt_replaced_at": "2026-11-04T11:23:47+00:00",
+          "prior_prompt": {
+            "text": "Complete direct owner RM-102 Continue conversation recovery: restore bounded Medy/Estimate chat, accurate breakdown history, completed shopping cards and drafts within the existing per-tab two-hour/byte/count limits. No pending operation, mode/grant, photo, unapplied-preview or Undo persistence/replay; projects stay chat-free. Meaningful tests/offline reload→Continue, remove QA route, settled gates/builds/read-only review and exact twenty-four-path local checkpoint. No paid QA or manual restart.",
+            "sha256": "283656edb71d7b00a73d72865d0a5b384be9942a47e30418e4f8a2004ae2a8be",
+            "context_sources": [
+              "docs/tickets/RM-102-restore-saved-session-conversations.md",
+              "docs/commit-plans/RM-102.md",
+              "docs/validation/RM-102.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          }
         }
       ]
     },
@@ -4601,27 +4635,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Owner review RM-101 direct whole-room shopping results in the running app. One bounded Find all request, every returned card directly visible and retained during choosing; existing provider/source/financial/Undo/lifecycle guards preserved. Exact fifteen-path validated local checkpoint; no new paid QA, manual restart or hosted change. Owner/physical/merchant/exact-hosted acceptance remains separate.",
-        "sha256": "14eb346869e9e7e4f9afc2ec33c386625bb7533c0cfdb82a5992019f985bf712",
+        "text": "Owner review RM-102 saved-session Continue with both conversations, historical/current breakdowns and completed shopping cards. Existing bounds and operation/source/financial/reset/expiry fences remain; no paid QA, replay, manual restart or hosted change. Exact validated thirty-path local checkpoint; owner/live-merchant/physical/exact-hosted acceptance remains separate.",
+        "sha256": "74a616b2e8c70994b6e4ae626553df7024aac4338b2412ade02ddd4694609b77",
         "context_sources": [
-          "docs/tickets/RM-101-show-all-market-options-directly.md",
-          "docs/commit-plans/RM-101.md",
-          "docs/validation/RM-101.md"
+          "docs/tickets/RM-102-restore-saved-session-conversations.md",
+          "docs/commit-plans/RM-102.md",
+          "docs/validation/RM-102.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-101-show-all-market-options-directly.md",
-        "docs/commit-plans/RM-101.md",
-        "docs/validation/RM-101.md"
+        "docs/tickets/RM-102-restore-saved-session-conversations.md",
+        "docs/commit-plans/RM-102.md",
+        "docs/validation/RM-102.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic, actual live merchant quality, physical fit and exact hosted-release acceptance remain separate.",
-          "reference": "docs/validation/RM-101.md"
+          "reason": "Owner aesthetic/live-merchant/physical and exact hosted-release acceptance remain separate; older omitted chat cannot be reconstructed from chat-free records.",
+          "reference": "docs/validation/RM-102.md"
         }
       ],
       "approval": null,
@@ -5018,6 +5052,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
               "docs/commit-plans/RM-100.md",
               "docs/validation/RM-100.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T11:23:48+00:00",
+          "reason": "Reconcile RM-102 saved-session conversation restoration.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Owner review RM-101 direct whole-room shopping results in the running app. One bounded Find all request, every returned card directly visible and retained during choosing; existing provider/source/financial/Undo/lifecycle guards preserved. Exact fifteen-path validated local checkpoint; no new paid QA, manual restart or hosted change. Owner/physical/merchant/exact-hosted acceptance remains separate.",
+            "sha256": "14eb346869e9e7e4f9afc2ec33c386625bb7533c0cfdb82a5992019f985bf712",
+            "context_sources": [
+              "docs/tickets/RM-101-show-all-market-options-directly.md",
+              "docs/commit-plans/RM-101.md",
+              "docs/validation/RM-101.md"
             ],
             "status": "afk",
             "approval": null,

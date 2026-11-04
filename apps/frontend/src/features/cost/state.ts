@@ -27,6 +27,8 @@ export interface CostMessage {
   costRevision: number;
   role: 'visitor' | 'assistant';
   text: string;
+  /** Historical before recovery's fresh runtime revisions; never render as a current total. */
+  historical?: true;
 }
 export interface CostDraft extends EstimateState {
   revision: number;

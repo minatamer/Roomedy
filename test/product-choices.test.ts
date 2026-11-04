@@ -644,7 +644,13 @@ describe('explicit product preferences and completion chat', () => {
     expect(restored.getSnapshot().cost!.productChoices).toEqual(
       c.getSnapshot().cost!.productChoices,
     );
-    expect(restored.getSnapshot().cost!.messages).toHaveLength(0);
+    const conversation = restored.getSnapshot().cost!.messages;
+    expect(conversation.map((message) => message.text)).toEqual(
+      c.getSnapshot().cost!.messages.map((message) => message.text),
+    );
+    restored.setDestination('design');
+    restored.setDestination('cost');
+    expect(restored.getSnapshot().cost!.messages).toBe(conversation);
     expect(
       productChoicesSchema.safeParse([
         ...c.getSnapshot().cost!.productChoices!,

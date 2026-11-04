@@ -58,7 +58,7 @@ describe('separate session-owned Estimate conversation UI', () => {
     });
     expect(c.getSnapshot().cost!.messages).toBe(messages);
   });
-  it('bounds cached results and drafts, keeping them outside project/recovery/financial records', () => {
+  it('bounds cached results and drafts, recovering display state without pending work or project data', () => {
     const c = session(),
       store = costConversation(c),
       s = c.getSnapshot(),
@@ -93,8 +93,13 @@ describe('separate session-owned Estimate conversation UI', () => {
     expect(JSON.stringify(projectOf(c.getSnapshot()))).not.toContain(
       'GUIDE_ONLY_KEY',
     );
-    expect(JSON.stringify(recoveryOf(c.getSnapshot()))).not.toContain(
-      'GUIDE_ONLY_KEY',
+    const saved = recoveryOf(c.getSnapshot())!.conversations!.estimate!.ui!;
+    expect(saved.guide.key).toBe('GUIDE_ONLY_KEY');
+    expect(saved.guide.reviewedKeys).toHaveLength(64);
+    expect(saved.input).toHaveLength(4000);
+    expect(saved.entries).toEqual([]);
+    expect(saved.message).toBe(
+      'Search paused. Your found options and choices are saved.',
     );
   });
   it('clears on New Room/import/disposal and prevents retired UI callbacks restoring old data', () => {
