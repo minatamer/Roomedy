@@ -7,7 +7,7 @@ sys.dont_write_bytecode = True
 from prepare_catalogue import ROOT, OUT, box_faces, thumbnail, digest
 query = "import { CATALOGUE } from '@roomedy/spatial'; import { FINISH_PALETTE } from './apps/frontend/src/features/catalogue/finishes.ts'; import { proceduralParts } from './apps/frontend/src/features/room-view/representations/definitions.ts'; console.log(JSON.stringify({catalogue:CATALOGUE,palette:FINISH_PALETTE,parts:Object.fromEntries(CATALOGUE.map(e=>[e.assetId,proceduralParts(e.category,Object.fromEntries(Object.entries(e.size).map(([k,a])=>[k,a.default])),e.accessMechanism,e.assetId)]))}));"
 data = json.loads(subprocess.run(['node','--import','tsx','--input-type=module','-e',query],cwd=ROOT,capture_output=True,text=True,check=True).stdout)
-manifest_path=OUT/'manifest.json'
+manifest_path=OUT/'manifest-v2.json'
 manifest=json.loads(manifest_path.read_text(encoding='utf-8'))
 existing={item['catalogueId']:item for item in manifest['thumbnails']}
 selected=set(sys.argv[1:])

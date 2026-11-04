@@ -144,7 +144,7 @@ def main():
             svg = thumbnail(faces, colors, entry['label'], size).encode()
             filename = 'thumbnails/' + entry['assetId'] + '.svg'; (OUT/filename).write_bytes(svg)
             manifest['thumbnails'].append({'catalogueId': entry['id'], 'filename': filename, 'bytes': len(svg), 'sha256': digest(svg), 'semanticMm': size})
-    (OUT/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8', newline='\n')
+    (OUT/'manifest-v2.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8', newline='\n')
     print(json.dumps({'assets':len(manifest['assets']), 'thumbnails':len(manifest['thumbnails']), 'preparedBytes':sum(a['bytes'] for a in manifest['assets'])}))
 
 

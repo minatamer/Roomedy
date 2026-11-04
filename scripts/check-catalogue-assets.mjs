@@ -28,9 +28,14 @@ const { Box3, Vector3 } = await import(
   pathToFileURL(path.join(threePackage, threeExports['.'].import)).href
 );
 const manifest = JSON.parse(
-  readFileSync(path.join(directory, 'manifest.json'), 'utf8'),
+  readFileSync(path.join(directory, 'manifest-v2.json'), 'utf8'),
 );
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
+// The first hosted release still owns this public URL during compatible rollout.
+assert.equal(
+  hash(readFileSync(path.join(directory, 'manifest.json'))),
+  'a2da918661e14203cc647ec78e2157cca9443360ac0723a8df18e42ec8f07476',
+);
 assert.equal(manifest.source.license, 'CC0-1.0');
 assert.equal(
   hash(readFileSync(path.join(directory, 'LICENSE-Kenney.txt'))),
@@ -122,6 +127,7 @@ assert.deepEqual(
     'LICENSE-Kenney.txt',
     'bedside-storage-v1.glb',
     'chair-desk-v1.glb',
+    'manifest-v2.json',
     'manifest.json',
     'thumbnails',
   ].sort(),
