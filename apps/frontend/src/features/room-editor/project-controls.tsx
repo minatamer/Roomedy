@@ -227,9 +227,7 @@ export function ProjectControls({
       controller.reset();
       onNewRoom();
     } else if (accepted.project && controller.importProject(accepted.project))
-      controller.notify(
-        'Project imported. Measurement labels are user-supplied; review them against your room.',
-      );
+      controller.notify('Project imported.');
     else setMessage(projectMessages['invalid-project']);
   };
   const load = async (file: File) => {
@@ -535,8 +533,10 @@ export function ProjectControls({
           </h2>
           {decision.project && (
             <p>
-              Imported room: {decision.project.current.room.width.value ?? '?'}{' '}
-              × {decision.project.current.room.depth.value ?? '?'} mm ·{' '}
+              Imported room:{' '}
+              {decision.project.current.room.width.value !== null &&
+                decision.project.current.room.depth.value !== null &&
+                `${decision.project.current.room.width.value} × ${decision.project.current.room.depth.value} mm · `}
               {decision.project.current.furniture.length} pieces. Its starting
               Before layout, draft prices and {decision.project.versions.length}{' '}
               saved estimate versions are included.

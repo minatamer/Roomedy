@@ -17,11 +17,7 @@ import {
   applyOpeningSizePreset,
 } from '@roomedy/spatial';
 import type { SessionController } from '../session/controller';
-import {
-  MeasurementField,
-  MeasurementInput,
-  measurementLabel,
-} from './measurements';
+import { MeasurementField, MeasurementInput } from './measurements';
 import { failureMessage } from './messages';
 import { focusProperties } from './focus';
 import styles from './editor.module.css';
@@ -172,7 +168,7 @@ export function FurnitureInspector({
         resetKey={controller.getSnapshot().inspectorReset ?? 0}
         item={item}
         onCommit={(action) => {
-          const result = run([action], 'Change size estimate');
+          const result = run([action], 'Change size');
           return result.ok ? null : failureMessage(result, room);
         }}
       >
@@ -356,11 +352,7 @@ export function FurnitureInspector({
                       </p>
                     </div>
                     <div className={styles.section}>
-                      <h3>Measured dimensions</h3>
-                      <p className={styles.hint}>
-                        Confirm only values you have measured. Other evidence
-                        stays as it is.
-                      </p>
+                      <h3>Dimensions</h3>
                       <div className={styles.measurementGrid}>
                         {(['width', 'depth', 'height'] as const).map(
                           (field) => (
@@ -381,8 +373,8 @@ export function FurnitureInspector({
                                     },
                                   ],
                                   value === null
-                                    ? `Mark ${field} unknown`
-                                    : `Confirm ${field}`,
+                                    ? `Clear ${field}`
+                                    : `Set ${field}`,
                                 );
                                 return result.ok
                                   ? null
@@ -532,8 +524,8 @@ export function FeatureInspector({
           </select>
         </label>
         <p className={styles.hint}>
-          Wall: {feature.wallProvenance.status}. Offset is measured from the
-          left on top/bottom walls, or from the top on side walls.
+          Offset is measured from the left on top/bottom walls, or from the top
+          on side walls.
         </p>
         {feature.wall !== 'unknown' &&
           feature.wallProvenance.status !== 'confirmed' && (
@@ -680,7 +672,7 @@ export function FeatureInspector({
       )}
       <p className={styles.hint}>
         Corrections describe your room; they do not claim a renovation is
-        possible. Width: {measurementLabel(feature.width)}.
+        possible.
       </p>
     </>
   );

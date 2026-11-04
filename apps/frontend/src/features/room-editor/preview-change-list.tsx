@@ -6,10 +6,8 @@ import { surfacePreviewChanges } from './preview-surface-changes';
 
 const same = (a: unknown, b: unknown) =>
   JSON.stringify(a) === JSON.stringify(b);
-const measurement = (value: { value: number | null; status: string }) =>
-  value.value === null
-    ? 'unknown'
-    : `${value.value} mm (${value.status === 'estimated' ? 'estimate' : value.status})`;
+const measurement = (value: { value: number | null }) =>
+  value.value === null ? '—' : `${value.value} mm`;
 const facing = (turns: number) => ['south', 'west', 'north', 'east'][turns];
 /** Review actual semantic differences, including explicit measurements, openings and protections. */
 export function PreviewChangeList({
@@ -28,9 +26,14 @@ export function PreviewChangeList({
     const details: string[] = [];
     if (before && before.catalogueId !== piece.catalogueId)
       details.push(piece.label);
-    if (!before)
+    if (
+      !before &&
+      piece.dimensions.width.value !== null &&
+      piece.dimensions.depth.value !== null &&
+      piece.dimensions.height.value !== null
+    )
       details.push(
-        `${piece.dimensions.width.value ?? '?'} × ${piece.dimensions.depth.value ?? '?'} × ${piece.dimensions.height.value ?? '?'} mm (planning size)`,
+        `${piece.dimensions.width.value} × ${piece.dimensions.depth.value} × ${piece.dimensions.height.value} mm`,
       );
     for (const axis of ['width', 'depth', 'height'] as const)
       if (before && !same(before.dimensions[axis], piece.dimensions[axis]))
@@ -50,7 +53,7 @@ export function PreviewChangeList({
       (before && furnitureBottom(before) !== furnitureBottom(piece))
     )
       details.push(
-        `bottom edge: ${before ? `${furnitureBottom(before) ?? 'unknown'} → ` : ''}${furnitureBottom(piece) ?? 'unknown'} mm above floor (planned)`,
+        `bottom edge: ${before ? `${furnitureBottom(before) ?? '—'} → ` : ''}${furnitureBottom(piece) ?? '—'} mm above floor`,
       );
     if (!before || before.pose.quarterTurns !== piece.pose.quarterTurns)
       details.push(`front facing ${facing(piece.pose.quarterTurns)}`);

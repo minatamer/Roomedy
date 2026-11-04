@@ -158,11 +158,12 @@ function PlacementForm({
       )}
       {replacement && (
         <p className={styles.notice}>
-          This explicitly replaces {replacement.label} (
-          {replacement.dimensions.width.value ?? '?'} ×{' '}
-          {replacement.dimensions.depth.value ?? '?'} ×{' '}
-          {replacement.dimensions.height.value ?? '?'} mm). Its recorded
-          dimensions are not resized to fit this model.
+          This explicitly replaces {replacement.label}
+          {replacement.dimensions.width.value !== null &&
+            replacement.dimensions.depth.value !== null &&
+            replacement.dimensions.height.value !== null &&
+            ` (${replacement.dimensions.width.value} × ${replacement.dimensions.depth.value} × ${replacement.dimensions.height.value} mm)`}
+          . Its recorded dimensions are not resized to fit this model.
         </p>
       )}
       <div className={styles.twoFields}>

@@ -28,12 +28,7 @@ import {
   furnitureMaterialRoles,
 } from '@roomedy/contracts/furniture-materials';
 import type { FurnitureMaterialTarget } from '@roomedy/contracts/furniture-materials';
-import {
-  displayFurnitureSize,
-  hasIllustrativeSize,
-  ILLUSTRATIVE_SIZE_NOTICE,
-} from '../catalogue/display-size';
-import previewStyles from '../room-view/room-view.module.css';
+import { displayFurnitureSize } from '../catalogue/display-size';
 import { roomSurface, roomSurfaceDetail } from '@roomedy/contracts/surfaces';
 import type { SurfaceTexture } from '@roomedy/contracts/surfaces';
 import { failureMessage } from '../room-editor/messages';
@@ -221,7 +216,6 @@ export function OrientedFootprint({
         }
         stroke={selected ? '#332b25' : '#5d5147'}
         strokeWidth={selected ? 35 : 14}
-        strokeDasharray={hasIllustrativeSize(item) ? '50 35' : undefined}
       />
       {materials && (
         <>
@@ -902,7 +896,7 @@ export function PlanView({
                 role={layer === 'floor' ? 'button' : undefined}
                 tabIndex={layer === 'floor' ? 0 : -1}
                 aria-hidden={layer === 'ceiling' || undefined}
-                aria-label={`${featureLabel(feature).toLowerCase()}, ${feature.wall} wall, ${feature.width.value ?? 'unknown'} mm wide`}
+                aria-label={`${featureLabel(feature).toLowerCase()}, ${feature.wall} wall${feature.width.value === null ? '' : `, ${feature.width.value} mm wide`}`}
                 aria-pressed={selected}
                 className={styles.feature}
                 style={
@@ -1115,7 +1109,7 @@ export function PlanView({
             const label = planFurnitureName(item);
             const labelLayout = planLabelLayout(
               item,
-              label + (w === null || d === null ? ' ?' : ''),
+              label,
               category === 'tv' ? 135 : 185,
               room,
             );
@@ -1125,7 +1119,7 @@ export function PlanView({
                 role="button"
                 tabIndex={0}
                 aria-pressed={selected}
-                aria-label={`${item.label}, ${w ?? 'unknown'} by ${d ?? 'unknown'} mm, ${before ? 'Before, read-only' : state.candidate ? 'proposal preview' : state.clientLoadFailure ? 'read-only' : item.locks.position ? 'position locked' : 'movable'}`}
+                aria-label={`${item.label}${w === null || d === null ? '' : `, ${w} by ${d} mm`}, ${before ? 'Before, read-only' : state.candidate ? 'proposal preview' : state.clientLoadFailure ? 'read-only' : item.locks.position ? 'position locked' : 'movable'}`}
                 className={`${styles.piece} ${readOnly || !arranging ? styles.piecePreview : ''}`}
                 transform={`translate(${item.pose.centerX} ${item.pose.centerZ})`}
                 onKeyDown={(e) => key(e, item)}
@@ -1167,7 +1161,6 @@ export function PlanView({
                     fill="#f1e8da"
                     stroke="#76634d"
                     strokeWidth="20"
-                    strokeDasharray="50 35"
                   />
                 ) : (
                   <OrientedFootprint item={item} selected={selected} />
@@ -1248,9 +1241,7 @@ export function PlanView({
           paintOrder="stroke"
           pointerEvents="none"
         >
-          {room.room.width.value === null
-            ? 'Width unknown'
-            : `${width} mm${room.room.width.status === 'confirmed' ? '' : ` · ${room.room.width.status}`}`}
+          {room.room.width.value !== null && `${width} mm`}
         </text>
         <text
           x={-180}
@@ -1264,9 +1255,7 @@ export function PlanView({
           pointerEvents="none"
           transform={`rotate(-90 -180 ${depth / 2})`}
         >
-          {room.room.depth.value === null
-            ? 'Depth unknown'
-            : `${depth} mm${room.room.depth.status === 'confirmed' ? '' : ` · ${room.room.depth.status}`}`}
+          {room.room.depth.value !== null && `${depth} mm`}
         </text>
         {placement && <CataloguePlanGhost placement={placement} />}
         {/* Keep opening names above preview and drag overlays. */}
@@ -1288,11 +1277,6 @@ export function PlanView({
           ) : null;
         })}
       </svg>
-      {room.furniture.some(hasIllustrativeSize) && (
-        <p className={previewStyles.illustrativeNotice}>
-          {ILLUSTRATIVE_SIZE_NOTICE}
-        </p>
-      )}
       <div id={descriptionId} className={styles.announcement}>
         <p>
           {ghost
@@ -1309,9 +1293,6 @@ export function PlanView({
                     ? 'Drag to place · arrow keys to nudge · dimensions in mm'
                     : 'Select a piece to inspect · arrow keys pan · dimensions in mm'}
         </p>
-        {(room.room.width.value === null || room.room.depth.value === null) && (
-          <p>Outline is illustrative until width and depth are measured.</p>
-        )}
       </div>
     </div>
   );

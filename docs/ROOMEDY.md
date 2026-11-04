@@ -1579,7 +1579,7 @@ RM-005 is committed as `85c7362` and RM-006 as `f73ce2e`. RM-007 adds bounded tr
 ## Build command progress
 
 Current phase: **local workflow finished**
-Next action: Owner review the committed RM-097–099 work on4November2026 using docs/commit-plans/RM-097-099-CHECKPOINT.md and its receipt. Existing five commits plus two documentation commits preserve the validated app/v3 photos. Clean local checkpoint; no new paid call/push/deploy or owner acceptance. Current services/open gallery retained; aesthetic/physical/merchant/actual v3 recognition/exact hosted proof remain separate.
+Next action: Owner review RM-100 plain scan labels and ordinary measurement fields in the running app. Existing focused checks, scoped frontend gates and native saved-scan review are recorded in the receipt. Canonical unknown facts and saved scan inventory/layout remain exact; no additional paid call. Exact twenty-one-path local checkpoint under existing authority; owner/physical/merchant/hosted acceptance remains separate.
 Active ticket: none
 Phase prompts: delegated during AFK
 Local commits approved: yes
@@ -1799,7 +1799,7 @@ This checklist records local work. Human approvals and unresolved external check
   "schema_version": 3,
   "repo_root": "C:\\Users\\minat\\Work\\Roomedy",
   "main_document": "docs/ROOMEDY.md",
-  "updated_at": "2026-11-03T15:58:58+00:00",
+  "updated_at": "2026-11-04T09:27:14+00:00",
   "context": {
     "TARGET_AUDIENCE": {
       "value": "Renters and people furnishing/rearranging small rectangular bedrooms/home-office combinations, plus potential clients evaluating the portfolio demo. Empty, partly furnished and existing-room conditions remain supported.",
@@ -2145,7 +2145,7 @@ This checklist records local work. Human approvals and unresolved external check
     "approval_source": "human:current-chat/2026-10-26/cpq-ticket-execution-authorization"
   },
   "active_ticket": null,
-  "next_action": "Owner review the committed RM-097–099 work on4November2026 using docs/commit-plans/RM-097-099-CHECKPOINT.md and its receipt. Existing five commits plus two documentation commits preserve the validated app/v3 photos. Clean local checkpoint; no new paid call/push/deploy or owner acceptance. Current services/open gallery retained; aesthetic/physical/merchant/actual v3 recognition/exact hosted proof remain separate.",
+  "next_action": "Owner review RM-100 plain scan labels and ordinary measurement fields in the running app. Existing focused checks, scoped frontend gates and native saved-scan review are recorded in the receipt. Canonical unknown facts and saved scan inventory/layout remain exact; no additional paid call. Exact twenty-one-path local checkpoint under existing authority; owner/physical/merchant/hosted acceptance remains separate.",
   "phases": [
     {
       "id": "01-docs",
@@ -2486,29 +2486,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Implement owner-selected RM-099 after6e06fd5. Remove only the standing pivot mirror and its support/shadow from all four public photos with built-in imagegen, including the partial reverse edge; preserve other furniture/wall mirror/camera/materials. Inspect originals/results, use installed Sharp to package four versioned1280x960 opaque WebPs under256KiB each, update normal gallery URLs, retire unused v2 inputs and retain provenance. Eighteen exact paths. Existing real asset/intake tests, scoped code checks/frontend build, public hashes/inventory and native four-photo viewer/preparation; no Continue/Send or new Roomedy paid call. Do not remove mirror variants or inject detections. No env/restart/dependency/delegation/Chrome/cloud/push/deploy. Existing local ticket checkpoint after validation; owner/physical/hosted acceptance separate.",
-        "sha256": "07319cdc720750d842c77ccc33c1efad7cf65397b177017d9ab54211b3f66ec6",
+        "text": "Complete RM-100 remaining editor measurement-uncertainty presentation correction. Preserve actual canonical facts and all planning/fit/financial/Apply/Undo authority; no new paid call or service restart. Validate seven frontend files with focused checks/build/native saved-project review, then exact sixteen-path local checkpoint.",
+        "sha256": "e417064e79753b404065f9d8e37dd245f9673329fad396e5670ac76f2c7490d1",
         "context_sources": [
-          "docs/tickets/RM-099-remove-standing-mirror-from-samples.md",
-          "docs/commit-plans/RM-099.md",
-          "docs/validation/RM-099.md"
+          "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
+          "docs/commit-plans/RM-100.md",
+          "docs/validation/RM-100.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/tickets/RM-099-remove-standing-mirror-from-samples.md",
-        "docs/commit-plans/RM-099.md",
-        "docs/validation/RM-099.md",
-        "docs/references/sample-room-photos-2026-11-03.md",
-        "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+        "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
+        "docs/commit-plans/RM-100.md",
+        "docs/validation/RM-100.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner aesthetic/physical and actual new v3 photo-recognition acceptance remain separate; no new paid scan authorized or spent. Exact hosted candidate proof remains outstanding.",
-          "reference": "docs/validation/RM-099.md"
+          "reason": "Owner aesthetic, physical/merchant and exact hosted-release acceptance remain separate; this is an editor display-only correction.",
+          "reference": "docs/validation/RM-100.md"
         }
       ],
       "approval": null,
@@ -2844,6 +2842,25 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/tickets/RM-098-reconcile-photo-mirrors-and-placement.md",
               "docs/commit-plans/RM-098.md",
               "docs/validation/RM-098.md#final-owner-authorized-paid-check-after-the-verifier"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T09:15:06+00:00",
+          "reason": "Direct owner reports successful scan and requests remaining measurement uncertainty UI removed.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Implement owner-selected RM-099 after6e06fd5. Remove only the standing pivot mirror and its support/shadow from all four public photos with built-in imagegen, including the partial reverse edge; preserve other furniture/wall mirror/camera/materials. Inspect originals/results, use installed Sharp to package four versioned1280x960 opaque WebPs under256KiB each, update normal gallery URLs, retire unused v2 inputs and retain provenance. Eighteen exact paths. Existing real asset/intake tests, scoped code checks/frontend build, public hashes/inventory and native four-photo viewer/preparation; no Continue/Send or new Roomedy paid call. Do not remove mirror variants or inject detections. No env/restart/dependency/delegation/Chrome/cloud/push/deploy. Existing local ticket checkpoint after validation; owner/physical/hosted acceptance separate.",
+            "sha256": "07319cdc720750d842c77ccc33c1efad7cf65397b177017d9ab54211b3f66ec6",
+            "context_sources": [
+              "docs/tickets/RM-099-remove-standing-mirror-from-samples.md",
+              "docs/commit-plans/RM-099.md",
+              "docs/validation/RM-099.md"
             ],
             "status": "afk",
             "approval": null,
@@ -4565,31 +4582,27 @@ This checklist records local work. Human approvals and unresolved external check
       "gate": null,
       "status": "complete_local",
       "prompt": {
-        "text": "Finish the owner-authorized RM-097–099 exact local checkpoint on clean entryeb82f2b. Preserve five existing commits, all application/assets/tests/config bytes, current permanent instructions and dated receipts. Two documentation commits: one exact file-level map, then receipt/deployment handoff/helper state. Verify exact staged groups, tracked blobs, parent order,50-path final union and clean worktree/index. Reuse settled1988-code and49-current-asset evidence; no app gate repetition, provider/browser/env/service/dependency/cloud/push/deploy action. Owner review4November remains pending.",
-        "sha256": "a8d7935ff80d7cbf388ac7f5a8431f361aaf874879a2df558b59d03c4f936f46",
+        "text": "Owner review RM-100 plain scan labels and ordinary measurement fields in the running app. Existing focused checks, scoped frontend gates and native saved-scan review are recorded in the receipt. Canonical unknown facts and saved scan inventory/layout remain exact; no additional paid call. Exact twenty-one-path local checkpoint under existing authority; owner/physical/merchant/hosted acceptance remains separate.",
+        "sha256": "da4d1476fc2c6259e25bdc9b17a4923c56022d277b4d5f4fd372d9e3a673a7cb",
         "context_sources": [
-          "docs/commit-plans/RM-097-099-CHECKPOINT.md",
-          "docs/validation/RM-097-099-CHECKPOINT.md",
-          "docs/validation/RM-097.md",
-          "docs/validation/RM-098.md",
-          "docs/validation/RM-099.md"
+          "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
+          "docs/commit-plans/RM-100.md",
+          "docs/validation/RM-100.md"
         ],
         "status": "afk",
         "approval": null,
         "afk_session": "AFK-SESSION-001"
       },
       "evidence": [
-        "docs/commit-plans/RM-097-099-CHECKPOINT.md",
-        "docs/validation/RM-097-099-CHECKPOINT.md",
-        "docs/validation/RM-097.md",
-        "docs/validation/RM-098.md",
-        "docs/validation/RM-099.md"
+        "docs/tickets/RM-100-remove-editor-measurement-uncertainty.md",
+        "docs/commit-plans/RM-100.md",
+        "docs/validation/RM-100.md"
       ],
       "blockers": [
         {
           "kind": "external",
-          "reason": "Owner review is planned for4November2026; visual/physical/merchant/actual new v3 recognition and exact hosted release acceptance are not supplied by this local Git checkpoint.",
-          "reference": "docs/validation/RM-097-099-CHECKPOINT.md"
+          "reason": "Owner aesthetic, physical/merchant and exact hosted-release acceptance remain separate; this is an editor display-only correction.",
+          "reference": "docs/validation/RM-100.md"
         }
       ],
       "approval": null,
@@ -4946,6 +4959,27 @@ This checklist records local work. Human approvals and unresolved external check
               "docs/validation/RM-099.md",
               "docs/references/sample-room-photos-2026-11-03.md",
               "docs/operations/DEPLOYMENT_PREPARATION_HANDOFF.md"
+            ],
+            "status": "afk",
+            "approval": null,
+            "afk_session": "AFK-SESSION-001"
+          },
+          "prior_approval": null,
+          "prior_decision": null
+        },
+        {
+          "reopened_at": "2026-11-04T09:27:13+00:00",
+          "reason": "Reconcile owner-requested RM-100 editor measurement presentation correction.",
+          "prior_status": "complete_local",
+          "prior_prompt": {
+            "text": "Finish the owner-authorized RM-097–099 exact local checkpoint on clean entryeb82f2b. Preserve five existing commits, all application/assets/tests/config bytes, current permanent instructions and dated receipts. Two documentation commits: one exact file-level map, then receipt/deployment handoff/helper state. Verify exact staged groups, tracked blobs, parent order,50-path final union and clean worktree/index. Reuse settled1988-code and49-current-asset evidence; no app gate repetition, provider/browser/env/service/dependency/cloud/push/deploy action. Owner review4November remains pending.",
+            "sha256": "a8d7935ff80d7cbf388ac7f5a8431f361aaf874879a2df558b59d03c4f936f46",
+            "context_sources": [
+              "docs/commit-plans/RM-097-099-CHECKPOINT.md",
+              "docs/validation/RM-097-099-CHECKPOINT.md",
+              "docs/validation/RM-097.md",
+              "docs/validation/RM-098.md",
+              "docs/validation/RM-099.md"
             ],
             "status": "afk",
             "approval": null,

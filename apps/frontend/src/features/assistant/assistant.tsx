@@ -242,8 +242,9 @@ export function Assistant({
                           </strong>
                           {piece && (
                             <small>
-                              {piece.dimensions.width.value ?? '?'} ×{' '}
-                              {piece.dimensions.depth.value ?? '?'} mm ·{' '}
+                              {piece.dimensions.width.value !== null &&
+                                piece.dimensions.depth.value !== null &&
+                                `${piece.dimensions.width.value} × ${piece.dimensions.depth.value} mm · `}
                               {piece.ownership === 'owned'
                                 ? 'Owned'
                                 : 'Proposed'}

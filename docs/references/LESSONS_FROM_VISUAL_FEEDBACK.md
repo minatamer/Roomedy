@@ -1,5 +1,9 @@
 # Lessons from the owner's visual feedback
 
+## Keep missing measurements out of object names —4 November2026
+
+Owner's successful scan showed `Bed ?`, `Desk ?` and similar labels only because physical dimensions were absent. These marks suggest recognition doubt even when the item is correctly captured. [RM-100](../tickets/RM-100-remove-editor-measurement-uncertainty.md) extends the earlier removal of measurement questions to the remaining editor surfaces: plain names/outlines, supplied numeric dimensions only and ordinary editable fields. Avoid repeated status badges and measurement nags in 2D, 3D, properties and import. Keep unknown/supplied facts and physical/financial validation intact internally; never invent measured values to simplify presentation.
+
 ## Make sample photos exercise the current feature set —2November2026
 
 The owner wants a useful complex room instead of only a plain bed/cabinet. Keep coherent overlapping room and furniture-detail views with a work area, mirrors/storage, visible light fixtures, openings and independently coloured bed parts. Check reverse camera orientation before shipping, preserve identifiable materials and avoid clutter/phantom reflection objects. Bundle bounded versioned public files so the normal deployed sample intake works; asset availability is distinct from paid model-detection accuracy. Keep actual generation prompts/hashes/coverage and use ordinary decoding/explicit Continue without sample-specific semantic shortcuts. [RM-096](../tickets/RM-096-refresh-the-public-sample-room-photos.md), [current assets/prompts](sample-room-photos-2026-11-02.md), [receipt](../validation/RM-096.md).

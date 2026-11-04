@@ -5,21 +5,6 @@ import type { SessionController } from '../session/controller';
 import { failureMessage } from './messages';
 import styles from './editor.module.css';
 
-export function measurementLabel(value: Measurement) {
-  const status =
-    value.status === 'scan-derived'
-      ? 'Scan derived'
-      : value.status[0]!.toUpperCase() + value.status.slice(1);
-  const source =
-    value.sourceId === 'authored-sample'
-      ? 'supplied sample'
-      : value.sourceId === 'visitor-confirmed'
-        ? 'your measurement'
-        : value.sourceId === 'visitor-estimate'
-          ? 'your estimate'
-          : null;
-  return `${status}${source ? ` · ${source}` : ''}`;
-}
 type Target = Extract<VisitorAction, { type: 'confirm-measurement' }>['target'];
 export function MeasurementField({
   controller,
@@ -51,8 +36,8 @@ export function MeasurementField({
         const result = (onEdit ?? controller.dispatch.bind(controller))(
           [{ type: 'confirm-measurement', target, value }],
           value === null
-            ? `Mark ${label.toLowerCase()} unknown`
-            : `Confirm ${label.toLowerCase()}`,
+            ? `Clear ${label.toLowerCase()}`
+            : `Set ${label.toLowerCase()}`,
         );
         return result.ok
           ? null
@@ -141,15 +126,10 @@ export function MeasurementInput({
               apply(n);
           }}
           aria-invalid={!!form.error}
-          aria-describedby={`${id}-evidence${form.error ? ` ${id}-error` : ''}`}
+          aria-describedby={form.error ? `${id}-error` : undefined}
         />
-        {!live && <button type="submit">Confirm</button>}
+        {!live && <button type="submit">Save</button>}
       </div>
-      <p id={`${id}-evidence`} className={styles.hint}>
-        Current:{' '}
-        {measurement.value === null ? 'unknown' : `${measurement.value} mm`} ·{' '}
-        {measurementLabel(measurement)}
-      </p>
       {form.error && (
         <p role="alert" id={`${id}-error`} className={styles.error}>
           {form.error}
@@ -159,9 +139,10 @@ export function MeasurementInput({
         <button
           className={styles.quiet}
           type="button"
+          aria-label={`Clear ${label.toLowerCase()}`}
           onClick={() => apply(null)}
         >
-          Mark unknown
+          Clear
         </button>
       )}
     </form>

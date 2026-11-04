@@ -284,11 +284,11 @@ export function RoomPanel({
                             focusProperties(controller, feature.id);
                           }}
                         >
-                          {featureLabel(feature)} · {feature.wall}
-                          <span>
-                            {feature.width.value ?? '?'} mm ·{' '}
-                            {feature.wallProvenance.status} wall
-                          </span>
+                          {featureLabel(feature)}
+                          {feature.wall !== 'unknown' && ` · ${feature.wall}`}
+                          {feature.width.value !== null && (
+                            <span>{feature.width.value} mm</span>
+                          )}
                         </button>
                       </li>
                     ))}
@@ -309,8 +309,7 @@ export function RoomPanel({
                     </button>
                   </div>
                   <p className={styles.hint}>
-                    New features use estimated sizes. Choose their wall in
-                    settings.
+                    Choose the wall for each new feature in settings.
                   </p>
                 </div>
               </>

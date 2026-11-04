@@ -1203,8 +1203,9 @@ export function Editor({
                                   )}
                                   <strong>{piece.label}</strong>
                                   <span>
-                                    {piece.dimensions.width.value ?? '?'} ×{' '}
-                                    {piece.dimensions.depth.value ?? '?'} mm ·{' '}
+                                    {piece.dimensions.width.value !== null &&
+                                      piece.dimensions.depth.value !== null &&
+                                      `${piece.dimensions.width.value} × ${piece.dimensions.depth.value} mm · `}
                                     {piece.ownership === 'owned'
                                       ? 'Owned'
                                       : 'Proposed'}
@@ -1258,9 +1259,10 @@ export function Editor({
                         );
                         return piece ? (
                           <p>
-                            {piece.dimensions.width.value ?? '?'} ×{' '}
-                            {piece.dimensions.depth.value ?? '?'} ×{' '}
-                            {piece.dimensions.height.value ?? '?'} mm ·{' '}
+                            {piece.dimensions.width.value !== null &&
+                              piece.dimensions.depth.value !== null &&
+                              piece.dimensions.height.value !== null &&
+                              `${piece.dimensions.width.value} × ${piece.dimensions.depth.value} × ${piece.dimensions.height.value} mm · `}
                             {piece.ownership === 'owned' ? 'Owned' : 'Proposed'}{' '}
                             · Similar representation
                           </p>
@@ -1372,11 +1374,15 @@ export function Editor({
                         <h2 tabIndex={-1}>
                           {before ? 'Before room' : 'Room inspection'}
                         </h2>
-                        <p>
-                          {shownRoom.room.width.value ?? '?'} ×{' '}
-                          {shownRoom.room.depth.value ?? '?'} ×{' '}
-                          {shownRoom.room.height.value ?? '?'} mm
-                        </p>
+                        {shownRoom.room.width.value !== null &&
+                          shownRoom.room.depth.value !== null &&
+                          shownRoom.room.height.value !== null && (
+                            <p>
+                              {shownRoom.room.width.value} ×{' '}
+                              {shownRoom.room.depth.value} ×{' '}
+                              {shownRoom.room.height.value} mm
+                            </p>
+                          )}
                         <p>
                           Floor:{' '}
                           {

@@ -15,16 +15,8 @@ import { RoomScene } from './scene';
 import type { CameraAction, SceneProps } from './scene';
 import type { CameraPose, CameraView } from './adapter';
 import { cameraViewPose } from './camera';
-import {
-  displayRoom,
-  featureBox,
-  pieceRepresentation,
-  presentationRoom,
-} from './adapter';
-import {
-  hasIllustrativeSize,
-  ILLUSTRATIVE_SIZE_NOTICE,
-} from '../catalogue/display-size';
+import { pieceRepresentation, presentationRoom } from './adapter';
+import { hasIllustrativeSize } from '../catalogue/display-size';
 import { useSurfaceMotion } from '../room-editor/use-surface-motion';
 import { useFloorEdit } from './use-floor-edit';
 import type { SessionController } from '../session/controller';
@@ -199,12 +191,12 @@ export default function Cutaway({
       })),
     [rendered],
   );
-  const incompleteFeatures = rendered.room.features.some(
-    (feature) => featureBox(rendered, feature) === null,
-  );
   const unavailable = rendered.furniture.filter((p) => {
     const r = pieceRepresentation(p, true, true);
-    return r.kind === 'unavailable' || (r.kind === 'procedural' && r.notice);
+    return (
+      r.kind === 'unavailable' ||
+      (r.kind === 'procedural' && r.notice && !hasIllustrativeSize(p))
+    );
   }).length;
   const fallback = (
     <div className={styles.fallback} role="status">
@@ -485,11 +477,6 @@ export default function Cutaway({
             include it; other switched-on bulbs remain visible.
           </p>
         )}
-        {rendered.furniture.some(hasIllustrativeSize) && (
-          <p className={styles.illustrativeNotice}>
-            {ILLUSTRATIVE_SIZE_NOTICE}
-          </p>
-        )}
       </div>
       <div id={descriptionId} className={styles.description}>
         <p>
@@ -502,19 +489,10 @@ export default function Cutaway({
             ? '· Scroll to zoom'
             : '· Scroll or pinch to zoom · Select a piece to inspect'}
         </p>
-        {(unavailable > 0 ||
-          incompleteFeatures ||
-          displayRoom(rendered).approximate ||
-          props.candidate) && (
+        {(unavailable > 0 || props.candidate) && (
           <p>
             {unavailable > 0
-              ? 'Some pieces use simple bounds or await dimensions; inspect their properties. '
-              : ''}
-            {displayRoom(rendered).approximate
-              ? 'Room height or outline is approximate. '
-              : ''}
-            {incompleteFeatures
-              ? 'Some openings or obstacles await measurements; review them in the plan. '
+              ? 'Some pieces use simple shapes; inspect their properties. '
               : ''}
             {props.candidate
               ? 'Preview: outlined shapes mark changes; pale outlines show the current arrangement.'

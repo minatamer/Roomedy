@@ -72,8 +72,8 @@ export function FurnitureSizeFields({
       )}
       {presentation !== 'preset' && selected?.mattress && (
         <p className={styles.hint}>
-          Mattress {selected.mattress}; includes an estimated 10 cm total frame
-          allowance in width and length. Adjust the overall size below.
+          Mattress {selected.mattress}; includes a 10 cm total frame allowance
+          in width and length. Adjust the overall size below.
         </p>
       )}
       {presentation !== 'preset' && (
@@ -195,7 +195,7 @@ export function FurnitureSizeForm({
         change(form.values, 'custom');
       }}
     >
-      <h3>Size estimate</h3>
+      <h3>Dimensions</h3>
       <FurnitureSizeFields
         entry={entry}
         values={{
@@ -218,8 +218,7 @@ export function FurnitureSizeForm({
         errorId={errorId}
       />
       <p className={styles.hint}>
-        Estimates stay approximate. Confirm measured values in Advanced. Size
-        edits leave protection settings unchanged.
+        Size edits leave protection settings unchanged.
       </p>
       {error('custom')}
     </form>
