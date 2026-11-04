@@ -1,0 +1,242 @@
+{
+  "kind": "hosted-paid-on-release",
+  "version": 1,
+  "date": "2026-11-04",
+  "verifiedAtUtc": "2026-11-04T18:10:20.265996+00:00",
+  "verifiedAtCairo": "2026-11-04T20:10:20.265996+02:00",
+  "runtimeSourceCommit": "f8859ec30a590f4ac57353501ce80e04a28ab60e",
+  "sourceOnlyDigest": "54589a8b67463633638aa843bebad8a8b6e6be095e50e17fed3f8decccd204a5",
+  "sourceInputs": 410,
+  "sourceBytes": 4741987,
+  "sourceAndRetainedDigest": "2685852fc145c5ec3a62de87c70e778a49c1712dcf0f97e34dea5996d8211a6a",
+  "releaseInputs": 507,
+  "releaseBytes": 9730901,
+  "linuxProofSha256": "8361600b32b760a6f21995ebb23bf4a99db08d89a298effcf23f28524b42a023",
+  "project": "roomedy",
+  "projectNumber": "860563209111",
+  "region": "europe-west1",
+  "canonicalOrigin": "https://roomedy-frontend-860563209111.europe-west1.run.app",
+  "services": {
+    "backend": {
+      "service": "roomedy-backend",
+      "revision": "roomedy-backend-r20261104-2685852",
+      "traffic": [
+        {
+          "percent": 100,
+          "revisionName": "roomedy-backend-r20261104-2685852"
+        }
+      ],
+      "image": "europe-west1-docker.pkg.dev/roomedy/roomedy/backend@sha256:25e99517d5a814126bb8256b318c23d3b1cfbe4488cd8b04851d99c854d7e115",
+      "resolvedRuntimeImage": "europe-west1-docker.pkg.dev/roomedy/roomedy/backend@sha256:64526e85c8a323b071d60abf0db80fc6c5a61d264232e06339d60c11043d7a06",
+      "verifiedImageManifestChain": [
+        "sha256:25e99517d5a814126bb8256b318c23d3b1cfbe4488cd8b04851d99c854d7e115",
+        "sha256:64526e85c8a323b071d60abf0db80fc6c5a61d264232e06339d60c11043d7a06"
+      ],
+      "url": "https://roomedy-backend-fbdqwlfulq-ew.a.run.app",
+      "environment": {
+        "APP_ENV": "production",
+        "NODE_ENV": "production",
+        "HOST": "0.0.0.0",
+        "FAKE_MODE": "false",
+        "PAID_DEMO_ENABLED": "true",
+        "FRONTEND_ORIGIN": "https://roomedy-frontend-860563209111.europe-west1.run.app",
+        "ROOMEDY_RELEASE_ID": "2685852fc145c5ec3a62de87c70e778a49c1712dcf0f97e34dea5996d8211a6a"
+      },
+      "secretReferences": {
+        "OPENAI_API_KEY": {
+          "secretKeyRef": {
+            "key": "1",
+            "name": "OPENAI_API_KEY"
+          }
+        },
+        "ROOMEDY_BRIDGE_SECRET": {
+          "secretKeyRef": {
+            "key": "1",
+            "name": "ROOMEDY_BRIDGE_SECRET"
+          }
+        },
+        "TURNSTILE_SECRET_KEY": {
+          "secretKeyRef": {
+            "key": "1",
+            "name": "TURNSTILE_SECRET_KEY"
+          }
+        },
+        "TURNSTILE_SITE_KEY": {
+          "secretKeyRef": {
+            "key": "1",
+            "name": "TURNSTILE_SITE_KEY"
+          }
+        }
+      },
+      "serviceAccount": "roomedy-backend@roomedy.iam.gserviceaccount.com",
+      "containerConcurrency": 4,
+      "timeoutSeconds": 120,
+      "resources": {
+        "limits": {
+          "cpu": "1",
+          "memory": "512Mi"
+        }
+      },
+      "revisionMaximumInstances": "1",
+      "serviceMaximumInstances": "20",
+      "executionEnvironment": "gen2",
+      "ingress": "all",
+      "rollbackRevisionRetained": "roomedy-backend-00003-f8t",
+      "testTagRemoved": true,
+      "anonymousInvoker": false
+    },
+    "frontend": {
+      "service": "roomedy-frontend",
+      "revision": "roomedy-frontend-r20261104-2685852",
+      "traffic": [
+        {
+          "percent": 100,
+          "revisionName": "roomedy-frontend-r20261104-2685852"
+        }
+      ],
+      "image": "europe-west1-docker.pkg.dev/roomedy/roomedy/frontend@sha256:7584f7603fd4480b24037c66c02198364f5ed13db6c741689a60458c5753933a",
+      "resolvedRuntimeImage": "europe-west1-docker.pkg.dev/roomedy/roomedy/frontend@sha256:f0ae721ba11124d930c79deb64d09ce95bb94273edca4bf5bb67197a871674d6",
+      "verifiedImageManifestChain": [
+        "sha256:7584f7603fd4480b24037c66c02198364f5ed13db6c741689a60458c5753933a",
+        "sha256:f0ae721ba11124d930c79deb64d09ce95bb94273edca4bf5bb67197a871674d6"
+      ],
+      "url": "https://roomedy-frontend-fbdqwlfulq-ew.a.run.app",
+      "environment": {
+        "NODE_ENV": "production",
+        "NEXT_TELEMETRY_DISABLED": "1",
+        "ROOMEDY_BACKEND_ORIGIN": "https://roomedy-backend-fbdqwlfulq-ew.a.run.app",
+        "ROOMEDY_PUBLIC_ORIGIN": "https://roomedy-frontend-860563209111.europe-west1.run.app",
+        "ROOMEDY_SERVICE_IDENTITY": "gcp-metadata",
+        "ROOMEDY_RELEASE_ID": "2685852fc145c5ec3a62de87c70e778a49c1712dcf0f97e34dea5996d8211a6a"
+      },
+      "secretReferences": {
+        "ROOMEDY_BRIDGE_SECRET": {
+          "secretKeyRef": {
+            "key": "1",
+            "name": "ROOMEDY_BRIDGE_SECRET"
+          }
+        }
+      },
+      "serviceAccount": "roomedy-frontend@roomedy.iam.gserviceaccount.com",
+      "containerConcurrency": 4,
+      "timeoutSeconds": 120,
+      "resources": {
+        "limits": {
+          "cpu": "1",
+          "memory": "512Mi"
+        }
+      },
+      "revisionMaximumInstances": "1",
+      "serviceMaximumInstances": "20",
+      "executionEnvironment": "gen2",
+      "ingress": "all",
+      "rollbackRevisionRetained": "roomedy-frontend-00002-kjn",
+      "testTagRemoved": true,
+      "anonymousInvoker": true
+    }
+  },
+  "mode": "live",
+  "paidDemoEnabled": true,
+  "ai": "live-ready",
+  "simulation": false,
+  "model": "gpt-6-luna",
+  "qualityGate": {
+    "testCoverage": 2043,
+    "testFiles": 124,
+    "initialFullSuitePassed": 2042,
+    "initialFullSuiteFailed": 1,
+    "initialFailure": "unchanged source-copy fixture default5s timeout",
+    "continuationTestsPassed": 34,
+    "continuationFiles": 3,
+    "continuationCliTestTimeoutMs": 15000,
+    "evidence": "documented split; no assertion or application timeout change",
+    "productionBuilds": [
+      "shared",
+      "backend",
+      "frontend"
+    ]
+  },
+  "linuxVerification": {
+    "platform": "linux/amd64",
+    "probesPassed": 9,
+    "publicAssetsVerified": 146,
+    "currentSourceAndImagesStrictlyVerified": true,
+    "privateFilesExcluded": true,
+    "nonRoot": true
+  },
+  "publicVerification": {
+    "pagesAndApiChecks": 15,
+    "byteVerifiedAssets": 146,
+    "workers": 1,
+    "backendAnonymous": {
+      "health": 403,
+      "admission": 403
+    },
+    "challengeConfiguration": {
+      "kind": "verification",
+      "state": "interaction",
+      "siteKeyPresent": true,
+      "action": "roomedy-ai",
+      "inputBound": true,
+      "tokenSubmitted": false,
+      "grantConsumed": false,
+      "providerDispatches": 0
+    },
+    "realChallengeTokenSubmitted": false,
+    "agentPaidProviderCalls": 0
+  },
+  "boundedDecoderMemory": {
+    "kind": "offline-linux-decoder-memory",
+    "synthetic": "flat JPEG with bounded legal COM padding",
+    "jobs": 2,
+    "photosPerJob": 6,
+    "edge": 2048,
+    "preparedBytesPerJob": 6291456,
+    "retainedRequestBytes": [
+      8389706,
+      8389707
+    ],
+    "elapsedMs": 1066,
+    "baselineCgroupBytes": 38572032,
+    "peakCgroupBytes": 316252160,
+    "limitCgroupBytes": 536870912,
+    "nodeMaxRssKiB": 350972,
+    "paidDispatches": 0,
+    "hosted": false,
+    "browserMemoryVerified": false
+  },
+  "rollback": {
+    "backend": {
+      "revision": "roomedy-backend-00003-f8t",
+      "image": "europe-west1-docker.pkg.dev/roomedy/roomedy/backend@sha256:a98f0fd3aa8ce7f97737dd4d6bb35dfd4f62fc4a37b41ddb4cc28bce47ef10e7",
+      "release": "aba8aff03fbfff4d53da81135b62f62e316ad5d887ba0c3d3250de5468f3e08b",
+      "paidMode": true
+    },
+    "frontend": {
+      "revision": "roomedy-frontend-00002-kjn",
+      "image": "europe-west1-docker.pkg.dev/roomedy/roomedy/frontend@sha256:c7bacbacaaa99b82cdbb31ed0051905a1967f3b54ada70edcc5fe54c86cc566f",
+      "release": "aba8aff03fbfff4d53da81135b62f62e316ad5d887ba0c3d3250de5468f3e08b",
+      "paidMode": true
+    }
+  },
+  "compatibility": {
+    "previousRetainedPublicFiles": 97,
+    "retentionMinutesAfterLastOldTraffic": 130,
+    "catalogueMetadata": "immutable original manifest.json plus current manifest-v2.json; both HTTP hash-verified",
+    "trafficRollbackPerformed": false
+  },
+  "temporaryTestTagsRemoved": true,
+  "globalProjectDefaultUnchanged": true,
+  "gitPush": false,
+  "receipt": "../validation/DEPLOYMENT-2026-11-04.md",
+  "securityEvidence": [
+    "../security/DEPLOYMENT_SECURITY_REVIEW.md",
+    "../security/PUBLIC_REPOSITORY_REVIEW.md"
+  ],
+  "verificationLimits": [
+    "No new security audit requested or performed.",
+    "No agent paid provider request or real browser challenge token submitted.",
+    "Synthetic decoder-only memory scenario is not worst-case codec/browser/GPU/full-server/hosted-capacity evidence.",
+    "Owner physical/merchant/model-quality and accessibility judgements are not inferred from deployment probes."
+  ]
+}

@@ -1,5 +1,7 @@
 # Roomedy hosted releases — 21 October 2026
 
+**4 November 2026 — current paid-on release verified.** [Open Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). Runtime source `f8859ec`; exact release `2685852f...`; frontend/backend `r20261104-2685852` each serve100%. Paid mode stays on, readiness is `live-ready`, mode `live`, simulationfalse. [Current immutable manifest](hosted-candidate-2026-11-04.json), [execution receipt](../validation/DEPLOYMENT-2026-11-04.md). All146 image-observed public files, worker delivery, current/stale release guards, private backend denial and challenge configuration pass. Existing identities/origins/secret versions/IAM/resources remain exact; old paired paid-on revisions remain available for rollback. No agent paid request, real challenge token or Git push. Earlier release records below are historical.
+
 ## Current landing update and paid activation
 
 **Deployed and bounded live cases verified.** [Open Roomedy](https://roomedy-frontend-860563209111.europe-west1.run.app). Owner accepted the final BM fade and explicitly authorized the checkpoint, then deployment with paid mode on. BM committed `3c30318` after a fresh1,043-test/64-file root gate/all builds. [Current exact manifest](landing-paid-candidate-2026-10-21.json), [17-path allocation](../commit-plans/RM-020.md), [receipt](../validation/RM-020.md), [later security disposition](../security/remediation-plan.md).
